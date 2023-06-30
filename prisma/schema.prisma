@@ -1,0 +1,201 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String  @map("user_id")
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String? @db.MediumText
+  access_token       String? @db.MediumText
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.MediumText
+  session_state      String? @db.MediumText
+  oauth_token_secret String? @db.MediumText
+  oauth_token        String? @db.MediumText
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  id         Int      @id @default(autoincrement())
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+//User
+model User {
+  id            String    @id @default(cuid())
+  username      String?   @unique
+  name          String?
+  email         String    @unique
+  image         String?
+  emailVerified String?
+  password      String?
+  profile       Profile?
+  following     Follows[] @relation("following")
+  followers     Follows[] @relation("follower")
+  reviews       Review[]
+  replies       Reply[]
+  likes         Like[]
+  dateJoined    DateTime  @default(now()) @map(name: "date_joined")
+  dateUpdated   DateTime  @updatedAt @map(name: "date_updated")
+  accounts      Account[]
+  sessions      Session[]
+}
+
+//User Settings
+model Profile {
+  id        String   @id @default(cuid())
+  avatar    String?
+  bio       String?
+  location  String?
+  website   String?
+  pronoun   String?
+  gender   String?
+  sleeveSetting   Boolean  @default(true) //Enable custom art.
+  replySetting   Boolean  @default(true) //Enable or disable replies to posts.
+  favorites Favorite[]
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique //@Unique to make sure single user to each profile; 1-1 relation.
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+}
+
+
+//Review 
+model Review {
+  id        String    @id @default(cuid())
+  album     Album     @relation(fields: [albumId], references: [id])
+  albumId   String
+  permalink String    @unique
+  rating    Float
+  loved     Boolean   @default(false)
+  replay    Boolean   @default(false)
+  content   String?   @db.MediumText
+  listened  Boolean   @default(false)
+  likes     Like[]
+  replies   Reply[]
+  published Boolean   @default(false)
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  String
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+
+  @@index([albumId])
+  @@index([authorId])
+}
+
+//Diary is just review without text, Rating is just a rating score no tags + no listened (obvious), no comments
+
+model Like {
+  id        String   @id @default(cuid())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  review    Review?  @relation(fields: [reviewId], references: [id])
+  reviewId  String?
+  album     Album?   @relation(fields: [albumId], references: [id])
+  albumId   String?
+  reply     Reply?   @relation(fields: [replyId], references: [id])
+  replyId String?
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@index([authorId])
+  @@index([reviewId])
+  @@index([replyId])
+  @@index([albumId])
+}
+
+
+//Comment
+model Reply {
+  id        String    @id @default(cuid())
+  content   String?
+  parent    Review?   @relation(fields: [parentId], references: [id])
+  parentId  String?
+  replyTo   Reply?  @relation("ReplyToReply", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replyToId String?
+  replies   Reply[] @relation("ReplyToReply")
+  author    User?     @relation(fields: [authorId], references: [id])
+  authorId  String
+  likes     Like[]
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+
+  @@index([parentId])
+  @@index([authorId])
+  @@index([replyToId])
+}
+
+model Album {
+  id            String    @id
+  name          String
+  artist        String
+  releaseDate   String
+  averageRating Float?    @default(0)  
+  lastUpdated   DateTime?  @default(now()) @updatedAt
+  reviews       Review[]
+  notes         String?   @db.MediumText
+  likes         Like[] 
+  favorites     Favorite[]
+
+  viewsCount    Int?      @default(0)  // Track number of views
+  listenedCount Int?      @default(0)  // Track number of listens
+  ratingsCount  Int?      @default(0) // Track number of ratings/reviews
+  likesCount    Int?      @default(0) // Track number of likes
+
+  @@unique([id])
+}
+
+model Follows {
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+model Favorite {
+  id        String  @id @default(cuid())
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String
+  album     Album   @relation(fields: [albumId], references: [id])
+  albumId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+  @@index([albumId])
+}

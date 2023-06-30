@@ -1,0 +1,141 @@
+export interface AlbumAttributes {
+  artistName: string;
+  artwork: {
+    bgColor: string;
+    textColor1: string;
+    textColor2: string;
+    textColor3: string;
+    textColor4: string;
+    url: string;
+  };
+  copyright: string;
+  dominantColor: string;
+  editorialNotes: {
+    short: string;
+    standard: string;
+  };
+  genreNames: [string];
+  isCompilation: boolean;
+  isComplete: boolean;
+  isMasteredForItunes: boolean;
+  isSingle: boolean;
+  name: string;
+  playParams: {
+    id: string;
+    kind: string;
+  };
+  recordLabel: string;
+  releaseDate: string;
+  trackCount: number;
+  url: string;
+}
+
+export interface AlbumData {
+  attributes: AlbumAttributes;
+  id: string;
+  notes: string;
+  relationships: AlbumRelationships;
+}
+
+export interface AlbumRelationships {
+  tracks: {
+    data: [TrackData];
+  };
+}
+
+export interface AlbumWithRating {
+  album: AlbumData;
+  averageRating: number | "n/a";
+}
+
+export interface LikeData {
+  authorId: string;
+  commentId: string | null;
+  createdAt: string;
+  id: string;
+  reviewId: string | null;
+  updatedAt: string;
+}
+
+export interface ReplyData {
+  author?: UserData | null;
+  authorId: string;
+  content?: string;
+  createdAt: string;
+  id: string;
+  likes: LikeData[];
+  parent: ReviewData | null;
+  parentId: string;
+  replies?: ReplyData[];
+  replyTo?: ReplyData | null;
+  replyToId?: string;
+  updatedAt: string;
+}
+
+export interface ReviewData {
+  albumId: string;
+  author: {
+    id: string;
+    image: string;
+    name: string;
+    username: string;
+  };
+  content: string | null;
+  createdAt: string;
+  id: string;
+  likedByUser: boolean;
+  likes: LikeData[];
+  listened: boolean;
+  loved: boolean;
+  permalink: string;
+  published: boolean;
+  rating: number;
+  replies: ReplyData[];
+  updatedAt: string;
+}
+
+export interface ReviewFormInputs {
+  isReReview: boolean;
+  listened: boolean;
+  loved: boolean;
+  rating: number;
+  reviewText: string;
+}
+
+export interface SelectedAlbumContextType {
+  selectedAlbum: AlbumData | null;
+  setSelectedAlbum: (album: AlbumData | null) => void;
+}
+
+export type OnSelectAlbumCallback = () => void;
+
+export interface TrackData {
+  attributes: {
+    durationInMillis: number;
+    hasLyrics: boolean;
+    isAppleDigitalMaster: boolean;
+    isrc: string;
+    name: string;
+    releaseDate: string;
+    trackNumber: number;
+    url: string;
+  };
+  href: string;
+  id: string;
+  type: string;
+}
+
+export interface UserData {
+  dateJoined: string;
+  dateUpdated: string;
+  email: string;
+  emailVerified?: string;
+  id: string;
+  image?: string;
+  likes?: LikeData[];
+  name?: string;
+  password?: string;
+  replies?: ReplyData[];
+  reviews?: ReviewData[];
+  username?: string;
+}
