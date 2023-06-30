@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 const SearchAlbums = (searchQuery) => {
-  const { data, isLoading, error } = useQuery(
+  const { data, isLoading, isFetching, error } = useQuery(
     ["albums", searchQuery],
     () =>
       fetch(`/api/crossReferenceSearch?query=${searchQuery}`).then((res) =>
@@ -18,6 +18,7 @@ const SearchAlbums = (searchQuery) => {
   return {
     data: data ?? [],
     isLoading,
+    isFetching,
     error: !!error,
   };
 };

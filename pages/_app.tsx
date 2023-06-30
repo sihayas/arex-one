@@ -9,6 +9,7 @@ import { useState } from "react";
 import { ThreadcrumbProvider } from "../contexts/Threadcrumbs";
 import { CMDKProvider } from "../contexts/CMDK";
 import { AlbumDetailsProvider } from "../contexts/CMDKAlbum";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const [queryClient] = useState(() => new QueryClient());
@@ -28,7 +29,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           </AlbumDetailsProvider>
         </CMDKProvider>
         {/* <Toaster /> */}
-        {/* <ReactQueryDevtools /> */}
+        <ReactQueryDevtools />
       </SessionProvider>
     </QueryClientProvider>
   );

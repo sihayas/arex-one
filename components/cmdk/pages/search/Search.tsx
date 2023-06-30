@@ -1,13 +1,12 @@
 import { Command } from "cmdk";
 import ColorThief from "colorthief";
-import { debounce } from "lodash";
 import Image from "next/image";
 import { useState } from "react";
 import Rating from "./subcomponents/Rating";
 import useCMDKContext from "../../../../hooks/useCMDKContext";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 
-const Search = ({ searchData, isLoading, error }) => {
+const Search = ({ searchData, isLoading, isFetching, error }) => {
   const [shadowColors, setShadowColors] = useState({});
 
   // CMDK context
@@ -46,9 +45,7 @@ const Search = ({ searchData, isLoading, error }) => {
       alert("Error: " + data.message);
     }
   };
-
-  if (isLoading) return <div>loading...</div>;
-  if (error) return <div>Error</div>;
+  if (isLoading && isFetching) if (error) return <div>Error</div>;
   searchData && searchData.length ? null : <div></div>;
 
   return (
