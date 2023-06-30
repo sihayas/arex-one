@@ -1,7 +1,7 @@
 //Fetches all replies for a review with the given id
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../lib/prisma";
+import { prisma } from "../../../lib/prisma";
 import { getSession } from "next-auth/react";
 
 const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize

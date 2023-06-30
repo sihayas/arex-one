@@ -31,7 +31,7 @@ const handleAddReply = async ({
   };
 
   try {
-    const res = await axios.post("/api/review/addReply", body);
+    const res = await axios.post("/api/review/postReply", body);
 
     if (res.status === 200) {
       console.log("submmited reply");

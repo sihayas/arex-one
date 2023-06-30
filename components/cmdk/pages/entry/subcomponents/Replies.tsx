@@ -12,12 +12,12 @@ interface RepliesProps {
 }
 
 const fetchReplies = ({ reviewId, replyId }: RepliesProps) => {
-  const baseURL = "/api/review/replies/";
+  const baseURL = "/api/reply/";
 
   // Decide URL based on presence of reviewId or replyId
   const url = reviewId
-    ? `${baseURL}byId?id=${reviewId}`
-    : `${baseURL}getReplies?replyId=${replyId}`;
+    ? `${baseURL}getReviewReplies?id=${reviewId}`
+    : `${baseURL}getReplyReplies?replyId=${replyId}`;
 
   return axios.get(url).then((res) => res.data);
 };
