@@ -12,11 +12,15 @@ export type CMDKContextType = {
   bounce: () => void;
 };
 
+type CMDKProviderProps = {
+  children: React.ReactNode;
+};
+
 export const CMDKContext = React.createContext<CMDKContextType | undefined>(
   undefined
 );
 
-export const CMDKProvider = ({ children }) => {
+export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [pages, setPages] = useState(["search"]);
 

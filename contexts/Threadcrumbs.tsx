@@ -14,6 +14,10 @@ export type ThreadcrumbContextType = {
   >;
 };
 
+type ThreadcrumbProviderType = {
+  children: React.ReactNode;
+};
+
 // Create the context with a default empty object
 export const ThreadcrumbContext = createContext<ThreadcrumbContextType | null>(
   null
@@ -28,7 +32,7 @@ export const useThreadcrumb = () => {
 };
 
 // Create a provider component
-export const ThreadcrumbProvider = ({ children }) => {
+export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
   const [threadcrumbs, setThreadcrumbs] = useState<string[]>([]);
   const [replyParent, setReplyParent] = useState<ReviewData | ReplyData | null>(
     null

@@ -4,7 +4,6 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Avatar from "./Avatar";
 import Image from "next/image";
-import Join from "./BtnJoin";
 
 const Nav: React.FC = () => {
   const router = useRouter();
@@ -28,7 +27,7 @@ const Nav: React.FC = () => {
           <div className="text-sm text-black">rx</div>
         </Link>
         <Link data-active={isActive("/signup")} href="/api/auth/signin">
-          <Join icon={google} label={"google"} color={"text-[#f5c344]"} />
+          <div className="text-xs">google join</div>
         </Link>
       </div>
     );
@@ -57,7 +56,6 @@ const Nav: React.FC = () => {
     );
   }
 
-  console.log(session?.user.gender);
   return (
     <div className="flex w-full h-16 fixed top-[92%]">
       {/* Inner */}

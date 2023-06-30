@@ -1,15 +1,16 @@
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import client from "../lib/redis";
+import { ReviewData } from "./interfaces";
 
 // Helper function to calculate the average rating from an array of reviews
-function calculateAverageRating(reviews) {
+function calculateAverageRating(reviews: ReviewData[]) {
   const average =
     reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
   return parseFloat(average.toFixed(1));
 }
 
 // Helper function to get albums updated within the last few hours
-async function getRecentlyUpdatedAlbums(hours) {
+async function getRecentlyUpdatedAlbums(hours: number) {
   const currentDate = new Date();
   const lastRunDate = new Date();
   lastRunDate.setHours(currentDate.getHours() - hours);
@@ -29,7 +30,7 @@ export async function updateAlbumRatings() {
 
   // Loop over each album and calculate the average rating
   for (const album of albums) {
-    const reviews = await prisma.review.findMany({
+    const reviews: ReviewData[] = await prisma.review.findMany({
       where: { albumId: album.id },
     });
 

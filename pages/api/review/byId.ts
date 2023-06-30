@@ -1,7 +1,7 @@
 // This API route fetches a review by its ID and includes the author and likes for "Entry.tsx"
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../lib/prisma";
+import { prisma } from "../../../lib/prisma";
 import { getSession } from "next-auth/react";
 
 export default async function handle(

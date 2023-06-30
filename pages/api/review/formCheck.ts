@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../lib/prisma";
+import { prisma } from "../../../lib/prisma";
 
 // This API route checks if a review exists for a given user and album when first loading the review form
 export default async function handle(
