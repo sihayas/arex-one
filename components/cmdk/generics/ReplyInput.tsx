@@ -4,8 +4,21 @@ import { ReplyIcon } from "../../icons";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import useThreadcrumbs from "../../../hooks/useThreadcrumbs";
+import { ReviewData, ReplyData } from "@/lib/interfaces";
 
-const handleAddReply = async ({ replyParent, replyContent, userId }) => {
+interface ReplyInputProps {
+  replyParent: ReviewData | ReplyData | null;
+  replyContent: string;
+  userId: string | undefined;
+}
+
+const handleAddReply = async ({
+  replyParent,
+  replyContent,
+  userId,
+}: ReplyInputProps) => {
+  if (!replyParent) return;
+
   const reviewId = "albumId" in replyParent ? replyParent.id : null;
   const replyId = "albumId" in replyParent ? null : replyParent.id;
 
@@ -37,7 +50,7 @@ export const ReplyInput = () => {
   const { replyParent } = useThreadcrumbs();
 
   const [replyContent, setReplyContent] = useState("");
-  const handleReplyChange = (e) => {
+  const handleReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReplyContent(e.target.value);
   };
 

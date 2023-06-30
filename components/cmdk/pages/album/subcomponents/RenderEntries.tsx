@@ -1,9 +1,14 @@
 import { useContext } from "react";
 import EntryPreview from "./EntryPreview";
 import { CMDKContext } from "../../../../../contexts/CMDK";
+import { ReviewData } from "@/lib/interfaces";
+
+interface RenderEntriesProps {
+  reviews: ReviewData[];
+}
 
 //Generates a list of entries for a given album
-export const RenderEntries = ({ reviews }) => {
+export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
   // CMDK Context
   const context = useContext(CMDKContext);
   if (!context) {

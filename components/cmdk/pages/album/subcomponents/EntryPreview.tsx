@@ -10,12 +10,13 @@ import {
   LikeButton,
   Stars,
 } from "../../../generics";
+import { ReviewData } from "@/lib/interfaces";
 
-export default function EntryPreview(props) {
+export default function EntryPreview(review: ReviewData) {
   const { data: session } = useSession();
-  const [liked, setLiked] = useState(props.likedByUser);
-  const [likeCount, setLikeCount] = useState(props.likes.length);
-  const replyCount = props.replies.length;
+  const [liked, setLiked] = useState(review.likedByUser);
+  const [likeCount, setLikeCount] = useState(review.likes.length);
+  const replyCount = review.replies.length;
 
   const handleLikeClick = async () => {
     if (!session) return;
@@ -25,7 +26,7 @@ export default function EntryPreview(props) {
     try {
       const action = liked ? "unlike" : "like";
       const response = await axios.post("/api/review/likeReview", {
-        reviewId: props.id,
+        reviewId: review.id,
         userId,
         action,
       });
@@ -46,8 +47,8 @@ export default function EntryPreview(props) {
         {/* AVI */}
         <div className="flex items-center w-[3rem]">
           <UserAvatar
-            imageSrc={props.author?.image}
-            altText={`${props.author?.name}'s avatar`}
+            imageSrc={review.author?.image}
+            altText={`${review.author?.name}'s avatar`}
             width={64}
             height={64}
           />
@@ -72,11 +73,11 @@ export default function EntryPreview(props) {
           replyCount > 0 ? "pb-[36px]" : ""
         }`}
       >
-        <UserName username={props.author.name} />
+        <UserName username={review.author.name} />
 
         {/* Rating */}
         <div className="-ml-[2px] flex items-center gap-1">
-          <Stars rating={props.rating} />
+          <Stars rating={review.rating} />
 
           <DividerIcon width={5} height={5} />
 
@@ -84,7 +85,7 @@ export default function EntryPreview(props) {
         </div>
         {/* Text Body / Also controls thread line (2.5rem to match up to Plus) */}
         <div className="flex flex-col gap-2 mt-1 w-[482px]">
-          <TextBody content={props.content} />
+          <TextBody content={review.content} />
           {/* Likes */}
           <div className="flex items-center">
             <LikeButton

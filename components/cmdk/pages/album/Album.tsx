@@ -5,8 +5,9 @@ import { LoveIcon, PlayIcon, ReviewIcon, StarIcon } from "../../../icons";
 import { RenderEntries } from "./subcomponents/RenderEntries";
 import useCMDKContext from "../../../../hooks/useCMDKContext";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
+import { AlbumData } from "@/lib/interfaces";
 
-async function initializeAlbum(album) {
+async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/tracking/viewAlbum`, album);
   return response.data;
 }
@@ -29,7 +30,7 @@ export default function Album() {
 
   const reviews = data?.reviews;
 
-  if (status === "loading" || status === "idle") return <div>Loading...</div>;
+  if (status === "loading") return <div>Loading...</div>;
   if (status === "error") return <div>Error...</div>;
   return (
     <div className="flex rounded-2xl flex-col w-full h-full overflow-scroll scrollbar-none">

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
 import { LoveIcon, DividerIcon } from "../../../icons";
@@ -58,7 +58,7 @@ export const Entry = () => {
     };
   }, [selectedReviewId]);
 
-  const handleLikeClick = async (event) => {
+  const handleLikeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     // This will stop the click event from propagating up to the parent components
     event.stopPropagation();
 

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-const SearchAlbums = (searchQuery) => {
+const SearchAlbums = (searchQuery: string) => {
   const { data, isLoading, isFetching, error } = useQuery(
     ["albums", searchQuery],
     () =>
