@@ -48,8 +48,9 @@ export const ReplyInput = () => {
   const userId = session?.user.id;
 
   const { replyParent } = useThreadcrumbs();
-
   const [replyContent, setReplyContent] = useState("");
+  console.log(replyParent);
+
   const handleReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReplyContent(e.target.value);
   };
@@ -72,8 +73,14 @@ export const ReplyInput = () => {
         }`}
       ></div>
       <TextareaAutosize
-        className={`text-xs text-grey outline-none bg-transparent w-full resize-none`}
-        placeholder="+ thread"
+        className={`text-sm text-grey outline-none bg-transparent w-full resize-none`}
+        placeholder={
+          replyParent
+            ? "albumId" in replyParent
+              ? `+ thread to ${replyParent.author.username}'s entry`
+              : `+ reply to ${replyParent.author.username}'s thread`
+            : "+ thread"
+        }
         value={replyContent}
         onChange={handleReplyChange}
       />

@@ -1,4 +1,3 @@
-export { TextBody } from "./TextBody";
 export { Line } from "./Line";
 export { UserAvatar } from "./UserAvatar";
 export { UserName } from "./UserName";

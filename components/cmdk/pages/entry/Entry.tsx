@@ -123,7 +123,7 @@ export const Entry = () => {
               </div>
               {/* Rating */}
               <div className="flex items-center gap-1">
-                <Stars rating={review.rating} />
+                <Stars color={"white"} rating={review.rating} />
                 <DividerIcon width={5} height={5} />
                 {review.loved && (
                   <LoveIcon width={16} height={16} color={"#FFF"} />

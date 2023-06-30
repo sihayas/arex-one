@@ -1,6 +1,6 @@
 // Importing required modules
 import React, { useState } from "react";
-import { TextBody, Line, UserName, UserAvatar } from "../../../generics";
+import { Line, UserName, UserAvatar } from "../../../generics";
 import { ThreadIcon } from "../../../../icons";
 import useThreadcrumbs from "../../../../../hooks/useThreadcrumbs";
 import { ReplyData } from "@/lib/interfaces";
@@ -94,7 +94,8 @@ export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
             username={reply.author.username || "stranger"}
           />
         </div>
-        <TextBody color="black" content={reply.content || ""} />
+        {/* Reply Content  */}
+        <div className={`text-sm text-black break-words`}>{reply.content}</div>
       </div>
     </div>
   );

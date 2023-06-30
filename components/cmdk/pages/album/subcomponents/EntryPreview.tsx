@@ -3,7 +3,6 @@ import { LoveIcon, DividerIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import {
-  TextBody,
   Line,
   UserName,
   UserAvatar,
@@ -77,7 +76,7 @@ export default function EntryPreview(review: ReviewData) {
 
         {/* Rating */}
         <div className="-ml-[2px] flex items-center gap-1">
-          <Stars rating={review.rating} />
+          <Stars color={"black"} rating={review.rating} />
 
           <DividerIcon width={5} height={5} />
 
@@ -85,7 +84,9 @@ export default function EntryPreview(review: ReviewData) {
         </div>
         {/* Text Body / Also controls thread line (2.5rem to match up to Plus) */}
         <div className="flex flex-col gap-2 mt-1 w-[482px]">
-          <TextBody content={review.content} />
+          <div className={`text-sm text-black break-words`}>
+            {review.content}
+          </div>
           {/* Likes */}
           <div className="flex items-center">
             <LikeButton
