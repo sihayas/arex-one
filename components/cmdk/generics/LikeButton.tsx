@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { AsteriskIcon, InsignificantIcon } from "../../icons";
 
 interface LikeButtonProps {
-  handleLikeClick: (event: React.MouseEvent) => Promise<void>;
+  handleLikeClick: (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => Promise<void>;
   liked: boolean;
   likeCount: number;
 }

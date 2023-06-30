@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { ReplyData } from "@/lib/interfaces";
 
 interface RepliesProps {
   reviewId?: string | null;
@@ -10,7 +11,7 @@ interface RepliesProps {
   setLoadingReplies?: (loading: boolean) => void;
 }
 
-const fetchReplies = ({ reviewId, replyId }) => {
+const fetchReplies = ({ reviewId, replyId }: RepliesProps) => {
   const baseURL = "/api/review/replies/";
 
   // Decide URL based on presence of reviewId or replyId
@@ -23,7 +24,7 @@ const fetchReplies = ({ reviewId, replyId }) => {
 
 // Replies component
 function Replies({ reviewId, replyId }: RepliesProps) {
-  const [selectedReplyId, setSelectedReplyId] = useState(null);
+  const [selectedReplyId, setSelectedReplyId] = useState<string | null>(null);
 
   const fetchRepliesQuery = useQuery(["replies", { reviewId, replyId }], () =>
     fetchReplies({ reviewId, replyId })
@@ -42,7 +43,7 @@ function Replies({ reviewId, replyId }: RepliesProps) {
   return (
     <TransitionGroup component={null}>
       {replies && replies.length > 0 ? (
-        replies.map((reply) => (
+        replies.map((reply: ReplyData) => (
           <CSSTransition key={reply.id} timeout={300} classNames="fade">
             <div
               style={{

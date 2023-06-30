@@ -3,8 +3,13 @@ import React, { useState } from "react";
 import { TextBody, Line, UserName, UserAvatar } from "../../../generics";
 import { ThreadIcon } from "../../../../icons";
 import useThreadcrumbs from "../../../../../hooks/useThreadcrumbs";
+import { ReplyData } from "@/lib/interfaces";
 
-export default function Reply({ reply, setSelectedReplyId }) {
+interface ReplyProps {
+  reply: ReplyData;
+  setSelectedReplyId: (id: string | null) => void;
+}
+export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
   const { addToThreadcrumbs, removeUpToId, setReplyParent } = useThreadcrumbs();
   const [shrink, setShrink] = useState(false); // State for reply shrink
   const [hideContent, setHideContent] = useState(false); // State for hiding reply content
@@ -37,15 +42,15 @@ export default function Reply({ reply, setSelectedReplyId }) {
       {/* Left Side  */}
       <div
         className="flex flex-col items-center"
-        onClick={shrink ? handleGoBack : undefined} // Click on
+        onClick={shrink ? handleGoBack : undefined}
       >
         <UserAvatar
-          imageSrc={reply.author?.image}
-          altText={`${reply.author?.name}'s avatar`}
+          imageSrc={reply.author?.image || "./public/images/default_image.png"}
+          altText={`${reply.author?.name || "Unknown Author"}'s avatar`}
         />
 
         {/* Vertical Thread Line */}
-        {reply.replies.length !== 0 && (
+        {reply.replies && reply.replies.length !== 0 && (
           <Line
             color={shrink ? "#000" : "#CCC"}
             width={shrink ? "3px" : "1px"}
@@ -54,7 +59,7 @@ export default function Reply({ reply, setSelectedReplyId }) {
         )}
 
         {/*Load More Replies  */}
-        {reply.replies.length > 0 && !hideContent && (
+        {reply.replies && reply.replies.length > 0 && !hideContent && (
           <>
             {/* Threader  */}
             <button
@@ -76,18 +81,20 @@ export default function Reply({ reply, setSelectedReplyId }) {
         )}
       </div>
 
-      {/* Right Side */}
+      {/* Right Side/ Author */}
 
       <div
         className={`flex flex-col mt-1.5 gap-1 w-full ${
-          reply.replies.length > 0 ? "pb-7" : "pb-2"
+          reply.replies && reply.replies.length > 0 ? "pb-7" : "pb-2"
         }`}
       >
-        {/* Author & More Threads */}
         <div className="flex gap-2 items-center">
-          <UserName color="black" username={reply.author.username} />
+          <UserName
+            color="black"
+            username={reply.author?.username || "stranger"}
+          />
         </div>
-        <TextBody color="black" content={reply.content} />
+        <TextBody color="black" content={reply.content || ""} />
       </div>
     </div>
   );

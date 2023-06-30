@@ -1,5 +1,5 @@
 interface TextBodyProps {
-  content: string | null;
+  content: string;
   color?: string;
 }
 

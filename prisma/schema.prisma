@@ -139,13 +139,13 @@ model Like {
 //Comment
 model Reply {
   id        String    @id @default(cuid())
-  content   String?
+  content   String   @db.MediumText
   parent    Review?   @relation(fields: [parentId], references: [id])
   parentId  String?
   replyTo   Reply?  @relation("ReplyToReply", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   replyToId String?
   replies   Reply[] @relation("ReplyToReply")
-  author    User?     @relation(fields: [authorId], references: [id])
+  author    User    @relation(fields: [authorId], references: [id])
   authorId  String
   likes     Like[]
   createdAt DateTime  @default(now()) @map(name: "created_at")

@@ -58,9 +58,9 @@ export interface LikeData {
 }
 
 export interface ReplyData {
-  author?: UserData | null;
+  author: UserData;
   authorId: string;
-  content?: string;
+  content: string;
   createdAt: string;
   id: string;
   likes: LikeData[];
