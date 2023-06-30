@@ -91,7 +91,7 @@ export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
         <div className="flex gap-2 items-center">
           <UserName
             color="black"
-            username={reply.author?.username || "stranger"}
+            username={reply.author.username || "stranger"}
           />
         </div>
         <TextBody color="black" content={reply.content || ""} />

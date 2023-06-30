@@ -8,11 +8,10 @@ import Listened from "../buttons/Listened";
 import Slider from "../buttons/Slider";
 import { useSession } from "next-auth/react";
 
-import useCMDKContext from "../../../hooks/useCMDKContext";
 import useCMDKAlbum from "../../../hooks/useCMDKAlbum";
 
 // Fetch user review for the album and signed-in user
-const fetchUserReview = async (albumId, userId) => {
+const fetchUserReview = async (albumId: string, userId: string) => {
   try {
     const response = await axios.get(
       `/api/review/formCheck?albumId=${albumId}&userId=${userId}`
@@ -32,7 +31,7 @@ export default function Form() {
 
   const hasReviewed = useQuery(
     ["userReview", selectedAlbum?.id, userId],
-    () => (userId ? fetchUserReview(selectedAlbum?.id, userId) : null),
+    () => (userId ? fetchUserReview(selectedAlbum!.id, userId) : null),
     {
       retry: 1,
       refetchOnWindowFocus: false,
@@ -48,16 +47,21 @@ export default function Form() {
 
   // Handle form field changes
   const handleLovedChange = () => setLoved((prevLoved) => !prevLoved);
+
   const handleListenedChange = () =>
     setListened((prevListened) => !prevListened);
-  const handleEntryTextChange = (event) => setEntryText(event.target.value);
-  const handleRatingChange = (newValue) => {
+
+  const handleEntryTextChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => setEntryText(event.target.value);
+
+  const handleRatingChange = (newValue: React.SetStateAction<number>) => {
     console.log("Rating changed: ", newValue); // This line will log every change
     setRating(newValue);
   };
 
   // Handle form submission
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {

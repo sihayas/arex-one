@@ -13,12 +13,13 @@ import Album from "./pages/album/Album";
 import Form from "./pages/Form";
 import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
-
 //Icons
 import { ExitIcon, SearchIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
-const PAGE_DIMENSIONS = {
+type PageName = "search" | "album" | "entry" | "form";
+
+const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   search: { width: 720, height: 480 },
   album: { width: 720, height: 720 }, // 808
   entry: { width: 560, height: 880 }, // 880
@@ -37,8 +38,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const [inputValue, setInputValue] = useState("");
 
   //Page Tracker
-  const activePage = pages[pages.length - 1];
-  const previousPage = pages[pages.length - 2];
+  const activePage: PageName = pages[pages.length - 1] as PageName;
+  const previousPage: PageName = pages[pages.length - 2] as PageName;
 
   // Search albums
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);

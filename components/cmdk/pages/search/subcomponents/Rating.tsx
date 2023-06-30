@@ -1,7 +1,12 @@
 import React from "react";
 import { StarIcon } from "../../../../icons";
 
-const Rating = ({ color, rating }) => {
+interface RatingProps {
+  color?: string;
+  rating: string;
+}
+
+const Rating = ({ color, rating }: RatingProps) => {
   const completedColor = `${color}, 1)`;
   const completedShadowColor = `${color}, 0.1)`;
 
