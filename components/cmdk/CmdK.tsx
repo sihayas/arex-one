@@ -4,7 +4,7 @@ import useCMDKAlbum from "../../hooks/useCMDKAlbum";
 import useCMDKContext from "../../hooks/useCMDK";
 
 //NPM
-import { animated, useSpring } from "@react-spring/web";
+import { animated, useSpring, useTransition } from "@react-spring/web";
 
 //Components
 import { Command } from "cmdk";
@@ -76,6 +76,18 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       friction: 30,
     },
   });
+
+  const navigateBackToPage = useCallback(
+    (page: string) => {
+      setPages((prevPages) => {
+        const index = prevPages.lastIndexOf(page);
+        return prevPages.slice(0, index + 1);
+      });
+      bounce();
+      resetThreadcrumbs();
+    },
+    [bounce, resetThreadcrumbs, setPages]
+  );
 
   // Go back a page
   const popPage = useCallback(() => {
@@ -177,15 +189,21 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         {activePage === "entry" && <Entry />}
         {activePage === "form" && <Form />}
 
-        {/* Back Button  */}
+        {/* Breadcrumbs  */}
         {activePage !== "search" && (
-          <div className="flex gap-2 items-center absolute -right-4 -top-6 ">
-            <button className="text-xs text-grey" onClick={popPage}>
-              <div>{pages.length > 1 ? pages[pages.length - 2] : null}</div>
-            </button>
+          <div className="flex gap-2 items-center absolute left-0 -top-6 ">
             <button onClick={resetPage}>
               <ExitIcon />
             </button>
+            {pages.map((page, index) => (
+              <button
+                key={index}
+                className="text-xs text-grey"
+                onClick={() => navigateBackToPage(page)}
+              >
+                <div>{page}</div>
+              </button>
+            ))}
           </div>
         )}
       </Command>

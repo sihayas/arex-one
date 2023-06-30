@@ -40,7 +40,7 @@ export default function EntryPreview(review: ReviewData) {
   };
 
   return (
-    <div className="flex gap-2 p-4 border border-silver rounded-[7px] hover:shadow-defaultLow ease-entryPreview duration-300">
+    <div className="flex gap-2 p-4 border border-silver rounded-[16px] hover:shadow-defaultLow ease-entryPreview duration-300">
       {/* Left Side  */}
       <div className="flex flex-col items-center relative">
         {/* AVI */}

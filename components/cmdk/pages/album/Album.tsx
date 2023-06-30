@@ -57,30 +57,30 @@ export default function Album() {
       {/* Section Two / Entries  */}
       <div className="flex flex-col w-full p-4 gap-2 relative">
         {/* Album Rating  */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
           <div className="flex items-center">
             <div className="text-2xl text-black">4.2</div>
             <StarIcon width={32} height={32} color={"#333"} />
           </div>
 
           {/* Album Metadata  */}
-          <div className="flex items-center gap-4 absolute right-0 pr-4">
+          <div className="flex items-center gap-4">
             {/* Play Count */}
             <div className="flex items-center gap-1">
-              <PlayIcon width={16} height={16} color={"#999"} />
               <div className=" text-xs text-grey">400</div>
+              <PlayIcon width={16} height={16} color={"#999"} />
             </div>
             {/* Loved count */}
             <div className="flex items-center gap-1">
-              <LoveIcon width={16} height={16} color={"#999"} />
               <div className=" text-xs text-grey">400</div>
+              <LoveIcon width={16} height={16} color={"#999"} />
             </div>
           </div>
         </div>
 
         {/* Verdict  */}
         <div className="flex items-center gap-2 mt-2">
-          <div className="text-xs">THE VERDICT</div>
+          <div className=" text-lg font-bold tracking-tight">THE VERDICT</div>
           <div className="px-[5px] rounded-xl bg-[#FFDB00] text-xs text-white flex items-center justify-center font-medium">
             CLASSIC
           </div>
