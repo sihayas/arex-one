@@ -40,7 +40,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const previousPage = pages[pages.length - 2];
 
   // Search albums
-  const { data, isLoading, error } = SearchAlbums(inputValue);
+  const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
   // Page dimensions spring
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
@@ -162,7 +162,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 }}
               />
             </div>
-            <Search searchData={data} isLoading={isLoading} error={error} />
+            <Search
+              searchData={data}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              error={error}
+            />
           </div>
         )}
 

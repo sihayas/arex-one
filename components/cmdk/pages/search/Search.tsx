@@ -5,16 +5,29 @@ import { useState } from "react";
 import Rating from "./subcomponents/Rating";
 import useCMDKContext from "../../../../hooks/useCMDKContext";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
+import { AlbumData } from "@/lib/interfaces";
 
-const Search = ({ searchData, isLoading, isFetching, error }) => {
-  const [shadowColors, setShadowColors] = useState({});
+interface SearchProps {
+  searchData: any;
+  isLoading: boolean;
+  isFetching: boolean;
+  error: any;
+}
+
+const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
+  const [shadowColors, setShadowColors] = useState<{ [key: string]: string }>(
+    {}
+  );
 
   // CMDK context
   const { setPages, bounce } = useCMDKContext();
   const { setSelectedAlbum, setArtworkUrl, setShadowColor } = useCMDKAlbum();
 
   // Dominant color thief
-  const handleImageLoad = async (imgElement, album) => {
+  const handleImageLoad = async (
+    imgElement: HTMLImageElement,
+    album: AlbumData
+  ) => {
     const dominantColor = new ColorThief().getColor(imgElement);
     setShadowColors((prev) => ({
       ...prev,
@@ -24,7 +37,11 @@ const Search = ({ searchData, isLoading, isFetching, error }) => {
   };
 
   //Set the album
-  const handleSelectAlbum = (album, artworkUrl, shadowColor) => {
+  const handleSelectAlbum = (
+    album: AlbumData,
+    artworkUrl: string,
+    shadowColor: string
+  ) => {
     setSelectedAlbum(album);
     setArtworkUrl(artworkUrl);
     setShadowColor(shadowColor);
@@ -45,6 +62,7 @@ const Search = ({ searchData, isLoading, isFetching, error }) => {
       alert("Error: " + data.message);
     }
   };
+
   if (isLoading && isFetching) if (error) return <div>Error</div>;
   searchData && searchData.length ? null : <div></div>;
 
@@ -58,7 +76,7 @@ const Search = ({ searchData, isLoading, isFetching, error }) => {
         Update Album Ratings
       </button>
       {/* Search Results */}
-      {searchData.map((album, averageRating) => {
+      {searchData.map((album: AlbumData, averageRating: string) => {
         const artworkUrl = generateArtworkUrl(album.attributes.artwork.url);
         return (
           <Command.Item
@@ -78,7 +96,9 @@ const Search = ({ searchData, isLoading, isFetching, error }) => {
                 height={80}
                 quality={100}
                 priority
-                onLoad={(event) => handleImageLoad(event.target, album)}
+                onLoad={(event) =>
+                  handleImageLoad(event.target as HTMLImageElement, album)
+                }
               />
 
               <Rating color={shadowColors[album.id]} rating={averageRating} />
