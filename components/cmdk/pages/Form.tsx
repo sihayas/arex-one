@@ -65,7 +65,7 @@ export default function Form() {
     event.preventDefault();
 
     try {
-      const response = await axios.post("/api/review/create", {
+      const response = await axios.post("/api/review/postReview", {
         listened,
         rating,
         loved,

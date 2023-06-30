@@ -38,7 +38,7 @@ export const Entry = () => {
 
     (async () => {
       const reviewData: AxiosResponse<ReviewData> = await axios.get(
-        `/api/review/byId?id=${selectedReviewId}`
+        `/api/review/getById?id=${selectedReviewId}`
       );
 
       // Only update state if component is still mounted
@@ -66,7 +66,7 @@ export const Entry = () => {
 
     try {
       const action = liked ? "unlike" : "like";
-      const response = await axios.post("/api/review/likeReview", {
+      const response = await axios.post("/api/review/postLike", {
         selectedReviewId: selectedReviewId,
         userId,
         action,

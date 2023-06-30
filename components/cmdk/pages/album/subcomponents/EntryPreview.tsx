@@ -25,7 +25,7 @@ export default function EntryPreview(review: ReviewData) {
 
     try {
       const action = liked ? "unlike" : "like";
-      const response = await axios.post("/api/review/likeReview", {
+      const response = await axios.post("/api/review/postLike", {
         reviewId: review.id,
         userId,
         action,
