@@ -3,7 +3,7 @@ import ColorThief from "colorthief";
 import Image from "next/image";
 import { useState } from "react";
 import Rating from "./subcomponents/Rating";
-import useCMDKContext from "../../../../hooks/useCMDKContext";
+import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
 

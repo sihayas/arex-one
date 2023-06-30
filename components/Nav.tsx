@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import Avatar from "./Avatar";
+import Avatar from "./random-bullshit-go/Avatar";
 import Image from "next/image";
 
 const Nav: React.FC = () => {

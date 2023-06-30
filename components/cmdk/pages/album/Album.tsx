@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { LoveIcon, PlayIcon, ReviewIcon, StarIcon } from "../../../icons";
 import { RenderEntries } from "./subcomponents/RenderEntries";
-import useCMDKContext from "../../../../hooks/useCMDKContext";
+import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
 

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { CMDKContext, CMDKContextType } from "../contexts/CMDK";
+import { CMDKContext, CMDKContextType } from "../context/CMDK";
 
 export const useCMDK = (): CMDKContextType => {
   const context = useContext(CMDKContext);

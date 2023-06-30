@@ -6,9 +6,9 @@ import Script from "next/script";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { useState } from "react";
-import { ThreadcrumbProvider } from "../contexts/Threadcrumbs";
-import { CMDKProvider } from "../contexts/CMDK";
-import { AlbumDetailsProvider } from "../contexts/CMDKAlbum";
+import { ThreadcrumbProvider } from "../context/Threadcrumbs";
+import { CMDKProvider } from "../context/CMDK";
+import { AlbumDetailsProvider } from "../context/CMDKAlbum";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const App = ({ Component, pageProps }: AppProps) => {

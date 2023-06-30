@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   AlbumDetailsContext,
   AlbumDetailsContextType,
-} from "../contexts/CMDKAlbum";
+} from "../context/CMDKAlbum";
 
 export const useAlbumDetails = (): AlbumDetailsContextType => {
   const context = useContext(AlbumDetailsContext);

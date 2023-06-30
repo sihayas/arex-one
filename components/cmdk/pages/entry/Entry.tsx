@@ -12,7 +12,7 @@ import {
   Stars,
 } from "../../generics";
 import { RenderReplies } from "./subcomponents/RenderReplies";
-import useCMDKContext from "../../../../hooks/useCMDKContext";
+import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import useThreadcrumbs from "../../../../hooks/useThreadcrumbs";
 

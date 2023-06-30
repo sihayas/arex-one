@@ -1,4 +1,4 @@
-import NavBar from "./random-bullshit-go/Nav";
+import NavBar from "./Nav";
 import React, { useEffect, useState, ReactNode, useCallback } from "react";
 import { CMDK } from "./cmdk/CmdK";
 import useContentControl from "../hooks/useContentControl";

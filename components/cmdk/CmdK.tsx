@@ -1,16 +1,16 @@
 //React
 import React, { useCallback, useEffect, useState } from "react";
 import useCMDKAlbum from "../../hooks/useCMDKAlbum";
-import useCMDKContext from "../../hooks/useCMDKContext";
+import useCMDKContext from "../../hooks/useCMDK";
 
 //NPM
 import { animated, useSpring } from "@react-spring/web";
 
 //Components
 import { Command } from "cmdk";
-import { useThreadcrumb } from "../../contexts/Threadcrumbs";
+import { useThreadcrumb } from "../../context/Threadcrumbs";
 import Album from "./pages/album/Album";
-import Form from "./pages/Form";
+import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
 //Icons

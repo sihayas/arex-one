@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import EntryPreview from "./EntryPreview";
-import { CMDKContext } from "../../../../../contexts/CMDK";
+import { CMDKContext } from "../../../../../context/CMDK";
 import { ReviewData } from "@/lib/interfaces";
 
 interface RenderEntriesProps {

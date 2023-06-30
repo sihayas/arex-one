@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   ThreadcrumbContext,
   ThreadcrumbContextType,
-} from "../contexts/Threadcrumbs";
+} from "../context/Threadcrumbs";
 
 export const useThreadcrumbs = (): ThreadcrumbContextType => {
   const context = useContext(ThreadcrumbContext);
