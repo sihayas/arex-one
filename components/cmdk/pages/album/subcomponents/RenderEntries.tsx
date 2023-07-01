@@ -19,8 +19,12 @@ export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
   return (
     <div className="flex flex-col gap-4 overflow-visible">
       {reviews && reviews.length > 0 ? (
-        reviews.map((review) => (
-          <>
+        reviews.map((review) => {
+          if (!review || typeof review !== "object") {
+            return null; // Or return some error or placeholder component
+          }
+
+          return (
             <div
               key={review.id}
               onClick={() => {
@@ -32,8 +36,8 @@ export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
             >
               <EntryPreview key={review.id} {...review} />
             </div>
-          </>
-        ))
+          );
+        })
       ) : (
         <div className="text-xs text-grey">no entries</div>
       )}

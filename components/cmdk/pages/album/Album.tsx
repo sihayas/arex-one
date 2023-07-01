@@ -1,14 +1,30 @@
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { LoveIcon, PlayIcon, ReviewIcon, StarIcon } from "../../../icons";
 import { RenderEntries } from "./subcomponents/RenderEntries";
 import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
+import { useEffect } from "react";
 
 async function initializeAlbum(album: AlbumData) {
-  const response = await axios.post(`/api/tracking/viewAlbum`, album);
+  console.log("Initializing album...");
+  const response = await axios.post(`/api/album/postAlbum`, album);
+  console.log("Album initialized");
+  return response.data;
+}
+
+async function fetchReviews({
+  pageParam = 1,
+  queryKey,
+  sort = "rating_high_to_low",
+}) {
+  const [, albumId] = queryKey;
+  const response = await axios.get(
+    `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}`
+  );
+  console.log("fetchReviews response: ", response.data);
   return response.data;
 }
 
@@ -17,21 +33,31 @@ export default function Album() {
   const { setPages, bounce } = useCMDKContext();
   const { selectedAlbum, artworkUrl } = useCMDKAlbum();
 
-  const { data, status } = useQuery(
-    ["reviews", selectedAlbum?.id],
+  // Initialize album and mark as viewed
+  const { data, isLoading, isError } = useQuery(
+    ["album", selectedAlbum?.id],
     () =>
-      selectedAlbum
-        ? initializeAlbum(selectedAlbum)
-        : Promise.resolve({ reviews: [] }),
+      selectedAlbum ? initializeAlbum(selectedAlbum) : Promise.resolve({}),
     {
-      retry: false,
+      enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
     }
   );
 
-  const reviews = data?.reviews;
+  const {
+    data: reviewsData,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(["reviews", selectedAlbum?.id], fetchReviews, {
+    getNextPageParam: (lastPage, pages) => {
+      // If the last page has 10 reviews, there might be another page.
+      // Replace "10" with the actual page size you are using on the server side.
+      return lastPage.length === 10 ? pages.length + 1 : false;
+    },
+    enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
+  });
 
-  if (status === "loading") return <div>Loading...</div>;
-  if (status === "error") return <div>Error...</div>;
+  const flattenedReviews = reviewsData?.pages.flat() || [];
+
   return (
     <div className="flex rounded-2xl flex-col w-full h-full overflow-scroll scrollbar-none">
       {/* Section One */}
@@ -100,11 +126,15 @@ export default function Album() {
         </div>
         {/* Album Entries  */}
         <div className="flex h-full mt-4">
-          <RenderEntries reviews={reviews} />
+          <RenderEntries reviews={flattenedReviews} />
         </div>
+        {hasNextPage && (
+          <button onClick={() => fetchNextPage()}>Load more</button>
+        )}
       </div>
       <div className="absolute right-4 bottom-4">
         <ReviewIcon
+          color={"#FFF"}
           onClick={() => {
             setPages((prevPages) => [...prevPages, "form"]);
             bounce();
