@@ -1,12 +1,11 @@
 import Image from "next/image";
-import { useQuery, useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { LoveIcon, PlayIcon, ReviewIcon, StarIcon } from "../../../icons";
 import { RenderEntries } from "./subcomponents/RenderEntries";
 import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
-import { useEffect } from "react";
 
 async function initializeAlbum(album: AlbumData) {
   console.log("Initializing album...");
@@ -19,6 +18,10 @@ async function fetchReviews({
   pageParam = 1,
   queryKey,
   sort = "rating_high_to_low",
+}: {
+  pageParam?: number;
+  queryKey: [string, string | undefined];
+  sort?: string;
 }) {
   const [, albumId] = queryKey;
   const response = await axios.get(
