@@ -81,7 +81,7 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col w-full p-4 gap-2 relative">
+      <div className="flex flex-col w-full p-4 gap-4 relative">
         {/* Album Rating  */}
         <div className="flex items-center gap-4">
           <div className="flex items-center">
@@ -105,27 +105,32 @@ export default function Album() {
         </div>
 
         {/* Verdict  */}
-        <div className="flex items-center gap-2 mt-2">
-          <div className="text-black text-lg font-bold tracking-tight">
-            THE VERDICT
+        <div className="flex flex-col">
+          {/* The Verdict  */}
+          <div className="flex items-center gap-2">
+            <div className="text-black text-lg font-bold tracking-tight">
+              VERDICT
+            </div>
+            <div className="px-[5px] rounded-xl bg-[#FFDB00] text-xs text-white flex items-center justify-center font-medium">
+              CLASSIC
+            </div>
           </div>
-          <div className="px-[5px] rounded-xl bg-[#FFDB00] text-xs text-white flex items-center justify-center font-medium">
-            CLASSIC
+
+          {/* Verdict Notes  */}
+          <div className="text-sm text-black">
+            In Smithereens, Joji masterfully navigates the labyrinth of human
+            emotions with his signature blend of melancholic pop. His soft yet
+            emotive voice, backed by minimalist lo-fi beats and ethereal synths,
+            guides listeners through poignant tales of love, loss, and longing.
+            The album is akin to a late-night intimate conversation, its honesty
+            and vulnerability resonating long after the last note. Smithereens
+            isnt just music-its an emotional journey, a raw, introspective
+            exploration of lifes complexities through Jojis unique lens.
           </div>
         </div>
-        {/* Album Notes  */}
-        <div className="text-sm text-greyTitle">
-          In Smithereens, Joji masterfully navigates the labyrinth of human
-          emotions with his signature blend of melancholic pop. His soft yet
-          emotive voice, backed by minimalist lo-fi beats and ethereal synths,
-          guides listeners through poignant tales of love, loss, and longing.
-          The album is akin to a late-night intimate conversation, its honesty
-          and vulnerability resonating long after the last note. Smithereens
-          isnt just music-its an emotional journey, a raw, introspective
-          exploration of lifes complexities through Jojis unique lens.
-        </div>
+
         {/* Album Entries  */}
-        <div className="flex h-full mt-4">
+        <div className="flex h-full">
           <RenderEntries reviews={flattenedReviews} />
         </div>
         {hasNextPage && (
