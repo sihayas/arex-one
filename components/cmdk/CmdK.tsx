@@ -11,7 +11,6 @@ import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
-import Pacman from "../pacman/Pacman";
 //Icons
 import { ExitIcon, SearchIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";

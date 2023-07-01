@@ -88,8 +88,8 @@ export default function Album() {
         {/* Album Rating  */}
         <div className="flex items-center gap-4">
           <div className="flex items-center">
-            <div className="text-2xl text-black">4.2</div>
-            <StarIcon width={32} height={32} color={"#333"} />
+            <div className="text-xl text-black font-semibold">4.2</div>
+            <StarIcon width={24} height={24} color={"#333"} />
           </div>
 
           {/* Album Metadata  */}
@@ -108,19 +108,17 @@ export default function Album() {
         </div>
 
         {/* Verdict  */}
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           {/* The Verdict  */}
-          <div className="flex items-center gap-2">
-            <div className="text-black text-lg font-bold tracking-tight">
-              VERDICT
+          <div className="flex items-center gap-1">
+            <div className="px-[9px] py-1 rounded-full bg-[#000] text-sm text-white flex items-center justify-center font-medium max-w-fit">
+              C
             </div>
-            <div className="px-[5px] rounded-xl bg-[#FFDB00] text-xs text-white flex items-center justify-center font-medium">
-              CLASSIC
-            </div>
+            <div className="text-black text-xs font-bold"> /verdict</div>
           </div>
 
           {/* Verdict Notes  */}
-          <div className="text-sm text-black">
+          <div className="text-sm text-black lowercase">
             In Smithereens, Joji masterfully navigates the labyrinth of human
             emotions with his signature blend of melancholic pop. His soft yet
             emotive voice, backed by minimalist lo-fi beats and ethereal synths,
