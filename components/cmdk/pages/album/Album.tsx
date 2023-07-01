@@ -84,7 +84,7 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col w-full p-4 gap-4 relative">
+      <div className="flex flex-col w-full p-5 gap-4 relative">
         {/* Album Rating  */}
         <div className="flex items-center gap-4">
           <div className="flex items-center">
