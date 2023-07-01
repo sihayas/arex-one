@@ -72,29 +72,31 @@ export default function EntryPreview(review: ReviewData) {
           replyCount > 0 ? "pb-[36px]" : ""
         }`}
       >
-        <UserName username={review.author.name} />
+        <div className={`font-semibold text-sm text-[#333]`}>
+          {review.author.name}
+        </div>
 
         {/* Rating */}
         <div className="-ml-[2px] flex items-center gap-1">
-          <Stars color={"black"} rating={review.rating} />
+          <Stars color={"#333"} rating={review.rating} />
 
-          <DividerIcon width={5} height={5} />
+          <DividerIcon color={"#585858"} width={5} height={5} />
 
-          <LoveIcon width={16} height={16} color={"#585858"} />
+          <LoveIcon width={16} height={16} color={"#333"} />
         </div>
         {/* Text Body / Also controls thread line (2.5rem to match up to Plus) */}
-        <div className="flex flex-col gap-2 mt-1 w-[482px]">
-          <div className={`text-sm text-black break-words`}>
+        <div className="flex flex-col gap-2 mt-1 w-full">
+          <div className={`text-sm text-greyTitle break-words`}>
             {review.content}
           </div>
           {/* Likes */}
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <LikeButton
               handleLikeClick={handleLikeClick}
               liked={liked}
               likeCount={likeCount}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

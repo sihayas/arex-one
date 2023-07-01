@@ -2,10 +2,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useCMDKAlbum from "../../hooks/useCMDKAlbum";
 import useCMDKContext from "../../hooks/useCMDK";
-
 //NPM
 import { animated, useSpring, useTransition } from "@react-spring/web";
-
 //Components
 import { Command } from "cmdk";
 import { useThreadcrumb } from "../../context/Threadcrumbs";
@@ -13,6 +11,7 @@ import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
+import Pacman from "../pacman/Pacman";
 //Icons
 import { ExitIcon, SearchIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
@@ -125,73 +124,23 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     : undefined;
 
   return (
-    // CMDK Outer
-    <animated.div
-      style={{
-        ...dimensionsSpring,
-        ...transformSpring,
-        transition: "box-shadow 750ms, scale 300ms",
-        boxShadow: boxShadow,
-      }}
-      className={`cmdk border border-silver ${
-        isVisible
-          ? "scale-100 pointer-events-auto"
-          : "shadow-none scale-95 pointer-events-none"
-      }`}
-    >
-      {/* CMDK Inner  */}
-      <Command
-        className={`transition-opacity duration-300 w-full h-full ${
-          isVisible ? "opacity-100" : "opacity-0"
-        }`}
-        ref={ref}
-        shouldFilter={false}
-        //CMDK Behavior depending on whether search input or not
-        onKeyDown={(e: React.KeyboardEvent) => {
-          if (e.key === "Enter" && activePage === "search") {
-            bounce();
-          }
-          if (e.key === "Backspace" && inputRef.current?.value === "") {
-            e.preventDefault();
-            popPage();
-            return;
-          }
-          if (e.key === "Backspace" && activePage === "album") {
-            popPage();
-            e.preventDefault();
-            return;
-          }
+    <>
+      <animated.div
+        style={{
+          ...dimensionsSpring,
+          ...transformSpring,
+          transition: "box-shadow 750ms, scale 300ms",
+          boxShadow: boxShadow,
         }}
+        className={`cmdk border border-silver ${
+          isVisible
+            ? "scale-100 pointer-events-auto"
+            : "!shadow-none scale-95 pointer-events-none"
+        }`}
       >
-        {/* Search bar & results*/}
-        {activePage === "search" && (
-          <div className="w-full h-[612px]">
-            <div className="w-full items-center flex p-4 gap-4">
-              <SearchIcon color={"#CCC"} />
-              <Command.Input
-                ref={inputRef}
-                placeholder="sound search"
-                onValueChange={(value) => {
-                  setInputValue(value);
-                }}
-              />
-            </div>
-            <Search
-              searchData={data}
-              isLoading={isLoading}
-              isFetching={isFetching}
-              error={error}
-            />
-          </div>
-        )}
-
-        {activePage === "album" && <Album />}
-        {activePage === "entry" && <Entry />}
-        {activePage === "form" && <Form />}
-
         {/* Breadcrumbs  */}
         {activePage !== "search" && (
-          <div className="flex gap-2 items-center absolute left-0 -top-6 ">
+          <div className="flex flex-col gap-2 items-center absolute -left-8 top-1/2">
             <button onClick={resetPage}>
               <ExitIcon />
             </button>
@@ -206,7 +155,57 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             ))}
           </div>
         )}
-      </Command>
-    </animated.div>
+        {/* CMDK Inner  */}
+        <Command
+          className={`transition-opacity duration-300 w-full h-full ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}
+          ref={ref}
+          shouldFilter={false}
+          //CMDK Behavior depending on whether search input or not
+          onKeyDown={(e: React.KeyboardEvent) => {
+            if (e.key === "Enter" && activePage === "search") {
+              bounce();
+            }
+            if (e.key === "Backspace" && inputRef.current?.value === "") {
+              e.preventDefault();
+              popPage();
+              return;
+            }
+            if (e.key === "Backspace" && activePage === "album") {
+              popPage();
+              e.preventDefault();
+              return;
+            }
+          }}
+        >
+          {/* Search bar & results*/}
+          {activePage === "search" && (
+            <div className="w-full h-[612px]">
+              <div className="w-full items-center flex p-4 gap-4">
+                <SearchIcon color={"#CCC"} />
+                <Command.Input
+                  ref={inputRef}
+                  placeholder="sound search"
+                  onValueChange={(value) => {
+                    setInputValue(value);
+                  }}
+                />
+              </div>
+              <Search
+                searchData={data}
+                isLoading={isLoading}
+                isFetching={isFetching}
+                error={error}
+              />
+            </div>
+          )}
+
+          {activePage === "album" && <Album />}
+          {activePage === "entry" && <Entry />}
+          {activePage === "form" && <Form />}
+        </Command>
+      </animated.div>
+    </>
   );
 }

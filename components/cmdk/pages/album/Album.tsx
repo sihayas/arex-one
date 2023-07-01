@@ -80,13 +80,15 @@ export default function Album() {
 
         {/* Verdict  */}
         <div className="flex items-center gap-2 mt-2">
-          <div className=" text-lg font-bold tracking-tight">THE VERDICT</div>
+          <div className="text-black text-lg font-bold tracking-tight">
+            THE VERDICT
+          </div>
           <div className="px-[5px] rounded-xl bg-[#FFDB00] text-xs text-white flex items-center justify-center font-medium">
             CLASSIC
           </div>
         </div>
         {/* Album Notes  */}
-        <div className="text-sm text-grey">
+        <div className="text-sm text-greyTitle">
           In Smithereens, Joji masterfully navigates the labyrinth of human
           emotions with his signature blend of melancholic pop. His soft yet
           emotive voice, backed by minimalist lo-fi beats and ethereal synths,

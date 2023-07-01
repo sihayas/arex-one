@@ -231,7 +231,7 @@ export function DividerIcon({ ...props }) {
       viewBox="0 0 5 5"
       {...props}
     >
-      <path fill="#FFF" d="M1 5 0 4l4-4 1 1-4 4Zm3 0L0 1l1-1 4 4-1 1Z" />
+      <path fill={props.color} d="M1 5 0 4l4-4 1 1-4 4Zm3 0L0 1l1-1 4 4-1 1Z" />
     </svg>
   );
 }
