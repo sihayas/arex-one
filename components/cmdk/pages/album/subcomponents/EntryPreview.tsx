@@ -49,6 +49,8 @@ export default function EntryPreview(review: ReviewData) {
             <UserAvatar
               imageSrc={review.author?.image}
               altText={`${review.author?.name}'s avatar`}
+              width={24}
+              height={24}
             />
             <UserName color="black" username={review.author.name} />
           </div>

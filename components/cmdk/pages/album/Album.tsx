@@ -74,39 +74,40 @@ export default function Album() {
           quality={100}
           priority
         />
-
-        <div className="flex gap-1 w-fit text-white text-sm absolute left-4 bottom-4">
-          <div className="font-bold drop-shadow-2xl">
-            {selectedAlbum?.attributes.name} &middot;
+        <div className="flex flex-col gap-2 absolute left-5 bottom-5">
+          {/* Album Info  */}
+          <div className="flex gap-1  text-white text-sm">
+            <div className="font-bold drop-shadow-2xl">
+              {selectedAlbum?.attributes.name} &middot;
+            </div>
+            <div>{selectedAlbum?.attributes.artistName}</div>
           </div>
-          <div>{selectedAlbum?.attributes.artistName}</div>
+          {/* Stats */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center">
+              <div className="text-xl text-white font-semibold">4.2</div>
+              <StarIcon width={24} height={24} color={"#FFF"} />
+            </div>
+
+            {/* Album Metadata  */}
+            <div className="flex items-center gap-4">
+              {/* Play Count */}
+              <div className="flex items-center gap-1">
+                <div className=" text-xs text-white">400</div>
+                <PlayIcon width={16} height={16} color={"#FFF"} />
+              </div>
+              {/* Loved count */}
+              <div className="flex items-center gap-1">
+                <div className=" text-xs text-white">400</div>
+                <LoveIcon width={16} height={16} color={"#FFF"} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Section Two / Entries  */}
       <div className="flex flex-col w-full p-5 gap-4 relative">
-        {/* Album Rating  */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center">
-            <div className="text-xl text-black font-semibold">4.2</div>
-            <StarIcon width={24} height={24} color={"#333"} />
-          </div>
-
-          {/* Album Metadata  */}
-          <div className="flex items-center gap-4">
-            {/* Play Count */}
-            <div className="flex items-center gap-1">
-              <div className=" text-xs text-grey">400</div>
-              <PlayIcon width={16} height={16} color={"#999"} />
-            </div>
-            {/* Loved count */}
-            <div className="flex items-center gap-1">
-              <div className=" text-xs text-grey">400</div>
-              <LoveIcon width={16} height={16} color={"#999"} />
-            </div>
-          </div>
-        </div>
-
         {/* Verdict  */}
         <div className="flex flex-col gap-2">
           {/* The Verdict  */}
