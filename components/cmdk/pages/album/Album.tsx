@@ -53,10 +53,9 @@ export default function Album() {
     data: reviewsData,
     fetchNextPage,
     hasNextPage,
+    isFetchingNextPage,
   } = useInfiniteQuery(["reviews", selectedAlbum?.id], fetchReviews, {
     getNextPageParam: (lastPage, pages) => {
-      // If the last page has 10 reviews, there might be another page.
-      // Replace "10" with the actual page size you are using on the server side.
       return lastPage.length === 10 ? pages.length + 1 : false;
     },
     enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
@@ -70,7 +69,8 @@ export default function Album() {
         scrollContainer &&
         scrollContainer.scrollTop + scrollContainer.clientHeight >=
           scrollContainer.scrollHeight &&
-        hasNextPage
+        hasNextPage &&
+        !isFetchingNextPage
       ) {
         fetchNextPage();
       }
@@ -166,8 +166,13 @@ export default function Album() {
         <div className="flex h-full">
           <RenderEntries reviews={flattenedReviews} />
         </div>
-        {hasNextPage && (
-          <button onClick={() => fetchNextPage()}>Load more</button>
+        {/* Loading Indicator  */}
+        {isFetchingNextPage ? (
+          <div className="">loading more reviews...</div>
+        ) : hasNextPage ? (
+          <button onClick={() => fetchNextPage()}>Load More</button>
+        ) : (
+          <div className="">youve reached the end</div>
         )}
       </div>
       <div className="absolute right-4 bottom-4">
