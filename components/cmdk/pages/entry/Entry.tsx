@@ -15,6 +15,7 @@ import { RenderReplies } from "./subcomponents/RenderReplies";
 import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import useThreadcrumbs from "../../../../hooks/useThreadcrumbs";
+import AnimatedGradient from "@/components/random-bullshit-go/AnimatedGradient";
 
 export const Entry = () => {
   const { data: session } = useSession();
@@ -88,22 +89,40 @@ export const Entry = () => {
       {/* Section One */}
       <div className="w-full relative">
         {/* Art  */}
-        <Image
-          className="rounded-t-2xl z-0 brightness-75"
-          src={artworkUrl}
-          alt={`${selectedAlbum?.attributes.name} artwork`}
-          width={560}
-          height={560}
-          quality={100}
-          priority
-        />
+        <div
+          className="relative overflow-visible"
+          style={{ width: "560px", height: "560px" }}
+        >
+          <Image
+            src={artworkUrl}
+            alt={`${selectedAlbum?.attributes.name} artwork`}
+            width={40} // Set this to a low value
+            height={40} // Set this to the same low value
+            priority
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              filter: "blur(24px)",
+              transform: "translate3d(0,0,0)",
+            }}
+          />
+          {/* <AnimatedGradient
+            color1={"#443F49"}
+            color2={"#425756"}
+            color3={"#79BEB8"}
+            bgColor={"#4DB1AA"}
+          />*/}
+        </div>
 
         {/* Main Review */}
         <div className="flex flex-col h-fit w-full absolute bottom-0 ">
           {/* Review Text  */}
-          <div className="flex gap-12">
-            <div></div>
-            <div className="backdrop-blur-md bg-blurEntry rounded-2xl rounded-r-none w-fill">
+          <div className="flex gap-12 p-4 pb-0">
+            <div className="backdrop-blur-md bg-blurEntry rounded-2xl  w-fill">
               <div className="text-sm text-white break-words p-4">
                 {review.content}
               </div>
@@ -124,7 +143,7 @@ export const Entry = () => {
               {/* Rating */}
               <div className="flex items-center gap-1">
                 <Stars color={"white"} rating={review.rating} />
-                <DividerIcon width={5} height={5} />
+                <DividerIcon color={"white"} width={5} height={5} />
                 {review.loved && (
                   <LoveIcon width={16} height={16} color={"#FFF"} />
                 )}
@@ -146,14 +165,16 @@ export const Entry = () => {
       </div>
 
       {/* Reply Input  */}
-      <div className="flex w-full items-center gap-2 fixed bottom-0 p-4 bg-blurEntry backdrop-blur-md rounded-b-2xl">
-        <UserAvatar
-          imageSrc={review.author?.image}
-          altText={`${review.author?.name}'s avatar`}
-          width={28}
-          height={28}
-        />
-        <ReplyInput />
+      <div className="w-full fixed bottom-2 p-4 ">
+        <div className="flex p-4 items-center gap-2 bg-blurEntry backdrop-blur-md rounded-full border border-silver">
+          <UserAvatar
+            imageSrc={review.author?.image}
+            altText={`${review.author?.name}'s avatar`}
+            width={28}
+            height={28}
+          />
+          <ReplyInput />
+        </div>
       </div>
     </div>
   );

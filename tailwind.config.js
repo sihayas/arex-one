@@ -36,6 +36,9 @@ module.exports = {
         entryPreview: "cubic-bezier(0.45, 0.05, 0.55, 0.95)",
         renderReplies: "cubic-bezier(0.65, 0.05, 0.36, 1)",
       },
+      translate: {
+        "3d": "0,0,0",
+      },
       width: {
         fill: "-webkit-fill-available",
       },

@@ -52,7 +52,7 @@ export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
         {/* Vertical Thread Line */}
         {reply.replies && reply.replies.length !== 0 && (
           <Line
-            color={shrink ? "#000" : "#CCC"}
+            color={shrink ? "#000" : "#999"}
             width={shrink ? "3px" : "1px"}
             animate={shrink}
           />
@@ -68,9 +68,9 @@ export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
             >
               {/* Removing rotate breaks alignment for some reason. */}
               <div className="rotate-[360deg] -mt-1  pl-[1px]">
-                <ThreadIcon width={24} height={24} color={"#CCC"} />
+                <ThreadIcon width={24} height={24} color={"#999"} />
               </div>
-              <div className="flex text-xs left-6 gap-2 bottom-1 text-greyUnselected absolute w-64">
+              <div className="flex text-xs left-9 gap-2 bottom-1 text-grey absolute w-64">
                 {reply.replies.length} threads
                 <button onClick={() => setReplyParent(reply)}>
                   [set reply parent id]

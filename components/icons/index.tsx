@@ -389,9 +389,7 @@ export function ThreadIcon({ ...props }) {
           <path fill="none" d="M0 0h24v24H0z" />
         </clipPath>
         <style>
-          {
-            ".prefix__cls-2{fill:none;stroke:#CCC;stroke-linecap:round;stroke-linejoin:round}"
-          }
+          {`.prefix__cls-2{fill:none;stroke:${props.color};stroke-linecap:round;stroke-linejoin:round}`}
         </style>
       </defs>
       <g clipPath="url(#prefix__clippath)">
