@@ -6,6 +6,7 @@ import { RenderEntries } from "./subcomponents/RenderEntries";
 import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
+import { useEffect, useRef } from "react";
 
 async function initializeAlbum(album: AlbumData) {
   console.log("Initializing album...");
@@ -36,6 +37,8 @@ export default function Album() {
   const { setPages, bounce } = useCMDKContext();
   const { selectedAlbum, artworkUrl } = useCMDKAlbum();
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   // Initialize album and mark as viewed
   const { data, isLoading, isError } = useQuery(
     ["album", selectedAlbum?.id],
@@ -59,10 +62,38 @@ export default function Album() {
     enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
   });
 
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+
+    const handleScroll = () => {
+      if (
+        scrollContainer &&
+        scrollContainer.scrollTop + scrollContainer.clientHeight >=
+          scrollContainer.scrollHeight &&
+        hasNextPage
+      ) {
+        fetchNextPage();
+      }
+    };
+
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [hasNextPage, fetchNextPage]);
+
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
   return (
-    <div className="flex rounded-2xl flex-col w-full h-full overflow-scroll scrollbar-none">
+    <div
+      ref={scrollContainerRef}
+      className="flex rounded-2xl flex-col w-full overflow-scroll scrollbar-none"
+    >
       {/* Section One */}
       <div className="relative">
         <Image
@@ -107,9 +138,9 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col w-full p-5 gap-4 relative">
+      <div className="flex flex-col w-full p-4 gap-4 relative">
         {/* Verdict  */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 p-4">
           {/* The Verdict  */}
           <div className="flex items-center gap-1">
             <div className="px-[9px] py-1 rounded-full bg-[#000] text-sm text-white flex items-center justify-center font-medium max-w-fit">
