@@ -85,7 +85,7 @@ export default function Album() {
         scrollContainer.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [hasNextPage, fetchNextPage]);
+  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 

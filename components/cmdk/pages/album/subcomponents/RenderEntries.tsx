@@ -17,7 +17,7 @@ export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
   const { setSelectedReviewId, setPages, bounce } = context;
 
   return (
-    <div className="flex flex-col gap-4 overflow-scroll">
+    <div className="flex flex-col gap-4 overflow-visible">
       {reviews && reviews.length > 0 ? (
         reviews.map((review) => {
           if (!review || typeof review !== "object") {
