@@ -157,7 +157,7 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col w-full p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow">
+      <div className="flex flex-col w-full p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow -mb-4">
         {/* Verdict  */}
         <div className="flex flex-col gap-4 p-2">
           {/* The Verdict  */}

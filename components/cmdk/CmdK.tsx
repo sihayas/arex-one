@@ -109,7 +109,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     resetThreadcrumbs();
   }, [resetThreadcrumbs, setInputValue, setPages]);
 
-  //Focus on input and set hideSearch based on the active page
   //Focus on input always
   useEffect(() => {
     if (isVisible && inputRef.current) {
@@ -170,26 +169,34 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             }
           }}
         >
-          <div className="flex flex-col w-full">
+          <div
+            className={`flex flex-col w-full transition-all duration-300 h-[68px] ${
+              !hideSearch ? "!h-[306px]" : ""
+            }`}
+          >
             <div className="w-full items-center flex p-4 gap-4">
               <SearchIcon color={"#CCC"} />
               <Command.Input
                 ref={inputRef}
-                placeholder="sound search"
+                placeholder="SOUNDSEARCH"
                 onValueChange={(value) => {
                   if (hideSearch) {
                     setHideSearch(false);
                   }
                   setInputValue(value);
                 }}
-                onFocus={() => setHideSearch(false)}
-                onBlur={() => setHideSearch(true)}
+                onFocus={() => {
+                  setHideSearch(false);
+                }}
+                onBlur={() => {
+                  setHideSearch(true);
+                }}
               />
             </div>
             <div
-              className={`w-full transition-all duration-300 ${
-                hideSearch ? "hidden h-[0px]" : "h-[306px]"
-              }`}
+              className={`transition-opacity duration-300 ${
+                activePage === "home" ? "h-[412px]" : "h-[120px]"
+              } ${hideSearch ? "opacity-0" : "opacity-100"}`}
             >
               <Search
                 searchData={data}

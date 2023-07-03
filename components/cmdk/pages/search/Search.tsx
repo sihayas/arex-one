@@ -68,7 +68,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   searchData && searchData.length ? null : <div></div>;
 
   return (
-    <div className="flex flex-col h-[410px] w-full overflow-y-scroll items-start gap-2 p-4 pt-0 rounded-[14px] rounded-t-none">
+    <div className="flex flex-col h-full p-4 pt-0 w-full overflow-y-scroll items-start gap-2 rounded-[14px] rounded-t-none">
       {/* Test Average Rating */}
       <button
         className="absolute bottom-0 right-0 text-xs text-grey"
@@ -95,7 +95,6 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
                 alt={`${album.attributes.name} artwork`}
                 width={80}
                 height={80}
-                quality={100}
                 priority
                 onLoad={(event) =>
                   handleImageLoad(event.target as HTMLImageElement, album)
