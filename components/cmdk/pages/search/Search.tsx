@@ -68,7 +68,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   searchData && searchData.length ? null : <div></div>;
 
   return (
-    <div className="flex flex-col h-full p-4 pt-0 w-full overflow-y-scroll items-start gap-2 rounded-[14px] rounded-t-none">
+    <div className="flex flex-col h-full p-4 w-full overflow-scroll items-start gap-2 rounded-[14px] rounded-t-none">
       {/* Test Average Rating */}
       <button
         className="absolute bottom-0 right-0 text-xs text-grey"

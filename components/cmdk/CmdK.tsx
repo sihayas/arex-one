@@ -40,6 +40,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Page Tracker
   const activePage: PageName = pages[pages.length - 1] as PageName;
   const previousPage: PageName = pages[pages.length - 2] as PageName;
+  const isHome = activePage === "home";
 
   // Search albums
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
@@ -149,7 +150,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             ))}
           </div>
         )}
-        {/* CMDK Inner  */}
+        {/* CMDK Inner Content  */}
         <Command
           className={`transition-opacity duration-300 w-full h-full ${
             isVisible ? "opacity-100" : "opacity-0"
@@ -170,11 +171,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }}
         >
           <div
-            className={`flex flex-col w-full transition-all duration-300 h-[68px] ${
-              !hideSearch ? "!h-[306px]" : ""
+            className={`flex flex-col w-full transition-all duration-300 h-[6.25rem] overflow-hidden ${
+              !hideSearch ? `${isHome ? "!h-[30rem]" : "!h-[52rem]"}` : null
             }`}
           >
-            <div className="w-full items-center flex p-4 gap-4">
+            {/* Search bar */}
+            <div className="w-full items-center flex p-4 gap-4 border-b ">
               <SearchIcon color={"#CCC"} />
               <Command.Input
                 ref={inputRef}
@@ -193,10 +195,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 }}
               />
             </div>
+            {/* Search Results  */}
             <div
-              className={`transition-opacity duration-300 ${
-                activePage === "home" ? "h-[412px]" : "h-[120px]"
-              } ${hideSearch ? "opacity-0" : "opacity-100"}`}
+              className={`transition-opacity duration-300 h-fill overflow-scroll ${
+                hideSearch ? "opacity-0" : "opacity-100"
+              }`}
             >
               <Search
                 searchData={data}
