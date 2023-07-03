@@ -17,6 +17,7 @@ export const Line: React.FC<LineProps> = ({
         height: height,
         backgroundColor: color,
         width: width,
+        borderRadius: "9999px",
       }}
       className={`flex-grow ${animate ? "animate-color-width" : ""}`}
     />

@@ -131,10 +131,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           transition: "box-shadow 750ms, scale 300ms",
           boxShadow: boxShadow,
         }}
-        className={`cmdk border border-silver ${
+        className={`cmdk ${
           isVisible
             ? "scale-100 pointer-events-auto"
-            : "!shadow-none scale-95 pointer-events-none"
+            : "!shadow-none scale-95 pointer-events-none border border-silver"
         }`}
       >
         {/* Breadcrumbs  */}
