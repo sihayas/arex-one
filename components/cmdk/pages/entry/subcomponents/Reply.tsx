@@ -35,67 +35,64 @@ export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
 
   return (
     <div
-      className={`flex gap-2 duration-700 pb-2 ${
-        shrink ? "cursor-pointer" : ""
-      }`}
+      className={`flex gap-2 duration-700 ${shrink ? "cursor-pointer" : ""}`}
     >
       {/* Left Side  */}
       <div
-        className="flex flex-col items-center"
+        className="flex flex-col"
         onClick={shrink ? handleGoBack : undefined}
       >
-        <UserAvatar
-          imageSrc={reply.author?.image || "./public/images/default_image.png"}
-          altText={`${reply.author?.name || "Unknown Author"}'s avatar`}
-        />
-
-        {/* Vertical Thread Line */}
-        {reply.replies && reply.replies.length !== 0 && (
-          <Line
-            color={shrink ? "#000" : "#999"}
-            width={shrink ? "3px" : "1px"}
-            animate={shrink}
+        {/* User Avatar & Username */}
+        <div className="flex items-center gap-4">
+          <UserAvatar
+            imageSrc={
+              reply.author?.image || "./public/images/default_image.png"
+            }
+            altText={`${reply.author?.name || "Unknown Author"}'s avatar`}
           />
-        )}
+          <UserName
+            color="black"
+            username={reply.author.username || "stranger"}
+          />
+        </div>
 
-        {/*Load More Replies  */}
+        {/* Reply Content & Thread Line  */}
+        <div className="flex gap-4 pb-1">
+          {/* Vertical Thread Line */}
+          <div className="flex flex-col min-w-[2rem] items-center mt-4 -mb-2">
+            {reply.replies && reply.replies.length > 0 && (
+              <Line
+                color={shrink ? "#000" : "#CCC"}
+                width={shrink ? "3px" : "1px"}
+                animate={shrink}
+              />
+            )}
+          </div>
+
+          {/* Reply Content  */}
+          <div className={`text-sm text-black break-words`}>
+            {reply.content}
+          </div>
+        </div>
+
+        {/*Interactions  */}
         {reply.replies && reply.replies.length > 0 && !hideContent && (
-          <>
+          <div className="flex  translate-x-[.28em] gap-[1.225em]">
+            <ThreadIcon width={24} height={24} color={"#CCC"} />
             {/* Threader  */}
             <button
               className="flex items-center gap-1 text-grey text-xs text-start hover:text-black duration-300 relative"
               onClick={handleLoadReplies}
             >
-              {/* Removing rotate breaks alignment for some reason. */}
-              <div className="rotate-[360deg] -mt-1  pl-[1px]">
-                <ThreadIcon width={24} height={24} color={"#999"} />
-              </div>
-              <div className="flex text-xs left-9 gap-2 bottom-1 text-grey absolute w-64">
+              <div className="flex text-xs text-grey w-64">
                 {reply.replies.length} threads
                 <button onClick={() => setReplyParent(reply)}>
                   [set reply parent id]
                 </button>
               </div>
             </button>
-          </>
+          </div>
         )}
-      </div>
-
-      {/* Right Side/ Author */}
-
-      <div
-        className={`flex flex-col mt-1.5 gap-1 w-full ${
-          reply.replies && reply.replies.length > 0 ? "pb-7" : "pb-2"
-        }`}
-      >
-        <div className="flex gap-2 items-center">
-          <UserName
-            color="black"
-            username={reply.author.username || "stranger"}
-          />
-        </div>
-        {/* Reply Content  */}
-        <div className={`text-sm text-black break-words`}>{reply.content}</div>
       </div>
     </div>
   );

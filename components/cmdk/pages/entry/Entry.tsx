@@ -106,7 +106,7 @@ export const Entry = () => {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              filter: "blur(24px)",
+              filter: "blur(80px)",
               transform: "translate3d(0,0,0)",
             }}
           />
@@ -132,14 +132,13 @@ export const Entry = () => {
           <div className="flex gap-4 items-center p-4">
             {/* Outer  */}
             <div className="flex items-center gap-2 backdrop-blur-md bg-blurEntry rounded-full pl-1 pr-2 py-1">
-              {/* Name and Avatar  */}
-              <div className="flex items-center gap-[6px]">
-                <UserAvatar
-                  imageSrc={review.author?.image}
-                  altText={`${review.author?.name}'s avatar`}
-                />
-                <UserName color="white" username={review.author.username} />
-              </div>
+              <UserAvatar
+                imageSrc={review.author?.image}
+                altText={`${review.author?.name}'s avatar`}
+                width={26}
+                height={26}
+              />
+              <UserName color="white" username={review.author.username} />
               {/* Rating */}
               <div className="flex items-center gap-1">
                 <Stars color={"white"} rating={review.rating} />
@@ -160,13 +159,13 @@ export const Entry = () => {
       </div>
 
       {/* Replies  */}
-      <div className="w-full h-full flex flex-col p-5 pb-20">
+      <div className="w-full h-full flex flex-col p-4 pb-20">
         <RenderReplies replyIds={threadcrumbs} reviewId={selectedReviewId} />
       </div>
 
       {/* Reply Input  */}
       <div className="w-full fixed bottom-2 p-4 ">
-        <div className="flex p-4 items-center gap-2 bg-blurEntry backdrop-blur-md rounded-full border border-silver">
+        <div className="flex p-2 items-center gap-2 bg-blurEntry backdrop-blur-md rounded-full border border-silver">
           <UserAvatar
             imageSrc={review.author?.image}
             altText={`${review.author?.name}'s avatar`}

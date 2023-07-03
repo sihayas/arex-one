@@ -105,6 +105,7 @@ export default function Album() {
           quality={100}
           priority
         />
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#FFF] to-transparent"></div>
         <div className="flex flex-col gap-2 absolute left-5 bottom-5">
           {/* Album Info  */}
           <div className="flex gap-1  text-white text-sm">

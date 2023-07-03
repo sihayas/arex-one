@@ -27,6 +27,13 @@ a {
   box-sizing: border-box;
 }
 
+.verticalLine {
+  border-left: 1px solid black;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+}
+
 .blurred {
   filter: blur(2px);
   transition: filter 0.7s;
