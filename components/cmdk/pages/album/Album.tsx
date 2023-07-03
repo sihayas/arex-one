@@ -1,7 +1,13 @@
 import Image from "next/image";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { LoveIcon, PlayIcon, ReviewIcon, StarIcon } from "../../../icons";
+import {
+  LoveIcon,
+  PlayIcon,
+  ReviewIcon,
+  StarIcon,
+  StarsIcon,
+} from "../../../icons";
 import { RenderEntries } from "./subcomponents/RenderEntries";
 import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
@@ -144,8 +150,10 @@ export default function Album() {
         <div className="flex flex-col gap-2 p-4">
           {/* The Verdict  */}
           <div className="flex items-center gap-1">
-            <div className="px-[9px] py-1 rounded-full bg-[#000] text-sm text-white flex items-center justify-center font-medium max-w-fit">
-              C
+            {/* put star here  */}
+            <div className="flex items-center gap-1 py-1 px-2 bg-[#FDF1E5] rounded-full font-medium">
+              <StarsIcon width={16} height={16} color={"#6B3815"} />
+              <div className="text-xs text-[#6B3815]">classic</div>
             </div>
             <div className="text-grey text-xs font-bold"> /verdict</div>
           </div>
