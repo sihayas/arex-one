@@ -10,6 +10,8 @@ export type CMDKContextType = {
   bounceScale: number;
   setBounceScale: React.Dispatch<React.SetStateAction<number>>;
   bounce: () => void;
+  hideSearch: boolean;
+  setHideSearch: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type CMDKProviderProps = {
@@ -22,7 +24,8 @@ export const CMDKContext = React.createContext<CMDKContextType | undefined>(
 
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [pages, setPages] = useState(["search"]);
+  const [pages, setPages] = useState(["home"]);
+  const [hideSearch, setHideSearch] = useState(false);
 
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
@@ -47,6 +50,8 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         bounceScale,
         setBounceScale,
         bounce,
+        hideSearch,
+        setHideSearch,
       }}
     >
       {children}

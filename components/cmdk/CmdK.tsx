@@ -11,15 +11,17 @@ import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
+import Home from "./pages/home/Home";
 //Icons
 import { ExitIcon, SearchIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
-type PageName = "search" | "album" | "entry" | "form";
+type PageName = "home" | "search" | "album" | "entry" | "form";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
+  home: { width: 720, height: 480 },
   search: { width: 720, height: 480 },
-  album: { width: 720, height: 720 }, // 808
+  album: { width: 720, height: 788 }, // 808
   entry: { width: 560, height: 880 }, // 880
   form: { width: 960, height: 480 },
 };
@@ -27,8 +29,8 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
   const { resetThreadcrumbs } = useThreadcrumb();
-  const { pages, setPages, bounceScale, bounce } = useCMDKContext();
-  const { shadowColor } = useCMDKAlbum();
+  const { pages, setPages, bounceScale, bounce, hideSearch, setHideSearch } =
+    useCMDKContext();
 
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -107,20 +109,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     resetThreadcrumbs();
   }, [resetThreadcrumbs, setInputValue, setPages]);
 
+  //Focus on input and set hideSearch based on the active page
   //Focus on input always
   useEffect(() => {
     if (isVisible && inputRef.current) {
       inputRef.current.focus();
     } //Autofocus on search input.
   }, [isVisible]);
-
-  const boxShadow = shadowColor
-    ? `-90px 73px 46px ${shadowColor},0.01),
-     -51px 41px 39px ${shadowColor},0.05),
-     -22px 18px 29px ${shadowColor},0.08),
-     -6px 5px 16px ${shadowColor},0.1),
-     0px 0px 0px ${shadowColor},0.1)`
-    : undefined;
 
   return (
     <>
@@ -129,16 +124,17 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           ...dimensionsSpring,
           ...transformSpring,
           transition: "box-shadow 750ms, scale 300ms",
-          boxShadow: boxShadow,
         }}
         className={`cmdk ${
           isVisible
-            ? "scale-100 pointer-events-auto"
+            ? `${
+                activePage === "home" ? "shadow-defaultLowHover" : ""
+              } scale-100 pointer-events-auto`
             : "!shadow-none scale-95 pointer-events-none border border-silver"
         }`}
       >
         {/* Breadcrumbs  */}
-        {activePage !== "search" && (
+        {activePage !== "home" && (
           <div className="flex flex-col gap-2 items-center absolute -left-8 top-1/2">
             <button onClick={resetPage}>
               <ExitIcon />
@@ -163,34 +159,38 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           shouldFilter={false}
           //CMDK Behavior depending on whether search input or not
           onKeyDown={(e: React.KeyboardEvent) => {
+            console.log(`Keydown event: ${e.key}`);
             if (e.key === "Enter" && activePage === "search") {
               bounce();
             }
-            if (e.key === "Backspace" && inputRef.current?.value === "") {
-              e.preventDefault();
-              popPage();
-              return;
-            }
-            if (e.key === "Backspace" && activePage === "album") {
+            if (e.key === "Backspace" && activePage !== "home" && !inputValue) {
               popPage();
               e.preventDefault();
               return;
             }
           }}
         >
-          {/* Search bar & results*/}
-          {activePage === "search" && (
-            <div className="w-full h-[612px]">
-              <div className="w-full items-center flex p-4 gap-4">
-                <SearchIcon color={"#CCC"} />
-                <Command.Input
-                  ref={inputRef}
-                  placeholder="sound search"
-                  onValueChange={(value) => {
-                    setInputValue(value);
-                  }}
-                />
-              </div>
+          <div className="flex flex-col w-full">
+            <div className="w-full items-center flex p-4 gap-4">
+              <SearchIcon color={"#CCC"} />
+              <Command.Input
+                ref={inputRef}
+                placeholder="sound search"
+                onValueChange={(value) => {
+                  if (hideSearch) {
+                    setHideSearch(false);
+                  }
+                  setInputValue(value);
+                }}
+                onFocus={() => setHideSearch(false)}
+                onBlur={() => setHideSearch(true)}
+              />
+            </div>
+            <div
+              className={`w-full transition-all duration-300 ${
+                hideSearch ? "hidden h-[0px]" : "h-[306px]"
+              }`}
+            >
               <Search
                 searchData={data}
                 isLoading={isLoading}
@@ -198,8 +198,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 error={error}
               />
             </div>
-          )}
+          </div>
 
+          {/* Search bar & results*/}
+          {activePage === "home" && <Home />}
           {activePage === "album" && <Album />}
           {activePage === "entry" && <Entry />}
           {activePage === "form" && <Form />}

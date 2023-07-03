@@ -13,6 +13,7 @@ import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
 import { useEffect, useRef } from "react";
+import { motion, useTransform, useViewportScroll } from "framer-motion";
 
 async function initializeAlbum(album: AlbumData) {
   console.log("Initializing album...");
@@ -41,7 +42,14 @@ async function fetchReviews({
 export default function Album() {
   // CMDK Context
   const { setPages, bounce } = useCMDKContext();
-  const { selectedAlbum, artworkUrl } = useCMDKAlbum();
+  const { selectedAlbum, artworkUrl, shadowColor } = useCMDKAlbum();
+  const boxShadow = shadowColor
+    ? `-90px 73px 46px ${shadowColor},0.01),
+     -51px 41px 39px ${shadowColor},0.05),
+     -22px 18px 29px ${shadowColor},0.08),
+     -6px 5px 16px ${shadowColor},0.1),
+     0px 0px 0px ${shadowColor},0.1)`
+    : undefined;
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -99,6 +107,9 @@ export default function Album() {
     <div
       ref={scrollContainerRef}
       className="flex rounded-2xl flex-col w-full overflow-scroll scrollbar-none"
+      style={{
+        boxShadow: boxShadow,
+      }}
     >
       {/* Section One */}
       <div className="relative">
@@ -111,10 +122,10 @@ export default function Album() {
           quality={100}
           priority
         />
-        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#FFF] to-transparent"></div>
-        <div className="flex flex-col gap-2 absolute left-5 bottom-5">
+
+        <div className="absolute flex flex-col gap-2 p-4 left-4 bottom-8 bg-blurEntry rounded-2xl backdrop-blur-2xl border border-silver">
           {/* Album Info  */}
-          <div className="flex gap-1  text-white text-sm">
+          <div className="flex gap-1 text-white text-sm">
             <div className="font-bold drop-shadow-2xl">
               {selectedAlbum?.attributes.name} &middot;
             </div>
@@ -125,6 +136,7 @@ export default function Album() {
             <div className="flex items-center">
               <div className="text-xl text-white font-semibold">4.2</div>
               <StarIcon width={24} height={24} color={"#FFF"} />
+              <div className="text-xs text-white italic mt-3">/10,000</div>
             </div>
 
             {/* Album Metadata  */}
@@ -145,21 +157,19 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col w-full p-4 gap-4 relative">
+      <div className="flex flex-col w-full p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow">
         {/* Verdict  */}
-        <div className="flex flex-col gap-2 p-4">
+        <div className="flex flex-col gap-4 p-2">
           {/* The Verdict  */}
           <div className="flex items-center gap-1">
-            {/* put star here  */}
             <div className="flex items-center gap-1 py-1 px-2 bg-[#FDF1E5] rounded-full font-medium">
               <StarsIcon width={16} height={16} color={"#6B3815"} />
               <div className="text-xs text-[#6B3815]">classic</div>
             </div>
-            <div className="text-grey text-xs font-bold"> /verdict</div>
           </div>
 
           {/* Verdict Notes  */}
-          <div className="text-sm text-grey lowercase">
+          <div className="text-sm text-grey">
             In Smithereens, Joji masterfully navigates the labyrinth of human
             emotions with his signature blend of melancholic pop. His soft yet
             emotive voice, backed by minimalist lo-fi beats and ethereal synths,
@@ -184,7 +194,7 @@ export default function Album() {
           <div className="">youve reached the end</div>
         )}
       </div>
-      <div className="absolute right-4 bottom-4">
+      <div className="absolute right-4 bottom-8 bg-blurEntry backdrop-blur-md rounded-full">
         <ReviewIcon
           color={"#FFF"}
           onClick={() => {

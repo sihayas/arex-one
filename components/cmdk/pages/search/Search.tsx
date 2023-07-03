@@ -20,7 +20,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   );
 
   // CMDK context
-  const { setPages, bounce } = useCMDKContext();
+  const { setPages, bounce, setHideSearch } = useCMDKContext();
   const { setSelectedAlbum, setArtworkUrl, setShadowColor } = useCMDKAlbum();
 
   // Dominant color thief
@@ -45,6 +45,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
     setSelectedAlbum(album);
     setArtworkUrl(artworkUrl);
     setShadowColor(shadowColor);
+    setHideSearch(true);
     setPages((prev) => [...prev, "album"]);
     bounce();
   };
