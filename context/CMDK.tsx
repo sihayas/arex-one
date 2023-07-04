@@ -1,12 +1,15 @@
 import React, { useState, useCallback } from "react";
+import { AlbumData } from "@/lib/interfaces";
+
+type Page = { name: string; album?: AlbumData };
 
 export type CMDKContextType = {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   selectedReviewId: string | null;
   setSelectedReviewId: React.Dispatch<React.SetStateAction<string | null>>;
-  pages: string[];
-  setPages: React.Dispatch<React.SetStateAction<string[]>>;
+  pages: Page[];
+  setPages: React.Dispatch<React.SetStateAction<Page[]>>;
   bounceScale: number;
   setBounceScale: React.Dispatch<React.SetStateAction<number>>;
   bounce: () => void;
@@ -24,7 +27,8 @@ export const CMDKContext = React.createContext<CMDKContextType | undefined>(
 
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [pages, setPages] = useState(["home"]);
+  const [pages, setPages] = useState<Page[]>([{ name: "home" }]);
+
   const [hideSearch, setHideSearch] = useState(false);
 
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);

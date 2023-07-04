@@ -42,13 +42,13 @@ async function fetchReviews({
 export default function Album() {
   // CMDK Context
   const { setPages, bounce } = useCMDKContext();
-  const { selectedAlbum, artworkUrl, shadowColor } = useCMDKAlbum();
-  const boxShadow = shadowColor
-    ? `-90px 73px 46px ${shadowColor},0.01),
-     -51px 41px 39px ${shadowColor},0.05),
-     -22px 18px 29px ${shadowColor},0.08),
-     -6px 5px 16px ${shadowColor},0.1),
-     0px 0px 0px ${shadowColor},0.1)`
+  const { selectedAlbum } = useCMDKAlbum();
+  const boxShadow = selectedAlbum?.shadowColor
+    ? `-90px 73px 46px ${selectedAlbum?.shadowColor},0.01),
+     -51px 41px 39px ${selectedAlbum.shadowColor},0.05),
+     -22px 18px 29px ${selectedAlbum.shadowColor},0.08),
+     -6px 5px 16px ${selectedAlbum.shadowColor},0.1),
+     0px 0px 0px ${selectedAlbum.shadowColor},0.1)`
     : undefined;
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -115,7 +115,7 @@ export default function Album() {
       <div className="relative">
         <Image
           className="rounded-2xl rounded-b-none"
-          src={artworkUrl}
+          src={selectedAlbum!.artworkUrl}
           alt={`${selectedAlbum?.attributes.name} artwork`}
           width={720}
           height={720}
@@ -198,7 +198,8 @@ export default function Album() {
         <ReviewIcon
           color={"#FFF"}
           onClick={() => {
-            setPages((prevPages) => [...prevPages, "form"]);
+            setPages((prevPages) => [...prevPages, { name: "form" }]);
+
             bounce();
           }}
         />

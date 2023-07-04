@@ -30,11 +30,18 @@ export interface AlbumAttributes {
   url: string;
 }
 
+// Mimics Apple Music API response
 export interface AlbumData {
   attributes: AlbumAttributes;
   id: string;
   notes: string;
   relationships: AlbumRelationships;
+}
+
+// Xtends Apple's API Response
+export interface AlbumDataExtended extends AlbumData {
+  artworkUrl: string;
+  shadowColor: string;
 }
 
 export interface AlbumRelationships {

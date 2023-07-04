@@ -21,7 +21,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
 
   // CMDK context
   const { setPages, bounce, setHideSearch } = useCMDKContext();
-  const { setSelectedAlbum, setArtworkUrl, setShadowColor } = useCMDKAlbum();
+  const { setSelectedAlbum } = useCMDKAlbum();
 
   // Dominant color thief
   const handleImageLoad = async (
@@ -42,11 +42,25 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
     artworkUrl: string,
     shadowColor: string
   ) => {
-    setSelectedAlbum(album);
-    setArtworkUrl(artworkUrl);
-    setShadowColor(shadowColor);
+    const extendedAlbum = {
+      ...album,
+      artworkUrl,
+      shadowColor,
+    };
+    setSelectedAlbum(extendedAlbum);
     setHideSearch(true);
-    setPages((prev) => [...prev, "album"]);
+    // Switch to album page and add to memory
+    setPages((prevPages) => [
+      ...prevPages,
+      {
+        name: "album",
+        album: {
+          ...album,
+          artworkUrl,
+          shadowColor,
+        },
+      },
+    ]);
     bounce();
   };
 

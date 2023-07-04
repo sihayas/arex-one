@@ -2,8 +2,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useCMDKAlbum from "../../hooks/useCMDKAlbum";
 import useCMDKContext from "../../hooks/useCMDK";
+import { AlbumDataExtended } from "@/lib/interfaces";
 //NPM
-import { animated, useSpring, useTransition } from "@react-spring/web";
+import { animated, useSpring } from "@react-spring/web";
 //Components
 import { Command } from "cmdk";
 import { useThreadcrumb } from "../../context/Threadcrumbs";
@@ -17,6 +18,7 @@ import { ExitIcon, SearchIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
 type PageName = "home" | "search" | "album" | "entry" | "form";
+type Page = { name: string; album?: AlbumDataExtended };
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   home: { width: 720, height: 480 },
@@ -31,6 +33,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const { resetThreadcrumbs } = useThreadcrumb();
   const { pages, setPages, bounceScale, bounce, hideSearch, setHideSearch } =
     useCMDKContext();
+  const { setSelectedAlbum } = useCMDKAlbum();
 
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -38,17 +41,18 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const [inputValue, setInputValue] = useState("");
 
   //Page Tracker
-  const activePage: PageName = pages[pages.length - 1] as PageName;
-  const previousPage: PageName = pages[pages.length - 2] as PageName;
-  const isHome = activePage === "home";
+  const activePage: Page = pages[pages.length - 1];
+  const previousPage: Page = pages[pages.length - 2] || { name: "home" };
+
+  const isHome = activePage.name === "home";
 
   // Search albums
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
   // Page dimensions spring
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
-    width: PAGE_DIMENSIONS[previousPage]?.width || 1018,
-    height: PAGE_DIMENSIONS[previousPage]?.height || 612,
+    width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width || 1018,
+    height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height || 612,
     config: {
       tension: 400,
       friction: 40,
@@ -58,14 +62,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
-        await next({ width: 306, height: 306 }); // Loading dimension
+        await next({ width: 306 }); // Loading dimension
         await next({
-          width: PAGE_DIMENSIONS[activePage]?.width || 1018,
-          height: PAGE_DIMENSIONS[activePage]?.height || 612,
+          width: PAGE_DIMENSIONS[activePage.name as PageName]?.width || 1018,
+          height: PAGE_DIMENSIONS[activePage.name as PageName]?.height || 612,
         });
       },
     });
-  }, [activePage, previousPage, setDimensionsSpring]);
+  }, [activePage.name, setDimensionsSpring]);
 
   // Transform spring
   const transformSpring = useSpring({
@@ -79,9 +83,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   });
 
   const navigateBackToPage = useCallback(
-    (page: string) => {
+    (pageName: string) => {
       setPages((prevPages) => {
-        const index = prevPages.lastIndexOf(page);
+        const index = prevPages.findIndex((page) => page.name === pageName);
         return prevPages.slice(0, index + 1);
       });
       bounce();
@@ -105,10 +109,17 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Reset pages
   const resetPage = useCallback(() => {
-    setPages(["search"]);
+    setPages([{ name: "search" }]);
     setInputValue("");
     resetThreadcrumbs();
   }, [resetThreadcrumbs, setInputValue, setPages]);
+
+  useEffect(() => {
+    if (activePage.name === "album" && activePage.album) {
+      setSelectedAlbum(activePage.album);
+      console.log("Selected album: ", activePage.album);
+    }
+  }, [activePage, setSelectedAlbum]);
 
   //Focus on input always
   useEffect(() => {
@@ -128,13 +139,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         className={`cmdk ${
           isVisible
             ? `${
-                activePage === "home" ? "shadow-defaultLowHover" : ""
+                isHome ? "shadow-defaultLowHover" : ""
               } scale-100 pointer-events-auto`
             : "!shadow-none scale-95 pointer-events-none border border-silver"
         }`}
       >
         {/* Breadcrumbs  */}
-        {activePage !== "home" && (
+        {!isHome && (
           <div className="flex flex-col gap-2 items-center absolute -left-8 top-1/2">
             <button onClick={resetPage}>
               <ExitIcon />
@@ -143,9 +154,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               <button
                 key={index}
                 className="text-xs text-grey"
-                onClick={() => navigateBackToPage(page)}
+                onClick={() => navigateBackToPage(page.name)}
               >
-                <div>{page}</div>
+                <div>{page.name}</div>
               </button>
             ))}
           </div>
@@ -160,10 +171,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           //CMDK Behavior depending on whether search input or not
           onKeyDown={(e: React.KeyboardEvent) => {
             console.log(`Keydown event: ${e.key}`);
-            if (e.key === "Enter" && activePage === "search") {
+            if (e.key === "Enter" && activePage.name === "search") {
               bounce();
             }
-            if (e.key === "Backspace" && activePage !== "home" && !inputValue) {
+            if (e.key === "Backspace" && !isHome && !inputValue) {
               popPage();
               e.preventDefault();
               return;
@@ -180,7 +191,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               <SearchIcon color={"#CCC"} />
               <Command.Input
                 ref={inputRef}
-                placeholder="SOUNDSEARCH"
+                placeholder="soundsystem"
                 onValueChange={(value) => {
                   if (hideSearch) {
                     setHideSearch(false);
@@ -211,10 +222,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           </div>
 
           {/* Search bar & results*/}
-          {activePage === "home" && <Home />}
-          {activePage === "album" && <Album />}
-          {activePage === "entry" && <Entry />}
-          {activePage === "form" && <Form />}
+          {activePage.name === "home" && <Home />}
+          {activePage.name === "album" && <Album />}
+          {activePage.name === "entry" && <Entry />}
+          {activePage.name === "form" && <Form />}
         </Command>
       </animated.div>
     </>
