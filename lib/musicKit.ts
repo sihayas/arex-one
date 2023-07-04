@@ -1,10 +1,11 @@
 import axios from "axios";
+import { AlbumData } from "./interfaces";
 
 const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
 
 // Search for albums method
 // Helper function to check if the album title contains unwanted keywords
-const isUnwanted = (title) => {
+const isUnwanted = (title: string) => {
   const unwantedKeywords = ["remix", "edition", "mix"];
   return unwantedKeywords.some((keyword) =>
     title.toLowerCase().includes(keyword)
@@ -29,7 +30,7 @@ export const searchAlbums = async (keyword: string) => {
   // Filter the results based on the isSingle property, unwanted keywords, and limit to 8 results
   const filteredResults = response.data.results.albums.data
     .filter(
-      (album) =>
+      (album: AlbumData) =>
         !album.attributes.isSingle && // Check if the album is not a single
         !isUnwanted(album.attributes.name) // Check if the album title contains unwanted keywords
     )
@@ -39,7 +40,7 @@ export const searchAlbums = async (keyword: string) => {
 };
 
 //Search for a specific album
-export const fetchAlbumById = async (albumId: string) => {
+export const getAlbumById = async (albumId: string) => {
   const baseURL = "https://api.music.apple.com/v1/catalog/us/albums";
 
   const response = await axios.get(`${baseURL}/${albumId}`, {

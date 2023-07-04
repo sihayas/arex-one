@@ -24,6 +24,13 @@ export default async function handle(
               image: true,
             },
           },
+          album: {
+            select: {
+              id: true,
+              name: true,
+              artist: true,
+            },
+          },
           likes: true,
           replies: {
             select: {

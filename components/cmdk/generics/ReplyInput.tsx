@@ -49,7 +49,7 @@ export const ReplyInput = () => {
 
   const { replyParent } = useThreadcrumbs();
   const [replyContent, setReplyContent] = useState("");
-  console.log(replyParent);
+  // console.log(replyParent);
 
   const handleReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReplyContent(e.target.value);

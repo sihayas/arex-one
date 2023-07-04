@@ -16,6 +16,7 @@ import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import useThreadcrumbs from "../../../../hooks/useThreadcrumbs";
 import AnimatedGradient from "@/components/random-bullshit-go/AnimatedGradient";
+import { useQuery } from "@tanstack/react-query";
 
 export const Entry = () => {
   const { data: session } = useSession();
@@ -23,15 +24,30 @@ export const Entry = () => {
 
   const { selectedAlbum } = useCMDKAlbum();
   const { selectedReviewId } = useCMDKContext();
-  const { threadcrumbs, addToThreadcrumbs, replyParent, setReplyParent } =
-    useThreadcrumbs();
+  const { threadcrumbs, addToThreadcrumbs, setReplyParent } = useThreadcrumbs();
 
-  // Review init
+  // Review initial state
   const [review, setReview] = useState<ReviewData | null>(null);
 
   // Review interaction
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+
+  const fetchArtworkUrl = async (albumId: string) => {
+    const response = await axios.get(
+      `/api/album/getAlbumById?albumId=${albumId}`
+    );
+    console.log("Artwork url: ", response.data.artworkUrl);
+    return response.data;
+  };
+
+  const { data: artworkUrl, isLoading: isArtworkLoading } = useQuery(
+    ["albumArtworkUrl", review?.albumId],
+    () => fetchArtworkUrl(review?.albumId),
+    {
+      enabled: !!review?.albumId && selectedAlbum?.id !== review?.albumId,
+    }
+  );
 
   useEffect(() => {
     // Track whether component is mounted
@@ -94,7 +110,7 @@ export const Entry = () => {
           style={{ width: "560px", height: "560px" }}
         >
           <Image
-            src={selectedAlbum.artworkUrl}
+            src={artworkUrl || selectedAlbum?.artworkUrl}
             alt={`${selectedAlbum?.attributes.name} artwork`}
             width={40} // Set this to a low value
             height={40} // Set this to the same low value

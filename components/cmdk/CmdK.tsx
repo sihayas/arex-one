@@ -61,7 +61,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
-        await next({ width: 306 }); // Loading dimension
+        await next({ width: 306, height: 306 }); // Loading dimension
         await next({
           width: PAGE_DIMENSIONS[activePage.name as PageName]?.width || 1018,
           height: PAGE_DIMENSIONS[activePage.name as PageName]?.height || 612,

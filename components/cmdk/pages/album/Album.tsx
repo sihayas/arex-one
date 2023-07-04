@@ -75,6 +75,7 @@ export default function Album() {
     enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
   });
 
+  // Infinite Scroll Page Tracker
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
 
