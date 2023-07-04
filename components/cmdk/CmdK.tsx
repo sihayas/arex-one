@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useCMDKAlbum from "../../hooks/useCMDKAlbum";
 import useCMDKContext from "../../hooks/useCMDK";
-import { AlbumDataExtended } from "@/lib/interfaces";
+import { AlbumData } from "@/lib/interfaces";
 //NPM
 import { animated, useSpring } from "@react-spring/web";
 //Components
@@ -17,12 +17,11 @@ import Home from "./pages/home/Home";
 import { ExitIcon, SearchIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
-type PageName = "home" | "search" | "album" | "entry" | "form";
-type Page = { name: string; album?: AlbumDataExtended };
+type PageName = "home" | "album" | "entry" | "form";
+type Page = { name: string; album?: AlbumData };
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   home: { width: 720, height: 480 },
-  search: { width: 720, height: 480 },
   album: { width: 720, height: 788 }, // 808
   entry: { width: 560, height: 880 }, // 880
   form: { width: 960, height: 480 },
@@ -82,30 +81,21 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   });
 
-  const navigateBackToPage = useCallback(
-    (pageName: string) => {
+  // Breadcrumb navigation
+  const navigateBack = useCallback(
+    (pageNumber: number = 1) => {
       setPages((prevPages) => {
-        const index = prevPages.findIndex((page) => page.name === pageName);
-        return prevPages.slice(0, index + 1);
+        const newPages = [...prevPages];
+        while (newPages.length > 1 && pageNumber-- > 0) {
+          newPages.pop();
+        }
+        return newPages;
       });
       bounce();
       resetThreadcrumbs();
     },
     [bounce, resetThreadcrumbs, setPages]
   );
-
-  // Go back a page
-  const popPage = useCallback(() => {
-    setPages((pages) => {
-      const newPages = [...pages];
-      if (newPages.length > 1) {
-        newPages.pop();
-      }
-      return newPages;
-    });
-    bounce();
-    resetThreadcrumbs();
-  }, [bounce, resetThreadcrumbs, setPages]);
 
   // Reset pages
   const resetPage = useCallback(() => {
@@ -154,7 +144,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               <button
                 key={index}
                 className="text-xs text-grey"
-                onClick={() => navigateBackToPage(page.name)}
+                onClick={() => navigateBack(pages.length - index - 1)}
               >
                 <div>{page.name}</div>
               </button>
@@ -175,7 +165,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               bounce();
             }
             if (e.key === "Backspace" && !isHome && !inputValue) {
-              popPage();
+              navigateBack();
               e.preventDefault();
               return;
             }

@@ -36,10 +36,6 @@ export interface AlbumData {
   id: string;
   notes: string;
   relationships: AlbumRelationships;
-}
-
-// Xtends Apple's API Response
-export interface AlbumDataExtended extends AlbumData {
   artworkUrl: string;
   shadowColor: string;
 }
