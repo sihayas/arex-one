@@ -99,7 +99,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Reset pages
   const resetPage = useCallback(() => {
-    setPages([{ name: "search" }]);
+    setPages([{ name: "home" }]);
     setInputValue("");
     resetThreadcrumbs();
   }, [resetThreadcrumbs, setInputValue, setPages]);
