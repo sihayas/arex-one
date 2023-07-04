@@ -171,12 +171,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }}
         >
           <div
-            className={`flex flex-col w-full transition-all duration-300 h-[6.25rem] overflow-hidden ${
+            className={`flex flex-col w-full transition-all duration-300 h-[94px] overflow-hidden ${
               !hideSearch ? `${isHome ? "!h-[30rem]" : "!h-[52rem]"}` : null
             }`}
           >
             {/* Search bar */}
-            <div className="w-full items-center flex p-4 gap-4 border-b ">
+            <div className="w-full items-center flex p-4 gap-4 border-b text-grey">
               <SearchIcon color={"#CCC"} />
               <Command.Input
                 ref={inputRef}

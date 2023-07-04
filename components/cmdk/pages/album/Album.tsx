@@ -125,11 +125,11 @@ export default function Album() {
 
         <div className="absolute flex flex-col gap-2 p-4 left-4 bottom-8 bg-blurEntry rounded-2xl backdrop-blur-2xl border border-silver">
           {/* Album Info  */}
-          <div className="flex gap-1 text-white text-sm">
-            <div className="font-bold drop-shadow-2xl">
-              {selectedAlbum?.attributes.name} &middot;
+          <div className="flex flex-col text-white text-sm">
+            <div className="font-medium">
+              {selectedAlbum?.attributes.artistName}
             </div>
-            <div>{selectedAlbum?.attributes.artistName}</div>
+            <div>{selectedAlbum?.attributes.name}</div>
           </div>
           {/* Stats */}
           <div className="flex items-center gap-4">
