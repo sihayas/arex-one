@@ -21,7 +21,7 @@ export const Entry = () => {
   const { data: session } = useSession();
   const userId = session?.user.id;
 
-  const { selectedAlbum, artworkUrl } = useCMDKAlbum();
+  const { selectedAlbum } = useCMDKAlbum();
   const { selectedReviewId } = useCMDKContext();
   const { threadcrumbs, addToThreadcrumbs, replyParent, setReplyParent } =
     useThreadcrumbs();
@@ -94,7 +94,7 @@ export const Entry = () => {
           style={{ width: "560px", height: "560px" }}
         >
           <Image
-            src={artworkUrl}
+            src={selectedAlbum.artworkUrl}
             alt={`${selectedAlbum?.attributes.name} artwork`}
             width={40} // Set this to a low value
             height={40} // Set this to the same low value

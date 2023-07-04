@@ -29,7 +29,12 @@ export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
               key={review.id}
               onClick={() => {
                 setSelectedReviewId(review.id);
-                setPages((prevPages) => [...prevPages, "entry"]);
+                setPages((prevPages) => [
+                  ...prevPages,
+                  {
+                    name: "entry",
+                  },
+                ]);
                 bounce();
               }}
               className="cursor-pointer"
