@@ -109,7 +109,6 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
                 alt={`${album.attributes.name} artwork`}
                 width={80}
                 height={80}
-                priority
                 onLoad={(event) =>
                   handleImageLoad(event.target as HTMLImageElement, album)
                 }

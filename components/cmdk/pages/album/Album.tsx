@@ -121,7 +121,6 @@ export default function Album() {
           width={720}
           height={720}
           quality={100}
-          priority
         />
 
         <div className="absolute flex flex-col gap-2 p-4 left-4 bottom-8 bg-blurEntry rounded-2xl backdrop-blur-2xl border border-silver">

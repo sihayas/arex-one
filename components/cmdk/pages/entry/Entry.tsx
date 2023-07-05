@@ -31,17 +31,18 @@ export const Entry = () => {
 
   // Context
   const { selectedAlbum } = useCMDKAlbum();
-  const { pages, setPages } = useCMDKContext();
-  const { setReplyParent, threadcrumbs, addToThreadcrumbs, setThreadcrumbs } =
-    useThreadcrumbs();
+  const { pages } = useCMDKContext();
+  const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumbs();
 
   const activePage = pages[pages.length - 1];
+  const firstThreadcrumb = activePage.threadcrumbs?.[0];
 
+  // If reviewId [first item in threadcrumb] changes, re-render Entry
   useEffect(() => {
-    if (activePage.threadcrumbs && activePage.threadcrumbs[0]) {
+    if (activePage.threadcrumbs && firstThreadcrumb) {
       setThreadcrumbs(activePage.threadcrumbs);
     }
-  }, [activePage.threadcrumbs?.[0]]);
+  }, [activePage.threadcrumbs, firstThreadcrumb, setThreadcrumbs]);
 
   const reviewId = threadcrumbs ? threadcrumbs[0] : null;
 
@@ -73,15 +74,20 @@ export const Entry = () => {
     }
   }, [review, setReplyParent]);
 
-  // Get artwork url function
-  const fetchArtworkUrl = async (albumId: string) => {
+  const fetchArtworkUrl = async (albumId: string | undefined) => {
+    if (!albumId) {
+      console.log("fetchArtworkURl didnt get an albumId");
+      return null;
+    }
+
     const albumData = await getAlbumById(albumId);
     const artworkUrl = generateArtworkUrl(albumData.attributes.artwork.url);
 
     return artworkUrl;
   };
 
-  // Get artwork url
+  // And then in your useQuery:
+
   const { data: artworkUrl, isLoading: isArtworkLoading } = useQuery(
     ["albumArtworkUrl", review?.albumId],
     () => fetchArtworkUrl(review?.albumId),
@@ -127,11 +133,12 @@ export const Entry = () => {
           style={{ width: "560px", height: "560px" }}
         >
           <Image
-            src={artworkUrl || selectedAlbum?.artworkUrl}
+            src={
+              artworkUrl || selectedAlbum?.artworkUrl || "/images/default.webp"
+            }
             alt={`${selectedAlbum?.attributes.name} artwork`}
             width={40} // Set this to a low value
             height={40} // Set this to the same low value
-            priority
             style={{
               position: "absolute",
               top: 0,
@@ -187,7 +194,7 @@ export const Entry = () => {
 
       {/* Replies  */}
       <div className="w-full h-full flex flex-col p-4 pb-20">
-        <RenderReplies replyIds={threadcrumbs!} reviewId={reviewId!} />
+        <RenderReplies replyIds={threadcrumbs} reviewId={reviewId!} />
       </div>
 
       {/* Reply Input  */}

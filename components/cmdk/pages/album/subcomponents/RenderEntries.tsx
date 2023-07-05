@@ -9,7 +9,7 @@ interface RenderEntriesProps {
 
 //Generates a list of entries for a given album
 export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
-  const { setPages, bounce, pages } = useCMDKContext();
+  const { setPages, bounce } = useCMDKContext();
   const { setThreadcrumbs } = useThreadcrumb();
 
   return (

@@ -86,10 +86,13 @@ export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
             >
               <div className="flex text-xs text-grey w-64">
                 {reply.replies.length} threads
-                <button onClick={() => setReplyParent(reply)}>
-                  [set reply parent id]
-                </button>
               </div>
+            </button>
+            <button
+              className="text-xs text-grey"
+              onClick={() => setReplyParent(reply)}
+            >
+              [set reply parent id]
             </button>
           </div>
         )}

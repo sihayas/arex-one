@@ -18,7 +18,7 @@ import { ExitIcon, SearchIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
 type PageName = "home" | "album" | "entry" | "form";
-type Page = { name: string; album?: AlbumData };
+type Page = { name: string; album?: AlbumData; threadcrumbs?: string[] };
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   home: { width: 720, height: 480 },
@@ -29,7 +29,7 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
-  const { resetThreadcrumbs, setThreadcrumbs } = useThreadcrumb();
+  const { resetThreadcrumbs, setThreadcrumbs, threadcrumbs } = useThreadcrumb();
   const { pages, setPages, bounceScale, bounce, hideSearch, setHideSearch } =
     useCMDKContext();
   const { setSelectedAlbum } = useCMDKAlbum();
@@ -105,12 +105,19 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     resetThreadcrumbs();
   }, [resetThreadcrumbs, setInputValue, setPages]);
 
+  // Album context
   useEffect(() => {
     if (activePage.name === "album" && activePage.album) {
       setSelectedAlbum(activePage.album);
-      console.log("Selected album: ", activePage.album);
     }
   }, [activePage, setSelectedAlbum]);
+
+  // useEffect(() => {
+  //   if (activePage.name === "entry") {
+  //     activePage.threadcrumbs = threadcrumbs;
+  //     console.log("backed up crumbs");
+  //   }
+  // }, [activePage, threadcrumbs]);
 
   //Focus on input always
   useEffect(() => {
