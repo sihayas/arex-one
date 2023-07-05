@@ -15,32 +15,73 @@ import { RenderReplies } from "./subcomponents/RenderReplies";
 import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import useThreadcrumbs from "../../../../hooks/useThreadcrumbs";
-import AnimatedGradient from "@/components/random-bullshit-go/AnimatedGradient";
 import { useQuery } from "@tanstack/react-query";
+import { getAlbumById } from "@/lib/musicKit";
+
+const generateArtworkUrl = (urlTemplate: String) => {
+  return urlTemplate.replace("{w}", "2500").replace("{h}", "2500");
+};
 
 export const Entry = () => {
   const { data: session } = useSession();
   const userId = session?.user.id;
-
-  const { selectedAlbum } = useCMDKAlbum();
-  const { selectedReviewId } = useCMDKContext();
-  const { threadcrumbs, addToThreadcrumbs, setReplyParent } = useThreadcrumbs();
-
-  // Review initial state
-  const [review, setReview] = useState<ReviewData | null>(null);
-
   // Review interaction
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
+  // Context
+  const { selectedAlbum } = useCMDKAlbum();
+  const { pages, setPages } = useCMDKContext();
+  const { setReplyParent, threadcrumbs, addToThreadcrumbs, setThreadcrumbs } =
+    useThreadcrumbs();
+
+  const activePage = pages[pages.length - 1];
+
+  useEffect(() => {
+    if (activePage.threadcrumbs && activePage.threadcrumbs[0]) {
+      setThreadcrumbs(activePage.threadcrumbs);
+    }
+  }, [activePage.threadcrumbs?.[0]]);
+
+  const reviewId = threadcrumbs ? threadcrumbs[0] : null;
+
+  // Get review data
+  const {
+    data: review,
+    error,
+    isLoading,
+  } = useQuery(
+    ["review", reviewId],
+    async () => {
+      const response: AxiosResponse<ReviewData> = await axios.get(
+        `/api/review/getById?id=${reviewId}`
+      );
+      return response.data;
+    },
+    {
+      enabled: !!reviewId, // <- Here, only fetch if reviewId is truthy
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+    }
+  );
+
+  useEffect(() => {
+    if (review) {
+      setLiked(review.likedByUser);
+      setLikeCount(review.likes.length);
+      setReplyParent(review);
+    }
+  }, [review, setReplyParent]);
+
+  // Get artwork url function
   const fetchArtworkUrl = async (albumId: string) => {
-    const response = await axios.get(
-      `/api/album/getAlbumById?albumId=${albumId}`
-    );
-    console.log("Artwork url: ", response.data.artworkUrl);
-    return response.data;
+    const albumData = await getAlbumById(albumId);
+    const artworkUrl = generateArtworkUrl(albumData.attributes.artwork.url);
+
+    return artworkUrl;
   };
 
+  // Get artwork url
   const { data: artworkUrl, isLoading: isArtworkLoading } = useQuery(
     ["albumArtworkUrl", review?.albumId],
     () => fetchArtworkUrl(review?.albumId),
@@ -48,32 +89,6 @@ export const Entry = () => {
       enabled: !!review?.albumId && selectedAlbum?.id !== review?.albumId,
     }
   );
-
-  useEffect(() => {
-    // Track whether component is mounted
-    let isMounted = true;
-
-    (async () => {
-      const reviewData: AxiosResponse<ReviewData> = await axios.get(
-        `/api/review/getById?id=${selectedReviewId}`
-      );
-
-      // Only update state if component is still mounted
-      if (isMounted && selectedReviewId) {
-        setReview(reviewData.data);
-        setLiked(reviewData.data.likedByUser);
-        setLikeCount(reviewData.data.likes.length);
-        addToThreadcrumbs(selectedReviewId);
-        setReplyParent(reviewData.data);
-        console.log("reviewData.data", reviewData.data);
-      }
-    })();
-
-    // Cleanup function to run when component unmounts
-    return () => {
-      isMounted = false;
-    };
-  }, [selectedReviewId]);
 
   const handleLikeClick = async (event: MouseEvent<HTMLButtonElement>) => {
     // This will stop the click event from propagating up to the parent components
@@ -84,7 +99,7 @@ export const Entry = () => {
     try {
       const action = liked ? "unlike" : "like";
       const response = await axios.post("/api/review/postLike", {
-        selectedReviewId: selectedReviewId,
+        selectedReviewId: reviewId,
         userId,
         action,
       });
@@ -99,6 +114,8 @@ export const Entry = () => {
   };
 
   if (!review) return null;
+
+  console.log("rendered entry", activePage.threadcrumbs);
 
   return (
     <div className="flex flex-col rounded-2xl w-full h-full overflow-scroll scrollbar-none relative">
@@ -126,12 +143,6 @@ export const Entry = () => {
               transform: "translate3d(0,0,0)",
             }}
           />
-          {/* <AnimatedGradient
-            color1={"#443F49"}
-            color2={"#425756"}
-            color3={"#79BEB8"}
-            bgColor={"#4DB1AA"}
-          />*/}
         </div>
 
         {/* Main Review */}
@@ -176,7 +187,7 @@ export const Entry = () => {
 
       {/* Replies  */}
       <div className="w-full h-full flex flex-col p-4 pb-20">
-        <RenderReplies replyIds={threadcrumbs} reviewId={selectedReviewId} />
+        <RenderReplies replyIds={threadcrumbs!} reviewId={reviewId!} />
       </div>
 
       {/* Reply Input  */}

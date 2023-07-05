@@ -29,7 +29,7 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
-  const { resetThreadcrumbs } = useThreadcrumb();
+  const { resetThreadcrumbs, setThreadcrumbs } = useThreadcrumb();
   const { pages, setPages, bounceScale, bounce, hideSearch, setHideSearch } =
     useCMDKContext();
   const { setSelectedAlbum } = useCMDKAlbum();
@@ -89,12 +89,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         while (newPages.length > 1 && pageNumber-- > 0) {
           newPages.pop();
         }
+        setThreadcrumbs(newPages[newPages.length - 1]?.threadcrumbs || []);
         return newPages;
       });
       bounce();
       resetThreadcrumbs();
     },
-    [bounce, resetThreadcrumbs, setPages]
+    [bounce, resetThreadcrumbs, setPages, setThreadcrumbs]
   );
 
   // Reset pages
@@ -160,7 +161,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           shouldFilter={false}
           //CMDK Behavior depending on whether search input or not
           onKeyDown={(e: React.KeyboardEvent) => {
-            console.log(`Keydown event: ${e.key}`);
+            // console.log(`Keydown event: ${e.key}`);
             if (e.key === "Enter" && activePage.name === "search") {
               bounce();
             }

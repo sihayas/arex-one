@@ -35,7 +35,7 @@ async function fetchReviews({
   const response = await axios.get(
     `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}`
   );
-  console.log("fetchReviews response: ", response.data);
+  // console.log("fetchReviews response: ", response.data);
   return response.data;
 }
 

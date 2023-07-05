@@ -1,7 +1,7 @@
-import { useContext } from "react";
 import EntryPreview from "./EntryPreview";
-import { CMDKContext } from "../../../../../context/CMDK";
 import { ReviewData } from "@/lib/interfaces";
+import useCMDKContext from "../../../../../hooks/useCMDK";
+import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
 
 interface RenderEntriesProps {
   reviews: ReviewData[];
@@ -9,12 +9,8 @@ interface RenderEntriesProps {
 
 //Generates a list of entries for a given album
 export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
-  // CMDK Context
-  const context = useContext(CMDKContext);
-  if (!context) {
-    throw new Error("Album must be used within a CMDKProvider");
-  }
-  const { setSelectedReviewId, setPages, bounce } = context;
+  const { setPages, bounce, pages } = useCMDKContext();
+  const { setThreadcrumbs } = useThreadcrumb();
 
   return (
     <div className="flex flex-col gap-4 overflow-visible">
@@ -28,13 +24,15 @@ export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
             <div
               key={review.id}
               onClick={() => {
-                setSelectedReviewId(review.id);
+                // Store in pages array with review id
                 setPages((prevPages) => [
                   ...prevPages,
                   {
                     name: "entry",
+                    threadcrumbs: [review.id],
                   },
                 ]);
+                setThreadcrumbs([review.id]);
                 bounce();
               }}
               className="cursor-pointer"

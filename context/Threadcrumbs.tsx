@@ -1,6 +1,10 @@
 import { createContext, useContext, useState } from "react";
 import { ReviewData, ReplyData } from "../lib/interfaces";
 
+type ThreadcrumbProviderType = {
+  children: React.ReactNode;
+};
+
 // Define the context type
 export type ThreadcrumbContextType = {
   threadcrumbs: string[];
@@ -12,10 +16,7 @@ export type ThreadcrumbContextType = {
   setReplyParent: React.Dispatch<
     React.SetStateAction<ReviewData | ReplyData | null>
   >;
-};
-
-type ThreadcrumbProviderType = {
-  children: React.ReactNode;
+  setThreadcrumbs: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 // Create the context with a default empty object
@@ -41,14 +42,14 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
   const addToThreadcrumbs = (id: string) => {
     const newThreadcrumbs = [...threadcrumbs, id];
     setThreadcrumbs(newThreadcrumbs);
-    console.log("New Threadcrumbs:", newThreadcrumbs); // log the updated threadcrumb state
+    // console.log("New Threadcrumbs:", newThreadcrumbs);
   };
 
   const removeLastThreadcrumb = () => {
     const newThreadcrumbs = [...threadcrumbs];
     newThreadcrumbs.pop();
     setThreadcrumbs(newThreadcrumbs);
-    console.log("Removed Threadcrumb:", newThreadcrumbs); // log the updated threadcrumb state
+    // console.log("Removed Threadcrumb:", newThreadcrumbs);
   };
 
   const removeUpToId = (id: string) => {
@@ -68,6 +69,8 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
 
   const resetThreadcrumbs = () => {
     setThreadcrumbs([]);
+
+    // console.log("current crumbs:", threadcrumbs);
   };
 
   return (
@@ -80,6 +83,7 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
         resetThreadcrumbs,
         replyParent,
         setReplyParent,
+        setThreadcrumbs,
       }}
     >
       {children}

@@ -48,6 +48,5 @@ export const getAlbumById = async (albumId: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
-  return response.data.data;
+  return response.data.data[0];
 };
