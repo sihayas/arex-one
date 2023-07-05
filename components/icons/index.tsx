@@ -250,28 +250,6 @@ export function PlusIcon({ ...props }) {
   );
 }
 
-export function LoveIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      xmlSpace="preserve"
-      viewBox="0 0 64 64"
-      width="16"
-      height="16"
-      fill={props.color}
-      {...props}
-    >
-      <path
-        d="M41.8 10.7c5.5 0 14.2 4.3 14.2 16 0 7.3-3.9 12-9.1 17.4-4.3 4.5-10.7 8.8-10.9 9a7.2 7.2 0 0 1-8 0c-.3-.2-6.6-4.5-10.9-9C11.9 38.7 8 34 8 26.7c0-11.7 8.7-16 14.2-16 3.5 0 6.8 1.1 9.8 3.3 3-2.2 6.3-3.3 9.8-3.3zm0 28.4c4.9-5.1 7.1-8.1 7.1-12.4 0-7.5-5.3-8.9-7.1-8.9-3.1 0-5.5 1.7-7.2 3.4a3.6 3.6 0 0 1-5.2 0 10.3 10.3 0 0 0-7.2-3.4c-1.8 0-7.1 1.4-7.1 8.9 0 4.3 2.2 7.3 7.1 12.4 3.8 4 9.8 8 9.8 8s5.9-4 9.8-8z"
-        className="prefix__st0"
-      />
-      <ellipse cx={25.7} cy={30.2} className="prefix__st0" rx={14} ry={13.6} />
-      <ellipse cx={37.8} cy={28.7} className="prefix__st0" rx={14} ry={13.6} />
-      <ellipse cx={30.5} cy={35.9} className="prefix__st0" rx={14} ry={13.6} />
-    </svg>
-  );
-}
-
 export function BackIcon({ ...props }) {
   return (
     <svg
@@ -402,18 +380,35 @@ export function ThreadIcon({ ...props }) {
   );
 }
 
-export function AsteriskIcon({ className, color, ...props }) {
+export function LoveIcon({ ...props }) {
   return (
     <svg
+      className="transition-colors duration-300"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 32"
+      xmlSpace="preserve"
+      viewBox="0 0 64 64"
+      width="16"
+      height="16"
+      fill={props.color}
       {...props}
-      className={className}
-      style={{ color }}
     >
       <path
+        d="M41.8 10.7c5.5 0 14.2 4.3 14.2 16 0 7.3-3.9 12-9.1 17.4-4.3 4.5-10.7 8.8-10.9 9a7.2 7.2 0 0 1-8 0c-.3-.2-6.6-4.5-10.9-9C11.9 38.7 8 34 8 26.7c0-11.7 8.7-16 14.2-16 3.5 0 6.8 1.1 9.8 3.3 3-2.2 6.3-3.3 9.8-3.3zm0 28.4c4.9-5.1 7.1-8.1 7.1-12.4 0-7.5-5.3-8.9-7.1-8.9-3.1 0-5.5 1.7-7.2 3.4a3.6 3.6 0 0 1-5.2 0 10.3 10.3 0 0 0-7.2-3.4c-1.8 0-7.1 1.4-7.1 8.9 0 4.3 2.2 7.3 7.1 12.4 3.8 4 9.8 8 9.8 8s5.9-4 9.8-8z"
+        className="prefix__st0"
+      />
+      <ellipse cx={25.7} cy={30.2} className="prefix__st0" rx={14} ry={13.6} />
+      <ellipse cx={37.8} cy={28.7} className="prefix__st0" rx={14} ry={13.6} />
+      <ellipse cx={30.5} cy={35.9} className="prefix__st0" rx={14} ry={13.6} />
+    </svg>
+  );
+}
+
+export function AsteriskIcon({ ...props }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" {...props}>
+      <path
         d="m17.7 17 6.2 8.4-2.4 1.6-5.5-8.7-5.5 8.7-2.3-1.6 6.2-8.4-9.3-2.4L6 12l9.1 3.2L14.5 5h3L17 15.2l9-3.2.8 2.7Z"
-        fill="currentColor"
+        fill={props.color}
       />
     </svg>
   );

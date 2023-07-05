@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LoveIcon, DividerIcon } from "../../../../icons";
+import { LoveIcon, DividerIcon, AsteriskIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import {
@@ -58,10 +58,12 @@ export default function EntryPreview(review: ReviewData) {
         {/* Rating */}
         <div className="-ml-[2px] flex items-center gap-1">
           <Stars color={"#333"} rating={review.rating} />
-
-          <DividerIcon color={"#585858"} width={5} height={5} />
-
-          <LoveIcon width={16} height={16} color={"#333"} />
+          {review.loved && (
+            <>
+              <DividerIcon color={"#585858"} width={5} height={5} />
+              <AsteriskIcon width={16} height={16} color={"#333"} />
+            </>
+          )}
         </div>
       </div>
       {/* Right Side */}

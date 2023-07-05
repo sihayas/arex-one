@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useState, useEffect, MouseEvent } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
-import { LoveIcon, DividerIcon } from "../../../icons";
+import { AsteriskIcon, DividerIcon } from "../../../icons";
 import { ReviewData } from "../../../../lib/interfaces";
 import {
   UserName,
@@ -24,7 +24,6 @@ const generateArtworkUrl = (urlTemplate: String) => {
 
 export const Entry = () => {
   const { data: session } = useSession();
-  const userId = session?.user.id;
   // Review interaction
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -52,10 +51,10 @@ export const Entry = () => {
     error,
     isLoading,
   } = useQuery(
-    ["review", reviewId],
+    ["review", reviewId, session?.user?.id],
     async () => {
       const response: AxiosResponse<ReviewData> = await axios.get(
-        `/api/review/getById?id=${reviewId}`
+        `/api/review/getById?id=${reviewId}&userId=${session?.user?.id || ""}`
       );
       return response.data;
     },
@@ -86,8 +85,6 @@ export const Entry = () => {
     return artworkUrl;
   };
 
-  // And then in your useQuery:
-
   const { data: artworkUrl, isLoading: isArtworkLoading } = useQuery(
     ["albumArtworkUrl", review?.albumId],
     () => fetchArtworkUrl(review?.albumId),
@@ -97,22 +94,24 @@ export const Entry = () => {
   );
 
   const handleLikeClick = async (event: MouseEvent<HTMLButtonElement>) => {
-    // This will stop the click event from propagating up to the parent components
-    event.stopPropagation();
+    if (!session) {
+      // console.log("User not logged in");
+      return;
+    }
 
-    if (!session) return;
-
+    const userId = session.user.id;
     try {
       const action = liked ? "unlike" : "like";
       const response = await axios.post("/api/review/postLike", {
-        selectedReviewId: reviewId,
-        userId,
+        reviewId,
         action,
+        userId,
       });
 
       if (response.data.success) {
         setLikeCount(response.data.likes);
         setLiked(!liked);
+        console.log("like update response", response.data);
       }
     } catch (error) {
       console.error("Error updating likes:", error);
@@ -176,9 +175,11 @@ export const Entry = () => {
               {/* Rating */}
               <div className="flex items-center gap-1">
                 <Stars color={"white"} rating={review.rating} />
-                <DividerIcon color={"white"} width={5} height={5} />
                 {review.loved && (
-                  <LoveIcon width={16} height={16} color={"#FFF"} />
+                  <>
+                    <DividerIcon color={"#FFF"} width={5} height={5} />
+                    <AsteriskIcon width={16} height={16} color={"#FFF"} />
+                  </>
                 )}
               </div>
             </div>

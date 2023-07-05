@@ -11,7 +11,7 @@ export const Stars: React.FC<StarsProps> = ({ rating, color }) => {
       {Array.from({ length: rating }, (_, i) => (
         <StarIcon
           key={i}
-          // className={i !== 0 ? "-ml-1" : ""}
+          className={i !== 0 ? "-ml-[2px]" : ""}
           width={16}
           height={16}
           color={color}

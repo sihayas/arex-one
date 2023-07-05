@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
+import { getSession } from "next-auth/react";
 
 type Data = {
   success: boolean;
@@ -10,7 +11,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { reviewId, userId, action } = req.body;
+  const { reviewId, action, userId } = req.body;
 
   if (action === "like") {
     // Create a new like

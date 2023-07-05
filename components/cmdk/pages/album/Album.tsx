@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
+  AsteriskIcon,
   LoveIcon,
   PlayIcon,
   ReviewIcon,
@@ -149,7 +150,7 @@ export default function Album() {
               {/* Loved count */}
               <div className="flex items-center gap-1">
                 <div className=" text-xs text-white">400</div>
-                <LoveIcon width={16} height={16} color={"#FFF"} />
+                <AsteriskIcon width={16} height={16} color={"#FFF"} />
               </div>
             </div>
           </div>

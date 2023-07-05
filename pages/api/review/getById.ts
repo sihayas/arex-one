@@ -8,7 +8,7 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id } = req.query;
+  const { id, userId } = req.query;
   const session = await getSession({ req });
 
   if (req.method === "GET") {
@@ -41,9 +41,10 @@ export default async function handle(
       });
 
       if (review) {
-        const likedByUser = session
-          ? review.likes.some((like) => like.authorId === session.user.id)
-          : false;
+        // Check if the review is liked by the current user
+        const likedByUser = review.likes.some(
+          (like) => like.authorId === userId
+        );
 
         const reviewWithUserLike = {
           ...review,
