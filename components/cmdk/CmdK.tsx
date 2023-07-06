@@ -1,5 +1,5 @@
 //React
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 import { AlbumData } from "@/lib/interfaces";
@@ -7,7 +7,7 @@ import { AlbumData } from "@/lib/interfaces";
 import { animated, useSpring } from "@react-spring/web";
 //Components
 import { Command } from "cmdk";
-import { useThreadcrumb } from "../../context/Threadcrumbs";
+import { useThreadcrumb } from "@/context/Threadcrumbs";
 import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
@@ -29,7 +29,7 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
-  const { resetThreadcrumbs, setThreadcrumbs, threadcrumbs } = useThreadcrumb();
+  const { resetThreadcrumbs, setThreadcrumbs } = useThreadcrumb();
   const { pages, setPages, bounceScale, bounce, hideSearch, setHideSearch } =
     useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
@@ -40,8 +40,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const [inputValue, setInputValue] = useState("");
 
   //Page Tracker
-  const activePage: Page = pages[pages.length - 1];
-  const previousPage: Page = pages[pages.length - 2] || { name: "home" };
+  const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
+  const previousPage: Page = useMemo(
+    () => pages[pages.length - 2] || { name: "home" },
+    [pages]
+  );
 
   const isHome = activePage.name === "home";
 
