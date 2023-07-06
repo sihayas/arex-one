@@ -13,11 +13,11 @@ import {
   generateArtworkUrl,
 } from "../../generics";
 import { RenderReplies } from "./subcomponents/RenderReplies";
-import useCMDKContext from "../../../../hooks/useCMDK";
-import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
-import useThreadcrumbs from "../../../../hooks/useThreadcrumbs";
+import { useCMDK } from "@/context/CMDKContext";
+import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumById } from "@/lib/musicKit";
+import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 export const Entry = () => {
   const { data: session } = useSession();
@@ -27,8 +27,8 @@ export const Entry = () => {
 
   // Context
   const { selectedAlbum } = useCMDKAlbum();
-  const { pages } = useCMDKContext();
-  const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumbs();
+  const { pages } = useCMDK();
+  const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
 
   const activePage = pages[pages.length - 1];
   const firstThreadcrumb = activePage.threadcrumbs?.[0];

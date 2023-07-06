@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import { AlbumData } from "@/lib/interfaces";
 
 type Page = { name: string; album?: AlbumData; threadcrumbs?: string[] };
@@ -24,6 +24,15 @@ type CMDKProviderProps = {
 export const CMDKContext = React.createContext<CMDKContextType | undefined>(
   undefined
 );
+
+// Export the hook
+export const useCMDK = (): CMDKContextType => {
+  const context = useContext(CMDKContext);
+  if (!context) {
+    throw new Error("useCMDK must be used within CMDKProvider");
+  }
+  return context;
+};
 
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [isVisible, setIsVisible] = useState(false);

@@ -10,8 +10,8 @@ import {
   StarsIcon,
 } from "../../../icons";
 import { RenderEntries } from "./subcomponents/RenderEntries";
-import useCMDKContext from "../../../../hooks/useCMDK";
-import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
+import { useCMDK } from "@/context/CMDKContext";
+import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
 import { useEffect, useRef } from "react";
 import { motion, useTransform, useViewportScroll } from "framer-motion";
@@ -42,7 +42,7 @@ async function fetchReviews({
 
 export default function Album() {
   // CMDK Context
-  const { setPages, bounce } = useCMDKContext();
+  const { setPages, bounce } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
   const boxShadow = selectedAlbum?.shadowColor
     ? `-90px 73px 46px ${selectedAlbum?.shadowColor},0.01),

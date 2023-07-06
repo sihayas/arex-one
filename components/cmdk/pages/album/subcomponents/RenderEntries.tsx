@@ -1,6 +1,6 @@
 import EntryPreview from "./EntryPreview";
 import { ReviewData } from "@/lib/interfaces";
-import useCMDKContext from "../../../../../hooks/useCMDK";
+import { useCMDK } from "@/context/CMDKContext";
 import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
 
 interface RenderEntriesProps {
@@ -9,7 +9,7 @@ interface RenderEntriesProps {
 
 //Generates a list of entries for a given album
 export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
-  const { setPages, bounce } = useCMDKContext();
+  const { setPages, bounce } = useCMDK();
   const { setThreadcrumbs } = useThreadcrumb();
 
   return (

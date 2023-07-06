@@ -24,6 +24,7 @@ export const ThreadcrumbContext = createContext<ThreadcrumbContextType | null>(
   null
 );
 
+// Create a hook to use the context
 export const useThreadcrumb = () => {
   const context = useContext(ThreadcrumbContext);
   if (!context) {

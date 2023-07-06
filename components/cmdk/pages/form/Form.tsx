@@ -7,8 +7,7 @@ import Love from "../../buttons/Love";
 import Listened from "../../buttons/Listened";
 import Slider from "../../buttons/Slider";
 import { useSession } from "next-auth/react";
-
-import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
+import { useCMDKAlbum } from "@/context/CMDKAlbum";
 
 // Fetch user review for the album and signed-in user
 const fetchUserReview = async (albumId: string, userId: string) => {

@@ -1,7 +1,7 @@
 //React
 import React, { useCallback, useEffect, useState } from "react";
-import useCMDKAlbum from "../../hooks/useCMDKAlbum";
-import useCMDKContext from "../../hooks/useCMDK";
+import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { useCMDK } from "@/context/CMDKContext";
 import { AlbumData } from "@/lib/interfaces";
 //NPM
 import { animated, useSpring } from "@react-spring/web";
@@ -31,7 +31,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
   const { resetThreadcrumbs, setThreadcrumbs, threadcrumbs } = useThreadcrumb();
   const { pages, setPages, bounceScale, bounce, hideSearch, setHideSearch } =
-    useCMDKContext();
+    useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
 
   //Element refs

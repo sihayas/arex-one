@@ -3,8 +3,8 @@ import TextareaAutosize from "react-textarea-autosize";
 import { ReplyIcon } from "../../icons";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import useThreadcrumbs from "../../../hooks/useThreadcrumbs";
 import { ReviewData, ReplyData } from "@/lib/interfaces";
+import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 interface ReplyInputProps {
   replyParent: ReviewData | ReplyData | null;
@@ -47,7 +47,7 @@ export const ReplyInput = () => {
   const { data: session } = useSession();
   const userId = session?.user.id;
 
-  const { replyParent } = useThreadcrumbs();
+  const { replyParent } = useThreadcrumb();
   const [replyContent, setReplyContent] = useState("");
   // console.log(replyParent);
 

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Line, UserName, UserAvatar } from "../../../generics";
 import { ThreadIcon } from "../../../../icons";
-import useThreadcrumbs from "../../../../../hooks/useThreadcrumbs";
+import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyData } from "@/lib/interfaces";
 
 interface ReplyProps {
@@ -10,7 +10,7 @@ interface ReplyProps {
   setSelectedReplyId: (id: string | null) => void;
 }
 export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
-  const { addToThreadcrumbs, removeUpToId, setReplyParent } = useThreadcrumbs();
+  const { addToThreadcrumbs, removeUpToId, setReplyParent } = useThreadcrumb();
   const [shrink, setShrink] = useState(false); // State for reply shrink
   const [hideContent, setHideContent] = useState(false); // State for hiding reply content
 

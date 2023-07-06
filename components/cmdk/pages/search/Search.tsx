@@ -3,8 +3,8 @@ import ColorThief from "colorthief";
 import Image from "next/image";
 import { useState } from "react";
 import Rating from "./subcomponents/Rating";
-import useCMDKContext from "../../../../hooks/useCMDK";
-import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
+import { useCMDK } from "@/context/CMDKContext";
+import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
 import { generateArtworkUrl } from "../../generics";
 
@@ -21,7 +21,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   );
 
   // CMDK context
-  const { setPages, bounce, setHideSearch } = useCMDKContext();
+  const { setPages, bounce, setHideSearch } = useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
 
   // Dominant color thief

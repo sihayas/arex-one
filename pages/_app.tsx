@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { useState } from "react";
 import { ThreadcrumbProvider } from "../context/Threadcrumbs";
-import { CMDKProvider } from "../context/CMDK";
+import { CMDKProvider } from "../context/CMDKContext";
 import { AlbumDetailsProvider } from "../context/CMDKAlbum";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
