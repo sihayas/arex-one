@@ -184,16 +184,19 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }}
         >
           <div
-            className={`flex flex-col w-full transition-all duration-300 h-[94px] overflow-hidden ${
-              !hideSearch ? `${isHome ? "!h-[30rem]" : "!h-[52rem]"}` : null
-            }`}
+            className={`flex flex-col w-full transition-all duration-300 [overflow-hidden]`}
           >
             {/* Search bar */}
-            <div className="w-full absolute items-center flex p-4 gap-4 text-grey">
+            <div
+              className={`w-full absolute items-center flex p-4 gap-4 text-grey  -translate-y-10 ${
+                hideSearch ? "z-0" : "z-20"
+              }`}
+            >
               <div className="absolute left-6">
                 <HomeIcon width={24} height={24} color={"#999)"} />
               </div>
               <Command.Input
+                className="shadow-defaultLow"
                 ref={inputRef}
                 placeholder="Rx*"
                 style={{ paddingLeft: "2.5rem" }} // adjust as per your requirement
@@ -213,8 +216,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             </div>
             {/* Search Results  */}
             <div
-              className={`transition-opacity duration-300 h-fill overflow-scroll ${
-                hideSearch ? "opacity-0" : "opacity-100"
+              className={`transition-all duration-150 h-1/3 w-full overflow-scroll rounded-2xl absolute z-10 bg-white ${
+                hideSearch
+                  ? "opacity-0 h-0 pointer-events-none"
+                  : "opacity-100 border"
               }`}
             >
               <Search
