@@ -14,7 +14,7 @@ import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
 import Home from "./pages/home/Home";
 //Icons
-import { ExitIcon, SearchIcon } from "../../components/icons";
+import { ExitIcon, SearchIcon, HomeIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
 type PageName = "home" | "album" | "entry" | "form";
@@ -109,7 +109,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     resetThreadcrumbs();
   }, [resetThreadcrumbs, setInputValue, setPages]);
 
-  // Album context
+  // Adjust album context when navigating to an album page
   useEffect(() => {
     if (activePage.name === "album" && activePage.album) {
       setSelectedAlbum(activePage.album);
@@ -189,11 +189,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             }`}
           >
             {/* Search bar */}
-            <div className="w-full items-center flex p-4 gap-4 border-b text-grey">
-              <SearchIcon color={"#CCC"} />
+            <div className="w-full absolute items-center flex p-4 gap-4 text-grey">
+              <div className="absolute left-6">
+                <HomeIcon width={24} height={24} color={"#999)"} />
+              </div>
               <Command.Input
                 ref={inputRef}
-                placeholder="soundsystem"
+                placeholder="Rx*"
+                style={{ paddingLeft: "2.5rem" }} // adjust as per your requirement
                 onValueChange={(value) => {
                   if (hideSearch) {
                     setHideSearch(false);

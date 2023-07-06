@@ -429,3 +429,22 @@ export function StarsIcon({ ...props }) {
     </svg>
   );
 }
+
+export function HomeIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      className="prefix__icon prefix__icon-tabler prefix__icon-tabler-circle-dotted"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <path d="M7.5 4.2h0M4.2 7.5h0M3 12h0M4.2 16.5h0M7.5 19.8h0M12 21h0M16.5 19.8h0M19.8 16.5h0M21 12h0M19.8 7.5h0M16.5 4.2h0M12 3h0" />
+    </svg>
+  );
+}
