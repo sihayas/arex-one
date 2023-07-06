@@ -10,6 +10,7 @@ import {
   LikeButton,
   ReplyInput,
   Stars,
+  generateArtworkUrl,
 } from "../../generics";
 import { RenderReplies } from "./subcomponents/RenderReplies";
 import useCMDKContext from "../../../../hooks/useCMDK";
@@ -17,10 +18,6 @@ import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import useThreadcrumbs from "../../../../hooks/useThreadcrumbs";
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumById } from "@/lib/musicKit";
-
-const generateArtworkUrl = (urlTemplate: String) => {
-  return urlTemplate.replace("{w}", "2500").replace("{h}", "2500");
-};
 
 export const Entry = () => {
   const { data: session } = useSession();

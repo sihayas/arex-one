@@ -6,6 +6,7 @@ import Rating from "./subcomponents/Rating";
 import useCMDKContext from "../../../../hooks/useCMDK";
 import useCMDKAlbum from "../../../../hooks/useCMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
+import { generateArtworkUrl } from "../../generics";
 
 interface SearchProps {
   searchData: any;
@@ -39,7 +40,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   //Set the album
   const handleSelectAlbum = (
     album: AlbumData,
-    artworkUrl: string,
+    artworkUrl: string, // Notice the type change here
     shadowColor: string
   ) => {
     const extendedAlbum = {
@@ -133,7 +134,3 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
 };
 
 export default Search;
-
-const generateArtworkUrl = (urlTemplate: String) => {
-  return urlTemplate.replace("{w}", "2500").replace("{h}", "2500");
-};
