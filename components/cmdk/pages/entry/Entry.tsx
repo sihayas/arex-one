@@ -118,9 +118,6 @@ export const Entry = () => {
   };
 
   if (!review) return null;
-
-  console.log("rendered entry", activePage.threadcrumbs);
-
   return (
     <div className="flex flex-col rounded-2xl w-full h-full overflow-scroll scrollbar-none relative bg-white">
       {/* Section One */}

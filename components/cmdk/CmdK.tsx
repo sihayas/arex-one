@@ -88,21 +88,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Breadcrumb navigation
   const navigateBack = useCallback(
     (pageNumber: number = 1) => {
-      console.log("navigateBack called, pageNumber:", pageNumber);
       setPages((prevPages) => {
-        const newPages = [...prevPages];
-        while (newPages.length > 1 && pageNumber-- > 0) {
-          newPages.pop();
-          console.log("newPages after pop:", newPages);
-        }
-        // setThreadcrumbs(newPages[newPages.length - 1]?.threadcrumbs || []);
+        const newPages = prevPages.slice(0, prevPages.length - pageNumber);
+        setThreadcrumbs(newPages[newPages.length - 1]?.threadcrumbs || []);
         return newPages;
       });
       bounce();
-
-      // resetThreadcrumbs();
     },
-    [bounce, setPages]
+    [bounce, setPages, setThreadcrumbs]
   );
 
   // Reset pages
@@ -117,7 +110,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     if (activePage.name === "album" && activePage.album) {
       setSelectedAlbum(activePage.album);
     }
-  }, [activePage, setSelectedAlbum]);
+    console.log("currentpages", pages);
+  }, [activePage, setSelectedAlbum, pages]);
 
   // useEffect(() => {
   //   if (activePage.name === "entry") {
