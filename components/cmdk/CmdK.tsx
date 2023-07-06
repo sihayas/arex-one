@@ -61,6 +61,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   }));
 
+  // Page dimensions spring
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
