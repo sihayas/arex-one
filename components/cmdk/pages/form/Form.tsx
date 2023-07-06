@@ -26,7 +26,7 @@ export default function Form() {
   const { data: session } = useSession();
   const userId = session?.user.id;
 
-  const { selectedAlbum, artworkUrl } = useCMDKAlbum();
+  const { selectedAlbum } = useCMDKAlbum();
 
   const hasReviewed = useQuery(
     ["userReview", selectedAlbum?.id, userId],
@@ -91,7 +91,7 @@ export default function Form() {
       <div className="flex w-full h-full">
         <Image
           className="rounded-[14px] rounded-tr-none rounded-br-none"
-          src={artworkUrl}
+          src={selectedAlbum?.artworkUrl || `/images/placeholder.png`}
           alt={`${selectedAlbum?.attributes.name} artwork`}
           width={480}
           height={480}

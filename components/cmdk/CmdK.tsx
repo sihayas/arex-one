@@ -22,7 +22,7 @@ type Page = { name: string; album?: AlbumData; threadcrumbs?: string[] };
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   home: { width: 720, height: 480 },
-  album: { width: 720, height: 788 }, // 808
+  album: { width: 800, height: 800 }, // 808
   entry: { width: 560, height: 880 }, // 880
   form: { width: 960, height: 480 },
 };
@@ -88,18 +88,21 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Breadcrumb navigation
   const navigateBack = useCallback(
     (pageNumber: number = 1) => {
+      console.log("navigateBack called, pageNumber:", pageNumber);
       setPages((prevPages) => {
         const newPages = [...prevPages];
         while (newPages.length > 1 && pageNumber-- > 0) {
           newPages.pop();
+          console.log("newPages after pop:", newPages);
         }
-        setThreadcrumbs(newPages[newPages.length - 1]?.threadcrumbs || []);
+        // setThreadcrumbs(newPages[newPages.length - 1]?.threadcrumbs || []);
         return newPages;
       });
       bounce();
-      resetThreadcrumbs();
+
+      // resetThreadcrumbs();
     },
-    [bounce, resetThreadcrumbs, setPages, setThreadcrumbs]
+    [bounce, setPages]
   );
 
   // Reset pages
@@ -130,6 +133,24 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     } //Autofocus on search input.
   }, [isVisible]);
 
+  let ActiveComponent;
+  switch (activePage.name) {
+    case "home":
+      ActiveComponent = Home;
+      break;
+    case "album":
+      ActiveComponent = Album;
+      break;
+    case "entry":
+      ActiveComponent = Entry;
+      break;
+    case "form":
+      ActiveComponent = Form;
+      break;
+    default:
+      ActiveComponent = Home;
+  }
+
   return (
     <>
       <animated.div
@@ -141,7 +162,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         className={`cmdk ${
           isVisible
             ? `${
-                isHome ? "shadow-defaultLowHover" : ""
+                isHome
+                  ? "shadow-defaultLowHover"
+                  : `${hideSearch ? "shadow-defaultLow" : ""}`
               } scale-100 pointer-events-auto`
             : "!shadow-none scale-95 pointer-events-none border border-silver"
         }`}
@@ -165,7 +188,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         )}
         {/* CMDK Inner Content  */}
         <Command
-          className={`transition-opacity duration-300 w-full h-full relative ${
+          className={`transition-opacity duration-300 w-full h-full relative z-0 ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}
           ref={ref}
@@ -188,15 +211,15 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           >
             {/* Search bar */}
             <div
-              className={`w-full absolute items-center flex p-4 gap-4 text-grey  -translate-y-10 ${
-                hideSearch ? "z-0" : "z-20"
+              className={`w-full absolute items-center flex p-4 gap-4 text-grey  -translate-y-8 ${
+                hideSearch ? "-z-10" : "z-20"
               }`}
             >
               <div className="absolute left-6">
                 <HomeIcon width={24} height={24} color={"#999)"} />
               </div>
               <Command.Input
-                className="shadow-defaultLow"
+                className="border"
                 ref={inputRef}
                 placeholder="Rx*"
                 style={{ paddingLeft: "2.5rem" }} // adjust as per your requirement
@@ -216,10 +239,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             </div>
             {/* Search Results  */}
             <div
-              className={`transition-all duration-150 h-1/3 w-full overflow-scroll rounded-2xl absolute z-10 bg-white ${
+              className={`transition-all duration-150 w-full overflow-scroll rounded-2xl absolute bg-white  ${
+                isHome ? "h-full" : "h-1/3"
+              } ${
                 hideSearch
-                  ? "opacity-0 h-0 pointer-events-none"
-                  : "opacity-100 border"
+                  ? "opacity-0 h-0 pointer-events-none -z-10"
+                  : "opacity-100 border z-10"
               }`}
             >
               <Search
@@ -230,12 +255,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               />
             </div>
           </div>
-
-          {/* Search bar & results*/}
-          {activePage.name === "home" && <Home />}
-          {activePage.name === "album" && <Album />}
-          {activePage.name === "entry" && <Entry />}
-          {activePage.name === "form" && <Form />}
+          <ActiveComponent />
         </Command>
       </animated.div>
     </>

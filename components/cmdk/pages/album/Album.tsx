@@ -3,7 +3,6 @@ import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
   AsteriskIcon,
-  LoveIcon,
   PlayIcon,
   ReviewIcon,
   StarIcon,
@@ -108,7 +107,7 @@ export default function Album() {
   return (
     <div
       ref={scrollContainerRef}
-      className="flex rounded-2xl flex-col w-full overflow-scroll scrollbar-none"
+      className="flex flex-col items-center rounded-2xl z-0 w-full overflow-scroll scrollbar-none bg-white"
       style={{
         boxShadow: boxShadow,
       }}
@@ -119,9 +118,9 @@ export default function Album() {
           className="rounded-2xl rounded-b-none"
           src={selectedAlbum!.artworkUrl}
           alt={`${selectedAlbum?.attributes.name} artwork`}
-          width={720}
-          height={720}
-          quality={100}
+          width={800}
+          height={800}
+          // quality={100}
         />
 
         <div className="absolute flex flex-col gap-2 p-4 left-4 bottom-8 bg-blurEntry rounded-2xl backdrop-blur-2xl border border-silver">
@@ -137,7 +136,6 @@ export default function Album() {
             <div className="flex items-center">
               <div className="text-xl text-white font-semibold">4.2</div>
               <StarIcon width={24} height={24} color={"#FFF"} />
-              <div className="text-xs text-white italic mt-3">/10,000</div>
             </div>
 
             {/* Album Metadata  */}
@@ -158,7 +156,7 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col w-full p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow -mb-4">
+      <div className="flex flex-col w-[92%] p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow -mb-4">
         {/* Verdict  */}
         <div className="flex flex-col gap-4 p-2">
           {/* The Verdict  */}

@@ -20,6 +20,7 @@ import { getAlbumById } from "@/lib/musicKit";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 export const Entry = () => {
+  console.log("Entry component render");
   const { data: session } = useSession();
   // Review interaction
   const [liked, setLiked] = useState(false);
@@ -82,6 +83,7 @@ export const Entry = () => {
     return artworkUrl;
   };
 
+  // If review album is different from selected album, fetch artwork
   const { data: artworkUrl, isLoading: isArtworkLoading } = useQuery(
     ["albumArtworkUrl", review?.albumId],
     () => fetchArtworkUrl(review?.albumId),
@@ -120,7 +122,7 @@ export const Entry = () => {
   console.log("rendered entry", activePage.threadcrumbs);
 
   return (
-    <div className="flex flex-col rounded-2xl w-full h-full overflow-scroll scrollbar-none relative">
+    <div className="flex flex-col rounded-2xl w-full h-full overflow-scroll scrollbar-none relative bg-white">
       {/* Section One */}
       <div className="w-full relative">
         {/* Art  */}
@@ -142,7 +144,7 @@ export const Entry = () => {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              filter: "blur(80px)",
+              filter: "blur(80px) brightness(75%)",
               transform: "translate3d(0,0,0)",
             }}
           />
