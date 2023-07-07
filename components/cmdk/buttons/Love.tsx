@@ -17,6 +17,7 @@ const Love = ({ isLoggedIn, handleLovedChange }: LoveProps) => {
 
   return (
     <button
+      type="button"
       onClick={handleClick}
       style={{
         backgroundColor: loved ? "#333333" : "#CCC",

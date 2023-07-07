@@ -4,11 +4,11 @@ import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import Script from "next/script";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
 import { useState } from "react";
 import { ThreadcrumbProvider } from "../context/Threadcrumbs";
-import { CMDKProvider } from "../context/CMDKContext";
 import { AlbumDetailsProvider } from "../context/CMDKAlbum";
+import { Toaster } from "sonner";
+import { CMDKProvider } from "../context/CMDKContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -28,7 +28,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             </ThreadcrumbProvider>
           </AlbumDetailsProvider>
         </CMDKProvider>
-        {/* <Toaster /> */}
+        <Toaster />
         <ReactQueryDevtools />
       </SessionProvider>
     </QueryClientProvider>

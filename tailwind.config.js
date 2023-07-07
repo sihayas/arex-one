@@ -28,6 +28,7 @@ module.exports = {
         greyHover: "#333333",
         silver: "rgba(0, 0, 0, 0.05)",
         blurEntry: "rgba(255, 255, 255, 0.2)",
+        error: "rgb(255,94,0)",
       },
       transitionProperty: {
         opacity: "opacity",

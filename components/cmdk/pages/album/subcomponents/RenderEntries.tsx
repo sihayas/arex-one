@@ -19,7 +19,6 @@ export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
           if (!review || typeof review !== "object") {
             return null; // Or return some error or placeholder component
           }
-
           return (
             <div
               key={review.id}

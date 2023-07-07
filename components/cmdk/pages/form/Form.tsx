@@ -121,11 +121,11 @@ export default function Form() {
           <div className="flex gap-2 justify-between items-center">
             <div className="flex">
               <Listened
-                isLoggedIn={session}
+                isLoggedIn={session ? true : false}
                 handleListenedChange={handleListenedChange}
               />
               <Love
-                isLoggedIn={session}
+                isLoggedIn={session ? true : false}
                 handleLovedChange={handleLovedChange}
               />
             </div>

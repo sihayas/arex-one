@@ -13,6 +13,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
 import { useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { motion, useTransform, useViewportScroll } from "framer-motion";
 
 async function initializeAlbum(album: AlbumData) {
@@ -41,7 +42,7 @@ async function fetchReviews({
 
 export default function Album() {
   // CMDK Context
-  const { setPages, bounce } = useCMDK();
+  const { setPages, bounce, pages } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
   const boxShadow = selectedAlbum?.shadowColor
     ? `-90px 73px 46px ${selectedAlbum?.shadowColor},0.01),
@@ -68,11 +69,15 @@ export default function Album() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isError: isReviewsError,
   } = useInfiniteQuery(["reviews", selectedAlbum?.id], fetchReviews, {
     getNextPageParam: (lastPage, pages) => {
       return lastPage.length === 10 ? pages.length + 1 : false;
     },
     enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
+    onSuccess: (data) => {
+      toast.success("Loaded reviews");
+    },
   });
 
   // Infinite Scroll Page Tracker
@@ -101,6 +106,21 @@ export default function Album() {
       }
     };
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
+
+  // Load and error handling
+
+  if (isLoading || isFetchingNextPage) {
+    return <div>Loading...</div>; // Replace with your preferred loading state
+  }
+
+  if (isError || isReviewsError) {
+    return (
+      <div>
+        <button onClick={pages.pop}>go back</button>
+        <button onClick={pages.pop}>retry</button>
+      </div>
+    );
+  }
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 

@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
-import slugify from "slugify";
 
 export default async function handle(
   req: NextApiRequest,
@@ -15,7 +14,6 @@ export default async function handle(
       isReReview,
       authorId,
       albumId,
-      albumName,
     } = req.body;
 
     const album = await prisma.album.findUnique({
@@ -25,46 +23,40 @@ export default async function handle(
     });
 
     try {
-      const user = await prisma.user.findUnique({ where: { id: authorId } });
-      const username = user?.username;
+      const actualIsReReview =
+        isReReview ||
+        (await prisma.review.count({
+          where: {
+            authorId: authorId,
+            albumId: albumId,
+          },
+        })) > 0;
 
-      const previousReviews = await prisma.review.count({
-        where: {
-          authorId: authorId,
-          albumId: albumId,
+      const newReview = await prisma.review.create({
+        data: {
+          listened,
+          loved,
+          rating,
+          content: reviewText,
+          replay: actualIsReReview,
+          author: { connect: { id: authorId } },
+          album: { connect: { id: albumId } },
+          permalink: "", // Initially created with empty permalink
         },
       });
 
-      const safeUsername = username || "unknown-user";
-      const nameSlug = slugify(safeUsername, { lower: true });
-      const albumSlug = slugify(albumName, { lower: true });
+      // Update the review with its ID as permalink after creation
+      const updatedReview = await prisma.review.update({
+        where: { id: newReview.id },
+        data: { permalink: `review/${newReview.id}` },
+      });
 
-      const permalink = `${nameSlug}/album/${albumSlug}`;
-      const adjustedPermalink =
-        previousReviews === 0 ? permalink : `${permalink}/${previousReviews}`;
+      await prisma.album.update({
+        where: { id: albumId },
+        data: { lastUpdated: new Date() },
+      });
 
-      const actualIsReReview = isReReview || previousReviews > 0;
-
-      const [newReview] = await prisma.$transaction([
-        prisma.review.create({
-          data: {
-            listened,
-            loved,
-            rating,
-            content: reviewText,
-            replay: actualIsReReview,
-            author: { connect: { id: authorId } },
-            album: { connect: { id: albumId } },
-            permalink: adjustedPermalink,
-          },
-        }),
-        prisma.album.update({
-          where: { id: albumId },
-          data: { lastUpdated: new Date() },
-        }),
-      ]);
-
-      res.status(201).json(newReview);
+      res.status(201).json(updatedReview);
     } catch (error) {
       console.error("Failed to create review:", error);
       res.status(500).json({ error: "Failed to create review." });
