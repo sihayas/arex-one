@@ -8,6 +8,7 @@ import Listened from "../../buttons/Listened";
 import Slider from "../../buttons/Slider";
 import { useSession } from "next-auth/react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { toast } from "sonner";
 
 // Fetch user review for the album and signed-in user
 const fetchUserReview = async (albumId: string, userId: string) => {
@@ -63,7 +64,8 @@ export default function Form() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    try {
+    // Define your async function
+    const postReview = async () => {
       const response = await axios.post("/api/review/postReview", {
         listened,
         rating,
@@ -78,11 +80,16 @@ export default function Form() {
       if (response.status === 201) {
         console.log("Review submitted successfully", response.data);
       } else {
-        console.log("Unexpected response status", response.status);
+        throw new Error("Unexpected response status");
       }
-    } catch (error) {
-      console.error("Error submitting review:", error);
-    }
+    };
+
+    // Use toast.promise
+    toast.promise(postReview(), {
+      loading: "Submitting review...",
+      success: "Review submitted successfully",
+      error: "Error submitting review",
+    });
   };
 
   // Render the form
