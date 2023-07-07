@@ -84,13 +84,6 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
 
   return (
     <div className="flex flex-col h-full p-4 w-full overflow-scroll items-start gap-2 rounded-[16px] bg-white">
-      {/* Test Average Rating */}
-      <button
-        className="absolute bottom-0 right-0 text-xs text-grey"
-        onClick={handleUpdateRatingsClick}
-      >
-        Update Album Ratings
-      </button>
       {/* Search Results */}
       {searchData.map((album: AlbumData, averageRating: string) => {
         const artworkUrl = generateArtworkUrl(album.attributes.artwork.url);
@@ -130,6 +123,13 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
           </Command.Item>
         );
       })}
+      {/* Test Average Rating / Internal Purposes */}
+      <button
+        className="absolute bottom-0 right-0 text-xs text-grey"
+        onClick={handleUpdateRatingsClick}
+      >
+        Update Album Ratings
+      </button>
     </div>
   );
 };

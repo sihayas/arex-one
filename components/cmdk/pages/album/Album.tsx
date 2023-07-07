@@ -40,6 +40,7 @@ export default function Album() {
   // CMDK Context
   const { setPages, bounce, pages } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
+
   const boxShadow = selectedAlbum?.shadowColor
     ? `-90px 73px 46px ${selectedAlbum?.shadowColor},0.01),
      -51px 41px 39px ${selectedAlbum.shadowColor},0.05),
@@ -51,7 +52,7 @@ export default function Album() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize album and mark as viewed
-  const { data, isLoading, isError } = useQuery(
+  const albumQuery = useQuery(
     ["album", selectedAlbum?.id],
     () =>
       selectedAlbum ? initializeAlbum(selectedAlbum) : Promise.resolve({}),
@@ -60,22 +61,30 @@ export default function Album() {
     }
   );
 
+  // Fetch reviews for the album
+  const reviewsQuery = useInfiniteQuery(
+    ["reviews", selectedAlbum?.id],
+    fetchReviews,
+    {
+      getNextPageParam: (lastPage, pages) => {
+        return lastPage.length === 10 ? pages.length + 1 : false;
+      },
+      enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        toast.success("Loaded reviews");
+      },
+    }
+  );
+
+  const { data, isLoading, isError } = albumQuery;
   const {
     data: reviewsData,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isError: isReviewsError,
-  } = useInfiniteQuery(["reviews", selectedAlbum?.id], fetchReviews, {
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.length === 10 ? pages.length + 1 : false;
-    },
-    enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
-    refetchOnWindowFocus: false,
-    onSuccess: (data) => {
-      toast.success("Loaded reviews");
-    },
-  });
+  } = reviewsQuery;
 
   // Infinite Scroll Page Tracker
   useEffect(() => {
@@ -105,8 +114,7 @@ export default function Album() {
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   // Load and error handling
-
-  if (isLoading || isFetchingNextPage) {
+  if (!selectedAlbum || isLoading || isFetchingNextPage) {
     return <div>Loading...</div>; // Replace with your preferred loading state
   }
 
@@ -133,20 +141,19 @@ export default function Album() {
       <div className="relative">
         <Image
           className="rounded-2xl rounded-b-none"
-          src={selectedAlbum!.artworkUrl}
-          alt={`${selectedAlbum?.attributes.name} artwork`}
+          src={selectedAlbum.artworkUrl}
+          alt={`${selectedAlbum.attributes.name} artwork`}
           width={800}
           height={800}
-          // quality={100}
         />
 
         <div className="absolute flex flex-col gap-2 p-4 left-4 bottom-8 bg-blurEntry rounded-2xl backdrop-blur-2xl border border-silver">
           {/* Album Info  */}
           <div className="flex flex-col text-white text-sm">
             <div className="font-medium">
-              {selectedAlbum?.attributes.artistName}
+              {selectedAlbum.attributes.artistName}
             </div>
-            <div>{selectedAlbum?.attributes.name}</div>
+            <div>{selectedAlbum.attributes.name}</div>
           </div>
           {/* Stats */}
           <div className="flex items-center gap-4">
