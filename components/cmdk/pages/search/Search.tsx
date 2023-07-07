@@ -83,7 +83,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   searchData && searchData.length ? null : <div></div>;
 
   return (
-    <div className="flex flex-col h-full p-4 w-full overflow-scroll items-start gap-2 rounded-[16px]">
+    <div className="flex flex-col h-full p-4 w-full overflow-scroll items-start gap-2 rounded-[16px] bg-white">
       {/* Test Average Rating */}
       <button
         className="absolute bottom-0 right-0 text-xs text-grey"
@@ -102,6 +102,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
               // Set selected album state
               handleSelectAlbum(album, artworkUrl, shadowColors[album.id])
             }
+            onMouseDown={(event) => event.preventDefault()}
           >
             <div className="flex gap-4 items-center w-full">
               <Image

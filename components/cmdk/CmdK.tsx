@@ -238,7 +238,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               } ${
                 hideSearch
                   ? "opacity-0 h-0 pointer-events-none -z-10"
-                  : "opacity-100 border z-10"
+                  : "opacity-100 border z-10 pointer-events-auto"
               }`}
             >
               <Search

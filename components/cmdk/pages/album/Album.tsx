@@ -14,12 +14,9 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { motion, useTransform, useViewportScroll } from "framer-motion";
 
 async function initializeAlbum(album: AlbumData) {
-  console.log("Initializing album...");
   const response = await axios.post(`/api/album/postAlbum`, album);
-  console.log("Album initialized");
   return response.data;
 }
 
@@ -36,7 +33,6 @@ async function fetchReviews({
   const response = await axios.get(
     `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}`
   );
-  // console.log("fetchReviews response: ", response.data);
   return response.data;
 }
 
@@ -75,6 +71,7 @@ export default function Album() {
       return lastPage.length === 10 ? pages.length + 1 : false;
     },
     enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
+    refetchOnWindowFocus: false,
     onSuccess: (data) => {
       toast.success("Loaded reviews");
     },

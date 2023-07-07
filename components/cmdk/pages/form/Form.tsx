@@ -87,16 +87,17 @@ export default function Form() {
 
   // Render the form
   return (
-    <form className="w-full h-full" onSubmit={handleSubmit}>
+    <form
+      className="w-full h-full bg-white rounded-2xl"
+      onSubmit={handleSubmit}
+    >
       <div className="flex w-full h-full">
         <Image
-          className="rounded-[14px] rounded-tr-none rounded-br-none"
+          className="rounded-2xl rounded-tr-none rounded-br-none"
           src={selectedAlbum?.artworkUrl || `/images/placeholder.png`}
           alt={`${selectedAlbum?.attributes.name} artwork`}
           width={480}
           height={480}
-          quality={100}
-          priority
         />
         <div className="p-8 mt-4 flex flex-col gap-4 w-full">
           {/* Names */}
