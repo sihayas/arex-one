@@ -157,11 +157,6 @@ export default function Album() {
           </div>
           {/* Stats */}
           <div className="flex items-center gap-4">
-            <div className="flex items-center">
-              <div className="text-xl text-white font-semibold">4.2</div>
-              <StarIcon width={24} height={24} color={"#FFF"} />
-            </div>
-
             {/* Album Metadata  */}
             <div className="flex items-center gap-4">
               {/* Play Count */}
@@ -184,7 +179,11 @@ export default function Album() {
         {/* Verdict  */}
         <div className="flex flex-col gap-4 p-2">
           {/* The Verdict  */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center">
+              <div className="text-xl text-grey font-semibold">4.2</div>
+              <StarIcon width={24} height={24} color={"#999"} />
+            </div>
             <div className="flex items-center gap-1 py-1 px-2 bg-[#FDF1E5] rounded-full font-medium">
               <StarsIcon width={16} height={16} color={"#6B3815"} />
               <div className="text-xs text-[#6B3815]">classic</div>
