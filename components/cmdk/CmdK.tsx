@@ -58,21 +58,25 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
   // Use gesture
-  const [{ x, y, scale }, api] = useSpring(() => ({ x: 0, y: 0, scale: 1.05 }));
+  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
 
   const bind = useDrag(
-    ({ down, movement: [mx, my] }) => {
+    ({ down, movement: [mx, my], last }) => {
       api.start({
         x: down ? mx : 0,
         y: down ? my : 0,
         immediate: down,
       });
+
+      const dragThreshold = 100; // Adjust as needed
+
+      // If the gesture has ended and the total movement along the X axis is above the threshold
+      if (last && Math.abs(mx) > dragThreshold) {
+        navigateBack();
+      }
     },
     {
-      // axis: "lock",
       filterTaps: true,
-      // bounds: { left: -120, right: 120, top: -50, bottom: 50 },
-      // rubberband: true,
     }
   );
 
@@ -298,13 +302,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               />
             </animated.div>
           </div>
-          {/* Active Page */}
+          {/* Active Page / Use Gesture */}
           <animated.div
             {...bind()}
             style={{
               x,
               y,
-              scale,
             }}
             className={`flex w-full h-full rounded-[32px] ${
               isVisible ? "shadow-defaultLowHover" : "shadow-defaultLow"

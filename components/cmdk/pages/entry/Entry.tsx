@@ -119,7 +119,7 @@ export const Entry = () => {
 
   if (!review) return null;
   return (
-    <div className="flex flex-col rounded-2xl w-full h-full overflow-scroll scrollbar-none relative bg-white">
+    <div className="flex flex-col rounded-[32px] w-full h-full overflow-scroll scrollbar-none relative bg-white">
       {/* Section One */}
       <div className="w-full relative">
         {/* Art  */}
