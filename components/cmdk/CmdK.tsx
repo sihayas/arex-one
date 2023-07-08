@@ -14,7 +14,13 @@ import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
 import Home from "./pages/home/Home";
 //Icons
-import { ExitIcon, SearchIcon, HomeIcon } from "../../components/icons";
+import {
+  ExitIcon,
+  HomeIcon,
+  BreadcrumbCircle,
+  BreadcrumbSquare,
+  BreadcrumbTriangle,
+} from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
 type PageName = "home" | "album" | "entry" | "form";
@@ -90,6 +96,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     height: hideSearch ? "0px" : "480px",
     opacity: hideSearch ? 0 : 1,
     config: { tension: 600, friction: 60 },
+    paddingTop: hideSearch ? "0px" : "32px",
+    padding: hideSearch ? "0px" : "16px",
   });
 
   // Breadcrumb navigation
@@ -174,15 +182,37 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             <button onClick={resetPage}>
               <ExitIcon />
             </button>
-            {pages.map((page, index) => (
-              <button
-                key={index}
-                className="text-xs text-grey"
-                onClick={() => navigateBack(pages.length - index - 1)}
-              >
-                <div>{page.name}</div>
-              </button>
-            ))}
+            {pages.map((page, index) => {
+              // Determine the appropriate icon based on the page name
+              let Icon;
+              switch (page.name) {
+                case "album":
+                  Icon = BreadcrumbSquare;
+                  break;
+                case "entry":
+                  Icon = BreadcrumbTriangle;
+                  break;
+                case "form":
+                  Icon = BreadcrumbCircle;
+                  break;
+                default:
+                  Icon = BreadcrumbCircle; // Default icon, modify as necessary
+              }
+
+              // Determine the size based on whether this page is the active page
+              const isLastPage = index === pages.length - 1;
+              const size = isLastPage ? 24 : 24 * 0.8;
+
+              return (
+                <button
+                  key={index}
+                  className="text-xs text-grey"
+                  onClick={() => navigateBack(pages.length - index - 1)}
+                >
+                  <Icon width={size} height={size} />
+                </button>
+              );
+            })}
           </div>
         )}
         {/* CMDK Inner Content  */}
@@ -239,9 +269,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Search Results  */}
             <animated.div
               style={{ ...searchStyles }}
-              className={`w-full overflow-scroll rounded-[32px] absolute bg-white p-4 pt-16 z-10 ${
+              className={`w-full overflow-scroll rounded-[32px] absolute bg-white z-10 ${
                 hideSearch ? "pointer-events-none" : "pointer-events-auto"
-              } ${isHome ? "" : "shadow-defaultLow"}`}
+              }`}
             >
               <Search
                 searchData={data}
