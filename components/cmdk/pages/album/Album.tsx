@@ -151,7 +151,7 @@ export default function Album() {
           {/* Album Info  */}
           <div className="flex flex-col gap-1 text-white tracking-tight">
             <div className="">{selectedAlbum.attributes.artistName}</div>
-            <div className="font-medium text-2xl">
+            <div className="font-bold text-2xl">
               {selectedAlbum.attributes.name}
             </div>
           </div>
