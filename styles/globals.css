@@ -84,3 +84,9 @@ textarea {
 .animate-color-width {
   transition: background-color 0.5s ease, width 0.5s ease;
 }
+
+.previous-page {
+  position: absolute;
+  opacity: 0.3; /* adjust as needed */
+  z-index: -20;
+}

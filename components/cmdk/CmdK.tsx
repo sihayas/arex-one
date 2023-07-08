@@ -192,7 +192,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }`}
           ref={ref}
           shouldFilter={false}
-          //CMDK Behavior depending on whether search input or not
           onKeyDown={(e: React.KeyboardEvent) => {
             // console.log(`Keydown event: ${e.key}`);
             if (e.key === "Enter" && activePage.name === "search") {
@@ -205,6 +204,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             }
           }}
         >
+          {/* Main Visible Content (Search, Search Results, Active Page) */}
           <div className={`flex flex-col w-full`}>
             {/* Search bar */}
             <div
@@ -240,10 +240,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             <animated.div
               style={{ ...searchStyles }}
               className={`w-full overflow-scroll rounded-[32px] absolute bg-white p-4 pt-16 z-10 ${
-                hideSearch
-                  ? "pointer-events-none"
-                  : "pointer-events-auto shadow-defaultLow"
-              }`}
+                hideSearch ? "pointer-events-none" : "pointer-events-auto"
+              } ${isHome ? "" : "shadow-defaultLow"}`}
             >
               <Search
                 searchData={data}
