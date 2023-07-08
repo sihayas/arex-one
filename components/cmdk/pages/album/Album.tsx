@@ -145,6 +145,7 @@ export default function Album() {
           alt={`${selectedAlbum.attributes.name} artwork`}
           width={800}
           height={800}
+          onDragStart={(e) => e.preventDefault()}
         />
 
         <div className="absolute flex gap-4 p-4 left-4 bottom-4">

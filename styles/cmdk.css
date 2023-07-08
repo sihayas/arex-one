@@ -8,7 +8,6 @@
 }
 
 .cmdk [cmdk-root] {
-  background: rgba(255, 255, 255, 0.97);
   font-family: var(--font-sans);
   position: relative;
   align-items: center;

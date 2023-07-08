@@ -5,6 +5,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import { AlbumData } from "@/lib/interfaces";
 //NPM
 import { animated, useSpring } from "@react-spring/web";
+import { useDrag, useGesture } from "@use-gesture/react";
 //Components
 import { Command } from "cmdk";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
@@ -51,13 +52,31 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     () => pages[pages.length - 2] || { name: "home" },
     [pages]
   );
-
   const isHome = activePage.name === "home";
 
   // Search albums
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
-  // Page dimensions spring
+  // Use gesture
+  const [{ x, y, scale }, api] = useSpring(() => ({ x: 0, y: 0, scale: 1.05 }));
+
+  const bind = useDrag(
+    ({ down, movement: [mx, my] }) => {
+      api.start({
+        x: down ? mx : 0,
+        y: down ? my : 0,
+        immediate: down,
+      });
+    },
+    {
+      // axis: "lock",
+      filterTaps: true,
+      // bounds: { left: -120, right: 120, top: -50, bottom: 50 },
+      // rubberband: true,
+    }
+  );
+
+  // Spring dimensions
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
     width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width || 1018,
     height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height || 612,
@@ -67,7 +86,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   }));
 
-  // Page dimensions spring
+  // Spring dimensions
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
@@ -80,7 +99,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     });
   }, [activePage.name, setDimensionsSpring]);
 
-  // Transform spring
+  // Spring transform
   const transformSpring = useSpring({
     transform: isVisible
       ? `translate(-50%, -50%) scale(${bounceScale})`
@@ -91,7 +110,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   });
 
-  // Search Height Spring
+  // Spring search
   const searchStyles = useSpring({
     height: hideSearch ? "0px" : "480px",
     opacity: hideSearch ? 0 : 1,
@@ -170,7 +189,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         }}
         className={`cmdk ${
           isVisible
-            ? `scale-100 pointer-events-auto shadow-defaultLowHover`
+            ? `scale-100 pointer-events-auto`
             : "!shadow-none scale-95 pointer-events-none border border-silver"
         }`}
       >
@@ -280,7 +299,19 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             </animated.div>
           </div>
           {/* Active Page */}
-          <ActiveComponent />
+          <animated.div
+            {...bind()}
+            style={{
+              x,
+              y,
+              scale,
+            }}
+            className={`flex w-full h-full rounded-[32px] ${
+              isVisible ? "shadow-defaultLowHover" : "shadow-defaultLow"
+            } `}
+          >
+            <ActiveComponent />
+          </animated.div>
         </Command>
       </animated.div>
     </>

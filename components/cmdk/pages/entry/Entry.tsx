@@ -134,6 +134,7 @@ export const Entry = () => {
             alt={`${selectedAlbum?.attributes.name} artwork`}
             width={40} // Set this to a low value
             height={40} // Set this to the same low value
+            onDragStart={(e) => e.preventDefault()}
             style={{
               position: "absolute",
               top: 0,
