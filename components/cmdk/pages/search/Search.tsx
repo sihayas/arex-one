@@ -83,7 +83,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   searchData && searchData.length ? null : <div></div>;
 
   return (
-    <div className="flex flex-col h-full p-4 w-full overflow-scroll items-start gap-2 rounded-[16px] bg-white">
+    <>
       {/* Search Results */}
       {searchData.map((album: AlbumData, averageRating: string) => {
         const artworkUrl = generateArtworkUrl(album.attributes.artwork.url);
@@ -130,7 +130,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
       >
         Update Album Ratings
       </button>
-    </div>
+    </>
   );
 };
 

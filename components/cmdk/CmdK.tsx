@@ -65,7 +65,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
-        await next({ width: 306, height: 306 }); // Loading dimension
+        // await next({ width: 306, height: 306 }); // Loading dimension
         await next({
           width: PAGE_DIMENSIONS[activePage.name as PageName]?.width || 1018,
           height: PAGE_DIMENSIONS[activePage.name as PageName]?.height || 612,
@@ -83,6 +83,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       tension: 400,
       friction: 30,
     },
+  });
+
+  // Search Height Spring
+
+  const searchStyles = useSpring({
+    height: hideSearch ? "0px" : "400px",
+    opacity: hideSearch ? 0 : 1,
+    config: { tension: 500, friction: 60 },
   });
 
   // Breadcrumb navigation
@@ -110,7 +118,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     if (activePage.name === "album" && activePage.album) {
       setSelectedAlbum(activePage.album);
     }
-    console.log("currentpages", pages);
   }, [activePage, setSelectedAlbum, pages]);
 
   // useEffect(() => {
@@ -122,11 +129,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   //Focus on input always
   useEffect(() => {
-    if (isVisible && inputRef.current) {
+    if (isVisible && inputRef.current && isHome) {
       inputRef.current.focus();
     } //Autofocus on search input.
-  }, [isVisible]);
+  }, [isVisible, isHome]);
 
+  // Handle page render
   let ActiveComponent;
   switch (activePage.name) {
     case "home":
@@ -155,11 +163,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         }}
         className={`cmdk ${
           isVisible
-            ? `${
-                isHome
-                  ? "shadow-defaultLowHover"
-                  : `${hideSearch ? "shadow-defaultLow" : ""}`
-              } scale-100 pointer-events-auto`
+            ? `scale-100 pointer-events-auto ${
+                isHome ? "shadow-defaultLowHover" : ``
+              } `
             : "!shadow-none scale-95 pointer-events-none border border-silver"
         }`}
       >
@@ -200,13 +206,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             }
           }}
         >
-          <div
-            className={`flex flex-col w-full transition-all duration-300 [overflow-hidden]`}
-          >
+          <div className={`flex flex-col w-full`}>
             {/* Search bar */}
             <div
-              className={`w-full absolute items-center flex p-4 gap-4 text-grey  -translate-y-8 ${
-                hideSearch ? "-z-10" : "z-20"
+              className={`w-full absolute items-center flex p-4 gap-4 text-grey transition-transform duration-500 ${
+                hideSearch ? "-z-10 -translate-y-8" : "z-20"
               }`}
             >
               <div className="absolute left-6">
@@ -232,13 +236,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               />
             </div>
             {/* Search Results  */}
-            <div
-              className={`transition-all duration-150 w-full overflow-scroll rounded-2xl absolute bg-white  ${
-                isHome ? "h-full" : "h-1/3"
-              } ${
+            <animated.div
+              style={{ ...searchStyles }}
+              className={` w-full overflow-scroll rounded-2xl absolute bg-white p-4 ${
                 hideSearch
-                  ? "opacity-0 h-0 pointer-events-none -z-10"
-                  : "opacity-100 border z-10 pointer-events-auto"
+                  ? "pointer-events-none z-0"
+                  : "pointer-events-auto border z-10"
               }`}
             >
               <Search
@@ -247,7 +250,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 isFetching={isFetching}
                 error={error}
               />
-            </div>
+            </animated.div>
           </div>
           <ActiveComponent />
         </Command>

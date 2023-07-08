@@ -30,6 +30,9 @@ module.exports = {
         blurEntry: "rgba(255, 255, 255, 0.2)",
         error: "rgb(255,94,0)",
       },
+      letterSpacing: {
+        tight: "-.02em",
+      },
       transitionProperty: {
         opacity: "opacity",
       },

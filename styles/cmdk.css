@@ -56,12 +56,14 @@
 }
 
 .cmdk [cmdk-list] {
-  height: 100%;
   width: 100%;
-  overflow: visible;
   overscroll-behavior: contain;
   scroll-padding-block-end: 40px;
   border-radius: 32px;
+  min-height: 300px;
+  height: var(--cmdk-list-height);
+  max-height: 500px;
+  transition: height 100ms ease;
 }
 
 .cmdk [cmdk-group-heading] {

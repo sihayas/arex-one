@@ -72,7 +72,7 @@ export default function Album() {
       enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
-        toast.success("Loaded reviews");
+        toast.success("loaded reviews");
       },
     }
   );
@@ -147,13 +147,13 @@ export default function Album() {
           height={800}
         />
 
-        <div className="absolute flex flex-col gap-2 p-4 left-4 bottom-8 bg-blurEntry rounded-2xl backdrop-blur-2xl border border-silver">
+        <div className="absolute flex gap-4 p-4 left-4 bottom-4">
           {/* Album Info  */}
-          <div className="flex flex-col text-white text-sm">
-            <div className="font-medium">
-              {selectedAlbum.attributes.artistName}
+          <div className="flex flex-col gap-1 text-white tracking-tight">
+            <div className="">{selectedAlbum.attributes.artistName}</div>
+            <div className="font-medium text-2xl">
+              {selectedAlbum.attributes.name}
             </div>
-            <div>{selectedAlbum.attributes.name}</div>
           </div>
           {/* Stats */}
           <div className="flex items-center gap-4">
@@ -222,7 +222,6 @@ export default function Album() {
           color={"#FFF"}
           onClick={() => {
             setPages((prevPages) => [...prevPages, { name: "form" }]);
-
             bounce();
           }}
         />
