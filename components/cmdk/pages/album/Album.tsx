@@ -132,7 +132,7 @@ export default function Album() {
   return (
     <div
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-2xl z-0 w-full overflow-scroll scrollbar-none bg-white"
+      className="flex flex-col items-center rounded-[32px] z-0 w-full overflow-scroll scrollbar-none bg-white"
       style={{
         boxShadow: boxShadow,
       }}
@@ -180,7 +180,7 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col w-[92%] p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow -mb-4">
+      <div className="flex flex-col p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow -mb-4">
         {/* Verdict  */}
         <div className="flex flex-col gap-4 p-2">
           {/* The Verdict  */}

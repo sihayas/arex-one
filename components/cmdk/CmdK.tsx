@@ -88,7 +88,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Search Height Spring
 
   const searchStyles = useSpring({
-    height: hideSearch ? "0px" : "400px",
+    height: hideSearch ? "0px" : "480px",
     opacity: hideSearch ? 0 : 1,
     config: { tension: 500, friction: 60 },
   });
@@ -238,10 +238,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Search Results  */}
             <animated.div
               style={{ ...searchStyles }}
-              className={` w-full overflow-scroll rounded-2xl absolute bg-white p-4 ${
+              className={`w-full overflow-scroll rounded-[32px] absolute bg-white p-4 pt-16 z-10 ${
                 hideSearch
-                  ? "pointer-events-none z-0"
-                  : "pointer-events-auto border z-10"
+                  ? "pointer-events-none"
+                  : "pointer-events-auto border"
               }`}
             >
               <Search
