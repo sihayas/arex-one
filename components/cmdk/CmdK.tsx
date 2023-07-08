@@ -86,11 +86,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   });
 
   // Search Height Spring
-
   const searchStyles = useSpring({
     height: hideSearch ? "0px" : "480px",
     opacity: hideSearch ? 0 : 1,
-    config: { tension: 500, friction: 60 },
+    config: { tension: 600, friction: 60 },
   });
 
   // Breadcrumb navigation
@@ -217,7 +216,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 <HomeIcon width={24} height={24} color={"#999)"} />
               </div>
               <Command.Input
-                className="border"
+                className={`border ${
+                  hideSearch ? "shadow-defaultLow" : "shadow-album"
+                }`}
                 ref={inputRef}
                 placeholder="Rx*"
                 style={{ paddingLeft: "2.5rem" }} // adjust as per your requirement
@@ -241,7 +242,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               className={`w-full overflow-scroll rounded-[32px] absolute bg-white p-4 pt-16 z-10 ${
                 hideSearch
                   ? "pointer-events-none"
-                  : "pointer-events-auto border"
+                  : "pointer-events-auto shadow-defaultLow"
               }`}
             >
               <Search

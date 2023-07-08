@@ -43,6 +43,7 @@
 .cmdk [cmdk-item][aria-selected="true"] {
   background: #ececec;
   border-radius: 16px;
+  transform: scale(1.02);
 }
 
 .cmdk [cmdk-item][aria-disabled="true"] {
