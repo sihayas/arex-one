@@ -74,6 +74,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       if (last && Math.abs(mx) > dragThreshold) {
         navigateBack();
       }
+      if (last && Math.abs(my) > dragThreshold) {
+        setHideSearch((prevHideSearch) => !prevHideSearch);
+      }
     },
     {
       filterTaps: true,
@@ -264,7 +267,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               }`}
             >
               <div className="absolute left-6">
-                <HomeIcon width={24} height={24} color={"#999)"} />
+                <HomeIcon width={24} height={24} color={"#FFF"} />
               </div>
               <Command.Input
                 className={`${
@@ -291,7 +294,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             <animated.div
               style={{ ...searchStyles }}
               className={`w-full overflow-scroll rounded-[32px] absolute bg-white z-10 ${
-                hideSearch ? "pointer-events-none" : "pointer-events-auto"
+                hideSearch
+                  ? "pointer-events-none"
+                  : "!pt-[4rem] pointer-events-auto"
               }`}
             >
               <Search
@@ -309,7 +314,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               x,
               y,
             }}
-            className={`flex w-full h-full rounded-[32px] ${
+            className={`flex w-full h-full rounded-[32px] cursor-grab ${
               isVisible ? "shadow-defaultLowHover" : "shadow-defaultLow"
             } `}
           >
