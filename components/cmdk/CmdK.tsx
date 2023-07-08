@@ -62,7 +62,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width || 1018,
     height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height || 612,
     config: {
-      tension: 400,
+      tension: 420,
       friction: 40,
     },
   }));
@@ -164,15 +164,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     <>
       <animated.div
         style={{
-          ...dimensionsSpring,
-          ...transformSpring,
+          ...dimensionsSpring, // To shapeshift
+          ...transformSpring, // To appear
           transition: "box-shadow 750ms, scale 300ms",
         }}
         className={`cmdk ${
           isVisible
-            ? `scale-100 pointer-events-auto ${
-                isHome ? "shadow-defaultLowHover" : ``
-              } `
+            ? `scale-100 pointer-events-auto shadow-defaultLowHover`
             : "!shadow-none scale-95 pointer-events-none border border-silver"
         }`}
       >
@@ -234,7 +232,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             }
           }}
         >
-          {/* Main Visible Content (Search, Search Results, Active Page) */}
+          {/* Search / Search Results*/}
           <div className={`flex flex-col w-full`}>
             {/* Search bar */}
             <div
@@ -246,12 +244,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 <HomeIcon width={24} height={24} color={"#999)"} />
               </div>
               <Command.Input
-                className={`border ${
+                className={`${
                   hideSearch ? "shadow-defaultLow" : "shadow-album"
                 }`}
                 ref={inputRef}
                 placeholder="Rx*"
-                style={{ paddingLeft: "2.5rem" }} // adjust as per your requirement
+                style={{ paddingLeft: "2.5rem" }}
                 onValueChange={(value) => {
                   if (hideSearch) {
                     setHideSearch(false);
@@ -281,6 +279,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               />
             </animated.div>
           </div>
+          {/* Active Page */}
           <ActiveComponent />
         </Command>
       </animated.div>

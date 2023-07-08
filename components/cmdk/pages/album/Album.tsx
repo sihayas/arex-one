@@ -150,57 +150,50 @@ export default function Album() {
         <div className="absolute flex gap-4 p-4 left-4 bottom-4">
           {/* Album Info  */}
           <div className="flex flex-col gap-1 text-white tracking-tight">
-            <div className="">{selectedAlbum.attributes.artistName}</div>
-            <div className="font-bold text-2xl">
-              {selectedAlbum.attributes.name}
+            <div className="text-end">
+              {selectedAlbum.attributes.artistName}
             </div>
-          </div>
-          {/* Stats */}
-          <div className="flex items-center gap-4">
-            {/* Album Metadata  */}
-            <div className="flex items-center gap-4">
-              {/* Play Count */}
-              <div className="flex items-center gap-1">
-                <div className=" text-xs text-white">400</div>
-                <PlayIcon width={16} height={16} color={"#FFF"} />
-              </div>
-              {/* Loved count */}
-              <div className="flex items-center gap-1">
-                <div className=" text-xs text-white">400</div>
-                <AsteriskIcon width={16} height={16} color={"#FFF"} />
-              </div>
-            </div>
+            <button
+              onClick={() => {
+                setPages((prevPages) => [...prevPages, { name: "form" }]);
+                bounce();
+              }}
+              className="font-bold text-2xl transition-all duration-300 hover:scale-105"
+            >
+              + {selectedAlbum.attributes.name}
+            </button>
           </div>
         </div>
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow -mb-4">
+      <div className="flex flex-col p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow -mb-4 w-full">
         {/* Verdict  */}
         <div className="flex flex-col gap-4 p-2">
           {/* The Verdict  */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center">
+            {/* Stars  */}
+            <div className="flex items-center gap-1">
               <div className="text-xl text-grey font-semibold">4.2</div>
-              <StarIcon width={24} height={24} color={"#999"} />
+              <StarsIcon width={24} height={24} color={"#999"} />
             </div>
-            <div className="flex items-center gap-1 py-1 px-2 bg-[#FDF1E5] rounded-full font-medium">
-              <StarsIcon width={16} height={16} color={"#6B3815"} />
-              <div className="text-xs text-[#6B3815]">classic</div>
+            {/* Album Metadata  */}
+            <div className="flex items-center gap-4 ml-2">
+              {/* Play Count */}
+              <div className="flex flex-col gap-1">
+                <div className="text-xs text-grey">+ heard by</div>
+                <div className="font-semibold text-sm text-grey">400</div>
+              </div>
+              {/* Loved count */}
+              <div className="flex flex-col gap-1">
+                <div className="text-xs text-grey">* loved by</div>
+                <div className="font-semibold text-sm text-grey">20</div>
+              </div>
             </div>
           </div>
 
           {/* Verdict Notes  */}
-          <div className="text-sm text-grey">
-            In Smithereens, Joji masterfully navigates the labyrinth of human
-            emotions with his signature blend of melancholic pop. His soft yet
-            emotive voice, backed by minimalist lo-fi beats and ethereal synths,
-            guides listeners through poignant tales of love, loss, and longing.
-            The album is akin to a late-night intimate conversation, its honesty
-            and vulnerability resonating long after the last note. Smithereens
-            isnt just music-its an emotional journey, a raw, introspective
-            exploration of lifes complexities through Jojis unique lens.
-          </div>
+          <div className="text-sm text-grey">verdict pending</div>
         </div>
 
         {/* Album Entries  */}
@@ -215,15 +208,6 @@ export default function Album() {
         ) : (
           <div className="">youve reached the end</div>
         )}
-      </div>
-      <div className="absolute right-4 bottom-8 bg-blurEntry backdrop-blur-md rounded-full">
-        <ReviewIcon
-          color={"#FFF"}
-          onClick={() => {
-            setPages((prevPages) => [...prevPages, { name: "form" }]);
-            bounce();
-          }}
-        />
       </div>
     </div>
   );
