@@ -233,7 +233,7 @@ export function HomeIcon({ ...props }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
-      className="prefix__icon prefix__icon-tabler prefix__icon-tabler-circle-dotted"
+      className="prefix__icon prefix__icon-tabler prefix__icon-tabler-circle-dotted absolute left-6"
       viewBox="0 0 24 24"
       {...props}
     >

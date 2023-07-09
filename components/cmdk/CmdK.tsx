@@ -58,28 +58,42 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
   // Use gesture
-  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
+  const [{ x, y, scale }, api] = useSpring(() => ({ x: 0, y: 0, scale: 1 }));
 
   const bind = useDrag(
     ({ down, movement: [mx, my], last }) => {
+      const scaleFactor = down ? 1 - Math.abs(mx / 1400) : 1;
       api.start({
         x: down ? mx : 0,
         y: down ? my : 0,
+        scale: scaleFactor,
         immediate: down,
       });
 
       const dragThreshold = 100; // Adjust as needed
 
-      // If the gesture has ended and the total movement along the X axis is above the threshold
-      if (last && Math.abs(mx) > dragThreshold) {
-        navigateBack();
-      }
-      if (last && Math.abs(my) > dragThreshold) {
-        setHideSearch((prevHideSearch) => !prevHideSearch);
+      if (last) {
+        // If gesture is released
+        if (Math.abs(mx) > dragThreshold) {
+          // If gesture is horizontal and exceeds threshold
+          navigateBack();
+        }
+
+        // If gesture is vertical downwards and exceeds threshold
+        if (Math.abs(my) > dragThreshold) {
+          if (my > 0) {
+            inputRef.current?.focus();
+          } else {
+            // If gesture is vertical upwards and exceeds threshold
+            resetPage();
+          }
+        }
       }
     },
     {
       filterTaps: true,
+      // bounds: { left: -120, right: 120, top: -120, bottom: 120 },
+      // rubberband: true,
     }
   );
 
@@ -121,9 +135,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const searchStyles = useSpring({
     height: hideSearch ? "0px" : "480px",
     opacity: hideSearch ? 0 : 1,
-    config: { tension: 600, friction: 60 },
     paddingTop: hideSearch ? "0px" : "32px",
     padding: hideSearch ? "0px" : "16px",
+    config: { tension: 700, friction: 60 },
   });
 
   // Breadcrumb navigation
@@ -188,6 +202,24 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   return (
     <>
+      {/* Breadcrumbs  */}
+      {!isHome && (
+        <div className="flex flex-col gap-2 items-center absolute top-1/2">
+          <button className="text-xs text-grey" onClick={resetPage}>
+            reset
+          </button>
+          {pages.map((page, index) => (
+            <button
+              key={index}
+              className="text-xs text-grey"
+              onClick={() => navigateBack(pages.length - index - 1)}
+            >
+              <div>{page.name}</div>
+            </button>
+          ))}
+        </div>
+      )}
+
       <animated.div
         style={{
           ...dimensionsSpring, // To shapeshift
@@ -200,48 +232,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             : "!shadow-none scale-95 pointer-events-none border border-silver"
         }`}
       >
-        {/* Breadcrumbs  */}
-        {!isHome && (
-          <div className="flex flex-col gap-2 items-center absolute -left-8 top-1/2">
-            <button onClick={resetPage}>
-              <ExitIcon />
-            </button>
-            {pages.map((page, index) => {
-              // Determine the appropriate icon based on the page name
-              let Icon;
-              switch (page.name) {
-                case "album":
-                  Icon = BreadcrumbSquare;
-                  break;
-                case "entry":
-                  Icon = BreadcrumbTriangle;
-                  break;
-                case "form":
-                  Icon = BreadcrumbCircle;
-                  break;
-                default:
-                  Icon = BreadcrumbCircle; // Default icon, modify as necessary
-              }
-
-              // Determine the size based on whether this page is the active page
-              const isLastPage = index === pages.length - 1;
-              const size = isLastPage ? 24 : 24 * 0.8;
-
-              return (
-                <button
-                  key={index}
-                  className="text-xs text-grey"
-                  onClick={() => navigateBack(pages.length - index - 1)}
-                >
-                  <Icon width={size} height={size} />
-                </button>
-              );
-            })}
-          </div>
-        )}
         {/* CMDK Inner Content  */}
         <Command
-          className={`transition-opacity duration-300 w-full h-full relative z-0 ${
+          className={`transition-opacity duration-300 w-full h-full relative ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}
           ref={ref}
@@ -262,13 +255,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           <div className={`flex flex-col w-full`}>
             {/* Search bar */}
             <div
-              className={`w-full absolute items-center flex p-4 gap-4 text-grey transition-transform duration-500 ${
-                hideSearch ? "-z-10 -translate-y-8" : "z-20"
-              }`}
+              className={`w-full absolute items-center flex p-4 gap-4 text-grey transition-transform duration-300 z-20 ${
+                hideSearch ? `-translate-y-8 ${!isHome ? "!z-0" : ""}` : ""
+              }`} // Only change z-index if not on home page
             >
-              <div className="absolute left-6">
-                <HomeIcon width={24} height={24} color={"#FFF"} />
-              </div>
+              <HomeIcon width={24} height={24} color={"#FFF"} />
               <Command.Input
                 className={`${
                   hideSearch ? "shadow-defaultLow" : "shadow-album"
@@ -290,7 +281,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 }}
               />
             </div>
-            {/* Search Results  */}
+            {/* Search Resultss  */}
             <animated.div
               style={{ ...searchStyles }}
               className={`w-full overflow-scroll rounded-[32px] absolute bg-white z-10 ${
@@ -313,8 +304,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             style={{
               x,
               y,
+              scale,
             }}
-            className={`flex w-full h-full rounded-[32px] cursor-grab ${
+            className={`flex w-full h-full rounded-[32px] cursor-grab z-0 ${
               isVisible ? "shadow-defaultLowHover" : "shadow-defaultLow"
             } `}
           >

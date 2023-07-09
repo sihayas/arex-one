@@ -124,12 +124,12 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
         );
       })}
       {/* Test Average Rating / Internal Purposes */}
-      <button
+      {/* <button
         className="absolute bottom-0 right-0 text-xs text-grey"
         onClick={handleUpdateRatingsClick}
       >
         Update Album Ratings
-      </button>
+      </button> */}
     </>
   );
 };

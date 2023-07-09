@@ -132,7 +132,7 @@ export default function Album() {
   return (
     <div
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[32px] z-0 w-full overflow-scroll scrollbar-none bg-white"
+      className="flex flex-col items-center rounded-[32px] z-0 w-full overflow-scroll scrollbar-none"
       style={{
         boxShadow: boxShadow,
       }}
@@ -168,27 +168,27 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white shadow-defaultLow -mb-4 w-full">
+      <div className="flex flex-col p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white               shadow-defaultLow -mb-4 w-full">
         {/* Verdict  */}
         <div className="flex flex-col gap-4 p-2">
           {/* The Verdict  */}
           <div className="flex items-center gap-2">
             {/* Stars  */}
             <div className="flex items-center gap-1">
-              <div className="text-xl text-grey font-semibold">4.2</div>
-              <StarsIcon width={24} height={24} color={"#999"} />
+              <div className="text-xl text-black font-semibold">4.2</div>
+              <StarsIcon width={24} height={24} color={"#333"} />
             </div>
             {/* Album Metadata  */}
             <div className="flex items-center gap-4 ml-2">
               {/* Play Count */}
               <div className="flex flex-col gap-1">
-                <div className="text-xs text-grey">+ heard by</div>
-                <div className="font-semibold text-sm text-grey">400</div>
+                <div className="text-xs text-black">+ heard by</div>
+                <div className="font-semibold text-sm text-black">400</div>
               </div>
               {/* Loved count */}
               <div className="flex flex-col gap-1">
-                <div className="text-xs text-grey">* loved by</div>
-                <div className="font-semibold text-sm text-grey">20</div>
+                <div className="text-xs text-black">* loved by</div>
+                <div className="font-semibold text-sm text-black">20</div>
               </div>
             </div>
           </div>
