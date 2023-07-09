@@ -9,6 +9,7 @@ import { useDrag, useGesture } from "@use-gesture/react";
 //Components
 import { Command } from "cmdk";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
+import { useDragLogic } from "@/hooks/useDragLogic";
 import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
@@ -52,44 +53,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
   // Use gesture
-  const [{ x, y, scale }, api] = useSpring(() => ({ x: 0, y: 0, scale: 1 }));
-
-  const bind = useDrag(
-    ({ down, movement: [mx, my], last }) => {
-      const scaleFactor = down ? 1 - Math.abs(mx / 1400) : 1;
-      api.start({
-        x: down ? mx : 0,
-        y: down ? my : 0,
-        scale: scaleFactor,
-        immediate: down,
-      });
-
-      const dragThreshold = 80; // Adjust as needed
-
-      if (last) {
-        // If gesture is released
-        if (Math.abs(mx) > dragThreshold) {
-          // If gesture is horizontal and exceeds threshold
-          navigateBack();
-        }
-
-        // If gesture is vertical downwards and exceeds threshold
-        if (Math.abs(my) > dragThreshold) {
-          if (my > 0) {
-            inputRef.current?.focus();
-          } else {
-            // If gesture is vertical upwards and exceeds threshold
-            resetPage();
-          }
-        }
-      }
-    },
-    {
-      filterTaps: true,
-      // bounds: { left: -120, right: 120, top: -120, bottom: 120 },
-      // rubberband: true,
-    }
-  );
 
   // Spring dimensions
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
@@ -154,6 +117,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     resetThreadcrumbs();
   }, [resetThreadcrumbs, setInputValue, setPages]);
 
+  const { bind, x, y, scale } = useDragLogic({
+    navigateBack,
+    resetPage,
+    inputRef,
+  });
+
   // Adjust album context when navigating to an album page
   useEffect(() => {
     if (activePage.name === "album" && activePage.album) {
@@ -170,11 +139,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   //Focus on input always
   useEffect(() => {
-    if (isVisible && inputRef.current && isHome) {
-      inputRef.current.focus();
-    } //Autofocus on search input.
-  }, [isVisible, isHome]);
-
+    if (inputRef.current) {
+      if (isVisible && activePage.name === "home") {
+        inputRef.current.focus();
+      } else {
+        inputRef.current.blur();
+      }
+    }
+  }, [isVisible, activePage.name]);
   // Handle page render
   let ActiveComponent;
   switch (activePage.name) {
@@ -249,8 +221,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           <div className={`flex flex-col w-full`}>
             {/* Search bar */}
             <div
-              className={`w-full absolute items-center flex p-4 gap-4 text-grey transition-transform duration-300 z-20 ${
-                hideSearch ? `-translate-y-8 ${!isHome ? "!z-0" : ""}` : ""
+              className={`w-full absolute items-center flex p-4 gap-4 text-grey transition-transform duration-300 z-20 scale-100 ${
+                hideSearch
+                  ? `-translate-y-8 scale-95 ${!isHome ? "!z-0" : ""}`
+                  : ""
               }`} // Only change z-index if not on home page
             >
               <HomeIcon width={24} height={24} color={"#FFF"} />

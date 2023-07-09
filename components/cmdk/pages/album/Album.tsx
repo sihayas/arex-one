@@ -132,7 +132,7 @@ export default function Album() {
   return (
     <div
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[32px] z-0 w-full overflow-scroll scrollbar-none"
+      className="flex flex-col items-center rounded-[32px] z-0 w-full bg-white overflow-scroll scrollbar-none"
       style={{
         boxShadow: boxShadow,
       }}
