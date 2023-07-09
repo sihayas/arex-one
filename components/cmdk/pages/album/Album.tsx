@@ -151,7 +151,7 @@ export default function Album() {
         <div className="absolute flex gap-4 p-4 left-4 bottom-4">
           {/* Album Info  */}
           <div className="flex flex-col gap-1 text-white tracking-tight">
-            <div className="text-end">
+            <div className="text-end text-shadow">
               {selectedAlbum.attributes.artistName}
             </div>
             <button
@@ -159,7 +159,7 @@ export default function Album() {
                 setPages((prevPages) => [...prevPages, { name: "form" }]);
                 bounce();
               }}
-              className="font-bold text-2xl transition-all duration-300 hover:scale-105"
+              className="font-bold text-2xl text-shadow transition-all duration-300 hover:scale-105"
             >
               + {selectedAlbum.attributes.name}
             </button>

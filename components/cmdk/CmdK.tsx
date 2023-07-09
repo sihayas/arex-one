@@ -15,13 +15,7 @@ import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
 import Home from "./pages/home/Home";
 //Icons
-import {
-  ExitIcon,
-  HomeIcon,
-  BreadcrumbCircle,
-  BreadcrumbSquare,
-  BreadcrumbTriangle,
-} from "../../components/icons";
+import { HomeIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
 type PageName = "home" | "album" | "entry" | "form";
@@ -70,7 +64,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         immediate: down,
       });
 
-      const dragThreshold = 100; // Adjust as needed
+      const dragThreshold = 80; // Adjust as needed
 
       if (last) {
         // If gesture is released
