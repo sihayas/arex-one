@@ -11,23 +11,20 @@ module.exports = {
   theme: {
     extend: {
       boxShadow: {
+        low: "0px 0px 1px 0px rgba(0, 0, 0, 0.25);",
+        medium: "0px 0px 20px 0px rgba(0, 0, 0, 0.09);",
+        cmdkScaled: "0 0 30px rgba(0, 0, 0, 0.1)",
         nav: "0 0 0 1px hsla(0, 0%, 0%, 0.047), 0 4px 4px hsla(0, 0%, 0%, 0.141)",
-        cmdkScaled:
-          "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",
-        album:
-          "0px 0px 6px rgba(0, 0, 0, 0.02), 0px 2px 4px rgba(0, 0, 0, 0.08);",
-        defaultLow: "0 1px 4px rgba(0,0,0,.1), 0 2px 4px rgba(0,0,0,.1)",
-        defaultLowHover: "0 10px 40px rgba(0,0,0,.2)",
       },
       colors: {
         black: "#333333",
-        grey: "#999999",
-        greyTitle: "#585858",
-        greyUnselected: "#CCCCCC",
-        greySelected: "#6A6A6A",
-        greyHover: "#333333",
+        gray: "#585858",
+        gray1: "#777777",
+        gray2: "#999999",
+        gray3: "#CCCCCC",
         silver: "rgba(0, 0, 0, 0.05)",
         blurEntry: "rgba(255, 255, 255, 0.2)",
+        blurEntryDark: "rgba(0, 0, 0, 0.8)",
         error: "rgb(255,94,0)",
       },
       letterSpacing: {

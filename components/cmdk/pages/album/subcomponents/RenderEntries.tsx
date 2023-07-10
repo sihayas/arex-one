@@ -13,7 +13,7 @@ export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
   const { setThreadcrumbs } = useThreadcrumb();
 
   return (
-    <div className="flex flex-col gap-4 overflow-visible">
+    <div className="flex flex-col gap-6 overflow-visible">
       {reviews && reviews.length > 0 ? (
         reviews.map((review) => {
           if (!review || typeof review !== "object") {
@@ -34,14 +34,13 @@ export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
                 setThreadcrumbs([review.id]);
                 bounce();
               }}
-              className="cursor-pointer"
             >
               <EntryPreview key={review.id} {...review} />
             </div>
           );
         })
       ) : (
-        <div className="text-xs text-grey">no entries</div>
+        <div className="text-xs text-grey p-2">no entries</div>
       )}
     </div>
   );

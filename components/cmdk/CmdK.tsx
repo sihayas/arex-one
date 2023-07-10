@@ -19,14 +19,15 @@ import Home from "./pages/home/Home";
 import { HomeIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
-type PageName = "home" | "album" | "entry" | "form";
+type PageName = "home" | "album" | "entry" | "form" | "user";
 type Page = { name: string; album?: AlbumData; threadcrumbs?: string[] };
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   home: { width: 720, height: 480 },
-  album: { width: 800, height: 800 }, // 808
-  entry: { width: 560, height: 880 }, // 880
+  album: { width: 800, height: 800 },
+  entry: { width: 560, height: 880 },
   form: { width: 960, height: 480 },
+  user: { width: 400, height: 400 },
 };
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
@@ -117,6 +118,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     resetThreadcrumbs();
   }, [resetThreadcrumbs, setInputValue, setPages]);
 
+  // Drag logic
   const { bind, x, y, scale } = useDragLogic({
     navigateBack,
     resetPage,
@@ -147,6 +149,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       }
     }
   }, [isVisible, activePage.name]);
+
   // Handle page render
   let ActiveComponent;
   switch (activePage.name) {
@@ -223,14 +226,16 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             <div
               className={`w-full absolute items-center flex p-4 gap-4 text-grey transition-transform duration-300 z-20 scale-100 ${
                 hideSearch
-                  ? `-translate-y-8 scale-95 ${!isHome ? "!z-0" : ""}`
+                  ? `-translate-y-8 scale-95 hover:scale-[97%] ${
+                      !isHome ? "!z-0" : ""
+                    }`
                   : ""
               }`} // Only change z-index if not on home page
             >
               <HomeIcon width={24} height={24} color={"#FFF"} />
               <Command.Input
-                className={`${
-                  hideSearch ? "shadow-defaultLow" : "shadow-album"
+                className={` bg-blurEntryDark backdrop-blur-sm  ${
+                  hideSearch ? "shadow-defaultLow " : "shadow-album "
                 }`}
                 ref={inputRef}
                 placeholder="Rx*"
@@ -249,7 +254,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 }}
               />
             </div>
-            {/* Search Resultss  */}
+            {/* Search Results  */}
             <animated.div
               style={{ ...searchStyles }}
               className={`w-full overflow-scroll rounded-[32px] absolute bg-white z-10 ${
@@ -275,7 +280,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               scale,
             }}
             className={`flex w-full h-full rounded-[32px] cursor-grab z-0 ${
-              isVisible ? "shadow-defaultLowHover" : "shadow-defaultLow"
+              isVisible ? "shadow-cmdkScaled" : ""
             } `}
           >
             <ActiveComponent />

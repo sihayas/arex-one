@@ -168,33 +168,53 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col p-4 gap-4 relative rounded-2xl -translate-y-4 bg-white               shadow-defaultLow -mb-4 w-full">
-        {/* Verdict  */}
-        <div className="flex flex-col gap-4 p-2">
-          {/* The Verdict  */}
-          <div className="flex items-center gap-2">
+      <div className="flex flex-col p-8 gap-8 relative bg-white w-full">
+        {/* Info  */}
+        <div className="flex flex-col gap-8 p-2">
+          <div className="flex items-center gap-8">
             {/* Stars  */}
             <div className="flex items-center gap-1">
-              <div className="text-xl text-black font-semibold">4.2</div>
-              <StarsIcon width={24} height={24} color={"#333"} />
+              <div className="text-xl text-gray1 font-semibold">4.2</div>
+              <StarsIcon width={24} height={24} color={"#777"} />
             </div>
-            {/* Album Metadata  */}
-            <div className="flex items-center gap-4 ml-2">
+            {/* Stats  */}
+            <div className="flex items-center gap-4">
               {/* Play Count */}
               <div className="flex flex-col gap-1">
-                <div className="text-xs text-black">+ heard by</div>
-                <div className="font-semibold text-sm text-black">400</div>
+                <div className="text-xs text-gray1">+ heard by</div>
+                <div className="font-semibold text-sm text-gray1 text-end">
+                  400
+                </div>
               </div>
               {/* Loved count */}
               <div className="flex flex-col gap-1">
-                <div className="text-xs text-black">* loved by</div>
-                <div className="font-semibold text-sm text-black">20</div>
+                <div className="text-xs text-gray1">* loved by</div>
+                <div className="font-semibold text-sm text-gray1 text-end">
+                  20
+                </div>
               </div>
             </div>
           </div>
 
           {/* Verdict Notes  */}
-          <div className="text-sm text-grey">verdict pending</div>
+          <div className="text-sm text-gray1 w-[484px] line-clamp-3">
+            With Nectar Jojis full metamorphosis from a meme-laden internet
+            artist to a commendable musician takes flight. In a poignant
+            exercise of introspection, the album unfurls like a lucid dream of
+            melancholic electronica and R&B, veiled in lo-fi textures that waft
+            over you like the scent of midnight cherry blossoms. Jojis voice, at
+            once haunted and angelic, guides us through a labyrinth of his
+            deepest emotions - a startling encounter with vulnerability that
+            remains the albums spine. Notably, the production oscillates between
+            sparse minimalism and rich, layered tapestries of sound, providing
+            an auditory playground that keeps the listener tethered yet
+            continually guessing. Joji dares to push his artistic boundaries in
+            Nectar making it a poignant, disquietingly beautiful chronicle of
+            human sentiment. In this body of work, the line between the
+            sweetness of life (the nectar) and the stings of reality are
+            blurred, leaving an aftertaste that lingers long after the music
+            stops.
+          </div>
         </div>
 
         {/* Album Entries  */}

@@ -99,11 +99,11 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
           >
             <div className="flex gap-4 items-center w-full">
               <Image
-                className="rounded-2xl shadow-defaultLow"
+                className=" rounded-lg shadow-defaultLow"
                 src={artworkUrl}
                 alt={`${album.attributes.name} artwork`}
-                width={80}
-                height={80}
+                width={40}
+                height={40}
                 onLoad={(event) =>
                   handleImageLoad(event.target as HTMLImageElement, album)
                 }

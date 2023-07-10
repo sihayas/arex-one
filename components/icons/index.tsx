@@ -134,19 +134,6 @@ export function ReviewClefIcon({ ...props }) {
   );
 }
 
-export function ReplyIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      xmlSpace="preserve"
-      viewBox="0 0 512 512"
-      {...props}
-    >
-      <path fill={props.color} d="M128 96v320l256-160L128 96z" />
-    </svg>
-  );
-}
-
 export function ThreadIcon({ ...props }) {
   return (
     <svg
@@ -233,7 +220,7 @@ export function HomeIcon({ ...props }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
-      className="prefix__icon prefix__icon-tabler prefix__icon-tabler-circle-dotted absolute left-6"
+      className="prefix__icon prefix__icon-tabler prefix__icon-tabler-circle-dotted absolute left-6 z-10"
       viewBox="0 0 24 24"
       {...props}
     >
@@ -263,6 +250,20 @@ export function BreadcrumbCircle({ ...props }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" {...props}>
       <path d="M256 0a256 256 0 1 0 0 512 256 256 0 0 0 0-512zm96 256c0 53-43 96-96 96s-96-43.9-96-96 43-96 96-96 96 43.1 96 96z" />
+    </svg>
+  );
+}
+
+export function ReplyIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill={props.color}
+      className="prefix__bi prefix__bi-reply-fill"
+      viewBox="0 0 16 16"
+      {...props}
+    >
+      <path d="M6 11.9 1.3 8.6a.7.7 0 0 1 0-1.2L5.9 4a.7.7 0 0 1 1.1.6V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.3c0 .5-.6.9-1 .6z" />
     </svg>
   );
 }
