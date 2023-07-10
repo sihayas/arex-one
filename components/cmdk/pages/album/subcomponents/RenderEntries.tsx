@@ -22,18 +22,18 @@ export const RenderEntries = ({ reviews }: RenderEntriesProps) => {
           return (
             <div
               key={review.id}
-              onClick={() => {
-                // Store in pages array with review id
-                setPages((prevPages) => [
-                  ...prevPages,
-                  {
-                    name: "entry",
-                    threadcrumbs: [review.id],
-                  },
-                ]);
-                setThreadcrumbs([review.id]);
-                bounce();
-              }}
+              // onClick={() => {
+              //   // Store in pages array with review id
+              //   setPages((prevPages) => [
+              //     ...prevPages,
+              //     {
+              //       name: "entry",
+              //       threadcrumbs: [review.id],
+              //     },
+              //   ]);
+              //   setThreadcrumbs([review.id]);
+              //   bounce();
+              // }}
             >
               <EntryPreview key={review.id} {...review} />
             </div>

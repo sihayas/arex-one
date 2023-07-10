@@ -1,19 +1,15 @@
 import Image from "next/image";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import {
-  AsteriskIcon,
-  PlayIcon,
-  ReviewIcon,
-  StarIcon,
-  StarsIcon,
-} from "../../../icons";
+import { StarsIcon } from "../../../icons";
 import { RenderEntries } from "./subcomponents/RenderEntries";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { useScroll } from "@use-gesture/react";
+import { animated, useSpring } from "@react-spring/web";
 
 async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/postAlbum`, album);
@@ -40,6 +36,16 @@ export default function Album() {
   // CMDK Context
   const { setPages, bounce, pages } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
+
+  const [{ scale }, setScale] = useSpring(() => ({ scale: 1 }));
+
+  const bind = useScroll(({ xy: [, y] }) => {
+    let newScale = 1 - y / 900; // Larger numbers = slower shrink.
+    if (newScale > 1) newScale = 1;
+    if (newScale < 0.5) newScale = 0.32; // Set a minimum size to prevent the image from disappearing entirely.
+
+    setScale({ scale: newScale });
+  });
 
   const boxShadow = selectedAlbum?.shadowColor
     ? `-90px 73px 46px ${selectedAlbum?.shadowColor},0.01),
@@ -77,6 +83,7 @@ export default function Album() {
     }
   );
 
+  // Call both queries
   const { data, isLoading, isError } = albumQuery;
   const {
     data: reviewsData,
@@ -115,7 +122,7 @@ export default function Album() {
 
   // Load and error handling
   if (!selectedAlbum || isLoading || isFetchingNextPage) {
-    return <div>Loading...</div>; // Replace with your preferred loading state
+    return <div>loading...</div>; // Replace with your preferred loading state
   }
 
   if (isError || isReviewsError) {
@@ -131,6 +138,7 @@ export default function Album() {
 
   return (
     <div
+      {...bind()}
       ref={scrollContainerRef}
       className="flex flex-col items-center rounded-[32px] z-0 w-full bg-white overflow-scroll scrollbar-none"
       style={{
@@ -138,37 +146,48 @@ export default function Album() {
       }}
     >
       {/* Section One */}
-      <div className="relative">
-        <Image
-          className="rounded-2xl rounded-b-none"
-          src={selectedAlbum.artworkUrl}
-          alt={`${selectedAlbum.attributes.name} artwork`}
-          width={800}
-          height={800}
-          onDragStart={(e) => e.preventDefault()}
-        />
-
-        <div className="absolute flex gap-4 p-4 left-4 bottom-4">
-          {/* Album Info  */}
-          <div className="flex flex-col gap-1 text-white tracking-tight">
-            <div className="text-end text-shadow">
-              {selectedAlbum.attributes.artistName}
+      <div className="sticky top-0 ">
+        <animated.div
+          style={{
+            transform: scale.to((value) => `scale(${value})`),
+            paddingRight: scale.to((value) => `${(1 - value) * 148}px`),
+            paddingTop: scale.to((value) => `${(1 - value) * 148}px`),
+            transformOrigin: "right top", // scales towards the right
+          }}
+        >
+          <animated.img
+            style={{
+              borderRadius: scale.to((value) => `${(1 - value) * 128}px`),
+            }}
+            src={selectedAlbum.artworkUrl}
+            alt={`${selectedAlbum.attributes.name} artwork`}
+            width={800}
+            height={800}
+            onDragStart={(e) => e.preventDefault()}
+          />
+          {/* Title  */}
+          <div className="absolute flex gap-4 p-4 left-4 bottom-4">
+            {/* Album Info  */}
+            <div className="flex flex-col gap-1 text-white tracking-tight">
+              <div className="text-end ">
+                {selectedAlbum.attributes.artistName}
+              </div>
+              <button
+                onClick={() => {
+                  setPages((prevPages) => [...prevPages, { name: "form" }]);
+                  bounce();
+                }}
+                className="font-bold text-2xl transition-all duration-300 hover:scale-105"
+              >
+                + {selectedAlbum.attributes.name}
+              </button>
             </div>
-            <button
-              onClick={() => {
-                setPages((prevPages) => [...prevPages, { name: "form" }]);
-                bounce();
-              }}
-              className="font-bold text-2xl text-shadow transition-all duration-300 hover:scale-105"
-            >
-              + {selectedAlbum.attributes.name}
-            </button>
           </div>
-        </div>
+        </animated.div>
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col p-8 gap-8 relative bg-white w-full">
+      <div className="flex flex-col p-8 gap-8 relative w-full">
         {/* Info  */}
         <div className="flex flex-col gap-8 p-2">
           <div className="flex items-center gap-8">
@@ -227,7 +246,7 @@ export default function Album() {
         ) : hasNextPage ? (
           <button onClick={() => fetchNextPage()}>Load More</button>
         ) : (
-          <div className="">youve reached the end</div>
+          <div className="text-xs text-gray2">end of line</div>
         )}
       </div>
     </div>
