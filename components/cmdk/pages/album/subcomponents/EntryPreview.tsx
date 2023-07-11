@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { StarIcon, ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { UserName, UserAvatar, LikeButton, Stars } from "../../../generics";
+import { UserName, UserAvatar, LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
+import { useCMDK } from "@/context/CMDKContext";
+import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
 
 export default function EntryPreview(review: ReviewData) {
   const { data: session } = useSession();
   const [liked, setLiked] = useState(review.likedByUser);
   const [likeCount, setLikeCount] = useState(review.likes.length);
   const replyCount = review.replies.length;
+
+  const { setPages, bounce } = useCMDK();
+  const { setThreadcrumbs } = useThreadcrumb();
 
   const handleLikeClick = async () => {
     if (!session) return;
@@ -34,11 +39,24 @@ export default function EntryPreview(review: ReviewData) {
     }
   };
 
+  const handleContentClick = () => {
+    setPages((prevPages) => [
+      ...prevPages,
+      {
+        name: "entry",
+        threadcrumbs: [review.id],
+      },
+    ]);
+    setThreadcrumbs([review.id]);
+    bounce();
+  };
+
   return (
     <div className="flex flex-col gap-2 w-[484px] overflow-visible">
       {/* Review Content  */}
       <div className="flex relative">
         <div
+          onClick={handleContentClick}
           className={`w-full text-sm px-4 py-2 bg-white text-black shadow-medium rounded-2xl rounded-bl-[4px] break-words overflow-visible cursor-pointer transition-all duration-300 hover:scale-[102%]`}
         >
           {review.content}

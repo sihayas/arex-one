@@ -1,15 +1,15 @@
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { StarsIcon } from "../../../icons";
-import { RenderEntries } from "./subcomponents/RenderEntries";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { useScroll } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/web";
 import { useSession } from "next-auth/react";
+import EntryPreview from "./subcomponents/EntryPreview";
 
 async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/postAlbum`, album);
@@ -40,6 +40,7 @@ export default function Album() {
 
   const [{ scale }, setScale] = useSpring(() => ({ scale: 1 }));
 
+  // Shrink the album cover on scroll
   const bind = useScroll(({ xy: [, y] }) => {
     let newScale = 1 - y / 900; // Larger numbers = slower shrink.
     if (newScale > 1) newScale = 1;
@@ -48,13 +49,16 @@ export default function Album() {
     setScale({ scale: newScale });
   });
 
-  const boxShadow = selectedAlbum?.shadowColor
-    ? `-90px 73px 46px ${selectedAlbum?.shadowColor},0.01),
+  const boxShadow = useMemo(() => {
+    if (selectedAlbum?.shadowColor) {
+      return `-90px 73px 46px ${selectedAlbum?.shadowColor},0.01),
      -51px 41px 39px ${selectedAlbum.shadowColor},0.05),
      -22px 18px 29px ${selectedAlbum.shadowColor},0.08),
      -6px 5px 16px ${selectedAlbum.shadowColor},0.1),
-     0px 0px 0px ${selectedAlbum.shadowColor},0.1)`
-    : undefined;
+     0px 0px 0px ${selectedAlbum.shadowColor},0.1)`;
+    }
+    return undefined;
+  }, [selectedAlbum?.shadowColor]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -146,7 +150,7 @@ export default function Album() {
         boxShadow: boxShadow,
       }}
     >
-      {/* Section One */}
+      {/* Section One / Album Art */}
       <div className="sticky top-0">
         <animated.div
           style={{
@@ -186,7 +190,7 @@ export default function Album() {
 
       {/* Section Two / Entries  */}
       <div className="flex flex-col p-8 gap-8 relative w-full">
-        {/* Info  */}
+        {/* Stats  */}
         <div className="flex flex-col gap-8 p-2">
           <div className="flex items-center gap-8">
             {/* Stars  */}
@@ -235,10 +239,22 @@ export default function Album() {
         </div>
 
         {/* Album Entries  */}
-        <div className="flex h-full">
-          <RenderEntries reviews={flattenedReviews} />
+        <div className="flex flex-col gap-6 overflow-visible h-full">
+          {flattenedReviews && flattenedReviews.length > 0 ? (
+            flattenedReviews.map((review) => {
+              return (
+                <div key={review.id}>
+                  <EntryPreview key={review.id} {...review} />
+                </div>
+              );
+            })
+          ) : (
+            // If there are no entries, display this message
+            <div className="text-xs text-grey p-2">no entries</div>
+          )}
         </div>
-        {/* Loading Indicator  */}
+
+        {/* Infinite Loading Indicator  */}
         {isFetchingNextPage ? (
           <div className="">loading more reviews...</div>
         ) : hasNextPage ? (
