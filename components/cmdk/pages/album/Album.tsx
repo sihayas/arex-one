@@ -42,7 +42,7 @@ export default function Album() {
   const bind = useScroll(({ xy: [, y] }) => {
     let newScale = 1 - y / 900; // Larger numbers = slower shrink.
     if (newScale > 1) newScale = 1;
-    if (newScale < 0.5) newScale = 0.32; // Set a minimum size to prevent the image from disappearing entirely.
+    if (newScale < 0.5) newScale = 0.32; // Set a minimum size to prevent disappearing.
 
     setScale({ scale: newScale });
   });
@@ -146,7 +146,7 @@ export default function Album() {
       }}
     >
       {/* Section One */}
-      <div className="sticky top-0 ">
+      <div className="sticky top-0">
         <animated.div
           style={{
             transform: scale.to((value) => `scale(${value})`),
@@ -165,23 +165,20 @@ export default function Album() {
             height={800}
             onDragStart={(e) => e.preventDefault()}
           />
-          {/* Title  */}
-          <div className="absolute flex gap-4 p-4 left-4 bottom-4">
-            {/* Album Info  */}
-            <div className="flex flex-col gap-1 text-white tracking-tight">
-              <div className="text-end ">
-                {selectedAlbum.attributes.artistName}
-              </div>
-              <button
-                onClick={() => {
-                  setPages((prevPages) => [...prevPages, { name: "form" }]);
-                  bounce();
-                }}
-                className="font-bold text-2xl transition-all duration-300 hover:scale-105"
-              >
-                + {selectedAlbum.attributes.name}
-              </button>
-            </div>
+          {/* Album Information  */}
+          <div className="absolute left-8 bottom-8 flex flex-col gap-1 text-white tracking-tight">
+            {/* <div className="text-end ">
+              {selectedAlbum.attributes.artistName}
+            </div> */}
+            <button
+              onClick={() => {
+                setPages((prevPages) => [...prevPages, { name: "form" }]);
+                bounce();
+              }}
+              className="font-bold text-2xl transition-all duration-300 hover:scale-105"
+            >
+              + {selectedAlbum.attributes.name}
+            </button>
           </div>
         </animated.div>
       </div>
@@ -244,9 +241,9 @@ export default function Album() {
         {isFetchingNextPage ? (
           <div className="">loading more reviews...</div>
         ) : hasNextPage ? (
-          <button onClick={() => fetchNextPage()}>Load More</button>
+          <button onClick={() => fetchNextPage()}>load More</button>
         ) : (
-          <div className="text-xs text-gray2">end of line</div>
+          <div className="text-xs pl-2 text-gray2">end of line</div>
         )}
       </div>
     </div>

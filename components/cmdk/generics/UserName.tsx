@@ -4,5 +4,5 @@ interface UserNameProps {
 }
 
 export const UserName: React.FC<UserNameProps> = ({ username, color }) => {
-  return <div className={`font-semibold text-sm text-black`}>{username}</div>;
+  return <div className={`font-medium text-sm text-black`}>{username}</div>;
 };

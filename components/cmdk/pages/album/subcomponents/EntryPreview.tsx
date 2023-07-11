@@ -1,19 +1,8 @@
 import React, { useState } from "react";
-import {
-  DividerIcon,
-  AsteriskIcon,
-  StarIcon,
-  ReplyIcon,
-} from "../../../../icons";
+import { StarIcon, ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import {
-  UserName,
-  UserAvatar,
-  LikeButton,
-  Stars,
-  UserAttribution,
-} from "../../../generics";
+import { UserName, UserAvatar, LikeButton, Stars } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 
 export default function EntryPreview(review: ReviewData) {
@@ -38,6 +27,7 @@ export default function EntryPreview(review: ReviewData) {
       if (response.data.success) {
         setLikeCount(response.data.likes);
         setLiked(!liked);
+        console.log("Success:", response.data);
       }
     } catch (error) {
       console.error("Error updating likes:", error);
@@ -55,20 +45,22 @@ export default function EntryPreview(review: ReviewData) {
         </div>
 
         {/* Reply Count & Like Count */}
-        <div className="absolute flex items-center gap-2 -right-3 -bottom-3">
+        <div className="absolute flex  gap-2 -right-3 -bottom-6">
           {/* Reply Count  */}
-          <div className="flex items-center gap-1 px-1 py-[2px] rounded-full max-h-4 bg-white shadow-low">
+          <div className="flex mt-1.5 items-center gap-1 px-1 py-[2px] rounded-full max-h-4 bg-white shadow-low">
             <ReplyIcon width={8} height={8} color={"#999"} />
             <div className="text-[10px] text-gray2">{replyCount}</div>
           </div>
 
           {/* Like Count  */}
-
-          <LikeButton
-            handleLikeClick={handleLikeClick}
-            liked={liked}
-            likeCount={likeCount}
-          />
+          <div className="flex flex-col items-center">
+            <LikeButton
+              handleLikeClick={handleLikeClick}
+              liked={liked}
+              likeCount={likeCount}
+            />
+            <div className=" text-[10px] text-gray2">2</div>
+          </div>
         </div>
       </div>
 
