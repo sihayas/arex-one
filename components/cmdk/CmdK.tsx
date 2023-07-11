@@ -5,7 +5,6 @@ import { useCMDK } from "@/context/CMDKContext";
 import { AlbumData } from "@/lib/interfaces";
 //NPM
 import { animated, useSpring } from "@react-spring/web";
-import { useDrag, useGesture } from "@use-gesture/react";
 //Components
 import { Command } from "cmdk";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
@@ -25,7 +24,7 @@ type Page = { name: string; album?: AlbumData; threadcrumbs?: string[] };
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   home: { width: 720, height: 480 },
   album: { width: 800, height: 800 },
-  entry: { width: 560, height: 880 },
+  entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
   user: { width: 400, height: 400 },
 };
