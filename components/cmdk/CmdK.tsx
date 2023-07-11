@@ -13,16 +13,16 @@ import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
-import Home from "./pages/home/Home";
+import Index from "./pages/index/Index";
 //Icons
 import { HomeIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
-type PageName = "home" | "album" | "entry" | "form" | "user";
+type PageName = "index" | "album" | "entry" | "form" | "user";
 type Page = { name: string; album?: AlbumData; threadcrumbs?: string[] };
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
-  home: { width: 720, height: 480 },
+  index: { width: 720, height: 480 },
   album: { width: 800, height: 800 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
@@ -44,10 +44,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Page Tracker
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
-    () => pages[pages.length - 2] || { name: "home" },
+    () => pages[pages.length - 2] || { name: "index" },
     [pages]
   );
-  const isHome = activePage.name === "home";
+  const isHome = activePage.name === "index";
 
   // Search albums
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
@@ -112,7 +112,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Reset pages
   const resetPage = useCallback(() => {
-    setPages([{ name: "home" }]);
+    setPages([{ name: "index" }]);
     setInputValue("");
     resetThreadcrumbs();
   }, [resetThreadcrumbs, setInputValue, setPages]);
@@ -141,7 +141,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Focus on input always
   useEffect(() => {
     if (inputRef.current) {
-      if (isVisible && activePage.name === "home") {
+      if (isVisible && activePage.name === "index") {
         inputRef.current.focus();
       } else {
         inputRef.current.blur();
@@ -152,8 +152,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Handle page render
   let ActiveComponent;
   switch (activePage.name) {
-    case "home":
-      ActiveComponent = Home;
+    case "index":
+      ActiveComponent = Index;
       break;
     case "album":
       ActiveComponent = Album;
@@ -165,7 +165,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       ActiveComponent = Form;
       break;
     default:
-      ActiveComponent = Home;
+      ActiveComponent = Index;
   }
 
   return (

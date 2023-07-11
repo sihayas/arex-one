@@ -36,7 +36,7 @@ export const useCMDK = (): CMDKContextType => {
 
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [pages, setPages] = useState<Page[]>([{ name: "home" }]);
+  const [pages, setPages] = useState<Page[]>([{ name: "index" }]);
 
   const [hideSearch, setHideSearch] = useState(false);
 
