@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
-import { getSession } from "next-auth/react";
 
 type SortOrder = "asc" | "desc";
 
@@ -16,9 +15,10 @@ export default async function handle(
   const albumId = Array.isArray(req.query.albumId)
     ? req.query.albumId.join(",") // Convert array to string
     : req.query.albumId;
+
   const page = parseInt(req.query.page as string) || 1;
   const sort = req.query.sort || "newest";
-  const session = await getSession({ req });
+  const userId = req.query.userId || null;
 
   if (!albumId) {
     return res.status(400).json({ message: "Album ID is required" });
@@ -63,8 +63,8 @@ export default async function handle(
     });
 
     const reviewsWithUserLikes = reviews.map((review) => {
-      const likedByUser = session
-        ? review.likes.some((like) => like.authorId === session.user.id)
+      const likedByUser = userId
+        ? review.likes.some((like) => like.authorId === userId)
         : false;
 
       return {

@@ -2,14 +2,12 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
-import { getSession } from "next-auth/react";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { id, userId } = req.query;
-  const session = await getSession({ req });
 
   if (req.method === "GET") {
     try {

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { StarsIcon } from "../../../icons";
@@ -10,6 +9,7 @@ import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useScroll } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/web";
+import { useSession } from "next-auth/react";
 
 async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/postAlbum`, album);
@@ -22,12 +22,12 @@ async function fetchReviews({
   sort = "rating_high_to_low",
 }: {
   pageParam?: number;
-  queryKey: [string, string | undefined];
+  queryKey: [string, string | undefined, string | undefined];
   sort?: string;
 }) {
-  const [, albumId] = queryKey;
+  const [, albumId, userId] = queryKey;
   const response = await axios.get(
-    `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}`
+    `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}&userId=${userId}`
   );
   return response.data;
 }
@@ -36,6 +36,7 @@ export default function Album() {
   // CMDK Context
   const { setPages, bounce, pages } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
+  const { data: session } = useSession();
 
   const [{ scale }, setScale] = useSpring(() => ({ scale: 1 }));
 
@@ -69,7 +70,7 @@ export default function Album() {
 
   // Fetch reviews for the album
   const reviewsQuery = useInfiniteQuery(
-    ["reviews", selectedAlbum?.id],
+    ["reviews", selectedAlbum?.id, session?.user.id],
     fetchReviews,
     {
       getNextPageParam: (lastPage, pages) => {

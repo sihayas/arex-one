@@ -54,12 +54,8 @@ export default function EntryPreview(review: ReviewData) {
 
           {/* Like Count  */}
           <div className="flex flex-col items-center">
-            <LikeButton
-              handleLikeClick={handleLikeClick}
-              liked={liked}
-              likeCount={likeCount}
-            />
-            <div className=" text-[10px] text-gray2">2</div>
+            <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
+            <div className=" text-[10px] text-gray2">{likeCount}</div>
           </div>
         </div>
       </div>

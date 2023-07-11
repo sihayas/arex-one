@@ -20,7 +20,6 @@ import { getAlbumById } from "@/lib/musicKit";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 export const Entry = () => {
-  console.log("Entry component render");
   const { data: session } = useSession();
   // Review interaction
   const [liked, setLiked] = useState(false);
@@ -184,7 +183,6 @@ export const Entry = () => {
             <LikeButton
               handleLikeClick={(event) => handleLikeClick(event)}
               liked={liked}
-              likeCount={likeCount}
             />
           </div>
         </div>
