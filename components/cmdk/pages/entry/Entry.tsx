@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState, useEffect, MouseEvent } from "react";
+import { useState, useEffect, MouseEvent, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
 import { ReviewData } from "../../../../lib/interfaces";
@@ -22,6 +22,17 @@ export const Entry = () => {
   const { selectedAlbum } = useCMDKAlbum();
   const { pages } = useCMDK();
   const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
+  const boxShadow = useMemo(() => {
+    if (selectedAlbum?.shadowColor) {
+      return `0px 0px 0px 0px ${selectedAlbum?.shadowColor},0.025),
+     0px 5px 12px 0px ${selectedAlbum.shadowColor},0.25),
+     0px 22px 22px 0px ${selectedAlbum.shadowColor},0.22),
+     0px 49px 29px 0px ${selectedAlbum.shadowColor},0.13),
+     0px 87px 35px 0px ${selectedAlbum.shadowColor},0.04),
+     0px 136px 38px 0px ${selectedAlbum.shadowColor},0.00)`;
+    }
+    return undefined;
+  }, [selectedAlbum?.shadowColor]);
 
   const activePage = pages[pages.length - 1];
   const firstThreadcrumb = activePage.threadcrumbs?.[0];
@@ -127,6 +138,7 @@ export const Entry = () => {
           width={220} // Set this to a low value
           height={220} // Set this to the same low value
           onDragStart={(e) => e.preventDefault()}
+          style={{ boxShadow: boxShadow }}
         />
       </div>
 

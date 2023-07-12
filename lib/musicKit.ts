@@ -34,7 +34,7 @@ export const searchAlbums = async (keyword: string) => {
         !album.attributes.isSingle && // Check if the album is not a single
         !isUnwanted(album.attributes.name) // Check if the album title contains unwanted keywords
     )
-    .slice(0, 6);
+    .slice(0, 10);
 
   return filteredResults;
 };

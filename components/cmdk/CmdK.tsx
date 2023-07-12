@@ -223,7 +223,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           <div className={`flex flex-col w-full`}>
             {/* Search bar */}
             <div
-              className={`w-full absolute items-center flex p-4 gap-4 text-grey transition-transform duration-300 z-20 scale-100 ${
+              className={`w-full absolute items-center flex p-4 gap-4 text-black transition-transform duration-300 z-20 scale-100 ${
                 hideSearch
                   ? `-translate-y-8 scale-95 hover:scale-[97%] ${
                       !isHome ? "!z-0" : ""
@@ -231,11 +231,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                   : ""
               }`} // Only change z-index if not on home page
             >
-              <HomeIcon width={24} height={24} color={"#FFF"} />
+              <HomeIcon width={24} height={24} color={"#333"} />
               <Command.Input
-                className={` bg-blurEntryDark backdrop-blur-sm  ${
-                  hideSearch ? "" : "shadow-something"
-                }`}
+                className={`bg-blurEntry backdrop-blur-sm border border-silver shadow-low`}
                 ref={inputRef}
                 placeholder="Rx*"
                 style={{ paddingLeft: "2.5rem" }}

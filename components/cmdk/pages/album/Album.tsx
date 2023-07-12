@@ -51,11 +51,12 @@ export default function Album() {
 
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.shadowColor) {
-      return `-90px 73px 46px ${selectedAlbum?.shadowColor},0.01),
-     -51px 41px 39px ${selectedAlbum.shadowColor},0.05),
-     -22px 18px 29px ${selectedAlbum.shadowColor},0.08),
-     -6px 5px 16px ${selectedAlbum.shadowColor},0.1),
-     0px 0px 0px ${selectedAlbum.shadowColor},0.1)`;
+      return `0px 0px 0px 0px ${selectedAlbum?.shadowColor},0.025),
+     0px 5px 12px 0px ${selectedAlbum.shadowColor},0.25),
+     0px 22px 22px 0px ${selectedAlbum.shadowColor},0.22),
+     0px 49px 29px 0px ${selectedAlbum.shadowColor},0.13),
+     0px 87px 35px 0px ${selectedAlbum.shadowColor},0.04),
+     0px 136px 38px 0px ${selectedAlbum.shadowColor},0.00)`;
     }
     return undefined;
   }, [selectedAlbum?.shadowColor]);
@@ -163,6 +164,7 @@ export default function Album() {
           <animated.img
             style={{
               borderRadius: scale.to((value) => `${(1 - value) * 128}px`),
+              boxShadow: boxShadow,
             }}
             src={selectedAlbum.artworkUrl}
             alt={`${selectedAlbum.attributes.name} artwork`}
@@ -172,9 +174,9 @@ export default function Album() {
           />
           {/* Album Information  */}
           <div className="absolute left-8 bottom-8 flex flex-col gap-1 text-white tracking-tight">
-            {/* <div className="text-end ">
-              {selectedAlbum.attributes.artistName}
-            </div> */}
+            <div className="text-end ">
+              {/* {selectedAlbum.attributes.artistName} */}
+            </div>
             <button
               onClick={() => {
                 setPages((prevPages) => [...prevPages, { name: "form" }]);
@@ -182,7 +184,7 @@ export default function Album() {
               }}
               className="font-bold text-2xl transition-all duration-300 hover:scale-105"
             >
-              + {selectedAlbum.attributes.name}
+              {/* + {selectedAlbum.attributes.name} */}
             </button>
           </div>
         </animated.div>
