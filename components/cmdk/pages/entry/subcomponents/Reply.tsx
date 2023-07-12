@@ -9,9 +9,9 @@ import axios from "axios";
 
 interface ReplyProps {
   reply: ReplyData;
-  setSelectedReplyId: (id: string | null) => void;
+  setSelectedReply: (reply: ReplyData | null) => void;
 }
-export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
+export default function Reply({ reply, setSelectedReply }: ReplyProps) {
   const { addToThreadcrumbs, removeUpToId, setReplyParent } = useThreadcrumb();
   const [hideContent, setHideContent] = useState(false);
   const { data: session } = useSession();
@@ -23,7 +23,7 @@ export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
   // Handle loading of replies
   const handleLoadReplies = () => {
     setHideContent(true);
-    setSelectedReplyId(reply.id);
+    setSelectedReply(reply);
     addToThreadcrumbs(reply.id);
     setReplyParent(reply);
   };
@@ -32,7 +32,8 @@ export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
   const handleGoBack = () => {
     removeUpToId(reply.id);
     setHideContent(false);
-    setSelectedReplyId(null);
+    setSelectedReply(null);
+    setReplyParent(reply);
   };
 
   const handleLikeClick = async () => {
@@ -119,62 +120,3 @@ export default function Reply({ reply, setSelectedReplyId }: ReplyProps) {
     </div>
   );
 }
-
-//   return (
-//     <div
-//       className={`flex gap-2 duration-700 max-w-[484px] ${
-//         hideContent ? "cursor-pointer" : ""
-//       }`}
-//     >
-//       {/* Left Side  */}
-//       <div
-//         className="flex flex-col"
-//         onClick={hideContent ? handleGoBack : undefined}
-//       >
-//         {/* User Avatar & Username */}
-//         <div className="flex items-center gap-4">
-//           <UserAvatar
-//             imageSrc={
-//               reply.author?.image || "./public/images/default_image.png"
-//             }
-//             altText={`${reply.author?.name || "Unknown Author"}'s avatar`}
-//           />
-//           <UserName
-//             color="black"
-//             username={reply.author.username || "stranger"}
-//           />
-//         </div>
-
-//         {/* Reply Content & Thread Line  */}
-//         <div className="flex gap-4 pb-1">
-//           {/* Reply Content  */}
-//           <div className={`text-sm text-black break-words`}>
-//             {reply.content}
-//           </div>
-//         </div>
-
-//         {/*Interactions  */}
-//         {!hideContent && (
-//           <div className="flex  translate-x-[.28em] gap-[1.225em]">
-//             <ThreadIcon width={24} height={24} color={"#CCC"} />
-//             {/* Threader  */}
-//             <button
-//               className="flex items-center gap-1 text-grey text-xs text-start hover:text-black duration-300 relative"
-//               onClick={handleLoadReplies}
-//             >
-//               <div className="flex text-xs text-grey w-64">
-//                 {reply.replies.length} threads
-//               </div>
-//             </button>
-//             <button
-//               className="text-xs text-grey"
-//               onClick={() => setReplyParent(reply)}
-//             >
-//               [set reply parent id]
-//             </button>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
