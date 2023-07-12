@@ -123,6 +123,8 @@ export const Entry = () => {
 
   if (!review) return null;
 
+  console.log("Entry re-rendered");
+
   return (
     <div className="flex flex-col rounded-[32px] w-full h-full overflow-scroll scrollbar-none relative bg-white">
       <div className="flex items-end p-8 gap-8">
@@ -143,9 +145,7 @@ export const Entry = () => {
       </div>
 
       {/* Replies  */}
-      <div className="w-full h-full flex flex-col p-8">
-        <RenderReplies replyIds={threadcrumbs} reviewId={reviewId!} />
-      </div>
+      <RenderReplies replyIds={threadcrumbs} reviewId={reviewId!} />
 
       {/* Reply Input  */}
       <div className="w-[482px] fixed bottom-8 left-8 flex items-center gap-2 bg-[#F5F5F5] p-2 rounded-xl">
@@ -163,45 +163,3 @@ export const Entry = () => {
 };
 
 export default Entry;
-
-// {
-//   /* Main Review */
-// }
-// <div className="flex flex-col h-fit w-full absolute bottom-0 ">
-//   {/* Review Text  */}
-//   <div className="flex gap-12 p-4 pb-0">
-//     <div className="backdrop-blur-md bg-blurEntry rounded-2xl  w-fill">
-//       <div className="text-sm text-white break-words p-4">
-//         {review.content}
-//       </div>
-//     </div>
-//   </div>
-//   {/* Attribution */}
-//   <div className="flex gap-4 items-center p-4">
-//     {/* Outer  */}
-//     <div className="flex items-center gap-2 backdrop-blur-md bg-blurEntry rounded-full pl-1 pr-2 py-1">
-//       <UserAvatar
-//         imageSrc={review.author?.image}
-//         altText={`${review.author?.name}'s avatar`}
-//         width={26}
-//         height={26}
-//       />
-//       <UserName color="white" username={review.author.username} />
-//       {/* Rating */}
-//       <div className="flex items-center gap-1">
-//         <Stars color={"white"} rating={review.rating} />
-//         {review.loved && (
-//           <>
-//             <DividerIcon color={"#FFF"} width={5} height={5} />
-//             <AsteriskIcon width={16} height={16} color={"#FFF"} />
-//           </>
-//         )}
-//       </div>
-//     </div>
-
-//     <LikeButton
-//       handleLikeClick={(event) => handleLikeClick(event)}
-//       liked={liked}
-//     />
-//   </div>
-// </div>;

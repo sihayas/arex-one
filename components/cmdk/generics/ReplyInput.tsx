@@ -71,7 +71,7 @@ export const ReplyInput = () => {
           replyParent
             ? "albumId" in replyParent
               ? `+ reply to ${replyParent.author.name}'s entry`
-              : `+ reply to ${replyParent.author.name}'s thread`
+              : `+ reply to ${replyParent.content}`
             : "+ reply"
         }
         value={replyContent}

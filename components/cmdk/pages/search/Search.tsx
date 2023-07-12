@@ -112,10 +112,10 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
               {/* <Rating color={shadowColors[album.id]} rating={averageRating} /> */}
 
               <div className="flex flex-col justify-center gap-1">
-                <div className="text-sm text-greyTitle max-w-[17rem] text-ellipsis overflow-hidden whitespace-nowrap font-medium">
+                <div className="text-sm text-black max-w-[17rem] text-ellipsis overflow-hidden whitespace-nowrap font-medium">
                   {album.attributes.name}
                 </div>
-                <div className="text-xs text-grey">
+                <div className="text-xs text-gray">
                   {album.attributes.artistName}
                 </div>
               </div>

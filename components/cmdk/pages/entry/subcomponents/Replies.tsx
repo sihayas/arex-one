@@ -60,6 +60,9 @@ function Replies({ reviewId, replyId }: RepliesProps) {
                     : "none",
               }}
             >
+              {reply.id === selectedReplyId && (
+                <div>Replies to {selectedReplyId}</div>
+              )}
               <Reply reply={reply} setSelectedReplyId={setSelectedReplyId} />
             </div>
           </CSSTransition>
