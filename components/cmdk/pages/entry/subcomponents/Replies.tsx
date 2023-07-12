@@ -6,20 +6,22 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { ReplyData } from "@/lib/interfaces";
+import { useSession } from "next-auth/react";
 
 interface RepliesProps {
   reviewId?: string | null;
   replyId?: string;
+  userId?: string;
   setLoadingReplies?: (loading: boolean) => void;
 }
 
-const fetchReplies = ({ reviewId, replyId }: RepliesProps) => {
+const fetchReplies = ({ reviewId, replyId, userId }: RepliesProps) => {
   const baseURL = "/api/reply/";
 
   // Decide URL based on presence of reviewId or replyId
   const url = reviewId
-    ? `${baseURL}getReviewReplies?id=${reviewId}`
-    : `${baseURL}getReplyReplies?replyId=${replyId}`;
+    ? `${baseURL}getReviewReplies?id=${reviewId}&userId=${userId}`
+    : `${baseURL}getReplyReplies?replyId=${replyId}&userId=${userId}`;
 
   return axios.get(url).then((res) => res.data);
 };
@@ -27,9 +29,12 @@ const fetchReplies = ({ reviewId, replyId }: RepliesProps) => {
 // Replies component
 function Replies({ reviewId, replyId }: RepliesProps) {
   const [selectedReplyId, setSelectedReplyId] = useState<string | null>(null);
+  const { data: session } = useSession();
+  const userId = session?.user.id;
 
-  const fetchRepliesQuery = useQuery(["replies", { reviewId, replyId }], () =>
-    fetchReplies({ reviewId, replyId })
+  const fetchRepliesQuery = useQuery(
+    ["replies", { reviewId, replyId, userId }],
+    () => fetchReplies({ reviewId, replyId, userId })
   );
 
   if (fetchRepliesQuery.isLoading) {

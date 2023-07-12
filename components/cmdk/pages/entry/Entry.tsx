@@ -2,22 +2,15 @@ import Image from "next/image";
 import { useState, useEffect, MouseEvent } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
-import { AsteriskIcon, DividerIcon } from "../../../icons";
 import { ReviewData } from "../../../../lib/interfaces";
-import {
-  UserName,
-  UserAvatar,
-  LikeButton,
-  ReplyInput,
-  Stars,
-  generateArtworkUrl,
-} from "../../generics";
+import { UserAvatar, ReplyInput, generateArtworkUrl } from "../../generics";
 import { RenderReplies } from "./subcomponents/RenderReplies";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumById } from "@/lib/musicKit";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
+import { EntryPreview } from "../album/subcomponents/EntryPreview";
 
 export const Entry = () => {
   const { data: session } = useSession();
@@ -53,6 +46,7 @@ export const Entry = () => {
       const response: AxiosResponse<ReviewData> = await axios.get(
         `/api/review/getById?id=${reviewId}&userId=${session?.user?.id || ""}`
       );
+      console.log("review data", response.data);
       return response.data;
     },
     {
@@ -117,96 +111,85 @@ export const Entry = () => {
   };
 
   if (!review) return null;
+
   return (
     <div className="flex flex-col rounded-[32px] w-full h-full overflow-scroll scrollbar-none relative bg-white">
-      {/* Section One */}
-      <div className="w-full relative">
+      <div className="flex items-end p-8 gap-8">
+        <EntryPreview review={review} />
+
         {/* Art  */}
-        <div
-          className="relative overflow-visible"
-          style={{ width: "560px", height: "560px" }}
-        >
-          <Image
-            src={
-              artworkUrl || selectedAlbum?.artworkUrl || "/images/default.webp"
-            }
-            alt={`${selectedAlbum?.attributes.name} artwork`}
-            width={40} // Set this to a low value
-            height={40} // Set this to the same low value
-            onDragStart={(e) => e.preventDefault()}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              filter: "blur(80px) brightness(75%)",
-              transform: "translate3d(0,0,0)",
-            }}
-          />
-        </div>
-
-        {/* Main Review */}
-        <div className="flex flex-col h-fit w-full absolute bottom-0 ">
-          {/* Review Text  */}
-          <div className="flex gap-12 p-4 pb-0">
-            <div className="backdrop-blur-md bg-blurEntry rounded-2xl  w-fill">
-              <div className="text-sm text-white break-words p-4">
-                {review.content}
-              </div>
-            </div>
-          </div>
-          {/* Attribution */}
-          <div className="flex gap-4 items-center p-4">
-            {/* Outer  */}
-            <div className="flex items-center gap-2 backdrop-blur-md bg-blurEntry rounded-full pl-1 pr-2 py-1">
-              <UserAvatar
-                imageSrc={review.author?.image}
-                altText={`${review.author?.name}'s avatar`}
-                width={26}
-                height={26}
-              />
-              <UserName color="white" username={review.author.username} />
-              {/* Rating */}
-              <div className="flex items-center gap-1">
-                <Stars color={"white"} rating={review.rating} />
-                {review.loved && (
-                  <>
-                    <DividerIcon color={"#FFF"} width={5} height={5} />
-                    <AsteriskIcon width={16} height={16} color={"#FFF"} />
-                  </>
-                )}
-              </div>
-            </div>
-
-            <LikeButton
-              handleLikeClick={(event) => handleLikeClick(event)}
-              liked={liked}
-            />
-          </div>
-        </div>
+        <Image
+          className="rounded-[32px]"
+          src={
+            artworkUrl || selectedAlbum?.artworkUrl || "/images/default.webp"
+          }
+          alt={`${selectedAlbum?.attributes.name} artwork`}
+          width={220} // Set this to a low value
+          height={220} // Set this to the same low value
+          onDragStart={(e) => e.preventDefault()}
+        />
       </div>
 
       {/* Replies  */}
-      <div className="w-full h-full flex flex-col p-4 pb-20">
+      <div className="w-full h-full flex flex-col p-8">
         <RenderReplies replyIds={threadcrumbs} reviewId={reviewId!} />
       </div>
 
       {/* Reply Input  */}
-      <div className="w-full fixed bottom-2 p-4 ">
-        <div className="flex p-2 items-center gap-2 bg-blurEntry backdrop-blur-md rounded-full border border-silver">
-          <UserAvatar
-            imageSrc={review.author?.image}
-            altText={`${review.author?.name}'s avatar`}
-            width={28}
-            height={28}
-          />
-          <ReplyInput />
-        </div>
+      <div className="w-[482px] fixed bottom-8 left-8 flex items-center gap-2 bg-[#F5F5F5] p-2 rounded-xl">
+        <UserAvatar
+          className="border-2 border-white rounded-full"
+          imageSrc={review.author?.image}
+          altText={`${review.author?.name}'s avatar`}
+          width={28}
+          height={28}
+        />
+        <ReplyInput />
       </div>
     </div>
   );
 };
 
 export default Entry;
+
+// {
+//   /* Main Review */
+// }
+// <div className="flex flex-col h-fit w-full absolute bottom-0 ">
+//   {/* Review Text  */}
+//   <div className="flex gap-12 p-4 pb-0">
+//     <div className="backdrop-blur-md bg-blurEntry rounded-2xl  w-fill">
+//       <div className="text-sm text-white break-words p-4">
+//         {review.content}
+//       </div>
+//     </div>
+//   </div>
+//   {/* Attribution */}
+//   <div className="flex gap-4 items-center p-4">
+//     {/* Outer  */}
+//     <div className="flex items-center gap-2 backdrop-blur-md bg-blurEntry rounded-full pl-1 pr-2 py-1">
+//       <UserAvatar
+//         imageSrc={review.author?.image}
+//         altText={`${review.author?.name}'s avatar`}
+//         width={26}
+//         height={26}
+//       />
+//       <UserName color="white" username={review.author.username} />
+//       {/* Rating */}
+//       <div className="flex items-center gap-1">
+//         <Stars color={"white"} rating={review.rating} />
+//         {review.loved && (
+//           <>
+//             <DividerIcon color={"#FFF"} width={5} height={5} />
+//             <AsteriskIcon width={16} height={16} color={"#FFF"} />
+//           </>
+//         )}
+//       </div>
+//     </div>
+
+//     <LikeButton
+//       handleLikeClick={(event) => handleLikeClick(event)}
+//       liked={liked}
+//     />
+//   </div>
+// </div>;

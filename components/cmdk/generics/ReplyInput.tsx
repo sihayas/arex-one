@@ -65,21 +65,14 @@ export const ReplyInput = () => {
 
   return (
     <div className="flex items-center w-full">
-      <div
-        className={`transition-opacity duration-300 ease-in-out ${
-          !replyContent
-            ? "opacity-100 cursor-pointer"
-            : "opacity-0 cursor-default"
-        }`}
-      ></div>
       <TextareaAutosize
         className={`text-sm text-grey outline-none bg-transparent w-full resize-none`}
         placeholder={
           replyParent
             ? "albumId" in replyParent
-              ? `+ thread to ${replyParent.author.username}'s entry`
-              : `+ reply to ${replyParent.author.username}'s thread`
-            : "+ thread"
+              ? `+ reply to ${replyParent.author.name}'s entry`
+              : `+ reply to ${replyParent.author.name}'s thread`
+            : "+ reply"
         }
         value={replyContent}
         onChange={handleReplyChange}
@@ -94,9 +87,7 @@ export const ReplyInput = () => {
             : "opacity-0 cursor-default"
         }`}
       >
-        <div className=" -rotate-90">
-          <ReplyIcon width={16} height={16} color={"#333"} />
-        </div>
+        <ReplyIcon width={16} height={16} color={"#333"} />
       </button>
     </div>
   );

@@ -194,10 +194,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           ...transformSpring, // To appear
           transition: "box-shadow 750ms, scale 300ms",
         }}
-        className={`cmdk ${
+        className={`cmdk border border-silver ${
           isVisible
             ? `scale-100 pointer-events-auto`
-            : "!shadow-none scale-95 pointer-events-none border border-silver"
+            : "!shadow-none scale-95 pointer-events-none "
         }`}
       >
         {/* CMDK Inner Content  */}
@@ -234,7 +234,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               <HomeIcon width={24} height={24} color={"#FFF"} />
               <Command.Input
                 className={` bg-blurEntryDark backdrop-blur-sm  ${
-                  hideSearch ? "shadow-defaultLow " : "shadow-album "
+                  hideSearch ? "" : "shadow-something"
                 }`}
                 ref={inputRef}
                 placeholder="Rx*"

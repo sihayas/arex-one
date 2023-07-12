@@ -11,10 +11,14 @@ module.exports = {
   theme: {
     extend: {
       boxShadow: {
-        low: "0px 0px 1px 0px rgba(0, 0, 0, 0.25);",
-        medium: "0px 0px 20px 0px rgba(0, 0, 0, 0.09);",
-        cmdkScaled: "0 0 30px rgba(0, 0, 0, 0.1)",
-        nav: "0 0 0 1px hsla(0, 0%, 0%, 0.047), 0 4px 4px hsla(0, 0%, 0%, 0.141)",
+        low: "0px 0px 1px 0px rgba(0, 0, 0, 0.25)",
+        medium: "0px 0px 20px 0px rgba(0, 0, 0, 0.09)",
+        cmdkScaled:
+          "0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 11px 23px 0px rgba(0, 0, 0, 0.03), 0px 43px 43px 0px rgba(0, 0, 0, 0.03), 0px 96px 57px 0px rgba(0, 0, 0, 0.02), 0px 170px 68px 0px rgba(0, 0, 0, 0.00), 0px 266px 75px 0px rgba(0, 0, 0, 0.00)",
+        entry:
+          "0px 0px 0px rgba(0, 0, 0, 0.03), 0px 2px 5px rgba(0, 0, 0, 0.03), 0px 8px 8px rgba(0, 0, 0, 0.03), 0px 19px 11px rgba(0, 0, 0, 0.02), 0px 33px 13px rgba(0, 0, 0, 0.00), 0px 52px 15px rgba(0, 0, 0, 0.00)",
+        reply:
+          "0px 0px 0px rgba(0, 0, 0, 0.03), 0px 1px 2px rgba(0, 0, 0, 0.03), 0px 3px 3px rgba(0, 0, 0, 0.03), 0px 7px 4px rgba(0, 0, 0, 0.02), 0px 13px 5px rgba(0, 0, 0, 0.00), 0px 21px 6px rgba(0, 0, 0, 0.00)",
       },
       colors: {
         black: "#333333",
@@ -46,16 +50,13 @@ module.exports = {
     },
   },
   plugins: [
-    plugin(function ({ matchUtilities, theme }) {
-      matchUtilities(
-        {
-          "translate-z": (value) => ({
-            "--tw-translate-z": value,
-            transform: ` translate3d(var(--tw-translate-x), var(--tw-translate-y), var(--tw-translate-z)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`,
-          }), // this is actual CSS
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        ".shadow-bubble": {
+          filter:
+            "drop-shadow(0px 0px 0px rgba(0, 0, 0, 0.01)) drop-shadow(-7px 4px 18px rgba(0, 0, 0, 0.01)) drop-shadow(-30px 15px 33px rgba(0, 0, 0, 0.01)) drop-shadow(-67px 33px 45px rgba(0, 0, 0, 0.01)) drop-shadow(-119px 59px 53px rgba(0, 0, 0, 0.00)) drop-shadow(-185px 92px 58px rgba(0, 0, 0, 0.00))",
         },
-        { values: theme("translate"), supportsNegativeValues: true }
-      );
+      });
     }),
     require("tailwind-scrollbar"),
   ],

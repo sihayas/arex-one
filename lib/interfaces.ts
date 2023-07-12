@@ -73,6 +73,7 @@ export interface ReplyData {
   replyTo?: ReplyData | null;
   replyToId?: string;
   updatedAt: string;
+  likedByUser: boolean;
 }
 
 export interface ReviewData {

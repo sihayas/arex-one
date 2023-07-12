@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useScroll } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/web";
 import { useSession } from "next-auth/react";
-import EntryPreview from "./subcomponents/EntryPreview";
+import { EntryPreview } from "./subcomponents/EntryPreview";
 
 async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/postAlbum`, album);
@@ -146,9 +146,9 @@ export default function Album() {
       {...bind()}
       ref={scrollContainerRef}
       className="flex flex-col items-center rounded-[32px] z-0 w-full bg-white overflow-scroll scrollbar-none"
-      style={{
-        boxShadow: boxShadow,
-      }}
+      // style={{
+      //   boxShadow: boxShadow,
+      // }}
     >
       {/* Section One / Album Art */}
       <div className="sticky top-0">
@@ -244,7 +244,7 @@ export default function Album() {
             flattenedReviews.map((review) => {
               return (
                 <div key={review.id}>
-                  <EntryPreview key={review.id} {...review} />
+                  <EntryPreview key={review.id} review={review} />
                 </div>
               );
             })

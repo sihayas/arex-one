@@ -2,7 +2,6 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
-import { getSession } from "next-auth/react";
 
 const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 
@@ -10,8 +9,7 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id, pageSize = 10, lastId = null } = req.query;
-  const session = await getSession({ req });
+  const { id, pageSize = 10, lastId = null, userId } = req.query;
 
   // Input validation
   if (
@@ -45,7 +43,7 @@ export default async function handle(
         include: {
           author: {
             select: {
-              username: true,
+              name: true,
               image: true,
             },
           },
@@ -61,12 +59,23 @@ export default async function handle(
 
       if (replies) {
         // Add likedByUser field to each reply
-        const repliesWithUserLike = replies.map((reply) => ({
-          ...reply,
-          likedByUser: session
-            ? reply.likes.some((like) => like.authorId === session.user.id)
-            : false,
-        }));
+        const repliesWithUserLike = replies.map((reply) => {
+          console.log("Reply:", reply);
+          console.log("Likes:", reply.likes);
+          const likedByUser = userId
+            ? reply.likes.some((like) => {
+                console.log("Comparing:", like.authorId, userId);
+                return like.authorId === userId;
+              })
+            : false;
+
+          console.log("Liked by user:", likedByUser);
+
+          return {
+            ...reply,
+            likedByUser,
+          };
+        });
 
         res.status(200).json(repliesWithUserLike);
       } else {

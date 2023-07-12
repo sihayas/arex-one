@@ -18,7 +18,8 @@ export default async function handle(
         include: {
           author: {
             select: {
-              username: true,
+              id: true,
+              name: true,
               image: true,
             },
           },

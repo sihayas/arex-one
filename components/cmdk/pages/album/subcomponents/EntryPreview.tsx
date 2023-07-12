@@ -7,7 +7,11 @@ import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
 
-export default function EntryPreview(review: ReviewData) {
+interface EntryPreviewProps {
+  review: ReviewData;
+}
+
+export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
   const { data: session } = useSession();
   const [liked, setLiked] = useState(review.likedByUser);
   const [likeCount, setLikeCount] = useState(review.likes.length);
@@ -57,7 +61,7 @@ export default function EntryPreview(review: ReviewData) {
       <div className="flex relative">
         <div
           onClick={handleContentClick}
-          className={`w-full text-sm px-4 py-2 bg-white text-black shadow-medium rounded-2xl rounded-bl-[4px] break-words overflow-visible cursor-pointer transition-all duration-300 hover:scale-[102%]`}
+          className={`w-full text-sm px-4 py-2 bg-white text-black shadow-entry border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible cursor-pointer transition-all duration-300 hover:scale-[102%]`}
         >
           {review.content}
         </div>
@@ -102,48 +106,4 @@ export default function EntryPreview(review: ReviewData) {
       </div>
     </div>
   );
-}
-
-{
-  /* Likes */
-}
-{
-  /*  */
-}
-
-// return (
-//   <div className="flex gap-4 p-4 border border-silver rounded-[16px] hover:shadow-defaultLow ease-entryPreview duration-300">
-//     {/* Left Side  */}
-//     <div className="flex flex-col gap-2 items-center pr-4 border-r">
-//       {/* Attribution */}
-//       <UserAttribution
-//         id={review.author?.id}
-//         name={review.author?.name}
-//         image={review.author?.image}
-//       />
-
-//       {/* Rating */}
-//       <div className="-ml-[2px] flex items-center gap-1">
-//         <Stars color={"#333"} rating={review.rating} />
-//         {review.loved && (
-//           <>
-//             <DividerIcon color={"#585858"} width={5} height={5} />
-//             <AsteriskIcon width={16} height={16} color={"#333"} />
-//           </>
-//         )}
-//       </div>
-//     </div>
-//     {/* Right Side */}
-//     <div className="flex flex-col gap-2 w-full justify-between">
-//       <div className={`text-sm text-black break-words`}>
-//         {review.content}
-//       </div>
-//       {/* Thread Count */}
-//       {replyCount > 0 && (
-//         <div className="text-xs text-grey">
-//           {replyCount} {replyCount === 1 ? "thread" : "threads"}
-//         </div>
-//       )}
-//     </div>
-//   </div>
-// );
+};

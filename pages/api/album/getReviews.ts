@@ -49,7 +49,6 @@ export default async function handle(
           select: {
             id: true,
             name: true,
-            email: true,
             image: true,
           },
         },
