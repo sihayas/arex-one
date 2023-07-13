@@ -1,0 +1,35 @@
+/* Replies.module.css */
+
+.drop-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.drop-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.drop-exit {
+  opacity: 1;
+  position: absolute;
+  width: 100%;
+}
+
+.drop-exit-active {
+  opacity: 0;
+  height: 0;
+  transition: opacity 300ms, height 300ms;
+}
+
+.drop-appear {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.drop-appear-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}

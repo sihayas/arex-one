@@ -1,5 +1,4 @@
 import { UserAvatar } from "./UserAvatar";
-import { UserName } from "./UserName";
 import { useCMDK } from "@/context/CMDKContext";
 
 interface UserAttributionProps {
@@ -32,7 +31,7 @@ export const UserAttribution = ({ id, name, image }: UserAttributionProps) => {
           width={24}
           height={24}
         />
-        <UserName color="black" username={name} />
+        {/* <UserName color="black" username={name} /> */}
       </div>
     </div>
   );

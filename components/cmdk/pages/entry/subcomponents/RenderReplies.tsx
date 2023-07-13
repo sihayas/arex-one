@@ -11,7 +11,7 @@ export const RenderReplies: React.FC<RenderRepliesProps> = ({
   reviewId,
 }) => {
   return (
-    <div className="flex flex-col gap-8 p-8">
+    <div className="flex flex-col gap-7 p-8 pb-32 mb-12">
       {replyIds.map((replyId, id) => (
         <div key={id} className="flex flex-col gap-4">
           <Replies

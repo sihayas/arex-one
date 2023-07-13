@@ -27,13 +27,6 @@ a {
   box-sizing: border-box;
 }
 
-.verticalLine {
-  border-left: 1px solid black;
-  height: 100%;
-  position: absolute;
-  left: 50%;
-}
-
 .blurred {
   filter: blur(2px);
   transition: filter 0.7s;
@@ -41,25 +34,6 @@ a {
 
 .pointer-events-none {
   pointer-events: none;
-}
-
-/* Reply Right Side Fade Effect for Threads */
-.fade-enter {
-  opacity: 0;
-}
-
-.fade-enter-active {
-  opacity: 1;
-  transition: opacity 300ms;
-}
-
-.fade-exit {
-  opacity: 1;
-}
-
-.fade-exit-active {
-  opacity: 0;
-  transition: opacity 300ms;
 }
 
 textarea::-webkit-scrollbar {
@@ -71,20 +45,22 @@ textarea {
   scrollbar-width: none; /* Firefox */
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
 /* Hide scrollbar for IE, Edge and Firefox */
 .hide-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
 
-.animate-color-width {
-  transition: background-color 0.5s ease, width 0.5s ease;
+.thread-line {
+  position: absolute;
+  left: 11px;
+  height: 2rem;
+  width: 2px;
+  background-color: #e5e5e5; /* or whichever color you'd like */
+  transform-origin: bottom;
+  transition: height 0.3s ease-in-out;
 }
 
-.text-shadow {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+.thread-line.show {
+  height: 5.25rem; /* or whichever length you'd like */
 }

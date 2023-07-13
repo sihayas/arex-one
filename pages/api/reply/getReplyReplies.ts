@@ -52,8 +52,16 @@ export default async function handle(
           likes: true,
           // Count the number of replies for each reply to the reply
           replies: {
-            select: {
-              _count: true,
+            include: {
+              author: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+            take: 3, // Limit to 3 replies per reply
+            orderBy: {
+              id: "asc",
             },
           },
         },

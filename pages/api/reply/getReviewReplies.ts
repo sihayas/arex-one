@@ -1,5 +1,3 @@
-//Fetches all replies for a review with the given id
-
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
 
@@ -48,10 +46,18 @@ export default async function handle(
             },
           },
           likes: true,
-          // Count the number of replies for each reply to the review
+          // Fetch the replies of each reply, including the author's profile image
           replies: {
-            select: {
-              _count: true,
+            include: {
+              author: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+            take: 3, // Limit to 3 replies per reply
+            orderBy: {
+              id: "asc",
             },
           },
         },
@@ -60,16 +66,11 @@ export default async function handle(
       if (replies) {
         // Add likedByUser field to each reply
         const repliesWithUserLike = replies.map((reply) => {
-          console.log("Reply:", reply);
-          console.log("Likes:", reply.likes);
           const likedByUser = userId
             ? reply.likes.some((like) => {
-                console.log("Comparing:", like.authorId, userId);
                 return like.authorId === userId;
               })
             : false;
-
-          console.log("Liked by user:", likedByUser);
 
           return {
             ...reply,

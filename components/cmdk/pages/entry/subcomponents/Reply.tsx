@@ -1,7 +1,6 @@
 // Importing required modules
 import React, { useState } from "react";
-import { Line, UserName, UserAvatar, LikeButton } from "../../../generics";
-import { ReplyIcon, ThreadIcon } from "../../../../icons";
+import { UserAvatar, LikeButton } from "../../../generics";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyData } from "@/lib/interfaces";
 import { useSession } from "next-auth/react";
@@ -12,7 +11,8 @@ interface ReplyProps {
   setSelectedReply: (reply: ReplyData | null) => void;
 }
 export default function Reply({ reply, setSelectedReply }: ReplyProps) {
-  const { addToThreadcrumbs, removeUpToId, setReplyParent } = useThreadcrumb();
+  const { addToThreadcrumbs, removeUpToId, setReplyParent, threadcrumbs } =
+    useThreadcrumb();
   const [hideContent, setHideContent] = useState(false);
   const { data: session } = useSession();
 
@@ -22,10 +22,14 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
 
   // Handle loading of replies
   const handleLoadReplies = () => {
-    setHideContent(true);
-    setSelectedReply(reply);
-    addToThreadcrumbs(reply.id);
-    setReplyParent(reply);
+    if (threadcrumbs && !threadcrumbs.includes(reply.id)) {
+      setHideContent(true);
+      setSelectedReply(reply);
+      addToThreadcrumbs(reply.id);
+      setReplyParent(reply);
+    } else {
+      handleGoBack();
+    }
   };
 
   // Handle "Go Back" button click
@@ -67,8 +71,8 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
     >
       {/* Avatar & Content Outer */}
       <div className="flex items-end gap-2">
-        {/* Avatar */}
-        <div className="min-w-[24px]">
+        {/* Avatar & Line */}
+        <div className="min-w-[24px] relative">
           <UserAvatar
             imageSrc={
               reply.author?.image || "./public/images/default_image.png"
@@ -77,39 +81,34 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
             width={24}
             height={24}
           />
+          {/* Animate a line to indicate threading upon clicking */}
+          <div className={`thread-line ${hideContent ? "show" : ""}`}></div>
+          <div
+            onClick={() =>
+              replyCount ? handleLoadReplies() : setReplyParent(reply)
+            }
+            className={`absolute left-[7px] -bottom-[38px] cursor-pointer transition-all duration-300 hover:scale-150 overflow-visible ${
+              hideContent ? "scale-125" : ""
+            }`}
+          >
+            <svg height="10" width="10">
+              <circle cx="5" cy="5" r="5" fill="#E5E5E5" />
+            </svg>
+          </div>
         </div>
 
-        {/* Content  */}
+        {/* Content & Like Button  */}
         <div className="flex relative">
           <div
-            onClick={hideContent ? handleGoBack : undefined}
-            className={`text-sm px-4 py-2 w-[450px] bg-white text-gray shadow-reply border border-silver rounded-2xl rounded-bl-[4px] break-words cursor-pointer transition-all duration-300 hover:scale-[102%]`}
+            className={`px-4 py-2 w-[450px] bg-white text-black text-[13px] leading-normal shadow-reply border border-silver rounded-2xl rounded-bl-[4px] break-words cursor-pointer`}
           >
             {reply.content}
           </div>
 
-          {/* Reply Count & Like Count */}
-          <div className="absolute flex gap-2 -right-3 -bottom-6">
-            {/* Reply Count  */}
-            <div
-              onClick={() =>
-                reply.replies?.length
-                  ? handleLoadReplies()
-                  : setReplyParent(reply)
-              }
-              className="flex mt-1.5 items-center gap-1 px-1 py-[2px] rounded-full max-h-4 bg-white shadow-low cursor-pointer"
-            >
-              <ReplyIcon width={8} height={8} color={"#999"} />
-              <div className="text-[10px] text-gray2">
-                {reply.replies?.length}
-              </div>
-            </div>
-
-            {/* Like Count  */}
-            <div className="flex flex-col items-center">
-              <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
-              <div className=" text-[10px] text-gray2">{likeCount}</div>
-            </div>
+          {/* Like Count  */}
+          <div className="absolute flex flex-col items-center -right-3 -bottom-6">
+            <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
+            <div className=" text-[10px] text-gray2">{likeCount}</div>
           </div>
         </div>
       </div>
@@ -117,6 +116,17 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
       <div className={`pl-8 font-medium text-xs text-black`}>
         {reply.author.name}
       </div>
+      {/* Reply Count  */}
+      {replyCount && !hideContent ? (
+        <div
+          onClick={() =>
+            replyCount > 0 ? handleLoadReplies() : setReplyParent(reply)
+          }
+          className={`flex items-center translate-x-8 text-xs relative text-gray2 cursor-pointer transition-all`}
+        >
+          <div className="text-[10px]">{replyCount} replies</div>
+        </div>
+      ) : null}
     </div>
   );
 }

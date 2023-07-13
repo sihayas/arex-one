@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { ReplyData } from "@/lib/interfaces";
 import { useSession } from "next-auth/react";
-import { ReplyIcon } from "@/components/icons";
+import styles from "@/styles/replies.module.css";
 
 interface RepliesProps {
   reviewId?: string | null;
@@ -51,36 +51,30 @@ function Replies({ reviewId, replyId }: RepliesProps) {
   return (
     <TransitionGroup component={null}>
       {replies && replies.length > 0 ? (
-        replies.map((reply: ReplyData) => (
-          <CSSTransition key={reply.id} timeout={300} classNames="fade">
-            <div
-              style={{
-                display:
-                  reply.id === selectedReply?.id || selectedReply === null
-                    ? ""
-                    : "none",
-              }}
-            >
-              <Reply reply={reply} setSelectedReply={setSelectedReply} />
-              {/* Indicate thread parent if selected reply before rendering next set */}
-              {reply.id === selectedReply?.id && (
-                <div className="flex flex-col translate-y-6">
-                  <div className="flex items-center gap-1">
-                    <ReplyIcon width={8} height={8} color={"#999"} />
-                    <div className="text-xs text-gray2">replying to</div>
-                  </div>
-                  <div className="ml-3 text-xs text-gray1 font-medium">
-                    {selectedReply.author.name}s{" "}
-                    <span className=" font-normal">reply</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </CSSTransition>
-        ))
+        replies.map(
+          (reply: ReplyData) =>
+            // Only render the Reply component if it is selected or there is no selected reply
+            (selectedReply === null || reply.id === selectedReply.id) && (
+              <CSSTransition
+                key={reply.id}
+                timeout={500}
+                classNames={{
+                  enter: styles["drop-enter"],
+                  enterActive: styles["drop-enter-active"],
+                  exit: styles["drop-exit"],
+                  exitActive: styles["drop-exit-active"],
+                  appear: styles["drop-appear"],
+                  appearActive: styles["drop-appear-active"],
+                }}
+                appear={true}
+              >
+                <Reply reply={reply} setSelectedReply={setSelectedReply} />
+              </CSSTransition>
+            )
+        )
       ) : (
         <div className="text-xs text-[#CCC] mt-4 -ml-1"></div>
-        //  unthreaded
+        // unthreaded
       )}
     </TransitionGroup>
   );

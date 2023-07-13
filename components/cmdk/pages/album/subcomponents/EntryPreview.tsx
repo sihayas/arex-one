@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StarIcon, ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { UserName, UserAvatar, LikeButton } from "../../../generics";
+import { UserAvatar, LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
@@ -61,7 +61,7 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
       <div className="flex relative">
         <div
           onClick={handleContentClick}
-          className={`w-full text-sm px-4 py-2 bg-white text-black shadow-entry border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible cursor-pointer transition-all duration-300 hover:scale-[102%]`}
+          className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black shadow-entry border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible cursor-pointer transition-all duration-300 hover:scale-[102%]`}
         >
           {review.content}
         </div>
@@ -69,7 +69,7 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
         {/* Reply Count & Like Count */}
         <div className="absolute flex  gap-2 -right-3 -bottom-6">
           {/* Reply Count  */}
-          <div className="flex mt-1.5 items-center gap-1 px-1 py-[2px] rounded-full max-h-4 bg-white shadow-low">
+          <div className="flex mt-1.5 items-center gap-1 px-1 py-[2px] rounded-full max-h-4 bg-white border border-silver">
             <ReplyIcon width={8} height={8} color={"#999"} />
             <div className="text-[10px] text-gray2">{replyCount}</div>
           </div>
@@ -102,7 +102,9 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
           </div>
         </div>
         {/* Name  */}
-        <UserName username={review.author?.name} />
+        <div className={`font-medium text-[13px] leading-normal text-black`}>
+          {review.author?.name}
+        </div>
       </div>
     </div>
   );

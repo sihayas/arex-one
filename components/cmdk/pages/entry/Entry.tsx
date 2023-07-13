@@ -132,7 +132,7 @@ export const Entry = () => {
 
         {/* Art  */}
         <Image
-          className="rounded-[32px]"
+          className="rounded-[16px]"
           src={
             artworkUrl || selectedAlbum?.artworkUrl || "/images/default.webp"
           }
