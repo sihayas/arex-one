@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
-import { AlbumData } from "@/lib/interfaces";
+import { AlbumData, UserData } from "@/lib/interfaces";
 //NPM
 import { animated, useSpring } from "@react-spring/web";
 //Components
@@ -14,19 +14,25 @@ import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
+import User from "./pages/user/User";
 //Icons
 import { HomeIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
 type PageName = "index" | "album" | "entry" | "form" | "user";
-type Page = { name: string; album?: AlbumData; threadcrumbs?: string[] };
+type Page = {
+  name: string;
+  album?: AlbumData;
+  threadcrumbs?: string[];
+  user?: string;
+};
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 720, height: 480 },
   album: { width: 800, height: 800 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
-  user: { width: 400, height: 400 },
+  user: { width: 656, height: 656 },
 };
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
@@ -164,6 +170,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     case "form":
       ActiveComponent = Form;
       break;
+    case "user":
+      ActiveComponent = User;
+      break;
     default:
       ActiveComponent = Index;
   }
@@ -194,10 +203,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           ...transformSpring, // To appear
           transition: "box-shadow 750ms, scale 300ms",
         }}
-        className={`cmdk border border-silver ${
+        className={`cmdk ${
           isVisible
             ? `scale-100 pointer-events-auto`
-            : "!shadow-none scale-95 pointer-events-none "
+            : "!shadow-none scale-95 pointer-events-none border border-silver "
         }`}
       >
         {/* CMDK Inner Content  */}
@@ -277,7 +286,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               scale,
             }}
             className={`flex w-full h-full rounded-[32px] cursor-grab z-0 ${
-              isVisible ? "shadow-cmdkScaled" : ""
+              isVisible
+                ? `shadow-cmdkScaled ${
+                    activePage.name === "user" ? "!rounded-full" : ""
+                  }`
+                : ""
             } `}
           >
             <ActiveComponent />

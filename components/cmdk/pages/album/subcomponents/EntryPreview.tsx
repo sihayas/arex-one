@@ -6,6 +6,7 @@ import { UserAvatar, LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
+import handle from "@/pages/api/album/getReviews";
 
 interface EntryPreviewProps {
   review: ReviewData;
@@ -55,6 +56,15 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
     bounce();
   };
 
+  const handleUserClick = () => {
+    setPages((prevPages) => [
+      ...prevPages,
+      {
+        name: "user",
+        user: review.author.id,
+      },
+    ]);
+  };
   return (
     <div className="flex flex-col gap-2 w-[484px] overflow-visible">
       {/* Review Content  */}
@@ -102,7 +112,10 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
           </div>
         </div>
         {/* Name  */}
-        <div className={`font-medium text-[13px] leading-normal text-black`}>
+        <div
+          onClick={handleUserClick}
+          className={`font-medium text-[13px] leading-normal text-black cursor-pointer transition-all duration-300 hover:text-[#000]`}
+        >
           {review.author?.name}
         </div>
       </div>

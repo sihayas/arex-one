@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   // Fetch albums from Apple's database
   const appleAlbums = await searchAlbums(query);
 
-  // Cross-reference the Apple albums with your own database
+  // Cross-reference the Apple albums with our own database
   for (const album of appleAlbums) {
     const averageRating = await client.get(`album:${album.id}:averageRating`);
 

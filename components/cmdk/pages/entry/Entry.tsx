@@ -123,8 +123,6 @@ export const Entry = () => {
 
   if (!review) return null;
 
-  console.log("Entry re-rendered");
-
   return (
     <div className="flex flex-col rounded-[32px] w-full h-full overflow-scroll scrollbar-none relative bg-white">
       <div className="flex items-end p-8 gap-8">

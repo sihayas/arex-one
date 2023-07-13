@@ -1,7 +1,12 @@
 import React, { useState, useCallback, useContext } from "react";
 import { AlbumData } from "@/lib/interfaces";
 
-type Page = { name: string; album?: AlbumData; threadcrumbs?: string[] };
+type Page = {
+  name: string;
+  album?: AlbumData;
+  threadcrumbs?: string[];
+  user?: string;
+};
 
 export type CMDKContextType = {
   isVisible: boolean;
