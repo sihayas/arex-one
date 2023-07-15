@@ -10,6 +10,7 @@ import { useScroll } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/web";
 import { useSession } from "next-auth/react";
 import { EntryPreview } from "./subcomponents/EntryPreview";
+import { debounce } from "lodash";
 
 async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/postAlbum`, album);
@@ -40,6 +41,15 @@ export default function Album() {
 
   const [{ scale }, setScale] = useSpring(() => ({ scale: 1 }));
 
+  const handleScroll = debounce(() => {
+    const currentScrollPosition = scrollContainerRef.current?.scrollTop;
+    setPages((prevPages) => {
+      const currentPage = { ...prevPages[prevPages.length - 1] };
+      currentPage.scrollPosition = currentScrollPosition;
+      return [...prevPages.slice(0, -1), currentPage];
+    });
+  }, 200); // Delay scroll position update to prevent lag.
+
   // Shrink the album cover on scroll
   const bind = useScroll(({ xy: [, y] }) => {
     let newScale = 1 - y / 900; // Larger numbers = slower shrink.
@@ -47,6 +57,8 @@ export default function Album() {
     if (newScale < 0.5) newScale = 0.32; // Set a minimum size to prevent disappearing.
 
     setScale({ scale: newScale });
+
+    handleScroll();
   });
 
   const boxShadow = useMemo(() => {
@@ -124,7 +136,16 @@ export default function Album() {
         scrollContainer.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
+  }, [hasNextPage, fetchNextPage, isFetchingNextPage, setPages]);
+
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    const currentPage = pages[pages.length - 1];
+
+    if (scrollContainer && currentPage.scrollPosition) {
+      scrollContainer.scrollTop = currentPage.scrollPosition;
+    }
+  }, [pages]);
 
   // Load and error handling
   if (!selectedAlbum || isLoading || isFetchingNextPage) {

@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useContext } from "react";
 import { AlbumData } from "@/lib/interfaces";
 
-type Page = {
+export type Page = {
   name: string;
   album?: AlbumData;
   threadcrumbs?: string[];
   user?: string;
+  scrollPosition?: number;
 };
 
 export type CMDKContextType = {

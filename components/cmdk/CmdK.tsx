@@ -15,17 +15,12 @@ import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
 import User from "./pages/user/User";
+import { Page } from "@/context/CMDKContext";
 //Icons
 import { HomeIcon } from "../../components/icons";
 import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 
 type PageName = "index" | "album" | "entry" | "form" | "user";
-type Page = {
-  name: string;
-  album?: AlbumData;
-  threadcrumbs?: string[];
-  user?: string;
-};
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 720, height: 480 },

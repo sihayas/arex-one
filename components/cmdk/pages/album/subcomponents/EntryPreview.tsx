@@ -7,6 +7,7 @@ import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
 import handle from "@/pages/api/album/getReviews";
+import { Stars } from "../../../generics";
 
 interface EntryPreviewProps {
   review: ReviewData;
@@ -76,6 +77,9 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
         >
           {review.content}
         </div>
+        <div className="absolute -z-10 -left-[14px] -top-[14px]">
+          <Stars rating={review.rating} />
+        </div>
 
         {/* Reply Count & Like Count */}
         <div className="absolute flex  gap-2 -right-3 -bottom-6">
@@ -94,24 +98,14 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
       </div>
 
       {/* Attribution */}
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         {/* Image & Star  */}
-        <div className="flex relative">
-          <UserAvatar
-            imageSrc={review.author?.image}
-            altText={`${review.author?.name}'s avatar`}
-            width={24}
-            height={24}
-          />
-
-          {/* Star Rating  */}
-          <div className="flex items-center bg-white shadow-low rounded-full max-h-[14px] pl-[2px] pr-[3px] gap-[2px] -translate-x-2 translate-y-4">
-            <StarIcon width={10} height={10} color={"#000"} />
-            <div className="text-[10px] text-[#000] font-semibold">
-              {review.rating}
-            </div>
-          </div>
-        </div>
+        <UserAvatar
+          imageSrc={review.author?.image}
+          altText={`${review.author?.name}'s avatar`}
+          width={24}
+          height={24}
+        />
         {/* Name  */}
         <div
           onClick={handleUserClick}
