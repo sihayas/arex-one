@@ -82,7 +82,10 @@ export const Entry = () => {
     }
 
     const albumData = await getAlbumById(albumId);
-    const artworkUrl = generateArtworkUrl(albumData.attributes.artwork.url);
+    const artworkUrl = generateArtworkUrl(
+      albumData.attributes.artwork.url,
+      "440"
+    );
 
     return artworkUrl;
   };

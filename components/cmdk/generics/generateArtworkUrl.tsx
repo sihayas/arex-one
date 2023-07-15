@@ -1,5 +1,5 @@
 const SIZE = "1500";
 
-export const generateArtworkUrl = (urlTemplate: string) => {
-  return urlTemplate.replace("{w}", SIZE).replace("{h}", SIZE);
+export const generateArtworkUrl = (urlTemplate: string, size: string) => {
+  return urlTemplate.replace("{w}", size).replace("{h}", size);
 };

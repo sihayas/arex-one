@@ -34,7 +34,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
       ...prev,
       [album.id]: `rgba(${dominantColor.join(",")}`,
     }));
-    return generateArtworkUrl(album.attributes.artwork.url);
+    return generateArtworkUrl(album.attributes.artwork.url, "1500");
   };
 
   //Set the album
@@ -81,12 +81,14 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
 
   if (isLoading && isFetching) if (error) return <div>Error</div>;
   searchData && searchData.length ? null : <div></div>;
-
   return (
     <>
       {/* Search Results */}
       {searchData.map((album: AlbumData, averageRating: string) => {
-        const artworkUrl = generateArtworkUrl(album.attributes.artwork.url);
+        const artworkUrl = generateArtworkUrl(
+          album.attributes.artwork.url,
+          "1500"
+        );
         return (
           <Command.Item
             className="w-full p-2"

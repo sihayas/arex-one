@@ -19,6 +19,8 @@ module.exports = {
           "0px 0px 0px rgba(0, 0, 0, 0.03), 0px 2px 5px rgba(0, 0, 0, 0.03), 0px 8px 8px rgba(0, 0, 0, 0.03), 0px 19px 11px rgba(0, 0, 0, 0.02), 0px 33px 13px rgba(0, 0, 0, 0.00), 0px 52px 15px rgba(0, 0, 0, 0.00)",
         reply:
           "0px 0px 0px rgba(0, 0, 0, 0.03), 0px 1px 2px rgba(0, 0, 0, 0.03), 0px 3px 3px rgba(0, 0, 0, 0.03), 0px 7px 4px rgba(0, 0, 0, 0.02), 0px 13px 5px rgba(0, 0, 0, 0.00), 0px 21px 6px rgba(0, 0, 0, 0.00)",
+        albumFavorite:
+          "0px 0px 0px 0px rgba(0, 0, 0, 0.20), 0px 2px 4px 0px rgba(0, 0, 0, 0.20), 0px 7px 7px 0px rgba(0, 0, 0, 0.17), 0px 16px 10px 0px rgba(0, 0, 0, 0.10), 0px 29px 12px 0px rgba(0, 0, 0, 0.03), 0px 45px 13px 0px rgba(0, 0, 0, 0.00);",
       },
       colors: {
         black: "#333333",
@@ -27,8 +29,8 @@ module.exports = {
         gray2: "#999999",
         gray3: "#CCCCCC",
         silver: "rgba(0, 0, 0, 0.05)",
-        blurEntry: "rgba(255, 255, 255, 0.2)",
-        blurEntryDark: "rgba(0, 0, 0, 0.8)",
+        blurWhite: "rgba(255, 255, 255, 0.2)",
+        blurDark: "rgba(0, 0, 0, 0.8)",
         error: "rgb(255,94,0)",
       },
       letterSpacing: {

@@ -32,7 +32,7 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   album: { width: 800, height: 800 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
-  user: { width: 656, height: 656 },
+  user: { width: 768, height: 768 },
 };
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
@@ -65,8 +65,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width || 1018,
     height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height || 612,
     config: {
-      tension: 420,
-      friction: 40,
+      tension: 200,
+      friction: 22,
     },
   }));
 

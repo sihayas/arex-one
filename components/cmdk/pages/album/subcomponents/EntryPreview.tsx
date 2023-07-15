@@ -65,6 +65,7 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
       },
     ]);
   };
+
   return (
     <div className="flex flex-col gap-2 w-[484px] overflow-visible">
       {/* Review Content  */}

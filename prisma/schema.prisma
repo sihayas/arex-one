@@ -72,6 +72,18 @@ model User {
   sessions      Session[]
 }
 
+
+model Follows {
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
 //User Settings
 model Profile {
   id        String   @id @default(cuid())
@@ -176,16 +188,6 @@ model Album {
   @@unique([id])
 }
 
-model Follows {
-  follower    User   @relation("follower", fields: [followerId], references: [id])
-  followerId  String
-  following   User   @relation("following", fields: [followingId], references: [id])
-  followingId String
-
-  @@id([followerId, followingId])
-  @@index([followerId])
-  @@index([followingId])
-}
 
 model Favorite {
   id        String  @id @default(cuid())
