@@ -3,8 +3,6 @@ import { ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import { LikeButton, generateArtworkUrl } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
-import { useCMDK } from "@/context/CMDKContext";
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { Stars } from "../../../generics";
 import { getAlbumById } from "@/lib/musicKit";
@@ -35,9 +33,7 @@ export const EntryPreviewProfile: React.FC<EntryPreviewProfileProps> = ({
   const { getDominantColor } = useDominantColor();
 
   const { data: session } = useSession();
-  const { setPages, bounce } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
-  const { setThreadcrumbs } = useThreadcrumb();
 
   const replyCount = review.replies.length;
 

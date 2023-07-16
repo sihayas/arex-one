@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import { UserAvatar, LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
-import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
 import { Stars } from "../../../generics";
 import useHandleLikeClick from "@/hooks/useLike";
 import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
@@ -15,8 +14,7 @@ interface EntryPreviewProps {
 
 export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setPages, bounce } = useCMDK();
-  const { setThreadcrumbs } = useThreadcrumb();
+  const { setPages } = useCMDK();
 
   const replyCount = review.replies.length;
 

@@ -264,14 +264,10 @@ export default function Album() {
 
         {/* Album Entries  */}
         <div className="flex flex-col gap-6 overflow-visible h-full">
-          {flattenedReviews && flattenedReviews.length > 0 ? (
-            flattenedReviews.map((review) => {
-              return (
-                <div key={review.id}>
-                  <EntryPreview key={review.id} review={review} />
-                </div>
-              );
-            })
+          {flattenedReviews?.length > 0 ? (
+            flattenedReviews.map((review) => (
+              <EntryPreview key={review.id} review={review} />
+            ))
           ) : (
             // If there are no entries, display this message
             <div className="text-xs text-grey p-2">no entries</div>
