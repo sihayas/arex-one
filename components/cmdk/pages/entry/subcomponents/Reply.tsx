@@ -4,21 +4,19 @@ import { UserAvatar, LikeButton } from "../../../generics";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyData } from "@/lib/interfaces";
 import { useSession } from "next-auth/react";
-import axios from "axios";
+import useHandleLikeClick from "@/hooks/useLike";
 
 interface ReplyProps {
   reply: ReplyData;
   setSelectedReply: (reply: ReplyData | null) => void;
 }
 export default function Reply({ reply, setSelectedReply }: ReplyProps) {
+  const [hideContent, setHideContent] = useState(false);
+  const replyCount = reply.replies?.length;
+
+  const { data: session } = useSession();
   const { addToThreadcrumbs, removeUpToId, setReplyParent, threadcrumbs } =
     useThreadcrumb();
-  const [hideContent, setHideContent] = useState(false);
-  const { data: session } = useSession();
-
-  const [liked, setLiked] = useState(reply.likedByUser);
-  const [likeCount, setLikeCount] = useState(reply.likes.length);
-  const replyCount = reply.replies?.length;
 
   // Handle loading of replies
   const handleLoadReplies = () => {
@@ -40,28 +38,14 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
     setReplyParent(reply);
   };
 
-  const handleLikeClick = async () => {
-    if (!session) return;
-
-    const userId = session.user.id;
-
-    try {
-      const action = liked ? "unlike" : "like";
-      const response = await axios.post("/api/reply/postLike", {
-        replyId: reply.id,
-        userId,
-        action,
-      });
-
-      if (response.data.success) {
-        setLikeCount(response.data.likes);
-        setLiked(!liked);
-        console.log("Success:", response.data);
-      }
-    } catch (error) {
-      console.error("Error updating likes:", error);
-    }
-  };
+  const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
+    reply.likedByUser,
+    reply.likes,
+    "/api/reply/postLike",
+    "replyId",
+    reply.id,
+    session
+  );
 
   return (
     <div

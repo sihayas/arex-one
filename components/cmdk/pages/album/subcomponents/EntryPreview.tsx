@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
-import axios from "axios";
 import { UserAvatar, LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
 import { Stars } from "../../../generics";
+import useHandleLikeClick from "@/hooks/useLike";
+import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
 
 interface EntryPreviewProps {
   review: ReviewData;
@@ -14,47 +15,21 @@ interface EntryPreviewProps {
 
 export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
   const { data: session } = useSession();
-  const [liked, setLiked] = useState(review.likedByUser);
-  const [likeCount, setLikeCount] = useState(review.likes.length);
-  const replyCount = review.replies.length;
-
   const { setPages, bounce } = useCMDK();
   const { setThreadcrumbs } = useThreadcrumb();
 
-  const handleLikeClick = async () => {
-    if (!session) return;
+  const replyCount = review.replies.length;
 
-    const userId = session.user.id;
+  const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
+    review.likedByUser,
+    review.likes,
+    "/api/review/postLike",
+    "reviewId",
+    review.id,
+    session
+  );
 
-    try {
-      const action = liked ? "unlike" : "like";
-      const response = await axios.post("/api/review/postLike", {
-        reviewId: review.id,
-        userId,
-        action,
-      });
-
-      if (response.data.success) {
-        setLikeCount(response.data.likes);
-        setLiked(!liked);
-        console.log("Success:", response.data);
-      }
-    } catch (error) {
-      console.error("Error updating likes:", error);
-    }
-  };
-
-  const handleContentClick = () => {
-    setPages((prevPages) => [
-      ...prevPages,
-      {
-        name: "entry",
-        threadcrumbs: [review.id],
-      },
-    ]);
-    setThreadcrumbs([review.id]);
-    bounce();
-  };
+  const handleEntryClick = useHandleEntryClick(review.id);
 
   const handleUserClick = () => {
     setPages((prevPages) => [
@@ -71,7 +46,7 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
       {/* Review Content  */}
       <div className="flex relative">
         <div
-          onClick={handleContentClick}
+          onClick={handleEntryClick}
           className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black shadow-entry border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible cursor-pointer transition-all duration-300 hover:scale-[102%]`}
         >
           {review.content}

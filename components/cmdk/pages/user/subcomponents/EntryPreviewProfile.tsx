@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
-import axios from "axios";
 import { LikeButton, generateArtworkUrl } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
@@ -12,6 +11,8 @@ import { getAlbumById } from "@/lib/musicKit";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useDominantColor } from "@/hooks/useDominantColor";
+import useHandleLikeClick from "@/hooks/useLike";
+import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
 
 interface EntryPreviewProfileProps {
   review: ReviewData;
@@ -30,53 +31,26 @@ const fetchArtworkUrl = async (albumId: string) => {
 export const EntryPreviewProfile: React.FC<EntryPreviewProfileProps> = ({
   review,
 }) => {
-  // Initialize states
   const [dominantColor, setDominantColor] = useState("");
   const { getDominantColor } = useDominantColor();
 
   const { data: session } = useSession();
-  const [liked, setLiked] = useState(review.likedByUser);
-  const [likeCount, setLikeCount] = useState(review.likes.length);
-  const replyCount = review.replies.length;
-
   const { setPages, bounce } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
   const { setThreadcrumbs } = useThreadcrumb();
 
-  const handleLikeClick = async () => {
-    if (!session) return;
+  const replyCount = review.replies.length;
 
-    const userId = session.user.id;
+  const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
+    review.likedByUser,
+    review.likes,
+    "/api/review/postLike",
+    "reviewId",
+    review.id,
+    session
+  );
 
-    try {
-      const action = liked ? "unlike" : "like";
-      const response = await axios.post("/api/review/postLike", {
-        reviewId: review.id,
-        userId,
-        action,
-      });
-
-      if (response.data.success) {
-        setLikeCount(response.data.likes);
-        setLiked(!liked);
-        console.log("Success:", response.data);
-      }
-    } catch (error) {
-      console.error("Error updating likes:", error);
-    }
-  };
-
-  const handleEntryClick = () => {
-    setPages((prevPages) => [
-      ...prevPages,
-      {
-        name: "entry",
-        threadcrumbs: [review.id],
-      },
-    ]);
-    setThreadcrumbs([review.id]);
-    bounce();
-  };
+  const handleEntryClick = useHandleEntryClick(review.id);
 
   // If review album is different from selected album, fetch artwork
   const { data: artworkUrl, isLoading: isArtworkLoading } = useQuery(
