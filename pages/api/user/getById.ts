@@ -6,7 +6,6 @@ export default async function handle(
   res: NextApiResponse
 ) {
   const { id } = req.query;
-  console.log("userId", id);
 
   if (req.method === "GET") {
     try {
@@ -48,7 +47,20 @@ export default async function handle(
       });
 
       if (user) {
-        res.status(200).json(user);
+        const userWithLikes = {
+          ...user,
+          reviews: user.reviews.map((review) => {
+            const likedByUser = review.likes.some(
+              (like) => like.authorId === id
+            );
+            return {
+              ...review,
+              likedByUser,
+            };
+          }),
+        };
+
+        res.status(200).json(userWithLikes);
       } else {
         res.status(404).json({ error: "User not found." });
       }

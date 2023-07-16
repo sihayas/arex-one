@@ -1,5 +1,4 @@
 import { Command } from "cmdk";
-import ColorThief from "colorthief";
 import Image from "next/image";
 import { useState } from "react";
 import Rating from "./subcomponents/Rating";
@@ -7,6 +6,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { AlbumData } from "@/lib/interfaces";
 import { generateArtworkUrl } from "../../generics";
+import { useDominantColor } from "@/hooks/useDominantColor";
 
 interface SearchProps {
   searchData: any;
@@ -19,6 +19,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   const [shadowColors, setShadowColors] = useState<{ [key: string]: string }>(
     {}
   );
+  const { getDominantColor } = useDominantColor();
 
   // CMDK context
   const { setPages, bounce, setHideSearch } = useCMDK();
@@ -29,11 +30,12 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
     imgElement: HTMLImageElement,
     album: AlbumData
   ) => {
-    const dominantColor = new ColorThief().getColor(imgElement);
+    const dominantColor = getDominantColor(imgElement);
     setShadowColors((prev) => ({
       ...prev,
-      [album.id]: `rgba(${dominantColor.join(",")}`,
+      [album.id]: dominantColor,
     }));
+    console.log("dominantColor", dominantColor);
     return generateArtworkUrl(album.attributes.artwork.url, "1500");
   };
 

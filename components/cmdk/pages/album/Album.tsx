@@ -63,7 +63,7 @@ export default function Album() {
 
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.shadowColor) {
-      return `0px 0px 0px 0px ${selectedAlbum?.shadowColor},0.025),
+      return `0px 0px 0px 0px ${selectedAlbum.shadowColor},0.025),
      0px 5px 12px 0px ${selectedAlbum.shadowColor},0.25),
      0px 22px 22px 0px ${selectedAlbum.shadowColor},0.22),
      0px 49px 29px 0px ${selectedAlbum.shadowColor},0.13),
@@ -206,7 +206,7 @@ export default function Album() {
               }}
               className="font-bold text-2xl transition-all duration-300 hover:scale-105"
             >
-              {/* + {selectedAlbum.attributes.name} */}
+              + {selectedAlbum.attributes.name}
             </button>
           </div>
         </animated.div>

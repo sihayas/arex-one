@@ -16,20 +16,20 @@ export const Stars: React.FC<StarsProps> = ({ rating }) => {
 
     switch (Math.floor(rating)) {
       case 1:
-        return <StarIcon width={12} height={12} color={color} />;
+        return <StarIcon width={16} height={16} color={color} />;
       case 2:
-        return <StarTwoIcon width={12} height={12} color={color} />;
+        return <StarTwoIcon width={16} height={16} color={color} />;
       case 3:
-        return <StarThreeIcon width={12} height={12} color={color} />;
+        return <StarThreeIcon width={16} height={16} color={color} />;
       case 4:
-        return <StarFourIcon width={12} height={12} color={color} />;
-      default:
-        return <AsteriskIcon width={12} height={12} color={"#333"} />;
+        return <StarFourIcon width={16} height={16} color={color} />;
+      case 5:
+        return <AsteriskIcon width={16} height={16} color={"#000"} />;
     }
   };
 
   return (
-    <div className="flex items-center p-2 border border-silver bg-white rounded-full">
+    <div className="flex items-center p-2 border border-silver bg-blurWhite backdrop-blur-sm rounded-full">
       {getStarIcon(rating)}
     </div>
   );

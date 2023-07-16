@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { StarIcon, ReplyIcon } from "../../../../icons";
+import { ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { UserAvatar, LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { useThreadcrumb } from "../../../../../context/Threadcrumbs";
-import handle from "@/pages/api/album/getReviews";
 import { Stars } from "../../../generics";
 
 interface EntryPreviewProps {
@@ -77,7 +76,7 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
         >
           {review.content}
         </div>
-        <div className="absolute -z-10 -left-[14px] -top-[14px]">
+        <div className="absolute -z-10 -left-5 -top-5">
           <Stars rating={review.rating} />
         </div>
 

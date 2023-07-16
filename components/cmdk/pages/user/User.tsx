@@ -5,6 +5,7 @@ import Favorites from "./subcomponents/Favorites";
 import Image from "next/image";
 import { FavoritesIcon, HistoryIcon } from "@/components/icons";
 import { EntryPreview } from "../album/subcomponents/EntryPreview";
+import { EntryPreviewProfile } from "./subcomponents/EntryPreviewProfile";
 import { useState } from "react";
 import { ReviewData } from "@/lib/interfaces";
 import { motion } from "framer-motion";
@@ -19,6 +20,7 @@ const User = () => {
     setActiveTab(tabName);
   };
 
+  // Animate tabs
   const variants = {
     hidden: {
       opacity: 0,
@@ -37,6 +39,7 @@ const User = () => {
     },
   };
 
+  // Get user data
   const {
     data: user,
     isLoading,
@@ -65,15 +68,15 @@ const User = () => {
   console.log("user", user);
 
   return (
-    <div className="bg-white w-full h-full rounded-full relative flex flex-col items-center overflow-scroll scrollbar-none pb-20 pt-64 border border-silver">
+    <div className="bg-white w-full h-full rounded-full relative flex flex-col items-center overflow-scroll scrollbar-none pb-48 pt-48 border border-silver">
       {/* Header  */}
       <div className="flex flex-col items-center gap-2 p-8 pb-4">
         <Image
           className="border-8 shadow-medium rounded-full"
           src={user.image}
           alt={`${user.name}'s avatar`}
-          width={128}
-          height={128}
+          width={307}
+          height={307}
         />
         <div className="flex flex-col gap-1 items-center">
           <div className="text-sm font-semibold text-black">
@@ -128,7 +131,7 @@ const User = () => {
           variants={variants}
         >
           {user.reviews.map((review: ReviewData, i: string) => (
-            <EntryPreview key={i} review={review} />
+            <EntryPreviewProfile key={i} review={review} />
           ))}
         </motion.div>
       )}

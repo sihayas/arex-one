@@ -57,7 +57,6 @@ export const Entry = () => {
       const response: AxiosResponse<ReviewData> = await axios.get(
         `/api/review/getById?id=${reviewId}&userId=${session?.user?.id || ""}`
       );
-      console.log("review data", response.data);
       return response.data;
     },
     {

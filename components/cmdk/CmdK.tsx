@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
-import { AlbumData, UserData } from "@/lib/interfaces";
 //NPM
 import { animated, useSpring } from "@react-spring/web";
 //Components

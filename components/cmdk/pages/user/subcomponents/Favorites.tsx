@@ -24,7 +24,7 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId }) => {
     return <div>Loading...</div>;
   }
 
-  const url = generateArtworkUrl(data.attributes.artwork.url, "748");
+  const url = generateArtworkUrl(data.attributes.artwork.url, "996");
 
   return (
     <div>
@@ -32,8 +32,8 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId }) => {
         className="rounded-2xl shadow-albumFavorite"
         src={url}
         alt="album artwork"
-        width={374}
-        height={374}
+        width={498}
+        height={498}
       />
     </div>
   );
