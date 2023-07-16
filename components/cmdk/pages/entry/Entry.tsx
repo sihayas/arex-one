@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState, useEffect, MouseEvent, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
 import { ReviewData } from "../../../../lib/interfaces";
@@ -12,16 +12,29 @@ import { getAlbumById } from "@/lib/musicKit";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { EntryPreview } from "../album/subcomponents/EntryPreview";
 
+const fetchArtworkUrl = async (albumId: string | undefined) => {
+  if (!albumId) {
+    console.log("fetchArtworkURl didnt get an albumId");
+    return null;
+  }
+
+  const albumData = await getAlbumById(albumId);
+  const artworkUrl = generateArtworkUrl(
+    albumData.attributes.artwork.url,
+    "440"
+  );
+
+  return artworkUrl;
+};
+
 export const Entry = () => {
   const { data: session } = useSession();
-  // Review interaction
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
 
   // Context
   const { selectedAlbum } = useCMDKAlbum();
   const { pages } = useCMDK();
   const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
+
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.shadowColor) {
       return `0px 0px 0px 0px ${selectedAlbum?.shadowColor},0.025),
@@ -37,7 +50,7 @@ export const Entry = () => {
   const activePage = pages[pages.length - 1];
   const firstThreadcrumb = activePage.threadcrumbs?.[0];
 
-  // If reviewId [first item in threadcrumb] changes, re-render Entry
+  // If reviewId changes [first item in threadcrumb] changes, re-render Entry
   useEffect(() => {
     if (activePage.threadcrumbs && firstThreadcrumb) {
       setThreadcrumbs(activePage.threadcrumbs);
@@ -68,26 +81,9 @@ export const Entry = () => {
 
   useEffect(() => {
     if (review) {
-      setLiked(review.likedByUser);
-      setLikeCount(review.likes.length);
       setReplyParent(review);
     }
   }, [review, setReplyParent]);
-
-  const fetchArtworkUrl = async (albumId: string | undefined) => {
-    if (!albumId) {
-      console.log("fetchArtworkURl didnt get an albumId");
-      return null;
-    }
-
-    const albumData = await getAlbumById(albumId);
-    const artworkUrl = generateArtworkUrl(
-      albumData.attributes.artwork.url,
-      "440"
-    );
-
-    return artworkUrl;
-  };
 
   // If review album is different from selected album, fetch artwork
   const { data: artworkUrl, isLoading: isArtworkLoading } = useQuery(
@@ -97,31 +93,6 @@ export const Entry = () => {
       enabled: !!review?.albumId && selectedAlbum?.id !== review?.albumId,
     }
   );
-
-  const handleLikeClick = async (event: MouseEvent<HTMLButtonElement>) => {
-    if (!session) {
-      // console.log("User not logged in");
-      return;
-    }
-
-    const userId = session.user.id;
-    try {
-      const action = liked ? "unlike" : "like";
-      const response = await axios.post("/api/review/postLike", {
-        reviewId,
-        action,
-        userId,
-      });
-
-      if (response.data.success) {
-        setLikeCount(response.data.likes);
-        setLiked(!liked);
-        console.log("like update response", response.data);
-      }
-    } catch (error) {
-      console.error("Error updating likes:", error);
-    }
-  };
 
   if (!review) return null;
 
