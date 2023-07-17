@@ -177,6 +177,22 @@ export function HistoryIcon({ ...props }) {
     </svg>
   );
 }
+export function StarOneIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 13 12"
+      {...props}
+    >
+      <path
+        fill="#000"
+        fillOpacity={0.5}
+        d="M4.5 1c.2 1.4.3 2.4.6 3 .6.7 1.6.8 3.4 1-1.8.1-2.8.2-3.3.9-.5.5-.5 1.5-.7 3-.2-2-.2-3-1-3.5-.8-.3-1.5-.3-3-.4 1.7-.2 2.6-.2 3.2-.7.5-.6.6-1.6.7-3.2Z"
+      />
+    </svg>
+  );
+}
 
 export function StarTwoIcon({ ...props }) {
   return (

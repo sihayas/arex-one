@@ -4,8 +4,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import Favorites from "./subcomponents/Favorites";
 import Image from "next/image";
 import { FavoritesIcon, HistoryIcon } from "@/components/icons";
-import { EntryPreview } from "../album/subcomponents/EntryPreview";
-import { EntryPreviewProfile } from "./subcomponents/EntryPreviewProfile";
+import { EntryPreviewUser } from "./subcomponents/EntryPreviewUser";
 import { useState } from "react";
 import { ReviewData } from "@/lib/interfaces";
 import { motion } from "framer-motion";
@@ -131,7 +130,7 @@ const User = () => {
           variants={variants}
         >
           {user.reviews.map((review: ReviewData, i: string) => (
-            <EntryPreviewProfile key={i} review={review} />
+            <EntryPreviewUser key={i} review={review} />
           ))}
         </motion.div>
       )}

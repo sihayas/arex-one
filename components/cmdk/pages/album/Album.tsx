@@ -168,9 +168,6 @@ export default function Album() {
       {...bind()}
       ref={scrollContainerRef}
       className="flex flex-col items-center rounded-[32px] z-0 w-full bg-white overflow-scroll scrollbar-none"
-      // style={{
-      //   boxShadow: boxShadow,
-      // }}
     >
       {/* Section One / Album Art */}
       <div className="sticky top-0">
@@ -219,7 +216,7 @@ export default function Album() {
           <div className="flex items-center gap-8">
             {/* Stars  */}
             <div className="flex items-center gap-1">
-              <div className="text-xl text-gray2 font-medium ">4.2</div>
+              <div className="text-xl text-gray1 font-medium ">4.2</div>
               <StarsIcon width={24} height={24} color={"#999"} />
             </div>
             {/* Stats  */}
@@ -227,14 +224,14 @@ export default function Album() {
               {/* Play Count */}
               <div className="flex flex-col gap-1">
                 <div className="text-xs text-gray2">+ heard by</div>
-                <div className="font-medium text-sm text-gray2 text-end">
+                <div className="font-medium text-sm text-gray1 text-end">
                   400
                 </div>
               </div>
               {/* Loved count */}
               <div className="flex flex-col gap-1">
                 <div className="text-xs text-gray2">* loved by</div>
-                <div className="font-medium text-sm text-gray2 text-end">
+                <div className="font-medium text-sm text-gray1 text-end">
                   20
                 </div>
               </div>
@@ -242,7 +239,7 @@ export default function Album() {
           </div>
 
           {/* Verdict Notes  */}
-          <div className="text-sm text-gray2 w-[484px] line-clamp-3">
+          <div className="text-sm text-gray1 w-[484px] line-clamp-3">
             With Nectar Jojis full metamorphosis from a meme-laden internet
             artist to a commendable musician takes flight. In a poignant
             exercise of introspection, the album unfurls like a lucid dream of
@@ -263,7 +260,7 @@ export default function Album() {
         </div>
 
         {/* Album Entries  */}
-        <div className="flex flex-col gap-6 overflow-visible h-full">
+        <div className="flex flex-col gap-10 overflow-visible h-full">
           {flattenedReviews?.length > 0 ? (
             flattenedReviews.map((review) => (
               <EntryPreview key={review.id} review={review} />

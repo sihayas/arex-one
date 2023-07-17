@@ -1,5 +1,5 @@
 import {
-  StarIcon,
+  StarOneIcon,
   StarTwoIcon,
   StarThreeIcon,
   StarFourIcon,
@@ -16,7 +16,7 @@ export const Stars: React.FC<StarsProps> = ({ rating }) => {
 
     switch (Math.floor(rating)) {
       case 1:
-        return <StarIcon width={16} height={16} color={color} />;
+        return <StarOneIcon width={16} height={16} color={color} />;
       case 2:
         return <StarTwoIcon width={16} height={16} color={color} />;
       case 3:

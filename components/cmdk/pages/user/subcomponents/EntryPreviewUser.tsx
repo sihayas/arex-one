@@ -12,7 +12,7 @@ import { useDominantColor } from "@/hooks/useDominantColor";
 import useHandleLikeClick from "@/hooks/useLike";
 import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
 
-interface EntryPreviewProfileProps {
+interface EntryPreviewUserProps {
   review: ReviewData;
 }
 
@@ -26,7 +26,7 @@ const fetchArtworkUrl = async (albumId: string) => {
   return artworkUrl;
 };
 
-export const EntryPreviewProfile: React.FC<EntryPreviewProfileProps> = ({
+export const EntryPreviewUser: React.FC<EntryPreviewUserProps> = ({
   review,
 }) => {
   const [dominantColor, setDominantColor] = useState("");
