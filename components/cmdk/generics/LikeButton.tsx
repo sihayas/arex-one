@@ -29,7 +29,7 @@ export const LikeButton: React.FC<LikeButtonProps> = ({
       aria-label="like this review"
     >
       <div className="flex items-center border border-silver bg-white rounded-full p-1 text-white hover:text-black text-sm hover:bg-white hover:scale-[105%] transition-all duration-300">
-        <LoveIcon color={color} width={16} height={16} />
+        <LoveIcon color={color} width={12} height={12} />
       </div>
     </button>
   );

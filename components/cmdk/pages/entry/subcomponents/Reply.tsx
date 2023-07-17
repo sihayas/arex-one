@@ -90,9 +90,9 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
           </div>
 
           {/* Like Count  */}
-          <div className="absolute flex flex-col items-center -right-3 -bottom-6">
+          <div className="absolute flex flex-col items-center -right-2.5 -bottom-6">
             <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
-            <div className=" text-[10px] text-gray2">{likeCount}</div>
+            <div className="text-[10px] text-gray2">{likeCount}</div>
           </div>
         </div>
       </div>
