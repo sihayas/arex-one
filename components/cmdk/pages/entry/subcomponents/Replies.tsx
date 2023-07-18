@@ -1,5 +1,4 @@
 // Renders a list of replies to a review or reply
-
 import Reply from "./Reply";
 import { useState } from "react";
 import axios from "axios";
@@ -11,31 +10,23 @@ import styles from "@/styles/replies.module.css";
 
 interface RepliesProps {
   reviewId?: string | null;
-  replyId?: string;
   userId?: string;
   setLoadingReplies?: (loading: boolean) => void;
 }
 
-const fetchReplies = ({ reviewId, replyId, userId }: RepliesProps) => {
-  const baseURL = "/api/reply/";
-
-  // Decide URL based on presence of reviewId or replyId
-  const url = reviewId
-    ? `${baseURL}getReviewReplies?id=${reviewId}&userId=${userId}`
-    : `${baseURL}getReplyReplies?replyId=${replyId}&userId=${userId}`;
-
+const fetchReplies = ({ reviewId, userId }: RepliesProps) => {
+  const url = `/api/reply/getReviewReplies?id=${reviewId}&userId=${userId}`;
   return axios.get(url).then((res) => res.data);
 };
 
 // Replies component
-function Replies({ reviewId, replyId }: RepliesProps) {
+function Replies({ reviewId }: RepliesProps) {
   const [selectedReply, setSelectedReply] = useState<ReplyData | null>(null);
   const { data: session } = useSession();
   const userId = session?.user.id;
 
-  const fetchRepliesQuery = useQuery(
-    ["replies", { reviewId, replyId, userId }],
-    () => fetchReplies({ reviewId, replyId, userId })
+  const fetchRepliesQuery = useQuery(["replies", { reviewId, userId }], () =>
+    fetchReplies({ reviewId, userId })
   );
 
   if (fetchRepliesQuery.isLoading) {
@@ -47,6 +38,7 @@ function Replies({ reviewId, replyId }: RepliesProps) {
   }
 
   const replies = fetchRepliesQuery.data;
+  console.log(replies);
 
   return (
     <TransitionGroup component={null}>

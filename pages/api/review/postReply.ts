@@ -33,13 +33,11 @@ export default async function handle(
               id: userId,
             },
           },
-          parent: reviewId
-            ? {
-                connect: {
-                  id: reviewId,
-                },
-              }
-            : undefined,
+          review: {
+            connect: {
+              id: reviewId,
+            },
+          },
           replyTo: replyId
             ? {
                 connect: {

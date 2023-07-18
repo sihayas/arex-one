@@ -59,8 +59,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width || 1018,
     height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height || 612,
     config: {
-      tension: 200,
-      friction: 22,
+      tension: 400,
+      friction: 30,
     },
   }));
 
@@ -257,7 +257,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Search Results  */}
             <animated.div
               style={{ ...searchStyles }}
-              className={`w-full overflow-scroll rounded-[32px] absolute bg-white z-10 ${
+              className={`w-full overflow-scroll rounded-[32px] absolute bg-white z-10 border border-silver ${
                 hideSearch
                   ? "pointer-events-none"
                   : "!pt-[4rem] pointer-events-auto"

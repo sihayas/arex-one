@@ -19,7 +19,11 @@ const handleAddReply = async ({
 }: ReplyInputProps) => {
   if (!replyParent) return;
 
-  const reviewId = "albumId" in replyParent ? replyParent.id : null;
+  // If replyParent has albumId prop, its a review so reviewId is .id
+  const reviewId =
+    "albumId" in replyParent ? replyParent.id : replyParent.reviewId;
+
+  // If replyParent has albumId prop, its a review so replyId is null, post reply to review
   const replyId = "albumId" in replyParent ? null : replyParent.id;
 
   // Create the body object based on replyId or reviewId

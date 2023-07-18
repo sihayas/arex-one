@@ -97,7 +97,7 @@ export const Entry = () => {
   if (!review) return null;
 
   return (
-    <div className="flex flex-col rounded-[32px] w-full h-full overflow-scroll scrollbar-none relative bg-white">
+    <div className="flex flex-col rounded-[32px] w-full h-full overflow-scroll scrollbar-none relative bg-white border border-silver">
       <div className="flex items-end p-8 gap-8">
         <EntryPreview review={review} />
 
@@ -116,7 +116,7 @@ export const Entry = () => {
       </div>
 
       {/* Replies  */}
-      <RenderReplies replyIds={threadcrumbs} reviewId={reviewId!} />
+      <RenderReplies threadcrumbs={threadcrumbs} />
 
       {/* Reply Input  */}
       <div className="w-[482px] fixed bottom-8 left-8 flex items-center gap-2 bg-[#F5F5F5] p-2 rounded-xl">

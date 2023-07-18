@@ -1,10 +1,10 @@
-interface LineProps {
+interface LineBottomProps {
   height?: string;
   width?: string;
   color?: string;
 }
 
-export const Line: React.FC<LineProps> = ({
+export const LineBottom: React.FC<LineBottomProps> = ({
   height = "fit",
   width = "2px",
   color = "#E5E5E5",
@@ -16,8 +16,9 @@ export const Line: React.FC<LineProps> = ({
         backgroundColor: color,
         width: width,
         borderRadius: "9999px",
+        top: "8px",
       }}
-      className="flex-grow -translate-y-1"
+      className="flex-grow"
     />
   );
 };

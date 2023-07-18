@@ -245,3 +245,22 @@ export function StarFourIcon({ ...props }) {
     </svg>
   );
 }
+
+export function ChainEndIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 32 32"
+      {...props}
+    >
+      <path
+        stroke={props.color}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M28 13.3a12 12 0 1 1-24 0"
+      />
+    </svg>
+  );
+}

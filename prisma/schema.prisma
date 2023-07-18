@@ -152,10 +152,10 @@ model Like {
 model Reply {
   id        String    @id @default(cuid())
   content   String   @db.MediumText
-  parent    Review?   @relation(fields: [parentId], references: [id])
-  parentId  String?
   replyTo   Reply?  @relation("ReplyToReply", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   replyToId String?
+  review    Review   @relation(fields: [reviewId], references: [id])
+  reviewId  String
   replies   Reply[] @relation("ReplyToReply")
   author    User    @relation(fields: [authorId], references: [id])
   authorId  String
@@ -163,7 +163,7 @@ model Reply {
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @updatedAt @map(name: "updated_at")
 
-  @@index([parentId])
+  @@index([reviewId])
   @@index([authorId])
   @@index([replyToId])
 }

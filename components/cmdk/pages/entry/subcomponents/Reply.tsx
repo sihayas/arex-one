@@ -5,14 +5,18 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyData } from "@/lib/interfaces";
 import { useSession } from "next-auth/react";
 import useHandleLikeClick from "@/hooks/useLike";
+import { Line, LineBottom } from "../../../generics";
+import { ChainEndIcon } from "@/components/icons";
 
 interface ReplyProps {
   reply: ReplyData;
   setSelectedReply: (reply: ReplyData | null) => void;
 }
+
 export default function Reply({ reply, setSelectedReply }: ReplyProps) {
   const [hideContent, setHideContent] = useState(false);
   const replyCount = reply.replies?.length;
+  const isChild = reply.replyTo ? true : false;
 
   const { data: session } = useSession();
   const { addToThreadcrumbs, removeUpToId, setReplyParent, threadcrumbs } =
@@ -21,9 +25,9 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
   // Handle loading of replies
   const handleLoadReplies = () => {
     if (threadcrumbs && !threadcrumbs.includes(reply.id)) {
-      setHideContent(true);
-      setSelectedReply(reply);
-      addToThreadcrumbs(reply.id);
+      // setHideContent(true);
+      // setSelectedReply(reply);
+      // addToThreadcrumbs(reply.id);
       setReplyParent(reply);
     } else {
       handleGoBack();
@@ -48,36 +52,48 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
   );
 
   return (
-    <div
-      className={`flex flex-col gap-1 w-[482px] ${
-        hideContent ? "cursor-pointer" : ""
-      }`}
-    >
-      {/* Avatar & Content Outer */}
+    <div className={`flex flex-col gap-2 w-[482px] ${isChild ? "pt-4" : ""}`}>
+      {/* Parent Reply ?  */}
+      {isChild && reply.replyTo ? (
+        <div className="w-full flex gap-2">
+          <div className="min-w-[24px] ml-1 relative">
+            <UserAvatar
+              imageSrc={
+                reply.replyTo.author.image ||
+                "./public/images/default_image.png"
+              }
+              altText={`${reply.author?.name}'s avatar`}
+              width={16}
+              height={16}
+            />
+            <div className="absolute right-0 rotate-180 -bottom-[5px]">
+              <ChainEndIcon width={32} height={32} color={"#E5E5E5"} />
+            </div>
+          </div>
+          <div className="text-[10px] text-gray2">{reply.replyTo.content}</div>
+        </div>
+      ) : null}
+
+      {/* Reply */}
       <div className="flex items-end gap-2">
-        {/* Avatar & Line */}
-        <div className="min-w-[24px] relative">
-          <UserAvatar
-            imageSrc={
-              reply.author?.image || "./public/images/default_image.png"
-            }
-            altText={`${reply.author?.name}'s avatar`}
-            width={24}
-            height={24}
-          />
-          {/* Animate a line to indicate threading upon clicking */}
-          <div className={`thread-line ${hideContent ? "show" : ""}`}></div>
-          <div
-            onClick={() =>
-              replyCount ? handleLoadReplies() : setReplyParent(reply)
-            }
-            className={`absolute left-[7px] -bottom-[38px] cursor-pointer transition-all duration-300 hover:scale-150 overflow-visible ${
-              hideContent ? "scale-125" : ""
-            }`}
-          >
-            <svg height="10" width="10">
-              <circle cx="5" cy="5" r="5" fill="#E5E5E5" />
-            </svg>
+        {/* Avatar & Chain */}
+        <div className="min-w-[24px] h-full flex flex-col items-center relative">
+          {isChild ? <Line /> : <div className="h-full" />}
+          <div onClick={handleLoadReplies} className="relative cursor-pointer">
+            <UserAvatar
+              imageSrc={
+                reply.author?.image || "./public/images/default_image.png"
+              }
+              altText={`${reply.author?.name}'s avatar`}
+              width={24}
+              height={24}
+            />
+            {/* Chain Bottom (Reply)? */}
+            {isChild ? (
+              <div className="absolute -top-[5px] -right-[9px]">
+                <ChainEndIcon width={42} height={42} color={"#E5E5E5"} />
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -97,20 +113,24 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
         </div>
       </div>
       {/* Name  */}
-      <div className={`pl-8 font-medium text-xs text-black`}>
-        {reply.author.name}
+      <div className="flex gap-2">
+        <div className={`flex flex-col w-[24px] items-center -mb-2`}>
+          <LineBottom />
+        </div>
+        <div className={`font-medium text-xs text-black pb-8`}>
+          {reply.author.name}
+        </div>
       </div>
-      {/* Reply Count  */}
+
+      {/* Reply Count 
       {replyCount && !hideContent ? (
         <div
-          onClick={() =>
-            replyCount > 0 ? handleLoadReplies() : setReplyParent(reply)
-          }
+          onClick={handleLoadReplies}
           className={`flex items-center translate-x-8 text-xs relative text-gray2 cursor-pointer transition-all`}
         >
-          <div className="text-[10px]">{replyCount} replies</div>
+          <div className="text-[10px]">{replyCount} chains</div>
         </div>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }

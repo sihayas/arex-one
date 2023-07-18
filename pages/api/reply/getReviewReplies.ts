@@ -31,12 +31,12 @@ export default async function handle(
       // Fetch all replies pertaining to the [review] passed in request.
       const replies = await prisma.reply.findMany({
         where: {
-          parentId: String(id),
+          reviewId: String(id),
         },
         take: Number(pageSize),
         cursor: lastId ? { id: String(lastId) } : undefined,
         orderBy: {
-          id: "asc",
+          createdAt: "asc",
         },
         include: {
           author: {
@@ -46,7 +46,17 @@ export default async function handle(
             },
           },
           likes: true,
-          // Fetch the replies of each reply, including the author's profile image
+          replyTo: {
+            include: {
+              author: {
+                select: {
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          },
+          // Fetch a reply of each reply, including the author's profile image
           replies: {
             include: {
               author: {
@@ -57,7 +67,7 @@ export default async function handle(
             },
             take: 3, // Limit to 3 replies per reply
             orderBy: {
-              id: "asc",
+              createdAt: "desc",
             },
           },
         },

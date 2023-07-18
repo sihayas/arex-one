@@ -67,8 +67,8 @@ export interface ReplyData {
   createdAt: string;
   id: string;
   likes: LikeData[];
-  parent: ReviewData | null;
-  parentId: string;
+  review: ReviewData | null;
+  reviewId: string;
   replies?: ReplyData[];
   replyTo?: ReplyData | null;
   replyToId?: string;

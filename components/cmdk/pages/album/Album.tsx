@@ -38,6 +38,7 @@ export default function Album() {
   const { setPages, bounce, pages } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
   const { data: session } = useSession();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const [{ scale }, setScale] = useSpring(() => ({ scale: 1 }));
 
@@ -72,8 +73,6 @@ export default function Album() {
     }
     return undefined;
   }, [selectedAlbum?.shadowColor]);
-
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize album and mark as viewed
   const albumQuery = useQuery(

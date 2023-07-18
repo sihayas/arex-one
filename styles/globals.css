@@ -52,13 +52,12 @@ textarea {
 }
 
 .thread-line {
-  position: absolute;
   left: 11px;
-  height: 2rem;
+  bottom: 2rem;
   width: 2px;
   background-color: #e5e5e5; /* or whichever color you'd like */
-  transform-origin: bottom;
   transition: height 0.3s ease-in-out;
+  border-radius: 1px;
 }
 
 .thread-line.show {
