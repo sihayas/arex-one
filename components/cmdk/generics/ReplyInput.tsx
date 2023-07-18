@@ -19,21 +19,26 @@ const handleAddReply = async ({
 }: ReplyInputProps) => {
   if (!replyParent) return;
 
-  // If replyParent has albumId prop, its a review so reviewId is .id
-  const reviewId =
-    "albumId" in replyParent ? replyParent.id : replyParent.reviewId;
+  // Determine if replyParent is a review or reply
+  const isReview = "albumId" in replyParent;
 
-  // If replyParent has albumId prop, its a review so replyId is null, post reply to review
-  const replyId = "albumId" in replyParent ? null : replyParent.id;
+  // Grab review Id from either review or reply
+  const reviewId = isReview ? replyParent.id : replyParent.reviewId;
+
+  // If replyParent is a review, replyId is null; otherwise, it's the replyParent id
+  const replyId = isReview ? null : replyParent.id;
+
+  // If replyParent is a review, rootReplyId is null (no parent); otherwise, it's the replyParent rootReplyId
+  const rootReplyId = isReview ? null : replyParent.rootReplyId;
 
   // Create the body object based on replyId or reviewId
   const body = {
     replyId,
     reviewId,
+    rootReplyId,
     content: replyContent,
     userId,
   };
-
   try {
     const res = await axios.post("/api/review/postReply", body);
 

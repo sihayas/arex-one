@@ -74,6 +74,8 @@ export interface ReplyData {
   replyToId?: string;
   updatedAt: string;
   likedByUser: boolean;
+  rootReplyId?: string;
+  rootReply?: ReplyData | null;
 }
 
 export interface ReviewData {

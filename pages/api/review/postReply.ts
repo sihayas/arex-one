@@ -5,7 +5,7 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { reviewId, replyId, content, userId } = req.body;
+  const { reviewId, replyId, content, userId, rootReplyId } = req.body;
 
   if (req.method === "POST") {
     // Check if the user is signed in
@@ -25,31 +25,63 @@ export default async function handle(
     }
 
     try {
-      // Add the reply to the database
-      const reply = await prisma.reply.create({
-        data: {
-          author: {
-            connect: {
-              id: userId,
-            },
+      let newReply = {
+        author: {
+          connect: {
+            id: userId,
           },
-          review: {
-            connect: {
-              id: reviewId,
-            },
-          },
-          replyTo: replyId
-            ? {
-                connect: {
-                  id: replyId,
-                },
-              }
-            : undefined,
-          content,
         },
+        review: {
+          connect: {
+            id: reviewId,
+          },
+        },
+        replyTo: replyId
+          ? {
+              connect: {
+                id: replyId,
+              },
+            }
+          : undefined,
+        content,
+      };
+
+      // First create the reply
+      const createdReply = await prisma.reply.create({
+        data: newReply,
       });
 
-      res.status(200).json(reply);
+      // If it's a root reply, update its rootReplyId to its own id
+      if (!rootReplyId) {
+        await prisma.reply.update({
+          where: {
+            id: createdReply.id,
+          },
+          data: {
+            rootReply: {
+              connect: {
+                id: createdReply.id,
+              },
+            },
+          },
+        });
+      } else {
+        // If it's not a root reply, set its rootReplyId to the given rootReplyId
+        await prisma.reply.update({
+          where: {
+            id: createdReply.id,
+          },
+          data: {
+            rootReply: {
+              connect: {
+                id: rootReplyId,
+              },
+            },
+          },
+        });
+      }
+
+      res.status(200).json(createdReply);
     } catch (error) {
       console.error("Error adding reply:", error);
       res.status(500).json({ error: "Error adding reply." });

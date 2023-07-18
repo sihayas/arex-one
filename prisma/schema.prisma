@@ -150,23 +150,28 @@ model Like {
 
 //Comment
 model Reply {
-  id        String    @id @default(cuid())
-  content   String   @db.MediumText
-  replyTo   Reply?  @relation("ReplyToReply", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  replyToId String?
-  review    Review   @relation(fields: [reviewId], references: [id])
-  reviewId  String
-  replies   Reply[] @relation("ReplyToReply")
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  String
-  likes     Like[]
-  createdAt DateTime  @default(now()) @map(name: "created_at")
-  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+  id          String    @id @default(cuid())
+  content     String    @db.MediumText
+  rootReply   Reply?    @relation("ReplyToRoot", fields: [rootReplyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  rootReplyId String?
+  replyTo     Reply?    @relation("ReplyToReply", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replyToId   String?
+  review      Review    @relation(fields: [reviewId], references: [id])
+  reviewId    String
+  replies     Reply[]   @relation("ReplyToReply")
+  rootReplies Reply[]   @relation("ReplyToRoot")
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+  likes       Like[]
+  createdAt   DateTime  @default(now()) @map(name: "created_at")
+  updatedAt   DateTime  @updatedAt @map(name: "updated_at")
 
   @@index([reviewId])
   @@index([authorId])
   @@index([replyToId])
+  @@index([rootReplyId])
 }
+
 
 model Album {
   id            String    @id
