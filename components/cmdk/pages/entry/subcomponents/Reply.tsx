@@ -69,7 +69,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
                   className={"absolute right-0 rotate-180 -bottom-[5px]"}
                   width={32}
                   height={32}
-                  color={"#E5E5E5"}
+                  color={"#CCC"}
                 />
               ) : null}
               <UserAvatar
@@ -128,7 +128,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
                   className="absolute right-0 rotate-180 -bottom-[5px]"
                   width={32}
                   height={32}
-                  color={"#E5E5E5"}
+                  color={"#CCC"}
                 />
               ) : null}
             </div>
@@ -159,13 +159,14 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
                 className={"absolute top-2 -right-[9px] z-0"}
                 width={42}
                 height={42}
-                color={"#E5E5E5"}
+                color={"#CCC"}
               />
             ) : null}
           </div>
           {/* Content & Like Button  */}
           <div
-            className={`px-4 py-2 w-[450px] bg-white text-black text-[13px] leading-normal shadow-reply border border-silver rounded-2xl rounded-bl-[4px] break-words cursor-pointer ${
+            onClick={handleLoadReplies}
+            className={`px-4 py-2 w-[450px] bg-white text-black text-[13px] leading-normal border border-silver rounded-2xl rounded-bl-[4px] break-words cursor-pointer ${
               !isChild ? "mt-6" : ""
             } `}
           >

@@ -55,7 +55,7 @@ export default function Album() {
   const bind = useScroll(({ xy: [, y] }) => {
     let newScale = 1 - y / 900; // Larger numbers = slower shrink.
     if (newScale > 1) newScale = 1;
-    if (newScale < 0.5) newScale = 0.32; // Set a minimum size to prevent disappearing.
+    if (newScale < 0.5) newScale = 0.36; // Set a minimum size to prevent disappearing.
 
     setScale({ scale: newScale });
 
@@ -166,10 +166,10 @@ export default function Album() {
     <div
       {...bind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[32px] z-0 w-full bg-white overflow-scroll scrollbar-none"
+      className="flex flex-col items-center rounded-[32px] z-0 w-full bg-white overflow-scroll scrollbar-none border border-silver"
     >
       {/* Section One / Album Art */}
-      <div className="sticky top-0">
+      <div className="sticky top-8">
         <animated.div
           style={{
             transform: scale.to((value) => `scale(${value})`),
@@ -180,9 +180,9 @@ export default function Album() {
         >
           <animated.img
             style={{
-              borderRadius: scale.to((value) => `${(1 - value) * 64}px`),
+              borderRadius: scale.to((value) => `${16 + (1 - value) * 32}px`),
               boxShadow: boxShadow,
-              border: "1px solid rgba(0,0,0,0.1)",
+              // border: "1px solid rgba(0,0,0,0.1)",
             }}
             src={selectedAlbum.artworkUrl}
             alt={`${selectedAlbum.attributes.name} artwork`}
@@ -209,55 +209,37 @@ export default function Album() {
       </div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col p-8 gap-8 relative w-full">
+      <div className="flex flex-col p-8 mt-4 gap-8 relative w-full">
         {/* Stats  */}
-        <div className="flex flex-col gap-8 p-2">
-          <div className="flex items-center gap-8">
-            {/* Stars  */}
-            <div className="flex items-center gap-1">
-              <div className="text-xl text-gray1 font-medium ">4.2</div>
-              <StarsIcon width={24} height={24} color={"#999"} />
-            </div>
-            {/* Stats  */}
-            <div className="flex items-center gap-4">
-              {/* Play Count */}
-              <div className="flex flex-col gap-1">
-                <div className="text-xs text-gray2">+ heard by</div>
-                <div className="font-medium text-sm text-gray1 text-end">
-                  400
-                </div>
-              </div>
-              {/* Loved count */}
-              <div className="flex flex-col gap-1">
-                <div className="text-xs text-gray2">* loved by</div>
-                <div className="font-medium text-sm text-gray1 text-end">
-                  20
-                </div>
-              </div>
-            </div>
+        <div className="flex items-center gap-8">
+          {/* Stars  */}
+          <div className="flex items-center gap-1">
+            <div className=" text-5xl text-gray1">4.2</div>
+            <StarsIcon width={24} height={24} color={"#999"} />
           </div>
-
-          {/* Verdict Notes  */}
-          <div className="text-sm text-gray1 w-[484px] line-clamp-3">
-            With Nectar Jojis full metamorphosis from a meme-laden internet
-            artist to a commendable musician takes flight. In a poignant
-            exercise of introspection, the album unfurls like a lucid dream of
-            melancholic electronica and R&B, veiled in lo-fi textures that waft
-            over you like the scent of midnight cherry blossoms. Jojis voice, at
-            once haunted and angelic, guides us through a labyrinth of his
-            deepest emotions - a startling encounter with vulnerability that
-            remains the albums spine. Notably, the production oscillates between
-            sparse minimalism and rich, layered tapestries of sound, providing
-            an auditory playground that keeps the listener tethered yet
-            continually guessing. Joji dares to push his artistic boundaries in
-            Nectar making it a poignant, disquietingly beautiful chronicle of
-            human sentiment. In this body of work, the line between the
-            sweetness of life (the nectar) and the stings of reality are
-            blurred, leaving an aftertaste that lingers long after the music
-            stops.
-          </div>
+          {/* Stats  */}
+          <div className="font-medium text-sm text-gray1 text-end">400</div>
+          <div className="font-medium text-sm text-gray1 text-end">20</div>
         </div>
 
+        {/* Verdict Notes  */}
+        <div className="text-xs text-gray1 w-[484px] line-clamp-3">
+          With Nectar Jojis full metamorphosis from a meme-laden internet artist
+          to a commendable musician takes flight. In a poignant exercise of
+          introspection, the album unfurls like a lucid dream of melancholic
+          electronica and R&B, veiled in lo-fi textures that waft over you like
+          the scent of midnight cherry blossoms. Jojis voice, at once haunted
+          and angelic, guides us through a labyrinth of his deepest emotions - a
+          startling encounter with vulnerability that remains the albums spine.
+          Notably, the production oscillates between sparse minimalism and rich,
+          layered tapestries of sound, providing an auditory playground that
+          keeps the listener tethered yet continually guessing. Joji dares to
+          push his artistic boundaries in Nectar making it a poignant,
+          disquietingly beautiful chronicle of human sentiment. In this body of
+          work, the line between the sweetness of life (the nectar) and the
+          stings of reality are blurred, leaving an aftertaste that lingers long
+          after the music stops.
+        </div>
         {/* Album Entries  */}
         <div className="flex flex-col gap-10 overflow-visible h-full">
           {flattenedReviews?.length > 0 ? (

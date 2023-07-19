@@ -28,7 +28,7 @@ const handleAddReply = async ({
   // If replyParent is a review, replyId is null; otherwise, it's the replyParent id
   const replyId = isReview ? null : replyParent.id;
 
-  // If replyParent is a review, rootReplyId is null (no parent); otherwise, it's the replyParent rootReplyId
+  // If replyParent is a review, rootReplyId is null ()
   const rootReplyId = isReview ? null : replyParent.rootReplyId;
 
   // Create the body object based on replyId or reviewId
@@ -79,8 +79,8 @@ export const ReplyInput = () => {
         placeholder={
           replyParent
             ? "albumId" in replyParent
-              ? `+ reply to ${replyParent.author.name}'s entry`
-              : `+ reply to ${replyParent.content}`
+              ? `new chain`
+              : `+ chain: ${replyParent.content}`
             : "+ reply"
         }
         value={replyContent}
