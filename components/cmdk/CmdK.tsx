@@ -90,7 +90,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Spring search
   const searchStyles = useSpring({
-    height: hideSearch ? "0px" : "480px",
+    height: hideSearch ? "0px" : "448px",
     opacity: hideSearch ? 0 : 1,
     paddingTop: hideSearch ? "0px" : "32px",
     padding: hideSearch ? "0px" : "16px",
@@ -223,16 +223,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }}
         >
           {/* Search / Search Results*/}
-          <div className={`flex flex-col w-full`}>
+          <div className={`flex flex-col w-[96%]`}>
             {/* Search bar */}
             <div
-              className={`w-full absolute items-center flex p-4 gap-4 text-black transition-transform duration-300 z-20 scale-100 ${
+              className={`w-[96%] absolute items-center flex p-4 gap-4 text-black transition-transform duration-300 scale-100 ${
                 hideSearch
-                  ? `-translate-y-8 scale-95 hover:scale-[97%] ${
-                      !isHome ? "!z-0" : ""
-                    }`
-                  : ""
-              }`} // Only change z-index if not on home page
+                  ? `-translate-y-8 scale-95 hover:scale-[97%] z-0`
+                  : "translate-y-4 z-20"
+              }`}
             >
               <HomeIcon width={24} height={24} color={"#333"} />
               <Command.Input
@@ -257,10 +255,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Search Results  */}
             <animated.div
               style={{ ...searchStyles }}
-              className={`w-full overflow-scroll rounded-[32px] absolute bg-white z-10 border border-silver ${
+              className={`w-[96%] mt-4 overflow-scroll rounded-[32px] absolute bg-white z-10 border border-silver scrollbar-none ${
                 hideSearch
                   ? "pointer-events-none"
-                  : "!pt-[4rem] pointer-events-auto"
+                  : "!pt-[4rem] pointer-events-auto shadow-search"
               }`}
             >
               <Search

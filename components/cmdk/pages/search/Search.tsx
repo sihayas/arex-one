@@ -103,7 +103,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
           >
             <div className="flex gap-4 items-center w-full">
               <Image
-                className=" rounded-lg shadow-defaultLow"
+                className="rounded-lg border border-silver "
                 src={artworkUrl}
                 alt={`${album.attributes.name} artwork`}
                 width={40}
