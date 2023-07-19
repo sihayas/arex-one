@@ -52,34 +52,99 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
   );
 
   return (
-    <div className={`flex flex-col gap-2 w-[482px] ${isChild ? "pt-4" : ""}`}>
-      {/* Parent Reply ?  */}
-      {isChild && reply.replyTo ? (
-        <div className="w-full flex gap-2">
-          <div className="min-w-[24px] ml-1 relative">
-            <UserAvatar
-              imageSrc={
-                reply.replyTo.author.image ||
-                "./public/images/default_image.png"
-              }
-              altText={`${reply.author?.name}'s avatar`}
-              width={16}
-              height={16}
-            />
-            <div className="absolute right-0 rotate-180 -bottom-[5px]">
-              <ChainEndIcon width={32} height={32} color={"#E5E5E5"} />
+    <div className={`flex flex-col gap-2 w-[482px]`}>
+      {/* Reply root ? */}
+      {reply.rootReply ? (
+        <>
+          {/* Chain Line Top  */}
+          <Line className="flex flex-col flex-grow -mt-1 h-6 ml-[11px] -mb-1" />
+
+          {/* Root Reply  */}
+          <div className="flex gap-2 items-end h-[25px] pb-1">
+            {/* Avatar & Chain  */}
+            <div className="min-w-[24px] translate-x-1 relative">
+              {/* Chain Cap  */}
+              {reply.rootReply ? (
+                <ChainEndIcon
+                  className={"absolute right-0 rotate-180 -bottom-[5px]"}
+                  width={32}
+                  height={32}
+                  color={"#E5E5E5"}
+                />
+              ) : null}
+              <UserAvatar
+                imageSrc={
+                  reply.rootReply.author.image ||
+                  "./public/images/default_image.png"
+                }
+                altText={`${reply.author?.name}'s avatar`}
+                width={16}
+                height={16}
+              />
+              {/* Divider  */}
+              <svg
+                className="absolute top-[20px] left-[6px]"
+                width="4"
+                height="4"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="2" cy="2" r="2" fill="#E5E5E5" />
+              </svg>
+            </div>
+            <div className="text-[10px] text-gray2">
+              {reply.rootReply.content}
             </div>
           </div>
-          <div className="text-[10px] text-gray2">{reply.replyTo.content}</div>
-        </div>
+        </>
       ) : null}
 
-      {/* Reply */}
-      <div className="flex items-end gap-2">
-        {/* Avatar & Chain */}
-        <div className="min-w-[24px] h-full flex flex-col items-center relative">
-          {isChild ? <Line /> : <div className="h-full" />}
-          <div onClick={handleLoadReplies} className="relative cursor-pointer">
+      {/* Reply Parent ??  */}
+      {isChild && reply.replyTo ? (
+        <>
+          {/* Chain Line Top  */}
+          {!reply.rootReply ? (
+            <Line className="flex flex-grow flex-col h-6 ml-[11px] -mb-1 -mt-1" />
+          ) : null}
+
+          {/* Parent Reply  */}
+          <div
+            className={`w-full flex gap-2 items-end ${
+              !reply.rootReply ? "h-[21px]" : ""
+            }`}
+          >
+            <div className="min-w-[24px] translate-x-1 relative">
+              <Line className="flex-grow -translate-y-1" />
+              <UserAvatar
+                imageSrc={
+                  reply.replyTo.author.image ||
+                  "./public/images/default_image.png"
+                }
+                altText={`${reply.author?.name}'s avatar`}
+                width={16}
+                height={16}
+              />
+              {!reply.rootReply ? (
+                <ChainEndIcon
+                  className="absolute right-0 rotate-180 -bottom-[5px]"
+                  width={32}
+                  height={32}
+                  color={"#E5E5E5"}
+                />
+              ) : null}
+            </div>
+            <div className="text-[10px] text-gray2">
+              {reply.replyTo.content}
+            </div>
+          </div>
+        </>
+      ) : null}
+
+      {/* Main Reply */}
+      <div className="flex flex-col gap-1">
+        {/* Avatar/Chain & Content */}
+        <div className="flex items-end gap-2 relative">
+          <div className=" flex flex-col min-w-[24px] h-full items-center relative">
+            <Line className="flex-grow -translate-y-1" />
             <UserAvatar
               imageSrc={
                 reply.author?.image || "./public/images/default_image.png"
@@ -90,47 +155,38 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
             />
             {/* Chain Bottom (Reply)? */}
             {isChild ? (
-              <div className="absolute -top-[5px] -right-[9px]">
-                <ChainEndIcon width={42} height={42} color={"#E5E5E5"} />
-              </div>
+              <ChainEndIcon
+                className={"absolute top-2 -right-[9px] z-0"}
+                width={42}
+                height={42}
+                color={"#E5E5E5"}
+              />
             ) : null}
           </div>
-        </div>
-
-        {/* Content & Like Button  */}
-        <div className="flex relative">
+          {/* Content & Like Button  */}
           <div
-            className={`px-4 py-2 w-[450px] bg-white text-black text-[13px] leading-normal shadow-reply border border-silver rounded-2xl rounded-bl-[4px] break-words cursor-pointer`}
+            className={`px-4 py-2 w-[450px] bg-white text-black text-[13px] leading-normal shadow-reply border border-silver rounded-2xl rounded-bl-[4px] break-words cursor-pointer ${
+              !isChild ? "mt-6" : ""
+            } `}
           >
             {reply.content}
           </div>
-
           {/* Like Count  */}
           <div className="absolute flex flex-col items-center -right-2.5 -bottom-6">
             <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
             <div className="text-[10px] text-gray2">{likeCount}</div>
           </div>
         </div>
+        {/* Name  */}
+        <div className="flex gap-2">
+          <div className="w-[24px] flex flex-col translate-x-[11px]">
+            <Line className={`flex-grow ${!isChild ? "" : "mt-1"}`} />
+          </div>
+          <div className={`font-medium text-xs text-black`}>
+            {reply.author.name}
+          </div>
+        </div>
       </div>
-      {/* Name  */}
-      <div className="flex gap-2">
-        <div className={`flex flex-col w-[24px] items-center -mb-2`}>
-          <LineBottom />
-        </div>
-        <div className={`font-medium text-xs text-black pb-8`}>
-          {reply.author.name}
-        </div>
-      </div>
-
-      {/* Reply Count 
-      {replyCount && !hideContent ? (
-        <div
-          onClick={handleLoadReplies}
-          className={`flex items-center translate-x-8 text-xs relative text-gray2 cursor-pointer transition-all`}
-        >
-          <div className="text-[10px]">{replyCount} chains</div>
-        </div>
-      ) : null} */}
     </div>
   );
 }

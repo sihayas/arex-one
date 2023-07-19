@@ -19,7 +19,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 }) => {
   return (
     <Image
-      className={`rounded-full ${className}`}
+      className={`rounded-full cursor-pointer z-10 ${className}`}
       src={imageSrc}
       alt={altText}
       height={height}

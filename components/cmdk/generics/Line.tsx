@@ -2,12 +2,14 @@ interface LineProps {
   height?: string;
   width?: string;
   color?: string;
+  className?: string;
 }
 
 export const Line: React.FC<LineProps> = ({
   height = "fit",
   width = "2px",
   color = "#E5E5E5",
+  className = "",
 }) => {
   return (
     <div
@@ -17,7 +19,7 @@ export const Line: React.FC<LineProps> = ({
         width: width,
         borderRadius: "9999px",
       }}
-      className="flex-grow -translate-y-1"
+      className={className}
     />
   );
 };

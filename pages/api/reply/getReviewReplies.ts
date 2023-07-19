@@ -3,6 +3,29 @@ import { prisma } from "../../../lib/prisma";
 
 const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 
+async function getRootReply(rootReplyId: string, replyToId: string | null) {
+  if (rootReplyId !== replyToId && replyToId !== null) {
+    const rootReply = await prisma.reply.findUnique({
+      where: { id: rootReplyId },
+      include: {
+        author: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    const repliesCount = await prisma.reply.count({
+      where: { rootReplyId },
+    });
+
+    return { rootReply, repliesCount: repliesCount - 2 };
+  }
+  return { rootReply: null, repliesCount: null };
+}
+
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
@@ -56,7 +79,7 @@ export default async function handle(
               },
             },
           },
-          // Fetch a reply of each reply, including the author's profile image
+          // Fetch replies to each reply
           replies: {
             include: {
               author: {
@@ -74,8 +97,19 @@ export default async function handle(
       });
 
       if (replies) {
-        // Add likedByUser field to each reply
-        const repliesWithUserLike = replies.map((reply) => {
+        const promises = replies.map(async (reply) => {
+          let rootReply = null;
+          let repliesCount = null;
+
+          if (reply.rootReplyId !== null) {
+            const rootReplyData = await getRootReply(
+              reply.rootReplyId,
+              reply.replyToId
+            );
+            rootReply = rootReplyData.rootReply;
+            repliesCount = rootReplyData.repliesCount;
+          }
+
           const likedByUser = userId
             ? reply.likes.some((like) => {
                 return like.authorId === userId;
@@ -84,9 +118,13 @@ export default async function handle(
 
           return {
             ...reply,
+            rootReply,
+            repliesCount,
             likedByUser,
           };
         });
+
+        const repliesWithUserLike = await Promise.all(promises);
 
         res.status(200).json(repliesWithUserLike);
       } else {
