@@ -103,11 +103,11 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
           >
             <div className="flex gap-4 items-center w-full">
               <Image
-                className="rounded-lg border border-silver "
+                className=" rounded-2xl border border-silver "
                 src={artworkUrl}
                 alt={`${album.attributes.name} artwork`}
-                width={40}
-                height={40}
+                width={80}
+                height={80}
                 onLoad={(event) =>
                   handleImageLoad(event.target as HTMLImageElement, album)
                 }
@@ -119,7 +119,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
                 <div className="text-sm text-black max-w-[17rem] text-ellipsis overflow-hidden whitespace-nowrap">
                   {album.attributes.name}
                 </div>
-                <div className="text-xs text-gray">
+                <div className="text-xs text-gray2">
                   {album.attributes.artistName}
                 </div>
               </div>

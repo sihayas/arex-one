@@ -169,7 +169,7 @@ export default function Album() {
       className="flex flex-col items-center rounded-[32px] z-0 w-full bg-white overflow-scroll scrollbar-none border border-silver"
     >
       {/* Section One / Album Art */}
-      <div className="sticky top-8">
+      <div className="sticky top-4">
         <animated.div
           style={{
             transform: scale.to((value) => `scale(${value})`),
@@ -186,8 +186,8 @@ export default function Album() {
             }}
             src={selectedAlbum.artworkUrl}
             alt={`${selectedAlbum.attributes.name} artwork`}
-            width={800}
-            height={800}
+            width={832}
+            height={832}
             onDragStart={(e) => e.preventDefault()}
           />
           {/* Album Information  */}
@@ -200,7 +200,7 @@ export default function Album() {
                 setPages((prevPages) => [...prevPages, { name: "form" }]);
                 bounce();
               }}
-              className="font-bold text-2xl transition-all duration-300 hover:scale-105"
+              className="font-bold text-3xl transition-all duration-300 hover:scale-105"
             >
               + {selectedAlbum.attributes.name}
             </button>

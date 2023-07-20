@@ -23,7 +23,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 720, height: 480 },
-  album: { width: 860, height: 860 },
+  album: { width: 864, height: 864 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
   user: { width: 768, height: 768 },
@@ -59,8 +59,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width || 1018,
     height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height || 612,
     config: {
-      tension: 400,
-      friction: 30,
+      tension: 600,
+      friction: 40,
     },
   }));
 
@@ -234,7 +234,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             >
               <HomeIcon width={24} height={24} color={"#333"} />
               <Command.Input
-                className={`bg-blurEntry backdrop-blur-sm border border-silver shadow-low`}
+                className={`bg-blurWhite backdrop-blur-sm border border-silver`}
                 ref={inputRef}
                 placeholder="Rx*"
                 style={{ paddingLeft: "2.5rem" }}
