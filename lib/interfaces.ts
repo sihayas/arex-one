@@ -60,11 +60,10 @@ export interface AlbumDBData {
   lastUpdated?: Date;
   reviews?: ReviewData[];
   notes?: string;
-  likes?: LikeData[];
   viewsCount: number;
   listenedCount: number;
   ratingsCount: number;
-  likesCount: number;
+  lovedCount: number;
 }
 
 export interface LikeData {

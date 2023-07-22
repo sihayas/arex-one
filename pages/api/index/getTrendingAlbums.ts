@@ -1,7 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import client from "../../../lib/redis";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "GET") {
     const albums = await prisma.album.findMany({
       select: { id: true, name: true },

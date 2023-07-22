@@ -51,10 +51,18 @@ export default async function handle(
         data: { permalink: `review/${newReview.id}` },
       });
 
-      await prisma.album.update({
-        where: { id: albumId },
-        data: { lastUpdated: new Date() },
-      });
+      // If the review marked the album as loved, increment the album's lovedCount
+      if (loved) {
+        await prisma.album.update({
+          where: { id: albumId },
+          data: { lastUpdated: new Date(), lovedCount: { increment: 1 } },
+        });
+      } else {
+        await prisma.album.update({
+          where: { id: albumId },
+          data: { lastUpdated: new Date() },
+        });
+      }
 
       res.status(201).json(updatedReview);
     } catch (error) {

@@ -1,7 +1,8 @@
 import { updateTrendingScores } from "@/lib/updateTrendingScore";
+import { NextApiRequest, NextApiResponse } from "next";
 
-const handler = async (req, res) => {
-  if (req.method === "POST") {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === "POST" || req.method === "GET") {
     try {
       await updateTrendingScores();
       res.status(200).json({ message: "Successfully updated trending score." });

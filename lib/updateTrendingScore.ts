@@ -13,7 +13,7 @@ const weights = {
 function calculateTrendingScore(album: AlbumDBData) {
   return (
     album.viewsCount * weights.views +
-    album.likesCount * weights.likes +
+    album.lovedCount * weights.likes +
     album.ratingsCount * weights.ratings
   );
 }
@@ -29,7 +29,7 @@ export async function updateTrendingScores() {
     await client.set(`album:${album.id}:trendingScore`, trendingScore);
 
     console.log(
-      `Updated album ${album.id} with new trending score: ${trendingScore}`
+      `Updated album ${album.id} / ${album.name} with new trending score: ${trendingScore}`
     );
   }
 
