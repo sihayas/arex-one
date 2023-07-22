@@ -51,6 +51,22 @@ export interface AlbumWithRating {
   averageRating: number | "n/a";
 }
 
+export interface AlbumDBData {
+  id: string;
+  name: string;
+  artist: string;
+  releaseDate: string;
+  averageRating?: number;
+  lastUpdated?: Date;
+  reviews?: ReviewData[];
+  notes?: string;
+  likes?: LikeData[];
+  viewsCount: number;
+  listenedCount: number;
+  ratingsCount: number;
+  likesCount: number;
+}
+
 export interface LikeData {
   authorId: string;
   commentId: string | null;

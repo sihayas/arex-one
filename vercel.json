@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/averageRating",
       "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/cron/trendingScore",
+      "schedule": "0 18 * * *"
     }
   ]
 }

@@ -139,15 +139,15 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   // }, [activePage, threadcrumbs]);
 
   //Focus on input always
-  useEffect(() => {
-    if (inputRef.current) {
-      if (isVisible && activePage.name === "index") {
-        inputRef.current.focus();
-      } else {
-        inputRef.current.blur();
-      }
-    }
-  }, [isVisible, activePage.name]);
+  // useEffect(() => {
+  //   if (inputRef.current) {
+  //     if (isVisible && activePage.name === "index") {
+  //       inputRef.current.focus();
+  //     } else {
+  //       inputRef.current.blur();
+  //     }
+  //   }
+  // }, [isVisible, activePage.name]);
 
   // Handle page render
   let ActiveComponent;
@@ -277,7 +277,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               y,
               scale,
             }}
-            className={`flex w-full h-full rounded-[32px] cursor-grab z-0 ${
+            className={`flex w-full h-full rounded-[16px] cursor-grab z-0 ${
               isVisible
                 ? `shadow-cmdkScaled ${
                     activePage.name === "user" ? "!rounded-full" : ""

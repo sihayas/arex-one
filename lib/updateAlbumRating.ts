@@ -55,6 +55,7 @@ export async function updateAlbumRatings() {
   console.log("Album ratings updated successfully");
 }
 
+// In case you reset the database, you can use this function to repopulate
 export async function repopulateAllAlbumRatings() {
   // Fetch all albums regardless of lastUpdated date
   const albums = await prisma.album.findMany();

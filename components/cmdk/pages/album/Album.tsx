@@ -100,7 +100,7 @@ export default function Album() {
     }
   );
 
-  // Call both queries
+  // Call initialize album and fetch reviews
   const { data, isLoading, isError } = albumQuery;
   const {
     data: reviewsData,
@@ -166,10 +166,10 @@ export default function Album() {
     <div
       {...bind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[32px] z-0 w-full bg-white overflow-scroll scrollbar-none border border-silver"
+      className="flex flex-col items-center rounded-[16px] z-0 w-full bg-white overflow-scroll scrollbar-none border border-silver"
     >
       {/* Section One / Album Art */}
-      <div className="sticky top-4">
+      <div className="sticky top-0">
         <animated.div
           style={{
             transform: scale.to((value) => `scale(${value})`),
@@ -186,8 +186,8 @@ export default function Album() {
             }}
             src={selectedAlbum.artworkUrl}
             alt={`${selectedAlbum.attributes.name} artwork`}
-            width={832}
-            height={832}
+            width={864}
+            height={864}
             onDragStart={(e) => e.preventDefault()}
           />
           {/* Album Information  */}

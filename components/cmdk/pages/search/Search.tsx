@@ -42,7 +42,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   //Set the album
   const handleSelectAlbum = (
     album: AlbumData,
-    artworkUrl: string, // Notice the type change here
+    artworkUrl: string,
     shadowColor: string
   ) => {
     const extendedAlbum = {
