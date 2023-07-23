@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export const useTrendingAlbums = (page) => {
+export const useTrendingAlbums = (page: number) => {
   return useQuery(["trendingAlbums", page], async () => {
     const { data } = await axios.get(
       "/api/index/getTrendingAlbums?page=${page}"
