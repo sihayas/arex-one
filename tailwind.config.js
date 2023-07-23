@@ -23,6 +23,8 @@ module.exports = {
           "0px 0px 0px 0px rgba(0, 0, 0, 0.20), 0px 2px 4px 0px rgba(0, 0, 0, 0.20), 0px 7px 7px 0px rgba(0, 0, 0, 0.17), 0px 16px 10px 0px rgba(0, 0, 0, 0.10), 0px 29px 12px 0px rgba(0, 0, 0, 0.03), 0px 45px 13px 0px rgba(0, 0, 0, 0.00);",
         search:
           "0px 0px 0px rgba(0, 0, 0, 0.03), 0px 6px 14px rgba(0, 0, 0, 0.03), 0px 26px 26px rgba(0, 0, 0, 0.03), 0px 58px 35px rgba(0, 0, 0, 0.02), 0px 103px 41px rgba(0, 0, 0, 0.00), 0px 161px 45px rgba(0, 0, 0, 0.00)",
+        stars:
+          "0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px 0px rgba(0, 0, 0, 0.02), 0px 2px 1px 0px rgba(0, 0, 0, 0.00), 0px 4px 1px 0px rgba(0, 0, 0, 0.00);",
       },
       colors: {
         black: "#333333",

@@ -67,20 +67,6 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
     bounce();
   };
 
-  //Test ratings average
-  const handleUpdateRatingsClick = async () => {
-    const response = await fetch("/api/testUpdateAlbumRating", {
-      method: "POST",
-    });
-    const data = await response.json();
-
-    if (response.ok) {
-      alert(data.message);
-    } else {
-      alert("Error: " + data.message);
-    }
-  };
-
   if (isLoading && isFetching) if (error) return <div>Error</div>;
   searchData && searchData.length ? null : <div></div>;
   return (
@@ -103,7 +89,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
           >
             <div className="flex gap-4 items-center w-full">
               <Image
-                className=" rounded-2xl border border-silver "
+                className="rounded-2xl border border-silver "
                 src={artworkUrl}
                 alt={`${album.attributes.name} artwork`}
                 width={80}
@@ -127,13 +113,6 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
           </Command.Item>
         );
       })}
-      {/* Test Average Rating / Internal Purposes */}
-      {/* <button
-        className="absolute bottom-0 right-0 text-xs text-grey"
-        onClick={handleUpdateRatingsClick}
-      >
-        Update Album Ratings
-      </button> */}
     </>
   );
 };

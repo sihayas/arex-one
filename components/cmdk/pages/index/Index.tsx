@@ -1,27 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export default function Index() {
-  // Query function that will be retried if it fails
-  const fetchTrendingAlbums = async () => {
-    const { data } = await axios.get("/api/index/getTrendingAlbums");
+export const useTrendingAlbums = (page) => {
+  return useQuery(["trendingAlbums", page], async () => {
+    const { data } = await axios.get(
+      "/api/index/getTrendingAlbums?page=${page}"
+    );
     return data;
-  };
+  });
+};
 
-  // Fetch trending albums
-  const { isLoading, error, data } = useQuery(
-    ["trendingAlbums"],
-    fetchTrendingAlbums
-  );
+export default function Index() {
+  const { data: albums, isLoading } = useTrendingAlbums(1);
 
-  if (isLoading) return "Loading...";
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  if (error) return `An error occurred`;
-
-  console.log(data); // You can check out the result in the console
+  console.log(albums);
 
   return (
-    <div className="bg-white w-full h-full rounded-[16px] border border-silver">
+    <div className="bg-white w-full h-full rounded-[32px] border border-silver">
       {/* Later on, you can map through the 'data' to render your albums here */}
     </div>
   );

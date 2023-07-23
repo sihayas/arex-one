@@ -22,7 +22,7 @@ import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
-  index: { width: 720, height: 480 },
+  index: { width: 884, height: 576 },
   album: { width: 864, height: 864 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
@@ -277,7 +277,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               y,
               scale,
             }}
-            className={`flex w-full h-full rounded-[16px] cursor-grab z-0 ${
+            className={`flex w-full h-full rounded-[32px] cursor-grab z-0 ${
               isVisible
                 ? `shadow-cmdkScaled ${
                     activePage.name === "user" ? "!rounded-full" : ""

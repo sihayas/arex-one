@@ -49,7 +49,7 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
         >
           {review.content}
         </div>
-        <div className="absolute -z-10 -left-5 -top-5">
+        <div className="absolute -left-3 -top-3">
           <Stars rating={review.rating} />
         </div>
 

@@ -221,7 +221,6 @@ export default function Album() {
           <div className="font-medium text-sm text-gray1 text-end">400</div>
           <div className="font-medium text-sm text-gray1 text-end">20</div>
         </div>
-
         {/* Verdict Notes  */}
         <div className="text-xs text-gray1 w-[484px] line-clamp-3">
           With Nectar Jojis full metamorphosis from a meme-laden internet artist
@@ -251,7 +250,6 @@ export default function Album() {
             <div className="text-xs text-grey p-2">no entries</div>
           )}
         </div>
-
         {/* Infinite Loading Indicator  */}
         {isFetchingNextPage ? (
           <div className="">loading more reviews...</div>

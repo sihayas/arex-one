@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma";
 import client from "../../../lib/redis";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -7,29 +6,15 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const albums = await prisma.album.findMany({
-      select: { id: true, name: true },
-    });
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 8;
 
-    // Map over the album IDs to fetch their trending scores from Redis.
-    // This uses the 'Promise.all' method to perform all the fetches in parallel,
-    // improving the performance of this operation.
-    const trendingScores = await Promise.all(
-      albums.map(async (album) => {
-        const score = await client.get(`album:${album.id}:trendingScore`);
-        return {
-          id: album.id,
-          score: score ? parseFloat(score) : 0,
-          name: album.name,
-        };
-      })
-    );
+    const start = (page - 1) * limit;
+    const end = start + limit - 1;
 
-    // Sort the album IDs by their trending score.
-    trendingScores.sort((a, b) => b.score - a.score);
+    const albumIds = await client.zrange("trendingAlbums", start, end);
 
-    // Return the sorted album IDs as a JSON response.
-    res.status(200).json(trendingScores);
+    res.status(200).json(albumIds);
   } else {
     res.status(405).send("Method not allowed");
   }

@@ -26,7 +26,7 @@ export async function updateTrendingScores() {
     const trendingScore = calculateTrendingScore(album);
 
     // Update the album with the new trending score in Redis
-    await client.set(`album:${album.id}:trendingScore`, trendingScore);
+    await client.zadd("trendingAlbums", trendingScore, album.id);
 
     console.log(
       `Updated album ${album.id} / ${album.name} with new trending score: ${trendingScore}`

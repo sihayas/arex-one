@@ -29,7 +29,7 @@ export const Stars: React.FC<StarsProps> = ({ rating }) => {
   };
 
   return (
-    <div className="flex items-center p-2 border border-silver bg-blurWhite backdrop-blur-sm rounded-full">
+    <div className="flex items-center p-1 border border-silver bg-white rounded-full shadow-stars">
       {getStarIcon(rating)}
     </div>
   );
