@@ -166,7 +166,7 @@ export default function Album() {
     <div
       {...bind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[16px] z-0 w-full bg-white overflow-scroll scrollbar-none border border-silver"
+      className="flex flex-col items-center rounded-[32px] w-full bg-white overflow-scroll scrollbar-none border border-silver"
     >
       {/* Section One / Album Art */}
       <div className="sticky top-0">
@@ -180,7 +180,7 @@ export default function Album() {
         >
           <animated.img
             style={{
-              borderRadius: scale.to((value) => `${16 + (1 - value) * 32}px`),
+              borderRadius: scale.to((value) => `${32 + (1 - value) * 16}px`),
               boxShadow: boxShadow,
               // border: "1px solid rgba(0,0,0,0.1)",
             }}

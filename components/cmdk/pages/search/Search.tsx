@@ -1,12 +1,8 @@
 import { Command } from "cmdk";
 import Image from "next/image";
-import { useState } from "react";
-import Rating from "./subcomponents/Rating";
-import { useCMDK } from "@/context/CMDKContext";
-import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { useSelectAlbum } from "@/hooks/useSelectAlbum";
 import { AlbumData } from "@/lib/interfaces";
 import { generateArtworkUrl } from "../../generics";
-import { useDominantColor } from "@/hooks/useDominantColor";
 
 interface SearchProps {
   searchData: any;
@@ -16,59 +12,10 @@ interface SearchProps {
 }
 
 const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
-  const [shadowColors, setShadowColors] = useState<{ [key: string]: string }>(
-    {}
-  );
-  const { getDominantColor } = useDominantColor();
-
-  // CMDK context
-  const { setPages, bounce, setHideSearch } = useCMDK();
-  const { setSelectedAlbum } = useCMDKAlbum();
-
-  // Dominant color thief
-  const handleImageLoad = async (
-    imgElement: HTMLImageElement,
-    album: AlbumData
-  ) => {
-    const dominantColor = getDominantColor(imgElement);
-    setShadowColors((prev) => ({
-      ...prev,
-      [album.id]: dominantColor,
-    }));
-    console.log("dominantColor", dominantColor);
-    return generateArtworkUrl(album.attributes.artwork.url, "1500");
-  };
-
-  //Set the album
-  const handleSelectAlbum = (
-    album: AlbumData,
-    artworkUrl: string,
-    shadowColor: string
-  ) => {
-    const extendedAlbum = {
-      ...album,
-      artworkUrl,
-      shadowColor,
-    };
-    setSelectedAlbum(extendedAlbum);
-    setHideSearch(true);
-    // Switch to album page and add to memory
-    setPages((prevPages) => [
-      ...prevPages,
-      {
-        name: "album",
-        album: {
-          ...album,
-          artworkUrl,
-          shadowColor,
-        },
-      },
-    ]);
-    bounce();
-  };
+  const { handleSelectAlbum } = useSelectAlbum();
 
   if (isLoading && isFetching) if (error) return <div>Error</div>;
-  searchData && searchData.length ? null : <div></div>;
+
   return (
     <>
       {/* Search Results */}
@@ -82,21 +29,22 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
             className="w-full p-2"
             key={album.id}
             onSelect={() =>
-              // Set selected album state
-              handleSelectAlbum(album, artworkUrl, shadowColors[album.id])
+              handleSelectAlbum(
+                document.getElementById(album.id) as HTMLImageElement,
+                album,
+                artworkUrl
+              )
             }
             onMouseDown={(event) => event.preventDefault()}
           >
             <div className="flex gap-4 items-center w-full">
               <Image
+                id={album.id} // Add an id attribute to identify the image later
                 className="rounded-2xl border border-silver "
                 src={artworkUrl}
                 alt={`${album.attributes.name} artwork`}
                 width={80}
                 height={80}
-                onLoad={(event) =>
-                  handleImageLoad(event.target as HTMLImageElement, album)
-                }
               />
 
               {/* <Rating color={shadowColors[album.id]} rating={averageRating} /> */}

@@ -12,7 +12,7 @@ export default async function handler(
     const start = (page - 1) * limit;
     const end = start + limit - 1;
 
-    const albumIds = await client.zrange("trendingAlbums", start, end);
+    const albumIds = await client.zrevrange("trendingAlbums", start, end);
 
     res.status(200).json(albumIds);
   } else {

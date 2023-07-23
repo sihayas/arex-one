@@ -50,3 +50,15 @@ export const getAlbumById = async (albumId: string) => {
   });
   return response.data.data[0];
 };
+
+//Search for multiple albums
+export const getAlbumsByIds = async (albumIds: string[]) => {
+  const baseURL = "https://api.music.apple.com/v1/catalog/us/albums";
+
+  const response = await axios.get(`${baseURL}?ids=${albumIds.join(",")}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.data;
+};
