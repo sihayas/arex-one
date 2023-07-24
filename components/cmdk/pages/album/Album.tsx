@@ -4,13 +4,13 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { StarsIcon } from "../../../icons";
 import { AlbumData } from "@/lib/interfaces";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { useScroll } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/web";
 import { useSession } from "next-auth/react";
 import { EntryPreview } from "./subcomponents/EntryPreview";
-import { debounce } from "lodash";
+import { useScrollPosition } from "@/hooks/useScrollPosition";
 
 async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/postAlbum`, album);
@@ -38,18 +38,15 @@ export default function Album() {
   const { setPages, bounce, pages } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
   const { data: session } = useSession();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const {
+    scrollContainerRef,
+    saveScrollPosition,
+    restoreScrollPosition,
+    handleInfiniteScroll,
+  } = useScrollPosition();
 
   const [{ scale }, setScale] = useSpring(() => ({ scale: 1 }));
-
-  const handleScroll = debounce(() => {
-    const currentScrollPosition = scrollContainerRef.current?.scrollTop;
-    setPages((prevPages) => {
-      const currentPage = { ...prevPages[prevPages.length - 1] };
-      currentPage.scrollPosition = currentScrollPosition;
-      return [...prevPages.slice(0, -1), currentPage];
-    });
-  }, 100); // Delay scroll position update to prevent lag.
 
   // Shrink the album cover on scroll
   const bind = useScroll(({ xy: [, y] }) => {
@@ -59,7 +56,7 @@ export default function Album() {
 
     setScale({ scale: newScale });
 
-    handleScroll();
+    saveScrollPosition();
   });
 
   const boxShadow = useMemo(() => {
@@ -110,41 +107,20 @@ export default function Album() {
     isError: isReviewsError,
   } = reviewsQuery;
 
+  useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
+
   // Infinite Scroll Page Tracker
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-
-    const handleScroll = () => {
-      if (
-        scrollContainer &&
-        scrollContainer.scrollTop + scrollContainer.clientHeight >=
-          scrollContainer.scrollHeight &&
-        hasNextPage &&
-        !isFetchingNextPage
-      ) {
-        fetchNextPage();
-      }
-    };
-
-    if (scrollContainer) {
-      scrollContainer.addEventListener("scroll", handleScroll);
+    if (hasNextPage && !isFetchingNextPage) {
+      handleInfiniteScroll(fetchNextPage);
     }
-
-    return () => {
-      if (scrollContainer) {
-        scrollContainer.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [hasNextPage, fetchNextPage, isFetchingNextPage, setPages]);
-
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    const currentPage = pages[pages.length - 1];
-
-    if (scrollContainer && currentPage.scrollPosition) {
-      scrollContainer.scrollTop = currentPage.scrollPosition;
-    }
-  }, [pages]);
+  }, [
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    setPages,
+    handleInfiniteScroll,
+  ]);
 
   // Load and error handling
   if (!selectedAlbum || isLoading || isFetchingNextPage) {

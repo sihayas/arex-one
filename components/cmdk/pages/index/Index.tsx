@@ -6,6 +6,7 @@ import { SoundPreview } from "./sound/SoundPreview";
 import { useEffect, useRef } from "react";
 import { debounce } from "lodash";
 import { useCMDK } from "@/context/CMDKContext";
+import { useScrollPosition } from "@/hooks/useScrollPosition";
 
 export const useTrendingAlbumsDetails = (page: number) => {
   const albumIdsQuery = useQuery(["trendingAlbums", page], async () => {
@@ -27,39 +28,13 @@ export const useTrendingAlbumsDetails = (page: number) => {
 };
 
 export default function Index() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const { setPages, pages } = useCMDK();
+  const { pages } = useCMDK();
 
-  const handleScroll = debounce(() => {
-    const currentScrollPosition = scrollContainerRef.current?.scrollTop;
-    setPages((prevPages) => {
-      const currentPage = { ...prevPages[prevPages.length - 1] };
-      currentPage.scrollPosition = currentScrollPosition;
-      return [...prevPages.slice(0, -1), currentPage];
-    });
-  }, 100); // Delay scroll position update to prevent lag.
+  const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
+    useScrollPosition();
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (scrollContainer) {
-      scrollContainer.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (scrollContainer) {
-        scrollContainer.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [handleScroll]);
-
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    const currentPage = pages[pages.length - 1];
-
-    if (scrollContainer && currentPage.scrollPosition) {
-      scrollContainer.scrollTop = currentPage.scrollPosition;
-    }
-  }, [pages]);
+  useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
+  useEffect(saveScrollPosition, [pages, saveScrollPosition]);
 
   const { albumIdsQuery, albumDetailsQuery } = useTrendingAlbumsDetails(1);
 
