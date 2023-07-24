@@ -195,12 +195,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         style={{
           ...dimensionsSpring, // To shapeshift
           ...transformSpring, // To appear
-          transition: "box-shadow 750ms, scale 300ms",
+          transition: "box-shadow 750ms",
         }}
         className={`cmdk ${
           isVisible
-            ? `scale-100 pointer-events-auto`
-            : "!shadow-none scale-95 pointer-events-none border border-silver "
+            ? " pointer-events-auto"
+            : "!shadow-none pointer-events-none border border-silver"
         }`}
       >
         {/* CMDK Inner Content  */}

@@ -1,8 +1,8 @@
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { StarsIcon } from "../../../icons";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { StarsIcon } from "../../../icons";
 import { AlbumData } from "@/lib/interfaces";
 import { useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
@@ -49,7 +49,7 @@ export default function Album() {
       currentPage.scrollPosition = currentScrollPosition;
       return [...prevPages.slice(0, -1), currentPage];
     });
-  }, 200); // Delay scroll position update to prevent lag.
+  }, 100); // Delay scroll position update to prevent lag.
 
   // Shrink the album cover on scroll
   const bind = useScroll(({ xy: [, y] }) => {

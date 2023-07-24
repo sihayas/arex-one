@@ -2,9 +2,13 @@ import { generateArtworkUrl } from "@/components/cmdk/generics";
 import { AlbumData } from "@/lib/interfaces";
 import Image from "next/image";
 import { useSelectAlbum } from "@/hooks/useSelectAlbum";
+import { useRef } from "react";
 
 export const SoundPreview = (album: AlbumData) => {
   const { handleSelectAlbum } = useSelectAlbum();
+
+  const artworkUrl = generateArtworkUrl(album.attributes.artwork.url, "1024");
+  const imageRef = useRef(null); // Allows clicking art
 
   return (
     <div className="w-fit flex gap-8">
@@ -21,22 +25,19 @@ export const SoundPreview = (album: AlbumData) => {
       </div>
       {/* Artwork  */}
       <Image
-        className="shadow-medium rounded-[16px]"
-        src={generateArtworkUrl(album.attributes.artwork.url, "1024")}
+        ref={imageRef}
+        className="shadow-medium rounded-[16px] cursor"
+        src={artworkUrl}
         width={512}
         height={512}
         alt="alt"
         onDragStart={(e) => e.preventDefault()}
-        onSelect={() =>
-          handleSelectAlbum(
-            document.getElementById(album.id) as HTMLImageElement,
-            album,
-            generateArtworkUrl(album.attributes.artwork.url, "10")
-          )
-        }
+        onClick={() => {
+          if (imageRef.current) {
+            handleSelectAlbum(imageRef.current, album, artworkUrl);
+          }
+        }}
       />
-
-      {/* other album details */}
     </div>
   );
 };

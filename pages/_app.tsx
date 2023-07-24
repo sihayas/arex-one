@@ -29,7 +29,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           </AlbumDetailsProvider>
         </CMDKProvider>
         <Toaster />
-        <ReactQueryDevtools />
+        {/* <ReactQueryDevtools /> */}
       </SessionProvider>
     </QueryClientProvider>
   );
