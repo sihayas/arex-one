@@ -4,7 +4,13 @@ import Image from "next/image";
 import { useSelectAlbum } from "@/hooks/useSelectAlbum";
 import { useRef } from "react";
 
-export const SoundPreview = (album: AlbumData) => {
+export const SoundPreview = ({
+  album,
+  index,
+}: {
+  album: AlbumData;
+  index: number;
+}) => {
   const { handleSelectAlbum } = useSelectAlbum();
 
   const artworkUrl = generateArtworkUrl(album.attributes.artwork.url, "1024");
@@ -14,6 +20,8 @@ export const SoundPreview = (album: AlbumData) => {
     <div className="w-fit flex gap-8">
       {/* Names  */}
       <div className="flex flex-col justify-end items-end gap-2 mb-8">
+        {/* Number  */}
+        <div className="text-2xl text-gray3 mb-80">{index}</div>
         {/* Ratings Count */}
         <div className="flex items-center px-2 py-[2px] shadow-rating rounded-full mb-2 border border-silver max-w-fit">
           <div className="text-xs text-black">

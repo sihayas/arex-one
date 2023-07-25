@@ -236,7 +236,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               <Command.Input
                 className={`bg-blurWhite backdrop-blur-sm border border-silver`}
                 ref={inputRef}
-                placeholder="Rx*"
+                placeholder="Dive"
                 style={{ paddingLeft: "2.5rem" }}
                 onValueChange={(value) => {
                   if (hideSearch) {

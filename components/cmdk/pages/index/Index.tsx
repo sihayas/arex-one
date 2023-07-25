@@ -3,12 +3,14 @@ import axios from "axios";
 import { getAlbumsByIds } from "@/lib/musicKit";
 import { AlbumData } from "@/lib/interfaces";
 import { SoundPreview } from "./sound/SoundPreview";
-import { useEffect, useRef } from "react";
-import { debounce } from "lodash";
 import { useCMDK } from "@/context/CMDKContext";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
+import { SpotlightIcon, BloomIcon } from "@/components/icons";
+import Button from "./sound/Button";
+import { useState } from "react";
 
 export const useTrendingAlbumsDetails = (page: number) => {
+  // Grab trending albums from redis
   const albumIdsQuery = useQuery(["trendingAlbums", page], async () => {
     const { data } = await axios.get(
       `/api/index/getTrendingAlbums?page=${page}`
@@ -16,6 +18,7 @@ export const useTrendingAlbumsDetails = (page: number) => {
     return data;
   });
 
+  // Pull album data from Apple
   const albumDetailsQuery = useQuery(
     ["albumDetails", albumIdsQuery.data || []],
     () => getAlbumsByIds(albumIdsQuery.data || []),
@@ -29,12 +32,24 @@ export const useTrendingAlbumsDetails = (page: number) => {
 
 export default function Index() {
   const { pages } = useCMDK();
+  const [activeState, setActiveState] = useState({
+    button: "",
+    subButtons: { spotlight: "sound", bloom: "sound" },
+  });
+
+  const setButtonState = (button, subButton) => {
+    setActiveState((prevState) => ({
+      ...prevState,
+      button,
+      subButtons: { ...prevState.subButtons, [button]: subButton },
+    }));
+  };
 
   const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
     useScrollPosition();
 
-  useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
-  useEffect(saveScrollPosition, [pages, saveScrollPosition]);
+  // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
+  // useEffect(saveScrollPosition, [pages, saveScrollPosition]);
 
   const { albumIdsQuery, albumDetailsQuery } = useTrendingAlbumsDetails(1);
 
@@ -51,8 +66,31 @@ export default function Index() {
       ref={scrollContainerRef}
       className="flex flex-col bg-white w-full h-full rounded-[32px] border border-silver overflow-scroll items-end p-8 scrollbar-none gap-4"
     >
-      {albumDetailsQuery.data.map((album: AlbumData) => (
-        <SoundPreview key={album.id} {...album} />
+      <div className="absolute left-8 top-8 flex flex-col gap-4">
+        <Button
+          IconComponent={SpotlightIcon}
+          defaultText="SPOTLIGHT"
+          activeText={activeState.subButtons.spotlight}
+          isActive={activeState.button === "spotlight"}
+          onClick={() =>
+            setButtonState("spotlight", activeState.subButtons.spotlight)
+          }
+          onSubButtonClick={(subButton) =>
+            setButtonState("spotlight", subButton)
+          }
+        />
+
+        <Button
+          IconComponent={BloomIcon}
+          defaultText="IN BLOOM"
+          activeText={activeState.subButtons.bloom}
+          isActive={activeState.button === "bloom"}
+          onClick={() => setButtonState("bloom", activeState.subButtons.bloom)}
+          onSubButtonClick={(subButton) => setButtonState("bloom", subButton)}
+        />
+      </div>
+      {albumDetailsQuery.data.map((album: AlbumData, index: number) => (
+        <SoundPreview key={album.id} album={album} index={index + 1} />
       ))}
     </div>
   );

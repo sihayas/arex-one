@@ -14,7 +14,11 @@ export const useDragLogic = ({
   resetPage,
   inputRef,
 }: UseDragLogicProps) => {
-  const [{ x, y, scale }, api] = useSpring(() => ({ x: 0, y: 0, scale: 1 }));
+  const [{ x, y, scale }, api] = useSpring(() => ({
+    x: 0,
+    y: 0,
+    scale: 1,
+  }));
 
   const bind = useDrag(
     ({ down, movement: [mx, my], last }) => {
@@ -53,5 +57,5 @@ export const useDragLogic = ({
     }
   );
 
-  return { bind, x, y, scale };
+  return { bind, x, y, scale }; // Make sure to return the opacity
 };

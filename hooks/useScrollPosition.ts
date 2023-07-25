@@ -14,7 +14,7 @@ export function useScrollPosition() {
       currentPage.scrollPosition = currentScrollPosition;
       return [...prevPages.slice(0, -1), currentPage];
     });
-  }, 100); // Delay scroll position update to prevent lag.
+  }, 150); // Delay scroll position update to prevent lag.
 
   // useEffect hook to restore scroll position
   const restoreScrollPosition = () => {
