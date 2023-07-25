@@ -178,7 +178,7 @@ model Album {
   artist        String
   releaseDate   String
   averageRating Float?    @default(0)  
-  lastUpdated   DateTime?  @default(now()) @updatedAt
+  lastUpdated   DateTime  @default(now()) @updatedAt
   reviews       Review[]
   notes         String?   @db.MediumText
   favorites     Favorite[]

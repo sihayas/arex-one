@@ -57,7 +57,7 @@ export interface AlbumDBData {
   artist: string;
   releaseDate: string;
   averageRating?: number;
-  lastUpdated?: Date;
+  lastUpdated: Date;
   reviews?: ReviewData[];
   notes?: string;
   viewsCount: number;
