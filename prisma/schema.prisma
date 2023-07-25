@@ -122,6 +122,8 @@ model Review {
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @updatedAt @map(name: "updated_at")
 
+  viewsCount    Int      @default(0) // Track number of views
+
   @@index([albumId])
   @@index([authorId])
 }

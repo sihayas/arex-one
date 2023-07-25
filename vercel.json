@@ -5,7 +5,11 @@
       "schedule": "0 18 * * *"
     },
     {
-      "path": "/api/cron/trendingScore",
+      "path": "/api/cron/trendingScoreAlbum",
+      "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/cron/trendingScoreEntry",
       "schedule": "0 18 * * *"
     }
   ]

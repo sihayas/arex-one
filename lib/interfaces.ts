@@ -114,6 +114,7 @@ export interface ReviewData {
   rating: number;
   replies: ReplyData[];
   updatedAt: string;
+  viewsCount: number;
 }
 
 export interface ReviewFormInputs {

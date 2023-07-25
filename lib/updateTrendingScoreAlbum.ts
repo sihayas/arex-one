@@ -1,11 +1,11 @@
-import client from "../lib/redis";
-import { prisma } from "../lib/prisma";
+import client from "./redis";
+import { prisma } from "./prisma";
 import { AlbumDBData } from "./interfaces";
 
 // Weights for the trending score calculation
 const weights = {
   views: 0.4,
-  likes: 0.3,
+  loves: 0.3,
   ratings: 0.3,
 };
 
@@ -13,12 +13,12 @@ const weights = {
 function calculateTrendingScore(album: AlbumDBData) {
   return (
     album.viewsCount * weights.views +
-    album.lovedCount * weights.likes +
+    album.lovedCount * weights.loves +
     album.ratingsCount * weights.ratings
   );
 }
 
-export async function updateTrendingScores() {
+export async function updateTrendingScoreAlbum() {
   const albums = await prisma.album.findMany();
 
   // Loop over each album and calculate the trending score

@@ -30,6 +30,32 @@ export const useTrendingAlbumsDetails = (page: number) => {
   return { albumIdsQuery, albumDetailsQuery };
 };
 
+export const useTrendingEntryDetails = (page: number) => {
+  // Grab trending albums from redis
+  const entryIdsQuery = useQuery(["trendingEntries", page], async () => {
+    const { data } = await axios.get(
+      `/api/index/getTrendingEntries?page=${page}`
+    );
+    return data;
+  });
+
+  // Pull review data from DB with ID
+  const entryDetailsQuery = useQuery(
+    ["entryDetails", entryIdsQuery.data || []],
+    async () => {
+      const { data } = await axios.post("/api/review/getByIds", {
+        ids: entryIdsQuery.data,
+      });
+      return data;
+    },
+    {
+      enabled: !!entryIdsQuery.data?.length, // Only run the query if 'entryId's' is not an empty array
+    }
+  );
+
+  return { entryDetailsQuery, entryIdsQuery };
+};
+
 export default function Index() {
   const { pages } = useCMDK();
   const [activeState, setActiveState] = useState({
@@ -52,14 +78,17 @@ export default function Index() {
   // useEffect(saveScrollPosition, [pages, saveScrollPosition]);
 
   const { albumIdsQuery, albumDetailsQuery } = useTrendingAlbumsDetails(1);
+  const { entryIdsQuery, entryDetailsQuery } = useTrendingEntryDetails(1);
 
-  const isLoading = albumIdsQuery.isLoading || albumDetailsQuery.isLoading;
+  const isLoading =
+    (albumIdsQuery.isLoading && entryIdsQuery.isLoading) ||
+    (albumDetailsQuery.isLoading && entryDetailsQuery.isLoading);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  console.log(albumDetailsQuery.data);
+  console.log(entryDetailsQuery.data);
 
   return (
     <div
