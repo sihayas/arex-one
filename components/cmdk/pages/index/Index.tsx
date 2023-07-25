@@ -9,66 +9,49 @@ import { SpotlightIcon, BloomIcon } from "@/components/icons";
 import Button from "./sound/Button";
 import { useState } from "react";
 
-export const useTrendingAlbumsDetails = (page: number) => {
-  // Grab trending albums from redis
-  const albumIdsQuery = useQuery(["trendingAlbums", page], async () => {
-    const { data } = await axios.get(
-      `/api/index/getTrendingAlbums?page=${page}`
-    );
+type TransformFn = (data: any[]) => any;
+
+const useData = (
+  keyPrefix: string,
+  endpoint: string,
+  page: number,
+  transformFn: TransformFn
+) => {
+  // Grab data from server
+  const idsQuery = useQuery([`${keyPrefix}Ids`, page], async () => {
+    const { data } = await axios.get(`/api/index/${endpoint}?page=${page}`);
     return data;
   });
 
-  // Pull album data from Apple
-  const albumDetailsQuery = useQuery(
-    ["albumDetails", albumIdsQuery.data || []],
-    () => getAlbumsByIds(albumIdsQuery.data || []),
+  // Pull detailed data based on IDs
+  const detailsQuery = useQuery(
+    [`${keyPrefix}Details`, idsQuery.data || []],
+    () => transformFn(idsQuery.data || []),
     {
-      enabled: !!albumIdsQuery.data?.length, // Only run the query if 'albumIds' is not an empty array
+      enabled: !!idsQuery.data?.length,
     }
   );
 
-  return { albumIdsQuery, albumDetailsQuery };
-};
-
-export const useTrendingEntryDetails = (page: number) => {
-  // Grab trending albums from redis
-  const entryIdsQuery = useQuery(["trendingEntries", page], async () => {
-    const { data } = await axios.get(
-      `/api/index/getTrendingEntries?page=${page}`
-    );
-    return data;
-  });
-
-  // Pull review data from DB with ID
-  const entryDetailsQuery = useQuery(
-    ["entryDetails", entryIdsQuery.data || []],
-    async () => {
-      const { data } = await axios.post("/api/review/getByIds", {
-        ids: entryIdsQuery.data,
-      });
-      return data;
-    },
-    {
-      enabled: !!entryIdsQuery.data?.length, // Only run the query if 'entryId's' is not an empty array
-    }
-  );
-
-  return { entryDetailsQuery, entryIdsQuery };
+  return { idsQuery, detailsQuery };
 };
 
 export default function Index() {
   const { pages } = useCMDK();
+
+  // Button state handlers
   const [activeState, setActiveState] = useState({
-    button: "",
+    button: "spotlight",
     subButtons: { spotlight: "sound", bloom: "sound" },
   });
 
-  const setButtonState = (button, subButton) => {
-    setActiveState((prevState) => ({
-      ...prevState,
+  const setButtonState = (button: string, subButton: string) => {
+    setActiveState({
       button,
-      subButtons: { ...prevState.subButtons, [button]: subButton },
-    }));
+      subButtons: {
+        ...activeState.subButtons,
+        [button]: subButton,
+      },
+    });
   };
 
   const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
@@ -77,18 +60,61 @@ export default function Index() {
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
   // useEffect(saveScrollPosition, [pages, saveScrollPosition]);
 
-  const { albumIdsQuery, albumDetailsQuery } = useTrendingAlbumsDetails(1);
-  const { entryIdsQuery, entryDetailsQuery } = useTrendingEntryDetails(1);
+  const {
+    idsQuery: trendingAlbumIdsQuery,
+    detailsQuery: trendingAlbumDetailsQuery,
+  } = useData("trendingAlbums", "getTrendingAlbums", 1, getAlbumsByIds);
+
+  const {
+    idsQuery: trendingEntryIdsQuery,
+    detailsQuery: trendingEntryDetailsQuery,
+  } = useData("trendingEntries", "getTrendingEntries", 1, (ids: String[]) =>
+    axios.post("/api/review/getByIds", {
+      ids: ids,
+    })
+  );
+
+  const {
+    idsQuery: bloomingAlbumIdsQuery,
+    detailsQuery: bloomingAlbumDetailsQuery,
+  } = useData("bloomingAlbums", "getBloomingAlbums", 1, getAlbumsByIds);
+
+  const {
+    idsQuery: bloomingEntryIdsQuery,
+    detailsQuery: bloomingEntryDetailsQuery,
+  } = useData("bloomingEntries", "getBloomingEntries", 1, (ids: String[]) =>
+    axios.post("/api/review/getByIds", {
+      ids: ids,
+    })
+  );
 
   const isLoading =
-    (albumIdsQuery.isLoading && entryIdsQuery.isLoading) ||
-    (albumDetailsQuery.isLoading && entryDetailsQuery.isLoading);
+    trendingAlbumIdsQuery.isLoading ||
+    trendingEntryIdsQuery.isLoading ||
+    bloomingAlbumIdsQuery.isLoading ||
+    bloomingEntryIdsQuery.isLoading ||
+    trendingAlbumDetailsQuery.isLoading ||
+    trendingEntryDetailsQuery.isLoading ||
+    bloomingAlbumDetailsQuery.isLoading ||
+    bloomingEntryDetailsQuery.isLoading;
+
+  const isError =
+    trendingAlbumIdsQuery.isError ||
+    trendingAlbumIdsQuery.isError ||
+    bloomingAlbumIdsQuery.isError ||
+    bloomingEntryIdsQuery.isError ||
+    trendingAlbumDetailsQuery.isError ||
+    trendingEntryDetailsQuery.isError ||
+    bloomingAlbumDetailsQuery.isError ||
+    bloomingEntryDetailsQuery.isError;
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  console.log(entryDetailsQuery.data);
+  if (isError) {
+    return <div>Something went wrong: </div>;
+  }
 
   return (
     <div
@@ -118,9 +144,26 @@ export default function Index() {
           onSubButtonClick={(subButton) => setButtonState("bloom", subButton)}
         />
       </div>
-      {albumDetailsQuery.data.map((album: AlbumData, index: number) => (
-        <SoundPreview key={album.id} album={album} index={index + 1} />
-      ))}
+
+      {activeState.button === "spotlight" &&
+        activeState.subButtons.spotlight === "sound" &&
+        trendingAlbumDetailsQuery.data.map(
+          (album: AlbumData, index: number) => (
+            <SoundPreview key={album.id} album={album} index={index + 1} />
+          )
+        )}
+
+      {activeState.button === "spotlight" &&
+        activeState.subButtons.spotlight === "text" &&
+        trendingEntryDetailsQuery.data.map(/* ... */)}
+
+      {activeState.button === "bloom" &&
+        activeState.subButtons.bloom === "sound" &&
+        bloomingAlbumDetailsQuery.data.map(/* ... */)}
+
+      {activeState.button === "bloom" &&
+        activeState.subButtons.bloom === "text" &&
+        bloomingEntryDetailsQuery.data.map(/* ... */)}
     </div>
   );
 }

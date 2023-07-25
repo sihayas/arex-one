@@ -40,7 +40,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
             <div className="flex gap-4 items-center w-full">
               <Image
                 id={album.id} // Add an id attribute to identify the image later
-                className="rounded-2xl border border-silver "
+                className=" rounded-lg border border-silver "
                 src={artworkUrl}
                 alt={`${album.attributes.name} artwork`}
                 width={80}
