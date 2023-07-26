@@ -18,11 +18,12 @@ function calculateRecencyScore(lastInteractionTime: Date) {
 
 // Function to calculate the trending score
 function calculateBloomingScore(album: AlbumDBData) {
+  const lastUpdated = album.lastUpdated || new Date(); //TODO: Change this to never be null in db
   return (
     album.viewsCount * weights.views +
     album.lovedCount * weights.loves +
     album.ratingsCount * weights.ratings +
-    calculateRecencyScore(album.lastUpdated) * weights.recency
+    calculateRecencyScore(lastUpdated) * weights.recency
   );
 }
 

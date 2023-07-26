@@ -56,10 +56,10 @@ export interface AlbumDBData {
   name: string;
   artist: string;
   releaseDate: string;
-  averageRating?: number;
-  lastUpdated: Date;
+  averageRating: number | null;
+  lastUpdated: Date | null;
   reviews?: ReviewData[];
-  notes?: string;
+  notes?: string | null;
   viewsCount: number;
   listenedCount: number;
   ratingsCount: number;

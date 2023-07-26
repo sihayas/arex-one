@@ -10,9 +10,9 @@ import Button from "./sound/Button";
 import { useState } from "react";
 import { EntryPreview } from "./entry/EntryPreview";
 
-export const useSpotlightAlbumsDetails = (page: number) => {
+export const useFetchSpotlightAlbums = (page: number) => {
   // Grab trending albums from redis
-  const albumIdsQuery = useQuery(["spotlightAlbums", page], async () => {
+  const spotlightAlbumsQuery = useQuery(["spotlightAlbums", page], async () => {
     const { data } = await axios.get(
       `/api/index/getSpotlightAlbums?page=${page}`
     );
@@ -20,20 +20,49 @@ export const useSpotlightAlbumsDetails = (page: number) => {
   });
 
   // Pull album data from Apple
-  const albumDetailsQuery = useQuery(
-    ["albumDetails", albumIdsQuery.data || []],
-    () => getAlbumsByIds(albumIdsQuery.data || []),
+  const spotlightAlbumsDataQuery = useQuery(
+    ["albumDetails", spotlightAlbumsQuery.data || []],
+    () => getAlbumsByIds(spotlightAlbumsQuery.data || []),
     {
-      enabled: !!albumIdsQuery.data?.length, // Only run the query if 'albumIds' is not an empty array
+      enabled: !!spotlightAlbumsQuery.data?.length, // Only run the query if 'albumIds' is not an empty array
     }
   );
 
-  return { albumIdsQuery, albumDetailsQuery };
+  return { spotlightAlbumsQuery, spotlightAlbumsDataQuery };
 };
 
-export const useBloomingAlbumsDetails = (page: number) => {
+export const useFetchSpotlightEntries = (page: number) => {
+  // Grab trending entries from redis
+  const spotlightEntriesQuery = useQuery(
+    ["spotlightEntries", page],
+    async () => {
+      const { data } = await axios.get(
+        `/api/index/getSpotlightEntries?page=${page}`
+      );
+      return data;
+    }
+  );
+
+  // Pull review data from DB with ID
+  const spotlightEntriesDataQuery = useQuery(
+    ["entryDetails", spotlightEntriesQuery.data || []],
+    async () => {
+      const { data } = await axios.post("/api/review/getByIds", {
+        ids: spotlightEntriesQuery.data,
+      });
+      return data;
+    },
+    {
+      enabled: !!spotlightEntriesQuery.data?.length, // Only run the query if 'entryId's' is not an empty array
+    }
+  );
+
+  return { spotlightEntriesDataQuery, spotlightEntriesQuery };
+};
+
+export const useFetchBloomingAlbums = (page: number) => {
   // Grab blooming albums from redis
-  const bloomingAlbumIdsQuery = useQuery(["bloomingAlbums", page], async () => {
+  const bloomingAlbumsQuery = useQuery(["bloomingAlbums", page], async () => {
     const { data } = await axios.get(
       `/api/index/getBloomingAlbums?page=${page}`
     );
@@ -41,74 +70,48 @@ export const useBloomingAlbumsDetails = (page: number) => {
   });
 
   // Pull album data from Apple
-  const bloomingAlbumDetailsQuery = useQuery(
-    ["albumDetails", bloomingAlbumIdsQuery.data || []],
-    () => getAlbumsByIds(bloomingAlbumIdsQuery.data || []),
+  const bloomingAlbumsDataQuery = useQuery(
+    ["albumDetails", bloomingAlbumsQuery.data || []],
+    () => getAlbumsByIds(bloomingAlbumsQuery.data || []),
     {
-      enabled: !!bloomingAlbumIdsQuery.data?.length, // Only run the query if 'albumIds' is not an empty array
+      enabled: !!bloomingAlbumsQuery.data?.length, // Only run the query if 'albumIds' is not an empty array
     }
   );
 
-  return { bloomingAlbumIdsQuery, bloomingAlbumDetailsQuery };
+  return { bloomingAlbumsQuery, bloomingAlbumsDataQuery };
 };
 
-export const useSpotlightEntriesDetails = (page: number) => {
-  // Grab trending entries from redis
-  const entryIdsQuery = useQuery(["spotlightEntries", page], async () => {
+export const useFetchBloomingEntries = (page: number) => {
+  // Grab blooming entries from redis
+  const bloomingEntriesQuery = useQuery(["bloomingEntries", page], async () => {
     const { data } = await axios.get(
-      `/api/index/getSpotlightEntries?page=${page}`
+      `/api/index/getBloomingEntries?page=${page}`
     );
     return data;
   });
 
   // Pull review data from DB with ID
-  const entryDetailsQuery = useQuery(
-    ["entryDetails", entryIdsQuery.data || []],
+  const bloomingEntriesDataQuery = useQuery(
+    ["entryDetails", bloomingEntriesQuery.data || []],
     async () => {
       const { data } = await axios.post("/api/review/getByIds", {
-        ids: entryIdsQuery.data,
+        ids: bloomingEntriesQuery.data,
       });
       return data;
     },
     {
-      enabled: !!entryIdsQuery.data?.length, // Only run the query if 'entryId's' is not an empty array
+      enabled: !!bloomingEntriesQuery.data?.length, // Only run the query if 'entryId's' is not an empty array
     }
   );
 
-  return { entryDetailsQuery, entryIdsQuery };
-};
-
-export const useBloomingEntryDetails = (page: number) => {
-  // Grab blooming entries from redis
-  const bloomingEntryIdsQuery = useQuery(
-    ["bloomingEntries", page],
-    async () => {
-      const { data } = await axios.get(
-        `/api/index/getBloomingEntries?page=${page}`
-      );
-      return data;
-    }
-  );
-
-  // Pull review data from DB with ID
-  const bloomingEntryDetailsQuery = useQuery(
-    ["entryDetails", bloomingEntryIdsQuery.data || []],
-    async () => {
-      const { data } = await axios.post("/api/review/getByIds", {
-        ids: bloomingEntryIdsQuery.data,
-      });
-      return data;
-    },
-    {
-      enabled: !!bloomingEntryIdsQuery.data?.length, // Only run the query if 'entryId's' is not an empty array
-    }
-  );
-
-  return { bloomingEntryIdsQuery, bloomingEntryDetailsQuery };
+  return { bloomingEntriesQuery, bloomingEntriesDataQuery };
 };
 
 export default function Index() {
   const { pages } = useCMDK();
+  const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
+    useScrollPosition();
+
   const [activeState, setActiveState] = useState({
     button: "spotlight",
     subButtons: { spotlight: "sound", bloom: "sound" },
@@ -124,39 +127,31 @@ export default function Index() {
     });
   };
 
-  const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
-    useScrollPosition();
-
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
   // useEffect(saveScrollPosition, [pages, saveScrollPosition]);
 
-  const { albumIdsQuery, albumDetailsQuery } = useSpotlightAlbumsDetails(1);
-  const { entryIdsQuery, entryDetailsQuery } = useSpotlightEntriesDetails(1);
-  const { bloomingAlbumIdsQuery, bloomingAlbumDetailsQuery } =
-    useBloomingAlbumsDetails(1);
-  const { bloomingEntryIdsQuery, bloomingEntryDetailsQuery } =
-    useBloomingEntryDetails(1);
+  const { spotlightAlbumsQuery, spotlightAlbumsDataQuery } =
+    useFetchSpotlightAlbums(1);
+  const { spotlightEntriesQuery, spotlightEntriesDataQuery } =
+    useFetchSpotlightEntries(1);
+  const { bloomingAlbumsQuery, bloomingAlbumsDataQuery } =
+    useFetchBloomingAlbums(1);
+  const { bloomingEntriesQuery, bloomingEntriesDataQuery } =
+    useFetchBloomingEntries(1);
 
   const isLoading =
-    (albumIdsQuery.isLoading &&
-      entryIdsQuery.isLoading &&
-      bloomingAlbumIdsQuery.isLoading &&
-      bloomingEntryIdsQuery) ||
-    (albumDetailsQuery.isLoading &&
-      entryDetailsQuery.isLoading &&
-      bloomingAlbumDetailsQuery.isLoading &&
-      bloomingEntryDetailsQuery.isLoading);
+    (spotlightAlbumsQuery.isLoading &&
+      spotlightEntriesQuery.isLoading &&
+      bloomingAlbumsQuery.isLoading &&
+      bloomingEntriesQuery) ||
+    (spotlightAlbumsDataQuery.isLoading &&
+      spotlightEntriesDataQuery.isLoading &&
+      bloomingAlbumsDataQuery.isLoading &&
+      bloomingEntriesDataQuery.isLoading);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
-  console.log(
-    albumDetailsQuery.data,
-    entryDetailsQuery.data,
-    bloomingAlbumDetailsQuery.data,
-    bloomingEntryDetailsQuery.data
-  );
 
   return (
     <div
@@ -188,27 +183,27 @@ export default function Index() {
       </div>
       {activeState.button === "spotlight" &&
         activeState.subButtons.spotlight === "sound" &&
-        albumDetailsQuery.data.map((album: AlbumData, index: number) => (
+        spotlightAlbumsDataQuery.data.map((album: AlbumData, index: number) => (
           <SoundPreview key={album.id} album={album} index={index + 1} />
         ))}
 
       {activeState.button === "spotlight" &&
         activeState.subButtons.spotlight === "text" &&
-        entryDetailsQuery.data.map((entry: ReviewData, index: number) => (
-          <EntryPreview key={entry.id} entry={entry} index={index + 1} />
-        ))}
-
-      {activeState.button === "bloom" &&
-        activeState.subButtons.bloom === "sound" &&
-        bloomingAlbumDetailsQuery.data.map(
-          (album: AlbumData, index: number) => (
-            <SoundPreview key={album.id} album={album} index={index + 1} />
+        spotlightEntriesDataQuery.data.map(
+          (entry: ReviewData, index: number) => (
+            <EntryPreview key={entry.id} entry={entry} index={index + 1} />
           )
         )}
 
       {activeState.button === "bloom" &&
+        activeState.subButtons.bloom === "sound" &&
+        bloomingAlbumsDataQuery.data.map((album: AlbumData, index: number) => (
+          <SoundPreview key={album.id} album={album} index={index + 1} />
+        ))}
+
+      {activeState.button === "bloom" &&
         activeState.subButtons.bloom === "text" &&
-        bloomingEntryDetailsQuery.data.map(
+        bloomingEntriesDataQuery.data.map(
           (entry: ReviewData, index: number) => (
             <EntryPreview key={entry.id} entry={entry} index={index + 1} />
           )
