@@ -26,7 +26,7 @@ function calculateBloomingScore(album: AlbumDBData) {
   );
 }
 
-export async function updateBloomingScoreAlbum() {
+export async function updateBloomingAlbumScores() {
   const albums = await prisma.album.findMany();
 
   // Loop over each album and calculate the trending score

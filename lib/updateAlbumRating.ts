@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import client from "../lib/redis";
+import { prisma } from "./prisma";
+import client from "./redis";
 import { ReviewData } from "./interfaces";
 
 // Helper function to calculate the average rating from an array of reviews

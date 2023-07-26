@@ -12,7 +12,7 @@ export default async function handler(
     const start = (page - 1) * limit;
     const end = start + limit - 1;
 
-    const entryIds = await client.zrevrange("trendingEntries", start, end);
+    const entryIds = await client.zrevrange("spotlightEntries", start, end);
 
     res.status(200).json(entryIds);
   } else {

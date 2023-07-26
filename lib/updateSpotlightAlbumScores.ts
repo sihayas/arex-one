@@ -10,7 +10,7 @@ const weights = {
 };
 
 // Function to calculate the trending score
-function calculateTrendingScore(album: AlbumDBData) {
+function calculateSpotlightScore(album: AlbumDBData) {
   return (
     album.viewsCount * weights.views +
     album.lovedCount * weights.loves +
@@ -18,20 +18,20 @@ function calculateTrendingScore(album: AlbumDBData) {
   );
 }
 
-export async function updateTrendingScoreAlbum() {
+export async function updateSpotlightAlbumScores() {
   const albums = await prisma.album.findMany();
 
   // Loop over each album and calculate the trending score
   for (const album of albums) {
-    const trendingScore = calculateTrendingScore(album);
+    const trendingScore = calculateSpotlightScore(album);
 
     // Update the album with the new trending score in Redis
-    await client.zadd("trendingAlbums", trendingScore, album.id);
+    await client.zadd("spotlightAlbums", trendingScore, album.id);
 
     console.log(
-      `Updated album ${album.id} / ${album.name} with new trending score: ${trendingScore}`
+      `Updated album ${album.id} / ${album.name} with new spotlight score: ${trendingScore}`
     );
   }
 
-  console.log("Album trending scores updated successfully");
+  console.log("Album spotlight scores updated successfully");
 }

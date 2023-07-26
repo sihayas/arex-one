@@ -1,14 +1,16 @@
+import { updateSpotlightEntryScores } from "@/lib/updateSpotlightEntryScores";
 import { NextApiRequest, NextApiResponse } from "next";
-import { updateBloomingScoreEntry } from "@/lib/updateBloomingScoreEntry";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST" || req.method === "GET") {
     try {
-      await updateBloomingScoreEntry();
-      res.status(200).json({ message: "Successfully updated trending score." });
+      await updateSpotlightEntryScores();
+      res
+        .status(200)
+        .json({ message: "Successfully updated spotlight scores." });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Failed to update trending score." });
+      res.status(500).json({ message: "Failed to update spotlight scores." });
     }
   } else {
     res.status(405).json({ message: "Method not allowed." });

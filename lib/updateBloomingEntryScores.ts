@@ -30,7 +30,7 @@ function calculateBloomingScore(entry: ReviewData) {
   );
 }
 
-export async function updateBloomingScoreEntry() {
+export async function updateBloomingEntryScores() {
   const entries = await prisma.review.findMany();
 
   for (const entry of entries) {

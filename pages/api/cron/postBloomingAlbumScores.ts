@@ -1,10 +1,10 @@
-import { updateBloomingScoreAlbum } from "@/lib/updateBloomingScoreAlbum";
+import { updateBloomingAlbumScores } from "@/lib/updateBloomingAlbumScores";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST" || req.method === "GET") {
     try {
-      await updateBloomingScoreAlbum();
+      await updateBloomingAlbumScores();
       res.status(200).json({ message: "Successfully updated trending score." });
     } catch (error) {
       console.error(error);

@@ -9,11 +9,12 @@ import { SpotlightIcon, BloomIcon } from "@/components/icons";
 import Button from "./sound/Button";
 import { useState } from "react";
 import { EntryPreview } from "./entry/EntryPreview";
-export const useTrendingAlbumsDetails = (page: number) => {
+
+export const useSpotlightAlbumsDetails = (page: number) => {
   // Grab trending albums from redis
-  const albumIdsQuery = useQuery(["trendingAlbums", page], async () => {
+  const albumIdsQuery = useQuery(["spotlightAlbums", page], async () => {
     const { data } = await axios.get(
-      `/api/index/getTrendingAlbums?page=${page}`
+      `/api/index/getSpotlightAlbums?page=${page}`
     );
     return data;
   });
@@ -31,7 +32,7 @@ export const useTrendingAlbumsDetails = (page: number) => {
 };
 
 export const useBloomingAlbumsDetails = (page: number) => {
-  // Grab trending albums from redis
+  // Grab blooming albums from redis
   const bloomingAlbumIdsQuery = useQuery(["bloomingAlbums", page], async () => {
     const { data } = await axios.get(
       `/api/index/getBloomingAlbums?page=${page}`
@@ -51,11 +52,11 @@ export const useBloomingAlbumsDetails = (page: number) => {
   return { bloomingAlbumIdsQuery, bloomingAlbumDetailsQuery };
 };
 
-export const useTrendingEntryDetails = (page: number) => {
-  // Grab trending albums from redis
-  const entryIdsQuery = useQuery(["trendingEntries", page], async () => {
+export const useSpotlightEntriesDetails = (page: number) => {
+  // Grab trending entries from redis
+  const entryIdsQuery = useQuery(["spotlightEntries", page], async () => {
     const { data } = await axios.get(
-      `/api/index/getTrendingEntries?page=${page}`
+      `/api/index/getSpotlightEntries?page=${page}`
     );
     return data;
   });
@@ -78,7 +79,7 @@ export const useTrendingEntryDetails = (page: number) => {
 };
 
 export const useBloomingEntryDetails = (page: number) => {
-  // Grab trending albums from redis
+  // Grab blooming entries from redis
   const bloomingEntryIdsQuery = useQuery(
     ["bloomingEntries", page],
     async () => {
@@ -129,8 +130,8 @@ export default function Index() {
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
   // useEffect(saveScrollPosition, [pages, saveScrollPosition]);
 
-  const { albumIdsQuery, albumDetailsQuery } = useTrendingAlbumsDetails(1);
-  const { entryIdsQuery, entryDetailsQuery } = useTrendingEntryDetails(1);
+  const { albumIdsQuery, albumDetailsQuery } = useSpotlightAlbumsDetails(1);
+  const { entryIdsQuery, entryDetailsQuery } = useSpotlightEntriesDetails(1);
   const { bloomingAlbumIdsQuery, bloomingAlbumDetailsQuery } =
     useBloomingAlbumsDetails(1);
   const { bloomingEntryIdsQuery, bloomingEntryDetailsQuery } =
@@ -162,7 +163,7 @@ export default function Index() {
       ref={scrollContainerRef}
       className="flex flex-col bg-white w-full h-full rounded-[32px] border border-silver overflow-scroll items-end p-8 scrollbar-none"
     >
-      <div className="absolute right-8 top-8 flex flex-col gap-4">
+      <div className="absolute right-8 top-8 flex flex-col items-end gap-4">
         <Button
           IconComponent={SpotlightIcon}
           defaultText="SPOTLIGHT"

@@ -10,7 +10,7 @@ const weights = {
 };
 
 // Function to calculate the trending score
-function calculateTrendingScore(entry: ReviewData) {
+function calculateSpotlightScore(entry: ReviewData) {
   const likesCount = entry.likes ? entry.likes.length : 0; // corrected line
   const repliesCount = entry.replies ? entry.replies.length : 0; // corrected line
 
@@ -21,20 +21,20 @@ function calculateTrendingScore(entry: ReviewData) {
   );
 }
 
-export async function updateTrendingScoreEntry() {
+export async function updateSpotlightEntryScores() {
   const entries = await prisma.review.findMany();
 
   // Loop over each album and calculate the trending score
   for (const entry of entries) {
-    const trendingScore = calculateTrendingScore(entry);
+    const trendingScore = calculateSpotlightScore(entry);
 
     // Update the album with the new trending score in Redis
-    await client.zadd("trendingEntries", trendingScore, entry.id);
+    await client.zadd("spotlightEntries", trendingScore, entry.id);
 
     console.log(
-      `Updated album ${entry.id} /  with new trending score: ${trendingScore}`
+      `Updated album ${entry.id} /  with new spotlight score: ${trendingScore}`
     );
   }
 
-  console.log("Album trending scores updated successfully");
+  console.log("Entry spotlight scores updated successfully");
 }
