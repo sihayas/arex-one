@@ -81,9 +81,10 @@ export const EntryPreviewUser: React.FC<EntryPreviewUserProps> = ({
         >
           {review.content}
         </div>
-        <div className="absolute z-0 -left-5 -top-5">
-          <Stars rating={review.rating} />
-        </div>
+        <Stars
+          className={"absolute z-0 -left-5 -top-5 bg-white rounded-full"}
+          rating={review.rating}
+        />
 
         {/* Reply Count & Like Count */}
         <div className="absolute flex  gap-2 -right-3 -bottom-6 z-30">

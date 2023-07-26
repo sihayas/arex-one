@@ -43,12 +43,10 @@ const Button = ({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 rounded-full shadow-low pl-[6px] pr-2 py-1 w-fit"
+      className="flex items-center gap-2 rounded-full shadow-low pl-[6px] pr-2 py-1 w-fit bg-white"
     >
       {IconComponent && <IconComponent color={color} width={16} height={16} />}
-      {!isActive && (
-        <div className="font-bold text-xs text-gray3">{defaultText}</div>
-      )}
+      {!isActive && <div className="text-xs text-gray3">{defaultText}</div>}
       {isActive && (
         <div className="flex gap-2">
           <SubButton

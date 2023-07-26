@@ -49,9 +49,7 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
         >
           {review.content}
         </div>
-        <div className="absolute -left-3 -top-3">
-          <Stars rating={review.rating} />
-        </div>
+        <Stars className={"absolute -left-3 -top-3"} rating={review.rating} />
 
         {/* Reply Count & Like Count */}
         <div className="absolute flex  gap-2 -right-3 -bottom-6">

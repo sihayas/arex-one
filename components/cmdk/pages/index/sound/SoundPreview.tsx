@@ -17,20 +17,7 @@ export const SoundPreview = ({
   const imageRef = useRef(null); // Allows clicking art
 
   return (
-    <div className="w-fit flex gap-8">
-      {/* Names  */}
-      <div className="flex flex-col justify-end items-end gap-2 mb-8">
-        {/* Number  */}
-        <div className="text-2xl text-gray3 mb-80">{index}</div>
-        {/* Ratings Count */}
-        <div className="flex items-center px-2 py-[2px] shadow-rating rounded-full mb-2 border border-silver max-w-fit">
-          <div className="text-xs text-black">
-            4.2 / <span className="text-gray2 text-[10px]">10k</span>
-          </div>
-        </div>
-        <div className="text-black text-sm">{album.attributes.name}</div>
-        <div className="text-gray2 text-xs">{album.attributes.artistName}</div>
-      </div>
+    <div className="w-full flex gap-8 pb-8">
       {/* Artwork  */}
       <Image
         ref={imageRef}
@@ -46,6 +33,19 @@ export const SoundPreview = ({
           }
         }}
       />
+      {/* Names  */}
+      <div className="flex flex-col justify-end gap-2 mb-8">
+        {/* Rank  */}
+        <div className="text-2xl text-gray3 mb-80">{index}</div>
+        {/* Ratings Count */}
+        <div className="flex items-center px-2 py-[2px] shadow-rating rounded-full mb-2 border border-silver max-w-fit">
+          <div className="text-xs text-black">
+            4.2 / <span className="text-gray2 text-[10px]">10k</span>
+          </div>
+        </div>
+        <div className="text-black text-sm">{album.attributes.name}</div>
+        <div className="text-gray2 text-xs">{album.attributes.artistName}</div>
+      </div>
     </div>
   );
 };

@@ -109,7 +109,7 @@ export const useBloomingEntryDetails = (page: number) => {
 export default function Index() {
   const { pages } = useCMDK();
   const [activeState, setActiveState] = useState({
-    button: "",
+    button: "spotlight",
     subButtons: { spotlight: "sound", bloom: "sound" },
   });
 
@@ -160,9 +160,9 @@ export default function Index() {
   return (
     <div
       ref={scrollContainerRef}
-      className="flex flex-col bg-white w-full h-full rounded-[32px] border border-silver overflow-scroll items-end p-8 scrollbar-none gap-4"
+      className="flex flex-col bg-white w-full h-full rounded-[32px] border border-silver overflow-scroll items-end p-8 scrollbar-none"
     >
-      <div className="absolute left-8 top-8 flex flex-col gap-4">
+      <div className="absolute right-8 top-8 flex flex-col gap-4">
         <Button
           IconComponent={SpotlightIcon}
           defaultText="SPOTLIGHT"
@@ -196,22 +196,22 @@ export default function Index() {
         entryDetailsQuery.data.map((entry: ReviewData, index: number) => (
           <EntryPreview key={entry.id} entry={entry} index={index + 1} />
         ))}
-      {/* 
+
       {activeState.button === "bloom" &&
         activeState.subButtons.bloom === "sound" &&
         bloomingAlbumDetailsQuery.data.map(
           (album: AlbumData, index: number) => (
             <SoundPreview key={album.id} album={album} index={index + 1} />
           )
-        )} */}
+        )}
 
-      {/* {activeState.button === "bloom" &&
-        activeState.subButtons.bloom === "entry" &&
+      {activeState.button === "bloom" &&
+        activeState.subButtons.bloom === "text" &&
         bloomingEntryDetailsQuery.data.map(
-          (entry: EntryData, index: number) => (
+          (entry: ReviewData, index: number) => (
             <EntryPreview key={entry.id} entry={entry} index={index + 1} />
           )
-        )} */}
+        )}
     </div>
   );
 }

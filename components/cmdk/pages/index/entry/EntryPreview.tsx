@@ -14,7 +14,7 @@ const fetchArtworkUrl = async (albumId: string | undefined) => {
   const albumData = await getAlbumById(albumId);
   const artworkUrl = generateArtworkUrl(
     albumData.attributes.artwork.url,
-    "632"
+    "672"
   );
 
   return artworkUrl;
@@ -34,31 +34,38 @@ export const EntryPreview = ({
   );
 
   return (
-    <div className="w-full flex items-start gap-5 pb-8">
-      <Image
-        className="rounded-2xl shadow-medium"
-        src={artworkUrl || "/images/placeholder.png"}
-        alt={`${entry.album.name} artwork`}
-        width={316} // Set this to a low value
-        height={316} // Set this to the same low value
-        onDragStart={(e) => e.preventDefault()}
-      />
+    <div className="w-full flex items-start pb-8">
+      <div className="relative">
+        <Image
+          className="rounded-2xl shadow-medium"
+          src={artworkUrl || "/images/placeholder.png"}
+          alt={`${entry.album.name} artwork`}
+          width={336} // Set this to a low value
+          height={336} // Set this to the same low value
+          onDragStart={(e) => e.preventDefault()}
+        />
+
+        <Stars
+          className={
+            "absolute -bottom-4 -right-4 p-2 bg-white border border-silver rounded-full shadow-rating"
+          }
+          rating={entry.rating}
+          color="#000"
+        />
+      </div>
 
       {/* Entry Data  */}
       {/* MT 17.5 to align with image */}
-      <div className="flex flex-col justify-end gap-1 mt-[16.5rem]">
-        <div className="text-gray1 text-xs font-medium">{entry.album.name}</div>
-        <div className="text-gray1 text-xs pb-[26px]">{entry.album.artist}</div>
+      <div className="flex flex-col justify-end gap-1 mt-[17.375rem]">
+        <div className="pl-4 text-gray2 text-xs font-medium">
+          {entry.album.name}
+        </div>
+        <div className="pl-4 text-gray2 text-xs pb-4">{entry.album.artist}</div>
         {/* Entry Text  */}
-        <div className="relative">
-          <div
-            className={`w-[484px] text-[13px] leading-normal px-4 py-2 text-black border border-silver rounded-2xl rounded-bl-[4px] break-words line-clamp-6`}
-          >
-            {entry.content}
-          </div>
-          <div className="absolute z-0 -left-[26px] -top-[26px]">
-            <Stars rating={entry.rating} />
-          </div>
+        <div
+          className={`w-[484px] text-[13px] leading-normal px-4 py-2 text-black border border-silver rounded-2xl rounded-bl-[4px] break-words line-clamp-6`}
+        >
+          {entry.content}
         </div>
         {/* Attribution */}
         <div className="flex items-center gap-2">
