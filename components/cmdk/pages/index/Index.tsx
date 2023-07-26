@@ -1,46 +1,115 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { getAlbumsByIds } from "@/lib/musicKit";
-import { AlbumData } from "@/lib/interfaces";
+import { AlbumData, ReviewData } from "@/lib/interfaces";
 import { SoundPreview } from "./sound/SoundPreview";
 import { useCMDK } from "@/context/CMDKContext";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { SpotlightIcon, BloomIcon } from "@/components/icons";
 import Button from "./sound/Button";
 import { useState } from "react";
-
-type TransformFn = (data: any[]) => any;
-
-const useData = (
-  keyPrefix: string,
-  endpoint: string,
-  page: number,
-  transformFn: TransformFn
-) => {
-  // Grab data from server
-  const idsQuery = useQuery([`${keyPrefix}Ids`, page], async () => {
-    const { data } = await axios.get(`/api/index/${endpoint}?page=${page}`);
+import { EntryPreview } from "./entry/EntryPreview";
+export const useTrendingAlbumsDetails = (page: number) => {
+  // Grab trending albums from redis
+  const albumIdsQuery = useQuery(["trendingAlbums", page], async () => {
+    const { data } = await axios.get(
+      `/api/index/getTrendingAlbums?page=${page}`
+    );
     return data;
   });
 
-  // Pull detailed data based on IDs
-  const detailsQuery = useQuery(
-    [`${keyPrefix}Details`, idsQuery.data || []],
-    () => transformFn(idsQuery.data || []),
+  // Pull album data from Apple
+  const albumDetailsQuery = useQuery(
+    ["albumDetails", albumIdsQuery.data || []],
+    () => getAlbumsByIds(albumIdsQuery.data || []),
     {
-      enabled: !!idsQuery.data?.length,
+      enabled: !!albumIdsQuery.data?.length, // Only run the query if 'albumIds' is not an empty array
     }
   );
 
-  return { idsQuery, detailsQuery };
+  return { albumIdsQuery, albumDetailsQuery };
+};
+
+export const useBloomingAlbumsDetails = (page: number) => {
+  // Grab trending albums from redis
+  const bloomingAlbumIdsQuery = useQuery(["bloomingAlbums", page], async () => {
+    const { data } = await axios.get(
+      `/api/index/getBloomingAlbums?page=${page}`
+    );
+    return data;
+  });
+
+  // Pull album data from Apple
+  const bloomingAlbumDetailsQuery = useQuery(
+    ["albumDetails", bloomingAlbumIdsQuery.data || []],
+    () => getAlbumsByIds(bloomingAlbumIdsQuery.data || []),
+    {
+      enabled: !!bloomingAlbumIdsQuery.data?.length, // Only run the query if 'albumIds' is not an empty array
+    }
+  );
+
+  return { bloomingAlbumIdsQuery, bloomingAlbumDetailsQuery };
+};
+
+export const useTrendingEntryDetails = (page: number) => {
+  // Grab trending albums from redis
+  const entryIdsQuery = useQuery(["trendingEntries", page], async () => {
+    const { data } = await axios.get(
+      `/api/index/getTrendingEntries?page=${page}`
+    );
+    return data;
+  });
+
+  // Pull review data from DB with ID
+  const entryDetailsQuery = useQuery(
+    ["entryDetails", entryIdsQuery.data || []],
+    async () => {
+      const { data } = await axios.post("/api/review/getByIds", {
+        ids: entryIdsQuery.data,
+      });
+      return data;
+    },
+    {
+      enabled: !!entryIdsQuery.data?.length, // Only run the query if 'entryId's' is not an empty array
+    }
+  );
+
+  return { entryDetailsQuery, entryIdsQuery };
+};
+
+export const useBloomingEntryDetails = (page: number) => {
+  // Grab trending albums from redis
+  const bloomingEntryIdsQuery = useQuery(
+    ["bloomingEntries", page],
+    async () => {
+      const { data } = await axios.get(
+        `/api/index/getBloomingEntries?page=${page}`
+      );
+      return data;
+    }
+  );
+
+  // Pull review data from DB with ID
+  const bloomingEntryDetailsQuery = useQuery(
+    ["entryDetails", bloomingEntryIdsQuery.data || []],
+    async () => {
+      const { data } = await axios.post("/api/review/getByIds", {
+        ids: bloomingEntryIdsQuery.data,
+      });
+      return data;
+    },
+    {
+      enabled: !!bloomingEntryIdsQuery.data?.length, // Only run the query if 'entryId's' is not an empty array
+    }
+  );
+
+  return { bloomingEntryIdsQuery, bloomingEntryDetailsQuery };
 };
 
 export default function Index() {
   const { pages } = useCMDK();
-
-  // Button state handlers
   const [activeState, setActiveState] = useState({
-    button: "spotlight",
+    button: "",
     subButtons: { spotlight: "sound", bloom: "sound" },
   });
 
@@ -60,61 +129,33 @@ export default function Index() {
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
   // useEffect(saveScrollPosition, [pages, saveScrollPosition]);
 
-  const {
-    idsQuery: trendingAlbumIdsQuery,
-    detailsQuery: trendingAlbumDetailsQuery,
-  } = useData("trendingAlbums", "getTrendingAlbums", 1, getAlbumsByIds);
-
-  const {
-    idsQuery: trendingEntryIdsQuery,
-    detailsQuery: trendingEntryDetailsQuery,
-  } = useData("trendingEntries", "getTrendingEntries", 1, (ids: String[]) =>
-    axios.post("/api/review/getByIds", {
-      ids: ids,
-    })
-  );
-
-  const {
-    idsQuery: bloomingAlbumIdsQuery,
-    detailsQuery: bloomingAlbumDetailsQuery,
-  } = useData("bloomingAlbums", "getBloomingAlbums", 1, getAlbumsByIds);
-
-  const {
-    idsQuery: bloomingEntryIdsQuery,
-    detailsQuery: bloomingEntryDetailsQuery,
-  } = useData("bloomingEntries", "getBloomingEntries", 1, (ids: String[]) =>
-    axios.post("/api/review/getByIds", {
-      ids: ids,
-    })
-  );
+  const { albumIdsQuery, albumDetailsQuery } = useTrendingAlbumsDetails(1);
+  const { entryIdsQuery, entryDetailsQuery } = useTrendingEntryDetails(1);
+  const { bloomingAlbumIdsQuery, bloomingAlbumDetailsQuery } =
+    useBloomingAlbumsDetails(1);
+  const { bloomingEntryIdsQuery, bloomingEntryDetailsQuery } =
+    useBloomingEntryDetails(1);
 
   const isLoading =
-    trendingAlbumIdsQuery.isLoading ||
-    trendingEntryIdsQuery.isLoading ||
-    bloomingAlbumIdsQuery.isLoading ||
-    bloomingEntryIdsQuery.isLoading ||
-    trendingAlbumDetailsQuery.isLoading ||
-    trendingEntryDetailsQuery.isLoading ||
-    bloomingAlbumDetailsQuery.isLoading ||
-    bloomingEntryDetailsQuery.isLoading;
-
-  const isError =
-    trendingAlbumIdsQuery.isError ||
-    trendingAlbumIdsQuery.isError ||
-    bloomingAlbumIdsQuery.isError ||
-    bloomingEntryIdsQuery.isError ||
-    trendingAlbumDetailsQuery.isError ||
-    trendingEntryDetailsQuery.isError ||
-    bloomingAlbumDetailsQuery.isError ||
-    bloomingEntryDetailsQuery.isError;
+    (albumIdsQuery.isLoading &&
+      entryIdsQuery.isLoading &&
+      bloomingAlbumIdsQuery.isLoading &&
+      bloomingEntryIdsQuery) ||
+    (albumDetailsQuery.isLoading &&
+      entryDetailsQuery.isLoading &&
+      bloomingAlbumDetailsQuery.isLoading &&
+      bloomingEntryDetailsQuery.isLoading);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (isError) {
-    return <div>Something went wrong: </div>;
-  }
+  console.log(
+    albumDetailsQuery.data,
+    entryDetailsQuery.data,
+    bloomingAlbumDetailsQuery.data,
+    bloomingEntryDetailsQuery.data
+  );
 
   return (
     <div
@@ -144,26 +185,33 @@ export default function Index() {
           onSubButtonClick={(subButton) => setButtonState("bloom", subButton)}
         />
       </div>
-
       {activeState.button === "spotlight" &&
         activeState.subButtons.spotlight === "sound" &&
-        trendingAlbumDetailsQuery.data.map(
-          (album: AlbumData, index: number) => (
-            <SoundPreview key={album.id} album={album} index={index + 1} />
-          )
-        )}
+        albumDetailsQuery.data.map((album: AlbumData, index: number) => (
+          <SoundPreview key={album.id} album={album} index={index + 1} />
+        ))}
 
       {activeState.button === "spotlight" &&
         activeState.subButtons.spotlight === "text" &&
-        trendingEntryDetailsQuery.data.map(/* ... */)}
-
+        entryDetailsQuery.data.map((entry: ReviewData, index: number) => (
+          <EntryPreview key={entry.id} entry={entry} index={index + 1} />
+        ))}
+      {/* 
       {activeState.button === "bloom" &&
         activeState.subButtons.bloom === "sound" &&
-        bloomingAlbumDetailsQuery.data.map(/* ... */)}
+        bloomingAlbumDetailsQuery.data.map(
+          (album: AlbumData, index: number) => (
+            <SoundPreview key={album.id} album={album} index={index + 1} />
+          )
+        )} */}
 
-      {activeState.button === "bloom" &&
-        activeState.subButtons.bloom === "text" &&
-        bloomingEntryDetailsQuery.data.map(/* ... */)}
+      {/* {activeState.button === "bloom" &&
+        activeState.subButtons.bloom === "entry" &&
+        bloomingEntryDetailsQuery.data.map(
+          (entry: EntryData, index: number) => (
+            <EntryPreview key={entry.id} entry={entry} index={index + 1} />
+          )
+        )} */}
     </div>
   );
 }

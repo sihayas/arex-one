@@ -8,9 +8,10 @@ import {
 
 interface StarsProps {
   rating: number;
+  className?: string;
 }
 
-export const Stars: React.FC<StarsProps> = ({ rating }) => {
+export const Stars: React.FC<StarsProps> = ({ rating, className }) => {
   const getStarIcon = (rating: number) => {
     const color = Math.floor(rating) === rating ? "black" : "#808080"; // if rating is fractional, color is 50% black (#808080)
 
@@ -29,7 +30,7 @@ export const Stars: React.FC<StarsProps> = ({ rating }) => {
   };
 
   return (
-    <div className="flex items-center p-1 border border-silver bg-white rounded-full shadow-stars">
+    <div className="flex items-center p-2 border border-silver bg-white rounded-full shadow-stars">
       {getStarIcon(rating)}
     </div>
   );

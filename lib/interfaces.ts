@@ -95,6 +95,7 @@ export interface ReplyData {
 }
 
 export interface ReviewData {
+  album: AlbumDBData;
   albumId: string;
   author: {
     id: string;
