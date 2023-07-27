@@ -112,6 +112,7 @@ export const Entry = () => {
           height={220} // Set this to the same low value
           onDragStart={(e) => e.preventDefault()}
           style={{ boxShadow: boxShadow }}
+          draggable="false"
         />
       </div>
 

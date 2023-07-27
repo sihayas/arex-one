@@ -92,7 +92,7 @@ export const ReplyInput = () => {
         disabled={!replyContent}
         className={`transition-opacity duration-300 ease-in-out ${
           replyContent
-            ? "opacity-100 cursor-pointer"
+            ? "opacity-100 "
             : "opacity-0 cursor-default"
         }`}
       >

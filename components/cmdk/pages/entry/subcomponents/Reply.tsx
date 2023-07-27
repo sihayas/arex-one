@@ -166,7 +166,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
           {/* Content & Like Button  */}
           <div
             onClick={handleLoadReplies}
-            className={`px-4 py-2 w-[450px] bg-white text-black text-[13px] leading-normal border border-silver rounded-2xl rounded-bl-[4px] break-words cursor-pointer ${
+            className={`px-4 py-2 w-[450px] bg-white text-black text-[13px] leading-normal border border-silver rounded-2xl rounded-bl-[4px] break-words  ${
               !isChild ? "mt-6" : ""
             } `}
           >

@@ -34,6 +34,7 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId }) => {
         alt="album artwork"
         width={498}
         height={498}
+        draggable="false"
       />
     </div>
   );

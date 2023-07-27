@@ -43,6 +43,7 @@ export const EntryPreview = ({
           width={336} // Set this to a low value
           height={336} // Set this to the same low value
           onDragStart={(e) => e.preventDefault()}
+          draggable="false"
         />
 
         <Stars
@@ -78,7 +79,7 @@ export const EntryPreview = ({
           />
           {/* Name  */}
           <div
-            className={`font-medium text-[13px] leading-normal text-black cursor-pointer transition-all duration-300 hover:text-[#000]`}
+            className={`font-medium text-[13px] leading-normal text-black  transition-all duration-300 hover:text-[#000]`}
           >
             {entry.author?.name}
           </div>

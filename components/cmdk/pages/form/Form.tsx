@@ -105,6 +105,7 @@ export default function Form() {
           alt={`${selectedAlbum?.attributes.name} artwork`}
           width={480}
           height={480}
+          draggable="false"
         />
         <div className="p-8 mt-4 flex flex-col gap-4 w-full">
           {/* Names */}

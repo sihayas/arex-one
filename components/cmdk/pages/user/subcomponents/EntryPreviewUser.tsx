@@ -72,12 +72,13 @@ export const EntryPreviewUser: React.FC<EntryPreviewUserProps> = ({
         style={{
           boxShadow: `0px 0px 0px 0px ${dominantColor}, 0.15), 0px 2px 4px 0px ${dominantColor}, 0.15), 0px 7px 7px 0px ${dominantColor}, 0.13), 0px 16px 10px 0px ${dominantColor}, 0.07), 0px 29px 12px 0px ${dominantColor}, 0.02), 0px 45px 13px 0px ${dominantColor}, 0.00)`,
         }}
+        draggable="false"
       />
       {/* Review Content  */}
       <div className="flex relative">
         <div
           onClick={handleEntryClick}
-          className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black shadow-entry border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible cursor-pointer transition-all duration-300 hover:scale-[102%] z-20`}
+          className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black shadow-entry border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible  transition-all duration-300 hover:scale-[102%] z-20`}
         >
           {review.content}
         </div>

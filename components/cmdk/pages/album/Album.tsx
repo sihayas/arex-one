@@ -165,6 +165,7 @@ export default function Album() {
             width={864}
             height={864}
             onDragStart={(e) => e.preventDefault()}
+            draggable="false"
           />
           {/* Album Information  */}
           <div className="absolute left-8 bottom-8 flex flex-col gap-1 text-white tracking-tight">

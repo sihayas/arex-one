@@ -45,6 +45,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
                 alt={`${album.attributes.name} artwork`}
                 width={80}
                 height={80}
+                draggable="false"
               />
 
               {/* <Rating color={shadowColors[album.id]} rating={averageRating} /> */}

@@ -21,11 +21,12 @@ export const SoundPreview = ({
       {/* Artwork  */}
       <Image
         ref={imageRef}
-        className="shadow-medium rounded-[16px] cursor"
+        className="shadow-medium rounded-[16px] hoverable-medium"
         src={artworkUrl}
         width={512}
         height={512}
         alt="alt"
+        draggable="false"
         onDragStart={(e) => e.preventDefault()}
         onClick={() => {
           if (imageRef.current) {
