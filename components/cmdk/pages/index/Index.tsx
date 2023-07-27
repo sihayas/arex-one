@@ -11,7 +11,7 @@ import { useState } from "react";
 import { EntryPreview } from "./entry/EntryPreview";
 
 export const useFetchSpotlightAlbums = (page: number) => {
-  // Grab trending albums from redis
+  // Grab spotlight albums from redis
   const spotlightAlbumsQuery = useQuery(["spotlightAlbums", page], async () => {
     const { data } = await axios.get(
       `/api/index/getSpotlightAlbums?page=${page}`
@@ -32,7 +32,7 @@ export const useFetchSpotlightAlbums = (page: number) => {
 };
 
 export const useFetchSpotlightEntries = (page: number) => {
-  // Grab trending entries from redis
+  // Grab spotlight entries from redis
   const spotlightEntriesQuery = useQuery(
     ["spotlightEntries", page],
     async () => {
