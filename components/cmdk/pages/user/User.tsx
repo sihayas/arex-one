@@ -8,15 +8,60 @@ import { EntryPreviewUser } from "./subcomponents/EntryPreviewUser";
 import { useState } from "react";
 import { ReviewData } from "@/lib/interfaces";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 
 const User = () => {
   const { pages } = useCMDK();
+  const { data: session } = useSession();
+  const signedInUserId = session?.user.id;
+
   const userId = pages[pages.length - 1].user;
 
   const [activeTab, setActiveTab] = useState("favorites");
+  const [following, setFollowing] = useState<boolean | null>(null);
+  const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
+
+  // Get follow status
+  const { data: isFollowing } = useQuery(
+    ["isFollowing", signedInUserId, userId],
+    async () => {
+      const url = `/api/user/isFollowing?signedInUserId=${signedInUserId}&userId=${userId}`;
+      const response = await axios.get(url);
+      return response.data;
+    },
+    {
+      enabled: !!userId && !!signedInUserId,
+      onSuccess: (data) => {
+        setFollowing(data.isFollowing);
+        // console.log(data.isFollowing);
+      },
+    }
+  );
 
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
+  };
+
+  // Function to handle follow/unfollow
+  const handleFollow = async () => {
+    setLoadingFollow(true);
+    try {
+      if (following) {
+        await axios.delete(
+          `/api/user/unfollow?followerId=${signedInUserId}&followingId=${userId}`
+        );
+        setFollowing(false);
+      } else {
+        await axios.post(`/api/user/follow`, {
+          followerId: signedInUserId,
+          followingId: userId,
+        });
+        setFollowing(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setLoadingFollow(false);
   };
 
   // Animate tabs
@@ -71,7 +116,7 @@ const User = () => {
       {/* Header  */}
       <div className="flex flex-col items-center gap-2 p-8 pb-4">
         <Image
-          className="border-8 shadow-medium rounded-full"
+          className="border-2 shadow-medium rounded-full"
           src={user.image}
           alt={`${user.name}'s avatar`}
           width={307}
@@ -88,27 +133,34 @@ const User = () => {
         </div>
       </div>
       {/* Button Navigation  */}
-      <div className="flex gap-4 w-full mb-4 items-center justify-center">
+      <div className="flex gap-4 w-full mb-4 items-center justify-center pb-2">
         <button
-          className={`transform transition-transform duration-200 hover:scale-125`}
+          className={`hover:invert transition-all duration-300 hoverable-small`}
           onClick={() => handleTabClick("favorites")}
         >
           <FavoritesIcon
-            width={28}
-            height={28}
-            color={activeTab === "favorites" ? "#333" : "#ccc"}
+            width={32}
+            height={32}
+            color={activeTab === "favorites" ? "#000" : "#ccc"}
           />
         </button>
         <button
-          className={`transform transition-transform duration-200 hover:scale-125`}
+          className={`hover:invert transition-all duration-300 hoverable-small`}
           onClick={() => handleTabClick("history")}
         >
           <HistoryIcon
-            width={28}
-            height={28}
-            color={activeTab === "history" ? "#333" : "#ccc"}
+            width={32}
+            height={32}
+            color={activeTab === "history" ? "#000" : "#ccc"}
           />
         </button>
+        {following === null || loadingFollow ? (
+          <button disabled>Loading...</button>
+        ) : (
+          <button onClick={handleFollow}>
+            {following ? "Unfollow" : "Follow"}
+          </button>
+        )}
       </div>
 
       {/* Content  */}

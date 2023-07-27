@@ -14,11 +14,6 @@ export default async function handle(
           id: String(id),
         },
         include: {
-          likes: {
-            include: {
-              album: true,
-            },
-          },
           reviews: {
             include: {
               album: true,
@@ -28,7 +23,6 @@ export default async function handle(
           },
           replies: {
             include: {
-              parent: true,
               likes: true,
             },
           },

@@ -78,7 +78,7 @@ export const EntryPreviewUser: React.FC<EntryPreviewUserProps> = ({
       <div className="flex relative">
         <div
           onClick={handleEntryClick}
-          className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black shadow-entry border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible  transition-all duration-300 hover:scale-[102%] z-20`}
+          className={`w-full text-[13px] px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words hoverable-medium`}
         >
           {review.content}
         </div>

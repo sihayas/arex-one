@@ -26,7 +26,7 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
         );
         return (
           <Command.Item
-            className="w-full p-2"
+            className="w-full p-2 hoverable-medium"
             key={album.id}
             onSelect={() =>
               handleSelectAlbum(

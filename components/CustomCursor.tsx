@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { throttle } from "lodash";
 
-const springConfig = { tension: 500, friction: 40 };
+const springConfig = { tension: 500, friction: 70 };
 
 function CustomCursor() {
   const [coords, setCoords] = useState({ x: 0, y: 0 });

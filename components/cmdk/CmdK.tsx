@@ -22,7 +22,7 @@ import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
 type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
-  index: { width: 884, height: 576 },
+  index: { width: 1022, height: 576 }, //884
   album: { width: 864, height: 864 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
@@ -226,7 +226,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           <div className={`flex flex-col w-[96%]`}>
             {/* Search bar */}
             <div
-              className={`w-[96%] absolute items-center flex p-4 gap-4 text-black transition-transform duration-300 scale-100 ${
+              className={`w-[96%] absolute items-center flex p-4 gap-4 text-black transition-transform duration-300 scale-100 hoverable-small ${
                 hideSearch
                   ? `-translate-y-8 scale-95 hover:scale-[97%] z-0`
                   : "translate-y-4 z-20"

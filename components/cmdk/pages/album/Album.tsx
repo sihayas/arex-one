@@ -158,7 +158,6 @@ export default function Album() {
             style={{
               borderRadius: scale.to((value) => `${32 + (1 - value) * 16}px`),
               boxShadow: boxShadow,
-              // border: "1px solid rgba(0,0,0,0.1)",
             }}
             src={selectedAlbum.artworkUrl}
             alt={`${selectedAlbum.attributes.name} artwork`}
@@ -177,7 +176,7 @@ export default function Album() {
                 setPages((prevPages) => [...prevPages, { name: "form" }]);
                 bounce();
               }}
-              className="font-bold text-3xl transition-all duration-300 hover:scale-105"
+              className="font-bold text-3xl transition-all duration-300 hover:scale-105 hoverable-medium"
             >
               + {selectedAlbum.attributes.name}
             </button>
