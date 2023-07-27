@@ -10,7 +10,7 @@ import { AlbumDetailsProvider } from "../context/CMDKAlbum";
 import { Toaster } from "sonner";
 import { CMDKProvider } from "../context/CMDKContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
+import CustomCursor from "@/components/CustomCursor";
 const App = ({ Component, pageProps }: AppProps) => {
   const [queryClient] = useState(() => new QueryClient());
 
@@ -24,6 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         <CMDKProvider>
           <AlbumDetailsProvider>
             <ThreadcrumbProvider>
+              <CustomCursor />
               <Component {...pageProps} />
             </ThreadcrumbProvider>
           </AlbumDetailsProvider>
