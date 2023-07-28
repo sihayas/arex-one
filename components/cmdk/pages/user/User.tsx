@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useCMDK } from "@/context/CMDKContext";
 import Favorites from "./subcomponents/Favorites";
 import Image from "next/image";
@@ -9,6 +8,30 @@ import { useState } from "react";
 import { ReviewData } from "@/lib/interfaces";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import {
+  follow,
+  unfollow,
+  getUserById,
+  isUserFollowing,
+} from "@/lib/api/userAPI";
+
+const TAB_ANIMATION_VARIANTS = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+    transition: { duration: 0.8, ease: [0.6, -0.05, 0.01, 0.99] },
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.6, -0.05, 0.01, 0.99] },
+  },
+  exit: {
+    opacity: 0,
+    y: 50,
+    transition: { duration: 0.8, ease: [0.6, -0.05, 0.01, 0.99] },
+  },
+};
 
 const User = () => {
   const { pages } = useCMDK();
@@ -21,69 +44,49 @@ const User = () => {
   const [following, setFollowing] = useState<boolean | null>(null);
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
 
-  // Get follow status
-  const { data: isFollowing } = useQuery(
-    ["isFollowing", signedInUserId, userId],
-    async () => {
-      const url = `/api/user/isFollowing?signedInUserId=${signedInUserId}&userId=${userId}`;
-      const response = await axios.get(url);
-      return response.data;
-    },
-    {
-      enabled: !!userId && !!signedInUserId,
-      onSuccess: (data) => {
-        setFollowing(data.isFollowing);
-        // console.log(data.isFollowing);
-      },
-    }
-  );
-
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
   };
 
+  const { data: isFollowing, refetch: refetchIsFollowing } = useQuery(
+    ["isFollowing", signedInUserId, userId],
+    () =>
+      signedInUserId && userId ? isUserFollowing(signedInUserId, userId) : null,
+    {
+      enabled: !!userId && !!signedInUserId,
+      onSuccess: (data) => {
+        if (data !== null) {
+          setFollowing(data.isFollowing);
+        }
+      },
+    }
+  );
+
   // Function to handle follow/unfollow
   const handleFollow = async () => {
+    if (!signedInUserId || !userId) {
+      console.log("User is not signed in or user to follow/unfollow not found");
+      return;
+    }
+
     setLoadingFollow(true);
     try {
       if (following) {
-        await axios.delete(
-          `/api/user/unfollow?followerId=${signedInUserId}&followingId=${userId}`
-        );
+        await unfollow(signedInUserId, userId);
         setFollowing(false);
       } else {
-        await axios.post(`/api/user/follow`, {
-          followerId: signedInUserId,
-          followingId: userId,
-        });
+        await follow(signedInUserId, userId);
         setFollowing(true);
       }
+      refetchIsFollowing();
     } catch (error) {
-      console.error(error);
+      console.error("Error following/unfollowing", error);
+    } finally {
+      setLoadingFollow(false);
     }
-    setLoadingFollow(false);
   };
 
-  // Animate tabs
-  const variants = {
-    hidden: {
-      opacity: 0,
-      y: 50,
-      transition: { duration: 0.8, ease: [0.6, -0.05, 0.01, 0.99] },
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: [0.6, -0.05, 0.01, 0.99] },
-    },
-    exit: {
-      opacity: 0,
-      y: 50,
-      transition: { duration: 0.8, ease: [0.6, -0.05, 0.01, 0.99] },
-    },
-  };
-
-  // Get user data
+  // Query to get user Data
   const {
     data: user,
     isLoading,
@@ -91,16 +94,16 @@ const User = () => {
     error,
   } = useQuery(
     ["user", userId],
-    async () => {
-      const url = `/api/user/getById?id=${userId}`;
-      const response = await axios.get(url);
-      return response.data;
+    () => {
+      if (!userId) {
+        throw new Error("userId must be defined");
+      }
+      return getUserById(userId);
     },
     {
       enabled: !!userId,
     }
   );
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -114,7 +117,7 @@ const User = () => {
   return (
     <div className="bg-white w-full h-full rounded-full relative flex flex-col items-center overflow-scroll scrollbar-none pb-48 pt-48 border border-silver">
       {/* Header  */}
-      <div className="flex flex-col items-center gap-2 p-8 pb-4">
+      <div className="flex flex-col items-center gap-4 p-8 pb-4">
         <Image
           className="border-2 shadow-medium rounded-full"
           src={user.image}
@@ -154,13 +157,14 @@ const User = () => {
             color={activeTab === "history" ? "#000" : "#ccc"}
           />
         </button>
-        {following === null || loadingFollow ? (
-          <button disabled>Loading...</button>
-        ) : (
-          <button onClick={handleFollow}>
-            {following ? "Unfollow" : "Follow"}
-          </button>
-        )}
+        {signedInUserId &&
+          (following === null || loadingFollow ? (
+            <button disabled>Loading...</button>
+          ) : (
+            <button onClick={handleFollow}>
+              {following ? "Unfollow" : "Follow"}
+            </button>
+          ))}
       </div>
 
       {/* Content  */}
@@ -169,7 +173,7 @@ const User = () => {
           initial="hidden"
           animate="visible"
           exit="exit"
-          variants={variants}
+          variants={TAB_ANIMATION_VARIANTS}
         >
           <Favorites favorites={user.profile.favorites} />
         </motion.div>
@@ -179,7 +183,7 @@ const User = () => {
           initial="hidden"
           animate="visible"
           exit="exit"
-          variants={variants}
+          variants={TAB_ANIMATION_VARIANTS}
         >
           {user.reviews.map((review: ReviewData, i: string) => (
             <EntryPreviewUser key={i} review={review} />
