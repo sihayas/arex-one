@@ -223,7 +223,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }}
         >
           {/* Search / Search Results*/}
-          <div className={`flex flex-col w-[96%]`}>
+          <div className={`flex flex-col w-full`}>
             {/* Search bar */}
             <div
               className={`w-[96%] absolute items-center flex p-4 gap-4 text-black transition-transform duration-300 scale-100 hoverable-small ${
