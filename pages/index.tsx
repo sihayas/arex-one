@@ -10,6 +10,8 @@ export default function Home() {
       <Head>
         <title>rx</title>
       </Head>
+
+      <div className="w-[576px] h-[1022px] border border-silver justify-self-center self-center rounded-[32px]"></div>
     </Layout>
   );
 }
