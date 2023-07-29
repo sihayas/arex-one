@@ -31,7 +31,6 @@ const SubButton = ({
 };
 
 const Button = ({
-  IconComponent,
   defaultText,
   activeText,
   isActive,

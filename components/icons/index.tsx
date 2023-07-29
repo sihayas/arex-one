@@ -266,40 +266,19 @@ export function ChainEndIcon({ ...props }) {
   );
 }
 
-export function SpotlightIcon({ ...props }) {
+export function FeedHeader({ ...props }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      viewBox="0 0 18 18"
-      {...props}
-    >
-      <g clipPath="url(#a)">
-        <path
-          fill={props.color}
-          d="M18 9a9 9 0 0 0-9-9 9 9 0 0 0-9 9 9 9 0 0 0 9 9 9 9 0 0 0 9-9Zm-9 4.7a4.7 4.7 0 1 1 0-9.4 4.7 4.7 0 0 1 0 9.4Z"
-        />
-      </g>
-      <defs>
-        <clipPath id="a">
-          <path fill="#fff" d="M0 0h18v18H0z" />
-        </clipPath>
-      </defs>
-    </svg>
-  );
-}
-
-export function BloomIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 18 18"
+      viewBox="0 0 360 70"
       {...props}
     >
       <path
         fill={props.color}
-        d="M11.6 7.6a7.8 7.8 0 0 0-1.2 4.9c1.7 0 3.2-.5 4.3-1.8 1.7-1.9 1.6-4.2 1.6-5.2-2.1-.2-3.8.9-4.7 2.1ZM7 4a7.6 7.6 0 0 0-5.3-2c0 2.2-.1 5.5 1.5 7.3 1 1.1 2 1.6 3.4 2.1V16h3.1v-3.5c0-6-1.1-7.2-2.7-8.6Z"
+        fillRule="evenodd"
+        d="M360 0H22v44.5a14 14 0 1 0 3.5 3.5H344a16 16 0 0 0 16-16V0Z"
+        clipRule="evenodd"
       />
     </svg>
   );

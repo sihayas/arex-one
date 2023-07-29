@@ -5,7 +5,6 @@ import { AlbumData, ReviewData } from "@/lib/interfaces";
 import { SoundPreview } from "./sound/SoundPreview";
 import { useCMDK } from "@/context/CMDKContext";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
-import { SpotlightIcon, BloomIcon } from "@/components/icons";
 import Button from "./sound/Button";
 import { useState } from "react";
 import { EntryPreview } from "./entry/EntryPreview";
@@ -160,7 +159,6 @@ export default function Index() {
     >
       <div className="absolute right-8 top-8 flex flex-col items-end gap-4">
         <Button
-          IconComponent={SpotlightIcon}
           defaultText="SPOTLIGHT"
           activeText={activeState.subButtons.spotlight}
           isActive={activeState.button === "spotlight"}
@@ -173,7 +171,6 @@ export default function Index() {
         />
 
         <Button
-          IconComponent={BloomIcon}
           defaultText="IN BLOOM"
           activeText={activeState.subButtons.bloom}
           isActive={activeState.button === "bloom"}
