@@ -44,24 +44,27 @@ export default async function handle(
                 },
               },
             },
-            {
-              follow: {
-                followerId: {
-                  in: followingIds,
-                },
-              },
-            },
+            // ... other conditions
           ],
         },
         orderBy: {
           createdAt: "desc",
         },
         include: {
-          like: true,
-          review: true,
-          follow: true,
+          like: {
+            include: {
+              author: true,
+            },
+          },
+          review: {
+            include: {
+              author: true,
+            },
+          },
+          follow: true, // You need to adjust this as well if `follow` has an `author` relation
         },
       });
+
       console.log("Activities:", activities);
       res.status(200).json(activities);
     } catch (error) {

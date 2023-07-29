@@ -266,13 +266,14 @@ export function ChainEndIcon({ ...props }) {
   );
 }
 
-export function FeedHeader({ ...props }) {
+export function FeedHeaderIcon({ ...props }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 360 70"
       {...props}
+      className={props.className}
     >
       <path
         fill={props.color}
