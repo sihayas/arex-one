@@ -28,13 +28,9 @@ export default async function handle(
           },
           accounts: true,
           sessions: true,
-          profile: {
+          favorites: {
             include: {
-              favorites: {
-                include: {
-                  album: true,
-                },
-              },
+              album: true,
             },
           },
         },

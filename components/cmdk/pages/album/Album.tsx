@@ -161,8 +161,8 @@ export default function Album() {
             }}
             src={selectedAlbum.artworkUrl}
             alt={`${selectedAlbum.attributes.name} artwork`}
-            width={864}
-            height={864}
+            width={768}
+            height={768}
             onDragStart={(e) => e.preventDefault()}
             draggable="false"
           />

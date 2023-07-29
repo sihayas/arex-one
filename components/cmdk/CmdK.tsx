@@ -23,7 +23,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 1022, height: 576 }, //884
-  album: { width: 864, height: 864 },
+  album: { width: 768, height: 768 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
   user: { width: 768, height: 768 },
@@ -223,7 +223,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }}
         >
           {/* Search / Search Results*/}
-          <div className={`flex flex-col w-full`}>
+          <div className={`flex flex-col w-[96%]`}>
             {/* Search bar */}
             <div
               className={`w-[96%] absolute items-center flex p-4 gap-4 text-black transition-transform duration-300 scale-100 hoverable-small ${

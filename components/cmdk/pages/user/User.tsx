@@ -129,9 +129,9 @@ const User = () => {
           <div className="text-sm font-semibold text-black">
             {user.name || "nameless"}
           </div>
-          <div className="text-[13px] text-gray2 mb-2">{user.username}</div>
+          <div className="text-[13px] text-gray2 mb-2">{user.name}</div>
           <div className="text-[13px] text-gray2">
-            &middot; {user.profile.bio} &middot;
+            &middot; {user.bio} &middot;
           </div>
         </div>
       </div>
@@ -168,17 +168,17 @@ const User = () => {
       </div>
 
       {/* Content  */}
-      {activeTab === "favorites" && user.profile.favorites && (
+      {/* {activeTab === "favorites" && user.favorites && (
         <motion.div
           initial="hidden"
           animate="visible"
           exit="exit"
           variants={TAB_ANIMATION_VARIANTS}
         >
-          <Favorites favorites={user.profile.favorites} />
+          <Favorites favorites={user.favorites} />
         </motion.div>
-      )}
-      {activeTab === "history" && user.reviews && (
+      )} */}
+      {/* {activeTab === "history" && user.reviews && (
         <motion.div
           initial="hidden"
           animate="visible"
@@ -189,7 +189,7 @@ const User = () => {
             <EntryPreviewUser key={i} review={review} />
           ))}
         </motion.div>
-      )}
+      )} */}
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
+import { createReviewActivity } from "@/lib/middleware/createActivity";
+import { createNotificationForFollowers } from "@/lib/middleware/createNotification";
 
 export default async function handle(
   req: NextApiRequest,
@@ -51,7 +53,7 @@ export default async function handle(
         data: { permalink: `review/${newReview.id}` },
       });
 
-      // If the review marked the album as loved, increment the album's lovedCount
+      // Increment the album's lovedCount
       if (loved) {
         await prisma.album.update({
           where: { id: albumId },
@@ -62,6 +64,14 @@ export default async function handle(
           where: { id: albumId },
           data: { lastUpdated: new Date() },
         });
+      }
+
+      // Feed the review into the activity and notification pipelines
+      try {
+        const activity = await createReviewActivity(newReview.id);
+        await createNotificationForFollowers(activity.id, authorId);
+      } catch (error) {
+        console.error("Failed to create activity:", error);
       }
 
       res.status(201).json(updatedReview);

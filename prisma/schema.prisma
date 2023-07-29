@@ -57,11 +57,12 @@ model User {
   id            String    @id @default(cuid())
   username      String?   @unique
   name          String?
+  bio           String?
   email         String    @unique
   image         String?
   emailVerified String?
   password      String?
-  profile       Profile?
+  favorites Favorite[]
   following     Follows[] @relation("following")
   followers     Follows[] @relation("follower")
   reviews       Review[]
@@ -84,25 +85,10 @@ model Follows {
 
   @@index([followerId])
   @@index([followingId])
+  @@unique([followerId, followingId])
 }
 
-//User Settings
-model Profile {
-  id        String   @id @default(cuid())
-  avatar    String?
-  bio       String?
-  location  String?
-  website   String?
-  pronoun   String?
-  gender   String?
-  sleeveSetting   Boolean  @default(true) //Enable custom art.
-  replySetting   Boolean  @default(true) //Enable or disable replies to posts.
-  favorites Favorite[]
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @unique //@Unique to make sure single user to each profile; 1-1 relation.
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-}
+
 
 
 //Review 
@@ -198,14 +184,14 @@ model Album {
 
 model Favorite {
   id        String  @id @default(cuid())
-  profile   Profile @relation(fields: [profileId], references: [id])
-  profileId String
+  user     User    @relation(fields: [userId], references: [id])
+  userId   String
   album     Album   @relation(fields: [albumId], references: [id])
   albumId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([profileId])
+  @@index([userId])
   @@index([albumId])
 }
 

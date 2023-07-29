@@ -162,4 +162,5 @@ export interface UserData {
   replies?: ReplyData[];
   reviews?: ReviewData[];
   username?: string;
+  bio?: string;
 }
