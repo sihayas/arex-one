@@ -4,14 +4,14 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-radius: 14px;
+  border-radius: 24px;
 }
 
 .cmdk [cmdk-root] {
   font-family: var(--font-sans);
   position: relative;
   align-items: center;
-  border-radius: 14px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease-in-out;

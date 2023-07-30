@@ -277,7 +277,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               y,
               scale,
             }}
-            className={`flex w-full h-full rounded-[14px] z-0 hoverable-large ${
+            className={`flex w-full h-full rounded-[24px] z-0 hoverable-large ${
               isVisible
                 ? `shadow-cmdkScaled ${
                     activePage.name === "user" ? "!rounded-full" : ""
