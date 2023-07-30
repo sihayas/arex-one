@@ -1,6 +1,6 @@
-import client from "./redis";
-import { prisma } from "./prisma";
-import { ReviewData } from "./interfaces";
+import client from "../redis";
+import { prisma } from "../prisma";
+import { ReviewData } from "../interfaces";
 
 // Weights for the trending score calculation
 const weights = {

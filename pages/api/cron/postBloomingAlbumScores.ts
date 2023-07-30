@@ -1,4 +1,4 @@
-import { updateBloomingAlbumScores } from "@/lib/updateBloomingAlbumScores";
+import { updateBloomingAlbumScores } from "@/lib/cron/updateBloomingAlbumScores";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

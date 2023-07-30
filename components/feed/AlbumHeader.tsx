@@ -1,41 +1,21 @@
 import Image from "next/image";
 import { FeedHeaderIcon } from "../icons";
 
-import { Stars, generateArtworkUrl } from "../cmdk/generics";
-import { useQuery } from "@tanstack/react-query";
-import { getAlbumById } from "@/lib/musicKit";
+import { Stars } from "../cmdk/generics";
+import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 
 interface AlbumHeaderProps {
   albumId: string;
   rating?: number;
 }
 
-const fetchArtworkUrl = async (albumId: string) => {
-  if (!albumId) {
-    console.log("fetchArtworkURl didnt get an albumId");
-    return null;
-  }
-
-  const albumData = await getAlbumById(albumId);
-  const artworkUrl = generateArtworkUrl(
-    albumData.attributes.artwork.url,
-    "676"
-  );
-
-  return { artworkUrl, albumData };
-};
-
 export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
   albumId,
   rating,
 }) => {
-  // fetch artwork
-  const { data: data, isLoading: isDataLoading } = useQuery(
-    ["albumArtworkUrl", albumId],
-    () => fetchArtworkUrl(albumId),
-    {
-      enabled: !!albumId,
-    }
+  const { artworkUrl, albumData, isLoading } = useFetchArtworkUrl(
+    albumId,
+    "676"
   );
 
   return (
@@ -43,7 +23,11 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
       {/* Art  */}
       <Image
         className="rounded-[16px] rounded-b-none translate-x-[22px]"
-        src={data?.artworkUrl || "/images/default.webp"}
+        src={
+          isLoading
+            ? "/images/loading.webp"
+            : artworkUrl || "/images/default.webp"
+        }
         alt={`artwork`}
         width={338} // Set this to a low value
         height={338} // Set this to the same low value
@@ -60,10 +44,10 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
 
         <div className="absolute flex flex-col bottom-[30px] left-[38px]">
           <div className="font-medium text-xs text-gray2">
-            {data?.albumData.attributes.name}
+            {albumData?.attributes.name}
           </div>
           <div className="text-xs text-gray3">
-            {data?.albumData.attributes.artistName}
+            {albumData?.attributes.artistName}
           </div>
         </div>
       </div>

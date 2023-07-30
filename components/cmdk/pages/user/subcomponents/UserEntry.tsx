@@ -1,34 +1,21 @@
 import React, { useState } from "react";
 import { ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
-import { LikeButton, generateArtworkUrl } from "../../../generics";
+import { LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { Stars } from "../../../generics";
-import { getAlbumById } from "@/lib/musicKit";
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useDominantColor } from "@/hooks/useDominantColor";
 import useHandleLikeClick from "@/hooks/useLike";
 import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
+import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 
-interface EntryPreviewUserProps {
+interface UserEntryProps {
   review: ReviewData;
 }
 
-const fetchArtworkUrl = async (albumId: string) => {
-  const albumData = await getAlbumById(albumId);
-  const artworkUrl = generateArtworkUrl(
-    albumData.attributes.artwork.url,
-    "480"
-  );
-
-  return artworkUrl;
-};
-
-export const EntryPreviewUser: React.FC<EntryPreviewUserProps> = ({
-  review,
-}) => {
+export const UserEntry: React.FC<UserEntryProps> = ({ review }) => {
   const [dominantColor, setDominantColor] = useState("");
   const { getDominantColor } = useDominantColor();
 
@@ -48,13 +35,10 @@ export const EntryPreviewUser: React.FC<EntryPreviewUserProps> = ({
 
   const handleEntryClick = useHandleEntryClick(review.id);
 
-  // If review album is different from selected album, fetch artwork
-  const { data: artworkUrl, isLoading: isArtworkLoading } = useQuery(
-    ["albumArtworkUrl", review?.albumId],
-    () => fetchArtworkUrl(review?.albumId),
-    {
-      enabled: !!review?.albumId && selectedAlbum?.id !== review?.albumId,
-    }
+  // Use useFetchArtworkUrl hook
+  const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
+    review?.albumId,
+    "480"
   );
 
   return (

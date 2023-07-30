@@ -1,9 +1,7 @@
-import axios from "axios";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { StarsIcon } from "../../../icons";
-import { AlbumData } from "@/lib/interfaces";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { useScroll } from "@use-gesture/react";
@@ -11,27 +9,7 @@ import { animated, useSpring } from "@react-spring/web";
 import { useSession } from "next-auth/react";
 import { EntryPreview } from "./subcomponents/EntryPreview";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
-
-async function initializeAlbum(album: AlbumData) {
-  const response = await axios.post(`/api/album/postAlbum`, album);
-  return response.data;
-}
-
-async function fetchReviews({
-  pageParam = 1,
-  queryKey,
-  sort = "rating_high_to_low",
-}: {
-  pageParam?: number;
-  queryKey: [string, string | undefined, string | undefined];
-  sort?: string;
-}) {
-  const [, albumId, userId] = queryKey;
-  const response = await axios.get(
-    `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}&userId=${userId}`
-  );
-  return response.data;
-}
+import { fetchReviews, initializeAlbum } from "@/lib/api/albumAPI";
 
 export default function Album() {
   // CMDK Context

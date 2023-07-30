@@ -9,19 +9,7 @@ import Slider from "./buttons/Slider";
 import { useSession } from "next-auth/react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { toast } from "sonner";
-
-// Fetch user review for the album and signed-in user
-const fetchUserReview = async (albumId: string, userId: string) => {
-  try {
-    const response = await axios.get(
-      `/api/review/formCheck?albumId=${albumId}&userId=${userId}`
-    );
-    return response.data.exists;
-  } catch (error) {
-    console.error("Error fetching user review:", error);
-    return false;
-  }
-};
+import { fetchUserReview } from "@/lib/api/formAPI";
 
 export default function Form() {
   const { data: session } = useSession();

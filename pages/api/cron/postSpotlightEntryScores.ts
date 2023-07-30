@@ -1,4 +1,4 @@
-import { updateSpotlightEntryScores } from "@/lib/updateSpotlightEntryScores";
+import { updateSpotlightEntryScores } from "@/lib/cron/updateSpotlightEntryScores";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

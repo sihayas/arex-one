@@ -1,18 +1,11 @@
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import Layout from "../components/layout";
 import Head from "next/head";
 import React from "react";
-import { FeedAlbum } from "@/components/home/FeedAlbum";
+import { FeedAlbum } from "@/components/feed/FeedAlbum";
 import NavBar from "@/components/nav/Nav";
-
-// This fetch function is used by react-query
-async function fetchFeed(userId) {
-  console.log("Fetching feed for UserId:", userId); // Add this line
-  const res = await axios.get(`/api/feed/getActivities?userId=${userId}`);
-  return res.data;
-}
+import { fetchFeed } from "@/lib/api/feedAPI";
 
 export default function Home() {
   const { data: session } = useSession();

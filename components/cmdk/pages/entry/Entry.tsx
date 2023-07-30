@@ -8,28 +8,12 @@ import { RenderReplies } from "./subcomponents/RenderReplies";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useQuery } from "@tanstack/react-query";
-import { getAlbumById } from "@/lib/musicKit";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { EntryPreview } from "../album/subcomponents/EntryPreview";
-
-const fetchArtworkUrl = async (albumId: string | undefined) => {
-  if (!albumId) {
-    console.log("fetchArtworkURl didnt get an albumId");
-    return null;
-  }
-
-  const albumData = await getAlbumById(albumId);
-  const artworkUrl = generateArtworkUrl(
-    albumData.attributes.artwork.url,
-    "440"
-  );
-
-  return artworkUrl;
-};
+import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 
 export const Entry = () => {
   const { data: session } = useSession();
-
   // Context
   const { selectedAlbum } = useCMDKAlbum();
   const { pages } = useCMDK();
@@ -86,12 +70,9 @@ export const Entry = () => {
   }, [review, setReplyParent]);
 
   // If review album is different from selected album, fetch artwork
-  const { data: artworkUrl, isLoading: isArtworkLoading } = useQuery(
-    ["albumArtworkUrl", review?.albumId],
-    () => fetchArtworkUrl(review?.albumId),
-    {
-      enabled: !!review?.albumId && selectedAlbum?.id !== review?.albumId,
-    }
+  const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
+    review?.albumId,
+    "440"
   );
 
   if (!review) return null;

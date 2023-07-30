@@ -3,7 +3,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import Favorites from "./subcomponents/Favorites";
 import Image from "next/image";
 import { FavoritesIcon, HistoryIcon } from "@/components/icons";
-import { EntryPreviewUser } from "./subcomponents/EntryPreviewUser";
+import { UserEntry } from "./subcomponents/UserEntry";
 import { useState } from "react";
 import { ReviewData } from "@/lib/interfaces";
 import { motion } from "framer-motion";
@@ -186,7 +186,7 @@ const User = () => {
           variants={TAB_ANIMATION_VARIANTS}
         >
           {user.reviews.map((review: ReviewData, i: string) => (
-            <EntryPreviewUser key={i} review={review} />
+            <UserEntry key={i} review={review} />
           ))}
         </motion.div>
       )} */}

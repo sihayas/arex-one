@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { updateBloomingEntryScores } from "@/lib/updateBloomingEntryScores";
+import { updateBloomingEntryScores } from "@/lib/cron/updateBloomingEntryScores";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST" || req.method === "GET") {

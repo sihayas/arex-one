@@ -1,6 +1,6 @@
-import client from "./redis";
-import { prisma } from "./prisma";
-import { AlbumDBData } from "./interfaces";
+import client from "../redis";
+import { prisma } from "../prisma";
+import { AlbumDBData } from "../interfaces";
 
 const weights = {
   views: 0.2,
