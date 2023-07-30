@@ -200,7 +200,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         className={`cmdk ${
           isVisible
             ? " pointer-events-auto"
-            : "!shadow-none pointer-events-none border border-silver"
+            : "!shadow-none pointer-events-none"
         }`}
       >
         {/* CMDK Inner Content  */}

@@ -5,6 +5,7 @@ import Layout from "../components/layout";
 import Head from "next/head";
 import React from "react";
 import { FeedAlbum } from "@/components/home/FeedAlbum";
+import NavBar from "@/components/nav/Nav";
 
 // This fetch function is used by react-query
 async function fetchFeed(userId) {
@@ -28,7 +29,7 @@ export default function Home() {
   if (isLoading) return "Loading...";
 
   if (error) return `An error has occurred`;
-  console.log(data);
+  // console.log(data);
 
   return (
     <Layout>
@@ -36,13 +37,14 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="w-[576px] h-[1022px] border border-silver justify-self-center self-center rounded-[32px] p-8 overflow-scroll scrollbar-none">
+      <div className="w-[576px] h-[98vh] relative border border-silver justify-self-center self-center rounded-[16px] p-8 overflow-scroll scrollbar-none">
         {/* Render the feed here using the data */}
         {data?.map((activity) => (
           <div key={activity.id}>
             <FeedAlbum review={activity.review} />
           </div>
         ))}
+        <NavBar />
       </div>
     </Layout>
   );

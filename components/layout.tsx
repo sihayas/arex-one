@@ -1,4 +1,3 @@
-import NavBar from "./Nav";
 import React, { useEffect, useState, ReactNode, useCallback } from "react";
 import { CMDK } from "./cmdk/CmdK";
 import useContentControl from "../hooks/useContentControl";
@@ -38,7 +37,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main id="main-content" className="h-screen grid">
         {children}
       </main>
-      <NavBar />
     </>
   );
 }
