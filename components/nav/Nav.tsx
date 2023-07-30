@@ -12,20 +12,20 @@ import { useSpring, animated } from "@react-spring/web";
 const Nav: React.FC = () => {
   const { data: session, status } = useSession(); // types/next-auth.d.ts
   const router = useRouter();
-  const [navText, setNavText] = useState("");
-
-  const { data, isLoading, isFetching, error } = SearchAlbums(navText);
-
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
 
+  // Search functionality
+  const [navText, setNavText] = useState("");
+  const { data, isLoading, isFetching, error } = SearchAlbums(navText);
   const handleNavTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
     setNavText(event.target.value);
 
+  // React Spring
   const searchStyle = useSpring({
-    height: session && navText.length > 0 && data ? "400px" : "44px",
+    height: session && navText.length > 0 && data ? "554px" : "44px",
     from: { height: "44px" },
-    config: { tension: 400 }, // Increase tension for faster animation
+    config: { tension: 700, friction: 60 }, // Increase tension for faster animation
   });
 
   let left;
@@ -54,11 +54,11 @@ const Nav: React.FC = () => {
         <div className="flex flex-col relative ">
           {/* Quick Search  */}
           <animated.div
-            className="absolute flex flex-col justify-end bottom-[54px] -left-[480px] w-[512px] border border-silver bg-silver backdrop-blur-xl rounded-2xl"
+            className="absolute flex flex-col justify-end bottom-[54px] -left-[480px] w-[512px] border border-silver bg-silver backdrop-blur-xl rounded-[22px]"
             style={searchStyle}
           >
             <div
-              className={`flex flex-col overflow-y-scroll max-h-[354px] ${
+              className={`flex flex-col overflow-y-scroll max-h-[554px] ${
                 navText.length > 0 && data ? "border-b border-white" : ""
               }`} // Conditional border
             >
