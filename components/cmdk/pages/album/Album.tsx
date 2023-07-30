@@ -1,15 +1,14 @@
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { StarsIcon } from "../../../icons";
 import { useEffect, useMemo } from "react";
-import { toast } from "sonner";
 import { useScroll } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/web";
 import { useSession } from "next-auth/react";
 import { EntryPreview } from "./subcomponents/EntryPreview";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
-import { fetchReviews, initializeAlbum } from "@/lib/api/albumAPI";
+import { useAlbumQuery } from "@/lib/api/albumAPI";
+import { useReviewsQuery } from "@/lib/api/albumAPI";
 
 export default function Album() {
   // CMDK Context
@@ -50,30 +49,9 @@ export default function Album() {
   }, [selectedAlbum?.shadowColor]);
 
   // Initialize album and mark as viewed
-  const albumQuery = useQuery(
-    ["album", selectedAlbum?.id],
-    () =>
-      selectedAlbum ? initializeAlbum(selectedAlbum) : Promise.resolve({}),
-    {
-      enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
-    }
-  );
-
+  const albumQuery = useAlbumQuery(selectedAlbum);
   // Fetch reviews for the album
-  const reviewsQuery = useInfiniteQuery(
-    ["reviews", selectedAlbum?.id, session?.user.id],
-    fetchReviews,
-    {
-      getNextPageParam: (lastPage, pages) => {
-        return lastPage.length === 10 ? pages.length + 1 : false;
-      },
-      enabled: !!selectedAlbum, // Query will not run unless selectedAlbum is defined
-      refetchOnWindowFocus: false,
-      onSuccess: (data) => {
-        toast.success("loaded reviews");
-      },
-    }
-  );
+  const reviewsQuery = useReviewsQuery(selectedAlbum, session?.user);
 
   // Call initialize album and fetch reviews
   const { data, isLoading, isError } = albumQuery;
@@ -120,7 +98,7 @@ export default function Album() {
     <div
       {...bind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[32px] w-full bg-white overflow-scroll scrollbar-none border border-silver"
+      className="flex flex-col items-center rounded-[14px] w-full bg-white overflow-scroll scrollbar-none border border-silver"
     >
       {/* Section One / Album Art */}
       <div className="sticky top-0">
@@ -134,7 +112,7 @@ export default function Album() {
         >
           <animated.img
             style={{
-              borderRadius: scale.to((value) => `${32 + (1 - value) * 16}px`),
+              borderRadius: scale.to((value) => `${14 + (1 - value) * 16}px`),
               boxShadow: boxShadow,
             }}
             src={selectedAlbum.artworkUrl}

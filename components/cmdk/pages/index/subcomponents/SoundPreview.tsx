@@ -21,7 +21,7 @@ export const SoundPreview = ({
       {/* Artwork  */}
       <Image
         ref={imageRef}
-        className="shadow-medium rounded-[16px] hoverable-medium"
+        className="shadow-medium rounded-[7px] hoverable-medium"
         src={artworkUrl}
         width={512}
         height={512}

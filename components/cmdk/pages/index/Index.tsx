@@ -36,7 +36,7 @@ export default function Index() {
   return (
     <div
       ref={scrollContainerRef}
-      className="flex flex-col bg-white w-full h-full rounded-[32px] border border-silver overflow-scroll items-end p-8 scrollbar-none"
+      className="flex flex-col bg-white w-full h-full rounded-[14px] border border-silver overflow-scroll items-end p-8 scrollbar-none"
     >
       <div className="absolute right-8 top-8 flex flex-col items-end gap-4">
         <Button

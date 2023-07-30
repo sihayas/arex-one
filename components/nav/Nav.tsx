@@ -5,7 +5,7 @@ import Link from "next/link";
 import Avatar from "../random-bullshit-go/Avatar";
 import Image from "next/image";
 import TextareaAutosize from "react-textarea-autosize";
-import SearchAlbums from "@/components/cmdk/pages/search/subcomponents/SearchAlbums";
+import SearchAlbums from "@/lib/api/searchAPi";
 import Search from "./Search";
 import { useSpring, animated } from "@react-spring/web";
 

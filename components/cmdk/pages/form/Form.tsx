@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { toast } from "sonner";
 import { fetchUserReview } from "@/lib/api/formAPI";
+import { postReview } from "@/lib/api/formAPI";
 
 export default function Form() {
   const { data: session } = useSession();
@@ -33,18 +34,13 @@ export default function Form() {
   const [listened, setListened] = useState(false);
   const [entryText, setEntryText] = useState("");
 
-  // Handle form field changes
   const handleLovedChange = () => setLoved((prevLoved) => !prevLoved);
-
   const handleListenedChange = () =>
     setListened((prevListened) => !prevListened);
-
   const handleEntryTextChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => setEntryText(event.target.value);
-
   const handleRatingChange = (newValue: React.SetStateAction<number>) => {
-    console.log("Rating changed: ", newValue); // This line will log every change
     setRating(newValue);
   };
 
@@ -52,32 +48,23 @@ export default function Form() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Define your async function
-    const postReview = async () => {
-      const response = await axios.post("/api/review/postReview", {
+    toast.promise(
+      postReview(
         listened,
         rating,
         loved,
-        reviewText: entryText,
-        isReReview: hasReviewed,
-        authorId: userId,
-        albumId: selectedAlbum?.id,
-        albumName: selectedAlbum?.attributes.name,
-      });
-
-      if (response.status === 201) {
-        console.log("Review submitted successfully", response.data);
-      } else {
-        throw new Error("Unexpected response status");
+        entryText,
+        hasReviewed,
+        userId,
+        selectedAlbum?.id,
+        selectedAlbum?.attributes.name
+      ),
+      {
+        loading: "Submitting review...",
+        success: "Review submitted successfully",
+        error: "Error submitting review",
       }
-    };
-
-    // Use toast.promise
-    toast.promise(postReview(), {
-      loading: "Submitting review...",
-      success: "Review submitted successfully",
-      error: "Error submitting review",
-    });
+    );
   };
 
   // Render the form

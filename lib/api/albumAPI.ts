@@ -1,5 +1,7 @@
 import axios from "axios";
 import { AlbumData } from "../interfaces";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/postAlbum`, album);
@@ -20,4 +22,32 @@ export async function fetchReviews({
     `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}&userId=${userId}`
   );
   return response.data;
+}
+
+export function useAlbumQuery(selectedAlbum: AlbumData | null) {
+  return useQuery(
+    ["album", selectedAlbum?.id],
+    () =>
+      selectedAlbum ? initializeAlbum(selectedAlbum) : Promise.resolve({}),
+    {
+      enabled: !!selectedAlbum,
+    }
+  );
+}
+
+export function useReviewsQuery(selectedAlbum, user) {
+  return useInfiniteQuery(
+    ["reviews", selectedAlbum?.id, user?.id],
+    fetchReviews,
+    {
+      getNextPageParam: (lastPage, pages) => {
+        return lastPage.length === 10 ? pages.length + 1 : false;
+      },
+      enabled: !!selectedAlbum,
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        toast.success("loaded reviews");
+      },
+    }
+  );
 }

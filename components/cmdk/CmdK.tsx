@@ -17,7 +17,7 @@ import User from "./pages/user/User";
 import { Page } from "@/context/CMDKContext";
 //Icons
 import { HomeIcon } from "../../components/icons";
-import SearchAlbums from "./pages/search/subcomponents/SearchAlbums";
+import SearchAlbums from "@/lib/api/searchAPI";
 
 type PageName = "index" | "album" | "entry" | "form" | "user";
 
@@ -59,8 +59,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width || 1018,
     height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height || 612,
     config: {
-      tension: 600,
-      friction: 40,
+      tension: 350,
+      friction: 50,
     },
   }));
 
@@ -277,7 +277,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               y,
               scale,
             }}
-            className={`flex w-full h-full rounded-[32px] z-0 hoverable-large ${
+            className={`flex w-full h-full rounded-[14px] z-0 hoverable-large ${
               isVisible
                 ? `shadow-cmdkScaled ${
                     activePage.name === "user" ? "!rounded-full" : ""
