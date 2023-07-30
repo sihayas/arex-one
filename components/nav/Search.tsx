@@ -11,9 +11,7 @@ interface SearchProps {
 }
 
 const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
-  const handleClickAlbum = (event: React.MouseEvent<HTMLDivElement>) => {
-    console.log(event.target);
-  };
+  const { handleSelectAlbum } = useSelectAlbum();
 
   if (isLoading && isFetching) if (error) return <div>Error</div>;
 
@@ -23,13 +21,19 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
       {searchData.map((album: AlbumData, averageRating: string) => {
         const artworkUrl = generateArtworkUrl(
           album.attributes.artwork.url,
-          "1500"
+          "160"
         );
         return (
           <div
             className="w-full p-3 hoverable-medium"
             key={album.id}
-            // onClick={() => handleClickAlbum()}
+            onClick={() =>
+              handleSelectAlbum(
+                document.getElementById(album.id) as HTMLImageElement,
+                album,
+                artworkUrl
+              )
+            }
             onMouseDown={(event) => event.preventDefault()}
           >
             <div className="flex gap-4 items-center w-full">
