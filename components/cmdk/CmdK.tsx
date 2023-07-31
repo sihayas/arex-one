@@ -193,19 +193,16 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       <animated.div
         style={{
-          ...dimensionsSpring, // To shapeshift
+          ...dimensionsSpring, // To shape-shift
           ...transformSpring, // To appear
-          transition: "box-shadow 750ms",
         }}
         className={`cmdk ${
-          isVisible
-            ? " pointer-events-auto"
-            : "!shadow-none pointer-events-none"
+          isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"
         }`}
       >
         {/* CMDK Inner Content  */}
         <Command
-          className={`transition-opacity duration-300 w-full h-full relative ${
+          className={`transition-opacity duration-150 w-full h-full relative ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}
           ref={ref}

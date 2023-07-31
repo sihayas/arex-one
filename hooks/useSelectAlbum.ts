@@ -17,13 +17,14 @@ export const useSelectAlbum = () => {
     album: AlbumData,
     artworkUrl: string
   ) => {
-    const shadowColor = await getDominantColor(imgElement);
+    const colors = await getDominantColor(imgElement);
 
     const extendedAlbum = {
       ...album,
       artworkUrl,
-      shadowColor,
+      colors,
     };
+
     setSelectedAlbum(extendedAlbum);
     setHideSearch(true);
     // Switch to album page and add to memory
@@ -31,11 +32,7 @@ export const useSelectAlbum = () => {
       ...prevPages,
       {
         name: "album",
-        album: {
-          ...album,
-          artworkUrl,
-          shadowColor,
-        },
+        album: extendedAlbum,
       },
     ]);
     bounce();

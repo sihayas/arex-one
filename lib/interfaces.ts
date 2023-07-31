@@ -30,14 +30,14 @@ export interface AlbumAttributes {
   url: string;
 }
 
-// Mimics Apple Music API response
+// Mimics Apple Music API response with some custom stuff
 export interface AlbumData {
   attributes: AlbumAttributes;
   id: string;
   notes: string;
   relationships: AlbumRelationships;
   artworkUrl: string;
-  shadowColor: string;
+  colors: string[];
 }
 
 export interface AlbumRelationships {
@@ -164,3 +164,5 @@ export interface UserData {
   username?: string;
   bio?: string;
 }
+
+export interface ActivityData {}

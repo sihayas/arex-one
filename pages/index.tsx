@@ -30,7 +30,7 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="w-[576px] h-[98vh] border border-silver justify-self-center self-center rounded-[16px] p-8 overflow-scroll scrollbar-none">
+      <div className="w-[576px] h-[98vh] bg-white border border-silver justify-self-center self-center rounded-[16px] p-8 overflow-scroll scrollbar-none">
         {/* Render the feed here using the data */}
         {data?.map((activity) => (
           <div key={activity.id}>

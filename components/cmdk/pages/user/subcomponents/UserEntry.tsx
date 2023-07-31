@@ -51,7 +51,9 @@ export const UserEntry: React.FC<UserEntryProps> = ({ review }) => {
         height={240}
         onDragStart={(e) => e.preventDefault()}
         onLoad={(event) =>
-          setDominantColor(getDominantColor(event.target as HTMLImageElement))
+          setDominantColor(
+            getDominantColor(event.target as HTMLImageElement)[0]
+          )
         }
         style={{
           boxShadow: `0px 0px 0px 0px ${dominantColor}, 0.15), 0px 2px 4px 0px ${dominantColor}, 0.15), 0px 7px 7px 0px ${dominantColor}, 0.13), 0px 16px 10px 0px ${dominantColor}, 0.07), 0px 29px 12px 0px ${dominantColor}, 0.02), 0px 45px 13px 0px ${dominantColor}, 0.00)`,

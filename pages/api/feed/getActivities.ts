@@ -24,8 +24,6 @@ export default async function handle(
       // Extract the IDs of the followed users
       const followingIds = following.map((f) => f.followingId);
 
-      console.log("Following IDs:", followingIds);
-
       // Fetch all activities related to the followed users
       const activities = await prisma.activity.findMany({
         where: {
@@ -44,7 +42,6 @@ export default async function handle(
                 },
               },
             },
-            // ... other conditions
           ],
         },
         orderBy: {
@@ -65,7 +62,6 @@ export default async function handle(
         },
       });
 
-      console.log("Activities:", activities);
       res.status(200).json(activities);
     } catch (error) {
       console.error("Failed to fetch activities:", error);

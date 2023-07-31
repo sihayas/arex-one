@@ -1,13 +1,12 @@
-import React, { useEffect, useState, ReactNode, useCallback } from "react";
 import { CMDK } from "./cmdk/CmdK";
+import React, { useEffect, useState, ReactNode, useCallback } from "react";
 import useContentControl from "../hooks/useContentControl";
+import AnimatedGradient from "./cmdk/AnimatedGradient";
+import { useCMDK } from "@/context/CMDKContext";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isContentBlurred, setIsContentBlurred } = useContentControl();
   const [isVisible, setIsVisible] = useState(false);
-
-  // Un-render the CMDK component when it's not visible
-  // const cmdkStyle: React.CSSProperties = isVisible ? {} : { display: "none" };
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -23,7 +22,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     [setIsContentBlurred]
   );
 
-  //Listen for key strokes
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -34,9 +32,10 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <CMDK isVisible={isVisible} />
+      <AnimatedGradient />
       <main
         id="main-content"
-        className={`h-screen grid relative transition-transform duration-700 ${
+        className={`h-screen grid relative ${
           isVisible ? "animate-scale-down" : "animate-scale-up"
         }`}
       >
@@ -45,3 +44,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     </>
   );
 }
+
+// Un-render the CMDK component when it's not visible
+// const cmdkStyle: React.CSSProperties = isVisible ? {} : { display: "none" };

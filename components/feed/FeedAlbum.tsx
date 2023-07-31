@@ -40,7 +40,7 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
   };
 
   return (
-    //pb-6 to level with the footer
+    //PB-6 to level with the footer
     <div className="flex flex-col pb-14">
       <div className="translate-x-4 translate-y-4 z-10">
         <Footer albumId={review.albumId} rating={review.rating} />

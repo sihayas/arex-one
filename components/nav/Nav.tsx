@@ -10,7 +10,7 @@ import Search from "./Search";
 import { useSpring, animated } from "@react-spring/web";
 
 const Nav: React.FC = () => {
-  const { data: session, status } = useSession(); // types/next-auth.d.ts
+  const { data: session, status } = useSession();
   const router = useRouter();
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
@@ -29,7 +29,7 @@ const Nav: React.FC = () => {
   });
 
   let left;
-  //If user is logged out.
+
   if (!session) {
     left = (
       <div className="flex items-center justify-between rounded-full h-8">
@@ -78,7 +78,7 @@ const Nav: React.FC = () => {
               disabled={!session}
               value={navText}
               onChange={handleNavTextChange}
-              placeholder="+++"
+              placeholder="+"
             />
           </animated.div>
           <Circle20 />
@@ -98,7 +98,7 @@ const Nav: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-16 fixed left-2/4 top-2/4 transform -translate-x-2/4 -translate-y-2/4 z-50">
+    <div className="flex flex-col h-16 fixed left-2/4 bottom-0 transform translate-x-[700%] -translate-y-[44px] z-50">
       {left}
     </div>
   );

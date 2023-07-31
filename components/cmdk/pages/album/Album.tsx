@@ -37,16 +37,16 @@ export default function Album() {
   });
 
   const boxShadow = useMemo(() => {
-    if (selectedAlbum?.shadowColor) {
-      return `0px 0px 0px 0px ${selectedAlbum.shadowColor},0.025),
-     0px 5px 12px 0px ${selectedAlbum.shadowColor},0.25),
-     0px 22px 22px 0px ${selectedAlbum.shadowColor},0.22),
-     0px 49px 29px 0px ${selectedAlbum.shadowColor},0.13),
-     0px 87px 35px 0px ${selectedAlbum.shadowColor},0.04),
-     0px 136px 38px 0px ${selectedAlbum.shadowColor},0.00)`;
+    if (selectedAlbum?.colors[0]) {
+      return `0px 0px 0px 0px ${selectedAlbum.colors[0]},0.025),
+     0px 5px 12px 0px ${selectedAlbum.colors[0]},0.25),
+     0px 22px 22px 0px ${selectedAlbum.colors[0]},0.22),
+     0px 49px 29px 0px ${selectedAlbum.colors[0]},0.13),
+     0px 87px 35px 0px ${selectedAlbum.colors[0]},0.04),
+     0px 136px 38px 0px ${selectedAlbum.colors[0]},0.00)`;
     }
     return undefined;
-  }, [selectedAlbum?.shadowColor]);
+  }, [selectedAlbum?.colors]);
 
   // Initialize album and mark as viewed
   const albumQuery = useAlbumQuery(selectedAlbum);
@@ -93,7 +93,6 @@ export default function Album() {
   }
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
-
   return (
     <div
       {...bind()}
