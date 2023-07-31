@@ -14,7 +14,7 @@ interface FeedAlbumProps {
 
 export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setPages } = useCMDK();
+  const { setPages, setIsVisible } = useCMDK();
 
   // const replyCount = review.replies.length;
 
@@ -55,7 +55,10 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
         />
         <div className="relative">
           <div
-            onClick={handleEntryClick}
+            onClick={() => {
+              handleEntryClick();
+              setIsVisible((prevIsVisible) => !prevIsVisible);
+            }}
             className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible hoverable-medium`}
           >
             {review.content}

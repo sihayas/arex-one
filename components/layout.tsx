@@ -1,26 +1,19 @@
 import { CMDK } from "./cmdk/CmdK";
-import React, { useEffect, useState, ReactNode, useCallback } from "react";
-import useContentControl from "../hooks/useContentControl";
+import React, { useEffect, ReactNode, useCallback } from "react";
 import AnimatedGradient from "./cmdk/AnimatedGradient";
 import { useCMDK } from "@/context/CMDKContext";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { isContentBlurred, setIsContentBlurred } = useContentControl();
-  const [isVisible, setIsVisible] = useState(false);
+  const { isVisible, setIsVisible } = useCMDK();
 
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-        setIsVisible((prevIsVisible) => !prevIsVisible);
-        setIsContentBlurred((prevIsContentBlurred) => !prevIsContentBlurred);
-        event.preventDefault();
-      } else if (event.key === "Escape") {
-        setIsVisible(false);
-        setIsContentBlurred(false);
-      }
-    },
-    [setIsContentBlurred]
-  );
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+      setIsVisible((prevIsVisible) => !prevIsVisible);
+      event.preventDefault();
+    } else if (event.key === "Escape") {
+      setIsVisible(false);
+    }
+  }, []);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -32,7 +25,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <CMDK isVisible={isVisible} />
-      <AnimatedGradient />
+      {/* <AnimatedGradient /> */}
       <main
         id="main-content"
         className={`h-screen grid relative ${

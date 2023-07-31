@@ -3,6 +3,9 @@ import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function AnimatedGradient() {
+  const [albumTitle, setAlbumTitle] = useState("");
+
+  const [artist, setArtist] = useState("");
   const { pages } = useCMDK();
 
   const [gradientColors, setGradientColors] = useState({
@@ -31,6 +34,8 @@ export default function AnimatedGradient() {
       const newColor1 = activePage.album.colors[0];
       const newColor2 = activePage.album.colors[1];
       const newColor3 = activePage.album.colors[2];
+      setAlbumTitle(activePage.album.attributes.name);
+      setArtist(activePage.album.attributes.artistName);
 
       setGradientColors({
         color1: newColor1,
@@ -57,10 +62,14 @@ export default function AnimatedGradient() {
       ></motion.div>
       <motion.div
         style={{
-          backgroundColor: "rgba(255, 255, 255, 0.3)",
+          backgroundColor: "rgba(255, 255, 255, 0.75)",
         }}
         className="absolute z-[0] inset-0"
       ></motion.div>
+      <div className="flex flex-col absolute z-[0] top-8 left-8 text-white text-2xl tracking-widest opacity-80 uppercase font-semibold">
+        <div>{albumTitle}</div>
+        <div className="font-normal">{artist}</div>
+      </div>
     </>
   );
 }

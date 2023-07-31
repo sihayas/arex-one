@@ -84,7 +84,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       : `translate(-50%, -50%) scale(0.95)`,
     config: {
       tension: 400,
-      friction: 30,
+      friction: 70,
     },
   });
 
