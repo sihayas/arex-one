@@ -35,6 +35,32 @@ a {
   transition: filter 0.7s;
 }
 
+.animate-scale-down {
+  animation: scale-down 0.7s forwards;
+}
+
+.animate-scale-up {
+  animation: scale-up 0.7s forwards;
+}
+
+@keyframes scale-down {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.95);
+  }
+}
+
+@keyframes scale-up {
+  0% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .pointer-events-none {
   pointer-events: none;
 }

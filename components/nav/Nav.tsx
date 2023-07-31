@@ -5,7 +5,7 @@ import Link from "next/link";
 import Avatar from "../random-bullshit-go/Avatar";
 import Image from "next/image";
 import TextareaAutosize from "react-textarea-autosize";
-import SearchAlbums from "@/lib/api/searchAPi";
+import SearchAlbums from "@/lib/api/searchAPI";
 import Search from "./Search";
 import { useSpring, animated } from "@react-spring/web";
 
@@ -98,9 +98,7 @@ const Nav: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-16 sticky bottom-0 z-50">
-      {/* Inner */}
-
+    <div className="flex flex-col h-16 fixed left-2/4 top-2/4 transform -translate-x-2/4 -translate-y-2/4 z-50">
       {left}
     </div>
   );

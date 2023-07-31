@@ -4,15 +4,12 @@ import { FeedHeaderIcon } from "../icons";
 import { Stars } from "../cmdk/generics";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 
-interface AlbumHeaderProps {
+interface FooterProps {
   albumId: string;
   rating?: number;
 }
 
-export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
-  albumId,
-  rating,
-}) => {
+export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
   const { artworkUrl, albumData, isLoading } = useFetchArtworkUrl(
     albumId,
     "676"

@@ -6,7 +6,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import { Stars } from "../cmdk/generics";
 import useHandleLikeClick from "@/hooks/useLike";
 import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
-import { AlbumHeader } from "./AlbumHeader";
+import { Footer } from "./Footer";
 
 interface FeedAlbumProps {
   review: ReviewData;
@@ -40,10 +40,10 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
   };
 
   return (
-    //pb-6 to level with the album header
+    //pb-6 to level with the footer
     <div className="flex flex-col pb-14">
       <div className="translate-x-4 translate-y-4 z-10">
-        <AlbumHeader albumId={review.albumId} rating={review.rating} />
+        <Footer albumId={review.albumId} rating={review.rating} />
       </div>
       <div className="flex gap-1 items-end">
         <UserAvatar

@@ -34,7 +34,12 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <CMDK isVisible={isVisible} />
-      <main id="main-content" className="h-screen grid">
+      <main
+        id="main-content"
+        className={`h-screen grid relative transition-transform duration-700 ${
+          isVisible ? "animate-scale-down" : "animate-scale-up"
+        }`}
+      >
         {children}
       </main>
     </>
