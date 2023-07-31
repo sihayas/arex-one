@@ -45,7 +45,7 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
       <div className="flex relative">
         <div
           onClick={handleEntryClick}
-          className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible  transition-all duration-300 hover:scale-[102%] hover:shadow-entry hoverable-medium`}
+          className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words hoverable-medium`}
         >
           {review.content}
         </div>
@@ -68,7 +68,10 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
       </div>
 
       {/* Attribution */}
-      <div className="flex items-center gap-2">
+      <div
+        onClick={handleUserClick}
+        className="flex items-center gap-2 hoverable-small"
+      >
         {/* Image & Star  */}
         <UserAvatar
           imageSrc={review.author?.image}
@@ -78,7 +81,6 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
         />
         {/* Name  */}
         <div
-          onClick={handleUserClick}
           className={`font-medium text-[13px] leading-normal text-black  transition-all duration-300 hover:text-[#000]`}
         >
           {review.author?.name}

@@ -43,9 +43,13 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
     //PB-6 to level with the footer
     <div className="flex flex-col pb-14">
       <div className="translate-x-4 translate-y-4 z-10">
-        <Footer albumId={review.albumId} rating={review.rating} />
+        <Footer
+          albumId={review.albumId}
+          rating={review.rating}
+          album={review.album}
+        />
       </div>
-      <div className="flex gap-1 items-end">
+      <div className="flex gap-1 items-end w-full">
         <UserAvatar
           className="max-w-6 max-h-6"
           imageSrc={review.author.image}
@@ -53,7 +57,7 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
           width={24}
           height={24}
         />
-        <div className="relative">
+        <div className="relative w-full">
           <div
             onClick={() => {
               handleEntryClick();

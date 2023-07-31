@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
 import { ReviewData } from "../../../../lib/interfaces";
-import { UserAvatar, ReplyInput, generateArtworkUrl } from "../../generics";
+import { UserAvatar, ReplyInput } from "../../generics";
 import { RenderReplies } from "./subcomponents/RenderReplies";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
@@ -16,22 +16,21 @@ export const Entry = () => {
   const { data: session } = useSession();
   // Context
   const { selectedAlbum } = useCMDKAlbum();
-  const { pages } = useCMDK();
+  const { activePage } = useCMDK();
   const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
 
-  const boxShadow = useMemo(() => {
-    if (selectedAlbum?.shadowColor) {
-      return `0px 0px 0px 0px ${selectedAlbum?.shadowColor},0.025),
-     0px 5px 12px 0px ${selectedAlbum.shadowColor},0.25),
-     0px 22px 22px 0px ${selectedAlbum.shadowColor},0.22),
-     0px 49px 29px 0px ${selectedAlbum.shadowColor},0.13),
-     0px 87px 35px 0px ${selectedAlbum.shadowColor},0.04),
-     0px 136px 38px 0px ${selectedAlbum.shadowColor},0.00)`;
-    }
-    return undefined;
-  }, [selectedAlbum?.shadowColor]);
+  // const boxShadow = useMemo(() => {
+  //   if (selectedAlbum?.shadowColor) {
+  //     return `0px 0px 0px 0px ${selectedAlbum?.shadowColor},0.025),
+  //    0px 5px 12px 0px ${selectedAlbum.shadowColor},0.25),
+  //    0px 22px 22px 0px ${selectedAlbum.shadowColor},0.22),
+  //    0px 49px 29px 0px ${selectedAlbum.shadowColor},0.13),
+  //    0px 87px 35px 0px ${selectedAlbum.shadowColor},0.04),
+  //    0px 136px 38px 0px ${selectedAlbum.shadowColor},0.00)`;
+  //   }
+  //   return undefined;
+  // }, [selectedAlbum?.shadowColor]);
 
-  const activePage = pages[pages.length - 1];
   const firstThreadcrumb = activePage.threadcrumbs?.[0];
 
   // If reviewId changes [first item in threadcrumb] changes, re-render Entry
@@ -84,7 +83,7 @@ export const Entry = () => {
 
         {/* Art  */}
         <Image
-          className="rounded-[16px]"
+          className="rounded-[12px]"
           src={
             artworkUrl || selectedAlbum?.artworkUrl || "/images/default.webp"
           }
@@ -92,7 +91,7 @@ export const Entry = () => {
           width={220} // Set this to a low value
           height={220} // Set this to the same low value
           onDragStart={(e) => e.preventDefault()}
-          style={{ boxShadow: boxShadow }}
+          // style={{ boxShadow: boxShadow }}
           draggable="false"
         />
       </div>

@@ -1,22 +1,42 @@
 import Image from "next/image";
 import { FeedHeaderIcon } from "../icons";
-
 import { Stars } from "../cmdk/generics";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
+import { useSelectAlbum } from "@/hooks/useSelectAlbum";
+import { AlbumDBData } from "@/lib/interfaces";
+import { useCMDK } from "@/context/CMDKContext";
+import React from "react";
 
 interface FooterProps {
   albumId: string;
   rating?: number;
+  album?: AlbumDBData;
 }
 
 export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
+  const { handleSelectAlbum } = useSelectAlbum();
+  const imgRef = React.useRef<HTMLImageElement>(null);
+
+  const { setIsVisible } = useCMDK();
   const { artworkUrl, albumData, isLoading } = useFetchArtworkUrl(
     albumId,
     "676"
   );
 
+  const handleClick = async () => {
+    const imgElement = imgRef.current;
+
+    if (imgElement && albumData && artworkUrl) {
+      await handleSelectAlbum(imgElement, albumData, artworkUrl);
+      setIsVisible(true);
+    }
+  };
+
   return (
-    <div className="flex flex-col drop-shadow-lg">
+    <div
+      onClick={handleClick}
+      className="flex flex-col drop-shadow hoverable-medium"
+    >
       {/* Art  */}
       <Image
         className="rounded-[16px] rounded-b-none translate-x-[22px]"
@@ -30,6 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
         height={338} // Set this to the same low value
         onDragStart={(e) => e.preventDefault()}
         draggable="false"
+        ref={imgRef}
       />
       <div className="relative">
         <FeedHeaderIcon height={70} color={"#FFF"} />

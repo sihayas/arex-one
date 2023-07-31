@@ -13,16 +13,34 @@ export default function Home() {
 
   const { data, isLoading, error } = useQuery(
     ["feed", userId],
-    () => fetchFeed(userId),
+    () => {
+      if (!userId) {
+        throw new Error("User ID is undefined");
+      }
+      return fetchFeed(userId);
+    },
     {
       enabled: !!userId,
     }
   );
 
+  if (!session) {
+    return (
+      <Layout>
+        <Head>
+          <title>rx</title>
+        </Head>
+
+        <div className="w-[576px] h-[98vh] bg-white border border-silver justify-self-center self-center rounded-[16px] p-8 overflow-scroll scrollbar-none">
+          <NavBar />
+        </div>
+      </Layout>
+    );
+  }
+
   if (isLoading) return "Loading...";
 
   if (error) return `An error has occurred`;
-  // console.log(data);
 
   return (
     <Layout>

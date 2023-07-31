@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback, useContext, useMemo } from "react";
 import { AlbumData } from "@/lib/interfaces";
 
 export type Page = {
@@ -21,6 +21,7 @@ export type CMDKContextType = {
   bounce: () => void;
   hideSearch: boolean;
   setHideSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  activePage: Page;
 };
 
 type CMDKProviderProps = {
@@ -43,6 +44,7 @@ export const useCMDK = (): CMDKContextType => {
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [pages, setPages] = useState<Page[]>([{ name: "index" }]);
+  const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
 
   const [hideSearch, setHideSearch] = useState(true);
 
@@ -71,6 +73,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         bounce,
         hideSearch,
         setHideSearch,
+        activePage,
       }}
     >
       {children}

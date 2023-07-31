@@ -22,7 +22,7 @@ import SearchAlbums from "@/lib/api/searchAPI";
 type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
-  index: { width: 1022, height: 576 }, //884
+  index: { width: 1022, height: 680 }, //884
   album: { width: 768, height: 768 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
@@ -32,9 +32,17 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
   const { resetThreadcrumbs, setThreadcrumbs } = useThreadcrumb();
-  const { pages, setPages, bounceScale, bounce, hideSearch, setHideSearch } =
-    useCMDK();
+  const {
+    pages,
+    setPages,
+    bounceScale,
+    bounce,
+    hideSearch,
+    setHideSearch,
+    activePage,
+  } = useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
+  const MemoizedSearch = React.memo(Search);
 
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -42,7 +50,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const [inputValue, setInputValue] = useState("");
 
   //Page Tracker
-  const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
     () => pages[pages.length - 2] || { name: "index" },
     [pages]
@@ -52,14 +59,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Search albums
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
-  // Use gesture
-
   // Spring dimensions
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
     width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width || 1018,
     height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height || 612,
     config: {
-      tension: 350,
+      tension: 420,
       friction: 50,
     },
   }));
@@ -131,23 +136,23 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
   }, [activePage, setSelectedAlbum, pages]);
 
-  // useEffect(() => {
-  //   if (activePage.name === "entry") {
-  //     activePage.threadcrumbs = threadcrumbs;
-  //     console.log("backed up crumbs");
-  //   }
-  // }, [activePage, threadcrumbs]);
+  const onValueChange = useCallback(
+    (value) => {
+      if (hideSearch) {
+        setHideSearch(false);
+      }
+      setInputValue(value);
+    },
+    [hideSearch, setInputValue, setHideSearch]
+  );
 
-  //Focus on input always
-  // useEffect(() => {
-  //   if (inputRef.current) {
-  //     if (isVisible && activePage.name === "index") {
-  //       inputRef.current.focus();
-  //     } else {
-  //       inputRef.current.blur();
-  //     }
-  //   }
-  // }, [isVisible, activePage.name]);
+  const onFocus = useCallback(() => {
+    setHideSearch(false);
+  }, [setHideSearch]);
+
+  const onBlur = useCallback(() => {
+    setHideSearch(true);
+  }, [setHideSearch]);
 
   // Handle page render
   let ActiveComponent;
@@ -214,6 +219,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             }
             if (e.key === "Backspace" && !isHome && !inputValue) {
               navigateBack();
+              bounce();
               e.preventDefault();
               return;
             }
@@ -235,30 +241,21 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 ref={inputRef}
                 placeholder="Dive"
                 style={{ paddingLeft: "2.5rem" }}
-                onValueChange={(value) => {
-                  if (hideSearch) {
-                    setHideSearch(false);
-                  }
-                  setInputValue(value);
-                }}
-                onFocus={() => {
-                  setHideSearch(false);
-                }}
-                onBlur={() => {
-                  setHideSearch(true);
-                }}
+                onValueChange={onValueChange}
+                onFocus={onFocus}
+                onBlur={onBlur}
               />
             </div>
             {/* Search Results  */}
             <animated.div
               style={{ ...searchStyles }}
-              className={`w-[96%] mt-4 overflow-scroll rounded-[32px] absolute bg-white z-10 border border-silver scrollbar-none ${
+              className={`w-[96%] mt-4 overflow-scroll rounded-[32px] absolute bg-blurWhite backdrop-blur-lg z-10 border border-silver scrollbar-none transform-gpu ${
                 hideSearch
                   ? "pointer-events-none"
                   : "!pt-[4rem] pointer-events-auto shadow-search"
               }`}
             >
-              <Search
+              <MemoizedSearch
                 searchData={data}
                 isLoading={isLoading}
                 isFetching={isFetching}
@@ -289,3 +286,21 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     </>
   );
 }
+
+// useEffect(() => {
+//   if (activePage.name === "entry") {
+//     activePage.threadcrumbs = threadcrumbs;
+//     console.log("backed up crumbs");
+//   }
+// }, [activePage, threadcrumbs]);
+
+//Focus on input always
+// useEffect(() => {
+//   if (inputRef.current) {
+//     if (isVisible && activePage.name === "index") {
+//       inputRef.current.focus();
+//     } else {
+//       inputRef.current.blur();
+//     }
+//   }
+// }, [isVisible, activePage.name]);

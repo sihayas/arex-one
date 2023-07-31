@@ -2,6 +2,7 @@
 
 import { useDrag } from "@use-gesture/react";
 import { useSpring } from "@react-spring/web";
+import { useCMDK } from "@/context/CMDKContext";
 
 interface UseDragLogicProps {
   navigateBack: () => void;
@@ -14,6 +15,8 @@ export const useDragLogic = ({
   resetPage,
   inputRef,
 }: UseDragLogicProps) => {
+  const { activePage, setIsVisible } = useCMDK();
+
   const [{ x, y, scale }, api] = useSpring(() => ({
     x: 0,
     y: 0,
@@ -36,7 +39,11 @@ export const useDragLogic = ({
         // If gesture is released
         if (Math.abs(mx) > dragThreshold) {
           // If gesture is horizontal and exceeds threshold
-          navigateBack();
+          if (activePage.name === "index") {
+            setIsVisible(false);
+          } else {
+            navigateBack();
+          }
         }
 
         // If gesture is vertical downwards and exceeds threshold

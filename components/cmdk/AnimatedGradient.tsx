@@ -6,7 +6,7 @@ export default function AnimatedGradient() {
   const [albumTitle, setAlbumTitle] = useState("");
 
   const [artist, setArtist] = useState("");
-  const { pages } = useCMDK();
+  const { activePage } = useCMDK();
 
   const [gradientColors, setGradientColors] = useState({
     color1: "",
@@ -28,8 +28,6 @@ export default function AnimatedGradient() {
   }, [interval]);
 
   useEffect(() => {
-    const activePage = pages[pages.length - 1];
-
     if (activePage.name === "album" && activePage.album) {
       const newColor1 = activePage.album.colors[0];
       const newColor2 = activePage.album.colors[1];
@@ -43,7 +41,7 @@ export default function AnimatedGradient() {
         color3: newColor3,
       });
     }
-  }, [pages]);
+  }, [activePage]);
 
   return (
     <>

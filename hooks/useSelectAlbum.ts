@@ -1,4 +1,3 @@
-// hooks/useSelectAlbum.js
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useDominantColor } from "@/hooks/useDominantColor";
@@ -27,6 +26,7 @@ export const useSelectAlbum = () => {
 
     setSelectedAlbum(extendedAlbum);
     setHideSearch(true);
+
     // Switch to album page and add to memory
     setPages((prevPages) => [
       ...prevPages,

@@ -56,6 +56,7 @@ export default async function handle(
           review: {
             include: {
               author: true,
+              album: true,
             },
           },
           follow: true, // You need to adjust this as well if `follow` has an `author` relation

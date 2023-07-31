@@ -38,12 +38,12 @@ a {
 .animate-scale-down {
   filter: blur(2px);
   transition: all 0.7s;
-  animation: scale-down 0.3s forwards;
+  animation: scale-down 0.5s forwards;
 }
 
 .animate-scale-up {
   transition: all 0.7s;
-  animation: scale-up 0.3s forwards;
+  animation: scale-up 0.5s forwards;
 }
 
 @keyframes scale-down {
