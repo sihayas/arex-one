@@ -59,7 +59,7 @@ export default async function handle(
               album: true,
             },
           },
-          follow: true, // You need to adjust this as well if `follow` has an `author` relation
+          follow: true,
         },
       });
 

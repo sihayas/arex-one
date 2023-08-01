@@ -23,15 +23,20 @@ export default function Album() {
     handleInfiniteScroll,
   } = useScrollPosition();
 
-  const [{ scale }, setScale] = useSpring(() => ({ scale: 1 }));
+  // Define a new spring state for the width along with scale
+  const [{ scale, width }, set] = useSpring(() => ({ scale: 1, width: 768 }));
 
   // Shrink the album cover on scroll
   const bind = useScroll(({ xy: [, y] }) => {
-    let newScale = 1 - y / 900; // Larger numbers = slower shrink.
+    let newScale = 1 - y / 1000; // Larger numbers = slower shrink.
     if (newScale > 1) newScale = 1;
-    if (newScale < 0.5) newScale = 0.36; // Set a minimum size to prevent disappearing.
+    if (newScale < 0.5) newScale = 0.5;
 
-    setScale({ scale: newScale });
+    let newWidth = 768 + (y / 600) * (1022 - 768);
+    if (newWidth < 768) newWidth = 768;
+    if (newWidth > 1022) newWidth = 1022; // Max width
+
+    set({ scale: newScale, width: newWidth });
 
     saveScrollPosition();
   });
@@ -94,18 +99,21 @@ export default function Album() {
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
   return (
-    <div
+    <animated.div
       {...bind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[24px] w-full bg-white overflow-scroll scrollbar-none"
+      className="flex flex-col items-center rounded-[24px] w-[768px] bg-white overflow-scroll scrollbar-none"
+      style={{
+        width: width.to((w) => `${w}px`), // use the new spring state as the width
+      }}
     >
       {/* Section One / Album Art */}
       <div className="sticky top-0">
         <animated.div
           style={{
             transform: scale.to((value) => `scale(${value})`),
-            paddingRight: scale.to((value) => `${(1 - value) * 148}px`),
-            paddingTop: scale.to((value) => `${(1 - value) * 148}px`),
+            paddingTop: scale.to((value) => `${(1 - value) * 128}px`),
+            marginRight: scale.to((value) => `${(1 - value) * -380}px`), // negative margin to shift right
             transformOrigin: "right top", // scales towards the right
           }}
         >
@@ -171,7 +179,7 @@ export default function Album() {
           after the music stops.
         </div>
         {/* Album Entries  */}
-        <div className="flex flex-col gap-10 overflow-visible h-full">
+        <div className="flex flex-col gap-10 overflow-visible h-full pb-[100vh]">
           {flattenedReviews?.length > 0 ? (
             flattenedReviews.map((review) => (
               <EntryPreview key={review.id} review={review} />
@@ -190,6 +198,6 @@ export default function Album() {
           <div className="text-xs pl-2 text-gray2">end of line</div>
         )}
       </div>
-    </div>
+    </animated.div>
   );
 }

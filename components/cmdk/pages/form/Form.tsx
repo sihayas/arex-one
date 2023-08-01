@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import TextareaAutosize from "react-textarea-autosize";

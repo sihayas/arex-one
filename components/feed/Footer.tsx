@@ -35,7 +35,7 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
   return (
     <div
       onClick={handleClick}
-      className="flex flex-col drop-shadow hoverable-medium"
+      className="flex flex-col drop-shadow-sm hoverable-medium"
     >
       {/* Art  */}
       <Image

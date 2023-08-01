@@ -115,7 +115,7 @@ const User = () => {
   console.log("user", user);
 
   return (
-    <div className="bg-white w-full h-full rounded-full relative flex flex-col items-center overflow-scroll scrollbar-none pb-48 pt-48 border border-silver">
+    <div className="bg-white w-[768px] h-full rounded-full relative flex flex-col items-center overflow-scroll scrollbar-none pb-48 pt-48 border border-silver">
       {/* Header  */}
       <div className="flex flex-col items-center gap-4 p-8 pb-4">
         <Image
