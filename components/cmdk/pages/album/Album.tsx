@@ -24,7 +24,7 @@ export default function Album() {
   } = useScrollPosition();
 
   // Define a new spring state for the width along with scale
-  const [{ scale, width }, set] = useSpring(() => ({ scale: 1, width: 768 }));
+  const [{ scale, width }, set] = useSpring(() => ({ scale: 1, width: 658 }));
 
   // Shrink the album cover on scroll
   const bind = useScroll(({ xy: [, y] }) => {
@@ -32,9 +32,9 @@ export default function Album() {
     if (newScale > 1) newScale = 1;
     if (newScale < 0.5) newScale = 0.5;
 
-    let newWidth = 768 + (y / 600) * (1022 - 768);
-    if (newWidth < 768) newWidth = 768;
-    if (newWidth > 1022) newWidth = 1022; // Max width
+    let newWidth = 658 + (y / 200) * (930 - 658);
+    if (newWidth < 658) newWidth = 658;
+    if (newWidth > 930) newWidth = 930; // Max width
 
     set({ scale: newScale, width: newWidth });
 
@@ -102,82 +102,37 @@ export default function Album() {
     <animated.div
       {...bind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[24px] w-[768px] bg-white overflow-scroll scrollbar-none"
+      className="flex flex-col items-center rounded-[24px] w-[658px] bg-white overflow-scroll scrollbar-none"
       style={{
         width: width.to((w) => `${w}px`), // use the new spring state as the width
       }}
     >
       {/* Section One / Album Art */}
-      <div className="sticky top-0">
-        <animated.div
+      <animated.div
+        style={{
+          transform: scale.to((value) => `scale(${value})`),
+          top: scale.to((value) => `${(1 - value) * 64}px`),
+          translateX: scale.to((value) => `${(1 - value) * 418}px`), // 418 edge
+          transformOrigin: "top right", // scales towards the right
+        }}
+        className="sticky top-0"
+      >
+        <animated.img
           style={{
-            transform: scale.to((value) => `scale(${value})`),
-            paddingTop: scale.to((value) => `${(1 - value) * 128}px`),
-            marginRight: scale.to((value) => `${(1 - value) * -380}px`), // negative margin to shift right
-            transformOrigin: "right top", // scales towards the right
+            borderRadius: scale.to((value) => `${24 + (1 - value) * 12}px`),
+            boxShadow: boxShadow,
           }}
-        >
-          <animated.img
-            style={{
-              borderRadius: scale.to((value) => `${24 + (1 - value) * 12}px`),
-              boxShadow: boxShadow,
-            }}
-            src={selectedAlbum.artworkUrl}
-            alt={`${selectedAlbum.attributes.name} artwork`}
-            width={768}
-            height={768}
-            onDragStart={(e) => e.preventDefault()}
-            draggable="false"
-          />
-          {/* Album Information  */}
-          <div className="absolute left-8 bottom-8 flex flex-col gap-1 text-white tracking-tight">
-            <div className="text-end ">
-              {/* {selectedAlbum.attributes.artistName} */}
-            </div>
-            <button
-              onClick={() => {
-                setPages((prevPages) => [...prevPages, { name: "form" }]);
-                bounce();
-              }}
-              className="font-bold text-3xl transition-all duration-300 hover:scale-105 hoverable-medium"
-            >
-              + {selectedAlbum.attributes.name}
-            </button>
-          </div>
-        </animated.div>
-      </div>
+          src={selectedAlbum.artworkUrl}
+          alt={`${selectedAlbum.attributes.name} artwork`}
+          width={658}
+          height={658}
+          onDragStart={(e) => e.preventDefault()}
+          draggable="false"
+        />
+      </animated.div>
 
       {/* Section Two / Entries  */}
       <div className="flex flex-col p-8 mt-4 gap-8 relative w-full">
-        {/* Stats  */}
-        <div className="flex items-center gap-8">
-          {/* Stars  */}
-          <div className="flex items-center gap-1">
-            <div className=" text-5xl text-gray1">4.2</div>
-            <StarsIcon width={24} height={24} color={"#999"} />
-          </div>
-          {/* Stats  */}
-          <div className="font-medium text-sm text-gray1 text-end">400</div>
-          <div className="font-medium text-sm text-gray1 text-end">20</div>
-        </div>
-        {/* Verdict Notes  */}
-        <div className="text-xs text-gray1 w-[484px] line-clamp-3">
-          With Nectar Jojis full metamorphosis from a meme-laden internet artist
-          to a commendable musician takes flight. In a poignant exercise of
-          introspection, the album unfurls like a lucid dream of melancholic
-          electronica and R&B, veiled in lo-fi textures that waft over you like
-          the scent of midnight cherry blossoms. Jojis voice, at once haunted
-          and angelic, guides us through a labyrinth of his deepest emotions - a
-          startling encounter with vulnerability that remains the albums spine.
-          Notably, the production oscillates between sparse minimalism and rich,
-          layered tapestries of sound, providing an auditory playground that
-          keeps the listener tethered yet continually guessing. Joji dares to
-          push his artistic boundaries in Nectar making it a poignant,
-          disquietingly beautiful chronicle of human sentiment. In this body of
-          work, the line between the sweetness of life (the nectar) and the
-          stings of reality are blurred, leaving an aftertaste that lingers long
-          after the music stops.
-        </div>
         {/* Album Entries  */}
         <div className="flex flex-col gap-10 overflow-visible h-full pb-[100vh]">
           {flattenedReviews?.length > 0 ? (

@@ -23,7 +23,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 1022, height: 680 }, //884
-  album: { width: 768, height: 768 },
+  album: { width: 658, height: 658 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
   user: { width: 768, height: 768 },
@@ -271,7 +271,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               y,
               scale,
             }}
-            className={`flex min-w-full max-w-screen h-full rounded-[24px] z-0 hoverable-large ${
+            className={`flex min-w-full max-w-screen min-h-ful max-h-full rounded-[24px] z-0 hoverable-large ${
               isVisible
                 ? `shadow-cmdkScaled ${
                     activePage.name === "user" ? "!rounded-full" : ""
