@@ -78,7 +78,7 @@ export const Entry = () => {
 
   return (
     <div className="flex flex-col rounded-[32px] w-full h-full overflow-scroll scrollbar-none relative bg-white border border-silver">
-      <div className="flex items-start p-8 pb-0 gap-8">
+      <div className="flex items-end p-8 pb-0 gap-8">
         <EntryPreview review={review} />
 
         {/* Art  */}

@@ -1,21 +1,10 @@
-// hooks/useDragLogic.ts
-
 import { useDrag } from "@use-gesture/react";
 import { useSpring } from "@react-spring/web";
 import { useCMDK } from "@/context/CMDKContext";
 
-interface UseDragLogicProps {
-  navigateBack: () => void;
-  resetPage: () => void;
-  inputRef: React.RefObject<HTMLInputElement>;
-}
-
-export const useDragLogic = ({
-  navigateBack,
-  resetPage,
-  inputRef,
-}: UseDragLogicProps) => {
-  const { activePage, setIsVisible } = useCMDK();
+export const useDragLogic = () => {
+  const { activePage, setIsVisible, navigateBack, resetPage, inputRef } =
+    useCMDK();
 
   const [{ x, y, scale }, api] = useSpring(() => ({
     x: 0,
@@ -26,19 +15,16 @@ export const useDragLogic = ({
   const bind = useDrag(
     ({ down, movement: [mx, my], last }) => {
       const scaleFactor = down ? 1 - Math.abs(mx / 1400) : 1;
-      api.start({
-        x: down ? mx : 0,
-        y: down ? my : 0,
-        scale: scaleFactor,
-        immediate: down,
-      });
+      let newX = down ? mx : 0;
+      let newY = down ? my : 0;
 
-      const dragThreshold = 80; // Adjust as needed
+      const dragThreshold = 90; // Adjust as needed
 
       if (last) {
         // If gesture is released
         if (Math.abs(mx) > dragThreshold) {
           // If gesture is horizontal and exceeds threshold
+          newX = mx; // Maintain last mx value
           if (activePage.name === "index") {
             setIsVisible(false);
           } else {
@@ -48,6 +34,7 @@ export const useDragLogic = ({
 
         // If gesture is vertical downwards and exceeds threshold
         if (Math.abs(my) > dragThreshold) {
+          newY = my; // Maintain last my value
           if (my > 0) {
             inputRef.current?.focus();
           } else {
@@ -55,12 +42,23 @@ export const useDragLogic = ({
             resetPage();
           }
         }
+
+        if (Math.abs(mx) <= dragThreshold && Math.abs(my) <= dragThreshold) {
+          newX = 0;
+          newY = 0;
+        }
       }
+
+      api.start({
+        x: newX,
+        y: newY,
+        scale: scaleFactor,
+        immediate: down,
+      });
     },
     {
       filterTaps: true,
-      // bounds: { left: -120, right: 120, top: -120, bottom: 120 },
-      // rubberband: true,
+      delay: 100,
     }
   );
 

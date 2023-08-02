@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useContext, useMemo } from "react";
 import { AlbumData } from "@/lib/interfaces";
+import { useThreadcrumb } from "./Threadcrumbs";
 
 export type Page = {
   name: string;
@@ -7,6 +8,10 @@ export type Page = {
   threadcrumbs?: string[];
   user?: string;
   scrollPosition?: number;
+  dimensions?: {
+    width: number;
+    height: number;
+  };
 };
 
 export type CMDKContextType = {
@@ -22,6 +27,9 @@ export type CMDKContextType = {
   hideSearch: boolean;
   setHideSearch: React.Dispatch<React.SetStateAction<boolean>>;
   activePage: Page;
+  navigateBack: (pageNumber?: number) => void;
+  resetPage: () => void;
+  inputRef: React.MutableRefObject<HTMLInputElement | null>;
 };
 
 type CMDKProviderProps = {
@@ -42,15 +50,14 @@ export const useCMDK = (): CMDKContextType => {
 };
 
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
-  const [isVisible, setIsVisible] = useState(false);
   const [pages, setPages] = useState<Page[]>([{ name: "index" }]);
-  const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
-
+  const [isVisible, setIsVisible] = useState(false);
   const [hideSearch, setHideSearch] = useState(true);
-
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
-
   const [bounceScale, setBounceScale] = useState(1);
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
 
   const bounce = useCallback(() => {
     setBounceScale(0.95);
@@ -58,6 +65,20 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
       setBounceScale(1);
     }, 100);
   }, [setBounceScale]);
+
+  const navigateBack = useCallback(
+    (pageNumber: number = 1) => {
+      setPages((prevPages) => {
+        const newPages = prevPages.slice(0, prevPages.length - pageNumber);
+        return newPages;
+      });
+    },
+    [setPages]
+  );
+
+  const resetPage = useCallback(() => {
+    setPages([{ name: "index" }]);
+  }, [setPages]);
 
   return (
     <CMDKContext.Provider
@@ -74,6 +95,9 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         hideSearch,
         setHideSearch,
         activePage,
+        navigateBack,
+        resetPage,
+        inputRef,
       }}
     >
       {children}

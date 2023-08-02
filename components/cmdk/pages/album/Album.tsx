@@ -1,6 +1,5 @@
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
-import { StarsIcon } from "../../../icons";
 import { useEffect, useMemo } from "react";
 import { useScroll } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/web";
@@ -9,37 +8,60 @@ import { EntryPreview } from "./subcomponents/EntryPreview";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
+import { debounce } from "lodash";
+import { useDragLogic } from "@/hooks/useDragLogic";
 
 export default function Album() {
   // CMDK Context
-  const { setPages, bounce, pages } = useCMDK();
-  const { selectedAlbum } = useCMDKAlbum();
   const { data: session } = useSession();
 
-  const {
-    scrollContainerRef,
-    saveScrollPosition,
-    restoreScrollPosition,
-    handleInfiniteScroll,
-  } = useScrollPosition();
+  const { setPages, pages } = useCMDK();
+  const { selectedAlbum } = useCMDKAlbum();
+  const { scrollContainerRef, restoreScrollPosition, handleInfiniteScroll } =
+    useScrollPosition();
 
-  // Define a new spring state for the width along with scale
-  const [{ scale, width }, set] = useSpring(() => ({ scale: 1, width: 658 }));
+  const setDebounced = useMemo(
+    () =>
+      debounce(({ newScale, newWidth }) => {
+        setPages((prevPages) => {
+          const newPages = [...prevPages];
+          const activePageIndex = newPages.length - 1;
+          newPages[activePageIndex] = {
+            ...newPages[activePageIndex],
+            dimensions: {
+              width: newWidth,
+              height: 722,
+            },
+          };
+          return newPages;
+        });
+      }, 100),
+    []
+  );
 
-  // Shrink the album cover on scroll
-  const bind = useScroll(({ xy: [, y] }) => {
-    let newScale = 1 - y / 1000; // Larger numbers = slower shrink.
+  // React Spring and Drag Logic
+  const [{ scale, width }, set] = useSpring(() => ({ scale: 1, width: 722 }));
+  const { bind: dragBind, x, y, scale: dragScale } = useDragLogic();
+
+  // Shrink and width logic
+  const scrollBind = useScroll(({ xy: [, y] }) => {
+    let newScale = 1 - y / 1000;
     if (newScale > 1) newScale = 1;
-    if (newScale < 0.5) newScale = 0.5;
+    if (newScale < 0.5) newScale = 0.6; // CHATGPT HERE
 
-    let newWidth = 658 + (y / 200) * (930 - 658);
-    if (newWidth < 658) newWidth = 658;
-    if (newWidth > 930) newWidth = 930; // Max width
+    let newWidth = 722 + (y / 100) * (1066 - 722);
+    if (newWidth < 722) newWidth = 722;
+    if (newWidth > 1066) newWidth = 1066;
 
+    // Apply the new scale and width immediately to the spring animation
     set({ scale: newScale, width: newWidth });
 
-    saveScrollPosition();
+    // Defer updating the page dimensions
+    setDebounced({ newScale, newWidth });
   });
+
+  // Infinite Scroll Page Tracker
+  useEffect(() => {}, []);
 
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.colors[0]) {
@@ -68,8 +90,6 @@ export default function Album() {
     isError: isReviewsError,
   } = reviewsQuery;
 
-  useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
-
   // Infinite Scroll Page Tracker
   useEffect(() => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -82,6 +102,14 @@ export default function Album() {
     setPages,
     handleInfiniteScroll,
   ]);
+
+  // Unmount cleanup
+  useEffect(() => {
+    return () => {
+      setDebounced.cancel();
+    };
+  }, [setDebounced]);
+  useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
 
   // Load and error handling
   if (!selectedAlbum || isLoading || isFetchingNextPage) {
@@ -98,34 +126,39 @@ export default function Album() {
   }
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
+
   return (
     <animated.div
-      {...bind()}
+      {...scrollBind()}
+      {...dragBind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[24px] w-[658px] bg-white overflow-scroll scrollbar-none"
+      className="flex flex-col items-center rounded-[24px] h-full overflow-x-visible overflow-y-scroll scrollbar-none relative"
       style={{
-        width: width.to((w) => `${w}px`), // use the new spring state as the width
+        width: width.to((w) => `${w}px`),
+        transform: dragScale.to((s) => `scale(${s})`),
+        x,
+        y,
       }}
     >
       {/* Section One / Album Art */}
       <animated.div
         style={{
-          transform: scale.to((value) => `scale(${value})`),
-          top: scale.to((value) => `${(1 - value) * 64}px`),
-          translateX: scale.to((value) => `${(1 - value) * 418}px`), // 418 edge
-          transformOrigin: "top right", // scales towards the right
+          transform: scale.to(
+            (value) => `scale(${value}) translateX(${(1 - value) * 74}rem)`
+          ),
+          transformOrigin: "center",
         }}
-        className="sticky top-0"
+        className="sticky top-0 overflow-visible"
       >
         <animated.img
           style={{
-            borderRadius: scale.to((value) => `${24 + (1 - value) * 12}px`),
+            borderRadius: scale.to((value) => `${24 + (1 - value) * -12}px`),
             boxShadow: boxShadow,
           }}
           src={selectedAlbum.artworkUrl}
           alt={`${selectedAlbum.attributes.name} artwork`}
-          width={658}
-          height={658}
+          width={722}
+          height={722}
           onDragStart={(e) => e.preventDefault()}
           draggable="false"
         />
@@ -134,16 +167,16 @@ export default function Album() {
       {/* Section Two / Entries  */}
       <div className="flex flex-col p-8 mt-4 gap-8 relative w-full">
         {/* Album Entries  */}
-        <div className="flex flex-col gap-10 overflow-visible h-full pb-[100vh]">
+        <div className="flex flex-col gap-10 overflow-visible h-full pb-[60vh]">
           {flattenedReviews?.length > 0 ? (
             flattenedReviews.map((review) => (
               <EntryPreview key={review.id} review={review} />
             ))
           ) : (
-            // If there are no entries, display this message
             <div className="text-xs text-grey p-2">no entries</div>
           )}
         </div>
+
         {/* Infinite Loading Indicator  */}
         {isFetchingNextPage ? (
           <div className="">loading more reviews...</div>

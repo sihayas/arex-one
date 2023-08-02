@@ -14,6 +14,8 @@ import {
   getUserById,
   isUserFollowing,
 } from "@/lib/api/userAPI";
+import { useDragLogic } from "@/hooks/useDragLogic";
+import { animated } from "@react-spring/web";
 
 const TAB_ANIMATION_VARIANTS = {
   hidden: {
@@ -37,6 +39,7 @@ const User = () => {
   const { pages } = useCMDK();
   const { data: session } = useSession();
   const signedInUserId = session?.user.id;
+  const { bind, x, y, scale } = useDragLogic();
 
   const userId = pages[pages.length - 1].user;
 
@@ -115,7 +118,15 @@ const User = () => {
   console.log("user", user);
 
   return (
-    <div className="bg-white w-[768px] h-full rounded-full relative flex flex-col items-center overflow-scroll scrollbar-none pb-48 pt-48 border border-silver">
+    <animated.div
+      {...bind()}
+      style={{
+        x,
+        y,
+        scale,
+      }}
+      className="bg-white w-[768px] h-full relative flex flex-col items-center overflow-scroll scrollbar-none pb-48 pt-48 border border-silver shadow-cmdkScaled"
+    >
       {/* Header  */}
       <div className="flex flex-col items-center gap-4 p-8 pb-4">
         <Image
@@ -190,7 +201,7 @@ const User = () => {
           ))}
         </motion.div>
       )} */}
-    </div>
+    </animated.div>
   );
 };
 

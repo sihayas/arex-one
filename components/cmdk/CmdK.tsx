@@ -3,11 +3,10 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 //NPM
-import { animated, useSpring } from "@react-spring/web";
+import { animated, useSpring, useTransition } from "@react-spring/web";
 //Components
 import { Command } from "cmdk";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { useDragLogic } from "@/hooks/useDragLogic";
 import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
@@ -23,30 +22,31 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 1022, height: 680 }, //884
-  album: { width: 658, height: 658 },
+  album: { width: 1022, height: 722 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
   user: { width: 768, height: 768 },
 };
 
+const MemoizedSearch = React.memo(Search);
+
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
-  const { resetThreadcrumbs, setThreadcrumbs } = useThreadcrumb();
   const {
     pages,
-    setPages,
     bounceScale,
     bounce,
     hideSearch,
     setHideSearch,
     activePage,
+    navigateBack,
+    resetPage,
+    inputRef,
   } = useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
-  const MemoizedSearch = React.memo(Search);
 
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
   const [inputValue, setInputValue] = useState("");
 
   //Page Tracker
@@ -61,29 +61,30 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Spring dimensions
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
-    width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width || 1018,
-    height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height || 612,
+    width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width,
+    height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height,
     config: {
       tension: 420,
       friction: 50,
     },
   }));
 
-  // Spring dimensions
+  // Spring dimensions useEffect trigger
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
-        // await next({ width: 306, height: 306 }); // Loading dimension
+        const targetPageDimensions =
+          activePage.dimensions || PAGE_DIMENSIONS[activePage.name as PageName];
         await next({
-          width: PAGE_DIMENSIONS[activePage.name as PageName]?.width || 1018,
-          height: PAGE_DIMENSIONS[activePage.name as PageName]?.height || 612,
+          width: targetPageDimensions?.width,
+          height: targetPageDimensions?.height,
         });
       },
     });
-  }, [activePage.name, setDimensionsSpring]);
+  }, [activePage.name, activePage.dimensions, setDimensionsSpring]);
 
-  // Spring transform
-  const transformSpring = useSpring({
+  // Spring CMDK visibility
+  const visibilitySpring = useSpring({
     transform: isVisible
       ? `translate(-50%, -50%) scale(${bounceScale})`
       : `translate(-50%, -50%) scale(0.95)`,
@@ -93,7 +94,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   });
 
-  // Spring search
+  // Spring dynamic search
   const searchStyles = useSpring({
     height: hideSearch ? "0px" : "448px",
     opacity: hideSearch ? 0 : 1,
@@ -102,40 +103,15 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     config: { tension: 700, friction: 60 },
   });
 
-  // Breadcrumb navigation
-  const navigateBack = useCallback(
-    (pageNumber: number = 1) => {
-      setPages((prevPages) => {
-        const newPages = prevPages.slice(0, prevPages.length - pageNumber);
-        setThreadcrumbs(newPages[newPages.length - 1]?.threadcrumbs || []);
-        return newPages;
-      });
-      bounce();
-    },
-    [bounce, setPages, setThreadcrumbs]
-  );
-
-  // Reset pages
-  const resetPage = useCallback(() => {
-    setPages([{ name: "index" }]);
-    setInputValue("");
-    resetThreadcrumbs();
-  }, [resetThreadcrumbs, setInputValue, setPages]);
-
-  // Drag logic
-  const { bind, x, y, scale } = useDragLogic({
-    navigateBack,
-    resetPage,
-    inputRef,
-  });
-
   // Adjust album context when navigating to an album page
   useEffect(() => {
     if (activePage.name === "album" && activePage.album) {
       setSelectedAlbum(activePage.album);
     }
-  }, [activePage, setSelectedAlbum, pages]);
+    // bounce();
+  }, [activePage, setSelectedAlbum, pages, bounce]);
 
+  // Handle input changes
   const onValueChange = useCallback(
     (value) => {
       if (hideSearch) {
@@ -145,11 +121,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
     [hideSearch, setInputValue, setHideSearch]
   );
-
   const onFocus = useCallback(() => {
     setHideSearch(false);
   }, [setHideSearch]);
-
   const onBlur = useCallback(() => {
     setHideSearch(true);
   }, [setHideSearch]);
@@ -176,6 +150,18 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       ActiveComponent = Index;
   }
 
+  const transitions = useTransition(ActiveComponent, {
+    from: { scale: 0.95, opacity: 0 },
+    enter: { scale: 1, opacity: 1, delay: 350 }, // Add delay equal to the duration of leave transition
+    leave: { scale: 0.95, opacity: 0 },
+    config: {
+      duration: 350, // duration for the transition
+      mass: 1,
+      tension: 280,
+      friction: 60,
+    },
+  });
+
   return (
     <>
       {/* Breadcrumbs  */}
@@ -198,8 +184,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       <animated.div
         style={{
-          ...dimensionsSpring, // To shape-shift
-          ...transformSpring, // To appear
+          ...visibilitySpring, // To appear
         }}
         className={`cmdk ${
           isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"
@@ -214,12 +199,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           shouldFilter={false}
           onKeyDown={(e: React.KeyboardEvent) => {
             // console.log(`Keydown event: ${e.key}`);
-            if (e.key === "Enter" && activePage.name === "search") {
+            if (e.key === "Enter") {
               bounce();
             }
             if (e.key === "Backspace" && !isHome && !inputValue) {
               navigateBack();
-              bounce();
               e.preventDefault();
               return;
             }
@@ -249,7 +233,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Search Results  */}
             <animated.div
               style={{ ...searchStyles }}
-              className={`w-[96%] mt-4 overflow-scroll rounded-[32px] absolute bg-blurWhite backdrop-blur-lg z-10 border border-silver scrollbar-none transform-gpu ${
+              className={`w-[96%] mt-4 overflow-scroll rounded-[32px] absolute bg-blurWhite backdrop-blur-lg z-20 border border-silver scrollbar-none transform-gpu ${
                 hideSearch
                   ? "pointer-events-none"
                   : "!pt-[4rem] pointer-events-auto shadow-search"
@@ -263,23 +247,24 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               />
             </animated.div>
           </div>
-          {/* Active Page / Use Gesture */}
+          {/* Container / Shapeshifter */}
           <animated.div
-            {...bind()}
             style={{
-              x,
-              y,
-              scale,
+              ...dimensionsSpring, // To shape-shift or parent dimensions
             }}
-            className={`flex min-w-full max-w-screen min-h-ful max-h-full rounded-[24px] z-0 hoverable-large ${
-              isVisible
-                ? `shadow-cmdkScaled ${
-                    activePage.name === "user" ? "!rounded-full" : ""
-                  }`
-                : ""
+            className={`flex bg-white rounded-[24px] z-0 hoverable-large relative ${
+              isVisible ? `shadow-cmdkScaled` : ""
             } `}
           >
-            <ActiveComponent />
+            {/* Apply transition */}
+            {transitions((style, Component) => (
+              <animated.div
+                className={"flex w-full h-full bg-white rounded-[24px] z-50"}
+                style={{ ...style, position: "absolute" }}
+              >
+                <Component />
+              </animated.div>
+            ))}
           </animated.div>
         </Command>
       </animated.div>

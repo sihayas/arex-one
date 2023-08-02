@@ -7,7 +7,7 @@ export const useSelectAlbum = () => {
   const { getDominantColor } = useDominantColor();
 
   // CMDK context
-  const { setPages, bounce, setHideSearch } = useCMDK();
+  const { setPages, setHideSearch } = useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
 
   // Set the album
@@ -33,9 +33,12 @@ export const useSelectAlbum = () => {
       {
         name: "album",
         album: extendedAlbum,
+        dimensions: {
+          width: 722,
+          height: 722,
+        },
       },
     ]);
-    bounce();
   };
 
   return { handleSelectAlbum };

@@ -1,6 +1,6 @@
 import { CMDK } from "./cmdk/CmdK";
 import React, { useEffect, ReactNode, useCallback } from "react";
-import AnimatedGradient from "./cmdk/AnimatedGradient";
+import AnimatedGradient from "./cmdk/pages/album/subcomponents/AnimatedGradient";
 import { useCMDK } from "@/context/CMDKContext";
 
 export default function Layout({ children }: { children: ReactNode }) {

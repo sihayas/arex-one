@@ -2,7 +2,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 export const useHandleEntryClick = (reviewId: string) => {
-  const { setPages, bounce } = useCMDK();
+  const { setPages } = useCMDK();
   const { setThreadcrumbs } = useThreadcrumb();
 
   const handleEntryClick = () => {
@@ -14,7 +14,6 @@ export const useHandleEntryClick = (reviewId: string) => {
       },
     ]);
     setThreadcrumbs([reviewId]);
-    bounce();
   };
 
   return handleEntryClick;
