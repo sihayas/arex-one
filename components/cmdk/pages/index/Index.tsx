@@ -11,7 +11,6 @@ import {
 } from "@/lib/api/indexAPI";
 
 export default function Index() {
-  const { pages } = useCMDK();
   const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
     useScrollPosition();
 

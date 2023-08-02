@@ -10,6 +10,7 @@ import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
 import { debounce } from "lodash";
 import { useDragLogic } from "@/hooks/useDragLogic";
+import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 
 export default function Album() {
   // CMDK Context
@@ -19,24 +20,28 @@ export default function Album() {
   const { selectedAlbum } = useCMDKAlbum();
   const { scrollContainerRef, restoreScrollPosition, handleInfiniteScroll } =
     useScrollPosition();
+  const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
+    selectedAlbum?.id,
+    "1444"
+  );
 
   const setDebounced = useMemo(
     () =>
-      debounce(({ newScale, newWidth }) => {
+      debounce(({ newWidth }) => {
         setPages((prevPages) => {
-          const newPages = [...prevPages];
-          const activePageIndex = newPages.length - 1;
-          newPages[activePageIndex] = {
-            ...newPages[activePageIndex],
+          const updatedPages = [...prevPages];
+          const activePageIndex = updatedPages.length - 1;
+          updatedPages[activePageIndex] = {
+            ...updatedPages[activePageIndex],
             dimensions: {
               minWidth: newWidth,
               height: 722,
             },
           };
-          return newPages;
+          return updatedPages;
         });
-      }, 100),
-    []
+      }, 150),
+    [setPages]
   );
 
   // React Spring and Drag Logic
@@ -47,7 +52,7 @@ export default function Album() {
   const scrollBind = useScroll(({ xy: [, y] }) => {
     let newScale = 1 - y / 1000;
     if (newScale > 1) newScale = 1;
-    if (newScale < 0.5) newScale = 0.6; // CHATGPT HERE
+    if (newScale < 0.5) newScale = 0.6;
 
     let newWidth = 722 + (y / 300) * (1066 - 722);
     if (newWidth < 722) newWidth = 722;
@@ -59,9 +64,6 @@ export default function Album() {
     // Defer updating the page dimensions
     setDebounced({ newScale, newWidth });
   });
-
-  // Infinite Scroll Page Tracker
-  useEffect(() => {}, []);
 
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.colors[0]) {
@@ -75,7 +77,7 @@ export default function Album() {
     return undefined;
   }, [selectedAlbum?.colors]);
 
-  // Initialize album, fetch reviews (w/likes if authd), and infinite scroll
+  // Initialize album, fetch reviews (w/likes if auth), and infinite scroll
   const albumQuery = useAlbumQuery(selectedAlbum);
   const reviewsQuery = useReviewsQuery(selectedAlbum, session?.user);
 
@@ -110,7 +112,7 @@ export default function Album() {
   useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
 
   // Load and error handling
-  if (!selectedAlbum || isLoading || isFetchingNextPage) {
+  if (!selectedAlbum || isLoading || isFetchingNextPage || isArtworkLoading) {
     return <div>loading...</div>; // Replace with your preferred loading state
   }
 
@@ -157,7 +159,7 @@ export default function Album() {
             borderRadius: scale.to((value) => `${24 + (1 - value) * -12}px`),
             boxShadow: boxShadow,
           }}
-          src={selectedAlbum.artworkUrl}
+          src={artworkUrl || "/public/images/default.png"}
           alt={`${selectedAlbum.attributes.name} artwork`}
           width={722}
           height={722}
@@ -179,7 +181,7 @@ export default function Album() {
       {/* Section Two / Entries  */}
       <div className="flex flex-col p-8 mt-4 gap-8 relative w-full">
         {/* Album Entries  */}
-        <div className="flex flex-col gap-8 overflow-visible h-full pb-[60vh]">
+        <div className="flex flex-col gap-8 overflow-visible h-full">
           {flattenedReviews?.length > 0 ? (
             flattenedReviews.map((review) => (
               <EntryPreview key={review.id} review={review} />

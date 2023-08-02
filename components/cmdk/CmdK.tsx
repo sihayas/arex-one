@@ -142,14 +142,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const ActiveComponent = componentMap[activePage.name] || Index;
 
   const transitions = useTransition(ActiveComponent, {
-    from: { scale: 0.9, opacity: 0 },
-    enter: { scale: 1, opacity: 1, delay: 300 }, // Add delay equal to the duration of leave transition
-    leave: { scale: 0.9, opacity: 0 },
+    from: { scale: 0.95, opacity: 0 },
+    enter: { scale: 1, opacity: 1, delay: 350 }, // Add delay equal to the duration of leave transition
+    leave: { scale: 0.95, opacity: 0 },
     config: {
-      duration: 300, // duration for the transition
-      // mass: 1,
-      // tension: 280,
-      // friction: 60,
+      duration: 350, // duration for the transition
+      mass: 1,
+      tension: 280,
+      friction: 60,
     },
   });
 
@@ -243,7 +243,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             style={{
               ...dimensionsSpring, // To shape-shift or parent dimensions
             }}
-            className={`flex justify-center bg-white rounded-[24px] z-0 hoverable-large relative transition-all duration-500 ${
+            className={`flex justify-center bg-white rounded-[24px] z-0 hoverable-large relative ${
               isVisible ? `drop-shadow-2xl` : ""
             } `}
           >
