@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 interface UserAvatarProps {
-  imageSrc: string;
+  imageSrc: string | undefined;
   altText: string;
   height?: number;
   width?: number;
@@ -17,6 +17,21 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   width = 32,
   quality = 100,
 }) => {
+  if (!imageSrc) {
+    return (
+      <div
+        className={`
+        rounded-full 
+        bg-gray3
+        border-2 
+        border-white 
+        w-${width} 
+        h-${height} 
+        ${className}
+      `}
+      ></div>
+    );
+  }
   return (
     <Image
       className={`rounded-full border border-silver ${className}`}

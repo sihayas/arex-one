@@ -116,6 +116,8 @@ export interface ReviewData {
   replies: ReplyData[];
   updatedAt: string;
   viewsCount: number;
+
+  _count: CountData;
 }
 
 export interface ReviewFormInputs {
@@ -166,3 +168,8 @@ export interface UserData {
 }
 
 export interface ActivityData {}
+
+interface CountData {
+  replies: number;
+  likes: number;
+}

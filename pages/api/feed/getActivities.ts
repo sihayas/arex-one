@@ -54,15 +54,35 @@ export default async function handle(
             },
           },
           review: {
-            include: {
+            select: {
+              id: true,
+              content: true,
               author: true,
-              album: true,
+              albumId: true,
+              rating: true,
               likes: true,
+              _count: {
+                select: { replies: true, likes: true },
+              },
+              // include 2 reply images
+              replies: {
+                take: 2,
+                select: {
+                  author: {
+                    select: {
+                      image: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
             },
           },
           follow: true,
         },
       });
+
+      res.status(200).json(activities);
 
       res.status(200).json(activities);
     } catch (error) {

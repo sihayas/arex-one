@@ -38,9 +38,11 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
     ]);
   };
 
+  console.log(review);
+
   return (
     //PB-6 to level with the footer
-    <div className="flex flex-col pb-14">
+    <div className="flex flex-col">
       <div className="translate-x-4 translate-y-4 z-10">
         <Footer
           albumId={review.albumId}
@@ -66,11 +68,7 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
           >
             {review.content}
             <div className="absolute -right-3 -bottom-3">
-              <LikeButton
-                handleLikeClick={handleLikeClick}
-                liked={liked}
-                likeCount={likeCount}
-              />
+              <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
             </div>
           </div>
           {/* Name  */}
@@ -81,6 +79,41 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
             {review.author?.name}
           </div>
         </div>
+      </div>
+      <div className="flex items-center gap-2 mt-8 ml-7 ">
+        {review.replies && review._count.replies > 0 && (
+          <div className="flex items-center px-2 py-1 border border-silver rounded-lg rounded-bl-[2px]">
+            <UserAvatar
+              className={"!border-2 border-white"}
+              imageSrc={review.replies[0].author.image}
+              altText={`${review.replies[0].author.name}'s avatar`}
+              width={16}
+              height={16}
+            />
+            <UserAvatar
+              className={"-ml-1 !border-2 border-white"}
+              imageSrc={review.replies[1].author.image}
+              altText={`${review.replies[1].author.name}'s avatar`}
+              width={16}
+              height={16}
+            />
+
+            <div className="text-xs text-gray2 ml-1">
+              {review._count.replies}
+            </div>
+          </div>
+        )}
+
+        {review._count.replies > 0 && review._count.likes > 0 && (
+          <svg height="4" width="4">
+            <circle cx="2" cy="2" r="2" fill="#CCC" />
+          </svg>
+        )}
+        {review.likes && review._count.likes > 0 && (
+          <div className="flex items-center text-xs text-gray2">
+            {review._count.likes} {review._count.likes > 1 ? "likes" : "like"}
+          </div>
+        )}
       </div>
     </div>
   );

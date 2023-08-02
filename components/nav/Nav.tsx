@@ -23,8 +23,8 @@ const Nav: React.FC = () => {
 
   // React Spring
   const searchStyle = useSpring({
-    height: session && navText.length > 0 && data ? "554px" : "44px",
-    from: { height: "44px" },
+    height: session && navText.length > 0 && data ? "554px" : "36px",
+    from: { height: "36px" },
     config: { tension: 700, friction: 60 }, // Increase tension for faster animation
   });
 
@@ -54,7 +54,7 @@ const Nav: React.FC = () => {
         <div className="flex flex-col relative ">
           {/* Quick Search  */}
           <animated.div
-            className="absolute flex flex-col justify-end bottom-[54px] -left-[480px] w-[512px] border border-silver bg-silver backdrop-blur-xl rounded-[22px]"
+            className="absolute flex flex-col bottom-[54px] -left-[480px] w-[512px] bg-silver backdrop-blur-xl rounded-[22px]"
             style={searchStyle}
           >
             <div
@@ -72,7 +72,7 @@ const Nav: React.FC = () => {
 
             <TextareaAutosize
               id="entryText"
-              className="w-full p-3 bg-transparent resize-none text-white text-sm focus:outline-none hoverable-medium"
+              className="w-full p-2 pl-3 bg-transparent resize-none text-white text-sm focus:outline-none hoverable-medium"
               minRows={1}
               maxRows={12}
               disabled={!session}
