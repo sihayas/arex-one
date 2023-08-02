@@ -9,7 +9,7 @@ export type Page = {
   user?: string;
   scrollPosition?: number;
   dimensions?: {
-    width: number;
+    minWidth: number;
     height: number;
   };
 };

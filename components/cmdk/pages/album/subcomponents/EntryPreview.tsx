@@ -40,7 +40,7 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 w-[484px] overflow-visible">
+    <div className="flex flex-col gap-1 w-[484px] overflow-visible">
       {/* Review Content  */}
       <div className="flex relative">
         <div
@@ -49,7 +49,12 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
         >
           {review.content}
         </div>
-        <Stars className={"absolute -left-3 -top-3"} rating={review.rating} />
+        <Stars
+          className={
+            "absolute -left-3 -top-3 border border-silver rounded-full p-1 bg-white"
+          }
+          rating={review.rating}
+        />
 
         {/* Reply Count & Like Count */}
         <div className="absolute flex  gap-2 -right-3 -bottom-6">

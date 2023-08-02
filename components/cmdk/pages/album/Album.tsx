@@ -29,7 +29,7 @@ export default function Album() {
           newPages[activePageIndex] = {
             ...newPages[activePageIndex],
             dimensions: {
-              width: newWidth,
+              minWidth: newWidth,
               height: 722,
             },
           };
@@ -49,7 +49,7 @@ export default function Album() {
     if (newScale > 1) newScale = 1;
     if (newScale < 0.5) newScale = 0.6; // CHATGPT HERE
 
-    let newWidth = 722 + (y / 100) * (1066 - 722);
+    let newWidth = 722 + (y / 300) * (1066 - 722);
     if (newWidth < 722) newWidth = 722;
     if (newWidth > 1066) newWidth = 1066;
 
@@ -75,12 +75,10 @@ export default function Album() {
     return undefined;
   }, [selectedAlbum?.colors]);
 
-  // Initialize album and mark as viewed
+  // Initialize album, fetch reviews (w/likes if authd), and infinite scroll
   const albumQuery = useAlbumQuery(selectedAlbum);
-  // Fetch reviews for the album
   const reviewsQuery = useReviewsQuery(selectedAlbum, session?.user);
 
-  // Call initialize album and fetch reviews
   const { data, isLoading, isError } = albumQuery;
   const {
     data: reviewsData,
@@ -132,7 +130,7 @@ export default function Album() {
       {...scrollBind()}
       {...dragBind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[24px] h-full overflow-x-visible overflow-y-scroll scrollbar-none relative"
+      className="flex flex-col items-center rounded-[24px] h-full overflow-x-visible overflow-y-scroll scrollbar-none relative scale-x-150"
       style={{
         width: width.to((w) => `${w}px`),
         transform: dragScale.to((s) => `scale(${s})`),
@@ -140,16 +138,20 @@ export default function Album() {
         y,
       }}
     >
-      {/* Section One / Album Art */}
+      {/* Top Section */}
       <animated.div
         style={{
           transform: scale.to(
-            (value) => `scale(${value}) translateX(${(1 - value) * 74}rem)`
+            (value) =>
+              `scale3d(${value}, ${value}, ${value}) translate3d(${
+                (1 - value) * 67
+              }rem, 0, 0)`
           ),
           transformOrigin: "center",
         }}
-        className="sticky top-0 overflow-visible"
+        className="sticky top-0"
       >
+        {/* Album Artwork  */}
         <animated.img
           style={{
             borderRadius: scale.to((value) => `${24 + (1 - value) * -12}px`),
@@ -162,12 +164,22 @@ export default function Album() {
           onDragStart={(e) => e.preventDefault()}
           draggable="false"
         />
+
+        {/* Album Info  */}
+        <div className="flex flex-col items-center justify-center gap-2 p-4">
+          <div className="text-3xl font-medium text-black">
+            {selectedAlbum.attributes.name}
+          </div>
+          <div className="text-2xl text-gray2">
+            {selectedAlbum.attributes.artistName}
+          </div>
+        </div>
       </animated.div>
 
       {/* Section Two / Entries  */}
       <div className="flex flex-col p-8 mt-4 gap-8 relative w-full">
         {/* Album Entries  */}
-        <div className="flex flex-col gap-10 overflow-visible h-full pb-[60vh]">
+        <div className="flex flex-col gap-8 overflow-visible h-full pb-[60vh]">
           {flattenedReviews?.length > 0 ? (
             flattenedReviews.map((review) => (
               <EntryPreview key={review.id} review={review} />

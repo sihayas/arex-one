@@ -20,13 +20,14 @@ import SearchAlbums from "@/lib/api/searchAPI";
 
 type PageName = "index" | "album" | "entry" | "form" | "user";
 
-const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
-  index: { width: 1022, height: 680 }, //884
-  album: { width: 1022, height: 722 },
-  entry: { width: 800, height: 800 },
-  form: { width: 960, height: 480 },
-  user: { width: 768, height: 768 },
-};
+const PAGE_DIMENSIONS: Record<PageName, { minWidth: number; height: number }> =
+  {
+    index: { minWidth: 1022, height: 680 }, //884
+    album: { minWidth: 722, height: 722 },
+    entry: { minWidth: 800, height: 800 },
+    form: { minWidth: 960, height: 480 },
+    user: { minWidth: 768, height: 768 },
+  };
 
 const MemoizedSearch = React.memo(Search);
 
@@ -61,7 +62,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Spring dimensions
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
-    width: PAGE_DIMENSIONS[previousPage.name as PageName]?.width,
+    minWidth: PAGE_DIMENSIONS[previousPage.name as PageName]?.minWidth,
     height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height,
     config: {
       tension: 420,
@@ -73,15 +74,16 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
+        // If the page has custom dimensions, use them
         const targetPageDimensions =
           activePage.dimensions || PAGE_DIMENSIONS[activePage.name as PageName];
         await next({
-          width: targetPageDimensions?.width,
+          minWidth: targetPageDimensions?.minWidth,
           height: targetPageDimensions?.height,
         });
       },
     });
-  }, [activePage.name, activePage.dimensions, setDimensionsSpring]);
+  }, [activePage.name, setDimensionsSpring]);
 
   // Spring CMDK visibility
   const visibilitySpring = useSpring({
@@ -129,36 +131,25 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   }, [setHideSearch]);
 
   // Handle page render
-  let ActiveComponent;
-  switch (activePage.name) {
-    case "index":
-      ActiveComponent = Index;
-      break;
-    case "album":
-      ActiveComponent = Album;
-      break;
-    case "entry":
-      ActiveComponent = Entry;
-      break;
-    case "form":
-      ActiveComponent = Form;
-      break;
-    case "user":
-      ActiveComponent = User;
-      break;
-    default:
-      ActiveComponent = Index;
-  }
+  const componentMap: Record<string, React.ComponentType> = {
+    index: Index,
+    album: Album,
+    entry: Entry,
+    form: Form,
+    user: User,
+  };
+
+  const ActiveComponent = componentMap[activePage.name] || Index;
 
   const transitions = useTransition(ActiveComponent, {
-    from: { scale: 0.95, opacity: 0 },
-    enter: { scale: 1, opacity: 1, delay: 350 }, // Add delay equal to the duration of leave transition
-    leave: { scale: 0.95, opacity: 0 },
+    from: { scale: 0.9, opacity: 0 },
+    enter: { scale: 1, opacity: 1, delay: 300 }, // Add delay equal to the duration of leave transition
+    leave: { scale: 0.9, opacity: 0 },
     config: {
-      duration: 350, // duration for the transition
-      mass: 1,
-      tension: 280,
-      friction: 60,
+      duration: 300, // duration for the transition
+      // mass: 1,
+      // tension: 280,
+      // friction: 60,
     },
   });
 
@@ -219,7 +210,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                   : "translate-y-4 z-20"
               }`}
             >
-              <HomeIcon width={24} height={24} color={"#333"} />
+              <HomeIcon minWidth={24} height={24} color={"#333"} />
               <Command.Input
                 className={`bg-blurWhite backdrop-blur-sm border border-silver`}
                 ref={inputRef}
@@ -252,14 +243,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             style={{
               ...dimensionsSpring, // To shape-shift or parent dimensions
             }}
-            className={`flex bg-white rounded-[24px] z-0 hoverable-large relative ${
-              isVisible ? `shadow-cmdkScaled` : ""
+            className={`flex justify-center bg-white rounded-[24px] z-0 hoverable-large relative transition-all duration-500 ${
+              isVisible ? `drop-shadow-2xl` : ""
             } `}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
               <animated.div
-                className={"flex w-full h-full bg-white rounded-[24px] z-50"}
+                className={"flex min-w-fit h-full bg-white rounded-[24px]"}
                 style={{ ...style, position: "absolute" }}
               >
                 <Component />
