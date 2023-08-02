@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import { UserAvatar, LikeButton } from "../cmdk/generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
-import { Stars } from "../cmdk/generics";
 import useHandleLikeClick from "@/hooks/useLike";
 import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
 import { Footer } from "./Footer";
@@ -18,14 +17,14 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
 
   // const replyCount = review.replies.length;
 
-  // const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
-  //   review.likedByUser,
-  //   review.likes,
-  //   "/api/review/postLike",
-  //   "reviewId",
-  //   review.id,
-  //   session
-  // );
+  const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
+    review.likedByUser,
+    review.likes,
+    "/api/review/postLike",
+    "reviewId",
+    review.id,
+    session
+  );
 
   const handleEntryClick = useHandleEntryClick(review.id);
 
@@ -57,15 +56,22 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
           width={24}
           height={24}
         />
-        <div className="relative w-full">
+        <div className="relative w-[484px]">
           <div
             onClick={() => {
               handleEntryClick();
               setIsVisible((prevIsVisible) => !prevIsVisible);
             }}
-            className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible hoverable-medium`}
+            className={`w-[full] text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible hoverable-medium`}
           >
             {review.content}
+            <div className="absolute -right-3 -bottom-3">
+              <LikeButton
+                handleLikeClick={handleLikeClick}
+                liked={liked}
+                likeCount={likeCount}
+              />
+            </div>
           </div>
           {/* Name  */}
           <div
@@ -94,10 +100,7 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
 //     {/* Reply Count & Like Count */}
 //     <div className="absolute flex  gap-2 -right-3 -bottom-6">
 //       {/* Like Count  */}
-//       <div className="flex flex-col items-center">
-//         <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
-//         <div className=" text-[10px] text-gray2">{likeCount}</div>
-//       </div>
+
 //     </div>
 //   </div>
 

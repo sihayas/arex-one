@@ -57,6 +57,7 @@ export default async function handle(
             include: {
               author: true,
               album: true,
+              likes: true,
             },
           },
           follow: true,

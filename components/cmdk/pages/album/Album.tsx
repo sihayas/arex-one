@@ -20,10 +20,6 @@ export default function Album() {
   const { selectedAlbum } = useCMDKAlbum();
   const { scrollContainerRef, restoreScrollPosition, handleInfiniteScroll } =
     useScrollPosition();
-  const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
-    selectedAlbum?.id,
-    "1444"
-  );
 
   const setDebounced = useMemo(
     () =>
@@ -89,6 +85,10 @@ export default function Album() {
     isFetchingNextPage,
     isError: isReviewsError,
   } = reviewsQuery;
+  const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
+    selectedAlbum?.id,
+    "1444"
+  );
 
   // Infinite Scroll Page Tracker
   useEffect(() => {
