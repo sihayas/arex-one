@@ -9,8 +9,8 @@ import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
 import { debounce } from "lodash";
-import { useDragLogic } from "@/hooks/useDragLogic";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
+import { useScrollContext } from "@/context/ScrollContext";
 
 export default function Album() {
   // CMDK Context
@@ -20,6 +20,7 @@ export default function Album() {
   const { selectedAlbum } = useCMDKAlbum();
   const { scrollContainerRef, restoreScrollPosition, handleInfiniteScroll } =
     useScrollPosition();
+  const { isScrollingRight } = useScrollContext();
 
   const setDebounced = useMemo(
     () =>
@@ -42,7 +43,6 @@ export default function Album() {
 
   // React Spring and Drag Logic
   const [{ scale, width }, set] = useSpring(() => ({ scale: 1, width: 722 }));
-  const { bind: dragBind, x, y, scale: dragScale } = useDragLogic();
 
   // Shrink and width logic
   const scrollBind = useScroll(({ xy: [, y] }) => {
@@ -127,17 +127,16 @@ export default function Album() {
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
+  console.log("rerender");
+
   return (
     <animated.div
       {...scrollBind()}
-      {...dragBind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[24px] h-full overflow-x-visible overflow-y-scroll scrollbar-none relative scale-x-150"
+      className="flex flex-col items-center rounded-[24px] h-full overflow-x-visible overflow-y-scroll scrollbar-none relative"
       style={{
         width: width.to((w) => `${w}px`),
-        transform: dragScale.to((s) => `scale(${s})`),
-        x,
-        y,
+        backgroundColor: isScrollingRight ? "red" : "initial", // Change this to suit your needs
       }}
     >
       {/* Top Section */}

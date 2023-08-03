@@ -2,18 +2,6 @@ import React, { useState, useCallback, useContext, useMemo } from "react";
 import { AlbumData } from "@/lib/interfaces";
 import { useThreadcrumb } from "./Threadcrumbs";
 
-export type Page = {
-  name: string;
-  album?: AlbumData;
-  threadcrumbs?: string[];
-  user?: string;
-  scrollPosition?: number;
-  dimensions?: {
-    minWidth: number;
-    height: number;
-  };
-};
-
 export type CMDKContextType = {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,6 +24,18 @@ type CMDKProviderProps = {
   children: React.ReactNode;
 };
 
+export type Page = {
+  name: string;
+  album?: AlbumData;
+  threadcrumbs?: string[];
+  user?: string;
+  scrollPosition?: number;
+  dimensions: {
+    minWidth: number;
+    height: number;
+  };
+};
+
 export const CMDKContext = React.createContext<CMDKContextType | undefined>(
   undefined
 );
@@ -50,7 +50,9 @@ export const useCMDK = (): CMDKContextType => {
 };
 
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
-  const [pages, setPages] = useState<Page[]>([{ name: "index" }]);
+  const [pages, setPages] = useState<Page[]>([
+    { name: "index", dimensions: { minWidth: 1022, height: 680 } },
+  ]);
   const [isVisible, setIsVisible] = useState(false);
   const [hideSearch, setHideSearch] = useState(true);
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
@@ -77,7 +79,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   );
 
   const resetPage = useCallback(() => {
-    setPages([{ name: "index" }]);
+    setPages([{ name: "index", dimensions: { minWidth: 1022, height: 680 } }]);
   }, [setPages]);
 
   return (

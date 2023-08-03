@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { throttle } from "lodash";
+import { useCMDK } from "@/context/CMDKContext";
+import { useScrollContext } from "@/context/ScrollContext";
 
 const springConfig = { tension: 500, friction: 70 };
 
 function CustomCursor() {
+  const { pages } = useCMDK();
+  const componentWidth = pages[pages.length - 1].dimensions.minWidth;
+  const [cursorOnRight, setCursorOnRight] = useState(false);
+  const { setIsScrollingRight } = useScrollContext();
+
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
@@ -16,8 +23,20 @@ function CustomCursor() {
   });
 
   const cursorSize = 40;
+
   const moveCursor = throttle((e: MouseEvent) => {
-    setCoords({ x: e.clientX - cursorSize / 2, y: e.clientY - cursorSize / 2 });
+    const cursorX = e.clientX - cursorSize / 2;
+    const cursorY = e.clientY - cursorSize / 2;
+
+    // Detect if the cursor is on the right side of the component
+    if (cursorX > componentWidth / 2) {
+      setCursorOnRight(true);
+      console.log("right");
+    } else {
+      setCursorOnRight(false);
+    }
+
+    setCoords({ x: cursorX, y: cursorY });
   }, 16);
 
   const hoverCursor = (e: MouseEvent) => {
@@ -53,6 +72,24 @@ function CustomCursor() {
   const releaseCursor = () => {
     setClicked(false);
   };
+
+  useEffect(() => {
+    if (cursorOnRight) {
+      const handleWheel = (e) => {
+        console.log("Scroll event detected on the right side!");
+        setIsScrollingRight(true);
+
+        // To stop changing the background after a small delay
+        setTimeout(() => setIsScrollingRight(false), 500);
+      };
+
+      window.addEventListener("wheel", handleWheel);
+
+      return () => {
+        window.removeEventListener("wheel", handleWheel);
+      };
+    }
+  }, [cursorOnRight, setIsScrollingRight]);
 
   useEffect(() => {
     document.addEventListener("mousemove", moveCursor);

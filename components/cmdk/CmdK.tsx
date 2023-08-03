@@ -269,14 +269,3 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 //     console.log("backed up crumbs");
 //   }
 // }, [activePage, threadcrumbs]);
-
-//Focus on input always
-// useEffect(() => {
-//   if (inputRef.current) {
-//     if (isVisible && activePage.name === "index") {
-//       inputRef.current.focus();
-//     } else {
-//       inputRef.current.blur();
-//     }
-//   }
-// }, [isVisible, activePage.name]);

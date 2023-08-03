@@ -11,6 +11,8 @@ import { Toaster } from "sonner";
 import { CMDKProvider } from "../context/CMDKContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import CustomCursor from "@/components/CustomCursor";
+import { ScrollProvider } from "@/context/ScrollContext";
+
 const App = ({ Component, pageProps }: AppProps) => {
   const [queryClient] = useState(() => new QueryClient());
 
@@ -21,14 +23,16 @@ const App = ({ Component, pageProps }: AppProps) => {
           src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"
           async
         />
-        <CMDKProvider>
-          <AlbumDetailsProvider>
-            <ThreadcrumbProvider>
-              <CustomCursor />
-              <Component {...pageProps} />
-            </ThreadcrumbProvider>
-          </AlbumDetailsProvider>
-        </CMDKProvider>
+        <ScrollProvider>
+          <CMDKProvider>
+            <AlbumDetailsProvider>
+              <ThreadcrumbProvider>
+                <CustomCursor />
+                <Component {...pageProps} />
+              </ThreadcrumbProvider>
+            </AlbumDetailsProvider>
+          </CMDKProvider>
+        </ScrollProvider>
         <Toaster />
         {/* <ReactQueryDevtools /> */}
       </SessionProvider>
