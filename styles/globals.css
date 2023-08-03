@@ -92,6 +92,7 @@ button {
   /* -webkit-backdrop-filter: invert(30%) blur(10px); */
   backdrop-filter: blur(4px);
 }
+
 .hoverable {
   cursor: none;
 }

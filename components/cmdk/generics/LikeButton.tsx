@@ -23,15 +23,14 @@ export const LikeButton: React.FC<LikeButtonProps> = ({
     <button
       onClick={(event) => {
         handleLikeClick(event);
+        event.stopPropagation();
       }}
       onMouseEnter={() => setColor("#000")}
       onMouseLeave={() => setColor(liked ? "#333" : "#CCC")}
       aria-label="like this entry"
     >
-      <div className="flex items-center bg-white border border-silver rounded-full p-1 group-hover:invert hoverable-small translate-y-[1px] relative overflow-visible">
-        <div className="group">
-          <LoveIcon color={color} width={16} height={16} />
-        </div>
+      <div className="flex items-center bg-white border border-silver rounded-full p-1 hoverable-small translate-y-[1px] relative overflow-visible hover:invert">
+        <LoveIcon color={color} width={16} height={16} />
       </div>
     </button>
   );

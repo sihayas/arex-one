@@ -1,6 +1,5 @@
 import { useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { ReplyIcon } from "../../icons";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { ReviewData, ReplyData } from "@/lib/interfaces";
@@ -58,7 +57,6 @@ export const ReplyInput = () => {
 
   const { replyParent } = useThreadcrumb();
   const [replyContent, setReplyContent] = useState("");
-  // console.log(replyParent);
 
   const handleReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReplyContent(e.target.value);
@@ -91,12 +89,10 @@ export const ReplyInput = () => {
         onClick={handleReplySubmit}
         disabled={!replyContent}
         className={`transition-opacity duration-300 ease-in-out ${
-          replyContent
-            ? "opacity-100 "
-            : "opacity-0 cursor-default"
+          replyContent ? "opacity-100 " : "opacity-0 cursor-default"
         }`}
       >
-        <ReplyIcon width={16} height={16} color={"#333"} />
+        <div className="text-xs">submit</div>
       </button>
     </div>
   );

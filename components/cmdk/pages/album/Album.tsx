@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useScroll } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/web";
 import { useSession } from "next-auth/react";
-import { EntryPreview } from "./subcomponents/EntryPreview";
+import { EntryAlbum } from "./subcomponents/EntryAlbum";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
@@ -184,7 +184,7 @@ export default function Album() {
         <div className="flex flex-col gap-8 overflow-visible h-full">
           {flattenedReviews?.length > 0 ? (
             flattenedReviews.map((review) => (
-              <EntryPreview key={review.id} review={review} />
+              <EntryAlbum key={review.id} review={review} />
             ))
           ) : (
             <div className="text-xs text-grey p-2">no entries</div>

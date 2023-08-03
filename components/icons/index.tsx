@@ -118,20 +118,6 @@ export function HomeIcon({ ...props }) {
   );
 }
 
-export function ReplyIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill={props.color}
-      className="prefix__bi prefix__bi-reply-fill"
-      viewBox="0 0 16 16"
-      {...props}
-    >
-      <path d="M6 11.9 1.3 8.6a.7.7 0 0 1 0-1.2L5.9 4a.7.7 0 0 1 1.1.6V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.3c0 .5-.6.9-1 .6z" />
-    </svg>
-  );
-}
-
 export function FavoritesIcon({ ...props }) {
   return (
     <svg

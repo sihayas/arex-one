@@ -1,18 +1,16 @@
 import React from "react";
-import { ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import { UserAvatar, LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { Stars } from "../../../generics";
 import useHandleLikeClick from "@/hooks/useLike";
-import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
 
-interface EntryPreviewProps {
+interface EntryFullProps {
   review: ReviewData;
 }
 
-export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
+export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   const { data: session } = useSession();
   const { setPages } = useCMDK();
 
@@ -25,8 +23,6 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
     session
   );
 
-  const handleEntryClick = useHandleEntryClick(review.id);
-
   const handleUserClick = () => {
     setPages((prevPages) => [
       ...prevPages,
@@ -38,11 +34,10 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
   };
 
   return (
-    <div className="flex flex-col gap-1 w-[484px] overflow-visible">
-      {/* Review Content  */}
+    <div className="flex flex-col gap-1 w-[484px] overflow-visible relative group">
+      {/* Review Content, Like Button  */}
       <div className="flex relative">
         <div
-          onClick={handleEntryClick}
           className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words hoverable-medium`}
         >
           {review.content}
@@ -54,25 +49,12 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
           rating={review.rating}
         />
 
-        {/* Reply Count & Like Count */}
-        <div className="absolute flex  gap-2 -right-3 -bottom-6">
-          {/* Reply Count  */}
-          <div className="flex mt-1.5 items-center gap-1 px-1 py-[2px] rounded-full max-h-4 bg-white border border-silver">
-            <ReplyIcon width={8} height={8} color={"#999"} />
-            <div className="text-[10px] text-gray2">
-              {review._count.replies}
-            </div>
-          </div>
-
-          {/* Like Count  */}
-          <div className="flex flex-col items-center">
-            <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
-            <div className=" text-[10px] text-gray2">{likeCount}</div>
-          </div>
+        <div className="absolute gap-2 -right-3 -bottom-2 opacity-50 group-hover:opacity-100 transition-opacity duration-300">
+          <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
         </div>
       </div>
 
-      {/* Attribution */}
+      {/* Username and Avatar */}
       <div
         onClick={handleUserClick}
         className="flex items-center gap-2 hoverable-small"
@@ -90,6 +72,29 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
         >
           {review.author?.name}
         </div>
+      </div>
+
+      {/* Replies and Likes  */}
+      <div className="flex items-center gap-2 mt-2 ml-[4px] hoverable-small absolute -bottom-6">
+        {review._count.replies > 0 && (
+          <div className="flex items-center justify-center h-4 w-4 bg-gray3 rounded-full">
+            <div className="text-[10px] text-white">
+              {`${review._count.replies}`}
+            </div>
+          </div>
+        )}
+
+        {review._count.replies > 0 && review._count.likes > 0 && (
+          <svg height="4" width="4">
+            <circle cx="2" cy="2" r="2" fill="#CCC" />
+          </svg>
+        )}
+
+        {review.likes && review._count.likes > 0 && (
+          <div className="flex items-center text-xs text-gray2">
+            {review._count.likes} {review._count.likes > 1 ? "likes" : "like"}
+          </div>
+        )}
       </div>
     </div>
   );

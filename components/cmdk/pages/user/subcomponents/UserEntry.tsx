@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { ReplyIcon } from "../../../../icons";
 import { useSession } from "next-auth/react";
 import { LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
@@ -75,12 +74,6 @@ export const UserEntry: React.FC<UserEntryProps> = ({ review }) => {
 
         {/* Reply Count & Like Count */}
         <div className="absolute flex  gap-2 -right-3 -bottom-6 z-30">
-          {/* Reply Count  */}
-          <div className="flex mt-1.5 items-center gap-1 px-1 py-[2px] rounded-full max-h-4 bg-white border border-silver">
-            <ReplyIcon width={8} height={8} color={"#999"} />
-            <div className="text-[10px] text-gray2">{replyCount}</div>
-          </div>
-
           {/* Like Count  */}
           <div className="flex flex-col items-center">
             <LikeButton handleLikeClick={handleLikeClick} liked={liked} />

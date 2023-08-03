@@ -168,6 +168,7 @@ export interface UserData {
 }
 
 export interface ActivityData {
+  id: string;
   review?: ReviewData[];
 }
 

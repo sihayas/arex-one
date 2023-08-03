@@ -6,6 +6,7 @@ import React from "react";
 import { FeedAlbum } from "@/components/feed/FeedAlbum";
 import NavBar from "@/components/nav/Nav";
 import { fetchFeed } from "@/lib/api/feedAPI";
+import { ActivityData } from "@/lib/interfaces";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -48,13 +49,16 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="w-[592px] h-[98vh] bg-[#FFF] border border-silver justify-self-center self-center rounded-[16px] p-8 pb-40 overflow-scroll scrollbar-none">
+      <div className="w-[592px] h-[98vh] bg-[#FFF] border border-silver justify-self-center self-center rounded-[16px] p-8 pb-32 overflow-scroll scrollbar-none">
         {/* Render the feed here using the data */}
-        {data?.map((activity) => (
+        {data?.map((activity: ActivityData) => (
           <div key={activity.id}>
             <FeedAlbum review={activity.review} />
           </div>
         ))}
+        <div className="text-xs text-center pt-4 text-gray3 tracking-widest font-medium">
+          END OF LINE{" "}
+        </div>
         <NavBar />
       </div>
     </Layout>

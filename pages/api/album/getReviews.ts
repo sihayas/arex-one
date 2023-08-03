@@ -63,6 +63,17 @@ export default async function handle(
         _count: {
           select: { replies: true, likes: true },
         },
+        replies: {
+          take: 2,
+          select: {
+            author: {
+              select: {
+                image: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
 

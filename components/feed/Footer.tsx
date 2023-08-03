@@ -23,6 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
     "676"
   );
 
+  // Trigger CMDK
   const handleClick = async () => {
     const imgElement = imgRef.current;
 
@@ -35,7 +36,7 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
   return (
     <div
       onClick={handleClick}
-      className="flex flex-col drop-shadow-sm hoverable-medium"
+      className="flex flex-col drop-shadow-md hoverable-medium"
     >
       {/* Art  */}
       <Image

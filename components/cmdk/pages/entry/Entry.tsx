@@ -9,7 +9,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useQuery } from "@tanstack/react-query";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { EntryPreview } from "../album/subcomponents/EntryPreview";
+import { EntryFull } from "./subcomponents/EntryFull";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 
 export const Entry = () => {
@@ -56,8 +56,7 @@ export const Entry = () => {
       return response.data;
     },
     {
-      enabled: !!reviewId, // <- Here, only fetch if reviewId is truthy
-      refetchOnWindowFocus: false,
+      enabled: !!reviewId, // <- only fetch if reviewId is truthy
       staleTime: Infinity,
     }
   );
@@ -77,9 +76,9 @@ export const Entry = () => {
   if (!review) return null;
 
   return (
-    <div className="flex flex-col rounded-[32px] w-full h-full overflow-scroll scrollbar-none relative bg-white border border-silver">
+    <div className="flex flex-col rounded-[24px] w-full h-full overflow-scroll scrollbar-none relative bg-white border border-silver">
       <div className="flex items-end p-8 pb-0 gap-8">
-        <EntryPreview review={review} />
+        <EntryFull review={review} />
 
         {/* Art  */}
         <Image
@@ -100,7 +99,7 @@ export const Entry = () => {
       <RenderReplies threadcrumbs={threadcrumbs} />
 
       {/* Reply Input  */}
-      <div className="w-[482px] fixed bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-2 rounded-full shadow-reply z-20 border border-silver">
+      <div className="w-[470px] fixed bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full shadow-sm z-20 border border-silver">
         <UserAvatar
           className="border-2 border-white rounded-full"
           imageSrc={review.author?.image}
