@@ -167,7 +167,9 @@ export interface UserData {
   bio?: string;
 }
 
-export interface ActivityData {}
+export interface ActivityData {
+  review?: ReviewData[];
+}
 
 interface CountData {
   replies: number;

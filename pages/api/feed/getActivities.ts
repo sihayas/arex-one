@@ -27,6 +27,7 @@ export default async function handle(
       // Fetch all activities related to the followed users
       const activities = await prisma.activity.findMany({
         where: {
+          // Activities where authorId is in following list of signed in user
           OR: [
             {
               like: {
@@ -48,11 +49,12 @@ export default async function handle(
           createdAt: "desc",
         },
         include: {
-          like: {
-            include: {
-              author: true,
-            },
-          },
+          // include user following likes
+          // like: {
+          //   include: {
+          //     author: true,
+          //   },
+          // },
           review: {
             select: {
               id: true,
@@ -60,9 +62,10 @@ export default async function handle(
               author: true,
               albumId: true,
               rating: true,
-              likes: true,
-              _count: {
-                select: { replies: true, likes: true },
+              // check if user has liked
+              likes: {
+                select: { id: true },
+                where: { authorId: userId },
               },
               // include 2 reply images
               replies: {
@@ -76,13 +79,20 @@ export default async function handle(
                   },
                 },
               },
+              _count: {
+                select: { replies: true, likes: true },
+              },
             },
           },
           follow: true,
         },
       });
 
-      res.status(200).json(activities);
+      activities.forEach((activity) => {
+        if (activity.review) {
+          activity.review.likedByUser = activity.review.likes.length > 0;
+        }
+      });
 
       res.status(200).json(activities);
     } catch (error) {

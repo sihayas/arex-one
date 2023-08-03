@@ -30,25 +30,28 @@ export default async function handle(
               artist: true,
             },
           },
-          likes: true,
-          replies: {
-            select: {
-              _count: true,
-            },
+          // Check if liked
+          likes: {
+            select: { id: true },
+            where: { authorId: userId },
+          },
+          _count: {
+            select: { replies: true, likes: true },
           },
         },
       });
 
       if (reviews) {
-        // Check if each review is liked by the current user
-        const reviewsWithUserLike = reviews.map((review) => {
-          const likedByUser = review.likes.some(
-            (like) => like.authorId === userId
-          );
-          return { ...review, likedByUser };
+        const reviewsWithUserLikes = reviews.map((review) => {
+          const likedByUser = review.likes.length > 0;
+
+          return {
+            ...review,
+            likedByUser,
+          };
         });
 
-        res.status(200).json(reviewsWithUserLike);
+        res.status(200).json(reviewsWithUserLikes);
       } else {
         console.log("Reviews not found for ids:", ids);
         res.status(404).json({ error: "Reviews not found." });

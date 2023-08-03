@@ -17,7 +17,7 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
 
   // const replyCount = review.replies.length;
 
-  const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
+  const { liked, handleLikeClick } = useHandleLikeClick(
     review.likedByUser,
     review.likes,
     "/api/review/postLike",

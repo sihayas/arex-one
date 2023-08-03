@@ -1,3 +1,5 @@
+// Get reviews for an album
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
 
@@ -18,7 +20,8 @@ export default async function handle(
 
   const page = parseInt(req.query.page as string) || 1;
   const sort = req.query.sort || "newest";
-  const userId = req.query.userId || null;
+  const userId =
+    typeof req.query.userId === "string" ? req.query.userId : undefined;
 
   if (!albumId) {
     return res.status(400).json({ message: "Album ID is required" });
@@ -52,19 +55,19 @@ export default async function handle(
             image: true,
           },
         },
-        replies: {
-          select: {
-            _count: true,
-          },
+        // Check if liked
+        likes: {
+          select: { id: true },
+          where: { authorId: userId },
         },
-        likes: true,
+        _count: {
+          select: { replies: true, likes: true },
+        },
       },
     });
 
     const reviewsWithUserLikes = reviews.map((review) => {
-      const likedByUser = userId
-        ? review.likes.some((like) => like.authorId === userId)
-        : false;
+      const likedByUser = review.likes.length > 0;
 
       return {
         ...review,

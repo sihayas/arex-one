@@ -16,7 +16,7 @@ export const LikeButton: React.FC<LikeButtonProps> = ({
 
   // Update color when `liked` changes
   useEffect(() => {
-    setColor(liked ? "#000" : "#FFF");
+    setColor(liked ? "#333" : "#CCC"); // Adjusted to be consistent with initial state
   }, [liked]);
 
   return (

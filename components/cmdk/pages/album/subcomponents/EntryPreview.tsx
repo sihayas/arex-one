@@ -16,8 +16,6 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
   const { data: session } = useSession();
   const { setPages } = useCMDK();
 
-  const replyCount = review.replies.length;
-
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
     review.likedByUser,
     review.likes,
@@ -61,7 +59,9 @@ export const EntryPreview: React.FC<EntryPreviewProps> = ({ review }) => {
           {/* Reply Count  */}
           <div className="flex mt-1.5 items-center gap-1 px-1 py-[2px] rounded-full max-h-4 bg-white border border-silver">
             <ReplyIcon width={8} height={8} color={"#999"} />
-            <div className="text-[10px] text-gray2">{replyCount}</div>
+            <div className="text-[10px] text-gray2">
+              {review._count.replies}
+            </div>
           </div>
 
           {/* Like Count  */}

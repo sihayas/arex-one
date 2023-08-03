@@ -7,7 +7,9 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id, userId } = req.query;
+  const { id } = req.query;
+  const userId =
+    typeof req.query.userId === "string" ? req.query.userId : undefined;
 
   if (req.method === "GET") {
     try {
@@ -30,20 +32,20 @@ export default async function handle(
               artist: true,
             },
           },
-          likes: true,
-          replies: {
-            select: {
-              _count: true,
-            },
+          // Check if liked
+          likes: {
+            select: { id: true },
+            where: { authorId: userId },
+          },
+          _count: {
+            select: { replies: true, likes: true },
           },
         },
       });
 
       if (review) {
         // Check if the review is liked by the current user
-        const likedByUser = review.likes.some(
-          (like) => like.authorId === userId
-        );
+        const likedByUser = review.likes.length > 0;
 
         const reviewWithUserLike = {
           ...review,
