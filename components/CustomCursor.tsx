@@ -7,23 +7,31 @@ import { useScrollContext } from "@/context/ScrollContext";
 const springConfig = { tension: 500, friction: 70 };
 
 function CustomCursor() {
-  const { pages } = useCMDK();
-  const componentWidth = pages[pages.length - 1].dimensions.minWidth;
-  const [cursorOnRight, setCursorOnRight] = useState(false);
-  const { setIsScrollingRight } = useScrollContext();
+  const { pages, activePage } = useCMDK();
+  const componentWidth = activePage.dimensions.minWidth;
+
+  // Cursor context
+  const {
+    setIsScrollingRight,
+    setCursorOnRight,
+    cursorOnRight,
+    setScrollDelta,
+    scrollDelta,
+  } = useScrollContext();
 
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [hoveredScale, setHoveredScale] = useState(1);
 
+  // Reactive cursor size
   const { scale } = useSpring({
     scale: clicked ? hoveredScale * 0.8 : hoveredScale,
     config: springConfig,
   });
-
   const cursorSize = 40;
 
+  // Track cursor position
   const moveCursor = throttle((e: MouseEvent) => {
     const cursorX = e.clientX - cursorSize / 2;
     const cursorY = e.clientY - cursorSize / 2;
@@ -31,13 +39,16 @@ function CustomCursor() {
     // Detect if the cursor is on the right side of the component
     if (cursorX > componentWidth / 2) {
       setCursorOnRight(true);
-      console.log("right");
     } else {
       setCursorOnRight(false);
     }
 
     setCoords({ x: cursorX, y: cursorY });
   }, 16);
+
+  useEffect(() => {
+    console.log("is cursor on right?", cursorOnRight);
+  }, [cursorOnRight]);
 
   const hoverCursor = (e: MouseEvent) => {
     let target: HTMLElement | null = e.target as HTMLElement;
@@ -72,24 +83,6 @@ function CustomCursor() {
   const releaseCursor = () => {
     setClicked(false);
   };
-
-  useEffect(() => {
-    if (cursorOnRight) {
-      const handleWheel = (e) => {
-        console.log("Scroll event detected on the right side!");
-        setIsScrollingRight(true);
-
-        // To stop changing the background after a small delay
-        setTimeout(() => setIsScrollingRight(false), 500);
-      };
-
-      window.addEventListener("wheel", handleWheel);
-
-      return () => {
-        window.removeEventListener("wheel", handleWheel);
-      };
-    }
-  }, [cursorOnRight, setIsScrollingRight]);
 
   useEffect(() => {
     document.addEventListener("mousemove", moveCursor);

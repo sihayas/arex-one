@@ -1,7 +1,7 @@
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useEffect, useMemo } from "react";
-import { useScroll } from "@use-gesture/react";
+import { useScroll, useWheel } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/web";
 import { useSession } from "next-auth/react";
 import { EntryAlbum } from "./subcomponents/EntryAlbum";
@@ -16,11 +16,11 @@ export default function Album() {
   // CMDK Context
   const { data: session } = useSession();
 
-  const { setPages, pages } = useCMDK();
+  const { setPages, pages, previousPage, activePage, navigateBack } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
   const { scrollContainerRef, restoreScrollPosition, handleInfiniteScroll } =
     useScrollPosition();
-  const { isScrollingRight } = useScrollContext();
+  const { isScrollingRight, cursorOnRight } = useScrollContext();
 
   const setDebounced = useMemo(
     () =>
@@ -41,24 +41,47 @@ export default function Album() {
     [setPages]
   );
 
-  // React Spring and Drag Logic
+  // React Spring
   const [{ scale, width }, set] = useSpring(() => ({ scale: 1, width: 722 }));
 
-  // Shrink and width logic
+  // Make wider on scroll down, and scale down Artwork
   const scrollBind = useScroll(({ xy: [, y] }) => {
-    let newScale = 1 - y / 1000;
-    if (newScale > 1) newScale = 1;
-    if (newScale < 0.5) newScale = 0.6;
+    if (!cursorOnRight) {
+      // only proceed when cursorOnRight is false
+      let newScale = 1 - y / 1000;
+      if (newScale > 1) newScale = 1;
+      if (newScale < 0.5) newScale = 0.6;
 
-    let newWidth = 722 + (y / 300) * (1066 - 722);
-    if (newWidth < 722) newWidth = 722;
-    if (newWidth > 1066) newWidth = 1066;
+      let newWidth = 722 + (y / 300) * (1066 - 722);
+      if (newWidth < 722) newWidth = 722;
+      if (newWidth > 1066) newWidth = 1066;
 
-    // Apply the new scale and width immediately to the spring animation
-    set({ scale: newScale, width: newWidth });
+      // Apply the new scale and width immediately to the spring animation
+      set({ scale: newScale, width: newWidth });
 
-    // Defer updating the page dimensions
-    setDebounced({ newScale, newWidth });
+      // Defer updating the page dimensions
+      setDebounced({ newScale, newWidth });
+    }
+  });
+
+  const wheelBind = useWheel(({ delta: [, y] }) => {
+    if (cursorOnRight && previousPage) {
+      // only proceed when cursorOnRight is true
+      let newWidth = width.get() + y * 3; // Note the + instead of -
+      if (newWidth < previousPage.dimensions.minWidth) {
+        const prevPageMinWidth = previousPage.dimensions.minWidth;
+        navigateBack();
+        newWidth = prevPageMinWidth;
+        console.log("Reached previousPage.dimensions.minWidth");
+      }
+      if (newWidth > activePage.dimensions.minWidth) {
+        newWidth = activePage.dimensions.minWidth;
+      }
+      // Apply the new width immediately to the spring animation
+      set({ width: newWidth });
+      // Defer updating the page dimensions
+      setDebounced({ newWidth });
+    }
   });
 
   const boxShadow = useMemo(() => {
@@ -132,6 +155,7 @@ export default function Album() {
   return (
     <animated.div
       {...scrollBind()}
+      {...wheelBind()}
       ref={scrollContainerRef}
       className="flex flex-col items-center rounded-[24px] h-full overflow-x-visible overflow-y-scroll scrollbar-none relative"
       style={{

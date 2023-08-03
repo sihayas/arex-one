@@ -18,6 +18,7 @@ export type CMDKContextType = {
   navigateBack: (pageNumber?: number) => void;
   resetPage: () => void;
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
+  previousPage: Page | null;
 };
 
 type CMDKProviderProps = {
@@ -51,7 +52,7 @@ export const useCMDK = (): CMDKContextType => {
 
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [pages, setPages] = useState<Page[]>([
-    { name: "index", dimensions: { minWidth: 1022, height: 680 } },
+    { name: "index", dimensions: { minWidth: 844, height: 680 } },
   ]);
   const [isVisible, setIsVisible] = useState(false);
   const [hideSearch, setHideSearch] = useState(true);
@@ -60,6 +61,11 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
+  const previousPage: Page = useMemo(
+    () =>
+      pages[pages.length - 2] || { name: "index", minWidth: 844, height: 680 },
+    [pages]
+  );
 
   const bounce = useCallback(() => {
     setBounceScale(0.95);
@@ -100,6 +106,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         navigateBack,
         resetPage,
         inputRef,
+        previousPage,
       }}
     >
       {children}

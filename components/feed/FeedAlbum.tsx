@@ -38,8 +38,6 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
     ]);
   };
 
-  console.log(review);
-
   return (
     <>
       <div className="flex flex-col">

@@ -22,7 +22,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { minWidth: number; height: number }> =
   {
-    index: { minWidth: 1022, height: 680 }, //884
+    index: { minWidth: 844, height: 680 }, //1022
     album: { minWidth: 722, height: 722 },
     entry: { minWidth: 800, height: 800 },
     form: { minWidth: 960, height: 480 },
@@ -43,6 +43,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     navigateBack,
     resetPage,
     inputRef,
+    previousPage,
   } = useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
 
@@ -51,19 +52,23 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const [inputValue, setInputValue] = useState("");
 
   //Page Tracker
-  const previousPage: Page = useMemo(
-    () => pages[pages.length - 2] || { name: "index" },
-    [pages]
-  );
   const isHome = activePage.name === "index";
+  const componentMap: Record<string, React.ComponentType> = {
+    index: Index,
+    album: Album,
+    entry: Entry,
+    form: Form,
+    user: User,
+  };
+  const ActiveComponent = componentMap[activePage.name] || Index;
 
   // Search albums
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
   // Spring dimensions
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
-    minWidth: PAGE_DIMENSIONS[previousPage.name as PageName]?.minWidth,
-    height: PAGE_DIMENSIONS[previousPage.name as PageName]?.height,
+    minWidth: PAGE_DIMENSIONS[previousPage!.name as PageName]?.minWidth,
+    height: PAGE_DIMENSIONS[previousPage!.name as PageName]?.height,
     config: {
       tension: 420,
       friction: 50,
@@ -115,7 +120,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Handle input changes
   const onValueChange = useCallback(
-    (value) => {
+    (value: string) => {
       if (hideSearch) {
         setHideSearch(false);
       }
@@ -129,17 +134,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const onBlur = useCallback(() => {
     setHideSearch(true);
   }, [setHideSearch]);
-
-  // Handle page render
-  const componentMap: Record<string, React.ComponentType> = {
-    index: Index,
-    album: Album,
-    entry: Entry,
-    form: Form,
-    user: User,
-  };
-
-  const ActiveComponent = componentMap[activePage.name] || Index;
 
   const transitions = useTransition(ActiveComponent, {
     from: { scale: 0.95, opacity: 0 },
