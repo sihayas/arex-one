@@ -15,7 +15,6 @@ import { useScrollBind } from "@/hooks/npm/useScrollBind";
 import { useWheelBind } from "@/hooks/npm/useWheelBlind";
 
 const Lethargy = require("lethargy").Lethargy;
-const lethargy = new Lethargy(2, 200, 0.4);
 
 export default function Album() {
   // CMDK Context

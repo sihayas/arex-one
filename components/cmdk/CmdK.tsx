@@ -39,7 +39,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     setHideSearch,
     activePage,
     navigateBack,
-    resetPage,
     inputRef,
     previousPage,
   } = useCMDK();
@@ -68,8 +67,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     minWidth: PAGE_DIMENSIONS[previousPage!.name as PageName]?.minWidth,
     height: PAGE_DIMENSIONS[previousPage!.name as PageName]?.height,
     config: {
-      tension: 420,
-      friction: 50,
+      tension: 400,
+      friction: 77,
     },
   }));
 
@@ -133,10 +132,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const transitions = useTransition(ActiveComponent, {
     from: { scale: 0.95, opacity: 0 },
-    enter: { scale: 1, opacity: 1, delay: 500 }, // Add delay equal to the duration of leave transition
+    enter: { scale: 1, opacity: 1, delay: 500 },
     leave: { scale: 0.95, opacity: 0 },
     config: {
-      duration: 0, // duration for the transition
+      duration: 0,
     },
   });
 
@@ -177,9 +176,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           shouldFilter={false}
           onKeyDown={(e: React.KeyboardEvent) => {
             // console.log(`Keydown event: ${e.key}`);
-            if (e.key === "Enter") {
-              bounce();
-            }
             if (e.key === "Backspace" && !isHome && !inputValue) {
               navigateBack();
               e.preventDefault();
