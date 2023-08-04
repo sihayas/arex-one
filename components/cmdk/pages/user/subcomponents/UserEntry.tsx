@@ -5,7 +5,7 @@ import { ReviewData } from "@/lib/interfaces";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { Stars } from "../../../generics";
 import Image from "next/image";
-import { useDominantColor } from "@/hooks/useDominantColor";
+import { useDominantColor } from "@/hooks/npm/useDominantColor";
 import useHandleLikeClick from "@/hooks/useLike";
 import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";

@@ -11,6 +11,8 @@ import { useReviewsQuery } from "@/lib/api/albumAPI";
 import { debounce } from "lodash";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 import { useScrollContext } from "@/context/ScrollContext";
+import { useScrollBind } from "@/hooks/npm/useScrollBind";
+import { useWheelBind } from "@/hooks/npm/useWheelBlind";
 
 const Lethargy = require("lethargy").Lethargy;
 const lethargy = new Lethargy(2, 200, 0.4);
@@ -53,7 +55,7 @@ export default function Album() {
       // only proceed when cursorOnRight is false
       let newScale = 1 - y / 1000;
       if (newScale > 1) newScale = 1;
-      if (newScale < 0.5) newScale = 0.6;
+      if (newScale < 0.5) newScale = 0.5;
 
       let newWidth = 722 + (y / 300) * (1066 - 722);
       if (newWidth < 722) newWidth = 722;
@@ -68,7 +70,7 @@ export default function Album() {
   });
 
   // Inertia tracking with lethargy to trigger shapeshift
-  const lethargy = new Lethargy(2, 200, 0.4); // Example values; adjust as needed
+  const lethargy = new Lethargy(2, 200, 0.4);
 
   let lastScrollTime = Date.now();
   const wheelBind = useWheel(({ event, last, delta, velocity }) => {
@@ -80,7 +82,6 @@ export default function Album() {
     if (!last && event) {
       isUserScroll = lethargy.check(event);
     }
-
     if (
       isUserScroll &&
       cursorOnRight &&
@@ -96,7 +97,7 @@ export default function Album() {
 
       // Log scroll speed and velocity here for debugging
 
-      if (scrollSpeed > 1 && magnitudeVelocity > 3.41) {
+      if (scrollSpeed > 1 && magnitudeVelocity > 2.41) {
         let newWidth = width.get() - -y * 3;
         if (newWidth < previousPage.dimensions.minWidth) {
           newWidth = previousPage.dimensions.minWidth;
@@ -182,6 +183,7 @@ export default function Album() {
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
+  console.log(pages);
   return (
     <animated.div
       {...scrollBind()}
@@ -231,7 +233,7 @@ export default function Album() {
       </animated.div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col p-8 mt-4 gap-8 relative w-full">
+      <div className="flex flex-col p-8 gap-8 relative w-full">
         {/* Album Entries  */}
         <div className="flex flex-col gap-8 overflow-visible h-full">
           {flattenedReviews?.length > 0 ? (

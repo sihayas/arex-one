@@ -1,30 +1,7 @@
 import React, { useState, useCallback, useContext, useMemo } from "react";
 import { AlbumData } from "@/lib/interfaces";
-import { useThreadcrumb } from "./Threadcrumbs";
 
-export type CMDKContextType = {
-  isVisible: boolean;
-  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedReviewId: string | null;
-  setSelectedReviewId: React.Dispatch<React.SetStateAction<string | null>>;
-  pages: Page[];
-  setPages: React.Dispatch<React.SetStateAction<Page[]>>;
-  bounceScale: number;
-  setBounceScale: React.Dispatch<React.SetStateAction<number>>;
-  bounce: () => void;
-  hideSearch: boolean;
-  setHideSearch: React.Dispatch<React.SetStateAction<boolean>>;
-  activePage: Page;
-  navigateBack: (pageNumber?: number) => void;
-  resetPage: () => void;
-  inputRef: React.MutableRefObject<HTMLInputElement | null>;
-  previousPage: Page | null;
-};
-
-type CMDKProviderProps = {
-  children: React.ReactNode;
-};
-
+// Define the shape of the Page data type
 export type Page = {
   name: string;
   album?: AlbumData;
@@ -37,11 +14,34 @@ export type Page = {
   };
 };
 
+// Define the shape of the context data type
+export type CMDKContextType = {
+  isVisible: boolean;
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedReviewId: string | null;
+  setSelectedReviewId: React.Dispatch<React.SetStateAction<string | null>>;
+  pages: Page[];
+  setPages: React.Dispatch<React.SetStateAction<Page[]>>;
+  hideSearch: boolean;
+  setHideSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  activePage: Page;
+  navigateBack: (pageNumber?: number) => void;
+  resetPage: () => void;
+  inputRef: React.MutableRefObject<HTMLInputElement | null>;
+  previousPage: Page | null;
+};
+
+// Define the props for the CMDKProvider component
+type CMDKProviderProps = {
+  children: React.ReactNode;
+};
+
+// Create the context, initialized as undefined
 export const CMDKContext = React.createContext<CMDKContextType | undefined>(
   undefined
 );
 
-// Export the hook
+// Export a custom hook to consume the context
 export const useCMDK = (): CMDKContextType => {
   const context = useContext(CMDKContext);
   if (!context) {
@@ -50,36 +50,34 @@ export const useCMDK = (): CMDKContextType => {
   return context;
 };
 
+// Define the provider for the context
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
-  const [pages, setPages] = useState<Page[]>([
-    { name: "index", dimensions: { minWidth: 1022, height: 680 } },
-  ]);
+  // Visiblity states
   const [isVisible, setIsVisible] = useState(false);
   const [hideSearch, setHideSearch] = useState(true);
+
+  // Page states
+  const [pages, setPages] = useState<Page[]>([
+    { name: "index", dimensions: { minWidth: 500, height: 680 } },
+  ]);
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
   const [bounceScale, setBounceScale] = useState(1);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
+  // Use memoization for performance optimization, this will prevent unnecessary re-renders
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
     () =>
-      pages[pages.length - 2] || { name: "index", minWidth: 1022, height: 680 },
+      pages[pages.length - 2] || { name: "index", minWidth: 500, height: 680 },
     [pages]
   );
 
-  const bounce = useCallback(() => {
-    setBounceScale(0.95);
-    setTimeout(() => {
-      setBounceScale(1);
-    }, 100);
-  }, [setBounceScale]);
-
+  // Define navigateBack function, responsible for navigating pages
   const navigateBack = useCallback(
     (pageNumber: number = 1) => {
       setPages((prevPages) => {
-        // Check if there's a page to navigate back to
         if (prevPages.length <= 1) {
-          return prevPages; // No more pages to navigate back to, so don't change anything
+          return prevPages;
         }
 
         const newPages = prevPages.slice(0, prevPages.length - pageNumber);
@@ -88,10 +86,13 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
     },
     [setPages]
   );
+
+  // Reset the pages to the index page
   const resetPage = useCallback(() => {
-    setPages([{ name: "index", dimensions: { minWidth: 1022, height: 680 } }]);
+    setPages([{ name: "index", dimensions: { minWidth: 500, height: 680 } }]);
   }, [setPages]);
 
+  // Render the provider with the context value
   return (
     <CMDKContext.Provider
       value={{
@@ -101,9 +102,6 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         setSelectedReviewId,
         pages,
         setPages,
-        bounceScale,
-        setBounceScale,
-        bounce,
         hideSearch,
         setHideSearch,
         activePage,

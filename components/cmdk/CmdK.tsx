@@ -22,7 +22,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { minWidth: number; height: number }> =
   {
-    index: { minWidth: 1022, height: 680 }, //1022
+    index: { minWidth: 500, height: 680 }, //1022
     album: { minWidth: 722, height: 722 },
     entry: { minWidth: 800, height: 800 },
     form: { minWidth: 960, height: 480 },
@@ -35,8 +35,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
   const {
     pages,
-    bounceScale,
-    bounce,
     hideSearch,
     setHideSearch,
     activePage,
@@ -65,7 +63,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Search albums
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
-  // Spring dimensions
+  // Shapeshift dimensions
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
     minWidth: PAGE_DIMENSIONS[previousPage!.name as PageName]?.minWidth,
     height: PAGE_DIMENSIONS[previousPage!.name as PageName]?.height,
@@ -75,13 +73,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   }));
 
-  // Spring dimensions useEffect trigger
+  // Shapeshift dimensions useEffect trigger
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
         // If the page has custom dimensions, use them
-        const targetPageDimensions =
-          activePage.dimensions || PAGE_DIMENSIONS[activePage.name as PageName];
+        const targetPageDimensions = activePage.dimensions;
         await next({
           minWidth: targetPageDimensions?.minWidth,
           height: targetPageDimensions?.height,
@@ -93,7 +90,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Spring CMDK visibility
   const visibilitySpring = useSpring({
     transform: isVisible
-      ? `translate(-50%, -50%) scale(${bounceScale})`
+      ? `translate(-50%, -50%) scale(1)`
       : `translate(-50%, -50%) scale(0.95)`,
     config: {
       tension: 400,
@@ -115,8 +112,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     if (activePage.name === "album" && activePage.album) {
       setSelectedAlbum(activePage.album);
     }
-    // bounce();
-  }, [activePage, setSelectedAlbum, pages, bounce]);
+  }, [activePage, setSelectedAlbum, pages]);
 
   // Handle input changes
   const onValueChange = useCallback(
@@ -137,20 +133,17 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const transitions = useTransition(ActiveComponent, {
     from: { scale: 0.95, opacity: 0 },
-    enter: { scale: 1, opacity: 1, delay: 250 }, // Add delay equal to the duration of leave transition
+    enter: { scale: 1, opacity: 1, delay: 500 }, // Add delay equal to the duration of leave transition
     leave: { scale: 0.95, opacity: 0 },
     config: {
-      duration: 250, // duration for the transition
-      mass: 1,
-      tension: 280,
-      friction: 60,
+      duration: 0, // duration for the transition
     },
   });
 
   return (
     <>
       {/* Breadcrumbs  */}
-      {!isHome && (
+      {/* {!isHome && (
         <div className="flex flex-col gap-2 items-center absolute top-1/2">
           <button className="text-xs text-grey" onClick={resetPage}>
             reset
@@ -165,7 +158,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             </button>
           ))}
         </div>
-      )}
+      )} */}
 
       <animated.div
         style={{
