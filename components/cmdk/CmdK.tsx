@@ -14,7 +14,6 @@ import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
 import User from "./pages/user/User";
-import { Page } from "@/context/CMDKContext";
 const Lethargy = require("lethargy").Lethargy;
 
 //Icons
@@ -180,9 +179,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
   });
 
-  // Make wider on scroll down, and scale down Artwork
+  // Album page ScrollBind, make wider on scroll down, and scale down Artwork
   const scrollBind = useScroll(({ xy: [, y] }) => {
-    if (!cursorOnRight) {
+    if (!cursorOnRight && activePage.name === "album") {
       // only proceed when cursorOnRight is false
       let newScale = 1 - y / 1000;
       if (newScale > 1) newScale = 1;
@@ -344,8 +343,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           </div>
           {/* Container / Shapeshifter */}
           <animated.div
-            {...wheelBind()}
-            {...scrollBind()}
+            {...wheelBind()} // Shapeshifter scrolling
+            {...scrollBind()} // Custom page scrolling
             style={{
               ...dimensionsSpring, // Shapeshifter
               width: width.to((w) => `${w}px`),
@@ -356,7 +355,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
-              <animated.div style={{ ...style, position: "absolute" }}>
+              <animated.div
+                className={"w-full"}
+                style={{ ...style, position: "absolute" }}
+              >
                 {Component === Album ? (
                   <Component scale={scale} />
                 ) : (

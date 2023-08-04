@@ -1,7 +1,7 @@
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useEffect, useMemo } from "react";
-import { animated } from "@react-spring/web";
+import { animated, SpringValue } from "@react-spring/web";
 import { useSession } from "next-auth/react";
 import { EntryAlbum } from "./subcomponents/EntryAlbum";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
@@ -9,7 +9,11 @@ import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 
-const Album = ({ scale }) => {
+interface AlbumProps {
+  scale: SpringValue<number>;
+}
+
+const Album = ({ scale }: AlbumProps) => {
   // CMDK Context
   const { data: session } = useSession();
 
@@ -81,7 +85,7 @@ const Album = ({ scale }) => {
   return (
     <animated.div
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[24px] h-full scrollbar-none relative"
+      className="flex flex-col items-center rounded-[24px] h-full w-full relative"
     >
       {/* Top Section */}
       <animated.div
