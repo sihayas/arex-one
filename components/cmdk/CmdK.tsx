@@ -4,7 +4,7 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 //NPM
 import { animated, useSpring, useTransition } from "@react-spring/web";
-import { useWheel } from "@use-gesture/react";
+import { useScroll, useWheel } from "@use-gesture/react";
 //Components
 import { Command } from "cmdk";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
@@ -35,13 +35,15 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
 
 const MemoizedSearch = React.memo(Search);
 
-const componentMap: Record<string, React.ComponentType> = {
+const componentMap: Record<string, React.ComponentType<any>> = {
   index: Index,
   album: Album,
   entry: Entry,
   form: Form,
   user: User,
 };
+
+let lastScrollTime = Date.now();
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
@@ -115,13 +117,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Inertia tracking with lethargy to trigger shapeshift
   const lethargy = new Lethargy(2, 200, 0.4);
-
-  const [{ width }, set] = useSpring(() => ({
+  const [{ width, scale }, set] = useSpring(() => ({
     scale: 1,
     width: activePage.dimensions.width,
   }));
-
-  let lastScrollTime = Date.now();
   const wheelBind = useWheel(({ event, last, delta, velocity }) => {
     const [, y] = delta;
 
@@ -181,6 +180,26 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
   });
 
+  // Make wider on scroll down, and scale down Artwork
+  const scrollBind = useScroll(({ xy: [, y] }) => {
+    if (!cursorOnRight) {
+      // only proceed when cursorOnRight is false
+      let newScale = 1 - y / 1000;
+      if (newScale > 1) newScale = 1;
+      if (newScale < 0.5) newScale = 0.5;
+
+      let newWidth = 722 + (y / 300) * (1066 - 722);
+      if (newWidth < 722) newWidth = 722;
+      if (newWidth > 1066) newWidth = 1066;
+
+      // Apply the new scale and width immediately to the spring animation
+      set({ scale: newScale, width: newWidth });
+
+      // Defer updating the page dimensions
+      setDebounced({ newWidth });
+    }
+  });
+
   // Spring CMDK visibility
   const visibilitySpring = useSpring({
     transform: isVisible
@@ -233,6 +252,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       duration: 0,
     },
   });
+
+  // Unmount cleanup
+  useEffect(() => {
+    return () => {
+      setDebounced.cancel();
+    };
+  }, [setDebounced]);
 
   return (
     <>
@@ -319,21 +345,23 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           {/* Container / Shapeshifter */}
           <animated.div
             {...wheelBind()}
+            {...scrollBind()}
             style={{
-              ...dimensionsSpring, // To shape-shift or parent dimensions
+              ...dimensionsSpring, // Shapeshifter
               width: width.to((w) => `${w}px`),
             }}
-            className={`flex justify-center bg-white rounded-[24px] z-0 hoverable-large relative ${
+            className={`flex justify-center bg-white rounded-[24px] z-0 hoverable-large relative overflow-scroll scrollbar-none ${
               isVisible ? `drop-shadow-2xl` : ""
             } `}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
-              <animated.div
-                className={"flex h-full rounded-[24px]"}
-                style={{ ...style, position: "absolute" }}
-              >
-                <Component />
+              <animated.div style={{ ...style, position: "absolute" }}>
+                {Component === Album ? (
+                  <Component scale={scale} />
+                ) : (
+                  <Component />
+                )}
               </animated.div>
             ))}
           </animated.div>

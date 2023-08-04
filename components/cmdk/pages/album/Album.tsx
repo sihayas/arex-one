@@ -1,72 +1,22 @@
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useEffect, useMemo } from "react";
-import { useScroll, useWheel } from "@use-gesture/react";
-import { animated, useSpring } from "@react-spring/web";
+import { animated } from "@react-spring/web";
 import { useSession } from "next-auth/react";
 import { EntryAlbum } from "./subcomponents/EntryAlbum";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
-import { debounce } from "lodash";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
-import { useScrollContext } from "@/context/ScrollContext";
-import { useScrollBind } from "@/hooks/npm/useScrollBind";
-import { useWheelBind } from "@/hooks/npm/useWheelBlind";
 
-const Lethargy = require("lethargy").Lethargy;
-
-export default function Album() {
+const Album = ({ scale }) => {
   // CMDK Context
   const { data: session } = useSession();
 
-  const { setPages, pages, previousPage, activePage, navigateBack } = useCMDK();
+  const { setPages, pages } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
   const { scrollContainerRef, restoreScrollPosition, handleInfiniteScroll } =
     useScrollPosition();
-  const { cursorOnRight } = useScrollContext();
-
-  const setDebounced = useMemo(
-    () =>
-      debounce(({ newWidth }) => {
-        setPages((prevPages) => {
-          const updatedPages = [...prevPages];
-          const activePageIndex = updatedPages.length - 1;
-          updatedPages[activePageIndex] = {
-            ...updatedPages[activePageIndex],
-            dimensions: {
-              width: newWidth,
-              height: 722,
-            },
-          };
-          return updatedPages;
-        });
-      }, 150),
-    [setPages]
-  );
-
-  // Default page transition
-  const [{ scale, width }, set] = useSpring(() => ({ scale: 1, width: 722 }));
-
-  // Make wider on scroll down, and scale down Artwork
-  const scrollBind = useScroll(({ xy: [, y] }) => {
-    if (!cursorOnRight) {
-      // only proceed when cursorOnRight is false
-      let newScale = 1 - y / 1000;
-      if (newScale > 1) newScale = 1;
-      if (newScale < 0.5) newScale = 0.5;
-
-      let newWidth = 722 + (y / 300) * (1066 - 722);
-      if (newWidth < 722) newWidth = 722;
-      if (newWidth > 1066) newWidth = 1066;
-
-      // Apply the new scale and width immediately to the spring animation
-      set({ scale: newScale, width: newWidth });
-
-      // Defer updating the page dimensions
-      setDebounced({ newScale, newWidth });
-    }
-  });
 
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.colors[0]) {
@@ -110,12 +60,6 @@ export default function Album() {
     handleInfiniteScroll,
   ]);
 
-  // Unmount cleanup
-  useEffect(() => {
-    return () => {
-      setDebounced.cancel();
-    };
-  }, [setDebounced]);
   useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
 
   // Load and error handling
@@ -134,16 +78,10 @@ export default function Album() {
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
-  console.log(pages);
   return (
     <animated.div
-      {...scrollBind()}
-      // {...wheelBind()}
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[24px] h-full overflow-x-visible overflow-y-scroll scrollbar-none relative"
-      style={{
-        width: width.to((w) => `${w}px`),
-      }}
+      className="flex flex-col items-center rounded-[24px] h-full scrollbar-none relative"
     >
       {/* Top Section */}
       <animated.div
@@ -207,4 +145,6 @@ export default function Album() {
       </div>
     </animated.div>
   );
-}
+};
+
+export default Album;
