@@ -11,17 +11,10 @@ import { useReviewsQuery } from "@/lib/api/albumAPI";
 import { debounce } from "lodash";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 import { useScrollContext } from "@/context/ScrollContext";
-import { Lethargy } from "lethargy-ts";
 
 export default function Album() {
   // CMDK Context
   const { data: session } = useSession();
-
-  const lethargy = new Lethargy({
-    sensitivity: 2,
-    delay: 100,
-    inertiaDecay: 20,
-  });
 
   const { setPages, pages, previousPage, activePage, navigateBack } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
@@ -154,7 +147,7 @@ export default function Album() {
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
-  console.log(pages);
+  console.log("rerender");
 
   return (
     <animated.div
