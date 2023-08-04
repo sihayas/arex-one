@@ -11,7 +11,9 @@ import { useReviewsQuery } from "@/lib/api/albumAPI";
 import { debounce } from "lodash";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 import { useScrollContext } from "@/context/ScrollContext";
+
 const Lethargy = require("lethargy").Lethargy;
+const lethargy = new Lethargy(2, 200, 0.4);
 
 export default function Album() {
   // CMDK Context
@@ -67,15 +69,16 @@ export default function Album() {
 
   // Inertia tracking with lethargy to trigger shapeshift
   const lethargy = new Lethargy(2, 200, 0.4); // Example values; adjust as needed
-  const wheelBind = useWheel(({ event, last, delta }) => {
+
+  let lastScrollTime = Date.now();
+  const wheelBind = useWheel(({ event, last, delta, velocity }) => {
     const [, y] = delta;
 
     let isUserScroll = true;
 
+    // Last is necessary cause React does not register the last event
     if (!last && event) {
-      // False indicates that the user is not scrolling
       isUserScroll = lethargy.check(event);
-      console.log(isUserScroll); // Added console log
     }
 
     if (
@@ -84,18 +87,32 @@ export default function Album() {
       previousPage &&
       previousPage.dimensions
     ) {
-      let newWidth = width.get() - -y * 3;
-      if (newWidth < previousPage.dimensions.minWidth) {
-        newWidth = previousPage.dimensions.minWidth;
-        navigateBack();
+      const now = Date.now();
+      const elapsedTime = now - lastScrollTime;
+      const scrollSpeed = Math.abs(y) / elapsedTime;
+      const magnitudeVelocity = Math.sqrt(
+        velocity[0] * velocity[0] + velocity[1] * velocity[1]
+      );
+
+      // Log scroll speed and velocity here for debugging
+
+      if (scrollSpeed > 1 && magnitudeVelocity > 3.41) {
+        let newWidth = width.get() - -y * 3;
+        if (newWidth < previousPage.dimensions.minWidth) {
+          newWidth = previousPage.dimensions.minWidth;
+          navigateBack();
+        }
+        if (newWidth > activePage.dimensions.minWidth) {
+          newWidth = activePage.dimensions.minWidth;
+        }
+        // Apply the new width immediately to the spring animation
+        set({ width: newWidth });
+        console.log("newWidth", newWidth);
+        // Defer updating the page dimensions
+        setDebounced({ newWidth });
       }
-      if (newWidth > activePage.dimensions.minWidth) {
-        newWidth = activePage.dimensions.minWidth;
-      }
-      // Apply the new width immediately to the spring animation
-      set({ width: newWidth });
-      // Defer updating the page dimensions
-      setDebounced({ newWidth });
+
+      lastScrollTime = now;
     }
   });
 

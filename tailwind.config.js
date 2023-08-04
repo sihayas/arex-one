@@ -37,7 +37,8 @@ module.exports = {
         silver: "rgba(0, 0, 0, 0.05)",
         blurWhite: "rgba(255, 255, 255, 0.2)",
         blurDark: "rgba(0, 0, 0, 0.8)",
-        error: "rgb(255,94,0)",
+        action: "rgb(255,94,0)",
+        cursor: "rgba(108, 108, 108, 0.5)",
       },
       letterSpacing: {
         tight: "-.02em",
