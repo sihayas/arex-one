@@ -11,6 +11,7 @@ import { useReviewsQuery } from "@/lib/api/albumAPI";
 import { debounce } from "lodash";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 import { useScrollContext } from "@/context/ScrollContext";
+const Lethargy = require("lethargy").Lethargy;
 
 export default function Album() {
   // CMDK Context
@@ -64,8 +65,25 @@ export default function Album() {
     }
   });
 
-  const wheelBind = useWheel(({ delta: [, y] }) => {
-    if (cursorOnRight && previousPage && previousPage.dimensions) {
+  // Inertia tracking with lethargy to trigger shapeshift
+  const lethargy = new Lethargy(2, 200, 0.4); // Example values; adjust as needed
+  const wheelBind = useWheel(({ event, last, delta }) => {
+    const [, y] = delta;
+
+    let isUserScroll = true;
+
+    if (!last && event) {
+      // False indicates that the user is not scrolling
+      isUserScroll = lethargy.check(event);
+      console.log(isUserScroll); // Added console log
+    }
+
+    if (
+      isUserScroll &&
+      cursorOnRight &&
+      previousPage &&
+      previousPage.dimensions
+    ) {
       let newWidth = width.get() - -y * 3;
       if (newWidth < previousPage.dimensions.minWidth) {
         newWidth = previousPage.dimensions.minWidth;
@@ -146,8 +164,6 @@ export default function Album() {
   }
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
-
-  console.log("rerender");
 
   return (
     <animated.div
