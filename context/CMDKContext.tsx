@@ -52,7 +52,7 @@ export const useCMDK = (): CMDKContextType => {
 
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [pages, setPages] = useState<Page[]>([
-    { name: "index", dimensions: { minWidth: 844, height: 680 } },
+    { name: "index", dimensions: { minWidth: 1022, height: 680 } },
   ]);
   const [isVisible, setIsVisible] = useState(false);
   const [hideSearch, setHideSearch] = useState(true);
@@ -63,7 +63,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
     () =>
-      pages[pages.length - 2] || { name: "index", minWidth: 844, height: 680 },
+      pages[pages.length - 2] || { name: "index", minWidth: 1022, height: 680 },
     [pages]
   );
 
@@ -77,13 +77,17 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const navigateBack = useCallback(
     (pageNumber: number = 1) => {
       setPages((prevPages) => {
+        // Check if there's a page to navigate back to
+        if (prevPages.length <= 1) {
+          return prevPages; // No more pages to navigate back to, so don't change anything
+        }
+
         const newPages = prevPages.slice(0, prevPages.length - pageNumber);
         return newPages;
       });
     },
     [setPages]
   );
-
   const resetPage = useCallback(() => {
     setPages([{ name: "index", dimensions: { minWidth: 1022, height: 680 } }]);
   }, [setPages]);

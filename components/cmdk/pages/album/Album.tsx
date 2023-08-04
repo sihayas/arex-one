@@ -11,16 +11,23 @@ import { useReviewsQuery } from "@/lib/api/albumAPI";
 import { debounce } from "lodash";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 import { useScrollContext } from "@/context/ScrollContext";
+import { Lethargy } from "lethargy-ts";
 
 export default function Album() {
   // CMDK Context
   const { data: session } = useSession();
 
+  const lethargy = new Lethargy({
+    sensitivity: 2,
+    delay: 100,
+    inertiaDecay: 20,
+  });
+
   const { setPages, pages, previousPage, activePage, navigateBack } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
   const { scrollContainerRef, restoreScrollPosition, handleInfiniteScroll } =
     useScrollPosition();
-  const { isScrollingRight, cursorOnRight } = useScrollContext();
+  const { cursorOnRight } = useScrollContext();
 
   const setDebounced = useMemo(
     () =>
@@ -41,7 +48,7 @@ export default function Album() {
     [setPages]
   );
 
-  // React Spring
+  // Default page transition
   const [{ scale, width }, set] = useSpring(() => ({ scale: 1, width: 722 }));
 
   // Make wider on scroll down, and scale down Artwork
@@ -65,14 +72,11 @@ export default function Album() {
   });
 
   const wheelBind = useWheel(({ delta: [, y] }) => {
-    if (cursorOnRight && previousPage) {
-      // only proceed when cursorOnRight is true
-      let newWidth = width.get() + y * 3; // Note the + instead of -
+    if (cursorOnRight && previousPage && previousPage.dimensions) {
+      let newWidth = width.get() - -y * 3;
       if (newWidth < previousPage.dimensions.minWidth) {
-        const prevPageMinWidth = previousPage.dimensions.minWidth;
+        newWidth = previousPage.dimensions.minWidth;
         navigateBack();
-        newWidth = prevPageMinWidth;
-        console.log("Reached previousPage.dimensions.minWidth");
       }
       if (newWidth > activePage.dimensions.minWidth) {
         newWidth = activePage.dimensions.minWidth;
@@ -150,7 +154,7 @@ export default function Album() {
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
-  console.log("rerender");
+  console.log(pages);
 
   return (
     <animated.div
@@ -160,7 +164,6 @@ export default function Album() {
       className="flex flex-col items-center rounded-[24px] h-full overflow-x-visible overflow-y-scroll scrollbar-none relative"
       style={{
         width: width.to((w) => `${w}px`),
-        backgroundColor: isScrollingRight ? "red" : "initial", // Change this to suit your needs
       }}
     >
       {/* Top Section */}

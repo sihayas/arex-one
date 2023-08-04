@@ -7,17 +7,11 @@ import { useScrollContext } from "@/context/ScrollContext";
 const springConfig = { tension: 500, friction: 70 };
 
 function CustomCursor() {
-  const { pages, activePage } = useCMDK();
+  const { activePage } = useCMDK();
   const componentWidth = activePage.dimensions.minWidth;
 
   // Cursor context
-  const {
-    setIsScrollingRight,
-    setCursorOnRight,
-    cursorOnRight,
-    setScrollDelta,
-    scrollDelta,
-  } = useScrollContext();
+  const { setCursorOnRight, cursorOnRight } = useScrollContext();
 
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);

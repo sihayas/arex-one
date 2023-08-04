@@ -22,7 +22,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { minWidth: number; height: number }> =
   {
-    index: { minWidth: 844, height: 680 }, //1022
+    index: { minWidth: 1022, height: 680 }, //1022
     album: { minWidth: 722, height: 722 },
     entry: { minWidth: 800, height: 800 },
     form: { minWidth: 960, height: 480 },
@@ -137,10 +137,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const transitions = useTransition(ActiveComponent, {
     from: { scale: 0.95, opacity: 0 },
-    enter: { scale: 1, opacity: 1, delay: 350 }, // Add delay equal to the duration of leave transition
+    enter: { scale: 1, opacity: 1, delay: 250 }, // Add delay equal to the duration of leave transition
     leave: { scale: 0.95, opacity: 0 },
     config: {
-      duration: 350, // duration for the transition
+      duration: 250, // duration for the transition
       mass: 1,
       tension: 280,
       friction: 60,
