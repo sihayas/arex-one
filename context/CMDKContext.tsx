@@ -9,7 +9,7 @@ export type Page = {
   user?: string;
   scrollPosition?: number;
   dimensions: {
-    minWidth: number;
+    width: number;
     height: number;
   };
 };
@@ -58,17 +58,15 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
 
   // Page states
   const [pages, setPages] = useState<Page[]>([
-    { name: "index", dimensions: { minWidth: 500, height: 680 } },
+    { name: "index", dimensions: { width: 900, height: 680 } },
   ]);
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
-  const [bounceScale, setBounceScale] = useState(1);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   // Use memoization for performance optimization, this will prevent unnecessary re-renders
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
-    () =>
-      pages[pages.length - 2] || { name: "index", minWidth: 500, height: 680 },
+    () => pages[pages.length - 2] || { name: "index", width: 900, height: 680 },
     [pages]
   );
 
@@ -79,7 +77,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         if (prevPages.length <= 1) {
           return prevPages;
         }
-
+        console.log("navigating back");
         const newPages = prevPages.slice(0, prevPages.length - pageNumber);
         return newPages;
       });
@@ -89,7 +87,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
 
   // Reset the pages to the index page
   const resetPage = useCallback(() => {
-    setPages([{ name: "index", dimensions: { minWidth: 500, height: 680 } }]);
+    setPages([{ name: "index", dimensions: { width: 900, height: 680 } }]);
   }, [setPages]);
 
   // Render the provider with the context value

@@ -8,7 +8,6 @@ const springConfig = { tension: 500, friction: 70 };
 
 function CustomCursor() {
   const { activePage } = useCMDK();
-  const componentWidth = activePage.dimensions.minWidth;
 
   // Cursor context
   const { setCursorOnRight, cursorOnRight } = useScrollContext();

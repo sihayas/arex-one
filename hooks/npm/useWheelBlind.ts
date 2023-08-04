@@ -26,7 +26,7 @@ export const useWheelBind = (
           updatedPages[activePageIndex] = {
             ...updatedPages[activePageIndex],
             dimensions: {
-              minWidth: newWidth,
+              width: newWidth,
               height: 722,
             },
           };
@@ -63,12 +63,12 @@ export const useWheelBind = (
 
       if (scrollSpeed > 1 && magnitudeVelocity > 3.41) {
         let newWidth = width.get() - -y * 3;
-        if (newWidth < previousPage.dimensions.minWidth) {
-          newWidth = previousPage.dimensions.minWidth;
+        if (newWidth < previousPage.dimensions.width) {
+          newWidth = previousPage.dimensions.width;
           navigateBack();
         }
-        if (newWidth > activePage.dimensions.minWidth) {
-          newWidth = activePage.dimensions.minWidth;
+        if (newWidth > activePage.dimensions.width) {
+          newWidth = activePage.dimensions.width;
         }
         // Apply the new width immediately to the spring animation
         set({ width: newWidth });

@@ -4,6 +4,7 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 //NPM
 import { animated, useSpring, useTransition } from "@react-spring/web";
+import { useWheel } from "@use-gesture/react";
 //Components
 import { Command } from "cmdk";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
@@ -14,22 +15,33 @@ import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
 import User from "./pages/user/User";
 import { Page } from "@/context/CMDKContext";
+const Lethargy = require("lethargy").Lethargy;
+
 //Icons
 import { HomeIcon } from "../../components/icons";
 import SearchAlbums from "@/lib/api/searchAPI";
+import { useScrollContext } from "@/context/ScrollContext";
+import { debounce } from "lodash";
 
 type PageName = "index" | "album" | "entry" | "form" | "user";
 
-const PAGE_DIMENSIONS: Record<PageName, { minWidth: number; height: number }> =
-  {
-    index: { minWidth: 500, height: 680 }, //1022
-    album: { minWidth: 722, height: 722 },
-    entry: { minWidth: 800, height: 800 },
-    form: { minWidth: 960, height: 480 },
-    user: { minWidth: 768, height: 768 },
-  };
+const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
+  index: { width: 900, height: 680 }, //1022
+  album: { width: 722, height: 722 },
+  entry: { width: 800, height: 800 },
+  form: { width: 960, height: 480 },
+  user: { width: 768, height: 768 },
+};
 
 const MemoizedSearch = React.memo(Search);
+
+const componentMap: Record<string, React.ComponentType> = {
+  index: Index,
+  album: Album,
+  entry: Entry,
+  form: Form,
+  user: User,
+};
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
@@ -41,8 +53,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     navigateBack,
     inputRef,
     previousPage,
+    resetPage,
+    setPages,
   } = useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
+  const { cursorOnRight } = useScrollContext();
 
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -50,41 +65,121 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   //Page Tracker
   const isHome = activePage.name === "index";
-  const componentMap: Record<string, React.ComponentType> = {
-    index: Index,
-    album: Album,
-    entry: Entry,
-    form: Form,
-    user: User,
-  };
+
   const ActiveComponent = componentMap[activePage.name] || Index;
 
   // Search albums
   const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
-  // Shapeshift dimensions
+  // Shapeshift dimensionss
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
-    minWidth: PAGE_DIMENSIONS[previousPage!.name as PageName]?.minWidth,
+    width: PAGE_DIMENSIONS[previousPage!.name as PageName]?.width,
     height: PAGE_DIMENSIONS[previousPage!.name as PageName]?.height,
     config: {
       tension: 400,
       friction: 77,
     },
   }));
-
-  // Shapeshift dimensions useEffect trigger
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
         // If the page has custom dimensions, use them
         const targetPageDimensions = activePage.dimensions;
         await next({
-          minWidth: targetPageDimensions?.minWidth,
+          width: targetPageDimensions?.width,
           height: targetPageDimensions?.height,
         });
       },
     });
+    set({ width: activePage.dimensions.width || 0 });
   }, [activePage.name, setDimensionsSpring]);
+
+  const setDebounced = useMemo(
+    () =>
+      debounce(({ newWidth }) => {
+        setPages((prevPages) => {
+          const updatedPages = [...prevPages];
+          const activePageIndex = updatedPages.length - 1;
+          updatedPages[activePageIndex] = {
+            ...updatedPages[activePageIndex],
+            dimensions: {
+              width: newWidth,
+              height: 722,
+            },
+          };
+          return updatedPages;
+        });
+      }, 150),
+    [setPages]
+  );
+
+  // Inertia tracking with lethargy to trigger shapeshift
+  const lethargy = new Lethargy(2, 200, 0.4);
+
+  const [{ width }, set] = useSpring(() => ({
+    scale: 1,
+    width: activePage.dimensions.width,
+  }));
+
+  let lastScrollTime = Date.now();
+  const wheelBind = useWheel(({ event, last, delta, velocity }) => {
+    const [, y] = delta;
+
+    let isUserScroll = true;
+
+    // Last is necessary cause React does not register the last event
+    if (!last && event) {
+      isUserScroll = lethargy.check(event);
+    }
+    if (
+      isUserScroll &&
+      cursorOnRight &&
+      previousPage &&
+      previousPage.dimensions
+    ) {
+      const now = Date.now();
+      const elapsedTime = now - lastScrollTime;
+      const scrollSpeed = Math.abs(y) / elapsedTime;
+      const magnitudeVelocity = Math.sqrt(
+        velocity[0] * velocity[0] + velocity[1] * velocity[1]
+      );
+
+      // Log scroll speed and velocity here for debugging
+
+      if (scrollSpeed > 1 && magnitudeVelocity > 2.41) {
+        let newWidth;
+        if (previousPage.dimensions.width > activePage.dimensions.width) {
+          // If previous page is wider, increase the width
+          newWidth = width.get() + -y * 3;
+          if (newWidth === previousPage.dimensions.width) {
+            newWidth = previousPage.dimensions.width;
+            navigateBack();
+          }
+          if (newWidth < activePage.dimensions.width) {
+            newWidth = activePage.dimensions.width;
+          }
+        } else {
+          // If previous page is narrower, decrease the width
+          newWidth = width.get() - -y * 3;
+          if (newWidth < previousPage.dimensions.width) {
+            newWidth = previousPage.dimensions.width;
+            navigateBack();
+          }
+          if (newWidth > activePage.dimensions.width) {
+            newWidth = activePage.dimensions.width;
+          }
+        }
+
+        // Apply the new width immediately to the spring animation
+        set({ width: newWidth });
+        console.log("newWidth", newWidth);
+        // Defer updating the page dimensions
+        setDebounced({ newWidth });
+      }
+
+      lastScrollTime = now;
+    }
+  });
 
   // Spring CMDK visibility
   const visibilitySpring = useSpring({
@@ -97,7 +192,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   });
 
-  // Spring dynamic search
+  // Spring search
   const searchStyles = useSpring({
     height: hideSearch ? "0px" : "448px",
     opacity: hideSearch ? 0 : 1,
@@ -142,7 +237,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   return (
     <>
       {/* Breadcrumbs  */}
-      {/* {!isHome && (
+      {!isHome && (
         <div className="flex flex-col gap-2 items-center absolute top-1/2">
           <button className="text-xs text-grey" onClick={resetPage}>
             reset
@@ -157,7 +252,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             </button>
           ))}
         </div>
-      )} */}
+      )}
 
       <animated.div
         style={{
@@ -193,7 +288,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                   : "translate-y-4 z-20"
               }`}
             >
-              <HomeIcon minWidth={24} height={24} color={"#333"} />
+              <HomeIcon width={24} height={24} color={"#333"} />
               <Command.Input
                 className={`bg-blurWhite backdrop-blur-sm border border-silver`}
                 ref={inputRef}
@@ -223,8 +318,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           </div>
           {/* Container / Shapeshifter */}
           <animated.div
+            {...wheelBind()}
             style={{
               ...dimensionsSpring, // To shape-shift or parent dimensions
+              width: width.to((w) => `${w}px`),
             }}
             className={`flex justify-center bg-white rounded-[24px] z-0 hoverable-large relative ${
               isVisible ? `drop-shadow-2xl` : ""
@@ -233,7 +330,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Apply transition */}
             {transitions((style, Component) => (
               <animated.div
-                className={"flex min-w-fit h-full bg-white rounded-[24px]"}
+                className={"flex h-full rounded-[24px]"}
                 style={{ ...style, position: "absolute" }}
               >
                 <Component />

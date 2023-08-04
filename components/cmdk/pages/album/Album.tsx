@@ -35,7 +35,7 @@ export default function Album() {
           updatedPages[activePageIndex] = {
             ...updatedPages[activePageIndex],
             dimensions: {
-              minWidth: newWidth,
+              width: newWidth,
               height: 722,
             },
           };
@@ -65,54 +65,6 @@ export default function Album() {
 
       // Defer updating the page dimensions
       setDebounced({ newScale, newWidth });
-    }
-  });
-
-  // Inertia tracking with lethargy to trigger shapeshift
-  const lethargy = new Lethargy(2, 200, 0.4);
-
-  let lastScrollTime = Date.now();
-  const wheelBind = useWheel(({ event, last, delta, velocity }) => {
-    const [, y] = delta;
-
-    let isUserScroll = true;
-
-    // Last is necessary cause React does not register the last event
-    if (!last && event) {
-      isUserScroll = lethargy.check(event);
-    }
-    if (
-      isUserScroll &&
-      cursorOnRight &&
-      previousPage &&
-      previousPage.dimensions
-    ) {
-      const now = Date.now();
-      const elapsedTime = now - lastScrollTime;
-      const scrollSpeed = Math.abs(y) / elapsedTime;
-      const magnitudeVelocity = Math.sqrt(
-        velocity[0] * velocity[0] + velocity[1] * velocity[1]
-      );
-
-      // Log scroll speed and velocity here for debugging
-
-      if (scrollSpeed > 1 && magnitudeVelocity > 2.41) {
-        let newWidth = width.get() - -y * 3;
-        if (newWidth < previousPage.dimensions.minWidth) {
-          newWidth = previousPage.dimensions.minWidth;
-          navigateBack();
-        }
-        if (newWidth > activePage.dimensions.minWidth) {
-          newWidth = activePage.dimensions.minWidth;
-        }
-        // Apply the new width immediately to the spring animation
-        set({ width: newWidth });
-        console.log("newWidth", newWidth);
-        // Defer updating the page dimensions
-        setDebounced({ newWidth });
-      }
-
-      lastScrollTime = now;
     }
   });
 
@@ -186,7 +138,7 @@ export default function Album() {
   return (
     <animated.div
       {...scrollBind()}
-      {...wheelBind()}
+      // {...wheelBind()}
       ref={scrollContainerRef}
       className="flex flex-col items-center rounded-[24px] h-full overflow-x-visible overflow-y-scroll scrollbar-none relative"
       style={{
