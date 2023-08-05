@@ -132,6 +132,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     scale: 1,
     width: activePage.dimensions.width,
     height: activePage.dimensions.height,
+    config: {
+      tension: 400,
+      friction: 77,
+      mass: 1.3,
+    },
   }));
 
   let lastScrollWheelTimestamp = 0;
