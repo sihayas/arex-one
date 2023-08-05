@@ -42,7 +42,7 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
     <>
       <div className="flex flex-col">
         {/* Artwork  */}
-        <div className="translate-x-4 translate-y-2 z-10">
+        <div className="mb-4 ml-7 z-10">
           <Footer
             albumId={review.albumId}
             rating={review.rating}

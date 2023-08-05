@@ -182,7 +182,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       // Log scroll speed and velocity here for debugging
 
-      if (scrollSpeed > 1 && magnitudeVelocity > 2.41) {
+      if (scrollSpeed > 0.1 && magnitudeVelocity > 1.41) {
         let newWidth;
         let newHeight;
         if (

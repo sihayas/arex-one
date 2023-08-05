@@ -40,7 +40,7 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
     >
       {/* Art  */}
       <Image
-        className="rounded-[16px] rounded-b-none translate-x-[22px]"
+        className="rounded-[12px]"
         src={
           isLoading
             ? "/images/loading.webp"
@@ -54,18 +54,21 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
         ref={imgRef}
       />
       <div className="relative">
-        <FeedHeaderIcon height={70} color={"#FFF"} />
         {rating ? (
-          <div className="absolute bottom-[6px] left-[6px]">
-            <Stars rating={rating} color={"#000"} />
+          <div className="absolute -bottom-4 -left-4">
+            <Stars
+              className="bg-white p-2 rounded-full"
+              rating={rating}
+              color={"#000"}
+            />
           </div>
         ) : null}
 
-        <div className="absolute flex flex-col bottom-[30px] left-[38px]">
-          <div className="font-medium text-xs text-gray2">
+        <div className="absolute flex flex-col bottom-4 left-4 bg-blurWhite backdrop-blur-sm p-2 rounded-lg">
+          <div className="font-medium text-xs text-white">
             {albumData?.attributes.name}
           </div>
-          <div className="text-xs text-gray3">
+          <div className="text-xs text-white">
             {albumData?.attributes.artistName}
           </div>
         </div>
