@@ -384,11 +384,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             {...wheelBind()} // Shapeshifter scrolling
             {...scrollBind()} // Custom page scrolling
             style={{
-              ...dimensionsSpring, // Shapeshifter
+              ...dimensionsSpring, // Finalize shapeshifter dimensions
+
+              // Attached to binds
               width: width.to((w) => `${w}px`),
               height: height.to((h) => `${h}px`),
             }}
-            className={`flex justify-center bg-white rounded-[24px] z-0 hoverable-large relative overflow-scroll scrollbar-none ${
+            className={`flex bg-white rounded-[24px] z-0 hoverable-large relative overflow-scroll scrollbar-none ${
               isVisible ? `drop-shadow-2xl` : ""
             } `}
           >
