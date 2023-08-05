@@ -127,7 +127,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   );
 
   // Inertia tracking with lethargy to trigger shapeshift/navigation
-  const lethargy = new Lethargy(2, 100, 0.6);
   const [{ width, scale, height }, set] = useSpring(() => ({
     scale: 1,
     width: activePage.dimensions.width,
@@ -185,44 +184,64 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       if (scrollSpeed > 0.1 && magnitudeVelocity > 1.41) {
         let newWidth;
         let newHeight;
-        if (
-          previousPage.dimensions.width > activePage.dimensions.width &&
-          previousPage.dimensions.height > activePage.dimensions.height
-        ) {
-          // If previous page is wider, increase the width
+
+        let activeWidth = activePage.dimensions.width;
+        let activeHeight = activePage.dimensions.height;
+        let prevWidth = previousPage.dimensions.width;
+        let prevHeight = previousPage.dimensions.height;
+
+        // If previous page width & height are greater
+        if (prevWidth > activeWidth && prevHeight > activeHeight) {
           newWidth = width.get() + -y * 3;
           newHeight = height.get() + -y * 3;
-          if (
-            newWidth === previousPage.dimensions.width &&
-            newHeight === previousPage.dimensions.height
-          ) {
-            newWidth = previousPage.dimensions.width;
-            newHeight = previousPage.dimensions.height;
+          if (newWidth > prevWidth && newHeight > prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
             navigateBack();
           }
-          if (
-            newWidth < activePage.dimensions.width &&
-            newHeight < activePage.dimensions.height
-          ) {
-            newWidth = activePage.dimensions.width;
-            newHeight = activePage.dimensions.height;
+          if (newWidth < activeWidth && newHeight < activeHeight) {
+            newWidth = activeWidth;
+            newHeight = activeHeight;
           }
-        } else {
-          // If previous page is narrower, decrease the width
+          // If previous page width & height are smaller
+        } else if (prevWidth < activeWidth && prevHeight < activeHeight) {
           newWidth = width.get() - -y * 3;
           newHeight = height.get() - -y * 3;
-          if (
-            newWidth < previousPage.dimensions.width &&
-            newHeight < previousPage.dimensions.height
-          ) {
-            newWidth = previousPage.dimensions.width;
-            newHeight = previousPage.dimensions.height;
+          if (newWidth < prevWidth && newHeight < prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
             navigateBack();
           }
-          if (
-            newWidth > activePage.dimensions.width &&
-            newHeight > activePage.dimensions.height
-          ) {
+          if (newWidth > activeWidth && newHeight > activeHeight) {
+            newWidth = activeWidth;
+            newHeight = activeHeight;
+          }
+          // If previous page width is smaller and height is greater
+        } else if (prevWidth < activeWidth && prevHeight > activeHeight) {
+          newWidth = width.get() - -y * 3;
+          newHeight = height.get() + -y * 3;
+          if (newWidth < prevWidth && newHeight > prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
+            navigateBack();
+          }
+          if (newWidth > activeWidth && newHeight < activeHeight) {
+            newWidth = activeWidth;
+            newHeight = activeHeight;
+          }
+        } else if (
+          // If previous page width is greater and height is smaller
+          prevWidth > activeWidth &&
+          prevHeight < activeHeight
+        ) {
+          newWidth = width.get() + -y * 3;
+          newHeight = height.get() - -y * 3;
+          if (newWidth > prevWidth && newHeight < prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
+            navigateBack();
+          }
+          if (newWidth < activeWidth && newHeight > activeHeight) {
             newWidth = activePage.dimensions.width;
             newHeight = activePage.dimensions.height;
           }
@@ -241,36 +260,34 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Album page ScrollBind, make wider on scroll down, and scale down Artwork
   const scrollBind = useScroll(({ xy: [, y] }) => {
-    if (!cursorOnRight) {
-      if (activePage.name === "album") {
-        let newScale = 1 - y / 1000;
-        if (newScale > 1) newScale = 1;
-        if (newScale < 0.5) newScale = 0.5;
+    if (activePage.name === "album") {
+      let newScale = 1 - y / 1000;
+      if (newScale > 1) newScale = 1;
+      if (newScale < 0.5) newScale = 0.5;
 
-        let newWidth = 722 + (y / 300) * (1066 - 722);
-        if (newWidth < 722) newWidth = 722;
-        if (newWidth > 1066) newWidth = 1066;
+      let newWidth = 722 + (y / 300) * (1066 - 722);
+      if (newWidth < 722) newWidth = 722;
+      if (newWidth > 1066) newWidth = 1066;
 
-        // Apply the new scale and width immediately to the spring animation
-        set({
-          scale: newScale,
-          width: newWidth,
-          height: 722,
-        });
+      // Apply the new scale and width immediately to the spring animation
+      set({
+        scale: newScale,
+        width: newWidth,
+        height: 722,
+      });
 
-        // Defer updating the page dimensions
-        setDebounced({ newWidth, newHeight: 722 });
-      } else if (activePage.name === "index") {
-        let newHeight = 600 + (y / 300) * (918 - 600);
-        if (newHeight < 600) newHeight = 600;
-        if (newHeight > 918) newHeight = 918;
+      // Defer updating the page dimensions
+      setDebounced({ newWidth, newHeight: 722 });
+    } else if (activePage.name === "index") {
+      let newHeight = 600 + (y / 300) * (918 - 600);
+      if (newHeight < 600) newHeight = 600;
+      if (newHeight > 918) newHeight = 918;
 
-        // Apply the new scale and width immediately to the spring animation
-        set({ height: newHeight, width: 922 });
+      // Apply the new scale and width immediately to the spring animation
+      set({ height: newHeight, width: 922 });
 
-        // Defer updating the page dimensions
-        setDebounced({ newWidth: 922, newHeight });
-      }
+      // Defer updating the page dimensions
+      setDebounced({ newWidth: 922, newHeight });
     }
   });
 

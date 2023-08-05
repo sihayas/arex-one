@@ -13,7 +13,7 @@ export const SoundPreview = ({
 }) => {
   const { handleSelectAlbum } = useSelectAlbum();
 
-  const artworkUrl = generateArtworkUrl(album.attributes.artwork.url, "1024");
+  const artworkUrl = generateArtworkUrl(album.attributes.artwork.url, "1200");
   const imageRef = useRef(null); // Allows clicking art
 
   return (
