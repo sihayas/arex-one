@@ -29,6 +29,8 @@ export type CMDKContextType = {
   resetPage: () => void;
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   previousPage: Page | null;
+  prevPageCount: number;
+  setPrevPageCount: React.Dispatch<React.SetStateAction<number>>;
 };
 
 // Define the props for the CMDKProvider component
@@ -60,6 +62,8 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [pages, setPages] = useState<Page[]>([
     { name: "index", dimensions: { width: 922, height: 600 } },
   ]);
+  const [prevPageCount, setPrevPageCount] = useState(pages.length);
+
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -117,6 +121,8 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         resetPage,
         inputRef,
         previousPage,
+        prevPageCount,
+        setPrevPageCount,
       }}
     >
       {children}

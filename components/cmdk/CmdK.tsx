@@ -1,5 +1,11 @@
 //React
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 //NPM
@@ -55,6 +61,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     previousPage,
     resetPage,
     setPages,
+    prevPageCount,
+    setPrevPageCount,
   } = useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
   const { cursorOnRight } = useScrollContext();
@@ -62,6 +70,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
   const [inputValue, setInputValue] = useState("");
+  const shapeshifterContainerRef = useRef<HTMLDivElement | null>(null);
 
   //Page Tracker
   const isHome = activePage.name === "index";
@@ -124,6 +133,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     width: activePage.dimensions.width,
     height: activePage.dimensions.height,
   }));
+
   const wheelBind = useWheel(({ event, last, delta, velocity }) => {
     const [, y] = delta;
 
@@ -218,7 +228,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         if (newWidth > 1066) newWidth = 1066;
 
         // Apply the new scale and width immediately to the spring animation
-        set({ scale: newScale, width: newWidth });
+        set({
+          scale: newScale,
+          width: newWidth,
+          height: 722,
+        });
 
         // Defer updating the page dimensions
         setDebounced({ newWidth, height: activePage.dimensions.height });
@@ -228,10 +242,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         if (newHeight > 918) newHeight = 918;
 
         // Apply the new scale and width immediately to the spring animation
-        set({ height: newHeight });
+        set({ height: newHeight, width: 922 });
 
         // Defer updating the page dimensions
-        setDebounced({ newWidth: activePage.dimensions.width, newHeight });
+        setDebounced({ newWidth: 922, newHeight });
       }
     }
   });
@@ -296,6 +310,16 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       setDebounced.cancel();
     };
   }, [setDebounced]);
+
+  useEffect(() => {
+    if (pages.length > prevPageCount) {
+      if (shapeshifterContainerRef.current !== null) {
+        shapeshifterContainerRef.current.scrollTop = 0;
+      }
+    }
+
+    setPrevPageCount(pages.length);
+  }, [pages.length, prevPageCount, shapeshifterContainerRef, setPrevPageCount]);
 
   return (
     <>
@@ -390,6 +414,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               width: width.to((w) => `${w}px`),
               height: height.to((h) => `${h}px`),
             }}
+            ref={shapeshifterContainerRef}
             className={`flex bg-white rounded-[24px] z-0 hoverable-large relative overflow-scroll scrollbar-none ${
               isVisible ? `drop-shadow-2xl` : ""
             } `}
