@@ -58,7 +58,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
 
   // Page states
   const [pages, setPages] = useState<Page[]>([
-    { name: "index", dimensions: { width: 900, height: 680 } },
+    { name: "index", dimensions: { width: 922, height: 600 } },
   ]);
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
@@ -66,28 +66,38 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   // Use memoization for performance optimization, this will prevent unnecessary re-renders
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
-    () => pages[pages.length - 2] || { name: "index", width: 900, height: 680 },
+    () => pages[pages.length - 2] || { name: "index", width: 922, height: 600 },
     [pages]
   );
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  // Define navigateBack function, responsible for navigating pages
+  // Update your navigateBack function
   const navigateBack = useCallback(
     (pageNumber: number = 1) => {
-      setPages((prevPages) => {
-        if (prevPages.length <= 1) {
-          return prevPages;
-        }
-        console.log("navigating back");
-        const newPages = prevPages.slice(0, prevPages.length - pageNumber);
-        return newPages;
-      });
+      if (isNavigating) return;
+
+      setIsNavigating(true);
+
+      setTimeout(() => {
+        setPages((prevPages) => {
+          if (prevPages.length <= 1) {
+            setIsNavigating(false);
+            return prevPages;
+          }
+
+          console.log("navigating back");
+          const newPages = prevPages.slice(0, prevPages.length - pageNumber);
+          setIsNavigating(false);
+          return newPages;
+        });
+      }, 500);
     },
-    [setPages]
+    [isNavigating]
   );
 
   // Reset the pages to the index page
   const resetPage = useCallback(() => {
-    setPages([{ name: "index", dimensions: { width: 900, height: 680 } }]);
+    setPages([{ name: "index", dimensions: { width: 922, height: 600 } }]);
   }, [setPages]);
 
   // Render the provider with the context value

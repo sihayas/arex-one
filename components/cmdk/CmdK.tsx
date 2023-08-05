@@ -15,7 +15,6 @@ import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
 import User from "./pages/user/User";
 const Lethargy = require("lethargy").Lethargy;
-
 //Icons
 import { HomeIcon } from "../../components/icons";
 import SearchAlbums from "@/lib/api/searchAPI";
@@ -25,7 +24,7 @@ import { debounce } from "lodash";
 type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
-  index: { width: 900, height: 680 }, //1022
+  index: { width: 922, height: 600 },
   album: { width: 722, height: 722 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
@@ -92,12 +91,16 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         });
       },
     });
-    set({ width: activePage.dimensions.width || 0 });
+    set({
+      width: activePage.dimensions.width,
+      height: activePage.dimensions.height,
+    });
   }, [activePage.name, setDimensionsSpring]);
 
+  // Update the page dimensions in pages stack
   const setDebounced = useMemo(
     () =>
-      debounce(({ newWidth }) => {
+      debounce(({ newWidth, newHeight }) => {
         setPages((prevPages) => {
           const updatedPages = [...prevPages];
           const activePageIndex = updatedPages.length - 1;
@@ -105,7 +108,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             ...updatedPages[activePageIndex],
             dimensions: {
               width: newWidth,
-              height: 722,
+              height: newHeight,
             },
           };
           return updatedPages;
@@ -114,11 +117,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     [setPages]
   );
 
-  // Inertia tracking with lethargy to trigger shapeshift
+  // Inertia tracking with lethargy to trigger shapeshift/navigation
   const lethargy = new Lethargy(2, 200, 0.4);
-  const [{ width, scale }, set] = useSpring(() => ({
+  const [{ width, scale, height }, set] = useSpring(() => ({
     scale: 1,
     width: activePage.dimensions.width,
+    height: activePage.dimensions.height,
   }));
   const wheelBind = useWheel(({ event, last, delta, velocity }) => {
     const [, y] = delta;
@@ -146,33 +150,55 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       if (scrollSpeed > 1 && magnitudeVelocity > 2.41) {
         let newWidth;
-        if (previousPage.dimensions.width > activePage.dimensions.width) {
+        let newHeight;
+        if (
+          previousPage.dimensions.width > activePage.dimensions.width &&
+          previousPage.dimensions.height > activePage.dimensions.height
+        ) {
           // If previous page is wider, increase the width
           newWidth = width.get() + -y * 3;
-          if (newWidth === previousPage.dimensions.width) {
+          newHeight = height.get() + -y * 3;
+          if (
+            newWidth === previousPage.dimensions.width &&
+            newHeight === previousPage.dimensions.height
+          ) {
             newWidth = previousPage.dimensions.width;
+            newHeight = previousPage.dimensions.height;
             navigateBack();
           }
-          if (newWidth < activePage.dimensions.width) {
+          if (
+            newWidth < activePage.dimensions.width &&
+            newHeight < activePage.dimensions.height
+          ) {
             newWidth = activePage.dimensions.width;
+            newHeight = activePage.dimensions.height;
           }
         } else {
           // If previous page is narrower, decrease the width
           newWidth = width.get() - -y * 3;
-          if (newWidth < previousPage.dimensions.width) {
+          newHeight = height.get() - -y * 3;
+          if (
+            newWidth < previousPage.dimensions.width &&
+            newHeight < previousPage.dimensions.height
+          ) {
             newWidth = previousPage.dimensions.width;
+            newHeight = previousPage.dimensions.height;
             navigateBack();
           }
-          if (newWidth > activePage.dimensions.width) {
+          if (
+            newWidth > activePage.dimensions.width &&
+            newHeight > activePage.dimensions.height
+          ) {
             newWidth = activePage.dimensions.width;
+            newHeight = activePage.dimensions.height;
           }
         }
 
         // Apply the new width immediately to the spring animation
-        set({ width: newWidth });
-        console.log("newWidth", newWidth);
+        set({ width: newWidth, height: newHeight });
+        console.log("newWidth", newWidth, "newHeight", newHeight);
         // Defer updating the page dimensions
-        setDebounced({ newWidth });
+        setDebounced({ newWidth, newHeight });
       }
 
       lastScrollTime = now;
@@ -181,21 +207,32 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Album page ScrollBind, make wider on scroll down, and scale down Artwork
   const scrollBind = useScroll(({ xy: [, y] }) => {
-    if (!cursorOnRight && activePage.name === "album") {
-      // only proceed when cursorOnRight is false
-      let newScale = 1 - y / 1000;
-      if (newScale > 1) newScale = 1;
-      if (newScale < 0.5) newScale = 0.5;
+    if (!cursorOnRight) {
+      if (activePage.name === "album") {
+        let newScale = 1 - y / 1000;
+        if (newScale > 1) newScale = 1;
+        if (newScale < 0.5) newScale = 0.5;
 
-      let newWidth = 722 + (y / 300) * (1066 - 722);
-      if (newWidth < 722) newWidth = 722;
-      if (newWidth > 1066) newWidth = 1066;
+        let newWidth = 722 + (y / 300) * (1066 - 722);
+        if (newWidth < 722) newWidth = 722;
+        if (newWidth > 1066) newWidth = 1066;
 
-      // Apply the new scale and width immediately to the spring animation
-      set({ scale: newScale, width: newWidth });
+        // Apply the new scale and width immediately to the spring animation
+        set({ scale: newScale, width: newWidth });
 
-      // Defer updating the page dimensions
-      setDebounced({ newWidth });
+        // Defer updating the page dimensions
+        setDebounced({ newWidth, height: activePage.dimensions.height });
+      } else if (activePage.name === "index") {
+        let newHeight = 600 + (y / 300) * (918 - 600);
+        if (newHeight < 600) newHeight = 600;
+        if (newHeight > 918) newHeight = 918;
+
+        // Apply the new scale and width immediately to the spring animation
+        set({ height: newHeight });
+
+        // Defer updating the page dimensions
+        setDebounced({ newWidth: activePage.dimensions.width, newHeight });
+      }
     }
   });
 
@@ -224,6 +261,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     if (activePage.name === "album" && activePage.album) {
       setSelectedAlbum(activePage.album);
     }
+    console.log(pages);
   }, [activePage, setSelectedAlbum, pages]);
 
   // Handle input changes
@@ -348,6 +386,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             style={{
               ...dimensionsSpring, // Shapeshifter
               width: width.to((w) => `${w}px`),
+              height: height.to((h) => `${h}px`),
             }}
             className={`flex justify-center bg-white rounded-[24px] z-0 hoverable-large relative overflow-scroll scrollbar-none ${
               isVisible ? `drop-shadow-2xl` : ""
@@ -356,8 +395,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Apply transition */}
             {transitions((style, Component) => (
               <animated.div
-                className={"w-full"}
-                style={{ ...style, position: "absolute" }}
+                style={{ ...style, position: "absolute", width: "100%" }}
               >
                 {Component === Album ? (
                   <Component scale={scale} />

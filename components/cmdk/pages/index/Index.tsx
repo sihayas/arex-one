@@ -1,16 +1,15 @@
 import { AlbumData } from "@/lib/interfaces";
 import { SoundPreview } from "./subcomponents/SoundPreview";
-import { useCMDK } from "@/context/CMDKContext";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import Button from "./subcomponents/Button";
 import { useState } from "react";
-
 import {
   useFetchSpotlightAlbums,
   useFetchBloomingAlbums,
 } from "@/lib/api/indexAPI";
+import { SpringValue } from "@react-spring/web";
 
-export default function Index() {
+const Album = () => {
   const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
     useScrollPosition();
 
@@ -35,9 +34,9 @@ export default function Index() {
   return (
     <div
       ref={scrollContainerRef}
-      className="flex flex-col h-[680px] rounded-[24px] overflow-scroll items-end p-8 scrollbar-none"
+      className="flex flex-col w-full h-full rounded-[24px] scrollbar-none"
     >
-      <div className="absolute right-8 top-8 flex flex-col items-end gap-4">
+      {/* <div className="absolute right-8 top-8 flex flex-col items-end gap-4">
         <Button
           defaultText="SPOTLIGHT"
           type="album"
@@ -50,7 +49,7 @@ export default function Index() {
           isActive={activeState.button === "bloom"}
           onClick={() => setActiveState({ button: "bloom" })}
         />
-      </div>
+      </div> */}
       {activeState.button === "spotlight" &&
         spotlightAlbumsDataQuery.data.map((album: AlbumData, index: number) => (
           <SoundPreview key={album.id} album={album} index={index + 1} />
@@ -61,4 +60,6 @@ export default function Index() {
         ))}
     </div>
   );
-}
+};
+
+export default Album;

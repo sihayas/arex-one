@@ -17,35 +17,43 @@ export const SoundPreview = ({
   const imageRef = useRef(null); // Allows clicking art
 
   return (
-    <div className="w-full flex gap-8 pb-8">
-      {/* Artwork  */}
-      <Image
-        ref={imageRef}
-        className="shadow-index rounded-[12px] hoverable-medium"
-        src={artworkUrl}
-        width={512}
-        height={512}
-        alt="alt"
-        draggable="false"
-        onDragStart={(e) => e.preventDefault()}
-        onClick={() => {
-          if (imageRef.current) {
-            handleSelectAlbum(imageRef.current, album, artworkUrl);
-          }
-        }}
-      />
-      {/* Names  */}
-      <div className="flex flex-col justify-end gap-2 mb-8">
-        {/* Rank  */}
-        <div className="text-2xl text-gray3 mb-80">{index}</div>
-        {/* Ratings Count */}
-        <div className="flex items-center px-2 py-[2px] shadow-rating rounded-full mb-2 border border-silver max-w-fit">
-          <div className="text-xs text-black">
-            4.2 / <span className="text-gray2 text-[10px]">10k</span>
+    <div key={index} className="w-full flex pb-16">
+      <div className="flex-none">
+        {/* Artwork  */}
+        <Image
+          ref={imageRef}
+          className="shadow-medium hoverable-medium rounded-[12px]"
+          src={artworkUrl}
+          width={600}
+          height={600}
+          alt="alt"
+          draggable="false"
+          onDragStart={(e) => e.preventDefault()}
+          onClick={() => {
+            if (imageRef.current) {
+              handleSelectAlbum(imageRef.current, album, artworkUrl);
+            }
+          }}
+        />
+      </div>
+
+      {/* About  */}
+      <div className="flex items-end w-full p-16 justify-between">
+        {/* Names  */}
+        <div className="flex flex-col gap-2 w-[98px] pb-[10px]">
+          <div className="text-sm font-medium text-black">
+            {album.attributes.name}
+          </div>
+          <div className="text-xs text-gray2">
+            {album.attributes.artistName}
           </div>
         </div>
-        <div className="text-black text-sm">{album.attributes.name}</div>
-        <div className="text-gray2 text-xs">{album.attributes.artistName}</div>
+
+        {/* Circle Here  */}
+        <div className="flex flex-col w-[64px] h-[64px] rounded-full bg-white items-center justify-center border border-silver">
+          <div className="text-xs font-bold">4.2</div>
+          <div className="text-xs text-gray2">/ 12k</div>
+        </div>
       </div>
     </div>
   );
