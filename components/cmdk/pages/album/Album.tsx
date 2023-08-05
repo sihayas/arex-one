@@ -64,7 +64,7 @@ const Album = ({ scale }: AlbumProps) => {
     handleInfiniteScroll,
   ]);
 
-  useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
+  // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
 
   // Load and error handling
   if (!selectedAlbum || isLoading || isFetchingNextPage || isArtworkLoading) {

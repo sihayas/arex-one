@@ -127,21 +127,40 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   );
 
   // Inertia tracking with lethargy to trigger shapeshift/navigation
-  const lethargy = new Lethargy(2, 200, 0.4);
+  const lethargy = new Lethargy(2, 100, 0.6);
   const [{ width, scale, height }, set] = useSpring(() => ({
     scale: 1,
     width: activePage.dimensions.width,
     height: activePage.dimensions.height,
   }));
 
+  let lastScrollWheelTimestamp = 0;
+  let lastScrollWheelDelta = 0;
+  const minScrollWheelInterval = 100; // minimum milliseconds between scrolls
+
   const wheelBind = useWheel(({ event, last, delta, velocity }) => {
     const [, y] = delta;
 
+    if (y > 0) {
+      return;
+    }
+
+    // Assume scroll event is from a user
     let isUserScroll = true;
 
-    // Last is necessary cause React does not register the last event
     if (!last && event) {
-      isUserScroll = lethargy.check(event);
+      const now = Date.now();
+
+      const rapidSuccession =
+        now - lastScrollWheelTimestamp < minScrollWheelInterval;
+      const otherDirection = lastScrollWheelDelta > 0 !== event.deltaY > 0;
+      const speedDecrease =
+        Math.abs(event.deltaY) < Math.abs(lastScrollWheelDelta);
+
+      isUserScroll = otherDirection || !rapidSuccession || !speedDecrease;
+
+      lastScrollWheelTimestamp = now;
+      lastScrollWheelDelta = event.deltaY;
     }
     if (
       isUserScroll &&
@@ -235,7 +254,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         });
 
         // Defer updating the page dimensions
-        setDebounced({ newWidth, height: activePage.dimensions.height });
+        setDebounced({ newWidth, newHeight: 722 });
       } else if (activePage.name === "index") {
         let newHeight = 600 + (y / 300) * (918 - 600);
         if (newHeight < 600) newHeight = 600;
@@ -297,10 +316,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const transitions = useTransition(ActiveComponent, {
     from: { scale: 0.95, opacity: 0 },
-    enter: { scale: 1, opacity: 1, delay: 500 },
+    enter: { scale: 1, opacity: 1, delay: 250 },
     leave: { scale: 0.95, opacity: 0 },
     config: {
-      duration: 0,
+      duration: 250,
     },
   });
 
