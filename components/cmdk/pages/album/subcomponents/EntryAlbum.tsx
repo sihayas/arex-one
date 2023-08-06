@@ -53,7 +53,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         </div>
         <Stars
           className={
-            "absolute -left-4 -top-4 border border-silver rounded-full p-1 bg-white"
+            "absolute -left-3 -top-3 border border-silver rounded-full p-1 bg-white"
           }
           rating={review.rating}
           color={"#333"}
@@ -86,15 +86,15 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
 
       {/* Replies and Likes  */}
       <div className="flex items-center gap-2 hoverable-small relative">
-        <StatLineIcon
-          color={"#CCC"}
-          width={10}
-          height={11}
-          className={"absolute top-[4px] left-[11px]"}
-        />
         {/* Avatar previews */}
         {review.replies && review._count.replies > 0 && (
           <div className="flex items-center ml-[28px] mt-1">
+            <StatLineIcon
+              color={"#CCC"}
+              width={10}
+              height={11}
+              className={"absolute top-[4px] left-[11px]"}
+            />
             {review.replies.slice(0, 3).map((reply, index) => (
               <UserAvatar
                 key={index}
@@ -108,7 +108,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
               />
             ))}
 
-            {/* If replies show count + word chain(s) */}
+            {/* show count + word chain(s) */}
             <div className="text-xs text-gray2 ml-2">
               {`${review._count.replies} chain${
                 review._count.replies > 1 ? "s" : ""
@@ -118,14 +118,12 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         )}
         {/* Reply Count  */}
         {review._count.replies > 0 && review._count.likes > 0 && (
-          <svg height="4" width="4" className="mt-1">
-            <circle cx="2" cy="2" r="2" fill="#CCC" />
-          </svg>
+          <div className="text-xs text-gray3 mt-1">+</div>
         )}
 
         {review.likes && review._count.likes > 0 && (
           <div className="flex items-center text-xs text-gray2 mt-1">
-            {review._count.likes} {review._count.likes > 1 ? "likes" : "like"}
+            {review._count.likes} {review._count.likes > 1 ? "hearts" : "heart"}
           </div>
         )}
       </div>
