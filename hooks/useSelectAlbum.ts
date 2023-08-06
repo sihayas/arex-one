@@ -34,8 +34,8 @@ export const useSelectAlbum = () => {
         name: "album",
         album: extendedAlbum,
         dimensions: {
-          width: 722,
-          height: 722,
+          width: 800,
+          height: 800,
         },
       },
     ]);

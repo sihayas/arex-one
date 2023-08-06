@@ -38,7 +38,7 @@ const Album = ({ scale }: AlbumProps) => {
   const albumQuery = useAlbumQuery(selectedAlbum);
   const reviewsQuery = useReviewsQuery(selectedAlbum, session?.user);
 
-  const { data, isLoading, isError } = albumQuery;
+  const { isLoading, isError } = albumQuery;
   const {
     data: reviewsData,
     fetchNextPage,
@@ -85,7 +85,7 @@ const Album = ({ scale }: AlbumProps) => {
   return (
     <animated.div
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[24px] h-full w-full relative"
+      className="flex flex-col items-center rounded-[20px] h-full w-full relative"
     >
       {/* Top Section */}
       <animated.div
@@ -93,40 +93,30 @@ const Album = ({ scale }: AlbumProps) => {
           transform: scale.to(
             (value) =>
               `scale3d(${value}, ${value}, ${value}) translate3d(${
-                (1 - value) * 67
+                (1 - value) * -67
               }rem, 0, 0)`
           ),
           transformOrigin: "center",
         }}
-        className="sticky top-0"
+        className="sticky top-0 "
       >
         {/* Album Artwork  */}
         <animated.img
           style={{
-            borderRadius: scale.to((value) => `${24 + (1 - value) * -12}px`),
+            borderRadius: scale.to((value) => `${20 + (1 - value) * -12}px`),
             boxShadow: boxShadow,
           }}
           src={artworkUrl || "/public/images/default.png"}
           alt={`${selectedAlbum.attributes.name} artwork`}
-          width={722}
-          height={722}
+          width={800}
+          height={800}
           onDragStart={(e) => e.preventDefault()}
           draggable="false"
         />
-
-        {/* Album Info  */}
-        <div className="flex flex-col items-center justify-center gap-2 p-4">
-          <div className="text-3xl font-medium text-black">
-            {selectedAlbum.attributes.name}
-          </div>
-          <div className="text-2xl text-gray2">
-            {selectedAlbum.attributes.artistName}
-          </div>
-        </div>
       </animated.div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col p-8 gap-8 relative w-full">
+      <div className="flex flex-col p-12 gap-8 relative w-full items-end">
         {/* Album Entries  */}
         <div className="flex flex-col gap-8 overflow-visible h-full">
           {flattenedReviews?.length > 0 ? (

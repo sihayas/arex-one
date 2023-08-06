@@ -9,9 +9,9 @@ export default function AnimatedGradient() {
   const { activePage } = useCMDK();
 
   const [gradientColors, setGradientColors] = useState({
-    color1: "rgba(255,240,237",
-    color2: "rgba(7,21,16",
-    color3: "rgba(24,0,0",
+    color1: "",
+    color2: "",
+    color3: "",
   });
 
   let interval = useMotionValue(0);
@@ -27,21 +27,21 @@ export default function AnimatedGradient() {
     return controls.stop;
   }, [interval]);
 
-  // useEffect(() => {
-  //   if (activePage.name === "album" && activePage.album) {
-  //     const newColor1 = activePage.album.colors[0];
-  //     const newColor2 = activePage.album.colors[1];
-  //     const newColor3 = activePage.album.colors[2];
-  //     setAlbumTitle(activePage.album.attributes.name);
-  //     setArtist(activePage.album.attributes.artistName);
+  useEffect(() => {
+    if (activePage.name === "album" && activePage.album) {
+      const newColor1 = activePage.album.colors[0];
+      const newColor2 = activePage.album.colors[1];
+      const newColor3 = activePage.album.colors[2];
+      setAlbumTitle(activePage.album.attributes.name);
+      setArtist(activePage.album.attributes.artistName);
 
-  //     setGradientColors({
-  //       color1: newColor1,
-  //       color2: newColor2,
-  //       color3: newColor3,
-  //     });
-  //   }
-  // }, [activePage]);
+      setGradientColors({
+        color1: newColor1,
+        color2: newColor2,
+        color3: newColor3,
+      });
+    }
+  }, [activePage]);
 
   return (
     <>
@@ -60,7 +60,7 @@ export default function AnimatedGradient() {
       ></motion.div>
       <motion.div
         style={{
-          backgroundColor: "rgba(255, 255, 255, 0.75)",
+          backgroundColor: "rgba(255, 255, 255, .05)",
         }}
         className="absolute z-[0] inset-0"
       ></motion.div>

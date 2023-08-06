@@ -31,7 +31,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 922, height: 600 },
-  album: { width: 722, height: 722 },
+  album: { width: 800, height: 800 },
   entry: { width: 800, height: 800 },
   form: { width: 960, height: 480 },
   user: { width: 768, height: 768 },
@@ -245,6 +245,18 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             newWidth = activePage.dimensions.width;
             newHeight = activePage.dimensions.height;
           }
+        } else if (prevWidth === activeWidth && prevHeight === activeHeight) {
+          newWidth = width.get() + -y * 3;
+          newHeight = height.get() + -y * 3;
+          if (newWidth > prevWidth && newHeight > prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
+            navigateBack();
+          }
+          if (newWidth < activeWidth && newHeight < activeHeight) {
+            newWidth = activeWidth;
+            newHeight = activeHeight;
+          }
         }
 
         // Apply the new width immediately to the spring animation
@@ -261,23 +273,23 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Album page ScrollBind, make wider on scroll down, and scale down Artwork
   const scrollBind = useScroll(({ xy: [, y] }) => {
     if (activePage.name === "album") {
-      let newScale = 1 - y / 1000;
+      let newScale = 1 - y / 200;
       if (newScale > 1) newScale = 1;
       if (newScale < 0.5) newScale = 0.5;
 
-      let newWidth = 722 + (y / 300) * (1066 - 722);
-      if (newWidth < 722) newWidth = 722;
+      let newWidth = 800 + (y / 300) * (1066 - 800);
+      if (newWidth < 800) newWidth = 800;
       if (newWidth > 1066) newWidth = 1066;
 
       // Apply the new scale and width immediately to the spring animation
       set({
         scale: newScale,
         width: newWidth,
-        height: 722,
+        height: 800,
       });
 
       // Defer updating the page dimensions
-      setDebounced({ newWidth, newHeight: 722 });
+      setDebounced({ newWidth, newHeight: 800 });
     } else if (activePage.name === "index") {
       let newHeight = 600 + (y / 300) * (918 - 600);
       if (newHeight < 600) newHeight = 600;
@@ -337,11 +349,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   }, [setHideSearch]);
 
   const transitions = useTransition(ActiveComponent, {
-    from: { scale: 0.95, opacity: 0 },
-    enter: { scale: 1, opacity: 1, delay: 250 },
-    leave: { scale: 0.95, opacity: 0 },
+    from: { scale: 0.95, opacity: 0, blur: 5 },
+    enter: { scale: 1, opacity: 1, blur: 0, delay: 300 },
+    leave: { scale: 0.95, opacity: 0, blur: 6 },
     config: {
-      duration: 250,
+      duration: 300,
     },
   });
 
@@ -456,14 +468,20 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               height: height.to((h) => `${h}px`),
             }}
             ref={shapeshifterContainerRef}
-            className={`flex bg-white rounded-[24px] z-0 hoverable-large relative overflow-scroll scrollbar-none ${
+            className={`flex bg-white rounded-[20px] z-0 hoverable-large relative overflow-scroll scrollbar-none ${
               isVisible ? `drop-shadow-2xl` : ""
             } `}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
               <animated.div
-                style={{ ...style, position: "absolute", width: "100%" }}
+                style={{
+                  ...style,
+                  position: "absolute",
+                  width: "100%",
+                  filter: style.blur.to((value) => `blur(${value}px)`),
+                  willChange: "transform, opacity, filter",
+                }}
               >
                 {Component === Album ? (
                   <Component scale={scale} />

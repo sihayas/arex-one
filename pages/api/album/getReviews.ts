@@ -64,7 +64,7 @@ export default async function handle(
           select: { replies: true, likes: true },
         },
         replies: {
-          take: 2,
+          take: 3,
           select: {
             author: {
               select: {
