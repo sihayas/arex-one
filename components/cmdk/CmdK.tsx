@@ -32,7 +32,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 922, height: 600 },
   album: { width: 800, height: 800 },
-  entry: { width: 800, height: 800 },
+  entry: { width: 504, height: 704 },
   form: { width: 960, height: 480 },
   user: { width: 768, height: 768 },
 };
@@ -381,7 +381,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   return (
     <>
       {/* Breadcrumbs  */}
-      {!isHome && (
+      {/* {!isHome && (
         <div className="flex flex-col gap-2 items-center absolute top-1/2">
           <button className="text-xs text-grey" onClick={resetPage}>
             reset
@@ -396,7 +396,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             </button>
           ))}
         </div>
-      )}
+      )} */}
 
       <animated.div
         style={{
@@ -408,7 +408,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       >
         {/* CMDK Inner Content  */}
         <Command
-          className={`transition-opacity duration-150 w-full h-full relative ${
+          className={`transition-opacity duration-150 w-full h-full ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}
           ref={ref}
@@ -472,7 +472,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               height: height.to((h) => `${h}px`),
             }}
             ref={shapeshifterContainerRef}
-            className={`flex bg-white rounded-[20px] z-0 hoverable-large relative overflow-scroll scrollbar-none  ${
+            className={`flex bg-white rounded-[20px] z-0 hoverable-large relative overflow-y-scroll scrollbar-none ${
               isVisible ? `drop-shadow-2xl` : ""
             } `}
           >
@@ -483,7 +483,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                   ...style,
                   position: "absolute",
                   width: "100%",
-                  filter: style.blur.to((value) => `blur(${value}px)`),
+                  // filter: style.blur.to((value) => `blur(${value}px)`),
                   willChange: "transform, opacity, filter",
                 }}
               >

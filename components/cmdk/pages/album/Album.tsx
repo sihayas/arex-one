@@ -88,7 +88,7 @@ const Album = ({ scale }: AlbumProps) => {
   return (
     <animated.div
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[20px] h-full w-full relative"
+      className="flex flex-col items-center rounded-[20px] h-full w-full"
     >
       {/* Top Section */}
       <animated.div

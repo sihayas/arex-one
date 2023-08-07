@@ -34,20 +34,14 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   };
 
   return (
-    <div className="flex flex-col gap-1 w-[484px] overflow-visible relative group">
+    <div className="flex flex-col gap-2 w-[484px] overflow-visible relative group">
       {/* Review Content, Like Button  */}
       <div className="flex relative">
         <div
-          className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words hoverable-medium`}
+          className={`w-full text-[13px] text-black break-words hoverable-medium`}
         >
           {review.content}
         </div>
-        <Stars
-          className={
-            "absolute -left-3 -top-3 border border-silver rounded-full p-1 bg-white"
-          }
-          rating={review.rating}
-        />
 
         <div className="absolute gap-2 -right-3 -bottom-2 opacity-50 group-hover:opacity-100 transition-opacity duration-300">
           <LikeButton handleLikeClick={handleLikeClick} liked={liked} />

@@ -76,7 +76,7 @@ export const Entry = () => {
   if (!review) return null;
 
   return (
-    <div className="flex flex-col rounded-[24px] w-full h-full overflow-scroll scrollbar-none relative bg-white border border-silver">
+    <div className="flex flex-col rounded-[20px] w-full h-full">
       <div className="flex items-end p-8 pb-0 gap-8">
         <EntryFull review={review} />
 
