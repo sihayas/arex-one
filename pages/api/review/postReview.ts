@@ -66,6 +66,12 @@ export default async function handle(
         });
       }
 
+      // Update reviews count
+      await prisma.album.update({
+        where: { id: albumId },
+        data: { reviewsCount: { increment: 1 } },
+      });
+
       // Feed the review into the activity and notification pipelines
       try {
         const activity = await createReviewActivity(newReview.id);

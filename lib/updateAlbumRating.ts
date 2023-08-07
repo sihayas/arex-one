@@ -34,7 +34,7 @@ export async function updateAlbumRatings() {
       where: { albumId: album.id },
     });
 
-    // Skip albums with no reviews or no new reviews
+    // Skip albums with no reviews or no reviews since last ratingsCount
     if (reviews.length === 0 || reviews.length === album.ratingsCount) continue;
 
     // Calculate average rating and update the album

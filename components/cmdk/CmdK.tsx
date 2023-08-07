@@ -133,7 +133,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     height: activePage.dimensions.height,
     config: {
       tension: 400,
-      friction: 77,
+      friction: 57,
       mass: 0.2,
     },
   }));

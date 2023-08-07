@@ -175,7 +175,8 @@ model Album {
 
   viewsCount    Int      @default(0) // Track number of views
   listenedCount Int      @default(0) // Track number of listens
-  ratingsCount  Int      @default(0) // Track number of ratings/reviews
+  ratingsCount  Int      @default(0) // Track number of ratings
+  reviewsCount  Int      @default(0) // Track number of revews
   lovedCount    Int      @default(0) // Track number of loved reviews
 
   @@unique([id])

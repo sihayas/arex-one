@@ -124,7 +124,7 @@ const Album = ({ scale }: AlbumProps) => {
             ),
             transformOrigin: "center",
           }}
-          className="absolute grid items-center top-[882px] ml-[192px] w-[416px] gap-8"
+          className="absolute grid items-center top-[920px] ml-[192px] w-[416px] gap-8"
         >
           {/* Names  */}
           <div className="flex flex-col gap-2 items-center justify-center">
@@ -142,6 +142,12 @@ const Album = ({ scale }: AlbumProps) => {
               <OpenAIIcon width={16} height={16} color={"#999"} />
               <p className="font-medium text-gray2 text-xs">CONSENSUS</p>
             </div>
+
+            {data.album.notes ? (
+              <div className="text-xs text-gray2">{data.album.notes}</div>
+            ) : (
+              <div className="text-xs text-gray3">not enough entries</div>
+            )}
           </div>
         </animated.div>
       </animated.div>
