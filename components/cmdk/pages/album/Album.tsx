@@ -8,6 +8,7 @@ import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
+import { OpenAIIcon } from "@/components/icons";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -24,12 +25,12 @@ const Album = ({ scale }: AlbumProps) => {
 
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.colors[0]) {
-      return `0px 0px 0px 0px ${selectedAlbum.colors[0]},0.025),
-     0px 5px 12px 0px ${selectedAlbum.colors[0]},0.25),
-     0px 22px 22px 0px ${selectedAlbum.colors[0]},0.22),
-     0px 49px 29px 0px ${selectedAlbum.colors[0]},0.13),
-     0px 87px 35px 0px ${selectedAlbum.colors[0]},0.04),
-     0px 136px 38px 0px ${selectedAlbum.colors[0]},0.00)`;
+      return `0px 0px 0px 0px ${selectedAlbum.colors[0]}, 0.11),
+        9px 11px 32px 0px ${selectedAlbum.colors[0]}, 0.11),
+        37px 45px 58px 0px ${selectedAlbum.colors[0]}, 0.09),
+        83px 100px 78px 0px ${selectedAlbum.colors[0]}, 0.05),
+        148px 178px 93px 0px ${selectedAlbum.colors[0]}, 0.02),
+        231px 279px 101px 0px ${selectedAlbum.colors[0]}, 0.00)`;
     }
     return undefined;
   }, [selectedAlbum?.colors]);
@@ -38,7 +39,7 @@ const Album = ({ scale }: AlbumProps) => {
   const albumQuery = useAlbumQuery(selectedAlbum);
   const reviewsQuery = useReviewsQuery(selectedAlbum, session?.user);
 
-  const { isLoading, isError } = albumQuery;
+  const { data, isLoading, isError } = albumQuery;
   const {
     data: reviewsData,
     fetchNextPage,
@@ -82,6 +83,8 @@ const Album = ({ scale }: AlbumProps) => {
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
+  console.log(data);
+
   return (
     <animated.div
       ref={scrollContainerRef}
@@ -93,12 +96,12 @@ const Album = ({ scale }: AlbumProps) => {
           transform: scale.to(
             (value) =>
               `scale3d(${value}, ${value}, ${value}) translate3d(${
-                (1 - value) * -67
-              }rem, 0, 0)`
+                (1 - value) * -69.25
+              }rem, ${(1 - value) * 12}rem, 0)`
           ),
-          transformOrigin: "center",
+          transformOrigin: "top center",
         }}
-        className="sticky top-0 "
+        className="sticky top-0"
       >
         {/* Album Artwork  */}
         <animated.img
@@ -113,6 +116,34 @@ const Album = ({ scale }: AlbumProps) => {
           onDragStart={(e) => e.preventDefault()}
           draggable="false"
         />
+        {/* Album Metadata  */}
+        <animated.div
+          style={{
+            transform: scale.to(
+              (value) => `scale3d(${1 / value}, ${1 / value}, ${1 / value})`
+            ),
+            transformOrigin: "center",
+          }}
+          className="absolute grid items-center top-[882px] ml-[192px] w-[416px] gap-8"
+        >
+          {/* Names  */}
+          <div className="flex flex-col gap-2 items-center justify-center">
+            <p className="text-sm text-black font-medium">{data.album.name}</p>
+            <p className="text-sm text-gray2">{data.album.artist}</p>
+          </div>
+          {/* Rating  */}
+          <div className="flex items-center justify-center justify-self-center w-9 h-9 border border-silver text-sm text-black rounded-full font-medium">
+            {data.album.averageRating}
+          </div>
+
+          {/* Consensus  */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <OpenAIIcon width={16} height={16} color={"#999"} />
+              <p className="font-medium text-gray2 text-xs">CONSENSUS</p>
+            </div>
+          </div>
+        </animated.div>
       </animated.div>
 
       {/* Section Two / Entries  */}

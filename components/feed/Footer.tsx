@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { FeedHeaderIcon } from "../icons";
 import { Stars } from "../cmdk/generics";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 import { useSelectAlbum } from "@/hooks/useSelectAlbum";

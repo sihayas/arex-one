@@ -134,7 +134,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     config: {
       tension: 400,
       friction: 77,
-      mass: 1.3,
+      mass: 0.2,
     },
   }));
 
@@ -275,7 +275,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     if (activePage.name === "album") {
       let newScale = 1 - y / 200;
       if (newScale > 1) newScale = 1;
-      if (newScale < 0.5) newScale = 0.5;
+      if (newScale < 0.52) newScale = 0.52;
 
       let newWidth = 800 + (y / 300) * (1066 - 800);
       if (newWidth < 800) newWidth = 800;
@@ -398,7 +398,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         style={{
           ...visibilitySpring, // To appear
         }}
-        className={`cmdk ${
+        className={`cmdk  ${
           isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"
         }`}
       >
@@ -468,7 +468,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               height: height.to((h) => `${h}px`),
             }}
             ref={shapeshifterContainerRef}
-            className={`flex bg-white rounded-[20px] z-0 hoverable-large relative overflow-scroll scrollbar-none ${
+            className={`flex bg-white rounded-[20px] z-0 hoverable-large relative overflow-scroll scrollbar-none  ${
               isVisible ? `drop-shadow-2xl` : ""
             } `}
           >
