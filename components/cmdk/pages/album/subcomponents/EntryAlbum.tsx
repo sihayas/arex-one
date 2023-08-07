@@ -42,7 +42,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   };
 
   return (
-    <div className="flex flex-col gap-1 w-[484px] overflow-visible">
+    <div className="flex flex-col gap-1 w-[484px] overflow-visible group">
       {/* Review Content, Like Button  */}
       <div className="flex relative">
         <div
@@ -59,7 +59,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           color={"#333"}
         />
 
-        <div className="absolute flex gap-2 -right-3 -bottom-2">
+        <div className="absolute flex gap-2 -right-3 -bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
         </div>
       </div>

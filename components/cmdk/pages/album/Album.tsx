@@ -146,14 +146,14 @@ const Album = ({ scale }: AlbumProps) => {
             {data.album.notes ? (
               <div className="text-xs text-gray2">{data.album.notes}</div>
             ) : (
-              <div className="text-xs text-gray3">not enough entries</div>
+              <div className="ml-6 text-xs text-gray3">COMING SOON</div>
             )}
           </div>
         </animated.div>
       </animated.div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col p-12 gap-8 relative w-full items-end">
+      <div className="flex flex-col p-12 gap-8 relative w-full items-end pb-64">
         {/* Album Entries  */}
         <div className="flex flex-col gap-8 overflow-visible h-full">
           {flattenedReviews?.length > 0 ? (
@@ -161,18 +161,18 @@ const Album = ({ scale }: AlbumProps) => {
               <EntryAlbum key={review.id} review={review} />
             ))
           ) : (
-            <div className="text-xs text-grey p-2">no entries</div>
+            <div className="text-xs text-gray2 p-2">surrender the sound.</div>
           )}
         </div>
 
         {/* Infinite Loading Indicator  */}
-        {isFetchingNextPage ? (
+        {/* {isFetchingNextPage ? (
           <div className="">loading more reviews...</div>
         ) : hasNextPage ? (
           <button onClick={() => fetchNextPage()}>load More</button>
         ) : (
           <div className="text-xs pl-2 text-gray2">end of line</div>
-        )}
+        )} */}
       </div>
     </animated.div>
   );

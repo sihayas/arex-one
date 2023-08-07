@@ -34,7 +34,7 @@ const Album = () => {
   return (
     <div
       ref={scrollContainerRef}
-      className="flex flex-col w-full h-full rounded-[20px] scrollbar-none"
+      className="flex flex-col w-full h-full items-center justify-center rounded-[20px]"
     >
       {/* <div className="absolute right-8 top-8 flex flex-col items-end gap-4">
         <Button

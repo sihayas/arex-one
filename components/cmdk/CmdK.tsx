@@ -295,11 +295,15 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       if (newHeight < 600) newHeight = 600;
       if (newHeight > 918) newHeight = 918;
 
+      let newWidth = 922 + (y / 300) * (986 - 922);
+      if (newWidth < 922) newWidth = 922;
+      if (newWidth > 986) newWidth = 986;
+
       // Apply the new scale and width immediately to the spring animation
-      set({ height: newHeight, width: 922 });
+      set({ height: newHeight, width: newWidth });
 
       // Defer updating the page dimensions
-      setDebounced({ newWidth: 922, newHeight });
+      setDebounced({ newWidth, newHeight });
     }
   });
 
