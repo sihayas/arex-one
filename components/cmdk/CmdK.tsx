@@ -32,7 +32,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 922, height: 600 },
   album: { width: 800, height: 800 },
-  entry: { width: 504, height: 704 },
+  entry: { width: 516, height: 608 },
   form: { width: 960, height: 480 },
   user: { width: 768, height: 768 },
 };
@@ -304,6 +304,20 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       // Defer updating the page dimensions
       setDebounced({ newWidth, newHeight });
+    } else if (activePage.name === "entry") {
+      let baseHeight = 610;
+      let newHeight = baseHeight + (y / 50) * (888 - baseHeight);
+      if (newHeight < baseHeight) newHeight = baseHeight;
+      if (newHeight > 888) newHeight = 888;
+
+      // Apply the new scale and width immediately to the spring animation
+      set({
+        width: 516,
+        height: newHeight,
+      });
+
+      // Defer updating the page dimensions
+      setDebounced({ newWidth: 516, newHeight: newHeight });
     }
   });
 

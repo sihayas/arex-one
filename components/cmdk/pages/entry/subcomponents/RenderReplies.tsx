@@ -9,7 +9,7 @@ export const RenderReplies: React.FC<RenderRepliesProps> = ({
   threadcrumbs,
 }) => {
   return (
-    <div className="flex flex-col p-8 pb-32 mb-12">
+    <div className="flex flex-col p-8 pt-0 pb-32 mb-12">
       <Replies reviewId={threadcrumbs[0]} />
     </div>
   );

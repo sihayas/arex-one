@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
 import { ReviewData } from "../../../../lib/interfaces";
@@ -11,29 +11,17 @@ import { useQuery } from "@tanstack/react-query";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { EntryFull } from "./subcomponents/EntryFull";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
+import { animated, SpringValue } from "@react-spring/web";
 
 export const Entry = () => {
   const { data: session } = useSession();
   // Context
-  const { selectedAlbum } = useCMDKAlbum();
   const { activePage } = useCMDK();
   const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
 
-  // const boxShadow = useMemo(() => {
-  //   if (selectedAlbum?.shadowColor) {
-  //     return `0px 0px 0px 0px ${selectedAlbum?.shadowColor},0.025),
-  //    0px 5px 12px 0px ${selectedAlbum.shadowColor},0.25),
-  //    0px 22px 22px 0px ${selectedAlbum.shadowColor},0.22),
-  //    0px 49px 29px 0px ${selectedAlbum.shadowColor},0.13),
-  //    0px 87px 35px 0px ${selectedAlbum.shadowColor},0.04),
-  //    0px 136px 38px 0px ${selectedAlbum.shadowColor},0.00)`;
-  //   }
-  //   return undefined;
-  // }, [selectedAlbum?.shadowColor]);
-
   const firstThreadcrumb = activePage.threadcrumbs?.[0];
 
-  // If reviewId changes [first item in threadcrumb] changes, re-render Entry
+  // If reviewId changes [first item in threadcrumbs], re-render Entry
   useEffect(() => {
     if (activePage.threadcrumbs && firstThreadcrumb) {
       setThreadcrumbs(activePage.threadcrumbs);
@@ -70,22 +58,20 @@ export const Entry = () => {
   // If review album is different from selected album, fetch artwork
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
     review?.albumId,
-    "440"
+    "1032"
   );
 
-  if (!review) return null;
-
-  console.log(review);
+  if (!review || !artworkUrl) return null;
 
   return (
-    <div className="flex flex-col rounded-[20px] p-[26px] w-full h-full">
-      <EntryFull review={review} />
+    <>
+      <EntryFull review={review} artworkUrl={artworkUrl} />
 
       {/* Replies  */}
-      <RenderReplies threadcrumbs={threadcrumbs} />
+      {/* <RenderReplies threadcrumbs={threadcrumbs} /> */}
 
       {/* Reply Input  */}
-      <div className="w-[470px] fixed bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full shadow-sm z-20 border border-silver">
+      {/* <div className="w-[470px] fixed bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full shadow-sm z-20 border border-silver">
         <UserAvatar
           className="border-2 border-white rounded-full"
           imageSrc={review.author?.image}
@@ -94,8 +80,8 @@ export const Entry = () => {
           height={28}
         />
         <ReplyInput />
-      </div>
-    </div>
+      </div> */}
+    </>
   );
 };
 

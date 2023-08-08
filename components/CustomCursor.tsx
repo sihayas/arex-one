@@ -46,10 +46,6 @@ function CustomCursor() {
     setCoords({ x: cursorX, y: cursorY });
   }, 16);
 
-  useEffect(() => {
-    console.log("is cursor on right?", cursorOnRight);
-  }, [cursorOnRight]);
-
   const hoverCursor = (e: MouseEvent) => {
     let target: HTMLElement | null = e.target as HTMLElement;
     let hoverScale = 1;

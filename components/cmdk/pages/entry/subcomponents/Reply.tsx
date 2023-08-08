@@ -156,7 +156,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
             {/* Chain Bottom (Reply)? */}
             {isChild ? (
               <ChainEndIcon
-                className={"absolute top-2 -right-[9px] z-0"}
+                className={"absolute -top-1 -right-[9px] z-0"}
                 width={42}
                 height={42}
                 color={"#CCC"}
@@ -166,16 +166,15 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
           {/* Content & Like Button  */}
           <div
             onClick={handleLoadReplies}
-            className={`px-4 py-2 w-[450px] bg-white text-black text-[13px] leading-normal border border-silver rounded-2xl rounded-bl-[4px] break-words  ${
+            className={`px-3 py-[6px] w-[420px] bg-white text-black text-[13px] leading-normal border border-silver rounded-2xl rounded-bl-[4px] break-words  ${
               !isChild ? "mt-6" : ""
             } `}
           >
             {reply.content}
           </div>
           {/* Like Count  */}
-          <div className="absolute flex flex-col items-center -right-2.5 -bottom-6">
+          <div className="absolute flex flex-col items-center right-[18px] -bottom-2">
             <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
-            <div className="text-[10px] text-gray2">{likeCount}</div>
           </div>
         </div>
         {/* Name  */}

@@ -29,7 +29,7 @@ export const LikeButton: React.FC<LikeButtonProps> = ({
       onMouseLeave={() => setColor(liked ? "#333" : "#CCC")}
       aria-label="like this entry"
     >
-      <div className="flex items-center bg-white border border-silver rounded-full p-1 hoverable-small translate-y-[1px] relative overflow-visible hover:invert">
+      <div className="flex items-center border border-silver rounded-full p-1 hoverable-small translate-y-[1px] relative overflow-visible hover:invert">
         <LoveIcon color={color} width={16} height={16} />
       </div>
     </button>
