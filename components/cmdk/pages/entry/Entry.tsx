@@ -3,7 +3,6 @@ import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
 import { ReviewData } from "../../../../lib/interfaces";
-import { UserAvatar, ReplyInput } from "../../generics";
 import { RenderReplies } from "./subcomponents/RenderReplies";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
@@ -13,11 +12,28 @@ import { EntryFull } from "./subcomponents/EntryFull";
 import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
 import { animated, SpringValue } from "@react-spring/web";
 
-export const Entry = () => {
+interface EntryProps {
+  translateY: SpringValue<number>;
+}
+
+export const Entry = ({ translateY }: EntryProps) => {
   const { data: session } = useSession();
   // Context
   const { activePage } = useCMDK();
   const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
+  const { selectedAlbum } = useCMDKAlbum();
+
+  const boxShadow = useMemo(() => {
+    if (selectedAlbum?.colors[0]) {
+      return `0px 0px 0px 0px ${selectedAlbum.colors[0]}, 0.11),
+        9px 11px 32px 0px ${selectedAlbum.colors[0]}, 0.11),
+        37px 45px 58px 0px ${selectedAlbum.colors[0]}, 0.09),
+        83px 100px 78px 0px ${selectedAlbum.colors[0]}, 0.05),
+        148px 178px 93px 0px ${selectedAlbum.colors[0]}, 0.02),
+        231px 279px 101px 0px ${selectedAlbum.colors[0]}, 0.00)`;
+    }
+    return undefined;
+  }, [selectedAlbum?.colors]);
 
   const firstThreadcrumb = activePage.threadcrumbs?.[0];
 
@@ -44,11 +60,11 @@ export const Entry = () => {
       return response.data;
     },
     {
-      enabled: !!reviewId, // <- only fetch if reviewId is truthy
-      staleTime: Infinity,
+      enabled: !!reviewId,
     }
   );
 
+  // Set default reply parent
   useEffect(() => {
     if (review) {
       setReplyParent(review);
@@ -65,22 +81,27 @@ export const Entry = () => {
 
   return (
     <>
-      <EntryFull review={review} artworkUrl={artworkUrl} />
+      <Image
+        className="absolute rounded-[20px] rounded-b-none"
+        style={{
+          boxShadow: boxShadow,
+        }}
+        src={artworkUrl || "/public/images/default.png"}
+        alt={`${selectedAlbum?.attributes.name} artwork`}
+        width={516}
+        height={516}
+        onDragStart={(e) => e.preventDefault()}
+        draggable="false"
+      />
 
-      {/* Replies  */}
-      {/* <RenderReplies threadcrumbs={threadcrumbs} /> */}
-
-      {/* Reply Input  */}
-      {/* <div className="w-[470px] fixed bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full shadow-sm z-20 border border-silver">
-        <UserAvatar
-          className="border-2 border-white rounded-full"
-          imageSrc={review.author?.image}
-          altText={`${review.author?.name}'s avatar`}
-          width={28}
-          height={28}
-        />
-        <ReplyInput />
-      </div> */}
+      {/* Translate up 8rem  */}
+      <animated.div
+        style={{
+          transform: translateY.to((value) => `translateY(${value}rem)`),
+        }}
+      >
+        <EntryFull review={review} artworkUrl={artworkUrl} />
+      </animated.div>
     </>
   );
 };

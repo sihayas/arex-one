@@ -74,13 +74,6 @@ export const ReplyInput = () => {
     <div className="flex items-center w-full">
       <TextareaAutosize
         className={`text-sm text-grey outline-none bg-transparent w-full resize-none`}
-        placeholder={
-          replyParent
-            ? "albumId" in replyParent
-              ? `new chain`
-              : `+ chain: ${replyParent.content}`
-            : "+ reply"
-        }
         value={replyContent}
         onChange={handleReplyChange}
       />

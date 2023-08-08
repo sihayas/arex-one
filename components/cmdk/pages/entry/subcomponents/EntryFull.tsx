@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useSession } from "next-auth/react";
-import { UserAvatar, LikeButton } from "../../../generics";
+import { UserAvatar, LikeButton, ReplyInput } from "../../../generics";
 import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { Stars } from "../../../generics";
@@ -13,8 +13,10 @@ import {
   differenceInSeconds,
   differenceInYears,
 } from "date-fns";
-import Image from "next/image";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { RenderReplies } from "./RenderReplies";
+
+import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 interface EntryFullProps {
   review: ReviewData;
@@ -23,20 +25,11 @@ interface EntryFullProps {
 
 export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
   const { data: session } = useSession();
-  const { setPages } = useCMDK();
+  const { setPages, activePage } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
+  const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
 
-  const boxShadow = useMemo(() => {
-    if (selectedAlbum?.colors[0]) {
-      return `0px 0px 0px 0px ${selectedAlbum.colors[0]}, 0.11),
-        9px 11px 32px 0px ${selectedAlbum.colors[0]}, 0.11),
-        37px 45px 58px 0px ${selectedAlbum.colors[0]}, 0.09),
-        83px 100px 78px 0px ${selectedAlbum.colors[0]}, 0.05),
-        148px 178px 93px 0px ${selectedAlbum.colors[0]}, 0.02),
-        231px 279px 101px 0px ${selectedAlbum.colors[0]}, 0.00)`;
-    }
-    return undefined;
-  }, [selectedAlbum?.colors]);
+  const firstThreadcrumb = activePage.threadcrumbs?.[0];
 
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
     review.likedByUser,
@@ -47,32 +40,23 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
     session
   );
 
-  // const handleUserClick = () => {
-  //   setPages((prevPages) => [
-  //     ...prevPages,
-  //     {
-  //       name: "user",
-  //       user: review.author.id,
-  //     },
-  //   ]);
-  // };
-  //
+  const handleUserClick = () => {
+    setPages((prevPages) => [
+      ...prevPages,
+      {
+        name: "user",
+        user: review.author.id,
+        dimensions: {
+          width: 50,
+          height: 50,
+        },
+      },
+    ]);
+  };
 
   return (
     <>
-      <Image
-        className="absolute rounded-[20px]"
-        style={{
-          boxShadow: boxShadow,
-        }}
-        src={artworkUrl || "/public/images/default.png"}
-        alt={`${selectedAlbum?.attributes.name} artwork`}
-        width={516}
-        height={516}
-        onDragStart={(e) => e.preventDefault()}
-        draggable="false"
-      />
-      <div className="flex flex-col gap-4 w-full overflow-visible absolute top-[516px] p-8 bg-white bg-opacity-0 rounded-[20px] pb-9 z-10">
+      <div className="flex flex-col gap-4 w-full overflow-hidden absolute top-[516px] p-8 z-10 bg-white rounded-[20px]">
         {/* Review Content */}
         <div
           className={`w-full text-[13px] text-black break-words hoverable-medium`}
@@ -81,11 +65,11 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
         </div>
 
         {/* Attribution and stats */}
-        <div className="flex items-center justify-between">
+        <div className="grid grid-cols-3 relative">
           {/* Username and Avatar */}
           <div
-            // onClick={handleUserClick}
-            className="flex items-center gap-2 hoverable-small"
+            onClick={handleUserClick}
+            className="self-center flex items-center gap-2 hoverable-small"
           >
             <UserAvatar
               imageSrc={review.author?.image}
@@ -101,12 +85,18 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
             </div>
           </div>
 
+          <Stars
+            className="self-center justify-self-center border border-silver rounded-full p-1"
+            rating={review.rating}
+            color={"#000"}
+          />
+
           {/* Replies and Likes  */}
-          <div className="flex items-center gap-1 hoverable-small">
+          <div className="self-center justify-self-end flex items-center gap-2 hoverable-small">
             <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
-            {/* Like Avatar previews */}
             {review.replies && review._count.replies > 0 && (
-              <div className="flex items-center">
+              // Like & Avatar previews
+              <div className="flex items-center -ml-1">
                 {review.replies.slice(0, 3).map((reply, index) => (
                   <UserAvatar
                     key={index}
@@ -120,12 +110,11 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
                   />
                 ))}
 
-                {review.likes && review._count.likes > 3 && (
+                {review.replies && review._count.replies > 3 && (
                   <div className="text-[10px] ml-1 text-gray2">
-                    + {review._count.likes - 3}
+                    + {review._count.replies - 3}
                   </div>
                 )}
-                <div className="text-gray3 ml-2 mr-1">&middot;</div>
               </div>
             )}
             {/* Date  */}
@@ -133,9 +122,24 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
               {formatDateShort(new Date(review.createdAt))}
             </div>
           </div>
+
+          <div className="text-xs text-gray2 font-medium absolute -bottom-8">
+            {review._count.replies} chains
+          </div>
         </div>
-        <div className="text-xs text-gray2 border-b-8 border-gray2 absolute -bottom-[4px] left-1/2 rounded-b">
-          {review._count.replies}
+
+        <RenderReplies threadcrumbs={threadcrumbs} />
+
+        {/* Reply Input  */}
+        <div className="w-[452px] absolute bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full z-20 border border-silver">
+          <UserAvatar
+            className="border-2 border-white rounded-full"
+            imageSrc={review.author?.image}
+            altText={`${review.author?.name}'s avatar`}
+            width={28}
+            height={28}
+          />
+          <ReplyInput />
         </div>
       </div>
     </>

@@ -126,11 +126,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     [setPages]
   );
 
-  // Inertia tracking with lethargy to trigger shapeshift/navigation
-  const [{ width, scale, height }, set] = useSpring(() => ({
+  // Inertia tracking with lethargy to trigger shape shift/navigation
+  const [{ width, scale, height, translateY }, set] = useSpring(() => ({
     scale: 1,
     width: activePage.dimensions.width,
     height: activePage.dimensions.height,
+    translateY: 0,
     config: {
       tension: 400,
       friction: 57,
@@ -310,10 +311,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       if (newHeight < baseHeight) newHeight = baseHeight;
       if (newHeight > 888) newHeight = 888;
 
+      let translateY = -y / 20;
+      if (translateY < -4) translateY = -4;
       // Apply the new scale and width immediately to the spring animation
       set({
         width: 516,
         height: newHeight,
+        translateY: translateY,
       });
 
       // Defer updating the page dimensions
@@ -503,6 +507,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               >
                 {Component === Album ? (
                   <Component scale={scale} />
+                ) : Component === Entry ? (
+                  <Component translateY={translateY} />
                 ) : (
                   <Component />
                 )}
