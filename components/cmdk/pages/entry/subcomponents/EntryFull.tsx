@@ -20,16 +20,12 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 interface EntryFullProps {
   review: ReviewData;
-  artworkUrl: string;
 }
 
-export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
+export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setPages, activePage } = useCMDK();
-  const { selectedAlbum } = useCMDKAlbum();
-  const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
-
-  const firstThreadcrumb = activePage.threadcrumbs?.[0];
+  const { setPages } = useCMDK();
+  const { threadcrumbs } = useThreadcrumb();
 
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
     review.likedByUser,

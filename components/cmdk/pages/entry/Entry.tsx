@@ -3,7 +3,6 @@ import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
 import { ReviewData } from "../../../../lib/interfaces";
-import { RenderReplies } from "./subcomponents/RenderReplies";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useQuery } from "@tanstack/react-query";
@@ -37,13 +36,6 @@ export const Entry = ({ translateY }: EntryProps) => {
 
   const firstThreadcrumb = activePage.threadcrumbs?.[0];
 
-  // If reviewId changes [first item in threadcrumbs], re-render Entry
-  useEffect(() => {
-    if (activePage.threadcrumbs && firstThreadcrumb) {
-      setThreadcrumbs(activePage.threadcrumbs);
-    }
-  }, [activePage.threadcrumbs, firstThreadcrumb, setThreadcrumbs]);
-
   const reviewId = threadcrumbs ? threadcrumbs[0] : null;
 
   // Get review data
@@ -70,6 +62,13 @@ export const Entry = ({ translateY }: EntryProps) => {
       setReplyParent(review);
     }
   }, [review, setReplyParent]);
+
+  // If reviewId changes [first item in threadcrumbs], re-render Entry
+  useEffect(() => {
+    if (activePage.threadcrumbs && firstThreadcrumb) {
+      setThreadcrumbs(activePage.threadcrumbs);
+    }
+  }, [activePage.threadcrumbs, firstThreadcrumb, setThreadcrumbs]);
 
   // If review album is different from selected album, fetch artwork
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
@@ -100,7 +99,7 @@ export const Entry = ({ translateY }: EntryProps) => {
           transform: translateY.to((value) => `translateY(${value}rem)`),
         }}
       >
-        <EntryFull review={review} artworkUrl={artworkUrl} />
+        <EntryFull review={review} />
       </animated.div>
     </>
   );
