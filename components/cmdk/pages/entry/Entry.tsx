@@ -75,25 +75,11 @@ export const Entry = () => {
 
   if (!review) return null;
 
-  return (
-    <div className="flex flex-col rounded-[20px] w-full h-full">
-      <div className="flex items-end p-8 pb-0 gap-8">
-        <EntryFull review={review} />
+  console.log(review);
 
-        {/* Art  */}
-        <Image
-          className="rounded-[12px]"
-          src={
-            artworkUrl || selectedAlbum?.artworkUrl || "/images/default.webp"
-          }
-          alt={`${selectedAlbum?.attributes.name} artwork`}
-          width={220} // Set this to a low value
-          height={220} // Set this to the same low value
-          onDragStart={(e) => e.preventDefault()}
-          // style={{ boxShadow: boxShadow }}
-          draggable="false"
-        />
-      </div>
+  return (
+    <div className="flex flex-col rounded-[20px] p-[26px] w-full h-full">
+      <EntryFull review={review} />
 
       {/* Replies  */}
       <RenderReplies threadcrumbs={threadcrumbs} />

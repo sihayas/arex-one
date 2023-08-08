@@ -1,5 +1,3 @@
-// This API route fetches a review by its ID and includes the author and likes for "Entry.tsx"
-
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
 
@@ -39,6 +37,18 @@ export default async function handle(
           },
           _count: {
             select: { replies: true, likes: true },
+          },
+          // Include details of up to 3 replies
+          replies: {
+            take: 3,
+            select: {
+              author: {
+                select: {
+                  image: true,
+                  name: true,
+                },
+              },
+            },
           },
         },
       });
