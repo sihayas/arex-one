@@ -4,7 +4,7 @@ import Image from "next/image";
 import TextareaAutosize from "react-textarea-autosize";
 import Love from "./buttons/Love";
 import Listened from "./buttons/Listened";
-import Slider from "./buttons/Slider";
+// import Slider from "./buttons/Slider";
 import { useSession } from "next-auth/react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { toast } from "sonner";
@@ -90,7 +90,7 @@ export default function Form() {
             </div>
           </div>
           <div className="-mt-4">
-            <Slider onValueChange={handleRatingChange} />
+            {/* <Slider onValueChange={handleRatingChange} /> */}
           </div>
           <TextareaAutosize
             id="entryText"
