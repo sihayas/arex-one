@@ -3,12 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import Layout from "../components/layout";
 import Head from "next/head";
 import React, { useState } from "react";
-import { FeedAlbum } from "@/components/feed/FeedAlbum";
 import NavBar from "@/components/nav/Nav";
 import { fetchFeed } from "@/lib/api/feedAPI";
-import { ActivityData } from "@/lib/interfaces";
 import SpotlightFeed from "@/components/feed/SpotlightFeed";
 import BloomingFeed from "@/components/feed/BloomingFeed";
+import UserFeed from "@/components/feed/UserFeed";
 import { useDragLogic } from "@/hooks/npm/useDragLogic";
 import { animated } from "@react-spring/web";
 
@@ -66,19 +65,13 @@ export default function Home() {
   let feedContent;
   switch (currentFeed) {
     case "spotlight":
-      // use your spotlight fetching logic here
-      feedContent = <SpotlightFeed />;
+      feedContent = <SpotlightFeed page={1} />;
       break;
     case "blooming":
-      // use your blooming fetching logic here
-      feedContent = <BloomingFeed />;
+      feedContent = <BloomingFeed page={1} />;
       break;
     default:
-      feedContent = data.map((activity: ActivityData, index: number) => (
-        <div key={activity.id} className={index > 0 ? "pt-4" : ""}>
-          <FeedAlbum review={activity.review} />
-        </div>
-      ));
+      feedContent = <UserFeed userId={userId} />;
       break;
   }
 
