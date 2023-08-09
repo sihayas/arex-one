@@ -101,6 +101,9 @@ export default function Home() {
         </div>
         <NavBar />
       </div>
+
+      {/* Circle/Support/About */}
+      <div className="absolute bottom-8 left-8 w-4 h-4 bg-action rounded-full hoverable-small"></div>
     </Layout>
   );
 }

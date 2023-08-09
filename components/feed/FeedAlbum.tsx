@@ -67,7 +67,7 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
               className={`w-[full] text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible hoverable-small`}
             >
               {review.content}
-              <div className="absolute -right-3 -bottom-3">
+              <div className="absolute -right-3 -bottom-3 bg-white">
                 <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
               </div>
             </div>
