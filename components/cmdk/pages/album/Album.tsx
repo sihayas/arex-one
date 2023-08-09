@@ -83,7 +83,7 @@ const Album = ({ scale }: AlbumProps) => {
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
-  console.log(data);
+  console.log(flattenedReviews);
 
   return (
     <animated.div

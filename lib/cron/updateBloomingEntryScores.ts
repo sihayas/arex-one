@@ -2,6 +2,16 @@ import client from "../redis";
 import { prisma } from "../prisma";
 import { ReviewData } from "../interfaces";
 
+interface PrismaReviewData {
+  id: string;
+  _count: {
+    replies: number;
+    likes: number;
+  };
+  viewsCount: number;
+  updatedAt: Date;
+}
+
 // Weights for the trending score calculation
 const weights = {
   views: 0.3,
@@ -10,12 +20,9 @@ const weights = {
   recency: 0.3, // <-- Add this
 };
 
-function calculateBloomingScore(entry: ReviewData) {
-  const likesCount = entry.likes ? entry.likes.length : 0;
-  const repliesCount = entry.replies ? entry.replies.length : 0; // corrected line
-
+function calculateBloomingScore(entry: PrismaReviewData) {
   const currentTime = new Date();
-  const lastInteractionTime = new Date(entry.updatedAt); // assuming lastInteractionTime is in ISO string format
+  const lastInteractionTime = new Date(entry.updatedAt);
   const diffInMilliseconds =
     currentTime.getTime() - lastInteractionTime.getTime();
   const diffInHours = diffInMilliseconds / 1000 / 60 / 60;
@@ -24,14 +31,23 @@ function calculateBloomingScore(entry: ReviewData) {
 
   return (
     entry.viewsCount * weights.views +
-    likesCount * weights.likes +
-    repliesCount * weights.replies +
-    recencyScore * weights.recency // <-- Add this
+    entry._count.likes * weights.likes +
+    entry._count.replies * weights.replies +
+    recencyScore * weights.recency
   );
 }
 
 export async function updateBloomingEntryScores() {
-  const entries = await prisma.review.findMany();
+  const entries = await prisma.review.findMany({
+    select: {
+      id: true,
+      _count: {
+        select: { replies: true, likes: true },
+      },
+      viewsCount: true,
+      updatedAt: true,
+    },
+  });
 
   for (const entry of entries) {
     const bloomingScore = calculateBloomingScore(entry);

@@ -106,7 +106,7 @@ export interface ReviewData {
   content: string | null;
   createdAt: string;
   id: string;
-  likedByUser: boolean;
+  likedByUser?: boolean;
   likes: LikeData[];
   listened: boolean;
   loved: boolean;
