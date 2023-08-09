@@ -62,7 +62,7 @@ model User {
   image         String?
   emailVerified String?
   password      String?
-  favorites Favorite[]
+  favorites     Favorite[]
   following     Follows[] @relation("following")
   followers     Follows[] @relation("follower")
   reviews       Review[]

@@ -28,19 +28,19 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
 
   const handleEntryClick = useHandleEntryClick(review.id);
 
-  const handleUserClick = () => {
-    setPages((prevPages) => [
-      ...prevPages,
-      {
-        name: "user",
-        user: review.author.id,
-      },
-    ]);
-  };
+  // const handleUserClick = () => {
+  //   setPages((prevPages) => [
+  //     ...prevPages,
+  //     {
+  //       name: "user",
+  //       user: review.author.id,
+  //     },
+  //   ]);
+  // };
 
   return (
     <>
-      <div className="flex flex-col pt-4">
+      <div className="flex flex-col">
         {/* Artwork  */}
         <div className="mb-1 ml-8 z-10">
           <ArtworkHeader
@@ -73,7 +73,7 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
             </div>
             {/* Name  */}
             <div
-              onClick={handleUserClick}
+              // onClick={handleUserClick}
               className={`absolute -bottom-6 font-medium text-[13px] text-gray1`}
             >
               {review.author?.name}
@@ -118,7 +118,7 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
           )}
         </div>
       </div>
-      <hr className="border-silver mt-4" />
+      <hr className="border-silver mt-4 w-[105%] translate-x-7" />
     </>
   );
 };

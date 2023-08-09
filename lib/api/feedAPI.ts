@@ -1,4 +1,5 @@
 // This fetch function is used by react-query
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export const fetchFeed = async (userId: string) => {
