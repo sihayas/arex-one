@@ -5,7 +5,7 @@ import { ReviewData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import useHandleLikeClick from "@/hooks/useLike";
 import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
-import { Footer } from "./Footer";
+import { ArtworkHeader } from "./ArtworkHeader";
 
 interface FeedAlbumProps {
   review: ReviewData;
@@ -42,8 +42,8 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
     <>
       <div className="flex flex-col pt-4">
         {/* Artwork  */}
-        <div className="mb-2 ml-7 z-10">
-          <Footer
+        <div className="mb-1 ml-8 z-10">
+          <ArtworkHeader
             albumId={review.albumId}
             rating={review.rating}
             album={review.album}

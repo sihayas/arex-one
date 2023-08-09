@@ -4,7 +4,7 @@ import { throttle } from "lodash";
 import { useCMDK } from "@/context/CMDKContext";
 import { useScrollContext } from "@/context/ScrollContext";
 
-const springConfig = { tension: 500, friction: 70 };
+const springConfig = { tension: 500, friction: 50 };
 
 function CustomCursor() {
   const { activePage, isVisible } = useCMDK();
@@ -37,7 +37,7 @@ function CustomCursor() {
     const cursorY = e.clientY - cursorSize / 2;
 
     // Detect if the cursor is on the right side of the window
-    if (windowWidth !== 0 && cursorX > windowWidth / 2 && isVisible) {
+    if (windowWidth !== 0 && cursorX > windowWidth / 2) {
       setCursorOnRight(true);
     } else {
       setCursorOnRight(false);

@@ -6,13 +6,16 @@ import { AlbumDBData } from "@/lib/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import React from "react";
 
-interface FooterProps {
+interface ArtworkHeaderProps {
   albumId: string;
   rating?: number;
   album?: AlbumDBData;
 }
 
-export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
+export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
+  albumId,
+  rating,
+}) => {
   const { handleSelectAlbum } = useSelectAlbum();
   const imgRef = React.useRef<HTMLImageElement>(null);
 
@@ -33,10 +36,10 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
   };
 
   return (
-    <div onClick={handleClick} className="flex flex-col hoverable-medium">
+    <div onClick={handleClick} className="flex flex-col w-fit hoverable-medium">
       {/* Art  */}
       <Image
-        className="rounded-[12px]"
+        className="rounded-[12px] shadow-index"
         src={
           isLoading
             ? "/images/loading.webp"
@@ -54,7 +57,7 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
         {rating ? (
           <div className="absolute -bottom-4 -left-4">
             <Stars
-              className="bg-white p-2 rounded-full"
+              className="bg-white p-1 rounded-full border border-silver"
               rating={rating}
               color={"#000"}
             />

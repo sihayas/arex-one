@@ -85,14 +85,14 @@ const Nav: React.FC = () => {
           <Circle12 />
           <Avatar />
         </div>
-        <button className="absolute" onClick={() => signOut()}>
+        {/* <button className="absolute" onClick={() => signOut()}>
           <Image
             src="/images/icons/nav/log-out.svg"
             width={15}
             height={15}
             alt="logout-button"
           />
-        </button>
+        </button> */}
       </div>
     );
   }
