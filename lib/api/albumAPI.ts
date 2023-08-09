@@ -3,6 +3,13 @@ import { AlbumData, UserData } from "../interfaces";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+interface UserSession {
+  id: string;
+  name: string;
+  image: string;
+  gender: string;
+}
+
 export async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/postAlbum`, album);
   return response.data;
@@ -35,7 +42,10 @@ export function useAlbumQuery(selectedAlbum: AlbumData | null) {
   );
 }
 
-export function useReviewsQuery(selectedAlbum: AlbumData, user: UserData) {
+export function useReviewsQuery(
+  selectedAlbum: AlbumData | null,
+  user: UserSession | undefined
+) {
   return useInfiniteQuery(
     ["reviews", selectedAlbum?.id, user?.id],
     fetchReviews,
