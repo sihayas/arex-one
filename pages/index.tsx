@@ -17,13 +17,13 @@ export default function Home() {
   const [currentFeed, setCurrentFeed] = useState("default");
 
   const navigateLeft = () => {
-    if (currentFeed === "spotlight") setCurrentFeed("blooming");
-    else if (currentFeed === "blooming") setCurrentFeed("default");
+    if (currentFeed === "spotlight") setCurrentFeed("in bloom");
+    else if (currentFeed === "in bloom") setCurrentFeed("default");
   };
 
   const navigateRight = () => {
-    if (currentFeed === "default") setCurrentFeed("blooming");
-    else if (currentFeed === "blooming") setCurrentFeed("spotlight");
+    if (currentFeed === "default") setCurrentFeed("in bloom");
+    else if (currentFeed === "in bloom") setCurrentFeed("spotlight");
   };
 
   const { bind, x, scaleSpring } = useDragLogic({
@@ -67,7 +67,7 @@ export default function Home() {
     case "spotlight":
       feedContent = <SpotlightFeed page={1} />;
       break;
-    case "blooming":
+    case "in bloom":
       feedContent = <BloomingFeed page={1} />;
       break;
     default:
@@ -81,7 +81,7 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="w-[592px] h-[98vh] border border-silver justify-self-center self-center rounded-[16px] overflow-hidden ">
+      <div className="w-[592px] h-[96vh] border border-silver justify-self-center self-center rounded-[20px] overflow-hidden relative">
         {/* Render the feed here using the data */}
         <animated.div
           style={{
@@ -89,10 +89,16 @@ export default function Home() {
             ...scaleSpring,
           }}
           {...bind()}
-          className="bg-white w-full h-full p-8 overflow-scroll scrollbar-none border border-silver rounded-[16px]"
+          className="bg-white w-full h-full p-8 overflow-scroll scrollbar-none active:border border-silver rounded-[20px]"
         >
           {feedContent}
         </animated.div>
+        {/* Footer */}
+        <div className="absolute bottom-[26px] right-[80px] font-baskerville text-gray3 italic">
+          {currentFeed === "default"
+            ? `${session.user.name}'s feed`
+            : `${currentFeed}`}
+        </div>
         <NavBar />
       </div>
     </Layout>

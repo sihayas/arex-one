@@ -23,7 +23,7 @@ const Nav: React.FC = () => {
 
   // React Spring
   const searchStyle = useSpring({
-    height: session && navText.length > 0 && data ? "554px" : "36px",
+    height: session && navText.length > 0 && data ? "554px" : "40px",
     from: { height: "36px" },
     config: { tension: 700, friction: 60 }, // Increase tension for faster animation
   });
@@ -72,7 +72,7 @@ const Nav: React.FC = () => {
 
             <TextareaAutosize
               id="entryText"
-              className="w-full p-2 pl-3 bg-transparent resize-none text-white text-sm focus:outline-none hoverable-medium"
+              className="w-full p-2.5 pl-3 bg-transparent resize-none text-white text-sm focus:outline-none hoverable-medium"
               minRows={1}
               maxRows={12}
               disabled={!session}

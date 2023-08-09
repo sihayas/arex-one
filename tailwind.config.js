@@ -38,6 +38,9 @@ module.exports = {
         action: "rgb(255,94,0)",
         cursor: "rgba(108, 108, 108, 0.5)",
       },
+      fontFamily: {
+        baskerville: ["Baskerville", "serif"],
+      },
       letterSpacing: {
         tight: "-.02em",
       },
