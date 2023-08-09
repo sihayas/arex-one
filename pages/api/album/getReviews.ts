@@ -23,7 +23,7 @@ export default async function handle(
   const userId =
     typeof req.query.userId === "string" ? req.query.userId : undefined;
 
-  if (!albumId) {
+  if (!albumId || !userId) {
     return res.status(400).json({ message: "Album ID is required" });
   }
 

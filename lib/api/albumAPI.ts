@@ -21,7 +21,7 @@ export async function fetchReviews({
   sort = "rating_high_to_low",
 }: {
   pageParam?: number;
-  queryKey: [string, string | undefined, string | undefined];
+  queryKey: [string, string, string];
   sort?: string;
 }) {
   const [, albumId, userId] = queryKey;
@@ -42,12 +42,9 @@ export function useAlbumQuery(selectedAlbum: AlbumData | null) {
   );
 }
 
-export function useReviewsQuery(
-  selectedAlbum: AlbumData | null,
-  user: UserSession | undefined
-) {
+export function useReviewsQuery(selectedAlbum: AlbumData, user: UserSession) {
   return useInfiniteQuery(
-    ["reviews", selectedAlbum?.id, user?.id],
+    ["reviews", selectedAlbum.id, user.id],
     fetchReviews,
     {
       getNextPageParam: (lastPage, pages) => {

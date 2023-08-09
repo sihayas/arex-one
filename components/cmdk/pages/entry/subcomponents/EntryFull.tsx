@@ -28,7 +28,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   const { threadcrumbs } = useThreadcrumb();
 
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
-    review.likedByUser,
+    review.likedByUser!,
     review.likes,
     "/api/review/postLike",
     "reviewId",

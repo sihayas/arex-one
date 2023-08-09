@@ -37,7 +37,7 @@ const Album = ({ scale }: AlbumProps) => {
 
   // Initialize album, fetch reviews (w/likes if auth), and infinite scroll
   const albumQuery = useAlbumQuery(selectedAlbum);
-  const reviewsQuery = useReviewsQuery(selectedAlbum, session?.user);
+  const reviewsQuery = useReviewsQuery(selectedAlbum!, session!.user);
 
   const { data, isLoading, isError } = albumQuery;
   const {

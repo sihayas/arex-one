@@ -24,7 +24,7 @@ export const UserEntry: React.FC<UserEntryProps> = ({ review }) => {
   const replyCount = review.replies.length;
 
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
-    review.likedByUser,
+    review.likedByUser!,
     review.likes,
     "/api/review/postLike",
     "reviewId",

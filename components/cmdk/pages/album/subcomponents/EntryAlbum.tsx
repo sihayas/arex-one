@@ -17,7 +17,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   const { setPages } = useCMDK();
 
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
-    review.likedByUser,
+    review.likedByUser!,
     review.likes,
     "/api/review/postLike",
     "reviewId",
