@@ -7,7 +7,7 @@ import { useScrollContext } from "@/context/ScrollContext";
 const springConfig = { tension: 500, friction: 70 };
 
 function CustomCursor() {
-  const { activePage } = useCMDK();
+  const { activePage, isVisible } = useCMDK();
 
   // Cursor context
   const { setCursorOnRight, cursorOnRight } = useScrollContext();
@@ -37,7 +37,7 @@ function CustomCursor() {
     const cursorY = e.clientY - cursorSize / 2;
 
     // Detect if the cursor is on the right side of the window
-    if (windowWidth !== 0 && cursorX > windowWidth / 2) {
+    if (windowWidth !== 0 && cursorX > windowWidth / 2 && isVisible) {
       setCursorOnRight(true);
     } else {
       setCursorOnRight(false);

@@ -503,8 +503,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                   ...style,
                   position: "absolute",
                   width: "100%",
-                  // filter: style.blur.to((value) => `blur(${value}px)`),
-                  willChange: "transform, opacity, filter",
                 }}
               >
                 {Component === Album ? (

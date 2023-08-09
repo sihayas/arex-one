@@ -33,10 +33,7 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
   };
 
   return (
-    <div
-      onClick={handleClick}
-      className="flex flex-col drop-shadow-md hoverable-medium"
-    >
+    <div onClick={handleClick} className="flex flex-col hoverable-medium">
       {/* Art  */}
       <Image
         className="rounded-[12px]"
@@ -46,11 +43,12 @@ export const Footer: React.FC<FooterProps> = ({ albumId, rating }) => {
             : artworkUrl || "/images/default.webp"
         }
         alt={`artwork`}
-        width={338} // Set this to a low value
-        height={338} // Set this to the same low value
+        width={338}
+        height={338}
         onDragStart={(e) => e.preventDefault()}
         draggable="false"
         ref={imgRef}
+        loading="lazy"
       />
       <div className="relative">
         {rating ? (
