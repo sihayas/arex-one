@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AlbumData } from "../interfaces";
+import { AlbumData, UserData } from "../interfaces";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -35,7 +35,7 @@ export function useAlbumQuery(selectedAlbum: AlbumData | null) {
   );
 }
 
-export function useReviewsQuery(selectedAlbum, user) {
+export function useReviewsQuery(selectedAlbum: AlbumData, user: UserData) {
   return useInfiniteQuery(
     ["reviews", selectedAlbum?.id, user?.id],
     fetchReviews,
