@@ -169,7 +169,15 @@ export interface UserData {
 
 export interface ActivityData {
   id: string;
-  review?: ReviewData[];
+  type: string;
+  createdAt: Date;
+  updatedAt: Date;
+  review?: ReviewData;
+  reviewId?: string;
+  like?: LikeData;
+  likeId?: string;
+
+  notifications: Notification[]; // Assuming a Notification interface is defined elsewhere
 }
 
 interface CountData {
