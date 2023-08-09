@@ -193,8 +193,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
         // If previous page width & height are greater
         if (prevWidth > activeWidth && prevHeight > activeHeight) {
-          newWidth = width.get() + -y * 3;
-          newHeight = height.get() + -y * 3;
+          newWidth = increaseWidth(width.get(), -y);
+          newHeight = increaseHeight(height.get(), -y);
           if (newWidth > prevWidth && newHeight > prevHeight) {
             newWidth = prevWidth;
             newHeight = prevHeight;
@@ -204,10 +204,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             newWidth = activeWidth;
             newHeight = activeHeight;
           }
+
           // If previous page width & height are smaller
         } else if (prevWidth < activeWidth && prevHeight < activeHeight) {
-          newWidth = width.get() - -y * 3;
-          newHeight = height.get() - -y * 3;
+          newWidth = decreaseWidth(width.get(), -y);
+          newHeight = decreaseHeight(height.get(), -y);
           if (newWidth < prevWidth && newHeight < prevHeight) {
             newWidth = prevWidth;
             newHeight = prevHeight;
@@ -217,10 +218,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             newWidth = activeWidth;
             newHeight = activeHeight;
           }
+
           // If previous page width is smaller and height is greater
         } else if (prevWidth < activeWidth && prevHeight > activeHeight) {
-          newWidth = width.get() - -y * 3;
-          newHeight = height.get() + -y * 3;
+          newWidth = decreaseWidth(width.get(), -y);
+          newHeight = increaseHeight(height.get(), -y);
           if (newWidth < prevWidth && newHeight > prevHeight) {
             newWidth = prevWidth;
             newHeight = prevHeight;
@@ -235,8 +237,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           prevWidth > activeWidth &&
           prevHeight < activeHeight
         ) {
-          newWidth = width.get() + -y * 3;
-          newHeight = height.get() - -y * 3;
+          newWidth = increaseWidth(width.get(), -y);
+          newHeight = decreaseHeight(height.get(), -y);
           if (newWidth > prevWidth && newHeight < prevHeight) {
             newWidth = prevWidth;
             newHeight = prevHeight;
@@ -247,8 +249,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             newHeight = activePage.dimensions.height;
           }
         } else if (prevWidth === activeWidth && prevHeight === activeHeight) {
-          newWidth = width.get() + -y * 3;
-          newHeight = height.get() + -y * 3;
+          newWidth = increaseWidth(width.get(), -y);
+          newHeight = increaseHeight(height.get(), -y);
           if (newWidth > prevWidth && newHeight > prevHeight) {
             newWidth = prevWidth;
             newHeight = prevHeight;
@@ -527,3 +529,19 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 //     console.log("backed up crumbs");
 //   }
 // }, [activePage, threadcrumbs]);
+
+function increaseWidth(currentWidth: number, delta: number): number {
+  return currentWidth + delta * 3;
+}
+
+function decreaseWidth(currentWidth: number, delta: number): number {
+  return currentWidth - delta * 3;
+}
+
+function increaseHeight(currentHeight: number, delta: number): number {
+  return currentHeight + delta * 3;
+}
+
+function decreaseHeight(currentHeight: number, delta: number): number {
+  return currentHeight - delta * 3;
+}
