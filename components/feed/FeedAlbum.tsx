@@ -125,9 +125,15 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
                 />
               </>
             )}
+
+            {review._count.replies === 0 && review._count.likes > 0 && (
+              <div className="absolute -bottom-[50px] left-8 text-xs text-gray3 w-max">
+                {review._count.likes} Heart
+              </div>
+            )}
           </div>
 
-          <div className="relative w-[484px]">
+          <div className={`relative w-[484px]`}>
             <div
               onClick={() => {
                 handleEntryClick();
@@ -152,7 +158,13 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
       </div>
       <hr
         className={`border-silver w-[105%] translate-x-7 ${
-          review._count.replies > 0 ? "mt-[4.5rem] " : "mt-6"
+          review._count.replies > 0 && review._count.likes > 0
+            ? "mt-[4.5rem]"
+            : review._count.replies > 0 || review._count.likes > 0
+            ? "mt-[4.5rem]"
+            : review._count.likes > 0
+            ? "mt-[3.5rem]"
+            : "mt-[2.5rem]"
         }`}
       />
     </>
