@@ -10,7 +10,7 @@ import { AlbumDetailsProvider } from "../context/CMDKAlbum";
 import { Toaster } from "sonner";
 import { CMDKProvider } from "../context/CMDKContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import CustomCursor from "@/components/CustomCursor";
+import CustomCursor from "@/components/global/CustomCursor";
 import { ScrollProvider } from "@/context/ScrollContext";
 
 const App = ({ Component, pageProps }: AppProps) => {

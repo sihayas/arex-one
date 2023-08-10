@@ -1,7 +1,7 @@
 import { generateArtworkUrl } from "@/components/cmdk/generics";
 import { AlbumData } from "@/lib/global/interfaces";
 import Image from "next/image";
-import { useSelectAlbum } from "@/hooks/useSelectAlbum";
+import { useSelectAlbum } from "@/hooks/global/useSelectAlbum";
 import { useRef } from "react";
 
 export const SoundPreview = ({

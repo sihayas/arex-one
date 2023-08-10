@@ -4,10 +4,10 @@ import { useEffect, useMemo } from "react";
 import { animated, SpringValue } from "@react-spring/web";
 import { useSession } from "next-auth/react";
 import { EntryAlbum } from "./subcomponents/EntryAlbum";
-import { useScrollPosition } from "@/hooks/useScrollPosition";
+import { useScrollPosition } from "@/hooks/global/useScrollPosition";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
-import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
+import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { OpenAIIcon } from "@/components/icons";
 
 interface AlbumProps {

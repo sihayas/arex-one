@@ -4,8 +4,8 @@ import { UserAvatar, LikeButton } from "../../../generics";
 import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { Stars } from "../../../generics";
-import useHandleLikeClick from "@/hooks/useLike";
-import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
+import useHandleLikeClick from "@/hooks/global/useLike";
+import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
 import { StatLineIcon } from "@/components/icons";
 
 interface EntryAlbumProps {

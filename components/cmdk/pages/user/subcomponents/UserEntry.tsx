@@ -6,9 +6,9 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { Stars } from "../../../generics";
 import Image from "next/image";
 import { useDominantColor } from "@/hooks/npm/useDominantColor";
-import useHandleLikeClick from "@/hooks/useLike";
-import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
-import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
+import useHandleLikeClick from "@/hooks/global/useLike";
+import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
+import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 
 interface UserEntryProps {
   review: ReviewData;

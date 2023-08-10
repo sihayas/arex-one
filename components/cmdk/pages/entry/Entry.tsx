@@ -8,7 +8,7 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useQuery } from "@tanstack/react-query";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { EntryFull } from "./subcomponents/EntryFull";
-import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
+import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { animated, SpringValue } from "@react-spring/web";
 
 interface EntryProps {

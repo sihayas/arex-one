@@ -3,8 +3,8 @@ import { useSession } from "next-auth/react";
 import { UserAvatar, LikeButton } from "../cmdk/generics";
 import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
-import useHandleLikeClick from "@/hooks/useLike";
-import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";
+import useHandleLikeClick from "@/hooks/global/useLike";
+import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
 import { ArtworkHeader } from "./ArtworkHeader";
 
 interface FeedAlbumProps {

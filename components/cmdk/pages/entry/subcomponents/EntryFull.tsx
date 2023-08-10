@@ -4,7 +4,7 @@ import { UserAvatar, LikeButton, ReplyInput } from "../../../generics";
 import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { Stars } from "../../../generics";
-import useHandleLikeClick from "@/hooks/useLike";
+import useHandleLikeClick from "@/hooks/global/useLike";
 import {
   differenceInDays,
   differenceInHours,

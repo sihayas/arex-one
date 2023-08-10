@@ -4,7 +4,7 @@ import { UserAvatar, LikeButton } from "../../../generics";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyData } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
-import useHandleLikeClick from "@/hooks/useLike";
+import useHandleLikeClick from "@/hooks/global/useLike";
 import { Line, LineBottom } from "../../../generics";
 import { ChainEndIcon } from "@/components/icons";
 

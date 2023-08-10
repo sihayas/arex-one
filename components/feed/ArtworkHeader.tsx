@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Stars } from "../cmdk/generics";
-import useFetchArtworkUrl from "@/hooks/useFetchArtworkUrl";
-import { useSelectAlbum } from "@/hooks/useSelectAlbum";
+import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
+import { useSelectAlbum } from "@/hooks/global/useSelectAlbum";
 import { AlbumDBData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import React from "react";
