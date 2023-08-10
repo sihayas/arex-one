@@ -49,12 +49,6 @@ export default async function handle(
           createdAt: "desc",
         },
         include: {
-          // include user following likes
-          // like: {
-          //   include: {
-          //     author: true,
-          //   },
-          // },
           review: {
             select: {
               id: true,
@@ -88,13 +82,21 @@ export default async function handle(
         },
       });
 
-      activities.forEach((activity) => {
+      // Attach likedByUser property to each activity
+      const activitiesWithUserLike = activities.map((activity) => {
         if (activity.review) {
-          activity.review.likedByUser = activity.review.likes.length > 0;
+          return {
+            ...activity,
+            review: {
+              ...activity.review,
+              likedByUser: activity.review.likes.length > 0,
+            },
+          };
         }
+        return activity;
       });
 
-      res.status(200).json(activities);
+      res.status(200).json(activitiesWithUserLike);
     } catch (error) {
       console.error("Failed to fetch activities:", error);
       res.status(500).json({ error: "Failed to fetch activities." });
