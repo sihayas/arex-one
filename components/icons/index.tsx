@@ -294,3 +294,41 @@ export function OpenAIIcon({ ...props }) {
     </svg>
   );
 }
+
+export function LargeAviCap({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 43 43"
+      {...props}
+    >
+      <path
+        stroke="#E5E5E5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M38 25a16 16 0 1 0-32 0"
+      />
+    </svg>
+  );
+}
+
+export function SmallAviCap({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 32 32"
+      {...props}
+    >
+      <path
+        stroke="#E5E5E5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M28 13a12 12 0 1 1-24 0"
+      />
+    </svg>
+  );
+}

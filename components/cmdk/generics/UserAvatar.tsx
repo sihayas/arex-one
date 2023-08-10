@@ -34,7 +34,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   }
   return (
     <Image
-      className={`rounded-full border border-silver ${className}`}
+      className={`rounded-full  ${className}`}
       src={imageSrc}
       alt={altText}
       height={height}

@@ -89,7 +89,7 @@ export default function Home() {
             ...scaleSpring,
           }}
           {...bind()}
-          className="bg-white w-full h-full p-8 overflow-scroll scrollbar-none active:border border-silver rounded-[20px]"
+          className="bg-white w-full h-full p-8 overflow-scroll scrollbar-none active:border border-silver rounded-[20px] pb-96"
         >
           {feedContent}
         </animated.div>

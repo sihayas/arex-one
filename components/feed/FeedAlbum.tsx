@@ -1,11 +1,12 @@
 import React from "react";
 import { useSession } from "next-auth/react";
-import { UserAvatar, LikeButton } from "../cmdk/generics";
+import { UserAvatar, LikeButton, Line } from "../cmdk/generics";
 import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import useHandleLikeClick from "@/hooks/global/useLike";
 import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
 import { ArtworkHeader } from "./ArtworkHeader";
+import { LargeAviCap, SmallAviCap } from "../icons";
 
 interface FeedAlbumProps {
   review: ReviewData;
@@ -42,22 +43,90 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
     <>
       <div className="flex flex-col">
         {/* Artwork  */}
-        <div className="mb-1 ml-8 z-10">
+        <div className="mb-1 ml-9 z-10">
           <ArtworkHeader
             albumId={review.albumId}
             rating={review.rating}
             album={review.album}
           />
         </div>
-        {/* Avatar, Content, Like Button */}
-        <div className="flex gap-1 items-end w-full">
-          <UserAvatar
-            className="max-w-6 max-h-6"
-            imageSrc={review.author.image}
-            altText={`${review.author.name}'s avatar`}
-            width={24}
-            height={24}
-          />
+        {/* Avatar, Content+Like Button */}
+        <div className="flex gap-2 items-end w-full">
+          <div className="relative">
+            {review.replies && review._count.replies > 0 && (
+              <LargeAviCap
+                className="absolute -left-[10px] -bottom-[6px]"
+                width={43}
+                height={43}
+              />
+            )}
+            <UserAvatar
+              className="max-w-6 max-h-6"
+              imageSrc={review.author.image}
+              altText={`${review.author.name}'s avatar`}
+              width={24}
+              height={24}
+            />
+
+            {review._count.replies === 1 && (
+              <>
+                <Line className="absolute h-[46px] ml-[11px] translate-y-1" />
+                <UserAvatar
+                  className="absolute ml-1 mt-[3.25rem]"
+                  imageSrc={review.replies[0].author.image}
+                  altText={`${review.replies[0].author.name}'s avatar`}
+                  width={16}
+                  height={16}
+                />
+                <div className="absolute top-14 left-6 flex text-xs text-gray2 w-max">
+                  {review._count.likes > 0 && (
+                    <div>{review._count.likes} Heart</div>
+                  )}
+                </div>
+                <SmallAviCap
+                  className="absolute -left-1 top-[71px]"
+                  width={32}
+                  height={32}
+                />
+              </>
+            )}
+
+            {review._count.replies > 1 && (
+              <>
+                <Line className="absolute h-2 ml-[11px] translate-y-1" />
+                <UserAvatar
+                  className="absolute ml-[6px] mt-[1rem]"
+                  imageSrc={review.replies[0].author.image}
+                  altText={`${review.replies[0].author.name}'s avatar`}
+                  width={12}
+                  height={12}
+                />
+
+                <Line className="absolute h-[18px] ml-[11px] translate-y-8" />
+
+                <UserAvatar
+                  className="absolute ml-1 mt-[3.25rem]"
+                  imageSrc={review.replies[1].author.image}
+                  altText={`${review.replies[1].author.name}'s avatar`}
+                  width={16}
+                  height={16}
+                />
+                <div className="absolute top-14 left-6 flex gap-2 text-xs text-gray3 w-max">
+                  <div>{review._count.replies} Chains</div>
+                  <div>&middot;</div>
+                  {review._count.likes > 0 && (
+                    <div>{review._count.likes} Heart</div>
+                  )}
+                </div>
+                <SmallAviCap
+                  className="absolute -left-1 top-[71px]"
+                  width={32}
+                  height={32}
+                />
+              </>
+            )}
+          </div>
+
           <div className="relative w-[484px]">
             <div
               onClick={() => {
@@ -74,51 +143,18 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
             {/* Name  */}
             <div
               // onClick={handleUserClick}
-              className={`absolute -bottom-6 font-medium text-[13px] text-gray1`}
+              className={`absolute left-2 -bottom-6 font-medium text-[13px] text-black`}
             >
               {review.author?.name}
             </div>
           </div>
         </div>
-        {/* Likes and Replies ?? */}
-        <div className="flex items-center gap-2 mt-8 ml-7">
-          {review.replies && review._count.replies > 0 && (
-            <div className="flex items-center px-2 py-1 border border-silver rounded-lg rounded-bl-[2px]">
-              {review.replies.slice(0, 2).map((reply, index) => (
-                <UserAvatar
-                  key={index}
-                  className={`!border-2 border-white ${
-                    index !== 0 ? "-ml-1" : ""
-                  }`}
-                  imageSrc={reply.author.image}
-                  altText={`${reply.author.name}'s avatar`}
-                  width={20}
-                  height={20}
-                />
-              ))}
-
-              {review._count.replies > 2 && (
-                <div className="text-xs text-gray2 ml-1">
-                  {`+ ${review._count.replies - 2}`}
-                </div>
-              )}
-            </div>
-          )}
-
-          {review._count.replies > 0 && review._count.likes > 0 && (
-            <svg height="4" width="4">
-              <circle cx="2" cy="2" r="2" fill="#CCC" />
-            </svg>
-          )}
-
-          {review.likes && review._count.likes > 0 && (
-            <div className="flex items-center text-xs text-gray2">
-              {review._count.likes} {review._count.likes > 1 ? "likes" : "like"}
-            </div>
-          )}
-        </div>
       </div>
-      <hr className="border-silver mt-4 w-[105%] translate-x-7" />
+      <hr
+        className={`border-silver w-[105%] translate-x-7 ${
+          review._count.replies > 0 ? "mt-[4.5rem] " : "mt-6"
+        }`}
+      />
     </>
   );
 };
