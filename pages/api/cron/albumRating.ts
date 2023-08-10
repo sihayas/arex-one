@@ -1,4 +1,4 @@
-import { updateAlbumRatings } from "@/lib/updateAlbumRating";
+import { updateAlbumRatings } from "@/lib/cron/updateAlbumRating";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

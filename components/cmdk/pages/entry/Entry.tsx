@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import axios, { AxiosResponse } from "axios";
-import { ReviewData } from "../../../../lib/interfaces";
+import { ReviewData } from "../../../../lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useQuery } from "@tanstack/react-query";

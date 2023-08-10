@@ -1,5 +1,5 @@
 import { generateArtworkUrl } from "@/components/cmdk/generics";
-import { AlbumData } from "@/lib/interfaces";
+import { AlbumData } from "@/lib/global/interfaces";
 import Image from "next/image";
 import { useSelectAlbum } from "@/hooks/useSelectAlbum";
 import { useRef } from "react";

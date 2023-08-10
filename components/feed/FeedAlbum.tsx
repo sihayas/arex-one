@@ -1,7 +1,7 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 import { UserAvatar, LikeButton } from "../cmdk/generics";
-import { ReviewData } from "@/lib/interfaces";
+import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import useHandleLikeClick from "@/hooks/useLike";
 import { useHandleEntryClick } from "@/hooks/useHandleEntryClick";

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAlbumById } from "@/lib/musicKit";
-import { AlbumData } from "@/lib/interfaces";
+import { getAlbumById } from "@/lib/global/musicKit";
+import { AlbumData } from "@/lib/global/interfaces";
 import { generateArtworkUrl } from "@/components/cmdk/generics";
 
 interface FetchArtworkResult {

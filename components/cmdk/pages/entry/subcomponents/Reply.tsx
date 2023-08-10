@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { UserAvatar, LikeButton } from "../../../generics";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { ReplyData } from "@/lib/interfaces";
+import { ReplyData } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
 import useHandleLikeClick from "@/hooks/useLike";
 import { Line, LineBottom } from "../../../generics";

@@ -4,7 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { ReplyData } from "@/lib/interfaces";
+import { ReplyData } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
 import styles from "@/styles/replies.module.css";
 

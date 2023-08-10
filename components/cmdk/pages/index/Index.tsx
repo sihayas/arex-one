@@ -1,4 +1,4 @@
-import { AlbumData } from "@/lib/interfaces";
+import { AlbumData } from "@/lib/global/interfaces";
 import { SoundPreview } from "./subcomponents/SoundPreview";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import Button from "./subcomponents/Button";

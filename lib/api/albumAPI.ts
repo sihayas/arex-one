@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AlbumData, UserData } from "../interfaces";
+import { AlbumData, UserData } from "../global/interfaces";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 

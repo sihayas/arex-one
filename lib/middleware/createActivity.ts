@@ -1,4 +1,4 @@
-import { prisma } from "../prisma";
+import { prisma } from "../global/prisma";
 
 export async function createReviewActivity(reviewId: string) {
   return await prisma.activity.create({

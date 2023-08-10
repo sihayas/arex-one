@@ -1,6 +1,6 @@
 import { useFetchSpotlightEntries } from "@/lib/api/feedAPI";
 import { FeedAlbum } from "@/components/feed/FeedAlbum";
-import { ReviewData } from "@/lib/interfaces";
+import { ReviewData } from "@/lib/global/interfaces";
 
 const SpotlightFeed = ({ page }: { page: number }) => {
   const { spotlightEntriesDataQuery, spotlightEntriesQuery } =

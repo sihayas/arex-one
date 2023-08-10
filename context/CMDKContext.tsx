@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext, useMemo } from "react";
-import { AlbumData } from "@/lib/interfaces";
+import { AlbumData } from "@/lib/global/interfaces";
 
 // Define the shape of the Page data type
 export type Page = {

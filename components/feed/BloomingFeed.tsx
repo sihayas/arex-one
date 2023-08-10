@@ -1,6 +1,6 @@
 import { useFetchBloomingEntries } from "@/lib/api/feedAPI";
 import { FeedAlbum } from "@/components/feed/FeedAlbum";
-import { ReviewData } from "@/lib/interfaces";
+import { ReviewData } from "@/lib/global/interfaces";
 
 const BloomingFeed = ({ page }: { page: number }) => {
   const { bloomingEntriesQuery, bloomingEntriesDataQuery } =

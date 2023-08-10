@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { getAlbumsByIds } from "@/lib/musicKit";
+import { getAlbumsByIds } from "@/lib/global/musicKit";
 
 // SPOTLIGHT ALBUMS
 export const useFetchSpotlightAlbums = (page: number) => {

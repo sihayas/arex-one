@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { getAlbumById } from "@/lib/musicKit";
+import { getAlbumById } from "@/lib/global/musicKit";
 import { generateArtworkUrl } from "@/components/cmdk/generics";
 import { AsteriskIcon } from "@/components/icons";
 

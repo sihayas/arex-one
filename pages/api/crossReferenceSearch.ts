@@ -1,6 +1,6 @@
 // Cross reference Apple results with rating in cache, utilized in SearchAlbums.tsx
-import { searchAlbums } from "../../lib/musicKit";
-import client from "../../lib/redis";
+import { searchAlbums } from "../../lib/global/musicKit";
+import client from "../../lib/global/redis";
 
 export default async function handler(req, res) {
   const { query } = req.query;

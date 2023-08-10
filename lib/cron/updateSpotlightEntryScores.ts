@@ -1,5 +1,5 @@
-import client from "../redis";
-import { prisma } from "../prisma";
+import client from "../global/redis";
+import { prisma } from "../global/prisma";
 
 interface PrismaReviewData {
   id: string;

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AlbumData } from "../lib/interfaces";
+import { AlbumData } from "../lib/global/interfaces";
 
 export type AlbumDetailsContextType = {
   selectedAlbum: AlbumData | null;

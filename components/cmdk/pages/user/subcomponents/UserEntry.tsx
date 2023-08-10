@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { LikeButton } from "../../../generics";
-import { ReviewData } from "@/lib/interfaces";
+import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { Stars } from "../../../generics";
 import Image from "next/image";

@@ -1,4 +1,4 @@
-import client from "../../../lib/redis";
+import client from "../../../lib/global/redis";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(

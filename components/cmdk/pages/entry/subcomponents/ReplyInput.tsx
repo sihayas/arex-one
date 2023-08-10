@@ -2,7 +2,7 @@ import { useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { ReviewData, ReplyData } from "@/lib/interfaces";
+import { ReviewData, ReplyData } from "@/lib/global/interfaces";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 interface ReplyInputProps {

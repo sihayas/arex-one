@@ -1,7 +1,7 @@
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useDominantColor } from "@/hooks/npm/useDominantColor";
-import { AlbumData } from "@/lib/interfaces";
+import { AlbumData } from "@/lib/global/interfaces";
 
 export const useSelectAlbum = () => {
   const { getDominantColor } = useDominantColor();

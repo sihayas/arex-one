@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "../../../lib/global/prisma";
 import { createReviewActivity } from "@/lib/middleware/createActivity";
 import { createNotificationForFollowers } from "@/lib/middleware/createNotification";
 

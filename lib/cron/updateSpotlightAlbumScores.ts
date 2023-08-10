@@ -1,6 +1,6 @@
-import client from "../redis";
-import { prisma } from "../prisma";
-import { AlbumDBData } from "../interfaces";
+import client from "../global/redis";
+import { prisma } from "../global/prisma";
+import { AlbumDBData } from "../global/interfaces";
 
 // Weights for the trending score calculation
 const weights = {

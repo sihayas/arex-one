@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { generateConsensusForAlbums } from "@/lib/openAI";
+import { generateConsensusForAlbums } from "@/lib/global/openAI";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST" || req.method === "GET") {
