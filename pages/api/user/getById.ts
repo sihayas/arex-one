@@ -52,11 +52,21 @@ export default async function handle(
               },
             },
           },
-          accounts: true,
-          sessions: true,
           favorites: {
             include: {
               album: true,
+            },
+          },
+          // Include 3 followers and their images
+          followers: {
+            take: 3,
+            select: {
+              follower: {
+                select: {
+                  image: true,
+                  name: true,
+                },
+              },
             },
           },
         },

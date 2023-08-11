@@ -24,15 +24,15 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId, isFirst }) => {
     return <div>Loading...</div>;
   }
 
-  const url = generateArtworkUrl(data.attributes.artwork.url, "540");
+  const url = generateArtworkUrl(data.attributes.artwork.url, "600");
 
   return (
     <Image
-      className={`rounded-xl shadow-albumFavorite`} // Use Tailwind's margin-left class conditionally
+      className={`rounded-lg shadow-albumFavorite`} // Use Tailwind's margin-left class conditionally
       src={url}
       alt={`${data.attributes.name}'s artwork`}
-      width={270}
-      height={270}
+      width={300}
+      height={300}
       draggable="false"
     />
   );
@@ -40,7 +40,8 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId, isFirst }) => {
 
 const Favorites: React.FC<{ favorites: Favorites[] }> = ({ favorites }) => {
   return (
-    <div className="flex flex-col items-end gap-6 overflow-scroll scrollbar-none">
+    <div className="flex flex-col items-end gap-6 overflow-scroll scrollbar-none mt-[64px] mr-6 pb-32">
+      <div className="text-sm -mb-2">favorites</div>
       {favorites?.map((fav, index) => (
         <FavoriteAlbum
           key={fav.album.id}

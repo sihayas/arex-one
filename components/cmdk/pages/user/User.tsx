@@ -12,6 +12,7 @@ import {
   isUserFollowing,
 } from "@/lib/api/userAPI";
 import { Entry } from "@/components/cmdk/generics/Entry";
+import { UserAvatar } from "../../generics";
 
 const User = () => {
   const { pages } = useCMDK();
@@ -103,14 +104,14 @@ const User = () => {
     console.error(error);
     return <div>Error</div>;
   }
-  console.log("user", user);
+  console.log("user.followers", user.followers); // Check the followers array itself
+  console.log("user.followers.length", user.followers?.length);
 
   return (
     <div className="flex flex-col w-full h-full relative">
       <div className="absolute right-6 top-6 font-bold text-[#000]">rx</div>
       {/* Favorites  */}
       <Favorites favorites={user.favorites} />
-
       {/* Reviews  */}
       {/* <div className="p-8 flex flex-col">
         {user.reviews.map((review: ReviewData, i: string) => (
@@ -120,21 +121,20 @@ const User = () => {
           soundtrack
         </div>
       </div> */}
-
       {/* Footer  */}
       <div className="flex fixed items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full">
         <div className="flex gap-2 items-center">
           <Image
-            className="border-[1.5px] border-[#000] rounded-full"
+            className="border-[1.5px] border-silver rounded-full"
             src={user.image}
             alt={`${user.name}'s avatar`}
             width={48}
             height={48}
           />
-          <div className="text-xs font-medium text-black">{user.name}*</div>
+          <div className="text-xs font-medium text-[#000]">{user.name}*</div>
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col items-end gap-2">
           {/* Following Status/Button */}
           {signedInUserId && userId && (
             <div className="flex gap-1 items-center justify-center hoverable-small">
@@ -143,19 +143,42 @@ const User = () => {
                 style={{ backgroundColor: linkColor }} // Set color based on following status
               />
               <button
-                className={`text-xs font-medium hover:underline transition-all duration-300`}
+                className={`text-xs font-medium hover:underline transition-all duration-300${
+                  loadingFollow ? " pulse" : ""
+                }`}
                 style={{ color: linkColor }} // Set color based on following status
                 onClick={handleFollow}
               >
                 {linkText}
               </button>
+            </div>
+          )}
 
-              {loadingFollow && (
-                <div className="ml-2">
-                  <div className="w-4 h-4 border-2 border-black rounded-full animate-spin"></div>
+          {/* Followers Preview */}
+          {user.followers.length > 0 ? (
+            <div className="flex">
+              {user.followers.length > 3 && (
+                <div className="text-xs text-gray2">
+                  +{user.followers.length - 3}
                 </div>
               )}
+              {user.followers.slice(0, 3).map(({ follower }, index) => {
+                return (
+                  <UserAvatar
+                    key={index}
+                    className={`!border-2 border-white shadow-md ${
+                      index !== 0 ? "-ml-1" : ""
+                    }`}
+                    imageSrc={follower.image} // Access properties on the nested follower object
+                    altText={`${follower.name}'s avatar`}
+                    width={20}
+                    height={20}
+                  />
+                );
+              })}
             </div>
+          ) : (
+            <div>No followers</div>
           )}
         </div>
       </div>

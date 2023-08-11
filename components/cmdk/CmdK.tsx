@@ -386,10 +386,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const transitions = useTransition(ActiveComponent, {
     from: { scale: 0.95, opacity: 0, blur: 5 },
-    enter: { scale: 1, opacity: 1, blur: 0, delay: 300 },
+    enter: { scale: 1, opacity: 1, blur: 0, delay: 150 },
     leave: { scale: 0.95, opacity: 0, blur: 6 },
     config: {
-      duration: 300,
+      duration: 150,
     },
   });
 
