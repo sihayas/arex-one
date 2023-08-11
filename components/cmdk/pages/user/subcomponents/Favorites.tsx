@@ -40,7 +40,7 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId, isFirst }) => {
 
 const Favorites: React.FC<{ favorites: Favorites[] }> = ({ favorites }) => {
   return (
-    <div className="flex flex-col items-end gap-6 overflow-scroll scrollbar-none mt-[64px] mr-6 pb-32">
+    <div className="flex flex-col items-end gap-6 overflow-scroll scrollbar-none mt-[64px] mr-6 pb-32 w-[532px] h-full">
       <div className="text-sm -mb-2">favorites</div>
       {favorites?.map((fav, index) => (
         <FavoriteAlbum

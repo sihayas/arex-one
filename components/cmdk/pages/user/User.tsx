@@ -13,6 +13,8 @@ import {
 } from "@/lib/api/userAPI";
 import { Entry } from "@/components/cmdk/generics/Entry";
 import { UserAvatar } from "../../generics";
+import { useDragLogic } from "@/hooks/npm/useDragLogic";
+import { animated } from "@react-spring/web";
 
 const User = () => {
   const { pages } = useCMDK();
@@ -24,6 +26,22 @@ const User = () => {
   const [followingAtoB, setFollowingAtoB] = useState<boolean | null>(null);
   const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
+
+  const navigateLeft = () => {
+    setCurrentSection("Favorites");
+  };
+  const navigateRight = () => {
+    setCurrentSection("Reviews");
+  };
+
+  // Use the drag logic hook
+  const { bind, x, scaleSpring } = useDragLogic({
+    navigateLeft,
+    navigateRight,
+  });
+
+  // State to hold the current section (Favorites or Reviews)
+  const [currentSection, setCurrentSection] = useState("Favorites");
 
   const { data: followStatus, refetch: refetchFollowStatus } = useQuery(
     ["followStatus", signedInUserId, userId],
@@ -87,7 +105,7 @@ const User = () => {
   let linkColor = "#999";
   if (followingAtoB && followingBtoA) {
     linkText = "interlinked";
-    linkColor = "#87E84B";
+    linkColor = "#b1f36b";
   } else if (followingAtoB) {
     linkText = "linked";
     linkColor = "#000";
@@ -104,23 +122,38 @@ const User = () => {
     console.error(error);
     return <div>Error</div>;
   }
-  console.log("user.followers", user.followers); // Check the followers array itself
-  console.log("user.followers.length", user.followers?.length);
 
   return (
     <div className="flex flex-col w-full h-full relative">
       <div className="absolute right-6 top-6 font-bold text-[#000]">rx</div>
-      {/* Favorites  */}
-      <Favorites favorites={user.favorites} />
-      {/* Reviews  */}
-      {/* <div className="p-8 flex flex-col">
-        {user.reviews.map((review: ReviewData, i: string) => (
-          <Entry key={i} review={review} />
-        ))}
-        <div className="fixed right-8 bottom-4 text-xs text-gray2">
-          soundtrack
-        </div>
-      </div> */}
+
+      <animated.div
+        className="flex w-full h-full overflow-hidden"
+        style={{ width: "200%" }}
+      >
+        <animated.div
+          className="flex w-full h-full"
+          {...bind()}
+          style={{
+            transform: x.to((val) => `translateX(${val}px)`),
+          }}
+        >
+          <div className="flex w-full h-full">
+            {/* Add wrapper for Favorites */}
+            <Favorites favorites={user.favorites} />
+          </div>
+          <div className="flex w-full h-full">
+            {/* Add wrapper for Reviews */}
+            <div className="flex flex-col mt-[64px] pb-32">
+              <div className="text-sm -mb-2">soundtrack</div>
+              {user.reviews.map((review: ReviewData, i: string) => (
+                <Entry key={i} review={review} />
+              ))}
+            </div>
+          </div>
+        </animated.div>
+      </animated.div>
+
       {/* Footer  */}
       <div className="flex fixed items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full">
         <div className="flex gap-2 items-center">
