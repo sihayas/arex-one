@@ -1,5 +1,5 @@
 import { useFetchBloomingEntries } from "@/lib/api/feedAPI";
-import { FeedAlbum } from "@/components/feed/FeedAlbum";
+import { Entry } from "@/components/cmdk/generics/Entry";
 import { ReviewData } from "@/lib/global/interfaces";
 
 const BloomingFeed = ({ page }: { page: number }) => {
@@ -22,7 +22,7 @@ const BloomingFeed = ({ page }: { page: number }) => {
       {bloomingEntriesDataQuery.data.map(
         (review: ReviewData, index: number) => (
           <div key={review.id} className={index > 0 ? "pt-4" : ""}>
-            <FeedAlbum review={review} />
+            <Entry review={review} />
           </div>
         )
       )}

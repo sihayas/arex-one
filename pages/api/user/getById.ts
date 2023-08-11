@@ -7,6 +7,15 @@ export default async function handle(
 ) {
   const { id } = req.query;
 
+  const sessionUserId =
+    typeof req.query.sessionUserId === "string"
+      ? req.query.sessionUserId
+      : undefined;
+
+  if (!sessionUserId) {
+    return res.status(400).json({ error: "User ID is required." });
+  }
+
   if (req.method === "GET") {
     try {
       const user = await prisma.user.findUnique({
@@ -15,15 +24,32 @@ export default async function handle(
         },
         include: {
           reviews: {
-            include: {
-              album: true,
-              likes: true,
-              replies: true,
-            },
-          },
-          replies: {
-            include: {
-              likes: true,
+            select: {
+              id: true,
+              content: true,
+              author: true,
+              albumId: true,
+              rating: true,
+              // check if user has liked
+              likes: {
+                select: { id: true },
+                where: { authorId: sessionUserId },
+              },
+              // include 2 reply images
+              replies: {
+                take: 2,
+                select: {
+                  author: {
+                    select: {
+                      image: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+              _count: {
+                select: { replies: true, likes: true },
+              },
             },
           },
           accounts: true,
@@ -40,19 +66,14 @@ export default async function handle(
         const userWithLikes = {
           ...user,
           reviews: user.reviews.map((review) => {
-            const likedByUser = review.likes.some(
-              (like) => like.authorId === id
-            );
             return {
               ...review,
-              likedByUser,
+              likedByUser: review.likes.length > 0,
             };
           }),
         };
 
         res.status(200).json(userWithLikes);
-      } else {
-        res.status(404).json({ error: "User not found." });
       }
     } catch (error) {
       console.error("Error fetching user:", error);

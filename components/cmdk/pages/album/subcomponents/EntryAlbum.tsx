@@ -7,6 +7,7 @@ import { Stars } from "../../../generics";
 import useHandleLikeClick from "@/hooks/global/useLike";
 import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
 import { StatLineIcon } from "@/components/icons";
+import { useHandleUserClick } from "@/hooks/global/useHandleUserClick";
 
 interface EntryAlbumProps {
   review: ReviewData;
@@ -14,7 +15,7 @@ interface EntryAlbumProps {
 
 export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setPages } = useCMDK();
+  const { setIsVisible } = useCMDK();
 
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
@@ -27,19 +28,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
 
   const handleEntryClick = useHandleEntryClick(review.id);
 
-  const handleUserClick = () => {
-    setPages((prevPages) => [
-      ...prevPages,
-      {
-        name: "user",
-        user: review.author.id,
-        dimensions: {
-          width: 484,
-          height: 484,
-        },
-      },
-    ]);
-  };
+  const handleUserClick = useHandleUserClick(review.author.id);
 
   return (
     <div className="flex flex-col gap-1 w-[484px] overflow-visible group">
@@ -66,7 +55,10 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
 
       {/* Username and Avatar */}
       <div
-        onClick={handleUserClick}
+        onClick={() => {
+          handleUserClick();
+          setIsVisible((prevIsVisible) => !prevIsVisible);
+        }}
         className="flex items-center gap-2 hoverable-small"
       >
         {/* Image & Star  */}

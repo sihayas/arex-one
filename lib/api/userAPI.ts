@@ -22,8 +22,8 @@ export const unfollow = async (followerId: string, followingId: string) => {
   );
 };
 
-export const getUserById = async (userId: string) => {
-  const url = `/api/user/getById?id=${userId}`;
+export const getUserById = async (userId: string, sessionUserId: string) => {
+  const url = `/api/user/getById?id=${userId}&sessionUserId=${sessionUserId}`;
   const response = await axios.get(url);
   return response.data;
 };

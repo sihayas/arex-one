@@ -30,6 +30,7 @@ a {
   box-sizing: border-box;
   user-select: none;
   cursor: none;
+  -webkit-font-smoothing: antialiased;
 }
 
 #main-content {

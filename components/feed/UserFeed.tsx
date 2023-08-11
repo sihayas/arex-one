@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchFeed } from "@/lib/api/feedAPI";
-import { FeedAlbum } from "@/components/feed/FeedAlbum";
+import { Entry } from "@/components/cmdk/generics/Entry";
 import { ActivityData } from "@/lib/global/interfaces";
 
 const UserFeed = ({ userId }: { userId: string | undefined }) => {
@@ -26,7 +26,7 @@ const UserFeed = ({ userId }: { userId: string | undefined }) => {
       {data.map((activity: ActivityData, index: number) => (
         <div key={activity.id} className={index > 0 ? "pt-4" : ""}>
           {activity.review ? (
-            <FeedAlbum review={activity.review} />
+            <Entry review={activity.review} />
           ) : (
             // You may provide a placeholder or different handling if there's no review
             <div>No review available for this activity.</div>

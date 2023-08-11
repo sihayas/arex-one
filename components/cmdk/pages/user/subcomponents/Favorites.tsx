@@ -3,10 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { getAlbumById } from "@/lib/global/musicKit";
 import { generateArtworkUrl } from "@/components/cmdk/generics";
-import { AsteriskIcon } from "@/components/icons";
 
 interface AlbumProps {
   albumId: string;
+  isFirst: boolean; // Add this prop to know if it's the first item
 }
 
 interface Favorites {
@@ -15,7 +15,7 @@ interface Favorites {
   };
 }
 
-const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId }) => {
+const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId, isFirst }) => {
   const { data, isLoading } = useQuery(["album", albumId], () =>
     getAlbumById(albumId)
   );
@@ -24,34 +24,29 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId }) => {
     return <div>Loading...</div>;
   }
 
-  const url = generateArtworkUrl(data.attributes.artwork.url, "996");
+  const url = generateArtworkUrl(data.attributes.artwork.url, "540");
 
   return (
-    <div>
-      <Image
-        className="rounded-2xl shadow-albumFavorite"
-        src={url}
-        alt="album artwork"
-        width={498}
-        height={498}
-        draggable="false"
-      />
-    </div>
+    <Image
+      className={`rounded-xl shadow-albumFavorite`} // Use Tailwind's margin-left class conditionally
+      src={url}
+      alt={`${data.attributes.name}'s artwork`}
+      width={270}
+      height={270}
+      draggable="false"
+    />
   );
 };
 
 const Favorites: React.FC<{ favorites: Favorites[] }> = ({ favorites }) => {
   return (
-    <div className="flex flex-col gap-8">
-      {favorites?.map((fav) => (
-        <>
-          <div className="relative">
-            <FavoriteAlbum key={fav.album.id} albumId={fav.album.id} />
-            <div className="absolute top-2 left-2 bg-blurWhite backdrop-blur-sm border border-blurWhite rounded-full p-[6px]">
-              <AsteriskIcon width={24} height={24} color={"white"} />
-            </div>
-          </div>
-        </>
+    <div className="flex flex-col items-end gap-6 overflow-scroll scrollbar-none">
+      {favorites?.map((fav, index) => (
+        <FavoriteAlbum
+          key={fav.album.id}
+          albumId={fav.album.id}
+          isFirst={index === 0}
+        /> // Pass isFirst prop here
       ))}
     </div>
   );

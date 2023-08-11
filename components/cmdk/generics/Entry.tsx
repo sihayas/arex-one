@@ -1,22 +1,21 @@
 import React from "react";
 import { useSession } from "next-auth/react";
-import { UserAvatar, LikeButton, Line } from "../cmdk/generics";
+import { UserAvatar, LikeButton, Line } from ".";
 import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import useHandleLikeClick from "@/hooks/global/useLike";
 import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
-import { ArtworkHeader } from "./ArtworkHeader";
-import { LargeAviCap, SmallAviCap } from "../icons";
+import { useHandleUserClick } from "@/hooks/global/useHandleUserClick";
+import { ArtworkHeader } from "../../feed/ArtworkHeader";
+import { LargeAviCap, SmallAviCap } from "../../icons";
 
-interface FeedAlbumProps {
+interface EntryProps {
   review: ReviewData;
 }
 
-export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
+export const Entry: React.FC<EntryProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setPages, setIsVisible } = useCMDK();
-
-  // const replyCount = review.replies.length;
+  const { setIsVisible } = useCMDK();
 
   const { liked, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
@@ -28,20 +27,11 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
   );
 
   const handleEntryClick = useHandleEntryClick(review.id);
-
-  // const handleUserClick = () => {
-  //   setPages((prevPages) => [
-  //     ...prevPages,
-  //     {
-  //       name: "user",
-  //       user: review.author.id,
-  //     },
-  //   ]);
-  // };
+  const handleUserClick = useHandleUserClick(review.author.id);
 
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col pt-4">
         {/* Artwork  */}
         <div className="mb-1 ml-9 z-10">
           <ArtworkHeader
@@ -148,22 +138,25 @@ export const FeedAlbum: React.FC<FeedAlbumProps> = ({ review }) => {
             </div>
             {/* Name  */}
             <div
-              // onClick={handleUserClick}
-              className={`absolute left-2 -bottom-6 font-medium text-[13px] text-black`}
+              onClick={() => {
+                handleUserClick();
+                setIsVisible((prevIsVisible) => !prevIsVisible);
+              }}
+              className={`absolute left-2 -bottom-6 font-medium text-[13px] text-black hoverable-small`}
             >
-              {review.author?.name}
+              {review.author.name}
             </div>
           </div>
         </div>
       </div>
       <hr
-        className={`border-silver w-[105%] translate-x-7 ${
+        className={`border-silver w-[100%] ${
           review._count.replies > 0 && review._count.likes > 0
+            ? "mt-[5.5rem]"
+            : review._count.replies > 0 && review._count.likes === 0
             ? "mt-[4.5rem]"
-            : review._count.replies > 0 || review._count.likes > 0
-            ? "mt-[4.5rem]"
-            : review._count.likes > 0
-            ? "mt-[3.5rem]"
+            : review._count.likes > 0 && review._count.replies === 0
+            ? "mt-[4.25rem]"
             : "mt-[2.5rem]"
         }`}
       />

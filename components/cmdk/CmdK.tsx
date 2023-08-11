@@ -34,7 +34,7 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   album: { width: 800, height: 800 },
   entry: { width: 516, height: 608 },
   form: { width: 960, height: 480 },
-  user: { width: 768, height: 768 },
+  user: { width: 532, height: 712 },
 };
 
 const MemoizedSearch = React.memo(Search);
@@ -302,7 +302,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       if (newWidth < 922) newWidth = 922;
       if (newWidth > 986) newWidth = 986;
 
-      // Apply the new scale and width immediately to the spring animation
       set({ height: newHeight, width: newWidth });
 
       // Defer updating the page dimensions
@@ -315,7 +314,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       let translateY = -y / 20;
       if (translateY < -4) translateY = -4;
-      // Apply the new scale and width immediately to the spring animation
+
       set({
         width: 516,
         height: newHeight,
@@ -323,7 +322,20 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       });
 
       // Defer updating the page dimensions
-      setDebounced({ newWidth: 516, newHeight: newHeight });
+      setDebounced({ newWidth: 580, newHeight: newHeight });
+    } else if (activePage.name === "user") {
+      let baseHeight = 712;
+      let newHeight = baseHeight + (y / 300) * (994 - baseHeight);
+      if (newHeight < baseHeight) newHeight = baseHeight;
+      if (newHeight > 994) newHeight = 994;
+
+      set({
+        height: newHeight,
+        width: 532,
+      });
+
+      // Defer updating the page dimensions
+      setDebounced({ newWidth: 532, newHeight: newHeight });
     }
   });
 
