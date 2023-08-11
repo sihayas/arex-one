@@ -9,15 +9,24 @@ export default async function handle(
 
   if (req.method === "GET") {
     try {
-      const follow = await prisma.follows.findFirst({
+      const followAtoB = await prisma.follows.findFirst({
         where: {
           followerId: String(signedInUserId),
           followingId: String(userId),
         },
       });
 
-      const isFollowing = follow != null;
-      res.status(200).json({ isFollowing });
+      const followBtoA = await prisma.follows.findFirst({
+        where: {
+          followerId: String(userId),
+          followingId: String(signedInUserId),
+        },
+      });
+
+      const isFollowingAtoB = followAtoB != null;
+      const isFollowingBtoA = followBtoA != null;
+
+      res.status(200).json({ isFollowingAtoB, isFollowingBtoA });
     } catch (error) {
       console.error("Error retrieving follow status:", error);
       res.status(500).json({ error: "Failed to retrieve follow status." });

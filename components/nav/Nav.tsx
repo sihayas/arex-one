@@ -7,6 +7,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import SearchAlbums from "@/lib/api/searchAPI";
 import Search from "./Search";
 import { useSpring, animated } from "@react-spring/web";
+import Image from "next/image";
 
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
@@ -84,14 +85,14 @@ const Nav: React.FC = () => {
           <Circle12 />
           <Avatar />
         </div>
-        {/* <button className="absolute" onClick={() => signOut()}>
+        <button className="absolute" onClick={() => signOut()}>
           <Image
             src="/images/icons/nav/log-out.svg"
             width={15}
             height={15}
             alt="logout-button"
           />
-        </button> */}
+        </button>
       </div>
     );
   }

@@ -20,18 +20,20 @@ const User = () => {
 
   const userId = pages[pages.length - 1].user;
 
-  const [following, setFollowing] = useState<boolean | null>(null);
+  const [followingAtoB, setFollowingAtoB] = useState<boolean | null>(null);
+  const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
 
-  const { data: isFollowing, refetch: refetchIsFollowing } = useQuery(
-    ["isFollowing", signedInUserId, userId],
+  const { data: followStatus, refetch: refetchFollowStatus } = useQuery(
+    ["followStatus", signedInUserId, userId],
     () =>
       signedInUserId && userId ? isUserFollowing(signedInUserId, userId) : null,
     {
       enabled: !!userId && !!signedInUserId,
       onSuccess: (data) => {
         if (data !== null) {
-          setFollowing(data.isFollowing);
+          setFollowingAtoB(data.isFollowingAtoB);
+          setFollowingBtoA(data.isFollowingBtoA);
         }
       },
     }
@@ -46,14 +48,14 @@ const User = () => {
 
     setLoadingFollow(true);
     try {
-      if (following) {
+      if (followingAtoB) {
         await unfollow(signedInUserId, userId);
-        setFollowing(false);
+        setFollowingAtoB(false);
       } else {
         await follow(signedInUserId, userId);
-        setFollowing(true);
+        setFollowingAtoB(true);
       }
-      refetchIsFollowing();
+      refetchFollowStatus();
     } catch (error) {
       console.error("Error following/unfollowing", error);
     } finally {
@@ -79,6 +81,19 @@ const User = () => {
       enabled: !!userId,
     }
   );
+
+  let linkText = "link?";
+  let linkColor = "#999";
+  if (followingAtoB && followingBtoA) {
+    linkText = "interlinked";
+    linkColor = "#87E84B";
+  } else if (followingAtoB) {
+    linkText = "linked";
+    linkColor = "#000";
+  } else if (followingBtoA) {
+    linkText = "interlink?";
+    linkColor = "#FFE601";
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -122,20 +137,19 @@ const User = () => {
         <div className="flex flex-col">
           {/* Following Status/Button */}
           {signedInUserId && userId && (
-            <div className="flex gap-1 items-center justify-center">
+            <div className="flex gap-1 items-center justify-center hoverable-small">
               <div
-                className={`w-[6px] h-[6px] rounded-full ${
-                  following ? "bg-black" : "bg-gray2"
-                }`}
+                className="w-[6px] h-[6px] rounded-full"
+                style={{ backgroundColor: linkColor }} // Set color based on following status
               />
               <button
-                className={`${
-                  following ? "text-black" : "text-gray2"
-                } text-xs font-medium hover:underline hover:text-black transition-all duration-300`}
+                className={`text-xs font-medium hover:underline transition-all duration-300`}
+                style={{ color: linkColor }} // Set color based on following status
                 onClick={handleFollow}
               >
-                {following ? "linked" : "link"}
+                {linkText}
               </button>
+
               {loadingFollow && (
                 <div className="ml-2">
                   <div className="w-4 h-4 border-2 border-black rounded-full animate-spin"></div>
