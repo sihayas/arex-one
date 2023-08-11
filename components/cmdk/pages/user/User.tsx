@@ -13,8 +13,11 @@ import {
 } from "@/lib/api/userAPI";
 import { Entry } from "@/components/cmdk/generics/Entry";
 import { UserAvatar } from "../../generics";
-import { useDragLogic } from "@/hooks/npm/useDragLogic";
+// import { useDragLogic } from "@/hooks/npm/useDragLogic";
 import { animated } from "@react-spring/web";
+import { useDragLogic } from "@/hooks/npm/useDragUserLogic";
+import { useDrag } from "@use-gesture/react";
+import { useSpring } from "@react-spring/web";
 
 const User = () => {
   const { pages } = useCMDK();
@@ -27,21 +30,8 @@ const User = () => {
   const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
 
-  const navigateLeft = () => {
-    setCurrentSection("Favorites");
-  };
-  const navigateRight = () => {
-    setCurrentSection("Reviews");
-  };
-
   // Use the drag logic hook
-  const { bind, x, scaleSpring } = useDragLogic({
-    navigateLeft,
-    navigateRight,
-  });
-
-  // State to hold the current section (Favorites or Reviews)
-  const [currentSection, setCurrentSection] = useState("Favorites");
+  const { bind, x } = useDragLogic();
 
   const { data: followStatus, refetch: refetchFollowStatus } = useQuery(
     ["followStatus", signedInUserId, userId],
@@ -128,30 +118,23 @@ const User = () => {
       <div className="absolute right-6 top-6 font-bold text-[#000]">rx</div>
 
       <animated.div
-        className="flex w-full h-full overflow-hidden"
-        style={{ width: "200%" }}
+        className="flex w-full h-full"
+        {...bind()}
+        style={{
+          transform: x.to((val) => `translateX(${val}px)`),
+        }}
       >
-        <animated.div
-          className="flex w-full h-full"
-          {...bind()}
-          style={{
-            transform: x.to((val) => `translateX(${val}px)`),
-          }}
-        >
-          <div className="flex w-full h-full">
-            {/* Add wrapper for Favorites */}
-            <Favorites favorites={user.favorites} />
+        <div className="flex w-full h-full ">
+          <Favorites favorites={user.favorites} />
+        </div>
+        <div className="flex w-full h-full">
+          <div className="flex flex-col mt-[64px] pb-32">
+            <div className="text-sm -mb-2">soundtrack</div>
+            {user.reviews.map((review: ReviewData, i: string) => (
+              <Entry key={i} review={review} />
+            ))}
           </div>
-          <div className="flex w-full h-full">
-            {/* Add wrapper for Reviews */}
-            <div className="flex flex-col mt-[64px] pb-32">
-              <div className="text-sm -mb-2">soundtrack</div>
-              {user.reviews.map((review: ReviewData, i: string) => (
-                <Entry key={i} review={review} />
-              ))}
-            </div>
-          </div>
-        </animated.div>
+        </div>
       </animated.div>
 
       {/* Footer  */}
