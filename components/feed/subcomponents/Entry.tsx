@@ -31,7 +31,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
 
   return (
     <>
-      <div className="flex flex-col pt-4">
+      <div className="flex flex-col pt-4 group">
         {/* Artwork  */}
         <div className="mb-1 ml-9 z-10">
           <ArtworkHeader
@@ -68,7 +68,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
                   width={16}
                   height={16}
                 />
-                <div className="absolute top-14 left-6 flex text-xs text-gray2 w-max">
+                <div className="absolute top-14 left-10 flex text-xs text-gray2 w-max">
                   {review._count.likes > 0 && (
                     <div>{review._count.likes} Heart</div>
                   )}
@@ -101,7 +101,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
                   width={16}
                   height={16}
                 />
-                <div className="absolute top-14 left-6 flex gap-2 text-xs text-gray3 w-max">
+                <div className="absolute top-14 left-10 flex gap-2 text-xs text-gray3 w-max">
                   <div>{review._count.replies} Chains</div>
                   <div>&middot;</div>
                   {review._count.likes > 0 && (
@@ -117,7 +117,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             )}
 
             {review._count.replies === 0 && review._count.likes > 0 && (
-              <div className="absolute -bottom-[50px] left-8 text-xs text-gray3 w-max">
+              <div className="absolute -bottom-[50px] left-10 text-xs text-gray3 w-max">
                 {review._count.likes} Heart
               </div>
             )}
@@ -132,7 +132,11 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
               className={`w-[full] text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible hoverable-small`}
             >
               {review.content}
-              <div className="absolute -right-3 -bottom-3 bg-white">
+              <div
+                className={`absolute -right-3 -bottom-3 bg-white ${
+                  liked ? "opacity-100" : "opacity-0"
+                } group-hover:opacity-100 transition-opacity`}
+              >
                 <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
               </div>
             </div>

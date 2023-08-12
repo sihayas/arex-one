@@ -81,7 +81,7 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="w-[592px] h-[96vh] border border-silver justify-self-center self-center rounded-[20px] overflow-hidden relative">
+      <div className="w-[566px] h-[96vh] border border-silver justify-self-center self-center rounded-[20px] overflow-hidden relative">
         {/* Render the feed here using the data */}
         <animated.div
           style={{
@@ -94,10 +94,8 @@ export default function Home() {
           {feedContent}
         </animated.div>
         {/* Footer */}
-        <div className="absolute bottom-[26px] right-[80px] font-baskerville text-gray3 italic">
-          {currentFeed === "default"
-            ? `${session.user.name}'s feed`
-            : `${currentFeed}`}
+        <div className="absolute bottom-[30px] right-[80px] text-black text-xs">
+          {currentFeed === "default" ? `linked` : `${currentFeed}`}
         </div>
         <NavBar />
       </div>
