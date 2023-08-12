@@ -18,6 +18,13 @@ export default async function handle(
 
   if (req.method === "GET") {
     try {
+      const distinctAlbumIds = await prisma.review.findMany({
+        where: { authorId: String(id) },
+        distinct: ["albumId"],
+        select: { albumId: true },
+      });
+      const uniqueAlbumCount = distinctAlbumIds.length;
+
       const user = await prisma.user.findUnique({
         where: {
           id: String(id),
@@ -69,6 +76,9 @@ export default async function handle(
               },
             },
           },
+          _count: {
+            select: { reviews: true },
+          },
         },
       });
 
@@ -81,6 +91,7 @@ export default async function handle(
               likedByUser: review.likes.length > 0,
             };
           }),
+          uniqueAlbumCount,
         };
 
         res.status(200).json(userWithLikes);

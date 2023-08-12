@@ -325,7 +325,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       setDebounced({ newWidth: 580, newHeight: newHeight });
     } else if (activePage.name === "user") {
       let baseHeight = 712;
-      let newHeight = baseHeight + (y / 300) * (994 - baseHeight);
+      let newHeight = baseHeight + (y / 120) * (994 - baseHeight);
       if (newHeight < baseHeight) newHeight = baseHeight;
       if (newHeight > 994) newHeight = 994;
 

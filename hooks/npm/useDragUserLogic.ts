@@ -13,8 +13,8 @@ export const useDragLogic = () => {
       if (last) {
         // Determine which section to switch to based on the drag direction
         if (
-          (activeSection === 0 && mx < -100) ||
-          (activeSection === 1 && mx > 100)
+          (activeSection === 0 && mx < -64) ||
+          (activeSection === 1 && mx > 64)
         ) {
           setActiveSection((prevSection) => (prevSection === 0 ? 1 : 0));
         }

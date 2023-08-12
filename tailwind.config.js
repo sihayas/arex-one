@@ -22,7 +22,7 @@ module.exports = {
         rating: "0px 0px 10px 0px rgba(0, 0, 0, 0.08);",
         index: "0px 1px 5px 0px rgba(0, 0, 0, 0.25)",
         albumFavorite:
-          "0px 0px 0px 0px rgba(97, 73, 104, 0.20), 0px 2px 4px 0px rgba(97, 73, 104, 0.20), 0px 7px 7px 0px rgba(97, 73, 104, 0.17), 0px 16px 10px 0px rgba(97, 73, 104, 0.10), 0px 29px 12px 0px rgba(97, 73, 104, 0.03), 0px 45px 13px 0px rgba(97, 73, 104, 0.00)",
+          "0px 0px 0px 0px rgba(0, 0, 0, 0.20), 0px 2px 4px 0px rgba(0, 0, 0, 0.20), 0px 7px 7px 0px rgba(0, 0, 0, 0.17), 0px 16px 10px 0px rgba(0, 0, 0, 0.10), 0px 29px 12px 0px rgba(0, 0, 0, 0.03), 0px 45px 13px 0px rgba(0, 0, 0, 0.00)",
       },
       colors: {
         black: "#333333",

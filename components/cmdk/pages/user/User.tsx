@@ -11,13 +11,10 @@ import {
   getUserById,
   isUserFollowing,
 } from "@/lib/api/userAPI";
-import { Entry } from "@/components/cmdk/generics/Entry";
+import { UserEntry } from "./subcomponents/UserEntry";
 import { UserAvatar } from "../../generics";
-// import { useDragLogic } from "@/hooks/npm/useDragLogic";
 import { animated } from "@react-spring/web";
 import { useDragLogic } from "@/hooks/npm/useDragUserLogic";
-import { useDrag } from "@use-gesture/react";
-import { useSpring } from "@react-spring/web";
 
 const User = () => {
   const { pages } = useCMDK();
@@ -113,29 +110,46 @@ const User = () => {
     return <div>Error</div>;
   }
 
-  return (
-    <div className="flex flex-col w-full h-full relative">
-      <div className="absolute right-6 top-6 font-bold text-[#000]">rx</div>
+  console.log(user);
 
+  return (
+    <div className="flex flex-col w-full h-full relative overflow-hidden">
+      <div className="absolute right-6 top-6 font-semibold text-[#000]">rx</div>
+      {/* Header */}
       <animated.div
-        className="flex w-full h-full"
         {...bind()}
         style={{
-          transform: x.to((val) => `translateX(${val}px)`),
+          transform: x.to((val) => `translateX(${val * 0.94}px)`),
         }}
+        className=" absolute top-[72px] -right-16 flex gap-4"
       >
-        <div className="flex w-full h-full ">
-          <Favorites favorites={user.favorites} />
-        </div>
-        <div className="flex w-full h-full">
-          <div className="flex flex-col mt-[64px] pb-32">
-            <div className="text-sm -mb-2">soundtrack</div>
+        <div className="text-sm">favorites</div>
+        <div className="text-sm text-gray3">soundtrack</div>
+      </animated.div>
+
+      {/* Container */}
+      <div className="overflow-x-hidden w-full h-full">
+        <animated.div
+          className="flex w-[200%] h-full"
+          {...bind()}
+          style={{
+            transform: x.to((val) => `translateX(${val}px)`),
+          }}
+        >
+          <div className="flex w-full h-full ">
+            <Favorites
+              favorites={user.favorites}
+              reviews={user._count.reviews}
+              sounds={user.uniqueAlbumCount}
+            />
+          </div>
+          <div className="flex flex-col mt-[80px] pb-32 p-6 gap-4 w-full">
             {user.reviews.map((review: ReviewData, i: string) => (
-              <Entry key={i} review={review} />
+              <UserEntry key={i} review={review} />
             ))}
           </div>
-        </div>
-      </animated.div>
+        </animated.div>
+      </div>
 
       {/* Footer  */}
       <div className="flex fixed items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full">
@@ -159,7 +173,7 @@ const User = () => {
                 style={{ backgroundColor: linkColor }} // Set color based on following status
               />
               <button
-                className={`text-xs font-medium hover:underline transition-all duration-300${
+                className={`text-xs font-medium font-mono hover:underline transition-all duration-300${
                   loadingFollow ? " pulse" : ""
                 }`}
                 style={{ color: linkColor }} // Set color based on following status
@@ -203,79 +217,3 @@ const User = () => {
 };
 
 export default User;
-//  <animated.div className="bg-white w-full h-full relative flex flex-col items-center overflow-scroll scrollbar-none pb-48 pt-48 border border-silver shadow-cmdkScaled">
-//       {/* Header  */}
-//       <div className="flex flex-col items-center gap-4 p-8 pb-4">
-//         <Image
-//           className="border-2 shadow-medium rounded-full"
-//           src={user.image}
-//           alt={`${user.name}'s avatar`}
-//           width={307}
-//           height={307}
-//         />
-//         <div className="flex flex-col gap-1 items-center">
-//           <div className="text-sm font-semibold text-black">
-//             {user.name || "nameless"}
-//           </div>
-//           <div className="text-[13px] text-gray2 mb-2">{user.name}</div>
-//           <div className="text-[13px] text-gray2">
-//             &middot; {user.bio} &middot;
-//           </div>
-//         </div>
-//       </div>
-//       {/* Button Navigation  */}
-//       <div className="flex gap-4 w-full mb-4 items-center justify-center pb-2">
-//         <button
-//           className={`hover:invert transition-all duration-300 hoverable-small`}
-//           onClick={() => handleTabClick("favorites")}
-//         >
-//           <FavoritesIcon
-//             width={32}
-//             height={32}
-//             color={activeTab === "favorites" ? "#000" : "#ccc"}
-//           />
-//         </button>
-//         <button
-//           className={`hover:invert transition-all duration-300 hoverable-small`}
-//           onClick={() => handleTabClick("history")}
-//         >
-//           <HistoryIcon
-//             width={32}
-//             height={32}
-//             color={activeTab === "history" ? "#000" : "#ccc"}
-//           />
-//         </button>
-//         {signedInUserId &&
-//           (following === null || loadingFollow ? (
-//             <button disabled>Loading...</button>
-//           ) : (
-//             <button onClick={handleFollow}>
-//               {following ? "Unfollow" : "Follow"}
-//             </button>
-//           ))}
-//       </div>
-
-//       {/* Content  */}
-//       {/* {activeTab === "favorites" && user.favorites && (
-//         <motion.div
-//           initial="hidden"
-//           animate="visible"
-//           exit="exit"
-//           variants={TAB_ANIMATION_VARIANTS}
-//         >
-//           <Favorites favorites={user.favorites} />
-//         </motion.div>
-//       )} */}
-//       {/* {activeTab === "history" && user.reviews && (
-//         <motion.div
-//           initial="hidden"
-//           animate="visible"
-//           exit="exit"
-//           variants={TAB_ANIMATION_VARIANTS}
-//         >
-//           {user.reviews.map((review: ReviewData, i: string) => (
-//             <UserEntry key={i} review={review} />
-//           ))}
-//         </motion.div>
-//       )} */}
-//     </animated.div>
