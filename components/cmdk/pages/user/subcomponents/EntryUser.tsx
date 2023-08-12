@@ -8,6 +8,7 @@ import useHandleLikeClick from "@/hooks/global/useLike";
 import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
 import { StatLineIcon } from "@/components/icons";
 import { useHandleUserClick } from "@/hooks/global/useHandleUserClick";
+import { ArtworkHeader } from "@/components/feed/ArtworkHeader";
 
 interface EntryUserProps {
   review: ReviewData;
@@ -32,6 +33,14 @@ export const EntryUser: React.FC<EntryUserProps> = ({ review }) => {
 
   return (
     <div className="flex flex-col gap-1 w-[484px] overflow-visible group">
+      <div className="ml-1 z-10">
+        <ArtworkHeader
+          albumId={review.albumId}
+          rating={review.rating}
+          album={review.album}
+        />
+      </div>
+
       {/* Review Content, Like Button  */}
       <div className="flex relative">
         <div
@@ -40,15 +49,8 @@ export const EntryUser: React.FC<EntryUserProps> = ({ review }) => {
         >
           {review.content}
         </div>
-        <Stars
-          className={
-            "absolute -left-3 -top-3 border border-silver rounded-full p-1 bg-white"
-          }
-          rating={review.rating}
-          color={"#333"}
-        />
 
-        <div className="absolute flex gap-2 -right-3 -bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute bg-white flex gap-2 -right-3 -bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
         </div>
       </div>

@@ -6,6 +6,7 @@ import { generateArtworkUrl } from "@/components/cmdk/generics";
 
 interface AlbumProps {
   albumId: string;
+  index: number;
 }
 
 interface Favorites {
@@ -21,7 +22,7 @@ interface FavoritesProps {
   bio: string;
 }
 
-const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId }) => {
+const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId, index }) => {
   const { data, isLoading } = useQuery(["album", albumId], () =>
     getAlbumById(albumId)
   );
@@ -30,15 +31,15 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId }) => {
     return <div>Loading...</div>;
   }
 
-  const url = generateArtworkUrl(data.attributes.artwork.url, "460");
+  const url = generateArtworkUrl(data.attributes.artwork.url, "722");
 
   return (
     <Image
-      className={`rounded-lg shadow-index`} // Use Tailwind's margin-left class conditionally
+      className={`rounded-lg shadow-index ${index === 0 ? "mr-6" : ""} `}
       src={url}
       alt={`${data.attributes.name}'s artwork`}
-      width={230}
-      height={230}
+      width={361}
+      height={361}
       draggable="false"
     />
   );
@@ -51,11 +52,19 @@ const Favorites: React.FC<FavoritesProps> = ({
   bio,
 }) => {
   return (
-    <div className="flex flex-wrap flex-row-reverse items-end gap-6 overflow-hidden mt-[108px] pr-4 w-full h-full">
-      {favorites?.map((fav) => (
-        <FavoriteAlbum key={fav.album.id} albumId={fav.album.id} />
-      ))}
-      <div className="w-[230px] h-[230px] flex flex-col gap-2 justify-end text-xs text-gray2">
+    <div className="flex flex-col gap-6 overflow-hidden mt-[108px] w-full h-full">
+      <div className="flex gap-6 flex-row-reverse overflow-y-scroll scrollbar-none">
+        {favorites?.map((fav, index) => (
+          <FavoriteAlbum
+            key={fav.album.id}
+            albumId={fav.album.id}
+            index={index}
+          />
+        ))}
+        <div className="w-6"></div>
+      </div>
+
+      <div className="w-full flex flex-col gap-2 justify-end text-xs text-gray2 pl-6">
         <div className="font-semibold text-[10px] pb-2">YEAR 1</div>
         <div className="flex gap-2">
           <div className="min-w-[43px]">CODA</div>

@@ -15,7 +15,7 @@ import { useDragLogic } from "@/hooks/npm/useDragUserLogic";
 import Soundtrack from "./subcomponents/Soundtrack";
 
 const favoritesMaxHeight = "592px";
-const reviewsMaxHeight = "994px";
+const reviewsMaxHeight = "";
 
 const User = () => {
   const { pages } = useCMDK();

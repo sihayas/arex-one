@@ -9,9 +9,9 @@ type SoundtrackProps = {
 // EntrySection Component
 const Soundtrack: React.FC<SoundtrackProps> = ({ reviews }) => {
   return (
-    <div className="flex flex-col mt-[80px] pb-32 p-6 gap-4 w-full">
+    <div className="flex flex-col mt-[80px] pt-7 gap-4 w-full items-center">
       {reviews.map((review: ReviewData, i: number) => (
-        <EntryUser key={i.toString()} review={review} /> // Note the change here
+        <EntryUser key={i.toString()} review={review} />
       ))}
     </div>
   );
