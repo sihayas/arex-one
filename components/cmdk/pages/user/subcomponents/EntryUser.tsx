@@ -1,14 +1,14 @@
 import React from "react";
 import { useSession } from "next-auth/react";
-import { UserAvatar, LikeButton } from "../../../generics";
+import { UserAvatar, LikeButton } from "../../../../generics";
 import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
-import { Stars } from "../../../generics";
+import { Stars } from "../../../../generics";
 import useHandleLikeClick from "@/hooks/global/useLike";
 import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
 import { StatLineIcon } from "@/components/icons";
 import { useHandleUserClick } from "@/hooks/global/useHandleUserClick";
-import { ArtworkHeader } from "@/components/feed/ArtworkHeader";
+import { ArtworkHeader } from "@/components/feed/subcomponents/ArtworkHeader";
 
 interface EntryUserProps {
   review: ReviewData;

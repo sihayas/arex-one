@@ -2,7 +2,7 @@ import { Command } from "cmdk";
 import Image from "next/image";
 import { useSelectAlbum } from "@/hooks/global/useSelectAlbum";
 import { AlbumData } from "@/lib/global/interfaces";
-import { generateArtworkUrl } from "../../generics";
+import { generateArtworkUrl } from "../../../generics";
 
 interface SearchProps {
   searchData: any;

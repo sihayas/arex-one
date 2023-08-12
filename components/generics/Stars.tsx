@@ -4,7 +4,7 @@ import {
   StarThreeIcon,
   StarFourIcon,
   AsteriskIcon,
-} from "../../icons";
+} from "../icons";
 
 interface StarsProps {
   rating: number;

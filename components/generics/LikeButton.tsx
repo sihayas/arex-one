@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LoveIcon } from "../../icons";
+import { LoveIcon } from "../icons";
 
 interface LikeButtonProps {
   handleLikeClick: (

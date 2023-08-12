@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { getAlbumById } from "@/lib/global/musicKit";
-import { generateArtworkUrl } from "@/components/cmdk/generics";
+import { generateArtworkUrl } from "@/components/generics";
 
 interface AlbumProps {
   albumId: string;

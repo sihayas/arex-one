@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Stars } from "../cmdk/generics";
+import { Stars } from "../../generics";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { useSelectAlbum } from "@/hooks/global/useSelectAlbum";
 import { AlbumDBData } from "@/lib/global/interfaces";

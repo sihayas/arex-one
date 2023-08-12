@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useSelectAlbum } from "@/hooks/global/useSelectAlbum";
 import { AlbumData } from "@/lib/global/interfaces";
-import { generateArtworkUrl } from "../cmdk/generics";
+import { generateArtworkUrl } from "../generics";
 
 interface SearchProps {
   searchData: any;

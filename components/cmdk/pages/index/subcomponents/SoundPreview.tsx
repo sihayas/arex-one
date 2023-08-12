@@ -1,4 +1,4 @@
-import { generateArtworkUrl } from "@/components/cmdk/generics";
+import { generateArtworkUrl } from "@/components/generics";
 import { AlbumData } from "@/lib/global/interfaces";
 import Image from "next/image";
 import { useSelectAlbum } from "@/hooks/global/useSelectAlbum";
