@@ -39,14 +39,14 @@ a {
 
 .animate-scale-down {
   opacity: 0; /* Fades out */
-  transition: all 0.5s; /* 0.5s transition duration for everything */
-  animation: scale-down 0.5s forwards;
+  transition: all 0.33s; /* 0.5s transition duration for everything */
+  animation: scale-down 0.33s forwards;
 }
 
 .animate-scale-up {
   opacity: 1; /* Fades in */
-  transition: all 0.5s; /* 0.5s transition duration for everything */
-  animation: scale-up 0.5s forwards;
+  transition: all 0.33s; /* 0.5s transition duration for everything */
+  animation: scale-up 0.33s forwards;
 }
 
 @keyframes scale-down {
