@@ -38,31 +38,36 @@ a {
 }
 
 .animate-scale-down {
-  filter: blur(2px);
-  transition: all 0.7s;
+  opacity: 0; /* Fades out */
+  transition: all 0.5s; /* 0.5s transition duration for everything */
   animation: scale-down 0.5s forwards;
 }
 
 .animate-scale-up {
-  transition: all 0.7s;
+  opacity: 1; /* Fades in */
+  transition: all 0.5s; /* 0.5s transition duration for everything */
   animation: scale-up 0.5s forwards;
 }
 
 @keyframes scale-down {
   0% {
     transform: scale(1);
+    opacity: 1; /* Starts fully visible */
   }
   100% {
-    transform: scale(0.92);
+    transform: scale(0.92); /* Scales down to 92% */
+    opacity: 0; /* Ends fully transparent */
   }
 }
 
 @keyframes scale-up {
   0% {
-    transform: scale(0.92);
+    transform: scale(0.92); /* Starts at 92% */
+    opacity: 0; /* Starts fully transparent */
   }
   100% {
-    transform: scale(1);
+    transform: scale(1); /* Restores to original size */
+    opacity: 1; /* Ends fully visible */
   }
 }
 
@@ -113,8 +118,4 @@ button {
   100% {
     opacity: 1;
   }
-}
-
-.transition-height {
-  transition: max-height 0.3s ease-in-out; /* Adjust the duration and easing as needed */
 }
