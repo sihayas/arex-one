@@ -43,5 +43,5 @@ export const useDragLogic = () => {
     });
   }, [activeSection, api]);
 
-  return { bind, x };
+  return { bind, x, activeSection };
 };

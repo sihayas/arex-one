@@ -3,7 +3,6 @@ import { useCMDK } from "@/context/CMDKContext";
 import Favorites from "./subcomponents/Favorites";
 import Image from "next/image";
 import { useState } from "react";
-import { ReviewData } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
 import {
   follow,
@@ -11,10 +10,12 @@ import {
   getUserById,
   isUserFollowing,
 } from "@/lib/api/userAPI";
-import { UserEntry } from "./subcomponents/UserEntry";
-import { UserAvatar } from "../../generics";
 import { animated } from "@react-spring/web";
 import { useDragLogic } from "@/hooks/npm/useDragUserLogic";
+import Soundtrack from "./subcomponents/Soundtrack";
+
+const favoritesMaxHeight = "592px";
+const reviewsMaxHeight = "994px";
 
 const User = () => {
   const { pages } = useCMDK();
@@ -28,7 +29,10 @@ const User = () => {
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
 
   // Use the drag logic hook
-  const { bind, x } = useDragLogic();
+  const { bind, x, activeSection } = useDragLogic();
+
+  const coraColor = activeSection === 0 ? "#000" : "#999";
+  const soundtrackColor = activeSection === 1 ? "#000" : "#999";
 
   const { data: followStatus, refetch: refetchFollowStatus } = useQuery(
     ["followStatus", signedInUserId, userId],
@@ -110,82 +114,96 @@ const User = () => {
     return <div>Error</div>;
   }
 
-  console.log(user);
+  const renderFollowButton = () => (
+    <div className="flex gap-1 items-center justify-center hoverable-small">
+      <div
+        className="w-[6px] h-[6px] rounded-full"
+        style={{ backgroundColor: linkColor }}
+      />
+      <button
+        className={`text-xs font-mono hover:underline transition-all duration-300${
+          loadingFollow ? " pulse" : ""
+        }`}
+        style={{ color: linkColor }}
+        onClick={handleFollow}
+      >
+        {linkText}
+      </button>
+    </div>
+  );
+
+  const renderHeader = () => (
+    <animated.div
+      {...bind()}
+      style={{
+        transform: x.to((val) => `translateX(${val * 0.94}px)`),
+      }}
+      className=" absolute top-[72px] -right-16 flex gap-4"
+    >
+      <div className="text-sm font-medium" style={{ color: coraColor }}>
+        @cora
+      </div>
+      <div className="text-sm text-gray3" style={{ color: soundtrackColor }}>
+        soundtrack
+      </div>
+    </animated.div>
+  );
+
+  const renderFooter = () => (
+    <div className="flex fixed items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full rounded-b-[20px]">
+      <div className="flex gap-2 items-center">
+        <Image
+          className="border-[1.5px] border-silver rounded-full"
+          src={user.image}
+          alt={`${user.name}'s avatar`}
+          width={48}
+          height={48}
+        />
+        <div className="text-xs font-medium text-[#000]">{user.name}</div>
+      </div>
+      <div className="flex flex-col items-end gap-2">
+        {signedInUserId && userId && renderFollowButton()}
+        {/* Followers Preview code here */}
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex flex-col w-full h-full relative overflow-hidden">
       <div className="absolute right-6 top-6 font-semibold text-[#000]">rx</div>
-      {/* Header */}
-      <animated.div
-        {...bind()}
-        style={{
-          transform: x.to((val) => `translateX(${val * 0.94}px)`),
-        }}
-        className=" absolute top-[72px] -right-16 flex gap-4"
-      >
-        <div className="text-sm">favorites</div>
-        <div className="text-sm text-gray3">soundtrack</div>
-      </animated.div>
+      {renderHeader()}
 
       {/* Container */}
-      <div className="overflow-x-hidden w-full h-full">
-        <animated.div
-          className="flex w-[200%] h-full"
-          {...bind()}
-          style={{
-            transform: x.to((val) => `translateX(${val}px)`),
-          }}
-        >
-          <div className="flex w-full h-full ">
-            <Favorites
-              favorites={user.favorites}
-              reviews={user._count.reviews}
-              sounds={user.uniqueAlbumCount}
-            />
-          </div>
-          <div className="flex flex-col mt-[80px] pb-32 p-6 gap-4 w-full">
-            {user.reviews.map((review: ReviewData, i: string) => (
-              <UserEntry key={i} review={review} />
-            ))}
-          </div>
-        </animated.div>
-      </div>
+      <animated.div
+        className="flex w-[200%] h-full"
+        {...bind()}
+        style={{
+          transform: x.to((val) => `translateX(${val}px)`),
+          maxHeight:
+            activeSection === 0 ? favoritesMaxHeight : reviewsMaxHeight,
+        }}
+      >
+        <Favorites
+          favorites={user.favorites}
+          reviews={user._count.reviews}
+          sounds={user.uniqueAlbumCount}
+          bio={user.bio}
+        />
+        <Soundtrack reviews={user.reviews} />
+      </animated.div>
 
-      {/* Footer  */}
-      <div className="flex fixed items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full">
-        <div className="flex gap-2 items-center">
-          <Image
-            className="border-[1.5px] border-silver rounded-full"
-            src={user.image}
-            alt={`${user.name}'s avatar`}
-            width={48}
-            height={48}
-          />
-          <div className="text-xs font-medium text-[#000]">{user.name}*</div>
-        </div>
+      {renderFooter()}
+    </div>
+  );
+};
 
-        <div className="flex flex-col items-end gap-2">
-          {/* Following Status/Button */}
-          {signedInUserId && userId && (
-            <div className="flex gap-1 items-center justify-center hoverable-small">
-              <div
-                className="w-[6px] h-[6px] rounded-full"
-                style={{ backgroundColor: linkColor }} // Set color based on following status
-              />
-              <button
-                className={`text-xs font-medium font-mono hover:underline transition-all duration-300${
-                  loadingFollow ? " pulse" : ""
-                }`}
-                style={{ color: linkColor }} // Set color based on following status
-                onClick={handleFollow}
-              >
-                {linkText}
-              </button>
-            </div>
-          )}
+export default User;
 
-          {/* Followers Preview */}
-          {user.followers.length > 0 ? (
+{
+  /* Followers Preview */
+}
+{
+  /* {user.followers.length > 0 ? (
             <div className="flex">
               {user.followers.length > 3 && (
                 <div className="text-xs text-gray2">
@@ -208,12 +226,6 @@ const User = () => {
               })}
             </div>
           ) : (
-            <div>No followers</div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default User;
+            <div>no links</div>
+          )} */
+}

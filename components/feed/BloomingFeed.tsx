@@ -1,5 +1,5 @@
 import { useFetchBloomingEntries } from "@/lib/api/feedAPI";
-import { Entry } from "@/components/cmdk/generics/Entry";
+import { Entry } from "@/components/feed/Entry";
 import { ReviewData } from "@/lib/global/interfaces";
 
 const BloomingFeed = ({ page }: { page: number }) => {

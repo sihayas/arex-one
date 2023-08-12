@@ -114,3 +114,7 @@ button {
     opacity: 1;
   }
 }
+
+.transition-height {
+  transition: max-height 0.3s ease-in-out; /* Adjust the duration and easing as needed */
+}

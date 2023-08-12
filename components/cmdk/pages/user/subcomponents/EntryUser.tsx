@@ -9,11 +9,11 @@ import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
 import { StatLineIcon } from "@/components/icons";
 import { useHandleUserClick } from "@/hooks/global/useHandleUserClick";
 
-interface UserEntryProps {
+interface EntryUserProps {
   review: ReviewData;
 }
 
-export const UserEntry: React.FC<UserEntryProps> = ({ review }) => {
+export const EntryUser: React.FC<EntryUserProps> = ({ review }) => {
   const { data: session } = useSession();
   const { setIsVisible } = useCMDK();
 

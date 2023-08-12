@@ -1,5 +1,5 @@
 import { useFetchSpotlightEntries } from "@/lib/api/feedAPI";
-import { Entry } from "@/components/cmdk/generics/Entry";
+import { Entry } from "@/components/feed/Entry";
 import { ReviewData } from "@/lib/global/interfaces";
 
 const SpotlightFeed = ({ page }: { page: number }) => {
