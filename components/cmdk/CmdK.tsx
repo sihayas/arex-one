@@ -31,7 +31,7 @@ type PageName = "index" | "album" | "entry" | "form" | "user";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 922, height: 600 },
-  album: { width: 800, height: 800 },
+  album: { width: 658, height: 658 },
   entry: { width: 516, height: 608 },
   form: { width: 960, height: 480 },
   user: { width: 532, height: 712 },
@@ -275,36 +275,36 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const scrollBind = useScroll(({ xy: [, y] }) => {
     if (activePage.name === "album") {
-      let newScale = 1 - y / 200;
+      let newScale = 1 - y / 77;
       if (newScale > 1) newScale = 1;
-      if (newScale < 0.52) newScale = 0.52;
+      if (newScale < 0.74) newScale = 0.74;
 
-      let newWidth = 800 + (y / 300) * (1066 - 800);
-      if (newWidth < 800) newWidth = 800;
+      let newWidth = 658 + (y / 77) * (1066 - 658);
+      if (newWidth < 658) newWidth = 658;
       if (newWidth > 1066) newWidth = 1066;
+
+      let newHeight = 658 + (y / 300) * (888 - 658);
+      if (newHeight < 658) newHeight = 658;
+      if (newHeight > 888) newHeight = 888;
 
       // Apply the new scale and width immediately to the spring animation
       set({
         scale: newScale,
         width: newWidth,
-        height: 800,
+        height: newHeight,
       });
 
       // Defer updating the page dimensions
-      setDebounced({ newWidth, newHeight: 800 });
+      setDebounced({ newWidth, newHeight });
     } else if (activePage.name === "index") {
       let newHeight = 600 + (y / 300) * (918 - 600);
       if (newHeight < 600) newHeight = 600;
       if (newHeight > 918) newHeight = 918;
 
-      let newWidth = 922 + (y / 300) * (986 - 922);
-      if (newWidth < 922) newWidth = 922;
-      if (newWidth > 986) newWidth = 986;
-
-      set({ height: newHeight, width: newWidth });
+      set({ height: newHeight, width: 922 });
 
       // Defer updating the page dimensions
-      setDebounced({ newWidth, newHeight });
+      setDebounced({ newWidth: 922, newHeight });
     } else if (activePage.name === "entry") {
       let baseHeight = 610;
       let newHeight = baseHeight + (y / 50) * (888 - baseHeight);
@@ -453,44 +453,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             }
           }}
         >
-          {/* Search / Search Results*/}
-          <div className={`flex flex-col w-[96%]`}>
-            {/* Search bar */}
-            <div
-              className={`w-[96%] absolute items-center flex p-4 gap-4 text-black transition-transform duration-300 scale-100 hoverable-small ${
-                hideSearch
-                  ? `-translate-y-8 scale-95 hover:scale-[97%] z-0`
-                  : "translate-y-4 z-20"
-              }`}
-            >
-              <HomeIcon width={24} height={24} color={"#333"} />
-              <Command.Input
-                className={`bg-blurWhite backdrop-blur-sm border border-silver`}
-                ref={inputRef}
-                placeholder="Dive"
-                style={{ paddingLeft: "2.5rem" }}
-                onValueChange={onValueChange}
-                onFocus={onFocus}
-                onBlur={onBlur}
-              />
-            </div>
-            {/* Search Results  */}
-            <animated.div
-              style={{ ...searchStyles }}
-              className={`w-[96%] mt-4 overflow-scroll rounded-[32px] absolute bg-blurWhite backdrop-blur-lg z-20 border border-silver scrollbar-none transform-gpu ${
-                hideSearch
-                  ? "pointer-events-none"
-                  : "!pt-[4rem] pointer-events-auto shadow-search"
-              }`}
-            >
-              <MemoizedSearch
-                searchData={data}
-                isLoading={isLoading}
-                isFetching={isFetching}
-                error={error}
-              />
-            </animated.div>
-          </div>
           {/* Container / Shapeshifter */}
           <animated.div
             {...wheelBind()} // Shapeshifter scrolling

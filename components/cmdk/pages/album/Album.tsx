@@ -40,7 +40,7 @@ const Album = ({ scale }: AlbumProps) => {
   const { data, isLoading, isError } = albumQuery;
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
     selectedAlbum?.id,
-    "1444"
+    "1316"
   );
 
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
@@ -70,7 +70,7 @@ const Album = ({ scale }: AlbumProps) => {
           transform: scale.to(
             (value) =>
               `scale3d(${value}, ${value}, ${value}) translate3d(${
-                (1 - value) * -73.25
+                (1 - value) * -84.25
               }rem, ${(1 - value) * 8}rem, 0)`
           ),
           transformOrigin: "top center",
@@ -85,8 +85,8 @@ const Album = ({ scale }: AlbumProps) => {
           }}
           src={artworkUrl || "/public/images/default.png"}
           alt={`${selectedAlbum.attributes.name} artwork`}
-          width={800}
-          height={800}
+          width={658}
+          height={658}
           onDragStart={(e) => e.preventDefault()}
           draggable="false"
         />
@@ -98,7 +98,7 @@ const Album = ({ scale }: AlbumProps) => {
             ),
             transformOrigin: "center",
           }}
-          className="absolute grid items-center top-[920px] ml-[192px] w-[416px] gap-8"
+          className="absolute grid items-center top-[724px] ml-[74px] w-[496px] gap-8"
         >
           {/* Album Details  */}
           <div className="flex flex-col gap-2 items-center justify-center">
@@ -132,7 +132,7 @@ const Album = ({ scale }: AlbumProps) => {
         style={{
           transform: x.to((val) => `translateX(${val}px)`),
         }}
-        className="flex pt-[800px] p-12 gap-8 ml-[1004px] w-full"
+        className="flex pt-[800px] p-12 gap-8 ml-[1030px] w-full"
       >
         {activeSection === 0 && (
           <Highlights selectedAlbum={selectedAlbum!} user={session!.user} />
