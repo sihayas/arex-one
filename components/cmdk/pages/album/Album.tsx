@@ -9,6 +9,7 @@ import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { OpenAIIcon } from "@/components/icons";
+import { useDragLogic } from "@/hooks/npm/useDragAlbumLogic";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -22,6 +23,7 @@ const Album = ({ scale }: AlbumProps) => {
   const { selectedAlbum } = useCMDKAlbum();
   const { scrollContainerRef, restoreScrollPosition, handleInfiniteScroll } =
     useScrollPosition();
+  const { bind, x, activeSection } = useDragLogic();
 
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.colors[0]) {
@@ -35,9 +37,17 @@ const Album = ({ scale }: AlbumProps) => {
     return undefined;
   }, [selectedAlbum?.colors]);
 
-  // Initialize album, fetch reviews (w/likes if auth), and infinite scroll
+  // Initialize album and infinite scroll
   const albumQuery = useAlbumQuery(selectedAlbum);
-  const reviewsQuery = useReviewsQuery(selectedAlbum!, session!.user);
+
+  // Fetch reviews
+  const sortOrder =
+    activeSection === 0 ? "rating_high_to_low" : "rating_low_to_high";
+  const reviewsQuery = useReviewsQuery(
+    selectedAlbum!,
+    session!.user,
+    sortOrder
+  );
 
   const { data, isLoading, isError } = albumQuery;
   const {
@@ -83,12 +93,26 @@ const Album = ({ scale }: AlbumProps) => {
 
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
-  console.log(flattenedReviews);
+  const ReviewSection = ({ reviews, isActive }) => (
+    <div
+      className={`flex flex-col gap-8 overflow-visible h-full ${
+        isActive
+          ? "opacity-100 transition-opacity duration-300"
+          : "opacity-0 transition-opacity duration-300"
+      }`}
+    >
+      {reviews?.length > 0 ? (
+        reviews.map((review) => <EntryAlbum key={review.id} review={review} />)
+      ) : (
+        <div className="text-xs text-gray2 p-2">surrender the sound.</div>
+      )}
+    </div>
+  );
 
   return (
     <animated.div
       ref={scrollContainerRef}
-      className="flex flex-col items-center rounded-[20px] h-full w-full"
+      className="flex flex-col items-center h-full w-full"
     >
       {/* Top Section */}
       <animated.div
@@ -101,7 +125,7 @@ const Album = ({ scale }: AlbumProps) => {
           ),
           transformOrigin: "top center",
         }}
-        className="sticky top-0"
+        className="sticky top-0 z-50"
       >
         {/* Album Artwork  */}
         <animated.img
@@ -126,7 +150,7 @@ const Album = ({ scale }: AlbumProps) => {
           }}
           className="absolute grid items-center top-[920px] ml-[192px] w-[416px] gap-8"
         >
-          {/* Names  */}
+          {/* Album Details  */}
           <div className="flex flex-col gap-2 items-center justify-center">
             <p className="text-sm text-black font-medium">{data.album.name}</p>
             <p className="text-sm text-gray2">{data.album.artist}</p>
@@ -153,9 +177,62 @@ const Album = ({ scale }: AlbumProps) => {
       </animated.div>
 
       {/* Section Two / Entries  */}
-      <div className="flex flex-col p-12 gap-8 relative w-full items-end pb-64">
-        {/* Album Entries  */}
-        <div className="flex flex-col gap-8 overflow-visible h-full">
+      <animated.div
+        {...bind()}
+        style={{
+          transform: x.to((val) => `translateX(${val}px)`),
+        }}
+        className="flex p-12 gap-8 ml-[1004px] w-full h-[48rem] relative"
+      >
+        {/* Section Headers */}
+        <animated.div
+          {...bind()}
+          style={{
+            transform: x.to((val) => `translateX(${403 + val * 0.031}px)`),
+          }}
+          className="absolute top-4 left-16 flex gap-4"
+        >
+          <div
+            className={`text-sm font-medium ${
+              activeSection === 0 ? "text-black" : "text-gray3"
+            }`}
+          >
+            highlights
+          </div>
+          <div
+            className={`text-sm font-medium ${
+              activeSection === 1 ? "text-black" : "text-gray3"
+            }`}
+          >
+            low / high
+          </div>
+        </animated.div>
+
+        {/* Highlights Section */}
+        <div
+          className={`flex flex-col gap-8 overflow-visible h-full ${
+            activeSection === 0
+              ? "opacity-100 transition-opacity duration-300"
+              : "opacity-0 transition-opacity duration-300"
+          }`}
+        >
+          {flattenedReviews?.length > 0 ? (
+            flattenedReviews.map((review) => (
+              <EntryAlbum key={review.id} review={review} />
+            ))
+          ) : (
+            <div className="text-xs text-gray2 p-2">surrender the sound.</div>
+          )}
+        </div>
+
+        {/* High to Low */}
+        <div
+          className={`flex flex-col gap-8 overflow-visible h-full ${
+            activeSection === 1
+              ? "opacity-100 transition-opacity duration-300"
+              : "opacity-0 transition-opacity duration-300"
+          }`}
+        >
           {flattenedReviews?.length > 0 ? (
             flattenedReviews.map((review) => (
               <EntryAlbum key={review.id} review={review} />
@@ -173,7 +250,7 @@ const Album = ({ scale }: AlbumProps) => {
         ) : (
           <div className="text-xs pl-2 text-gray2">end of line</div>
         )} */}
-      </div>
+      </animated.div>
     </animated.div>
   );
 };

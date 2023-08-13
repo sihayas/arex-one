@@ -15,22 +15,6 @@ export async function initializeAlbum(album: AlbumData) {
   return response.data;
 }
 
-export async function fetchReviews({
-  pageParam = 1,
-  queryKey,
-  sort = "rating_high_to_low",
-}: {
-  pageParam?: number;
-  queryKey: [string, string, string];
-  sort?: string;
-}) {
-  const [, albumId, userId] = queryKey;
-  const response = await axios.get(
-    `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}&userId=${userId}`
-  );
-  return response.data;
-}
-
 export function useAlbumQuery(selectedAlbum: AlbumData | null) {
   return useQuery(
     ["album", selectedAlbum?.id],
@@ -42,10 +26,35 @@ export function useAlbumQuery(selectedAlbum: AlbumData | null) {
   );
 }
 
-export function useReviewsQuery(selectedAlbum: AlbumData, user: UserSession) {
+export async function fetchReviews({
+  pageParam = 1,
+  queryKey,
+  sort,
+}: {
+  pageParam?: number;
+  queryKey: [string, string, string];
+  sort: string;
+}) {
+  const [, albumId, userId] = queryKey;
+  const response = await axios.get(
+    `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}&userId=${userId}`
+  );
+  return response.data;
+}
+
+export function useReviewsQuery(
+  selectedAlbum: AlbumData,
+  user: UserSession,
+  sortOrder: string
+) {
   return useInfiniteQuery(
-    ["reviews", selectedAlbum.id, user.id],
-    fetchReviews,
+    ["reviews", selectedAlbum.id, user.id, sortOrder],
+    ({ pageParam, queryKey }) =>
+      fetchReviews({
+        pageParam,
+        queryKey: queryKey as [string, string, string],
+        sort: sortOrder,
+      }),
     {
       getNextPageParam: (lastPage, pages) => {
         return lastPage.length === 10 ? pages.length + 1 : false;
