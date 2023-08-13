@@ -273,7 +273,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
   });
 
-  // Album page ScrollBind, make wider on scroll down, and scale down Artwork
   const scrollBind = useScroll(({ xy: [, y] }) => {
     if (activePage.name === "album") {
       let newScale = 1 - y / 200;
@@ -532,13 +531,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     </>
   );
 }
-
-// useEffect(() => {
-//   if (activePage.name === "entry") {
-//     activePage.threadcrumbs = threadcrumbs;
-//     console.log("backed up crumbs");
-//   }
-// }, [activePage, threadcrumbs]);
 
 function increaseWidth(currentWidth: number, delta: number): number {
   return currentWidth + delta * 3;

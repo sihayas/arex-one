@@ -70,12 +70,12 @@ const Album = ({ scale }: AlbumProps) => {
           transform: scale.to(
             (value) =>
               `scale3d(${value}, ${value}, ${value}) translate3d(${
-                (1 - value) * -69.25
-              }rem, ${(1 - value) * 12}rem, 0)`
+                (1 - value) * -73.25
+              }rem, ${(1 - value) * 8}rem, 0)`
           ),
           transformOrigin: "top center",
         }}
-        className="sticky top-0 z-50"
+        className="fixed top-0 z-50"
       >
         {/* Album Artwork  */}
         <animated.img
@@ -132,32 +132,8 @@ const Album = ({ scale }: AlbumProps) => {
         style={{
           transform: x.to((val) => `translateX(${val}px)`),
         }}
-        className="flex p-12 gap-8 ml-[1004px] w-full h-[48rem] relative"
+        className="flex pt-[800px] p-12 gap-8 ml-[1004px] w-full"
       >
-        {/* Section Headers */}
-        <animated.div
-          {...bind()}
-          style={{
-            transform: x.to((val) => `translateX(${403 + val * 0.031}px)`),
-          }}
-          className="absolute top-4 left-16 flex gap-4"
-        >
-          <div
-            className={`text-sm font-medium ${
-              activeSection === 0 ? "text-black" : "text-gray3"
-            }`}
-          >
-            highlights
-          </div>
-          <div
-            className={`text-sm font-medium ${
-              activeSection === 1 ? "text-black" : "text-gray3"
-            }`}
-          >
-            low / high
-          </div>
-        </animated.div>
-
         {activeSection === 0 && (
           <Highlights selectedAlbum={selectedAlbum!} user={session!.user} />
         )}
@@ -165,6 +141,30 @@ const Album = ({ scale }: AlbumProps) => {
         {activeSection === 1 && (
           <Lowlights selectedAlbum={selectedAlbum!} user={session!.user} />
         )}
+      </animated.div>
+
+      {/* Section Headers */}
+      <animated.div
+        {...bind()}
+        style={{
+          transform: x.to((val) => `translateX(${0 + val * 1.03}px)`),
+        }}
+        className="fixed top-16 -right-11 flex gap-4"
+      >
+        <div
+          className={`text-sm font-medium ${
+            activeSection === 0 ? "text-black" : "text-gray3"
+          }`}
+        >
+          high<span className="font-light">lights</span>
+        </div>
+        <div
+          className={`text-sm font-medium ${
+            activeSection === 1 ? "text-black" : "text-gray3"
+          }`}
+        >
+          low<span className="font-light">lights</span>
+        </div>
       </animated.div>
     </animated.div>
   );
