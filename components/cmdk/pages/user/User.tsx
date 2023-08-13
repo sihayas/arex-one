@@ -11,7 +11,7 @@ import {
   isUserFollowing,
 } from "@/lib/api/userAPI";
 import { animated } from "@react-spring/web";
-import { useDragLogic } from "@/hooks/npm/useDragUserLogic";
+import { useDragUserLogic } from "@/hooks/npm/useDragUserLogic";
 import Soundtrack from "./subcomponents/Soundtrack";
 
 const favoritesMaxHeight = "592px";
@@ -29,7 +29,7 @@ const User = () => {
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
 
   // Use the drag logic hook
-  const { bind, x, activeSection } = useDragLogic();
+  const { bind, x, activeSection } = useDragUserLogic();
 
   const coraColor = activeSection === 0 ? "#000" : "#999";
   const soundtrackColor = activeSection === 1 ? "#000" : "#999";
@@ -198,34 +198,3 @@ const User = () => {
 };
 
 export default User;
-
-{
-  /* Followers Preview */
-}
-{
-  /* {user.followers.length > 0 ? (
-            <div className="flex">
-              {user.followers.length > 3 && (
-                <div className="text-xs text-gray2">
-                  +{user.followers.length - 3}
-                </div>
-              )}
-              {user.followers.slice(0, 3).map(({ follower }, index) => {
-                return (
-                  <UserAvatar
-                    key={index}
-                    className={`!border-2 border-white shadow-md ${
-                      index !== 0 ? "-ml-1" : ""
-                    }`}
-                    imageSrc={follower.image} // Access properties on the nested follower object
-                    altText={`${follower.name}'s avatar`}
-                    width={20}
-                    height={20}
-                  />
-                );
-              })}
-            </div>
-          ) : (
-            <div>no links</div>
-          )} */
-}

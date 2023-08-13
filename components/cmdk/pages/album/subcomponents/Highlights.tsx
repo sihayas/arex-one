@@ -23,7 +23,7 @@ const Highlights: React.FC<HighlightsProps> = ({ selectedAlbum, user }) => {
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
   return (
-    <div className="flex flex-col gap-8 overflow-visible h-full">
+    <div className="flex flex-col gap-8 overflow-scroll h-full">
       {flattenedReviews?.length > 0 ? (
         flattenedReviews.map((review) => (
           <EntryAlbum key={review.id} review={review} />

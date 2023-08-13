@@ -7,7 +7,7 @@ import { useScrollPosition } from "@/hooks/global/useScrollPosition";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { OpenAIIcon } from "@/components/icons";
-import { useDragLogic } from "@/hooks/npm/useDragAlbumLogic";
+import { useDragAlbumLogic } from "@/hooks/npm/useDragAlbumLogic";
 import Lowlights from "./subcomponents/Lowlights";
 import Highlights from "./subcomponents/Highlights";
 
@@ -21,7 +21,7 @@ const Album = ({ scale }: AlbumProps) => {
   const { pages } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
   const { scrollContainerRef, restoreScrollPosition } = useScrollPosition();
-  const { bind, x, activeSection } = useDragLogic();
+  const { bind, x, activeSection } = useDragAlbumLogic();
 
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.colors[0]) {

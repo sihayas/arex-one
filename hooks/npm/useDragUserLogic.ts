@@ -2,7 +2,7 @@ import { useDrag } from "@use-gesture/react";
 import { useSpring } from "@react-spring/web";
 import { useEffect, useState } from "react";
 
-export const useDragLogic = () => {
+export const useDragUserLogic = () => {
   const [activeSection, setActiveSection] = useState(0); // Keeping track of the active section
   const [{ x }, api] = useSpring(() => ({
     x: activeSection === 0 ? 0 : -532,

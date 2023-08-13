@@ -23,15 +23,18 @@ const Lowlights: React.FC<LowlightsProps> = ({ selectedAlbum, user }) => {
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
   return (
-    <div className="flex flex-col gap-8 overflow-visible h-full">
-      {flattenedReviews?.length > 0 ? (
-        flattenedReviews.map((review) => (
-          <EntryAlbum key={review.id} review={review} />
-        ))
-      ) : (
-        <div className="text-xs text-gray2 p-2">surrender the sound.</div>
-      )}
-    </div>
+    <>
+      <div className="w-full"></div>
+      <div className="flex flex-col gap-8 h-full">
+        {flattenedReviews?.length > 0 ? (
+          flattenedReviews.map((review) => (
+            <EntryAlbum key={review.id} review={review} />
+          ))
+        ) : (
+          <div className="text-xs text-gray2 p-2">surrender the sound.</div>
+        )}
+      </div>
+    </>
   );
 };
 
