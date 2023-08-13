@@ -1,28 +1,26 @@
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { animated, SpringValue } from "@react-spring/web";
 import { useSession } from "next-auth/react";
-import { EntryAlbum } from "./subcomponents/EntryAlbum";
 import { useScrollPosition } from "@/hooks/global/useScrollPosition";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
-import { useReviewsQuery } from "@/lib/api/albumAPI";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { OpenAIIcon } from "@/components/icons";
 import { useDragLogic } from "@/hooks/npm/useDragAlbumLogic";
+import Lowlights from "./subcomponents/Lowlights";
+import Highlights from "./subcomponents/Highlights";
 
 interface AlbumProps {
   scale: SpringValue<number>;
 }
 
 const Album = ({ scale }: AlbumProps) => {
-  // CMDK Context
+  // Hooks
   const { data: session } = useSession();
-
-  const { setPages, pages } = useCMDK();
+  const { pages } = useCMDK();
   const { selectedAlbum } = useCMDKAlbum();
-  const { scrollContainerRef, restoreScrollPosition, handleInfiniteScroll } =
-    useScrollPosition();
+  const { scrollContainerRef, restoreScrollPosition } = useScrollPosition();
   const { bind, x, activeSection } = useDragLogic();
 
   const boxShadow = useMemo(() => {
@@ -37,52 +35,22 @@ const Album = ({ scale }: AlbumProps) => {
     return undefined;
   }, [selectedAlbum?.colors]);
 
-  // Initialize album and infinite scroll
+  // Initialize album
   const albumQuery = useAlbumQuery(selectedAlbum);
-
-  // Fetch reviews
-  const sortOrder =
-    activeSection === 0 ? "rating_high_to_low" : "rating_low_to_high";
-  const reviewsQuery = useReviewsQuery(
-    selectedAlbum!,
-    session!.user,
-    sortOrder
-  );
-
   const { data, isLoading, isError } = albumQuery;
-  const {
-    data: reviewsData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isError: isReviewsError,
-  } = reviewsQuery;
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
     selectedAlbum?.id,
     "1444"
   );
 
-  // Infinite Scroll Page Tracker
-  useEffect(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      handleInfiniteScroll(fetchNextPage);
-    }
-  }, [
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    setPages,
-    handleInfiniteScroll,
-  ]);
-
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
 
   // Load and error handling
-  if (!selectedAlbum || isLoading || isFetchingNextPage || isArtworkLoading) {
+  if (!selectedAlbum || isLoading || isArtworkLoading) {
     return <div>loading...</div>; // Replace with your preferred loading state
   }
 
-  if (isError || isReviewsError) {
+  if (isError) {
     return (
       <div>
         <button onClick={pages.pop}>go back</button>
@@ -90,24 +58,6 @@ const Album = ({ scale }: AlbumProps) => {
       </div>
     );
   }
-
-  const flattenedReviews = reviewsData?.pages.flat() || [];
-
-  const ReviewSection = ({ reviews, isActive }) => (
-    <div
-      className={`flex flex-col gap-8 overflow-visible h-full ${
-        isActive
-          ? "opacity-100 transition-opacity duration-300"
-          : "opacity-0 transition-opacity duration-300"
-      }`}
-    >
-      {reviews?.length > 0 ? (
-        reviews.map((review) => <EntryAlbum key={review.id} review={review} />)
-      ) : (
-        <div className="text-xs text-gray2 p-2">surrender the sound.</div>
-      )}
-    </div>
-  );
 
   return (
     <animated.div
@@ -208,48 +158,13 @@ const Album = ({ scale }: AlbumProps) => {
           </div>
         </animated.div>
 
-        {/* Highlights Section */}
-        <div
-          className={`flex flex-col gap-8 overflow-visible h-full ${
-            activeSection === 0
-              ? "opacity-100 transition-opacity duration-300"
-              : "opacity-0 transition-opacity duration-300"
-          }`}
-        >
-          {flattenedReviews?.length > 0 ? (
-            flattenedReviews.map((review) => (
-              <EntryAlbum key={review.id} review={review} />
-            ))
-          ) : (
-            <div className="text-xs text-gray2 p-2">surrender the sound.</div>
-          )}
-        </div>
+        {activeSection === 0 && (
+          <Highlights selectedAlbum={selectedAlbum!} user={session!.user} />
+        )}
 
-        {/* High to Low */}
-        <div
-          className={`flex flex-col gap-8 overflow-visible h-full ${
-            activeSection === 1
-              ? "opacity-100 transition-opacity duration-300"
-              : "opacity-0 transition-opacity duration-300"
-          }`}
-        >
-          {flattenedReviews?.length > 0 ? (
-            flattenedReviews.map((review) => (
-              <EntryAlbum key={review.id} review={review} />
-            ))
-          ) : (
-            <div className="text-xs text-gray2 p-2">surrender the sound.</div>
-          )}
-        </div>
-
-        {/* Infinite Loading Indicator  */}
-        {/* {isFetchingNextPage ? (
-          <div className="">loading more reviews...</div>
-        ) : hasNextPage ? (
-          <button onClick={() => fetchNextPage()}>load More</button>
-        ) : (
-          <div className="text-xs pl-2 text-gray2">end of line</div>
-        )} */}
+        {activeSection === 1 && (
+          <Lowlights selectedAlbum={selectedAlbum!} user={session!.user} />
+        )}
       </animated.div>
     </animated.div>
   );
