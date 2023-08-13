@@ -98,7 +98,7 @@ const Album = ({ scale }: AlbumProps) => {
             ),
             transformOrigin: "center",
           }}
-          className="absolute grid items-center top-[724px] ml-[74px] w-[496px] gap-8"
+          className="absolute grid items-center top-[724px] ml-[86px] w-[486px] gap-8"
         >
           {/* Album Details  */}
           <div className="flex flex-col gap-2 items-center justify-center">
@@ -132,7 +132,7 @@ const Album = ({ scale }: AlbumProps) => {
         style={{
           transform: x.to((val) => `translateX(${val}px)`),
         }}
-        className="flex pt-[800px] p-12 gap-8 ml-[1030px] w-full"
+        className="flex pt-[800px] gap-8 ml-[1030px] w-full"
       >
         {activeSection === 0 && (
           <Highlights selectedAlbum={selectedAlbum!} user={session!.user} />
@@ -147,7 +147,7 @@ const Album = ({ scale }: AlbumProps) => {
       <animated.div
         {...bind()}
         style={{
-          transform: x.to((val) => `translateX(${0 + val * 1.03}px)`),
+          transform: x.to((val) => `translateX(${0 + val * 0.98}px)`),
         }}
         className="fixed top-16 -right-11 flex gap-4"
       >

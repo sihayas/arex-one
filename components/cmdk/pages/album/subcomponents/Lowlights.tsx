@@ -25,7 +25,7 @@ const Lowlights: React.FC<LowlightsProps> = ({ selectedAlbum, user }) => {
   return (
     <>
       <div className="w-full"></div>
-      <div className="flex flex-col gap-8 h-full">
+      <div className="flex flex-col gap-8 h-full w-full">
         {flattenedReviews?.length > 0 ? (
           flattenedReviews.map((review) => (
             <EntryAlbum key={review.id} review={review} />

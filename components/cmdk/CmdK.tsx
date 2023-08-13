@@ -277,7 +277,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     if (activePage.name === "album") {
       let newScale = 1 - y / 77;
       if (newScale > 1) newScale = 1;
-      if (newScale < 0.74) newScale = 0.74;
+      if (newScale < 0.738) newScale = 0.738;
 
       let newWidth = 658 + (y / 77) * (1066 - 658);
       if (newWidth < 658) newWidth = 658;

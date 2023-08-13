@@ -7,7 +7,6 @@ import {
   useFetchSpotlightAlbums,
   useFetchBloomingAlbums,
 } from "@/lib/api/indexAPI";
-import { SpringValue } from "@react-spring/web";
 
 const Album = () => {
   const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
@@ -34,7 +33,7 @@ const Album = () => {
   return (
     <div
       ref={scrollContainerRef}
-      className="flex flex-col w-full h-full items-center justify-center rounded-[20px]"
+      className="flex flex-col w-full h-full items-center justify-center rounded-[20px] pb-8"
     >
       {/* <div className="absolute right-8 top-8 flex flex-col items-end gap-4">
         <Button
