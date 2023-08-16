@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { Stars } from "../../generics";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
-import { useSelectAlbum } from "@/hooks/global/useSelectAlbum";
+import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
 import { AlbumDBData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import React from "react";
+import Stars from "@/components/global/Stars";
 
 interface ArtworkHeaderProps {
   albumId: string;
@@ -16,7 +16,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
   albumId,
   rating,
 }) => {
-  const { handleSelectAlbum } = useSelectAlbum();
+  const { handleSelectAlbum } = useHandleAlbumClick();
   const imgRef = React.useRef<HTMLImageElement>(null);
 
   const { setIsVisible } = useCMDK();

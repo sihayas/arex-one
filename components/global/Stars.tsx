@@ -12,7 +12,7 @@ interface StarsProps {
   color?: string;
 }
 
-export const Stars: React.FC<StarsProps> = ({ rating, className, color }) => {
+const Stars: React.FC<StarsProps> = ({ rating, className, color }) => {
   const getStarIcon = (rating: number) => {
     switch (Math.floor(rating)) {
       case 1:
@@ -30,3 +30,5 @@ export const Stars: React.FC<StarsProps> = ({ rating, className, color }) => {
 
   return <div className={`${className}`}>{getStarIcon(rating)}</div>;
 };
+
+export default Stars;

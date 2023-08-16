@@ -5,10 +5,10 @@ import Head from "next/head";
 import React, { useState } from "react";
 import NavBar from "@/components/nav/Nav";
 import { fetchFeed } from "@/lib/api/feedAPI";
-import SpotlightFeed from "@/components/feed/SpotlightFeed";
-import BloomingFeed from "@/components/feed/BloomingFeed";
-import UserFeed from "@/components/feed/UserFeed";
-import { useDragLogic } from "@/hooks/npm/useDragLogic";
+import SpotlightFeed from "@/components/feed/sections/SpotlightFeed";
+import BloomingFeed from "@/components/feed/sections/BloomingFeed";
+import UserFeed from "@/components/feed/sections/UserFeed";
+import { useDragLogic } from "@/hooks/handleInteractions/useDragLogic";
 import { animated } from "@react-spring/web";
 
 export default function Home() {

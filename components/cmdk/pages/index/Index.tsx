@@ -1,6 +1,6 @@
 import { AlbumData } from "@/lib/global/interfaces";
 import { SoundPreview } from "./subcomponents/SoundPreview";
-import { useScrollPosition } from "@/hooks/global/useScrollPosition";
+import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 import Button from "./subcomponents/Button";
 import { useState } from "react";
 import {

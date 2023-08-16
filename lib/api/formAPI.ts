@@ -24,7 +24,7 @@ export const postReview = async (
   albumName: string | undefined
 ) => {
   try {
-    const response = await axios.post("/api/review/postReview", {
+    const response = await axios.post("/api/review/post/review", {
       listened,
       rating,
       loved,

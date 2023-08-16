@@ -47,7 +47,7 @@ export const Entry = ({ translateY }: EntryProps) => {
     ["review", reviewId, session?.user?.id],
     async () => {
       const response: AxiosResponse<ReviewData> = await axios.get(
-        `/api/review/getById?id=${reviewId}&userId=${session?.user?.id || ""}`
+        `/api/review/get/byId?id=${reviewId}&userId=${session?.user?.id || ""}`
       );
       return response.data;
     },

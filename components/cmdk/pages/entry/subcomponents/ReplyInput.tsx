@@ -39,7 +39,7 @@ const handleAddReply = async ({
     userId,
   };
   try {
-    const res = await axios.post("/api/review/postReply", body);
+    const res = await axios.post("/api/review/post/reply", body);
 
     if (res.status === 200) {
       console.log("submmited reply");
@@ -51,7 +51,7 @@ const handleAddReply = async ({
   }
 };
 
-export const ReplyInput = () => {
+const ReplyInput = () => {
   const { data: session } = useSession();
   const userId = session?.user.id;
 
@@ -90,3 +90,5 @@ export const ReplyInput = () => {
     </div>
   );
 };
+
+export default ReplyInput;

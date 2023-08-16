@@ -1,10 +1,11 @@
-import { UserAvatar } from "@/components/generics/UserAvatar";
-import { generateArtworkUrl } from "@/components/generics/generateArtworkUrl";
+import UserAvatar from "@/components/global/UserAvatar";
+
 import { getAlbumById } from "@/lib/global/musicKit";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { ReplyData } from "@/lib/global/interfaces";
 import { formatDistanceToNow } from "date-fns";
+import generateArtworkUrl from "@/components/global/generateArtworkUrl";
 
 interface SignalRepliedProps {
   reply: ReplyData;
@@ -20,7 +21,7 @@ const SignalReplied = ({ reply, date }: SignalRepliedProps) => {
     ["album", albumId],
     () => getAlbumById(albumId!),
     {
-      enabled: !!albumId, // Only enable the query if albumId is present
+      enabled: !!albumId,
     }
   );
 
@@ -33,7 +34,6 @@ const SignalReplied = ({ reply, date }: SignalRepliedProps) => {
 
   return (
     <div className="flex flex-col items-center gap-2 w-full h-full">
-      {/* notification time since */}
       <div className="text-gray2 text-[10px] uppercase">{timeSince}</div>
 
       {/* album art */}

@@ -1,10 +1,11 @@
-import { UserAvatar } from "@/components/generics/UserAvatar";
-import { generateArtworkUrl } from "@/components/generics/generateArtworkUrl";
+import UserAvatar from "@/components/global/UserAvatar";
+
 import { getAlbumById } from "@/lib/global/musicKit";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { LikeData } from "@/lib/global/interfaces";
 import { formatDistanceToNow } from "date-fns";
+import generateArtworkUrl from "@/components/global/generateArtworkUrl";
 
 interface SignalLikedProps {
   like: LikeData;
@@ -19,7 +20,7 @@ const SignalLiked = ({ like, date }: SignalLikedProps) => {
     ["album", albumId],
     () => getAlbumById(albumId!),
     {
-      enabled: !!albumId, // Only enable the query if albumId is present
+      enabled: !!albumId,
     }
   );
 
@@ -32,10 +33,8 @@ const SignalLiked = ({ like, date }: SignalLikedProps) => {
 
   return (
     <div className="flex flex-col items-center gap-2 w-full h-full">
-      {/* notification time since */}
       <div className="text-gray2 text-[10px] uppercase">{timeSince}</div>
 
-      {/* album art */}
       <Image
         className="rounded shadow-index"
         src={url}
@@ -45,7 +44,6 @@ const SignalLiked = ({ like, date }: SignalLikedProps) => {
         draggable="false"
       />
 
-      {/* red dot  */}
       {/* Conditional dots depending on the like's type */}
       {like.review ? (
         <div className="w-[4px] h-[4px] rounded-full bg-[#FF0000]" />
@@ -58,7 +56,6 @@ const SignalLiked = ({ like, date }: SignalLikedProps) => {
         </div>
       )}
 
-      {/* likers */}
       <UserAvatar
         className={`!border-2 border-white shadow-md`}
         imageSrc={like.author.image}

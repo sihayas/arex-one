@@ -33,13 +33,6 @@ export default async function handle(
           // Activities where authorId is in following list of signed in user
           OR: [
             {
-              like: {
-                authorId: {
-                  in: followingIds,
-                },
-              },
-            },
-            {
               review: {
                 authorId: {
                   in: followingIds,

@@ -8,10 +8,7 @@ interface LikeButtonProps {
   liked: boolean;
 }
 
-export const LikeButton: React.FC<LikeButtonProps> = ({
-  handleLikeClick,
-  liked,
-}) => {
+const LikeButton: React.FC<LikeButtonProps> = ({ handleLikeClick, liked }) => {
   const [color, setColor] = useState(liked ? "#333" : "#CCC");
 
   // Update color when `liked` changes
@@ -35,3 +32,5 @@ export const LikeButton: React.FC<LikeButtonProps> = ({
     </button>
   );
 };
+
+export default LikeButton;

@@ -23,7 +23,7 @@ export const useFetchSpotlightEntries = (page: number) => {
   const spotlightEntriesDataQuery = useQuery(
     ["entryDetails", spotlightEntriesQuery.data || []],
     async () => {
-      const { data } = await axios.post("/api/review/getByIds", {
+      const { data } = await axios.post("/api/review/get/byIds", {
         ids: spotlightEntriesQuery.data,
       });
       return data;

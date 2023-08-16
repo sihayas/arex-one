@@ -23,7 +23,7 @@ const Signals = () => {
     }
   );
 
-  console.log("notifications", notifications);
+  // console.log("notifications", notifications);
   return (
     <div className="flex flex-col gap-6 items-center w-full h-full bg-white">
       <div className="text-sm font-medium pt-6 pb-2">signals</div>

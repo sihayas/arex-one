@@ -1,10 +1,10 @@
 import React from "react";
 import { useSession } from "next-auth/react";
-import { UserAvatar, LikeButton, ReplyInput } from "../../../../generics";
+import UserAvatar from "@/components/global/UserAvatar";
+
 import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
-import { Stars } from "../../../../generics";
-import useHandleLikeClick from "@/hooks/global/useLike";
+import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
 import {
   differenceInDays,
   differenceInHours,
@@ -13,10 +13,11 @@ import {
   differenceInSeconds,
   differenceInYears,
 } from "date-fns";
-import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { RenderReplies } from "./RenderReplies";
-
 import { useThreadcrumb } from "@/context/Threadcrumbs";
+import ReplyInput from "./ReplyInput";
+import Stars from "@/components/global/Stars";
+import LikeButton from "@/components/global/LikeButton";
 
 interface EntryFullProps {
   review: ReviewData;
@@ -30,7 +31,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
     review.likes,
-    "/api/review/postLike",
+    "/api/review/post/like",
     "reviewId",
     review.id,
     session

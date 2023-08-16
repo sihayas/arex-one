@@ -1,12 +1,12 @@
-interface LineProps {
+interface LineBottomProps {
   height?: string;
   width?: string;
   color?: string;
   className?: string;
 }
 
-export const Line: React.FC<LineProps> = ({
-  height = "fit",
+const LineBottom: React.FC<LineBottomProps> = ({
+  height,
   width = "2px",
   color = "#E5E5E5",
   className = "",
@@ -14,7 +14,6 @@ export const Line: React.FC<LineProps> = ({
   return (
     <div
       style={{
-        height: height,
         backgroundColor: color,
         width: width,
         borderRadius: "9999px",
@@ -23,3 +22,5 @@ export const Line: React.FC<LineProps> = ({
     />
   );
 };
+
+export default LineBottom;

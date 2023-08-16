@@ -1,14 +1,14 @@
 import React from "react";
 import { useSession } from "next-auth/react";
-import { UserAvatar, LikeButton } from "../../../../generics";
 import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
-import { Stars } from "../../../../generics";
-import useHandleLikeClick from "@/hooks/global/useLike";
-import { useHandleEntryClick } from "@/hooks/global/useHandleEntryClick";
+import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
+import { useHandleEntryClick } from "@/hooks/handlePageChange/useHandleEntryClick";
 import { StatLineIcon } from "@/components/icons";
-import { useHandleUserClick } from "@/hooks/global/useHandleUserClick";
+import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
 import { ArtworkHeader } from "@/components/feed/subcomponents/ArtworkHeader";
+import UserAvatar from "@/components/global/UserAvatar";
+import LikeButton from "@/components/global/LikeButton";
 
 interface EntryUserProps {
   review: ReviewData;
@@ -21,7 +21,7 @@ export const EntryUser: React.FC<EntryUserProps> = ({ review }) => {
   const { liked, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
     review.likes,
-    "/api/review/postLike",
+    "/api/review/post/like",
     "reviewId",
     review.id,
     session

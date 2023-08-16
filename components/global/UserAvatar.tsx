@@ -9,7 +9,7 @@ interface UserAvatarProps {
   className?: string;
 }
 
-export const UserAvatar: React.FC<UserAvatarProps> = ({
+const UserAvatar: React.FC<UserAvatarProps> = ({
   className,
   imageSrc,
   altText,
@@ -43,3 +43,5 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     />
   );
 };
+
+export default UserAvatar;

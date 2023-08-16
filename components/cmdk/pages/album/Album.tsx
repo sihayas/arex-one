@@ -3,11 +3,11 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useMemo } from "react";
 import { animated, SpringValue } from "@react-spring/web";
 import { useSession } from "next-auth/react";
-import { useScrollPosition } from "@/hooks/global/useScrollPosition";
+import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { OpenAIIcon } from "@/components/icons";
-import { useDragAlbumLogic } from "@/hooks/npm/useDragAlbumLogic";
+import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDragAlbumLogic";
 import Lowlights from "./subcomponents/Lowlights";
 import Highlights from "./subcomponents/Highlights";
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { useSelectAlbum } from "@/hooks/global/useSelectAlbum";
+import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
 import { AlbumData } from "@/lib/global/interfaces";
-import { generateArtworkUrl } from "../generics";
+import generateArtworkUrl from "../global/generateArtworkUrl";
 
 interface SearchProps {
   searchData: any;
@@ -11,7 +11,7 @@ interface SearchProps {
 }
 
 const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
-  const { handleSelectAlbum } = useSelectAlbum();
+  const { handleSelectAlbum } = useHandleAlbumClick();
 
   if (isLoading && isFetching) if (error) return <div>Error</div>;
 

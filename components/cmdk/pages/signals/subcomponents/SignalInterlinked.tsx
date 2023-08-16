@@ -1,5 +1,6 @@
 // Followed back notification
-import { UserAvatar } from "@/components/generics/UserAvatar";
+import UserAvatar from "@/components/global/UserAvatar";
+
 import { Follows } from "@/lib/global/interfaces";
 import { formatDistanceToNow } from "date-fns";
 

@@ -1,8 +1,8 @@
-import { generateArtworkUrl } from "@/components/generics";
 import { AlbumData } from "@/lib/global/interfaces";
 import Image from "next/image";
-import { useSelectAlbum } from "@/hooks/global/useSelectAlbum";
+import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
 import { useRef } from "react";
+import generateArtworkUrl from "@/components/global/generateArtworkUrl";
 
 export const SoundPreview = ({
   album,
@@ -11,7 +11,7 @@ export const SoundPreview = ({
   album: AlbumData;
   index: number;
 }) => {
-  const { handleSelectAlbum } = useSelectAlbum();
+  const { handleSelectAlbum } = useHandleAlbumClick();
 
   const artworkUrl = generateArtworkUrl(album.attributes.artwork.url, "800");
   const imageRef = useRef(null); // Allows clicking art
