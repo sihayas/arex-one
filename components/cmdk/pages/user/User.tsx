@@ -14,6 +14,7 @@ import {
   isUserFollowing,
 } from "@/lib/api/userAPI";
 import { animated } from "@react-spring/web";
+
 import Favorites from "./subcomponents/Favorites";
 import Soundtrack from "./subcomponents/Soundtrack";
 

@@ -1,8 +1,11 @@
-import { Command } from "cmdk";
 import Image from "next/image";
+
 import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
 import { AlbumData } from "@/lib/global/interfaces";
-import generateArtworkUrl from "@/components/global/generateArtworkUrl";
+
+import { Command } from "cmdk";
+
+import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface SearchProps {
   searchData: any;

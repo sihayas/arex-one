@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
 import { AlbumData } from "@/lib/global/interfaces";
-import generateArtworkUrl from "../global/generateArtworkUrl";
+import generateArtworkUrl from "../global/GenerateArtworkUrl";
 
 interface SearchProps {
   searchData: any;

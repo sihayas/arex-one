@@ -1,13 +1,15 @@
 import React from "react";
 import { useSession } from "next-auth/react";
-import Line from "@/components/cmdk/pages/entry/subcomponents/icons/Line";
+
 import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
 import { useHandleEntryClick } from "@/hooks/handlePageChange/useHandleEntryClick";
 import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
+
 import { ArtworkHeader } from "./ArtworkHeader";
 import { LargeAviCap, SmallAviCap } from "../../icons";
+import Line from "@/components/cmdk/pages/entry/subcomponents/icons/Line";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 

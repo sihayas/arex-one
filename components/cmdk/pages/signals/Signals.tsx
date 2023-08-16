@@ -1,11 +1,14 @@
+import { useSession } from "next-auth/react";
+
+import { fetchNotificationsForUser } from "@/lib/api/userAPI";
+import { Notification } from "@/lib/global/interfaces";
+
 import { useQuery } from "@tanstack/react-query";
+
 import SignalLiked from "./subcomponents/SignalLiked";
 import SignalReplied from "./subcomponents/SignalReplied";
 import SignalInterlinked from "./subcomponents/SignalInterlinked";
 import SignalLinked from "./subcomponents/SignalLinked";
-import { fetchNotificationsForUser } from "@/lib/api/userAPI";
-import { useSession } from "next-auth/react";
-import { Notification } from "@/lib/global/interfaces";
 
 const Signals = () => {
   const { data: session } = useSession();

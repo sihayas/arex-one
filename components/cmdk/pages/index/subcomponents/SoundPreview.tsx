@@ -2,7 +2,7 @@ import { AlbumData } from "@/lib/global/interfaces";
 import Image from "next/image";
 import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
 import { useRef } from "react";
-import generateArtworkUrl from "@/components/global/generateArtworkUrl";
+import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 export const SoundPreview = ({
   album,

@@ -1,9 +1,11 @@
+import React from "react";
 import Image from "next/image";
+
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
 import { AlbumDBData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
-import React from "react";
+
 import Stars from "@/components/global/Stars";
 
 interface ArtworkHeaderProps {

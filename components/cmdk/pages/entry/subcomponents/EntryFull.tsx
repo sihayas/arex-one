@@ -1,10 +1,9 @@
 import React from "react";
 import { useSession } from "next-auth/react";
-import UserAvatar from "@/components/global/UserAvatar";
 
-import { ReviewData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
+import { useThreadcrumb } from "@/context/Threadcrumbs";
 import {
   differenceInDays,
   differenceInHours,
@@ -13,11 +12,13 @@ import {
   differenceInSeconds,
   differenceInYears,
 } from "date-fns";
+
+import { ReviewData } from "@/lib/global/interfaces";
 import { RenderReplies } from "./RenderReplies";
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 import ReplyInput from "./ReplyInput";
 import Stars from "@/components/global/Stars";
 import LikeButton from "@/components/global/LikeButton";
+import UserAvatar from "@/components/global/UserAvatar";
 
 interface EntryFullProps {
   review: ReviewData;

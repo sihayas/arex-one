@@ -1,8 +1,11 @@
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+
 import { getAlbumById } from "@/lib/global/musicKit";
-import generateArtworkUrl from "@/components/global/generateArtworkUrl";
+
+import { useQuery } from "@tanstack/react-query";
+
+import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface AlbumProps {
   albumId: string;

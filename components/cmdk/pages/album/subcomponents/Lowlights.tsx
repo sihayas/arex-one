@@ -1,8 +1,9 @@
 import React from "react";
+import { Session } from "next-auth/core/types";
+
 import { useReviewsQuery } from "@/lib/api/albumAPI";
 import { AlbumData } from "@/lib/global/interfaces";
 import { EntryAlbum } from "./EntryAlbum";
-import { Session } from "next-auth/core/types";
 
 interface LowlightsProps {
   selectedAlbum: AlbumData;

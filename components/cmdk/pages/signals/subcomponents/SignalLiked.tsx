@@ -1,11 +1,13 @@
-import UserAvatar from "@/components/global/UserAvatar";
+import Image from "next/image";
 
 import { getAlbumById } from "@/lib/global/musicKit";
-import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import { LikeData } from "@/lib/global/interfaces";
+
+import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import generateArtworkUrl from "@/components/global/generateArtworkUrl";
+
+import UserAvatar from "@/components/global/UserAvatar";
+import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface SignalLikedProps {
   like: LikeData;

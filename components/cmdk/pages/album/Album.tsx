@@ -1,15 +1,18 @@
+import { useSession } from "next-auth/react";
+import { useMemo } from "react";
+
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
-import { useMemo } from "react";
-import { animated, SpringValue } from "@react-spring/web";
-import { useSession } from "next-auth/react";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
-import { useAlbumQuery } from "@/lib/api/albumAPI";
-import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
-import { OpenAIIcon } from "@/components/icons";
 import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDragAlbumLogic";
+import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
+
+import { useAlbumQuery } from "@/lib/api/albumAPI";
+import { OpenAIIcon } from "@/components/icons";
 import Lowlights from "./subcomponents/Lowlights";
 import Highlights from "./subcomponents/Highlights";
+
+import { animated, SpringValue } from "@react-spring/web";
 
 interface AlbumProps {
   scale: SpringValue<number>;

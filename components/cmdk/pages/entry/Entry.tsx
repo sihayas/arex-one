@@ -1,15 +1,18 @@
-import Image from "next/image";
 import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
-import axios, { AxiosResponse } from "axios";
-import { ReviewData } from "../../../../lib/global/interfaces";
+import Image from "next/image";
+
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
-import { useQuery } from "@tanstack/react-query";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { EntryFull } from "./subcomponents/EntryFull";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
+
+import { useQuery } from "@tanstack/react-query";
 import { animated, SpringValue } from "@react-spring/web";
+import axios, { AxiosResponse } from "axios";
+
+import { EntryFull } from "./subcomponents/EntryFull";
+import { ReviewData } from "../../../../lib/global/interfaces";
 
 interface EntryProps {
   translateY: SpringValue<number>;

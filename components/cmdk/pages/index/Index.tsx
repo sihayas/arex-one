@@ -1,12 +1,14 @@
-import { AlbumData } from "@/lib/global/interfaces";
-import { SoundPreview } from "./subcomponents/SoundPreview";
-import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
-import Button from "./subcomponents/Button";
 import { useState } from "react";
+import Button from "./subcomponents/Button";
+
+import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
+import { AlbumData } from "@/lib/global/interfaces";
 import {
   useFetchSpotlightAlbums,
   useFetchBloomingAlbums,
 } from "@/lib/api/indexAPI";
+
+import { SoundPreview } from "./subcomponents/SoundPreview";
 
 const Album = () => {
   const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =

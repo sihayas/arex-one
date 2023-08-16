@@ -1,13 +1,15 @@
+import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import Avatar from "./Avatar";
-import TextareaAutosize from "react-textarea-autosize";
+
 import SearchAlbums from "@/lib/api/searchAPI";
-import Search from "./Search";
+import TextareaAutosize from "react-textarea-autosize";
 import { useSpring, animated } from "@react-spring/web";
-import Image from "next/image";
+
+import Search from "./Search";
+import Avatar from "./Avatar";
 
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();

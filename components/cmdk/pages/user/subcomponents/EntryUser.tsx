@@ -1,11 +1,13 @@
 import React from "react";
 import { useSession } from "next-auth/react";
-import { ReviewData } from "@/lib/global/interfaces";
-import { useCMDK } from "@/context/CMDKContext";
+
 import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
 import { useHandleEntryClick } from "@/hooks/handlePageChange/useHandleEntryClick";
-import { StatLineIcon } from "@/components/icons";
 import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
+import { useCMDK } from "@/context/CMDKContext";
+import { ReviewData } from "@/lib/global/interfaces";
+
+import { StatLineIcon } from "@/components/icons";
 import { ArtworkHeader } from "@/components/feed/subcomponents/ArtworkHeader";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
