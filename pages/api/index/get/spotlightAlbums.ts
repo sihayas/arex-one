@@ -1,4 +1,4 @@
-import client from "../../../lib/global/redis";
+import client from "../../../../lib/global/redis";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -12,9 +12,9 @@ export default async function handler(
     const start = (page - 1) * limit;
     const end = start + limit - 1;
 
-    const entryIds = await client.zrevrange("spotlightEntries", start, end);
+    const albumIds = await client.zrevrange("spotlightAlbums", start, end);
 
-    res.status(200).json(entryIds);
+    res.status(200).json(albumIds);
   } else {
     res.status(405).send("Method not allowed");
   }

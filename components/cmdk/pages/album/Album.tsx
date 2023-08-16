@@ -9,8 +9,8 @@ import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { OpenAIIcon } from "@/components/icons";
-import Lowlights from "./subcomponents/Lowlights";
-import Highlights from "./subcomponents/Highlights";
+import Lowlights from "./sub/Lowlights";
+import Highlights from "./sub/Highlights";
 
 import { animated, SpringValue } from "@react-spring/web";
 

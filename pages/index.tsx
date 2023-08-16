@@ -95,7 +95,7 @@ export default function Home() {
         </animated.div>
         {/* Footer */}
         <div className="absolute bottom-[30px] right-[80px] text-black text-xs">
-          {currentFeed === "default" ? `linked` : `${currentFeed}`}
+          {currentFeed === "default" ? `` : `${currentFeed}`}
         </div>
         <NavBar />
       </div>

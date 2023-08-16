@@ -1,4 +1,3 @@
-//React
 import React, {
   useCallback,
   useEffect,
@@ -8,10 +7,10 @@ import React, {
 } from "react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
-//NPM
+
 import { animated, useSpring, useTransition } from "@react-spring/web";
 import { useScroll, useWheel } from "@use-gesture/react";
-//Components
+
 import { Command } from "cmdk";
 import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
@@ -21,7 +20,7 @@ import Index from "./pages/index/Index";
 import User from "./pages/user/User";
 import Signals from "./pages/signals/Signals";
 const Lethargy = require("lethargy").Lethargy;
-//Icons
+
 import SearchAlbums from "@/lib/api/searchAPI";
 import { useScrollContext } from "@/context/ScrollContext";
 import { debounce } from "lodash";

@@ -14,8 +14,8 @@ import {
 } from "date-fns";
 
 import { ReviewData } from "@/lib/global/interfaces";
-import { RenderReplies } from "./RenderReplies";
-import ReplyInput from "./ReplyInput";
+import { RenderReplies } from "./reply/RenderReplies";
+import ReplyInput from "./reply/ReplyInput";
 import Stars from "@/components/global/Stars";
 import LikeButton from "@/components/global/LikeButton";
 import UserAvatar from "@/components/global/UserAvatar";
@@ -54,7 +54,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-full overflow-hidden absolute top-[516px] p-8 z-10 bg-white rounded-[20px]">
+      <div className="flex flex-col gap-4 w-full absolute top-[516px] p-8 z-10 bg-white rounded-[20px]">
         {/* Review Content */}
         <div
           className={`w-full text-[13px] text-black break-words hoverable-medium`}

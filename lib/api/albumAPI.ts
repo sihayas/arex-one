@@ -11,7 +11,7 @@ interface UserSession {
 }
 
 export async function initializeAlbum(album: AlbumData) {
-  const response = await axios.post(`/api/album/postAlbum`, album);
+  const response = await axios.post(`/api/album/post/album`, album);
   return response.data;
 }
 
@@ -37,7 +37,7 @@ export async function fetchReviews({
 }) {
   const [, albumId, userId] = queryKey;
   const response = await axios.get(
-    `/api/album/getReviews?albumId=${albumId}&page=${pageParam}&sort=${sort}&userId=${userId}`
+    `/api/album/get/reviews?albumId=${albumId}&page=${pageParam}&sort=${sort}&userId=${userId}`
   );
   return response.data;
 }

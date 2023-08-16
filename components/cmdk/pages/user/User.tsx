@@ -15,8 +15,8 @@ import {
 } from "@/lib/api/userAPI";
 import { animated } from "@react-spring/web";
 
-import Favorites from "./subcomponents/Favorites";
-import Soundtrack from "./subcomponents/Soundtrack";
+import Favorites from "./sub/Favorites";
+import Soundtrack from "./sub/Soundtrack";
 
 const favoritesMaxHeight = "592px";
 const reviewsMaxHeight = "";

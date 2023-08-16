@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../lib/global/prisma";
+import { prisma } from "../../../../lib/global/prisma";
 
 const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 

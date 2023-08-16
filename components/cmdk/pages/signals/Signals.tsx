@@ -5,10 +5,10 @@ import { Notification } from "@/lib/global/interfaces";
 
 import { useQuery } from "@tanstack/react-query";
 
-import SignalLiked from "./subcomponents/SignalLiked";
-import SignalReplied from "./subcomponents/SignalReplied";
-import SignalInterlinked from "./subcomponents/SignalInterlinked";
-import SignalLinked from "./subcomponents/SignalLinked";
+import SignalLiked from "./sub/SignalLiked";
+import SignalReplied from "./sub/SignalReplied";
+import SignalInterlinked from "./sub/SignalInterlinked";
+import SignalLinked from "./sub/SignalLinked";
 
 const Signals = () => {
   const { data: session } = useSession();

@@ -15,7 +15,7 @@ interface RepliesProps {
 }
 
 const fetchReplies = ({ reviewId, userId }: RepliesProps) => {
-  const url = `/api/reply/getReviewReplies?id=${reviewId}&userId=${userId}`;
+  const url = `/api/reply/get/reviewReplies?id=${reviewId}&userId=${userId}`;
   return axios.get(url).then((res) => res.data);
 };
 

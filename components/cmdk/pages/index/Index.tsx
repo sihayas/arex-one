@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "./subcomponents/Button";
+import Button from "./sub/Button";
 
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 import { AlbumData } from "@/lib/global/interfaces";
@@ -8,7 +8,7 @@ import {
   useFetchBloomingAlbums,
 } from "@/lib/api/indexAPI";
 
-import { SoundPreview } from "./subcomponents/SoundPreview";
+import { SoundPreview } from "./sub/SoundPreview";
 
 const Album = () => {
   const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =

@@ -7,7 +7,7 @@ export const useFetchSpotlightAlbums = (page: number) => {
   // Grab spotlight albums from redis
   const spotlightAlbumsQuery = useQuery(["spotlightAlbums", page], async () => {
     const { data } = await axios.get(
-      `/api/index/getSpotlightAlbums?page=${page}`
+      `/api/index/get/spotlightAlbums?page=${page}`
     );
     return data;
   });
@@ -29,7 +29,7 @@ export const useFetchBloomingAlbums = (page: number) => {
   // Grab blooming albums from redis
   const bloomingAlbumsQuery = useQuery(["bloomingAlbums", page], async () => {
     const { data } = await axios.get(
-      `/api/index/getBloomingAlbums?page=${page}`
+      `/api/index/get/bloomingAlbums?page=${page}`
     );
     return data;
   });

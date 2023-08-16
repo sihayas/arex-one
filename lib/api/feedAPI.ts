@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export const fetchFeed = async (userId: string) => {
-  const res = await axios.get(`/api/feed/getActivities?userId=${userId}`);
+  const res = await axios.get(`/api/feed/get/activities?userId=${userId}`);
   return res.data;
 };
 
@@ -13,7 +13,7 @@ export const useFetchSpotlightEntries = (page: number) => {
     ["spotlightEntries", page],
     async () => {
       const { data } = await axios.get(
-        `/api/index/getSpotlightEntries?page=${page}`
+        `/api/index/get/spotlightEntries?page=${page}`
       );
       return data;
     }
@@ -40,7 +40,7 @@ export const useFetchBloomingEntries = (page: number) => {
   // Grab blooming entries from redis
   const bloomingEntriesQuery = useQuery(["bloomingEntries", page], async () => {
     const { data } = await axios.get(
-      `/api/index/getBloomingEntries?page=${page}`
+      `/api/index/get/bloomingEntries?page=${page}`
     );
     return data;
   });

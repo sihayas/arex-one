@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { animated, SpringValue } from "@react-spring/web";
 import axios, { AxiosResponse } from "axios";
 
-import { EntryFull } from "./subcomponents/EntryFull";
+import { EntryFull } from "./sub/EntryFull";
 import { ReviewData } from "../../../../lib/global/interfaces";
 
 interface EntryProps {

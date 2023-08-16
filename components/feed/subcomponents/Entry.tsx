@@ -9,7 +9,7 @@ import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick"
 
 import { ArtworkHeader } from "./ArtworkHeader";
 import { LargeAviCap, SmallAviCap } from "../../icons";
-import Line from "@/components/cmdk/pages/entry/subcomponents/icons/Line";
+import Line from "@/components/cmdk/pages/entry/sub/icons/Line";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 
