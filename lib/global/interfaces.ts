@@ -207,4 +207,5 @@ export interface Follows {
   followerId: string;
   following: UserData;
   followingId: string;
+  createdAt: string;
 }

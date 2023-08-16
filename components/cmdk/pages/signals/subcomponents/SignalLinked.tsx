@@ -1,19 +1,19 @@
-// Followed back notification
 import { UserAvatar } from "@/components/generics/UserAvatar";
-import { generateArtworkUrl } from "@/components/generics/generateArtworkUrl";
-import { getAlbumById } from "@/lib/global/musicKit";
-import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import { Follows } from "@/lib/global/interfaces";
+import { formatDistanceToNow } from "date-fns";
+
 interface SignalInterlinkedProps {
   follows: Follows;
+  date: Date;
 }
 
-const SignalInterlinked = ({ follows }: SignalInterlinkedProps) => {
+const SignalInterlinked = ({ follows, date }: SignalInterlinkedProps) => {
+  const timeSince = formatDistanceToNow(new Date(date));
+
   return (
-    <div className="flex flex-col items-center gap-4 w-full h-full">
+    <div className="flex flex-col items-center gap-2 w-full h-full">
       {/* notification time since */}
-      <div className="text-gray2 text-[10px]">5 MINS AGO</div>
+      <div className="text-gray2 text-[10px] uppercase">{timeSince}</div>
 
       {/* follower */}
       <UserAvatar

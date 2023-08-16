@@ -25,7 +25,7 @@ const Signals = () => {
 
   console.log("notifications", notifications);
   return (
-    <div className="flex flex-col gap-4 items-center w-full h-full bg-white">
+    <div className="flex flex-col gap-6 items-center w-full h-full bg-white">
       <div className="text-sm font-medium pt-6 pb-2">signals</div>
       {isLoading ? (
         <div>Loading...</div>
@@ -35,25 +35,37 @@ const Signals = () => {
             case "like":
               return (
                 <>
-                  <SignalLiked like={notification.activity.like!} />
+                  <SignalLiked
+                    like={notification.activity.like!}
+                    date={notification.activity.createdAt}
+                  />
                 </>
               );
             case "reply":
               return (
                 <>
-                  <SignalReplied reply={notification.activity.reply!} />
+                  <SignalReplied
+                    reply={notification.activity.reply!}
+                    date={notification.activity.createdAt}
+                  />
                 </>
               );
             case "followed_back":
               return (
                 <>
-                  <SignalInterlinked follows={notification.activity.follow!} />
+                  <SignalInterlinked
+                    follows={notification.activity.follow!}
+                    date={notification.activity.createdAt}
+                  />
                 </>
               );
             case "followed":
               return (
                 <>
-                  <SignalLinked follows={notification.activity.follow!} />
+                  <SignalLinked
+                    follows={notification.activity.follow!}
+                    date={notification.activity.createdAt}
+                  />
                 </>
               );
             default:

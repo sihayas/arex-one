@@ -4,12 +4,14 @@ import { getAlbumById } from "@/lib/global/musicKit";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { ReplyData } from "@/lib/global/interfaces";
+import { formatDistanceToNow } from "date-fns";
 
 interface SignalRepliedProps {
   reply: ReplyData;
+  date: Date;
 }
 
-const SignalReplied = ({ reply }: SignalRepliedProps) => {
+const SignalReplied = ({ reply, date }: SignalRepliedProps) => {
   // Extract the albumId conditionally based on the reply's data
   const albumId = reply.review?.albumId;
 
@@ -27,15 +29,16 @@ const SignalReplied = ({ reply }: SignalRepliedProps) => {
   }
 
   const url = generateArtworkUrl(data.attributes.artwork.url, "96");
+  const timeSince = formatDistanceToNow(new Date(date));
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full h-full">
+    <div className="flex flex-col items-center gap-2 w-full h-full">
       {/* notification time since */}
-      <div className="text-gray2 text-[10px]">5 MINS AGO</div>
+      <div className="text-gray2 text-[10px] uppercase">{timeSince}</div>
 
       {/* album art */}
       <Image
-        className="rounded"
+        className="rounded shadow-index"
         src={url}
         alt={`${data.attributes.name}'s artwork`}
         width={48}
@@ -47,21 +50,21 @@ const SignalReplied = ({ reply }: SignalRepliedProps) => {
       {reply.replyTo ? (
         <div className="flex items-center gap-2 justify-between">
           <div className="flex items-center gap-1">
-            <div className="w-[4px] h-[4px] rounded-full bg-[#CCC]" />
-            <div className="w-[4px] h-[4px] rounded-full bg-[#CCC]" />
-            <div className="w-[4px] h-[4px] rounded-full bg-[#CCC]" />
+            <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
+            <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
+            <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-[4px] h-[4px] rounded-full bg-[#CCC]" />
-            <div className="w-[4px] h-[4px] rounded-full bg-[#CCC]" />
-            <div className="w-[4px] h-[4px] rounded-full bg-[#CCC]" />
+            <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
+            <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
+            <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
           </div>
         </div>
       ) : (
         <div className="flex items-center gap-1">
-          <div className="w-[4px] h-[4px] rounded-full bg-[#CCC]" />
-          <div className="w-[4px] h-[4px] rounded-full bg-[#CCC]" />
-          <div className="w-[4px] h-[4px] rounded-full bg-[#CCC]" />
+          <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
+          <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
+          <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
         </div>
       )}
 

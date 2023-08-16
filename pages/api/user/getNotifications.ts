@@ -43,7 +43,7 @@ export default async function handle(
                   },
                 },
               },
-              // If replied, include the author info & subsequent replied review data
+              // If replied, include the author info & subsequent replied review data. Incude replyTo to indicate reply to reply.
               reply: {
                 include: {
                   author: {
@@ -75,7 +75,6 @@ export default async function handle(
                     select: {
                       name: true,
                       image: true,
-                      // Additional fields as needed
                     },
                   },
                 },
