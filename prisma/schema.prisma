@@ -137,8 +137,8 @@ model Like {
 }
 
 
-//Comment
 model Reply {
+  activities  Activity[]
   id          String    @id @default(cuid())
   content     String    @db.MediumText
   rootReply   Reply?    @relation("ReplyToRoot", fields: [rootReplyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -209,12 +209,16 @@ model Activity {
   likeId      String?
   follow      Follows?     @relation(fields: [followId], references: [id])
   followId    String?
+  reply      Reply?        @relation(fields: [replyId], references: [id])
+  replyId    String?
+
 
   notifications Notification[]
 
   @@index([reviewId])
   @@index([likeId])
   @@index([followId])
+  @@index([replyId])
 }
 
 

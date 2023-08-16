@@ -9,10 +9,38 @@ export default async function handle(
 
   if (req.method === "POST") {
     try {
+      // Check if the "following" user is already following the "follower" user
+      const existingFollow = await prisma.follows.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId: followingId,
+            followingId: followerId,
+          },
+        },
+      });
+
       const follow = await prisma.follows.create({
         data: {
           followerId,
           followingId,
+        },
+      });
+
+      // Determine the notification type
+      const notificationType = existingFollow ? "followed_back" : "followed";
+
+      const activity = await prisma.activity.create({
+        data: {
+          type: notificationType,
+          followId: follow.id,
+        },
+      });
+
+      // Create the notification
+      await prisma.notification.create({
+        data: {
+          activityId: activity.id,
+          recipientId: followingId,
         },
       });
 

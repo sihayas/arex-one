@@ -27,3 +27,12 @@ export const getUserById = async (userId: string, sessionUserId: string) => {
   const response = await axios.get(url);
   return response.data;
 };
+
+export const fetchNotificationsForUser = async (userId: string) => {
+  if (!userId) {
+    throw new Error("user id is required");
+  }
+  const url = `/api/user/getNotifications?userId=${userId}`;
+  const response = await axios.get(url);
+  return response.data;
+};

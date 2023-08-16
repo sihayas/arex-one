@@ -13,21 +13,20 @@ import { animated, useSpring, useTransition } from "@react-spring/web";
 import { useScroll, useWheel } from "@use-gesture/react";
 //Components
 import { Command } from "cmdk";
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
 import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
 import User from "./pages/user/User";
+import Signals from "./pages/signals/Signals";
 const Lethargy = require("lethargy").Lethargy;
 //Icons
-import { HomeIcon } from "../../components/icons";
 import SearchAlbums from "@/lib/api/searchAPI";
 import { useScrollContext } from "@/context/ScrollContext";
 import { debounce } from "lodash";
 
-type PageName = "index" | "album" | "entry" | "form" | "user";
+type PageName = "index" | "album" | "entry" | "form" | "user" | "signals";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   index: { width: 922, height: 600 },
@@ -35,6 +34,7 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   entry: { width: 516, height: 608 },
   form: { width: 960, height: 480 },
   user: { width: 532, height: 712 },
+  signals: { width: 96, height: 712 },
 };
 
 const MemoizedSearch = React.memo(Search);
@@ -45,6 +45,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   entry: Entry,
   form: Form,
   user: User,
+  signals: Signals,
 };
 
 let lastScrollTime = Date.now();

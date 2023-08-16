@@ -24,6 +24,9 @@ export default async function handle(
       // Extract the IDs of the followed users
       const followingIds = following.map((f) => f.followingId);
 
+      // Include the user's own ID to fetch their reviews as well
+      followingIds.push(userId);
+
       // Fetch all activities related to the followed users
       const activities = await prisma.activity.findMany({
         where: {

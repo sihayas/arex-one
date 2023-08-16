@@ -67,11 +67,14 @@ export interface AlbumDBData {
 }
 
 export interface LikeData {
-  authorId: string;
-  commentId: string | null;
-  createdAt: string;
   id: string;
+  author: UserData;
+  authorId: string;
+  reply: ReplyData | null;
+  replyId: string | null;
+  review: ReviewData | null;
   reviewId: string | null;
+  createdAt: string;
   updatedAt: string;
 }
 
@@ -176,11 +179,32 @@ export interface ActivityData {
   reviewId?: string;
   like?: LikeData;
   likeId?: string;
+  reply?: ReplyData;
+  replyId?: string;
+  follow?: Follows;
+  followId?: string;
 
-  notifications: Notification[]; // Assuming a Notification interface is defined elsewhere
+  notifications: Notification[];
 }
 
 interface CountData {
   replies: number;
   likes: number;
+}
+
+export interface Notification {
+  id: string;
+  read: boolean;
+  recipientId: string;
+  activityId: string;
+  activity: ActivityData;
+}
+
+export interface Follows {
+  activities: ActivityData[];
+  id: string;
+  follower: UserData;
+  followerId: string;
+  following: UserData;
+  followingId: string;
 }

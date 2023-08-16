@@ -1,9 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { useCMDK } from "@/context/CMDKContext";
-import Favorites from "./subcomponents/Favorites";
-import Image from "next/image";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+
+import { useQuery } from "@tanstack/react-query";
+import { useCMDK } from "@/context/CMDKContext";
+import { useDragUserLogic } from "@/hooks/npm/useDragUserLogic";
+import { useHandleSignalClick } from "@/hooks/global/useSignalClick";
+
 import {
   follow,
   unfollow,
@@ -11,7 +14,7 @@ import {
   isUserFollowing,
 } from "@/lib/api/userAPI";
 import { animated } from "@react-spring/web";
-import { useDragUserLogic } from "@/hooks/npm/useDragUserLogic";
+import Favorites from "./subcomponents/Favorites";
 import Soundtrack from "./subcomponents/Soundtrack";
 
 const favoritesMaxHeight = "592px";
@@ -20,9 +23,12 @@ const reviewsMaxHeight = "";
 const User = () => {
   const { pages } = useCMDK();
   const { data: session } = useSession();
-  const signedInUserId = session?.user.id;
 
+  const signedInUserId = session?.user.id;
   const userId = pages[pages.length - 1].user;
+  const isOwnProfile = session?.user.id === userId;
+
+  const handleSignalClick = useHandleSignalClick();
 
   const [followingAtoB, setFollowingAtoB] = useState<boolean | null>(null);
   const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
@@ -95,14 +101,14 @@ const User = () => {
   let linkText = "link?";
   let linkColor = "#999";
   if (followingAtoB && followingBtoA) {
-    linkText = "interlinked";
-    linkColor = "#b1f36b";
+    linkText = "INTERLINKED";
+    linkColor = "#00FF00";
   } else if (followingAtoB) {
-    linkText = "linked";
+    linkText = "LINKED";
     linkColor = "#000";
   } else if (followingBtoA) {
-    linkText = "interlink?";
-    linkColor = "#FFE601";
+    linkText = "INTERLINK?";
+    linkColor = "#FFEA00";
   }
 
   if (isLoading) {
@@ -149,24 +155,46 @@ const User = () => {
     </animated.div>
   );
 
-  const renderFooter = () => (
-    <div className="flex fixed items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full rounded-b-[20px]">
-      <div className="flex gap-2 items-center">
-        <Image
-          className="border-[1.5px] border-silver rounded-full"
-          src={user.image}
-          alt={`${user.name}'s avatar`}
-          width={48}
-          height={48}
-        />
-        <div className="text-xs font-medium text-[#000]">{user.name}</div>
+  const renderFooter = () =>
+    isOwnProfile ? (
+      <div className="flex flex-col fixed p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full rounded-b-[20px]">
+        {/* Footer */}
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2 items-center">
+            <Image
+              className="border-[1.5px] border-silver rounded-full"
+              src={user.image}
+              alt={`${user.name}'s avatar`}
+              width={48}
+              height={48}
+            />
+            <div className="text-xs font-medium text-[#000]">{user.name}</div>
+          </div>
+          <div
+            onClick={handleSignalClick}
+            className="flex items-center gap-2 font-mono text-xs hoverable-small"
+          >
+            <span className="w-[12px] h-[12px] rounded-full bg-[#FFC700]" />
+          </div>
+        </div>
       </div>
-      <div className="flex flex-col items-end gap-2">
-        {signedInUserId && userId && renderFollowButton()}
-        {/* Followers Preview code here */}
+    ) : (
+      <div className="flex fixed items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full rounded-b-[20px]">
+        <div className="flex gap-2 items-center">
+          <Image
+            className="border-[1.5px] border-silver rounded-full"
+            src={user.image}
+            alt={`${user.name}'s avatar`}
+            width={48}
+            height={48}
+          />
+          <div className="text-xs font-medium text-[#000]">{user.name}</div>
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          {renderFollowButton()}
+        </div>
       </div>
-    </div>
-  );
+    );
 
   return (
     <div className="flex flex-col w-full h-full relative overflow-hidden">

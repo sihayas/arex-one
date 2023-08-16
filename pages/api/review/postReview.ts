@@ -72,10 +72,9 @@ export default async function handle(
         data: { reviewsCount: { increment: 1 } },
       });
 
-      // Feed the review into the activity and notification pipelines
+      // Feed the review into the activity pipeline
       try {
-        const activity = await createReviewActivity(newReview.id);
-        await createNotificationForFollowers(activity.id, authorId);
+        await createReviewActivity(newReview.id);
       } catch (error) {
         console.error("Failed to create activity:", error);
       }
