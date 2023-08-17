@@ -19,7 +19,8 @@ import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
 import User from "./pages/user/User";
 import Signals from "./pages/signals/Signals";
-const Lethargy = require("lethargy").Lethargy;
+// const Lethargy = require("lethargy").Lethargy;
+import { Lethargy } from "lethargy-ts";
 
 import SearchAlbums from "@/lib/api/searchAPI";
 import { useScrollContext } from "@/context/ScrollContext";
@@ -125,6 +126,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     [setPages]
   );
 
+  const lethargy = new Lethargy();
+
   // Inertia tracking with lethargy to trigger shape shift/navigation
   const [{ width, scale, height, translateY }, set] = useSpring(() => ({
     scale: 1,
@@ -138,34 +141,23 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   }));
 
-  let lastScrollWheelTimestamp = 0;
-  let lastScrollWheelDelta = 0;
-  const minScrollWheelInterval = 100;
-  let blockSrollWheel = false;
-
   const wheelBind = useWheel(({ event, last, delta, velocity }) => {
     const [, y] = delta;
 
-    if (y > 0 || blockSrollWheel) {
+    if (y > 0) {
       return;
     }
 
-    // Assume scroll event is from a user
     let isUserScroll = true;
 
-    if (!last && event) {
-      const now = Date.now();
+    if (!last && event && event.nativeEvent instanceof WheelEvent) {
+      const wheelEvent = event.nativeEvent;
+      const s = lethargy.check(wheelEvent);
+      console.log("Lethargy check result", s);
 
-      const rapidSuccession =
-        now - lastScrollWheelTimestamp < minScrollWheelInterval;
-      const otherDirection = lastScrollWheelDelta > 0 !== event.deltaY > 0;
-      const speedDecrease =
-        Math.abs(event.deltaY) < Math.abs(lastScrollWheelDelta);
-
-      isUserScroll = otherDirection || !rapidSuccession || !speedDecrease;
-
-      lastScrollWheelTimestamp = now;
-      lastScrollWheelDelta = event.deltaY;
+      if (s === false) {
+        isUserScroll = false;
+      }
     }
     if (
       isUserScroll &&
@@ -182,21 +174,91 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       // Log scroll speed and velocity here for debugging
 
-      if (scrollSpeed > 10 && magnitudeVelocity > 2.41) {
+      if (scrollSpeed > 0.1 && magnitudeVelocity > 1.41) {
         let newWidth;
         let newHeight;
 
-        let targetWidth = 500;
-        let targetHeight = 500;
+        let activeWidth = activePage.dimensions.width;
+        let activeHeight = activePage.dimensions.height;
+        let prevWidth = previousPage.dimensions.width;
+        let prevHeight = previousPage.dimensions.height;
 
-        newWidth = decreaseWidth(width.get(), -y);
-        newHeight = decreaseHeight(height.get(), -y);
-        if (newWidth < targetWidth && newHeight < targetHeight) {
-          navigateBack();
+        // If previous page width & height are greater
+        if (prevWidth > activeWidth && prevHeight > activeHeight) {
+          newWidth = increaseWidth(width.get(), -y);
+          newHeight = increaseHeight(height.get(), -y);
+          if (newWidth > prevWidth && newHeight > prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
+            navigateBack();
+          }
+          if (newWidth < activeWidth && newHeight < activeHeight) {
+            newWidth = activeWidth;
+            newHeight = activeHeight;
+          }
+
+          // If previous page width & height are smaller
+        } else if (prevWidth < activeWidth && prevHeight < activeHeight) {
+          newWidth = decreaseWidth(width.get(), -y);
+          newHeight = decreaseHeight(height.get(), -y);
+          if (newWidth < prevWidth && newHeight < prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
+            navigateBack();
+          }
+          if (newWidth > activeWidth && newHeight > activeHeight) {
+            newWidth = activeWidth;
+            newHeight = activeHeight;
+          }
+
+          // If previous page width is smaller and height is greater
+        } else if (prevWidth < activeWidth && prevHeight > activeHeight) {
+          newWidth = decreaseWidth(width.get(), -y);
+          newHeight = increaseHeight(height.get(), -y);
+          if (newWidth < prevWidth && newHeight > prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
+            navigateBack();
+          }
+          if (newWidth > activeWidth && newHeight < activeHeight) {
+            newWidth = activeWidth;
+            newHeight = activeHeight;
+          }
+        } else if (
+          // If previous page width is greater and height is smaller
+          prevWidth > activeWidth &&
+          prevHeight < activeHeight
+        ) {
+          newWidth = increaseWidth(width.get(), -y);
+          newHeight = decreaseHeight(height.get(), -y);
+          if (newWidth > prevWidth && newHeight < prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
+            navigateBack();
+          }
+          if (newWidth < activeWidth && newHeight > activeHeight) {
+            newWidth = activePage.dimensions.width;
+            newHeight = activePage.dimensions.height;
+          }
+        } else if (prevWidth === activeWidth && prevHeight === activeHeight) {
+          newWidth = increaseWidth(width.get(), -y);
+          newHeight = increaseHeight(height.get(), -y);
+          if (newWidth > prevWidth && newHeight > prevHeight) {
+            newWidth = prevWidth;
+            newHeight = prevHeight;
+            navigateBack();
+          }
+          if (newWidth < activeWidth && newHeight < activeHeight) {
+            newWidth = activeWidth;
+            newHeight = activeHeight;
+          }
         }
 
+        // Apply the new width immediately to the spring animation
         set({ width: newWidth, height: newHeight });
-        // Store the new dimensions in the pages stack
+        console.log("newWidth", newWidth, "newHeight", newHeight);
+
+        // Defer updating the page dimensions
         setDebounced({ newWidth, newHeight });
       }
 
@@ -440,3 +502,98 @@ function increaseHeight(currentHeight: number, delta: number): number {
 function decreaseHeight(currentHeight: number, delta: number): number {
   return currentHeight - delta * 3;
 }
+
+// const wheelBind = useWheel(({ event, last, delta, velocity }) => {
+//   const [, y] = delta;
+
+//   if (y > 0) {
+//     return;
+//   }
+
+//   let isUserScroll = true;
+
+//   if (!last && event && event.nativeEvent instanceof WheelEvent) {
+//     const wheelEvent = event.nativeEvent;
+//     const s = lethargy.check(wheelEvent);
+//     console.log("Lethargy check result", s);
+
+//     if (s === false) {
+//       isUserScroll = false;
+//     }
+//   }
+
+//   if (
+//     isUserScroll &&
+//     cursorOnRight &&
+//     previousPage &&
+//     previousPage.dimensions
+//   ) {
+//     if (isUserScroll) {
+//       let activeWidth = activePage.dimensions.width;
+//       let activeHeight = activePage.dimensions.height;
+//       let prevWidth = previousPage.dimensions.width;
+//       let prevHeight = previousPage.dimensions.height;
+
+//       const targetWidth = prevWidth;
+//       const targetHeight = prevHeight;
+
+//       const widthRatio =
+//         (targetWidth - activeWidth) / (targetHeight - activeHeight);
+//       const heightRatio = 1;
+
+//       const widthStep = -y * widthRatio;
+//       const heightStep = -y * heightRatio;
+
+//       let newWidth = width.get() + widthStep;
+//       let newHeight = height.get() + heightStep;
+
+//       // Clamp to bounds
+//       if (
+//         (widthStep > 0 && newWidth > targetWidth) ||
+//         (widthStep < 0 && newWidth < targetWidth)
+//       ) {
+//         newWidth = targetWidth;
+//       }
+//       if (
+//         (heightStep > 0 && newHeight > targetHeight) ||
+//         (heightStep < 0 && newHeight < targetHeight)
+//       ) {
+//         newHeight = targetHeight;
+//       }
+
+//       // Check if target dimensions are reached
+//       if (newWidth === targetWidth && newHeight === targetHeight) {
+//         navigateBack();
+//       }
+
+//       set({ width: newWidth, height: newHeight });
+//       // console.log("newWidth", newWidth, "newHeight", newHeight);
+//       // Defer updating the page dimensions
+//       setDebounced({ newWidth, newHeight });
+//     }
+//   }
+// });
+
+// const wheelBind = useWheel(
+//   (state) => {
+//     const { event, last } = state;
+
+//     // console.log("Wheel event triggered");
+//     // console.log("State:", state);
+//     // console.log("Last:", last);
+
+//     if (!last && event && event.nativeEvent instanceof WheelEvent) {
+//       const wheelEvent = event.nativeEvent;
+//       // console.log("Wheel event object present", wheelEvent);
+
+//       const s = lethargy.check(wheelEvent);
+//       console.log("Lethargy check result", s);
+
+//       // Your logic here
+//     } else {
+//       // console.log("Last event in sequence or event object not found");
+//       return false;
+//     }
+//   },
+//   { passive: true }
+// );
