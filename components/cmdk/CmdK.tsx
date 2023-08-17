@@ -74,7 +74,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   //Page Tracker
   const isHome = activePage.name === "index";
-
   const ActiveComponent = componentMap[activePage.name] || Index;
 
   // Search albums
@@ -141,12 +140,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   let lastScrollWheelTimestamp = 0;
   let lastScrollWheelDelta = 0;
-  const minScrollWheelInterval = 100; // minimum milliseconds between scrolls
+  const minScrollWheelInterval = 100;
+  let blockSrollWheel = false;
 
   const wheelBind = useWheel(({ event, last, delta, velocity }) => {
     const [, y] = delta;
 
-    if (y > 0) {
+    if (y > 0 || blockSrollWheel) {
       return;
     }
 
@@ -169,7 +169,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
     if (
       isUserScroll &&
-      cursorOnRight &&
+      !cursorOnRight &&
       previousPage &&
       previousPage.dimensions
     ) {
@@ -182,90 +182,21 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       // Log scroll speed and velocity here for debugging
 
-      if (scrollSpeed > 0.1 && magnitudeVelocity > 1.41) {
+      if (scrollSpeed > 10 && magnitudeVelocity > 2.41) {
         let newWidth;
         let newHeight;
 
-        let activeWidth = activePage.dimensions.width;
-        let activeHeight = activePage.dimensions.height;
-        let prevWidth = previousPage.dimensions.width;
-        let prevHeight = previousPage.dimensions.height;
+        let targetWidth = 500;
+        let targetHeight = 500;
 
-        // If previous page width & height are greater
-        if (prevWidth > activeWidth && prevHeight > activeHeight) {
-          newWidth = increaseWidth(width.get(), -y);
-          newHeight = increaseHeight(height.get(), -y);
-          if (newWidth > prevWidth && newHeight > prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth < activeWidth && newHeight < activeHeight) {
-            newWidth = activeWidth;
-            newHeight = activeHeight;
-          }
-
-          // If previous page width & height are smaller
-        } else if (prevWidth < activeWidth && prevHeight < activeHeight) {
-          newWidth = decreaseWidth(width.get(), -y);
-          newHeight = decreaseHeight(height.get(), -y);
-          if (newWidth < prevWidth && newHeight < prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth > activeWidth && newHeight > activeHeight) {
-            newWidth = activeWidth;
-            newHeight = activeHeight;
-          }
-
-          // If previous page width is smaller and height is greater
-        } else if (prevWidth < activeWidth && prevHeight > activeHeight) {
-          newWidth = decreaseWidth(width.get(), -y);
-          newHeight = increaseHeight(height.get(), -y);
-          if (newWidth < prevWidth && newHeight > prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth > activeWidth && newHeight < activeHeight) {
-            newWidth = activeWidth;
-            newHeight = activeHeight;
-          }
-        } else if (
-          // If previous page width is greater and height is smaller
-          prevWidth > activeWidth &&
-          prevHeight < activeHeight
-        ) {
-          newWidth = increaseWidth(width.get(), -y);
-          newHeight = decreaseHeight(height.get(), -y);
-          if (newWidth > prevWidth && newHeight < prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth < activeWidth && newHeight > activeHeight) {
-            newWidth = activePage.dimensions.width;
-            newHeight = activePage.dimensions.height;
-          }
-        } else if (prevWidth === activeWidth && prevHeight === activeHeight) {
-          newWidth = increaseWidth(width.get(), -y);
-          newHeight = increaseHeight(height.get(), -y);
-          if (newWidth > prevWidth && newHeight > prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth < activeWidth && newHeight < activeHeight) {
-            newWidth = activeWidth;
-            newHeight = activeHeight;
-          }
+        newWidth = decreaseWidth(width.get(), -y);
+        newHeight = decreaseHeight(height.get(), -y);
+        if (newWidth < targetWidth && newHeight < targetHeight) {
+          navigateBack();
         }
 
-        // Apply the new width immediately to the spring animation
         set({ width: newWidth, height: newHeight });
-        console.log("newWidth", newWidth, "newHeight", newHeight);
-        // Defer updating the page dimensions
+        // Store the new dimensions in the pages stack
         setDebounced({ newWidth, newHeight });
       }
 

@@ -35,7 +35,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
 
   return (
     <>
-      <div className="flex flex-col pt-4 group">
+      <div className="flex flex-col group">
         {/* Artwork  */}
         <div className="mb-1 ml-9 z-10">
           <ArtworkHeader
@@ -47,13 +47,6 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         {/* Avatar, Content+Like Button */}
         <div className="flex gap-2 items-end w-full">
           <div className="relative">
-            {review.replies && review._count.replies > 0 && (
-              <LargeAviCap
-                className="absolute -left-[10px] -bottom-[6px]"
-                width={43}
-                height={43}
-              />
-            )}
             <UserAvatar
               className="max-w-6 max-h-6"
               imageSrc={review.author.image}
@@ -160,9 +153,9 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
       <hr
         className={`border-silver w-[100%] ${
           review._count.replies > 0 && review._count.likes > 0
-            ? "mt-[5.5rem]"
+            ? "mt-[5.75rem]"
             : review._count.replies > 0 && review._count.likes === 0
-            ? "mt-[4.5rem]"
+            ? "mt-[5.75rem]"
             : review._count.likes > 0 && review._count.replies === 0
             ? "mt-[4.25rem]"
             : "mt-[2.5rem]"

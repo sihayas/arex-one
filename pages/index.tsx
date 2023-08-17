@@ -81,7 +81,7 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="w-[566px] h-[96vh] border border-silver justify-self-center self-center rounded-[20px] overflow-hidden relative">
+      <div className="w-[566px] h-[100vh] justify-self-center self-center rounded-[20px] overflow-hidden relative">
         {/* Render the feed here using the data */}
         <animated.div
           style={{

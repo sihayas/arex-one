@@ -18,6 +18,7 @@ export const useHandleEntryClick = (reviewId: string) => {
       },
     ]);
     setThreadcrumbs([reviewId]);
+    window.history.pushState(null, "");
   };
 
   return handleEntryClick;

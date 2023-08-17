@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useContext, useMemo } from "react";
+import React, {
+  useState,
+  useCallback,
+  useContext,
+  useMemo,
+  useEffect,
+} from "react";
 import { AlbumData } from "@/lib/global/interfaces";
 
 // Define the shape of the Page data type
@@ -82,18 +88,20 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
 
       setIsNavigating(true);
 
-      setTimeout(() => {
-        setPages((prevPages) => {
-          if (prevPages.length <= 1) {
-            setIsNavigating(false);
-            return prevPages;
-          }
-
-          console.log("navigating back");
-          const newPages = prevPages.slice(0, prevPages.length - pageNumber);
+      setPages((prevPages) => {
+        if (prevPages.length <= 1) {
           setIsNavigating(false);
-          return newPages;
-        });
+          return prevPages;
+        }
+
+        console.log("navigating back");
+        const newPages = prevPages.slice(0, prevPages.length - pageNumber);
+
+        return newPages;
+      });
+
+      setTimeout(() => {
+        setIsNavigating(false);
       }, 500);
     },
     [isNavigating]
@@ -103,6 +111,27 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const resetPage = useCallback(() => {
     setPages([{ name: "index", dimensions: { width: 922, height: 600 } }]);
   }, [setPages]);
+
+  useEffect(() => {
+    // Function to handle the back button
+    const handlePopState = () => {
+      // Check if there's more than one page to navigate back
+      if (pages.length > 1) {
+        navigateBack();
+      } else {
+        // Handle the case when there's only one page left
+        // (e.g., close the modal or navigate to a different part of the app)
+      }
+    };
+
+    // Add a listener for the popstate event
+    window.addEventListener("popstate", handlePopState);
+
+    // Cleanup the listener when the component unmounts
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [pages, navigateBack]);
 
   // Render the provider with the context value
   return (
