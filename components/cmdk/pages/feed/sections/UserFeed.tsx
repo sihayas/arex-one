@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchFeed } from "@/lib/api/feedAPI";
-import { Entry } from "@/components/feed/subcomponents/Entry";
+import { Entry } from "@/components/cmdk/pages/feed/subcomponents/Entry";
 import { ActivityData } from "@/lib/global/interfaces";
 
 const UserFeed = ({ userId }: { userId: string | undefined }) => {

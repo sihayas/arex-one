@@ -19,15 +19,24 @@ import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
 import User from "./pages/user/User";
 import Signals from "./pages/signals/Signals";
+import Feed from "./pages/feed/Feed";
 // const Lethargy = require("lethargy").Lethargy;
 import { Lethargy } from "lethargy-ts";
 
 import SearchAlbums from "@/lib/api/searchAPI";
 import { debounce } from "lodash";
 
-type PageName = "index" | "album" | "entry" | "form" | "user" | "signals";
+type PageName =
+  | "feed"
+  | "index"
+  | "album"
+  | "entry"
+  | "form"
+  | "user"
+  | "signals";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
+  feed: { width: 566, height: 1084 },
   index: { width: 922, height: 600 },
   album: { width: 658, height: 658 },
   entry: { width: 516, height: 608 },
@@ -36,8 +45,6 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   signals: { width: 96, height: 712 },
 };
 
-const MemoizedSearch = React.memo(Search);
-
 const componentMap: Record<string, React.ComponentType<any>> = {
   index: Index,
   album: Album,
@@ -45,6 +52,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   form: Form,
   user: User,
   signals: Signals,
+  feed: Feed,
 };
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
@@ -72,9 +80,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Page Tracker
   const isHome = activePage.name === "index";
   const ActiveComponent = componentMap[activePage.name] || Index;
-
-  // Search albums
-  const { data, isLoading, isFetching, error } = SearchAlbums(inputValue);
 
   // Shapeshift dimensionss
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
@@ -122,7 +127,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     [setPages]
   );
 
-  // Inertia tracking with lethargy to trigger shape shift/navigation
   const [{ width, scale, height, translateY, opacity }, set] = useSpring(
     () => ({
       scale: 1,
@@ -317,24 +321,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   return (
     <>
-      {/* Breadcrumbs  */}
-      {/* {!isHome && (
-        <div className="flex flex-col gap-2 items-center absolute top-1/2">
-          <button className="text-xs text-grey" onClick={resetPage}>
-            reset
-          </button>
-          {pages.map((page, index) => (
-            <button
-              key={index}
-              className="text-xs text-grey"
-              onClick={() => navigateBack(pages.length - index - 1)}
-            >
-              <div>{page.name}</div>
-            </button>
-          ))}
-        </div>
-      )} */}
-
       <animated.div
         style={{
           ...visibilitySpring, // To appear
@@ -494,3 +480,25 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 //   },
 //   { passive: true }
 // );
+
+{
+  /* Breadcrumbs  */
+}
+{
+  /* {!isHome && (
+        <div className="flex flex-col gap-2 items-center absolute top-1/2">
+          <button className="text-xs text-grey" onClick={resetPage}>
+            reset
+          </button>
+          {pages.map((page, index) => (
+            <button
+              key={index}
+              className="text-xs text-grey"
+              onClick={() => navigateBack(pages.length - index - 1)}
+            >
+              <div>{page.name}</div>
+            </button>
+          ))}
+        </div>
+      )} */
+}

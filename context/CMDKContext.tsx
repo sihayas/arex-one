@@ -66,7 +66,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
 
   // Page states
   const [pages, setPages] = useState<Page[]>([
-    { name: "index", dimensions: { width: 922, height: 600 } },
+    { name: "feed", dimensions: { width: 566, height: 1084 } },
   ]);
   const [prevPageCount, setPrevPageCount] = useState(pages.length);
 
@@ -76,7 +76,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   // Use memoization for performance optimization, this will prevent unnecessary re-renders
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
-    () => pages[pages.length - 2] || { name: "index", width: 922, height: 600 },
+    () => pages[pages.length - 2] || { name: "feed", width: 566, height: 1084 },
     [pages]
   );
   const [isNavigating, setIsNavigating] = useState(false);

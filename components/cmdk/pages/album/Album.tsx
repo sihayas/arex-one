@@ -62,6 +62,8 @@ const Album = ({ scale }: AlbumProps) => {
     );
   }
 
+  console.log(data);
+
   return (
     <animated.div
       ref={scrollContainerRef}

@@ -56,13 +56,13 @@ const Nav: React.FC = () => {
         <div className="flex flex-col relative ">
           {/* Quick Search  */}
           <animated.div
-            className="absolute flex flex-col bottom-[54px] -left-[480px] w-[512px] bg-silver backdrop-blur-xl rounded-[22px]"
+            className="absolute flex flex-col bottom-[54px] right-0 w-[502px] bg-silver backdrop-blur-xl rounded-[22px]"
             style={searchStyle}
           >
             <div
               className={`flex flex-col overflow-y-scroll max-h-[554px] ${
                 navText.length > 0 && data ? "border-b border-white" : ""
-              }`} // Conditional border
+              }`}
             >
               <Search
                 searchData={data}
@@ -87,22 +87,20 @@ const Nav: React.FC = () => {
           <Circle12 />
           <Avatar />
         </div>
-        <button className="absolute" onClick={() => signOut()}>
-          <Image
-            src="/images/icons/nav/log-out.svg"
-            width={15}
-            height={15}
-            alt="logout-button"
-          />
-        </button>
+        <Image
+          className="absolute"
+          onClick={() => signOut()}
+          src="/images/icons/nav/log-out.svg"
+          width={15}
+          height={15}
+          alt="logout-button"
+        />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-16 fixed left-2/4 bottom-0 transform translate-x-[700%] -translate-y-[44px] z-50">
-      {left}
-    </div>
+    <div className="flex flex-col h-16 fixed right-8 bottom-8 z-50">{left}</div>
   );
 };
 
