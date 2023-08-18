@@ -14,16 +14,12 @@ import { useDrag, useScroll, useWheel } from "@use-gesture/react";
 import { Command } from "cmdk";
 import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
-import Search from "./pages/search/Search";
 import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
 import User from "./pages/user/User";
 import Signals from "./pages/signals/Signals";
 import Feed from "./pages/feed/Feed";
-// const Lethargy = require("lethargy").Lethargy;
-import { Lethargy } from "lethargy-ts";
 
-import SearchAlbums from "@/lib/api/searchAPI";
 import { debounce } from "lodash";
 
 type PageName =

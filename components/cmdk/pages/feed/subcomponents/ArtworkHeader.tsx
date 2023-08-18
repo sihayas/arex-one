@@ -67,10 +67,10 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
         ) : null}
 
         <div className="absolute flex flex-col bottom-4 left-4 rounded-lg gap-1">
-          <div className="font-medium text-xs text-white">
+          <div className="font-semibold text-[13px] text-white">
             {albumData?.attributes.name}
           </div>
-          <div className="text-xs text-white">
+          <div className="text-[13px] text-white">
             {albumData?.attributes.artistName}
           </div>
         </div>

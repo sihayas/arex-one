@@ -1,15 +1,8 @@
 import { useSession } from "next-auth/react";
-import { useQuery } from "@tanstack/react-query";
 import Layout from "../components/layout";
 import Head from "next/head";
-import React, { useState } from "react";
-import NavBar from "@/components/nav/Nav";
-import { fetchFeed } from "@/lib/api/feedAPI";
-import SpotlightFeed from "@/components/cmdk/pages/feed/sections/SpotlightFeed";
-import BloomingFeed from "@/components/cmdk/pages/feed/sections/BloomingFeed";
-import UserFeed from "@/components/cmdk/pages/feed/sections/UserFeed";
-import { useDragLogic } from "@/hooks/handleInteractions/useDragLogic";
-import { animated } from "@react-spring/web";
+import React from "react";
+import Image from "next/image";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -33,8 +26,15 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="justify-self-center self-center text-black text-sm">
-        hello, {session.user.name}
+      <div className="justify-self-center self-center text-black text-sm flex items-center gap-4">
+        <Image
+          className="rounded-full"
+          src={session.user.image}
+          alt="user avatar"
+          width={48}
+          height={48}
+        />
+        <div className="">@{session.user.name}</div>
       </div>
 
       {/* Circle/Support/About */}

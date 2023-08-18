@@ -2,7 +2,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 export const useHandleEntryClick = (reviewId: string) => {
-  const { setPages } = useCMDK();
+  const { setPages, isVisible, setIsVisible } = useCMDK();
   const { setThreadcrumbs } = useThreadcrumb();
 
   const handleEntryClick = () => {
@@ -18,6 +18,7 @@ export const useHandleEntryClick = (reviewId: string) => {
       },
     ]);
     setThreadcrumbs([reviewId]);
+    !isVisible ? setIsVisible(true) : null;
     window.history.pushState(null, "");
   };
 
