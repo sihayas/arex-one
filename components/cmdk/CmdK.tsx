@@ -9,7 +9,7 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 
 import { animated, useSpring, useTransition } from "@react-spring/web";
-import { useScroll, useWheel } from "@use-gesture/react";
+import { useDrag, useScroll, useWheel } from "@use-gesture/react";
 
 import { Command } from "cmdk";
 import Album from "./pages/album/Album";
@@ -141,52 +141,31 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   }));
 
-  const wheelBind = useWheel(({ event, last, delta, velocity }) => {
-    const [, y] = delta;
+  let initialWidth: number;
+  let initialHeight: number;
 
-    if (y > 0) {
-      return;
-    }
+  const dragBind = useDrag(
+    ({ down, first, last, movement: [x, y], direction: [dirX, dirY] }) => {
+      let newWidth;
+      let newHeight;
 
-    let isUserScroll = true;
-
-    if (!last && event && event.nativeEvent instanceof WheelEvent) {
-      const wheelEvent = event.nativeEvent;
-      const s = lethargy.check(wheelEvent);
-      console.log("Lethargy check result", s);
-
-      if (s === false) {
-        isUserScroll = false;
+      // Initialize the initial width and height when the drag starts
+      if (first) {
+        initialWidth = width.get();
+        initialHeight = height.get();
       }
-    }
-    if (
-      isUserScroll &&
-      !cursorOnRight &&
-      previousPage &&
-      previousPage.dimensions
-    ) {
-      const now = Date.now();
-      const elapsedTime = now - lastScrollTime;
-      const scrollSpeed = Math.abs(y) / elapsedTime;
-      const magnitudeVelocity = Math.sqrt(
-        velocity[0] * velocity[0] + velocity[1] * velocity[1]
-      );
 
-      // Log scroll speed and velocity here for debugging
-
-      if (scrollSpeed > 0.1 && magnitudeVelocity > 1.41) {
-        let newWidth;
-        let newHeight;
-
+      if (previousPage && previousPage.dimensions) {
         let activeWidth = activePage.dimensions.width;
         let activeHeight = activePage.dimensions.height;
+
         let prevWidth = previousPage.dimensions.width;
         let prevHeight = previousPage.dimensions.height;
 
         // If previous page width & height are greater
         if (prevWidth > activeWidth && prevHeight > activeHeight) {
-          newWidth = increaseWidth(width.get(), -y);
-          newHeight = increaseHeight(height.get(), -y);
+          newWidth = increaseWidth(width.get(), y);
+          newHeight = increaseHeight(height.get(), y);
           if (newWidth > prevWidth && newHeight > prevHeight) {
             newWidth = prevWidth;
             newHeight = prevHeight;
@@ -199,8 +178,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
           // If previous page width & height are smaller
         } else if (prevWidth < activeWidth && prevHeight < activeHeight) {
-          newWidth = decreaseWidth(width.get(), -y);
-          newHeight = decreaseHeight(height.get(), -y);
+          newWidth = decreaseWidth(width.get(), y);
+          newHeight = decreaseHeight(height.get(), y);
           if (newWidth < prevWidth && newHeight < prevHeight) {
             newWidth = prevWidth;
             newHeight = prevHeight;
@@ -213,8 +192,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
           // If previous page width is smaller and height is greater
         } else if (prevWidth < activeWidth && prevHeight > activeHeight) {
-          newWidth = decreaseWidth(width.get(), -y);
-          newHeight = increaseHeight(height.get(), -y);
+          newWidth = decreaseWidth(width.get(), y);
+          newHeight = increaseHeight(height.get(), y);
           if (newWidth < prevWidth && newHeight > prevHeight) {
             newWidth = prevWidth;
             newHeight = prevHeight;
@@ -229,8 +208,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           prevWidth > activeWidth &&
           prevHeight < activeHeight
         ) {
-          newWidth = increaseWidth(width.get(), -y);
-          newHeight = decreaseHeight(height.get(), -y);
+          newWidth = increaseWidth(width.get(), y);
+          newHeight = decreaseHeight(height.get(), y);
           if (newWidth > prevWidth && newHeight < prevHeight) {
             newWidth = prevWidth;
             newHeight = prevHeight;
@@ -240,31 +219,25 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
             newWidth = activePage.dimensions.width;
             newHeight = activePage.dimensions.height;
           }
-        } else if (prevWidth === activeWidth && prevHeight === activeHeight) {
-          newWidth = increaseWidth(width.get(), -y);
-          newHeight = increaseHeight(height.get(), -y);
-          if (newWidth > prevWidth && newHeight > prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth < activeWidth && newHeight < activeHeight) {
-            newWidth = activeWidth;
-            newHeight = activeHeight;
-          }
         }
 
-        // Apply the new width immediately to the spring animation
         set({ width: newWidth, height: newHeight });
-        console.log("newWidth", newWidth, "newHeight", newHeight);
+        if (last) {
+          const isWidthCloseToTarget = Math.abs(newWidth - prevWidth) < 48;
+          const isHeightCloseToTarget = Math.abs(newHeight - prevHeight) < 48;
 
-        // Defer updating the page dimensions
-        setDebounced({ newWidth, newHeight });
+          // If not close enough to the target dimensions, revert to initial dimensions
+          if (!isWidthCloseToTarget || !isHeightCloseToTarget) {
+            newWidth = initialWidth;
+            newHeight = initialHeight;
+          }
+
+          set({ width: newWidth, height: newHeight });
+          setDebounced({ newWidth, newHeight });
+        }
       }
-
-      lastScrollTime = now;
     }
-  });
+  );
 
   const scrollBind = useScroll(({ xy: [, y] }) => {
     if (activePage.name === "album") {
@@ -289,15 +262,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       // Defer updating the page dimensions
       setDebounced({ newWidth, newHeight });
-    } else if (activePage.name === "index") {
-      let newHeight = 600 + (y / 300) * (918 - 600);
-      if (newHeight < 600) newHeight = 600;
-      if (newHeight > 918) newHeight = 918;
-
-      set({ height: newHeight, width: 922 });
-
-      // Defer updating the page dimensions
-      setDebounced({ newWidth: 922, newHeight });
     } else if (activePage.name === "entry") {
       let baseHeight = 610;
       let newHeight = baseHeight + (y / 50) * (888 - baseHeight);
@@ -448,7 +412,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         >
           {/* Container / Shapeshifter */}
           <animated.div
-            {...wheelBind()} // Shapeshifter scrolling
+            {...dragBind()} // Shapeshifter scrolling
             {...scrollBind()} // Custom page scrolling
             style={{
               ...dimensionsSpring, // Finalize shapeshifter dimensions
@@ -488,19 +452,19 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 }
 
 function increaseWidth(currentWidth: number, delta: number): number {
-  return currentWidth + delta * 3;
+  return currentWidth + delta * 0.75;
 }
 
 function decreaseWidth(currentWidth: number, delta: number): number {
-  return currentWidth - delta * 3;
+  return currentWidth - delta * 0.75;
 }
 
 function increaseHeight(currentHeight: number, delta: number): number {
-  return currentHeight + delta * 3;
+  return currentHeight + delta * 0.75;
 }
 
 function decreaseHeight(currentHeight: number, delta: number): number {
-  return currentHeight - delta * 3;
+  return currentHeight - delta * 0.75;
 }
 
 // const wheelBind = useWheel(({ event, last, delta, velocity }) => {
