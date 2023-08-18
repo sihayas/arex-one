@@ -1,7 +1,7 @@
 import { useCMDK } from "@/context/CMDKContext";
 
 export const useHandleUserClick = (authorId: string) => {
-  const { setPages } = useCMDK();
+  const { setPages, setIsVisible, isVisible } = useCMDK();
 
   const handleUserClick = () => {
     setPages((prevPages) => [
@@ -12,6 +12,7 @@ export const useHandleUserClick = (authorId: string) => {
         dimensions: { width: 532, height: 712 },
       },
     ]);
+    !isVisible ? setIsVisible(true) : null;
   };
 
   return handleUserClick;

@@ -23,7 +23,6 @@ import Signals from "./pages/signals/Signals";
 import { Lethargy } from "lethargy-ts";
 
 import SearchAlbums from "@/lib/api/searchAPI";
-import { useScrollContext } from "@/context/ScrollContext";
 import { debounce } from "lodash";
 
 type PageName = "index" | "album" | "entry" | "form" | "user" | "signals";
@@ -64,7 +63,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     setPrevPageCount,
   } = useCMDK();
   const { setSelectedAlbum } = useCMDKAlbum();
-  const { cursorOnRight } = useScrollContext();
 
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -124,31 +122,33 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     [setPages]
   );
 
-  const lethargy = new Lethargy();
-
   // Inertia tracking with lethargy to trigger shape shift/navigation
-  const [{ width, scale, height, translateY }, set] = useSpring(() => ({
-    scale: 1,
-    width: activePage.dimensions.width,
-    height: activePage.dimensions.height,
-    translateY: 0,
-    config: {
-      tension: 400,
-      friction: 57,
-      mass: 0.2,
-    },
-  }));
+  const [{ width, scale, height, translateY, opacity }, set] = useSpring(
+    () => ({
+      scale: 1,
+      width: activePage.dimensions.width,
+      height: activePage.dimensions.height,
+      translateY: 0,
+      opacity: 1, // Initializing the opacity to 1 (100%)
+      config: {
+        tension: 400,
+        friction: 57,
+        mass: 0.2,
+      },
+    })
+  );
 
   let initialWidth: number;
   let initialHeight: number;
+  let initialOpacity: number;
 
   function adjustDimension(
     current: number,
     target: number,
     delta: number
   ): number {
-    if (target > current) return Math.min(target, current + delta * 1);
-    if (target < current) return Math.max(target, current - delta * 1);
+    if (target > current) return Math.min(target, current + delta * 2);
+    if (target < current) return Math.max(target, current - delta * 2);
     return current;
   }
 
@@ -158,6 +158,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       if (first) {
         initialWidth = width.get();
         initialHeight = height.get();
+        initialOpacity = opacity.get();
       }
 
       if (previousPage && previousPage.dimensions) {
@@ -169,8 +170,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
         let newWidth = adjustDimension(activeWidth, prevWidth, y);
         let newHeight = adjustDimension(activeHeight, prevHeight, y);
+        let newOpacity = 1 - Math.abs(y) / 20; // Adjust this calculation to match your drag length
 
-        set({ width: newWidth, height: newHeight });
+        set({ width: newWidth, height: newHeight, opacity: newOpacity });
 
         // Rubberband back to initial if not met with target
         if (last) {
@@ -181,12 +183,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           if (!isWidthCloseToTarget || !isHeightCloseToTarget) {
             newWidth = initialWidth;
             newHeight = initialHeight;
+            newOpacity = initialOpacity; // Resetting the opacity
           }
 
-          set({ width: newWidth, height: newHeight });
+          set({ width: newWidth, height: newHeight, opacity: newOpacity });
           setDebounced({ newWidth, newHeight });
         }
         if (newWidth === prevWidth && newHeight === prevHeight) {
+          set({ width: newWidth, height: newHeight, opacity: 1 });
           navigateBack();
         }
       }
@@ -260,15 +264,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   });
 
-  // Spring search
-  const searchStyles = useSpring({
-    height: hideSearch ? "0px" : "448px",
-    opacity: hideSearch ? 0 : 1,
-    paddingTop: hideSearch ? "0px" : "32px",
-    padding: hideSearch ? "0px" : "16px",
-    config: { tension: 700, friction: 60 },
-  });
-
   // Adjust album context when navigating to an album page
   useEffect(() => {
     if (activePage.name === "album" && activePage.album) {
@@ -295,9 +290,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   }, [setHideSearch]);
 
   const transitions = useTransition(ActiveComponent, {
-    from: { scale: 0.95, opacity: 0, blur: 5 },
-    enter: { scale: 1, opacity: 1, blur: 0, delay: 250 },
-    leave: { scale: 0.95, opacity: 0, blur: 6 },
+    from: { opacity: 0, blur: 5 },
+    enter: { opacity: 1, blur: 0, delay: 150 },
+    leave: { opacity: 0, blur: 6 },
     config: {
       duration: 150,
     },
@@ -350,8 +345,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       >
         {/* CMDK Inner Content  */}
         <Command
-          className={`transition-opacity duration-150 w-full h-full ${
-            isVisible ? "opacity-100" : "opacity-0"
+          className={`transition-opacity bg-white duration-150 w-full h-full ${
+            isVisible ? "opacity-100 drop-shadow-2xl" : "opacity-0"
           }`}
           ref={ref}
           shouldFilter={false}
@@ -366,18 +361,18 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         >
           {/* Container / Shapeshifter */}
           <animated.div
-            {...dragBind()} // Shapeshifter scrolling
+            {...dragBind()} // Shapeshifter dragging
             {...scrollBind()} // Custom page scrolling
             style={{
               ...dimensionsSpring, // Finalize shapeshifter dimensions
-
-              // Attached to binds
               width: width.to((w) => `${w}px`),
               height: height.to((h) => `${h}px`),
+              opacity: opacity.to((o) => o),
+              willChange: "width, height",
             }}
             ref={shapeshifterContainerRef}
-            className={`flex bg-white rounded-[20px] z-0 hoverable-large relative overflow-y-scroll scrollbar-none ${
-              isVisible ? `drop-shadow-2xl` : ""
+            className={`flex rounded-[20px] z-0 hoverable-large relative overflow-y-scroll scrollbar-none ${
+              isVisible ? `` : ""
             } `}
           >
             {/* Apply transition */}

@@ -1,64 +1,46 @@
 import { useState } from "react";
-import Button from "./sub/Button";
-
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
-import { AlbumData } from "@/lib/global/interfaces";
-import {
-  useFetchSpotlightAlbums,
-  useFetchBloomingAlbums,
-} from "@/lib/api/indexAPI";
-
-import { SoundPreview } from "./sub/SoundPreview";
+import { useDragIndexLogic } from "@/hooks/handleInteractions/useDragIndexLogic";
+import { animated } from "@react-spring/web";
+import BloomingSection from "./sub/BloomingSection";
+import SpotlightSection from "./sub/SpotlightSection";
 
 const Album = () => {
   const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
     useScrollPosition();
 
   const [activeState, setActiveState] = useState({ button: "spotlight" });
+  const { bind, x, activeSection } = useDragIndexLogic();
 
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
   // useEffect(saveScrollPosition, [pages, saveScrollPosition]);
 
-  const { spotlightAlbumsQuery, spotlightAlbumsDataQuery } =
-    useFetchSpotlightAlbums(1);
-  const { bloomingAlbumsQuery, bloomingAlbumsDataQuery } =
-    useFetchBloomingAlbums(1);
-
-  const isLoading =
-    (spotlightAlbumsQuery.isLoading && bloomingAlbumsQuery.isLoading) ||
-    (spotlightAlbumsDataQuery.isLoading && bloomingAlbumsDataQuery.isLoading);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div
       ref={scrollContainerRef}
-      className="flex flex-col w-full h-full items-center justify-center rounded-[20px] pb-8"
+      className="flex flex-col w-full h-full overflow-hidden relative"
     >
-      {/* <div className="absolute right-8 top-8 flex flex-col items-end gap-4">
-        <Button
-          defaultText="SPOTLIGHT"
-          type="album"
-          isActive={activeState.button === "spotlight"}
-          onClick={() => setActiveState({ button: "spotlight" })}
-        />
-        <Button
-          defaultText="IN BLOOM"
-          type="album"
-          isActive={activeState.button === "bloom"}
-          onClick={() => setActiveState({ button: "bloom" })}
-        />
-      </div> */}
-      {activeState.button === "spotlight" &&
-        spotlightAlbumsDataQuery.data.map((album: AlbumData, index: number) => (
-          <SoundPreview key={album.id} album={album} index={index + 1} />
-        ))}
-      {activeState.button === "bloom" &&
-        bloomingAlbumsDataQuery.data.map((album: AlbumData, index: number) => (
-          <SoundPreview key={album.id} album={album} index={index + 1} />
-        ))}
+      <animated.div
+        {...bind()}
+        style={{
+          transform: x.to((val) => `translateX(${val * 0.95}px)`),
+        }}
+        className="fixed top-[64px] -right-[40px] flex gap-4 z-50"
+      >
+        <div className="text-sm font-medium">spotlight</div>
+        <div className="text-sm text-gray3">in bloom</div>
+      </animated.div>
+      {/* Container */}
+      <animated.div
+        className="flex w-[200%] h-full"
+        {...bind()}
+        style={{
+          transform: x.to((val) => `translateX(${val}px)`),
+        }}
+      >
+        <SpotlightSection />
+        <BloomingSection />
+      </animated.div>
     </div>
   );
 };

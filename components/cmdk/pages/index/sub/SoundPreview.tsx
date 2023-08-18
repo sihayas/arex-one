@@ -18,30 +18,29 @@ export const SoundPreview = ({
 
   return (
     <div key={index} className="w-full flex p-8 pb-0">
-      <div className="flex-none">
-        {/* Artwork  */}
-        <Image
-          ref={imageRef}
-          className="shadow-index hoverable-medium rounded-[12px]"
-          src={artworkUrl}
-          width={400}
-          height={400}
-          alt="alt"
-          draggable="false"
-          onDragStart={(e) => e.preventDefault()}
-          onClick={() => {
-            if (imageRef.current) {
-              handleSelectAlbum(imageRef.current, album, artworkUrl);
-            }
-          }}
-        />
-      </div>
+      {/* Artwork  */}
+      <Image
+        ref={imageRef}
+        className="shadow-index hoverable-medium rounded-[12px]"
+        src={artworkUrl}
+        width={400}
+        height={400}
+        alt="alt"
+        draggable="false"
+        onDragStart={(e) => e.preventDefault()}
+        onClick={() => {
+          if (imageRef.current) {
+            handleSelectAlbum(imageRef.current, album, artworkUrl);
+          }
+        }}
+      />
 
       {/* About  */}
-      <div className="flex items-end w-full p-8 justify-between">
+      <div className="flex items-end w-full p-8 pr-0 justify-between">
         {/* Names  */}
-        <div className="flex flex-col gap-2 w-[98px] pb-[10px]">
-          <div className="text-sm font-medium text-black">
+        <div className="flex flex-col gap-2 w-[98px]">
+          <div className="text-gray3 text-2xl pb-4">{index}</div>
+          <div className="font-semibold text-2xl text-black tracking-tight">
             {album.attributes.name}
           </div>
           <div className="text-sm text-gray2">

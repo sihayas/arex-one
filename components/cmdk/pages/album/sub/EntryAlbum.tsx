@@ -1,7 +1,6 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 
-import { useCMDK } from "@/context/CMDKContext";
 import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
 import { useHandleEntryClick } from "@/hooks/handlePageChange/useHandleEntryClick";
 import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
@@ -18,7 +17,6 @@ interface EntryAlbumProps {
 
 export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setIsVisible } = useCMDK();
 
   const { liked, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
@@ -58,10 +56,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
 
       {/* Username and Avatar */}
       <div
-        onClick={() => {
-          handleUserClick();
-          setIsVisible((prevIsVisible) => !prevIsVisible);
-        }}
+        onClick={handleUserClick}
         className="flex items-center gap-2 hoverable-small"
       >
         {/* Image & Star  */}
@@ -93,7 +88,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
             {review.replies.slice(0, 3).map((reply, index) => (
               <UserAvatar
                 key={index}
-                className={`!border-2 border-white shadow-md ${
+                className={`!border-2 border-white ${
                   index !== 0 ? "-ml-1" : ""
                 }`}
                 imageSrc={reply.author.image}
