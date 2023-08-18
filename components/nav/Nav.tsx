@@ -56,7 +56,7 @@ const Nav: React.FC = () => {
         <div className="flex flex-col relative ">
           {/* Quick Search  */}
           <animated.div
-            className="absolute flex flex-col bottom-[54px] right-0 w-[502px] bg-silver backdrop-blur-xl rounded-[22px]"
+            className="absolute flex flex-col bottom-[54px] right-0 w-[502px] bg-silver backdrop-blur-xl rounded-[22px] shadow-nav"
             style={searchStyle}
           >
             <div
@@ -87,14 +87,6 @@ const Nav: React.FC = () => {
           <Circle12 />
           <Avatar />
         </div>
-        <Image
-          className="absolute"
-          onClick={() => signOut()}
-          src="/images/icons/nav/log-out.svg"
-          width={15}
-          height={15}
-          alt="logout-button"
-        />
       </div>
     );
   }

@@ -33,7 +33,6 @@ export type CMDKContextType = {
   activePage: Page;
   navigateBack: (pageNumber?: number) => void;
   resetPage: () => void;
-  inputRef: React.MutableRefObject<HTMLInputElement | null>;
   previousPage: Page | null;
   prevPageCount: number;
   setPrevPageCount: React.Dispatch<React.SetStateAction<number>>;
@@ -71,7 +70,6 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [prevPageCount, setPrevPageCount] = useState(pages.length);
 
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   // Use memoization for performance optimization, this will prevent unnecessary re-renders
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
@@ -148,7 +146,6 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         activePage,
         navigateBack,
         resetPage,
-        inputRef,
         previousPage,
         prevPageCount,
         setPrevPageCount,

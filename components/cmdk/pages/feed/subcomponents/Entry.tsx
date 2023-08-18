@@ -128,7 +128,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             >
               {review.content}
               <div
-                className={`absolute -right-3 -bottom-3 bg-white ${
+                className={`absolute -right-2 -bottom-2 bg-white ${
                   liked ? "opacity-100" : "opacity-0"
                 } group-hover:opacity-100 transition-opacity`}
               >
@@ -137,10 +137,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             </div>
             {/* Name  */}
             <div
-              onClick={() => {
-                handleUserClick();
-                setIsVisible((prevIsVisible) => !prevIsVisible);
-              }}
+              onClick={handleUserClick}
               className={`absolute left-2 -bottom-6 font-medium text-[13px] text-black hoverable-small`}
             >
               {review.author.name}

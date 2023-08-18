@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Layout from "../components/layout";
 import Head from "next/head";
 import React from "react";
@@ -34,7 +34,12 @@ export default function Home() {
           width={48}
           height={48}
         />
-        <div className="">@{session.user.name}</div>
+        <div className="flex flex-col gap-4 translate-y-1/3">
+          <div className="">{session.user.name}*</div>
+          <div onClick={() => signOut()} className="text-xs text-gray2">
+            disconnect
+          </div>
+        </div>
       </div>
 
       {/* Circle/Support/About */}
