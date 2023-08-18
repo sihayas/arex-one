@@ -151,14 +151,14 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         </div>
       </div>
       <hr
-        className={`border-silver w-[100%] ${
+        className={`border-silver w-[100%] border-dashed ${
           review._count.replies > 0 && review._count.likes > 0
-            ? "mt-[5.75rem]"
+            ? "mt-[6.75rem]"
             : review._count.replies > 0 && review._count.likes === 0
-            ? "mt-[5.75rem]"
+            ? "mt-[6.75rem]"
             : review._count.likes > 0 && review._count.replies === 0
-            ? "mt-[4.25rem]"
-            : "mt-[2.5rem]"
+            ? "mt-[5.25rem]"
+            : "mt-[3.5rem]"
         }`}
       />
     </>
