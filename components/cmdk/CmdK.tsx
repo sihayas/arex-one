@@ -144,11 +144,18 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   let initialWidth: number;
   let initialHeight: number;
 
+  function adjustDimension(
+    current: number,
+    target: number,
+    delta: number
+  ): number {
+    if (target > current) return Math.min(target, current + delta * 0.75);
+    if (target < current) return Math.max(target, current - delta * 0.75);
+    return current;
+  }
+
   const dragBind = useDrag(
     ({ down, first, last, movement: [x, y], direction: [dirX, dirY] }) => {
-      let newWidth;
-      let newHeight;
-
       // Initialize the initial width and height when the drag starts
       if (first) {
         initialWidth = width.get();
@@ -162,64 +169,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         let prevWidth = previousPage.dimensions.width;
         let prevHeight = previousPage.dimensions.height;
 
-        // If previous page width & height are greater
-        if (prevWidth > activeWidth && prevHeight > activeHeight) {
-          newWidth = increaseWidth(width.get(), y);
-          newHeight = increaseHeight(height.get(), y);
-          if (newWidth > prevWidth && newHeight > prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth < activeWidth && newHeight < activeHeight) {
-            newWidth = activeWidth;
-            newHeight = activeHeight;
-          }
-
-          // If previous page width & height are smaller
-        } else if (prevWidth < activeWidth && prevHeight < activeHeight) {
-          newWidth = decreaseWidth(width.get(), y);
-          newHeight = decreaseHeight(height.get(), y);
-          if (newWidth < prevWidth && newHeight < prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth > activeWidth && newHeight > activeHeight) {
-            newWidth = activeWidth;
-            newHeight = activeHeight;
-          }
-
-          // If previous page width is smaller and height is greater
-        } else if (prevWidth < activeWidth && prevHeight > activeHeight) {
-          newWidth = decreaseWidth(width.get(), y);
-          newHeight = increaseHeight(height.get(), y);
-          if (newWidth < prevWidth && newHeight > prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth > activeWidth && newHeight < activeHeight) {
-            newWidth = activeWidth;
-            newHeight = activeHeight;
-          }
-        } else if (
-          // If previous page width is greater and height is smaller
-          prevWidth > activeWidth &&
-          prevHeight < activeHeight
-        ) {
-          newWidth = increaseWidth(width.get(), y);
-          newHeight = decreaseHeight(height.get(), y);
-          if (newWidth > prevWidth && newHeight < prevHeight) {
-            newWidth = prevWidth;
-            newHeight = prevHeight;
-            navigateBack();
-          }
-          if (newWidth < activeWidth && newHeight > activeHeight) {
-            newWidth = activePage.dimensions.width;
-            newHeight = activePage.dimensions.height;
-          }
-        }
+        let newWidth = adjustDimension(activeWidth, prevWidth, y);
+        let newHeight = adjustDimension(activeHeight, prevHeight, y);
 
         set({ width: newWidth, height: newHeight });
         if (last) {
@@ -234,6 +185,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
           set({ width: newWidth, height: newHeight });
           setDebounced({ newWidth, newHeight });
+        }
+
+        if (newWidth === prevWidth && newHeight === prevHeight) {
+          navigateBack();
         }
       }
     }
@@ -449,22 +404,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       </animated.div>
     </>
   );
-}
-
-function increaseWidth(currentWidth: number, delta: number): number {
-  return currentWidth + delta * 0.75;
-}
-
-function decreaseWidth(currentWidth: number, delta: number): number {
-  return currentWidth - delta * 0.75;
-}
-
-function increaseHeight(currentHeight: number, delta: number): number {
-  return currentHeight + delta * 0.75;
-}
-
-function decreaseHeight(currentHeight: number, delta: number): number {
-  return currentHeight - delta * 0.75;
 }
 
 // const wheelBind = useWheel(({ event, last, delta, velocity }) => {
