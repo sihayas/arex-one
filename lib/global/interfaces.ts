@@ -1,3 +1,58 @@
+export interface ReviewData {
+  album?: AlbumDBData;
+  albumId?: string;
+  track?: TrackDBData;
+  trackId?: string;
+  author: {
+    id: string;
+    image: string;
+    name: string;
+    username: string;
+  };
+  content: string | null;
+  createdAt: string;
+  id: string;
+  likedByUser?: boolean;
+  likes: LikeData[];
+  listened: boolean;
+  loved: boolean;
+  permalink: string;
+  published: boolean;
+  rating: number;
+  replies: ReplyData[];
+  updatedAt: string;
+  viewsCount: number;
+
+  _count: CountData;
+}
+
+export interface AlbumDBData {
+  id: string;
+  name: string;
+  artist: string;
+  releaseDate: string;
+  averageRating: number | null;
+  lastUpdated: Date | null;
+  reviews?: ReviewData[];
+  notes?: string | null;
+  viewsCount: number;
+  listenedCount: number;
+  ratingsCount: number;
+  lovedCount: number;
+
+  tracks?: TrackData[];
+}
+
+export interface TrackDBData {
+  id: string;
+  name: string;
+  album: AlbumDBData;
+  albumId: string;
+  duration: number;
+  reviews?: ReviewData[];
+}
+
+// Apple Music API response
 export interface AlbumAttributes {
   artistName: string;
   artwork: {
@@ -30,7 +85,7 @@ export interface AlbumAttributes {
   url: string;
 }
 
-// Mimics Apple Music API response with some custom stuff
+// Apple Music API response
 export interface AlbumData {
   attributes: AlbumAttributes;
   id: string;
@@ -40,30 +95,34 @@ export interface AlbumData {
   colors: string[];
 }
 
+// Apple Music API response
 export interface AlbumRelationships {
   tracks: {
     data: [TrackData];
   };
 }
 
+// Apple Music API response
 export interface AlbumWithRating {
   album: AlbumData;
   averageRating: number | "n/a";
 }
 
-export interface AlbumDBData {
+// Apple Music API response
+export interface TrackData {
+  attributes: {
+    durationInMillis: number;
+    hasLyrics: boolean;
+    isAppleDigitalMaster: boolean;
+    isrc: string;
+    name: string;
+    releaseDate: string;
+    trackNumber: number;
+    url: string;
+  };
+  href: string;
   id: string;
-  name: string;
-  artist: string;
-  releaseDate: string;
-  averageRating: number | null;
-  lastUpdated: Date | null;
-  reviews?: ReviewData[];
-  notes?: string | null;
-  viewsCount: number;
-  listenedCount: number;
-  ratingsCount: number;
-  lovedCount: number;
+  type: string;
 }
 
 export interface LikeData {
@@ -97,32 +156,6 @@ export interface ReplyData {
   repliesCount?: number;
 }
 
-export interface ReviewData {
-  album: AlbumDBData;
-  albumId: string;
-  author: {
-    id: string;
-    image: string;
-    name: string;
-    username: string;
-  };
-  content: string | null;
-  createdAt: string;
-  id: string;
-  likedByUser?: boolean;
-  likes: LikeData[];
-  listened: boolean;
-  loved: boolean;
-  permalink: string;
-  published: boolean;
-  rating: number;
-  replies: ReplyData[];
-  updatedAt: string;
-  viewsCount: number;
-
-  _count: CountData;
-}
-
 export interface ReviewFormInputs {
   isReReview: boolean;
   listened: boolean;
@@ -137,22 +170,6 @@ export interface SelectedAlbumContextType {
 }
 
 export type OnSelectAlbumCallback = () => void;
-
-export interface TrackData {
-  attributes: {
-    durationInMillis: number;
-    hasLyrics: boolean;
-    isAppleDigitalMaster: boolean;
-    isrc: string;
-    name: string;
-    releaseDate: string;
-    trackNumber: number;
-    url: string;
-  };
-  href: string;
-  id: string;
-  type: string;
-}
 
 export interface UserData {
   dateJoined: string;

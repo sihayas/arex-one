@@ -88,15 +88,45 @@ model Follows {
   @@unique([followerId, followingId])
 }
 
+model Album {
+  id            String    @id
+  tracks        Track[]
+  name          String
+  artist        String
+  releaseDate   String
+  averageRating Float?    @default(0)  
+  lastUpdated   DateTime  @default(now()) @updatedAt
+  reviews       Review[]
+  notes         String?   @db.MediumText
+  favorites     Favorite[]
 
+  viewsCount    Int      @default(0) // Track number of views
+  listenedCount Int      @default(0) // Track number of listens
+  ratingsCount  Int      @default(0) // Track number of ratings
+  reviewsCount  Int      @default(0) // Track number of revews
+  lovedCount    Int      @default(0) // Track number of loved reviews
 
+  @@unique([id])
+}
 
-//Review 
+model Track {
+  id            String    @id @default(cuid())
+  name          String
+  duration      String
+  album         Album     @relation(fields: [albumId], references: [id])
+  albumId       String
+  reviews       Review[]
+
+  @@index ([albumId])
+}
+
 model Review {
   activities Activity[]
   id        String    @id @default(cuid())
-  album     Album     @relation(fields: [albumId], references: [id])
+  album     Album?     @relation(fields: [albumId], references: [id])
   albumId   String
+  track     Track?    @relation(fields: [trackId], references: [id])
+  trackId   String?
   permalink String    @unique
   rating    Float
   loved     Boolean   @default(false)
@@ -115,6 +145,7 @@ model Review {
 
   @@index([albumId])
   @@index([authorId])
+  @@index([trackId])
 }
 
 //Diary is just review without text, Rating is just a rating score no tags + no listened (obvious), no comments
@@ -160,28 +191,6 @@ model Reply {
   @@index([replyToId])
   @@index([rootReplyId])
 }
-
-
-model Album {
-  id            String    @id
-  name          String
-  artist        String
-  releaseDate   String
-  averageRating Float?    @default(0)  
-  lastUpdated   DateTime  @default(now()) @updatedAt
-  reviews       Review[]
-  notes         String?   @db.MediumText
-  favorites     Favorite[]
-
-  viewsCount    Int      @default(0) // Track number of views
-  listenedCount Int      @default(0) // Track number of listens
-  ratingsCount  Int      @default(0) // Track number of ratings
-  reviewsCount  Int      @default(0) // Track number of revews
-  lovedCount    Int      @default(0) // Track number of loved reviews
-
-  @@unique([id])
-}
-
 
 model Favorite {
   id        String  @id @default(cuid())
