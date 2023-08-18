@@ -48,8 +48,6 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   signals: Signals,
 };
 
-let lastScrollTime = Date.now();
-
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   //Context stuff
   const {
@@ -149,8 +147,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     target: number,
     delta: number
   ): number {
-    if (target > current) return Math.min(target, current + delta * 0.75);
-    if (target < current) return Math.max(target, current - delta * 0.75);
+    if (target > current) return Math.min(target, current + delta * 1);
+    if (target < current) return Math.max(target, current - delta * 1);
     return current;
   }
 
@@ -173,6 +171,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         let newHeight = adjustDimension(activeHeight, prevHeight, y);
 
         set({ width: newWidth, height: newHeight });
+
+        // Rubberband back to initial if not met with target
         if (last) {
           const isWidthCloseToTarget = Math.abs(newWidth - prevWidth) < 48;
           const isHeightCloseToTarget = Math.abs(newHeight - prevHeight) < 48;
@@ -186,7 +186,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           set({ width: newWidth, height: newHeight });
           setDebounced({ newWidth, newHeight });
         }
-
         if (newWidth === prevWidth && newHeight === prevHeight) {
           navigateBack();
         }
