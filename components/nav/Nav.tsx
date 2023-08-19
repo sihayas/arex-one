@@ -1,7 +1,6 @@
-import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 import SearchAlbums from "@/lib/api/searchAPI";
@@ -17,8 +16,8 @@ const Nav: React.FC = () => {
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
 
-  // Search functionality
   const [navText, setNavText] = useState("");
+  // Search functionality
   const { data, isLoading, isFetching, error } = SearchAlbums(navText);
   const handleNavTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
     setNavText(event.target.value);
@@ -49,19 +48,18 @@ const Nav: React.FC = () => {
     left = <p>logging in...</p>;
   }
 
-  //If user is logged in.
   if (session) {
     left = (
       <div className="flex w-full h-full justify-end gap-2">
         <div className="flex flex-col relative ">
           {/* Quick Search  */}
           <animated.div
-            className="absolute flex flex-col bottom-[54px] right-0 w-[502px] bg-silver backdrop-blur-xl rounded-[22px] shadow-nav"
+            className="absolute flex flex-col bottom-[54px] right-0 w-[502px] bg-white bg-opacity-40 backdrop-blur-3xl rounded-[22px] shadow-nav"
             style={searchStyle}
           >
             <div
-              className={`flex flex-col overflow-y-scroll max-h-[554px] ${
-                navText.length > 0 && data ? "border-b border-white" : ""
+              className={`flex flex-col overflow-y-scroll max-h-[554px] scrollbar-none ${
+                navText.length > 0 && data ? "border-b border-silver" : ""
               }`}
             >
               <Search
@@ -74,7 +72,7 @@ const Nav: React.FC = () => {
 
             <TextareaAutosize
               id="entryText"
-              className="w-full p-2.5 pl-3 bg-transparent resize-none text-white text-sm focus:outline-none hoverable-medium"
+              className="w-full p-2.5 pl-3 pb-8 bg-transparent resize-none text-black text-sm focus:outline-none hoverable-medium"
               minRows={1}
               maxRows={12}
               disabled={!session}

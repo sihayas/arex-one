@@ -53,6 +53,17 @@ export interface TrackDBData {
 }
 
 // Apple Music API response
+export interface AlbumData {
+  attributes: AlbumAttributes;
+  id: string;
+  notes: string;
+  relationships: AlbumRelationships;
+  artworkUrl: string;
+  colors: string[];
+  averageRating: number | "n/a";
+}
+
+// Apple Music API response
 export interface AlbumAttributes {
   artistName: string;
   artwork: {
@@ -86,22 +97,48 @@ export interface AlbumAttributes {
 }
 
 // Apple Music API response
-export interface AlbumData {
-  attributes: AlbumAttributes;
-  id: string;
-  notes: string;
-  relationships: AlbumRelationships;
-  artworkUrl: string;
-  colors: string[];
-}
-
-// Apple Music API response
 export interface AlbumRelationships {
   tracks: {
     data: [TrackData];
   };
 }
 
+export interface SongData {
+  attributes: SongAttributes;
+  href: string;
+  id: string;
+  type: string;
+}
+
+export interface SongAttributes {
+  albumName: string;
+  artistName: string;
+  artwork: {
+    bgColor: string;
+    textColor1: string;
+    textColor2: string;
+    textColor3: string;
+    textColor4: string;
+    url: string;
+  };
+  composerName: string;
+  contentRating: string;
+  discNumber: number;
+  durationInMillis: number;
+  genreNames: [string];
+  hasCredits: boolean;
+  hasLyrics: boolean;
+  isAppleDigitalMaster: boolean;
+  isrc: string;
+  name: string;
+  playParams: {
+    id: string;
+    kind: string;
+  };
+  releaseDate: string;
+  trackNumber: number;
+  url: string;
+}
 // Apple Music API response
 export interface AlbumWithRating {
   album: AlbumData;

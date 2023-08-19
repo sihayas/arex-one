@@ -13,6 +13,7 @@ import Lowlights from "./sub/Lowlights";
 import Highlights from "./sub/Highlights";
 
 import { animated, SpringValue } from "@react-spring/web";
+import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -25,6 +26,11 @@ const Album = ({ scale }: AlbumProps) => {
   const { selectedAlbum } = useCMDKAlbum();
   const { scrollContainerRef, restoreScrollPosition } = useScrollPosition();
   const { bind, x, activeSection } = useDragAlbumLogic();
+
+  const artworkUrl = generateArtworkUrl(
+    selectedAlbum!.attributes.artwork.url,
+    "1316"
+  );
 
   const boxShadow = useMemo(() => {
     if (selectedAlbum?.colors[0]) {
@@ -39,17 +45,12 @@ const Album = ({ scale }: AlbumProps) => {
   }, [selectedAlbum?.colors]);
 
   // Initialize album
-  const albumQuery = useAlbumQuery(selectedAlbum);
-  const { data, isLoading, isError } = albumQuery;
-  const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
-    selectedAlbum?.id,
-    "1316"
-  );
+  const { data, isLoading, isError } = useAlbumQuery(selectedAlbum);
 
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
 
   // Load and error handling
-  if (!selectedAlbum || isLoading || isArtworkLoading) {
+  if (!selectedAlbum || isLoading) {
     return <div>loading...</div>; // Replace with your preferred loading state
   }
 
@@ -61,8 +62,6 @@ const Album = ({ scale }: AlbumProps) => {
       </div>
     );
   }
-
-  console.log(data);
 
   return (
     <animated.div
@@ -107,12 +106,16 @@ const Album = ({ scale }: AlbumProps) => {
         >
           {/* Album Details  */}
           <div className="flex flex-col gap-2 items-center justify-center">
-            <p className="text-sm text-black font-medium">{data.album.name}</p>
-            <p className="text-sm text-gray2">{data.album.artist}</p>
+            <p className="text-sm text-black font-medium">
+              {selectedAlbum.attributes.name}
+            </p>
+            <p className="text-sm text-gray2">
+              {selectedAlbum.attributes.artistName}
+            </p>
           </div>
           {/* Rating  */}
           <div className="flex items-center justify-center justify-self-center w-9 h-9 border border-silver text-sm text-black rounded-full font-medium">
-            {data.album.averageRating}
+            {selectedAlbum.averageRating}
           </div>
 
           {/* Consensus  */}
@@ -122,11 +125,13 @@ const Album = ({ scale }: AlbumProps) => {
               <p className="font-medium text-gray2 text-xs">CONSENSUS</p>
             </div>
 
-            {data.album.notes ? (
-              <div className="text-xs text-gray2">{data.album.notes}</div>
+            {/* {data.album.notes ? (
+              <div className="text-xs text-gray2">
+                {selectedAlbum.attributes.editorialNotes.standard}
+              </div>
             ) : (
               <div className="ml-6 text-xs text-gray3">COMING SOON</div>
-            )}
+            )} */}
           </div>
         </animated.div>
       </animated.div>

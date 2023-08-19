@@ -16,16 +16,15 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   if (isLoading && isFetching) if (error) return <div>Error</div>;
 
   return (
-    <>
-      {/* Search Results */}
-      {searchData.map((album: AlbumData, averageRating: string) => {
+    <div className="pb-96">
+      {searchData?.filteredAlbums?.map((album: AlbumData) => {
         const artworkUrl = generateArtworkUrl(
           album.attributes.artwork.url,
-          "160"
+          "90"
         );
         return (
           <div
-            className="w-full p-3 hoverable-medium"
+            className="w-full p-4 hoverable-medium border-b border-silver"
             key={album.id}
             onClick={() =>
               handleSelectAlbum(
@@ -38,30 +37,34 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
           >
             <div className="flex gap-4 items-center w-full">
               <Image
-                id={album.id} // Add an id attribute to identify the image later
-                className="rounded-lg border border-silver "
+                id={album.id}
+                className="rounded-lg shadow-index"
                 src={artworkUrl}
                 alt={`${album.attributes.name} artwork`}
-                width={80}
-                height={80}
+                width={36}
+                height={36}
                 draggable="false"
               />
 
               {/* <Rating color={shadowColors[album.id]} rating={averageRating} /> */}
 
-              <div className="flex flex-col justify-center gap-1">
-                <div className="text-sm text-white max-w-[17rem] text-ellipsis overflow-hidden whitespace-nowrap">
+              <div className="flex flex-col justify-center gap">
+                <div className="text-sm font-medium text-black max-w-full text-ellipsis overflow-hidden whitespace-nowrap">
                   {album.attributes.name}
                 </div>
-                <div className="text-xs text-white">
-                  {album.attributes.artistName}
+                <div className="flex gap-[6px] items-center text-gray text-xs line-clamp-1">
+                  <div className="">{album.attributes.artistName}</div>
+                  <div className="">&middot;</div>
+                  <div className="">
+                    {album.attributes.releaseDate.split("-")[0]}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         );
       })}
-    </>
+    </div>
   );
 };
 

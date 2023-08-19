@@ -39,6 +39,7 @@ export const useHandleAlbumClick = () => {
         },
       },
     ]);
+    console.log("selectedAlbum", extendedAlbum);
     window.history.pushState(null, "");
   };
 

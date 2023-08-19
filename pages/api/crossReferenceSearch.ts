@@ -21,7 +21,7 @@ export default async function handler(
   const appleAlbums = await searchAlbums(keyword);
 
   // Cross-reference the Apple albums with our own database
-  for (const album of appleAlbums) {
+  for (const album of appleAlbums.filteredAlbums) {
     const averageRating = await client.get(`album:${album.id}:averageRating`);
 
     if (averageRating !== null) {

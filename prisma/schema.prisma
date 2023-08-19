@@ -112,7 +112,7 @@ model Album {
 model Track {
   id            String    @id @default(cuid())
   name          String
-  duration      String
+  duration      Int
   album         Album     @relation(fields: [albumId], references: [id])
   albumId       String
   reviews       Review[]

@@ -1,11 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../lib/global/prisma";
+import { TrackData } from "@/lib/global/interfaces";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const album = req.body;
+
+  if (
+    !album ||
+    !album.relationships ||
+    !album.relationships.tracks ||
+    !album.relationships.tracks.data
+  ) {
+    res.status(400).json({ error: "Invalid request payload" });
+    return;
+  }
 
   if (req.method === "POST") {
     try {
@@ -23,6 +34,13 @@ export default async function handle(
           name: album.attributes.name,
           releaseDate: album.attributes.releaseDate,
           artist: album.attributes.artistName,
+          tracks: {
+            create: album.relationships.tracks.data.map((track: TrackData) => ({
+              id: track.id,
+              name: track.attributes.name, // Make sure the attribute exists
+              duration: track.attributes.durationInMillis, // Make sure the attribute exists
+            })),
+          },
           viewsCount: 1,
         },
       });

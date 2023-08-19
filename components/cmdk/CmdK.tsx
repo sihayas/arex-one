@@ -145,8 +145,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     target: number,
     delta: number
   ): number {
-    if (target > current) return Math.min(target, current + delta * 2);
-    if (target < current) return Math.max(target, current - delta * 2);
+    if (target > current) return Math.min(target, current + delta * 0.5);
+    if (target < current) return Math.max(target, current - delta * 0.5);
     return current;
   }
 
@@ -168,7 +168,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
         let newWidth = adjustDimension(activeWidth, prevWidth, y);
         let newHeight = adjustDimension(activeHeight, prevHeight, y);
-        let newOpacity = 1 - Math.abs(y) / 20; // Adjust this calculation to match your drag length
+        let newOpacity = 1 - Math.abs(y) / 80; // Adjust this calculation to match your drag length
 
         set({ width: newWidth, height: newHeight, opacity: newOpacity });
 

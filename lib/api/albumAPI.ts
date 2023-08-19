@@ -1,7 +1,8 @@
 import axios from "axios";
-import { AlbumData, UserData } from "../global/interfaces";
+import { AlbumData } from "../global/interfaces";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { getAlbumById } from "../global/musicKit";
 
 interface UserSession {
   id: string;
@@ -14,12 +15,20 @@ export async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/post/album`, album);
   return response.data;
 }
-
 export function useAlbumQuery(selectedAlbum: AlbumData | null) {
   return useQuery(
     ["album", selectedAlbum?.id],
-    () =>
-      selectedAlbum ? initializeAlbum(selectedAlbum) : Promise.resolve({}),
+    async () => {
+      if (selectedAlbum) {
+        // If relationships attribute doesn't exist, fetch detailed info
+        if (!selectedAlbum.relationships) {
+          const detailedAlbum = await getAlbumById(selectedAlbum.id);
+          return initializeAlbum(detailedAlbum);
+        }
+        return initializeAlbum(selectedAlbum);
+      }
+      return Promise.resolve({});
+    },
     {
       enabled: !!selectedAlbum,
     }

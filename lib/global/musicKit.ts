@@ -1,10 +1,9 @@
 import axios from "axios";
-import { AlbumData } from "./interfaces";
+import { AlbumData, SongData } from "./interfaces";
 
 const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
 
-// Search for albums method
-// Helper function to check if the album title contains unwanted keywords
+// Helper function to check if the title contains unwanted keywords
 const isUnwanted = (title: string) => {
   const unwantedKeywords = ["remix", "edition", "mix"];
   return unwantedKeywords.some((keyword) =>
@@ -15,28 +14,36 @@ const isUnwanted = (title: string) => {
 // Search for albums method
 export const searchAlbums = async (keyword: string) => {
   const baseURL = "https://api.music.apple.com/v1/catalog/us/search";
+  const limit = 25;
+  const types = "albums,songs";
+  const url = `${baseURL}?term=${encodeURIComponent(
+    keyword
+  )}&limit=${limit}&types=${types}`;
 
-  const response = await axios.get(baseURL, {
+  const response = await axios.get(url, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    params: {
-      term: keyword,
-      limit: 25, // Increase the limit to get more results initially
-      types: "albums",
-    },
   });
 
-  // Filter the results based on the isSingle property, unwanted keywords, and limit to 8 results
-  const filteredResults = response.data.results.albums.data
+  const songs = response.data.results.songs.data
+    .filter((song: SongData) => !isUnwanted(song.attributes.albumName)) // Check if the song title contains unwanted keywords
+    .slice(0, 8); // Limit to 8 results
+
+  const albums = response.data.results.albums.data
     .filter(
       (album: AlbumData) =>
         !album.attributes.isSingle && // Check if the album is not a single
         !isUnwanted(album.attributes.name) // Check if the album title contains unwanted keywords
     )
-    .slice(0, 8);
+    .slice(0, 8); // Limit to 8 results
 
-  return filteredResults;
+  console.log("apple", {
+    filteredSongs: songs,
+    filteredAlbums: albums,
+  });
+
+  return { filteredSongs: songs, filteredAlbums: albums };
 };
 
 //Search for a specific album
