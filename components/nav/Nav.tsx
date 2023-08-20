@@ -1,32 +1,37 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 
-import SearchAlbums from "@/lib/api/searchAPI";
-import TextareaAutosize from "react-textarea-autosize";
+import GetSearchResults from "@/lib/api/searchAPI";
+// import TextareaAutosize from "react-textarea-autosize";
 import { useSpring, animated } from "@react-spring/web";
+import { debounce } from "lodash";
+import { Command } from "cmdk";
 
-import Search from "./Search";
+import Search from "./search/Search";
 import Avatar from "./Avatar";
 
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
-  const router = useRouter();
-  const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
 
+  // Navigation text and search query state
   const [navText, setNavText] = useState("");
-  // Search functionality
-  const { data, isLoading, isFetching, error } = SearchAlbums(navText);
-  const handleNavTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
-    setNavText(event.target.value);
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSetSearchQuery = debounce(setSearchQuery, 300);
 
-  // React Spring
+  // Handler for navigation text change
+  const handleNavTextChange = (value: string) => {
+    setNavText(value);
+    debouncedSetSearchQuery(value); // Debounced search query update
+  };
+
+  // Get search results based on debounced search query
+  const { data, isLoading, isFetching, error } = GetSearchResults(searchQuery);
+
   const searchStyle = useSpring({
-    height: session && navText.length > 0 && data ? "554px" : "40px",
+    height: session && navText.length > 0 && data ? "554px" : "0px",
     from: { height: "36px" },
-    config: { tension: 700, friction: 60 }, // Increase tension for faster animation
+    config: { tension: 800, friction: 60 },
   });
 
   let left;
@@ -34,12 +39,7 @@ const Nav: React.FC = () => {
   if (!session) {
     left = (
       <div className="flex items-center justify-between rounded-full h-8">
-        <Link data-active={isActive("/")} href="/">
-          <div className="text-sm text-black">rx</div>
-        </Link>
-        <Link data-active={isActive("/signup")} href="/api/auth/signin">
-          <div className="text-xs">google join</div>
-        </Link>
+        log in
       </div>
     );
   }
@@ -50,41 +50,32 @@ const Nav: React.FC = () => {
 
   if (session) {
     left = (
-      <div className="flex w-full h-full justify-end gap-2">
-        <div className="flex flex-col relative ">
-          {/* Quick Search  */}
+      // Search
+      <div className="flex flex-col relative ">
+        <div className="absolute h-fit flex flex-col justify-end bottom-[54px] right-0 w-[502px] bg-white bg-opacity-50 backdrop-blur-3xl rounded-[22px] shadow-nav">
           <animated.div
-            className="absolute flex flex-col bottom-[54px] right-0 w-[502px] bg-white bg-opacity-40 backdrop-blur-3xl rounded-[22px] shadow-nav"
+            className={`flex flex-col overflow-y-scroll max-h-[554px] scrollbar-none`}
             style={searchStyle}
           >
-            <div
-              className={`flex flex-col overflow-y-scroll max-h-[554px] scrollbar-none ${
-                navText.length > 0 && data ? "border-b border-silver" : ""
-              }`}
-            >
-              <Search
-                searchData={data}
-                isLoading={isLoading}
-                isFetching={isFetching}
-                error={error}
-              />
-            </div>
-
-            <TextareaAutosize
-              id="entryText"
-              className="w-full p-2.5 pl-3 pb-8 bg-transparent resize-none text-black text-sm focus:outline-none hoverable-medium"
-              minRows={1}
-              maxRows={12}
-              disabled={!session}
-              value={navText}
-              onChange={handleNavTextChange}
-              placeholder="+"
+            <Search
+              searchData={data}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              error={error}
             />
           </animated.div>
-          <Circle20 />
-          <Circle12 />
-          <Avatar />
+
+          <Command.Input
+            id="entryText"
+            className="p-3 w-full rounded-b-[22px] bg-transparent  text-black text-sm focus:outline-none hoverable-medium resize-none"
+            placeholder="+"
+            onValueChange={handleNavTextChange}
+          />
         </div>
+        {/* Circles */}
+        <Circle20 />
+        <Circle12 />
+        <Avatar />
       </div>
     );
   }
@@ -96,7 +87,6 @@ const Nav: React.FC = () => {
 
 export default Nav;
 
-// SVG circle components
 const Circle12 = () => (
   <svg className="-translate-x-3" height="12" width="12">
     <circle

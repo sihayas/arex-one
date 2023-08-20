@@ -36,6 +36,7 @@ export type CMDKContextType = {
   previousPage: Page | null;
   prevPageCount: number;
   setPrevPageCount: React.Dispatch<React.SetStateAction<number>>;
+  inputRef: React.MutableRefObject<HTMLInputElement | null>;
 };
 
 // Define the props for the CMDKProvider component
@@ -62,6 +63,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   // Visiblity states
   const [isVisible, setIsVisible] = useState(false);
   const [hideSearch, setHideSearch] = useState(true);
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   // Page states
   const [pages, setPages] = useState<Page[]>([
@@ -149,6 +151,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         previousPage,
         prevPageCount,
         setPrevPageCount,
+        inputRef,
       }}
     >
       {children}

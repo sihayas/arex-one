@@ -1,17 +1,39 @@
+import { useQuery } from "@tanstack/react-query";
+
+const GetSearchResults = (searchQuery: string) => {
+  const { data, isLoading, isFetching, error } = useQuery(
+    ["albums", searchQuery],
+    () =>
+      fetch(`/api/search/get/results?query=${searchQuery}`).then((res) =>
+        res.json()
+      ),
+    {
+      enabled: true,
+      retry: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  return {
+    data: data ?? [],
+    isLoading,
+    isFetching,
+    error: !!error,
+  };
+};
+
+export default GetSearchResults;
+
 // import { useQuery } from "@tanstack/react-query";
+// import { searchAlbums } from "../global/musicKit";
 
 // const SearchAlbums = (searchQuery: string) => {
 //   const { data, isLoading, isFetching, error } = useQuery(
 //     ["albums", searchQuery],
-//     () =>
-//       fetch(`/api/crossReferenceSearch?query=${searchQuery}`).then((res) =>
-//         res.json()
-//       ),
+//     () => searchAlbums(searchQuery), // Call the searchAlbums method directly
 //     {
 //       enabled: !!searchQuery,
 //       retry: false,
-//       staleTime: 5 * 60 * 1000, // 5 minutes
-//       cacheTime: 30 * 60 * 1000, // 30 minutes
 //     }
 //   );
 
@@ -24,26 +46,3 @@
 // };
 
 // export default SearchAlbums;
-
-import { useQuery } from "@tanstack/react-query";
-import { searchAlbums } from "../global/musicKit";
-
-const SearchAlbums = (searchQuery: string) => {
-  const { data, isLoading, isFetching, error } = useQuery(
-    ["albums", searchQuery],
-    () => searchAlbums(searchQuery), // Call the searchAlbums method directly
-    {
-      enabled: !!searchQuery,
-      retry: false,
-    }
-  );
-
-  return {
-    data: data ?? [],
-    isLoading,
-    isFetching,
-    error: !!error,
-  };
-};
-
-export default SearchAlbums;

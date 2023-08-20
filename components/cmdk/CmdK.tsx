@@ -9,9 +9,10 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 
 import { animated, useSpring, useTransition } from "@react-spring/web";
-import { useDrag, useScroll, useWheel } from "@use-gesture/react";
-
+import { useDrag, useScroll } from "@use-gesture/react";
 import { Command } from "cmdk";
+import NavBar from "@/components/nav/Nav";
+
 import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
 import Entry from "./pages/entry/Entry";
@@ -68,14 +69,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
-  const [inputValue, setInputValue] = useState("");
   const shapeshifterContainerRef = useRef<HTMLDivElement | null>(null);
 
   //Page Tracker
-  const isHome = activePage.name === "index";
   const ActiveComponent = componentMap[activePage.name] || Index;
 
-  // Shapeshift dimensionss
+  // Shapeshift dimensions
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
     width: PAGE_DIMENSIONS[previousPage!.name as PageName]?.width,
     height: PAGE_DIMENSIONS[previousPage!.name as PageName]?.height,
@@ -172,7 +171,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
         set({ width: newWidth, height: newHeight, opacity: newOpacity });
 
-        // Rubberband back to initial if not met with target
+        // Rubber-band back to initial if not met with target
         if (last) {
           const isWidthCloseToTarget = Math.abs(newWidth - prevWidth) < 48;
           const isHeightCloseToTarget = Math.abs(newHeight - prevHeight) < 48;
@@ -270,23 +269,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     console.log(pages);
   }, [activePage, setSelectedAlbum, pages]);
 
-  // Handle input changes
-  const onValueChange = useCallback(
-    (value: string) => {
-      if (hideSearch) {
-        setHideSearch(false);
-      }
-      setInputValue(value);
-    },
-    [hideSearch, setInputValue, setHideSearch]
-  );
-  const onFocus = useCallback(() => {
-    setHideSearch(false);
-  }, [setHideSearch]);
-  const onBlur = useCallback(() => {
-    setHideSearch(true);
-  }, [setHideSearch]);
-
   const transitions = useTransition(ActiveComponent, {
     from: { opacity: 0, blur: 5 },
     enter: { opacity: 1, blur: 0, delay: 150 },
@@ -330,15 +312,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }`}
           ref={ref}
           shouldFilter={false}
-          onKeyDown={(e: React.KeyboardEvent) => {
-            // console.log(`Keydown event: ${e.key}`);
-            if (e.key === "Backspace" && !isHome && !inputValue) {
-              navigateBack();
-              e.preventDefault();
-              return;
-            }
-          }}
+          onKeyDown={(e: React.KeyboardEvent) => {}}
         >
+          <NavBar />
           {/* Container / Shapeshifter */}
           <animated.div
             {...dragBind()} // Shapeshifter dragging

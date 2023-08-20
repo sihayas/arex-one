@@ -3,9 +3,14 @@ import Layout from "../components/layout";
 import Head from "next/head";
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const isActive: (pathname: string) => boolean = (pathname) =>
+    router.pathname === pathname;
 
   if (!session) {
     return (
@@ -13,9 +18,11 @@ export default function Home() {
         <Head>
           <title>rx</title>
         </Head>
-        <div className="justify-self-center self-center text-gray2">
-          log in?
-        </div>
+        <Link data-active={isActive("/signup")} href="/api/auth/signin">
+          <div className="justify-self-center self-center text-gray2 text-sm">
+            log in?
+          </div>
+        </Link>
       </Layout>
     );
   }

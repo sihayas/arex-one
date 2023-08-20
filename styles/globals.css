@@ -119,3 +119,7 @@ button {
     opacity: 1;
   }
 }
+
+.selected-item {
+  background-color: #f0f0f0; /* Choose your desired color */
+}

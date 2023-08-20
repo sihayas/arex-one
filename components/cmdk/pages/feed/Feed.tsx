@@ -6,7 +6,7 @@ import { useDragLogic } from "@/hooks/handleInteractions/useDragLogic";
 import { useQuery } from "@tanstack/react-query";
 import { animated } from "@react-spring/web";
 
-import NavBar from "@/components/nav/Nav";
+// import NavBar from "@/components/nav/Nav";
 import SpotlightFeed from "@/components/cmdk/pages/feed/sections/SpotlightFeed";
 import BloomingFeed from "@/components/cmdk/pages/feed/sections/BloomingFeed";
 import UserFeed from "@/components/cmdk/pages/feed/sections/UserFeed";
@@ -84,7 +84,7 @@ export default function Feed() {
           {feedContent}
           <div className="h-[8.5rem]"></div>
         </animated.div>
-        <NavBar />
+        {/* <NavBar /> */}
       </div>
     </div>
   );
