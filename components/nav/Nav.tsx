@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 
+import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import GetSearchResults from "@/lib/api/searchAPI";
 import { useSpring, animated } from "@react-spring/web";
 import { debounce } from "lodash";
 import { Command } from "cmdk";
 
-import Search from "./search/Search";
+import Search from "./sub/Search";
 import Avatar from "./Avatar";
+import Form from "./sub/Form";
 
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
+  const { selectedSound, setSelectedSound } = useCMDKAlbum();
 
   // Navigation text and search query state
   const [navText, setNavText] = useState("");
@@ -24,12 +27,22 @@ const Nav: React.FC = () => {
   };
 
   // Get search results based on debounced search query
-  const { data, isLoading, isFetching, error } = GetSearchResults(searchQuery);
+  const { data, isInitialLoading, isFetching, error } =
+    GetSearchResults(searchQuery);
 
   const searchStyle = useSpring({
-    height: session && navText.length > 0 && data ? "554px" : "0px",
+    height:
+      session && data && navText.length > 0
+        ? !selectedSound
+          ? "500"
+          : selectedSound.sound.type === "songs"
+          ? "144px"
+          : selectedSound.sound.type === "albums"
+          ? "542px"
+          : "0px"
+        : "0px",
     from: { height: "36px" },
-    config: { tension: 800, friction: 60 },
+    config: { tension: 550, friction: 70 },
   });
 
   let left;
@@ -52,15 +65,19 @@ const Nav: React.FC = () => {
       <div className="flex flex-col relative ">
         <div className="absolute h-fit flex flex-col justify-end bottom-[54px] right-0 w-[502px] bg-white bg-opacity-50 backdrop-blur-3xl rounded-[22px] shadow-nav">
           <animated.div
-            className={`flex flex-col overflow-y-scroll max-h-[554px] scrollbar-none`}
+            className={`flex flex-col overflow-y-scroll scrollbar-none`}
             style={searchStyle}
           >
-            <Search
-              searchData={data}
-              isLoading={isLoading}
-              isFetching={isFetching}
-              error={error}
-            />
+            {!selectedSound ? (
+              <Search
+                searchData={data}
+                isInitialLoading={isInitialLoading}
+                isFetching={isFetching}
+                error={error}
+              />
+            ) : (
+              <Form inputValue={navText} />
+            )}
           </animated.div>
 
           <Command.Input

@@ -2,36 +2,39 @@ import { AlbumData, SongData, UserData } from "@/lib/global/interfaces";
 
 import { Command } from "cmdk";
 
-import Song from "./sections/Song";
-import User from "./sections/User";
-import Album from "./sections/Album";
+import Song from "./items/Song";
+import User from "./items/User";
+import Album from "./items/Album";
 
 interface SearchProps {
   searchData: any;
-  isLoading: boolean;
+  isInitialLoading: boolean;
   isFetching: boolean;
   error: any;
 }
 
-const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
-  if (isLoading || isFetching) return <div>Loading...</div>;
+const Search = ({
+  searchData,
+  isInitialLoading,
+  isFetching,
+  error,
+}: SearchProps) => {
+  if (isInitialLoading || isFetching)
+    return <div className="text-xs">loading</div>;
   if (error) return <div>Error</div>;
 
   const appleData = searchData?.appleData || {};
-  const userData = searchData?.userData || {};
+  const userData = searchData?.users || {};
 
   const filteredAlbums = appleData.filteredAlbums || [];
   const filteredSongs = appleData.filteredSongs || [];
-  const users = userData.users || [];
 
   // Combining the different data types into a single array
   const allData = [
     ...filteredAlbums.map((album: AlbumData) => ({ ...album, type: "albums" })),
     ...filteredSongs.map((song: SongData) => ({ ...song, type: "songs" })),
-    ...users.map((user: UserData) => ({ ...user, type: "users" })),
+    // ...userData.map((user: UserData) => ({ ...user, type: "users" })),
   ];
-
-  console.log(allData);
 
   return (
     <Command.List className="pb-96" tabIndex={-1}>
