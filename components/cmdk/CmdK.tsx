@@ -295,6 +295,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     setPrevPageCount(pages.length);
   }, [pages.length, prevPageCount, shapeshifterContainerRef, setPrevPageCount]);
 
+  const onFocus = useCallback(() => {
+    setHideSearch(false);
+  }, [setHideSearch]);
+  const onBlur = useCallback(() => {
+    setHideSearch(true);
+  }, [setHideSearch]);
+
   return (
     <>
       <animated.div
@@ -330,6 +337,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                   },
                 },
               ]);
+            }
+            if (
+              e.key === "Backspace" &&
+              selectedSound &&
+              inputRef.current?.value === ""
+            ) {
+              e.preventDefault();
+              setSelectedSound(null);
             }
           }}
           loop

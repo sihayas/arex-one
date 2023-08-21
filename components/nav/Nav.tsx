@@ -16,9 +16,8 @@ import Form from "./sub/Form";
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
   const { selectedSound, setSelectedSound } = useCMDKAlbum();
-  const { inputRef } = useCMDK();
+  const { inputRef, inputValue, setInputValue } = useCMDK();
 
-  const [inputValue, setInputValue] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   const debouncedSetSearchQuery = debounce(setSearchQuery, 300);
@@ -44,21 +43,8 @@ const Nav: React.FC = () => {
           : "0px"
         : "0px",
     from: { height: "36px" },
-    config: { tension: 550, friction: 70 },
+    config: { tension: 975, friction: 70 },
   });
-
-  useEffect(() => {
-    const handleClearInput = () => {
-      setInputValue("");
-      inputRef.current?.focus(); // Refocus the input after clearing
-    };
-
-    window.addEventListener("clearInput", handleClearInput);
-
-    return () => {
-      window.removeEventListener("clearInput", handleClearInput);
-    };
-  }, []);
 
   let left;
 

@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useEffect,
 } from "react";
-import { AlbumData, SelectedSound } from "@/lib/global/interfaces";
+import { SelectedSound } from "@/lib/global/interfaces";
 
 // Define the shape of the Page data type
 export type Page = {
@@ -37,6 +37,8 @@ export type CMDKContextType = {
   prevPageCount: number;
   setPrevPageCount: React.Dispatch<React.SetStateAction<number>>;
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
+  inputValue: string;
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
 // Define the props for the CMDKProvider component
@@ -63,6 +65,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   // Visiblity states
   const [isVisible, setIsVisible] = useState(false);
   const [hideSearch, setHideSearch] = useState(true);
+  const [inputValue, setInputValue] = useState("");
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   // Page states
@@ -113,14 +116,11 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   }, [setPages]);
 
   useEffect(() => {
-    // Function to handle the back button
+    // Function to handle the web browser back button
     const handlePopState = () => {
-      // Check if there's more than one page to navigate back
       if (pages.length > 1) {
         navigateBack();
       } else {
-        // Handle the case when there's only one page left
-        // (e.g., close the modal or navigate to a different part of the app)
       }
     };
 
@@ -152,6 +152,8 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         prevPageCount,
         setPrevPageCount,
         inputRef,
+        inputValue,
+        setInputValue,
       }}
     >
       {children}

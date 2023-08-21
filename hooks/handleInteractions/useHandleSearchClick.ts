@@ -6,7 +6,7 @@ import { AlbumData, SongData } from "@/lib/global/interfaces";
 
 export const useHandleSearchClick = () => {
   const { getDominantColor } = useDominantColor();
-  const { inputRef } = useCMDK();
+  const { inputValue, setInputValue } = useCMDK();
 
   const { setSelectedSound } = useCMDKAlbum();
 
@@ -24,8 +24,7 @@ export const useHandleSearchClick = () => {
     };
 
     setSelectedSound(selectedSound);
-    window.dispatchEvent(new Event("clearInput"));
-    console.log("selectedSound", selectedSound);
+    setInputValue("");
   };
 
   return { handleSelectSearch };
