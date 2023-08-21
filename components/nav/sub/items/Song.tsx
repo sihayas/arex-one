@@ -4,17 +4,17 @@ import { Command } from "cmdk";
 
 import { SongData } from "@/lib/global/interfaces";
 import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import { useHandleSongClick } from "@/hooks/handlePageChange/useHandleSongClick";
+import { useHandleSearchClick } from "@/hooks/handleInteractions/useHandleSearchClick";
 
 const Song = ({ song }: { song: SongData }) => {
   const artworkUrl = generateArtworkUrl(song.attributes.artwork.url, "90");
-  const { handleSelectSong } = useHandleSongClick();
+  const { handleSelectSearch } = useHandleSearchClick();
 
   return (
     <Command.Item
       className="w-full p-4 hoverable-small border-b border-silver"
       onSelect={() =>
-        handleSelectSong(
+        handleSelectSearch(
           document.getElementById(song.id) as HTMLImageElement,
           song,
           artworkUrl

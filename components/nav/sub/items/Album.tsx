@@ -2,19 +2,19 @@ import Image from "next/image";
 
 import { Command } from "cmdk";
 
-import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
 import { AlbumData } from "@/lib/global/interfaces";
+import { useHandleSearchClick } from "@/hooks/handleInteractions/useHandleSearchClick";
+import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 const Album = ({ album }: { album: AlbumData }) => {
-  const { handleSelectAlbum } = useHandleAlbumClick();
+  const { handleSelectSearch } = useHandleSearchClick();
   const artworkUrl = generateArtworkUrl(album.attributes.artwork.url, "90");
 
   return (
     <Command.Item
       className="w-full p-4 hoverable-small border-b border-silver"
       onSelect={() =>
-        handleSelectAlbum(
+        handleSelectSearch(
           document.getElementById(album.id) as HTMLImageElement,
           album,
           artworkUrl

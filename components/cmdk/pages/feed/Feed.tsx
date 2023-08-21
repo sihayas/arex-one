@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { fetchFeed } from "@/lib/api/feedAPI";
-import { useDragLogic } from "@/hooks/handleInteractions/useDragLogic";
+import { useDragLogic } from "@/hooks/handleInteractions/useDrag/feed";
 import { useQuery } from "@tanstack/react-query";
 import { animated } from "@react-spring/web";
 

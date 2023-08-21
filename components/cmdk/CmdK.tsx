@@ -64,8 +64,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     setPages,
     prevPageCount,
     setPrevPageCount,
+    inputRef,
   } = useCMDK();
-  const { setSelectedSound } = useCMDKAlbum();
+  const { selectedSound, setSelectedSound } = useCMDKAlbum();
 
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -266,7 +267,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     if (activePage.name === "album" && activePage.selectedSound) {
       setSelectedSound(activePage.selectedSound);
     }
-    console.log(pages);
   }, [activePage, setSelectedSound, pages]);
 
   const transitions = useTransition(ActiveComponent, {
@@ -312,7 +312,26 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }`}
           ref={ref}
           shouldFilter={false}
-          onKeyDown={(e: React.KeyboardEvent) => {}}
+          onKeyDown={(e: React.KeyboardEvent) => {
+            if (
+              e.key === "Enter" &&
+              selectedSound &&
+              inputRef.current?.value === ""
+            ) {
+              e.preventDefault();
+              setPages((prevPages) => [
+                ...prevPages,
+                {
+                  name: "album",
+                  sound: selectedSound,
+                  dimensions: {
+                    width: 658,
+                    height: 658,
+                  },
+                },
+              ]);
+            }
+          }}
           loop
         >
           <Nav />

@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
-import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDragAlbumLogic";
+import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDrag/album";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { OpenAIIcon } from "@/components/icons";

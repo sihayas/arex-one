@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { useQuery } from "@tanstack/react-query";
 import { useCMDK } from "@/context/CMDKContext";
-import { useDragUserLogic } from "@/hooks/handleInteractions/useDragUserLogic";
+import { useDragUserLogic } from "@/hooks/handleInteractions/useDrag/user";
 import { useHandleSignalClick } from "@/hooks/handlePageChange/useHandleSignalClick";
 
 import {

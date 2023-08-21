@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
-import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
+import { useHandleSoundClick } from "@/hooks/handlePageChange/useHandleSoundClick";
 import { AlbumDBData } from "@/lib/global/interfaces";
 import { useCMDK } from "@/context/CMDKContext";
 
@@ -18,7 +18,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
   albumId,
   rating,
 }) => {
-  const { handleSelectAlbum } = useHandleAlbumClick();
+  const { handleSelectSound } = useHandleSoundClick();
   const imgRef = React.useRef<HTMLImageElement>(null);
 
   const { setIsVisible } = useCMDK();

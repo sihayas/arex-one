@@ -1,31 +1,30 @@
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
-import { SongData } from "@/lib/global/interfaces";
+import { AlbumData, SongData } from "@/lib/global/interfaces";
 
-export const useHandleSongClick = () => {
+export const useHandleSoundClick = () => {
   const { getDominantColor } = useDominantColor();
 
   // CMDK context
-  const { setPages, setHideSearch } = useCMDK();
+  const { setPages } = useCMDK();
   const { setSelectedSound } = useCMDKAlbum();
 
   // Set the album
-  const handleSelectSong = async (
+  const handleSelectSound = async (
     imgElement: HTMLImageElement,
-    song: SongData,
+    sound: AlbumData | SongData,
     artworkUrl: string
   ) => {
     const colors = getDominantColor(imgElement);
 
     const selectedSound = {
-      sound: song,
+      sound: sound,
       artworkUrl,
       colors,
     };
 
     setSelectedSound(selectedSound);
-    setHideSearch(true);
 
     // Switch to album page and add to memory
     setPages((prevPages) => [
@@ -43,5 +42,5 @@ export const useHandleSongClick = () => {
     window.history.pushState(null, "");
   };
 
-  return { handleSelectSong };
+  return { handleSelectSound };
 };

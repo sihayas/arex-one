@@ -124,7 +124,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
       }
     };
 
-    // Add a listener for the popstate event
+    // Add a listener for the  event
     window.addEventListener("popstate", handlePopState);
 
     // Cleanup the listener when the component unmounts
