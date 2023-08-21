@@ -52,15 +52,19 @@ export interface TrackDBData {
   reviews?: ReviewData[];
 }
 
+export interface SelectedSound {
+  sound: AlbumData | SongData;
+  artworkUrl: string;
+  colors: string[];
+}
+
 // Apple Music API response
 export interface AlbumData {
   attributes: AlbumAttributes;
   id: string;
   notes: string;
   relationships: AlbumRelationships;
-  artworkUrl: string;
-  colors: string[];
-  averageRating: number | "n/a";
+  type: string;
 }
 
 // Apple Music API response
@@ -139,11 +143,6 @@ export interface SongAttributes {
   trackNumber: number;
   url: string;
 }
-// Apple Music API response
-export interface AlbumWithRating {
-  album: AlbumData;
-  averageRating: number | "n/a";
-}
 
 // Apple Music API response
 export interface TrackData {
@@ -202,8 +201,8 @@ export interface ReviewFormInputs {
 }
 
 export interface SelectedAlbumContextType {
-  selectedAlbum: AlbumData | null;
-  setSelectedAlbum: (album: AlbumData | null) => void;
+  selectedSound: AlbumData | null;
+  setSelectedSound: (album: AlbumData | null) => void;
 }
 
 export type OnSelectAlbumCallback = () => void;

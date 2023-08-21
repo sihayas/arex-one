@@ -2,17 +2,17 @@ import React from "react";
 import { Session } from "next-auth/core/types";
 
 import { useReviewsQuery } from "@/lib/api/albumAPI";
-import { AlbumData } from "@/lib/global/interfaces";
+import { SelectedSound } from "@/lib/global/interfaces";
 import { EntryAlbum } from "./EntryAlbum";
 
 interface LowlightsProps {
-  selectedAlbum: AlbumData;
+  selectedSound: SelectedSound;
   user: Session["user"];
 }
 
-const Lowlights: React.FC<LowlightsProps> = ({ selectedAlbum, user }) => {
+const Lowlights: React.FC<LowlightsProps> = ({ selectedSound, user }) => {
   const sortOrder = "rating_low_to_high";
-  const reviewsQuery = useReviewsQuery(selectedAlbum, user, sortOrder);
+  const reviewsQuery = useReviewsQuery(selectedSound, user, sortOrder);
 
   const {
     data: reviewsData,

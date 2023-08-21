@@ -1,9 +1,9 @@
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
-import { AlbumData } from "@/lib/global/interfaces";
+import { SongData } from "@/lib/global/interfaces";
 
-export const useHandleAlbumClick = () => {
+export const useHandleSongClick = () => {
   const { getDominantColor } = useDominantColor();
 
   // CMDK context
@@ -11,15 +11,15 @@ export const useHandleAlbumClick = () => {
   const { setSelectedSound } = useCMDKAlbum();
 
   // Set the album
-  const handleSelectAlbum = async (
+  const handleSelectSong = async (
     imgElement: HTMLImageElement,
-    album: AlbumData,
+    song: SongData,
     artworkUrl: string
   ) => {
     const colors = getDominantColor(imgElement);
 
     const selectedSound = {
-      sound: album,
+      sound: song,
       artworkUrl,
       colors,
     };
@@ -43,5 +43,5 @@ export const useHandleAlbumClick = () => {
     window.history.pushState(null, "");
   };
 
-  return { handleSelectAlbum };
+  return { handleSelectSong };
 };

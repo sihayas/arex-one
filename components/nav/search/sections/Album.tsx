@@ -1,8 +1,10 @@
+import Image from "next/image";
+
+import { Command } from "cmdk";
+
 import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
 import { AlbumData } from "@/lib/global/interfaces";
-import Image from "next/image";
-import { Command } from "cmdk";
 
 const Album = ({ album }: { album: AlbumData }) => {
   const { handleSelectAlbum } = useHandleAlbumClick();
@@ -10,15 +12,14 @@ const Album = ({ album }: { album: AlbumData }) => {
 
   return (
     <Command.Item
-      className="w-full p-4 hoverable-small border-b border-silver focus:border-blue-400 focus:ring focus:ring-blue-200"
-      onClick={() =>
+      className="w-full p-4 hoverable-small border-b border-silver"
+      onSelect={() =>
         handleSelectAlbum(
           document.getElementById(album.id) as HTMLImageElement,
           album,
           artworkUrl
         )
       }
-      onMouseDown={(event) => event.preventDefault()}
     >
       <div className="flex gap-4 items-center w-full">
         <Image

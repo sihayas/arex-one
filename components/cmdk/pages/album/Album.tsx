@@ -5,7 +5,6 @@ import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDragAlbumLogic";
-import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { OpenAIIcon } from "@/components/icons";
@@ -23,34 +22,34 @@ const Album = ({ scale }: AlbumProps) => {
   // Hooks
   const { data: session } = useSession();
   const { pages } = useCMDK();
-  const { selectedAlbum } = useCMDKAlbum();
-  const { scrollContainerRef, restoreScrollPosition } = useScrollPosition();
+  const { selectedSound } = useCMDKAlbum();
+  const { scrollContainerRef } = useScrollPosition();
   const { bind, x, activeSection } = useDragAlbumLogic();
 
   const artworkUrl = generateArtworkUrl(
-    selectedAlbum!.attributes.artwork.url,
+    selectedSound!.sound.attributes.artwork.url,
     "1316"
   );
 
   const boxShadow = useMemo(() => {
-    if (selectedAlbum?.colors[0]) {
-      return `0px 0px 0px 0px ${selectedAlbum.colors[0]}, 0.11),
-        9px 11px 32px 0px ${selectedAlbum.colors[0]}, 0.11),
-        37px 45px 58px 0px ${selectedAlbum.colors[0]}, 0.09),
-        83px 100px 78px 0px ${selectedAlbum.colors[0]}, 0.05),
-        148px 178px 93px 0px ${selectedAlbum.colors[0]}, 0.02),
-        231px 279px 101px 0px ${selectedAlbum.colors[0]}, 0.00)`;
+    if (selectedSound?.colors[0]) {
+      return `0px 0px 0px 0px ${selectedSound.colors[0]}, 0.11),
+        9px 11px 32px 0px ${selectedSound.colors[0]}, 0.11),
+        37px 45px 58px 0px ${selectedSound.colors[0]}, 0.09),
+        83px 100px 78px 0px ${selectedSound.colors[0]}, 0.05),
+        148px 178px 93px 0px ${selectedSound.colors[0]}, 0.02),
+        231px 279px 101px 0px ${selectedSound.colors[0]}, 0.00)`;
     }
     return undefined;
-  }, [selectedAlbum?.colors]);
+  }, [selectedSound?.colors]);
 
   // Initialize album
-  const { data, isLoading, isError } = useAlbumQuery(selectedAlbum);
+  const { isLoading, isError } = useAlbumQuery();
 
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
 
   // Load and error handling
-  if (!selectedAlbum || isLoading) {
+  if (!selectedSound || isLoading) {
     return <div>loading...</div>; // Replace with your preferred loading state
   }
 
@@ -88,7 +87,7 @@ const Album = ({ scale }: AlbumProps) => {
             boxShadow: boxShadow,
           }}
           src={artworkUrl || "/public/images/default.png"}
-          alt={`${selectedAlbum.attributes.name} artwork`}
+          alt={`${selectedSound.sound.attributes.name} artwork`}
           width={658}
           height={658}
           onDragStart={(e) => e.preventDefault()}
@@ -107,15 +106,15 @@ const Album = ({ scale }: AlbumProps) => {
           {/* Album Details  */}
           <div className="flex flex-col gap-2 items-center justify-center">
             <p className="text-sm text-black font-medium">
-              {selectedAlbum.attributes.name}
+              {selectedSound.sound.attributes.name}
             </p>
             <p className="text-sm text-gray2">
-              {selectedAlbum.attributes.artistName}
+              {selectedSound.sound.attributes.artistName}
             </p>
           </div>
           {/* Rating  */}
           <div className="flex items-center justify-center justify-self-center w-9 h-9 border border-silver text-sm text-black rounded-full font-medium">
-            {selectedAlbum.averageRating}
+            {/* {selectedSound.sound.averageRating} */}
           </div>
 
           {/* Consensus  */}
@@ -127,7 +126,7 @@ const Album = ({ scale }: AlbumProps) => {
 
             {/* {data.album.notes ? (
               <div className="text-xs text-gray2">
-                {selectedAlbum.attributes.editorialNotes.standard}
+                {selectedSound.attributes.editorialNotes.standard}
               </div>
             ) : (
               <div className="ml-6 text-xs text-gray3">COMING SOON</div>
@@ -145,11 +144,11 @@ const Album = ({ scale }: AlbumProps) => {
         className="flex pt-[800px] gap-8 ml-[1030px] w-full"
       >
         {activeSection === 0 && (
-          <Highlights selectedAlbum={selectedAlbum!} user={session!.user} />
+          <Highlights selectedSound={selectedSound} user={session!.user} />
         )}
 
         {activeSection === 1 && (
-          <Lowlights selectedAlbum={selectedAlbum!} user={session!.user} />
+          <Lowlights selectedSound={selectedSound} user={session!.user} />
         )}
       </animated.div>
 

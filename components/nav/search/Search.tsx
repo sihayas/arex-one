@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from "react";
-import Album from "./sections/Album";
+import { AlbumData, SongData, UserData } from "@/lib/global/interfaces";
+
+import { Command } from "cmdk";
+
 import Song from "./sections/Song";
 import User from "./sections/User";
-import { Command } from "cmdk";
-import { AlbumData, SongData, UserData } from "@/lib/global/interfaces";
+import Album from "./sections/Album";
 
 interface SearchProps {
   searchData: any;
@@ -15,7 +16,6 @@ interface SearchProps {
 const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
   if (isLoading || isFetching) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
-  const listRef = useRef<HTMLDivElement | null>(null);
 
   const appleData = searchData?.appleData || {};
   const userData = searchData?.userData || {};
@@ -30,6 +30,8 @@ const Search = ({ searchData, isLoading, isFetching, error }: SearchProps) => {
     ...filteredSongs.map((song: SongData) => ({ ...song, type: "songs" })),
     ...users.map((user: UserData) => ({ ...user, type: "users" })),
   ];
+
+  console.log(allData);
 
   return (
     <Command.List className="pb-96" tabIndex={-1}>

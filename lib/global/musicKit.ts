@@ -14,7 +14,7 @@ const isUnwanted = (title: string) => {
 // Search for albums method
 export const searchAlbums = async (keyword: string) => {
   const baseURL = "https://api.music.apple.com/v1/catalog/us/search";
-  const limit = 25;
+  const limit = 12;
   const types = "albums,songs";
   const url = `${baseURL}?term=${encodeURIComponent(
     keyword
@@ -63,4 +63,16 @@ export const getAlbumsByIds = async (albumIds: string[]) => {
     },
   });
   return response.data.data;
+};
+
+// Search for an album by song ID
+export const getAlbumBySongId = async (songId: string) => {
+  const baseURL = "https://api.music.apple.com/v1/catalog/us/songs/";
+
+  const response = await axios.get(`${baseURL}${songId}/albums`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.data[0];
 };

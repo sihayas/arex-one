@@ -1,8 +1,9 @@
 import axios from "axios";
-import { AlbumData } from "../global/interfaces";
+import { SelectedSound, AlbumData } from "../global/interfaces";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { getAlbumById } from "../global/musicKit";
+import { getAlbumById, getAlbumBySongId } from "../global/musicKit";
+import { useCMDKAlbum } from "@/context/CMDKAlbum";
 
 interface UserSession {
   id: string;
@@ -15,22 +16,41 @@ export async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/post/album`, album);
   return response.data;
 }
-export function useAlbumQuery(selectedAlbum: AlbumData | null) {
+// Fetch detailed album data
+export function useAlbumQuery() {
+  const { selectedSound, setSelectedSound } = useCMDKAlbum();
+
   return useQuery(
-    ["album", selectedAlbum?.id],
+    ["album", selectedSound?.sound.id],
     async () => {
-      if (selectedAlbum) {
-        // If relationships attribute doesn't exist, fetch detailed info
-        if (!selectedAlbum.relationships) {
-          const detailedAlbum = await getAlbumById(selectedAlbum.id);
+      if (selectedSound) {
+        // If selected sound is a song, grab detailed album data to pass to Album page.
+        if (selectedSound.sound.type === "songs") {
+          const detailedAlbum = await getAlbumBySongId(selectedSound.sound.id);
+          setSelectedSound({
+            ...selectedSound,
+            sound: detailedAlbum,
+          });
           return initializeAlbum(detailedAlbum);
         }
-        return initializeAlbum(selectedAlbum);
+        // If selected sound is an album without relationships, grab detailed album data.
+        else if (selectedSound.sound.type === "albums") {
+          const albumData = selectedSound.sound as AlbumData;
+
+          if (!albumData.relationships) {
+            const detailedAlbum = await getAlbumById(albumData.id);
+            setSelectedSound({
+              ...selectedSound,
+              sound: detailedAlbum,
+            });
+            return initializeAlbum(detailedAlbum);
+          }
+        }
       }
       return Promise.resolve({});
     },
     {
-      enabled: !!selectedAlbum,
+      enabled: !!selectedSound,
     }
   );
 }
@@ -52,12 +72,12 @@ export async function fetchReviews({
 }
 
 export function useReviewsQuery(
-  selectedAlbum: AlbumData,
+  selectedSound: SelectedSound,
   user: UserSession,
   sortOrder: string
 ) {
   return useInfiniteQuery(
-    ["reviews", selectedAlbum.id, user.id, sortOrder],
+    ["reviews", selectedSound.sound.id, user.id, sortOrder],
     ({ pageParam, queryKey }) =>
       fetchReviews({
         pageParam,
@@ -68,7 +88,7 @@ export function useReviewsQuery(
       getNextPageParam: (lastPage, pages) => {
         return lastPage.length === 10 ? pages.length + 1 : false;
       },
-      enabled: !!selectedAlbum,
+      enabled: !!selectedSound,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
         toast.success("loaded reviews");

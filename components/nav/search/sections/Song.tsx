@@ -1,15 +1,25 @@
-import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import { useHandleAlbumClick } from "@/hooks/handlePageChange/useHandleAlbumClick";
-import { SongData } from "@/lib/global/interfaces";
 import Image from "next/image";
+
 import { Command } from "cmdk";
+
+import { SongData } from "@/lib/global/interfaces";
+import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import { useHandleSongClick } from "@/hooks/handlePageChange/useHandleSongClick";
 
 const Song = ({ song }: { song: SongData }) => {
   const artworkUrl = generateArtworkUrl(song.attributes.artwork.url, "90");
+  const { handleSelectSong } = useHandleSongClick();
 
   return (
     <Command.Item
-      className="w-full p-4 hoverable-small border-b border-silver focus:border-blue-400 focus:ring focus:ring-blue-200"
+      className="w-full p-4 hoverable-small border-b border-silver"
+      onSelect={() =>
+        handleSelectSong(
+          document.getElementById(song.id) as HTMLImageElement,
+          song,
+          artworkUrl
+        )
+      }
       key={song.id}
     >
       <div className="flex gap-4 items-center w-full">

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
 import GetSearchResults from "@/lib/api/searchAPI";
-// import TextareaAutosize from "react-textarea-autosize";
 import { useSpring, animated } from "@react-spring/web";
 import { debounce } from "lodash";
 import { Command } from "cmdk";

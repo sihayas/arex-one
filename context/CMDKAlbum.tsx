@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
-import { AlbumData } from "../lib/global/interfaces";
+import { SelectedSound } from "../lib/global/interfaces";
 
 export type AlbumDetailsContextType = {
-  selectedAlbum: AlbumData | null;
-  setSelectedAlbum: React.Dispatch<React.SetStateAction<AlbumData | null>>;
+  selectedSound: SelectedSound | null;
+  setSelectedSound: React.Dispatch<React.SetStateAction<SelectedSound | null>>;
 };
 
 type AlbumDetailsProviderProps = {
@@ -26,13 +26,15 @@ export const useCMDKAlbum = (): AlbumDetailsContextType => {
 export const AlbumDetailsProvider = ({
   children,
 }: AlbumDetailsProviderProps) => {
-  const [selectedAlbum, setSelectedAlbum] = useState<AlbumData | null>(null);
+  const [selectedSound, setSelectedSound] = useState<SelectedSound | null>(
+    null
+  );
 
   return (
     <AlbumDetailsContext.Provider
       value={{
-        selectedAlbum,
-        setSelectedAlbum,
+        selectedSound,
+        setSelectedSound,
       }}
     >
       {children}

@@ -23,19 +23,19 @@ export const Entry = ({ translateY }: EntryProps) => {
   // Context
   const { activePage } = useCMDK();
   const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
-  const { selectedAlbum } = useCMDKAlbum();
+  const { selectedSound } = useCMDKAlbum();
 
   const boxShadow = useMemo(() => {
-    if (selectedAlbum?.colors[0]) {
-      return `0px 0px 0px 0px ${selectedAlbum.colors[0]}, 0.11),
-        9px 11px 32px 0px ${selectedAlbum.colors[0]}, 0.11),
-        37px 45px 58px 0px ${selectedAlbum.colors[0]}, 0.09),
-        83px 100px 78px 0px ${selectedAlbum.colors[0]}, 0.05),
-        148px 178px 93px 0px ${selectedAlbum.colors[0]}, 0.02),
-        231px 279px 101px 0px ${selectedAlbum.colors[0]}, 0.00)`;
+    if (selectedSound?.colors[0]) {
+      return `0px 0px 0px 0px ${selectedSound.colors[0]}, 0.11),
+        9px 11px 32px 0px ${selectedSound.colors[0]}, 0.11),
+        37px 45px 58px 0px ${selectedSound.colors[0]}, 0.09),
+        83px 100px 78px 0px ${selectedSound.colors[0]}, 0.05),
+        148px 178px 93px 0px ${selectedSound.colors[0]}, 0.02),
+        231px 279px 101px 0px ${selectedSound.colors[0]}, 0.00)`;
     }
     return undefined;
-  }, [selectedAlbum?.colors]);
+  }, [selectedSound?.colors]);
 
   const firstThreadcrumb = activePage.threadcrumbs?.[0];
 
@@ -89,7 +89,7 @@ export const Entry = ({ translateY }: EntryProps) => {
           boxShadow: boxShadow,
         }}
         src={artworkUrl || "/public/images/default.png"}
-        alt={`${selectedAlbum?.attributes.name} artwork`}
+        alt={`${selectedSound?.attributes.name} artwork`}
         width={516}
         height={516}
         onDragStart={(e) => e.preventDefault()}

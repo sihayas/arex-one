@@ -3,15 +3,16 @@ import { useReviewsQuery } from "@/lib/api/albumAPI";
 import { AlbumData } from "@/lib/global/interfaces";
 import { EntryAlbum } from "./EntryAlbum";
 import { Session } from "next-auth/core/types";
+import { SelectedSound } from "@/lib/global/interfaces";
 
 interface HighlightsProps {
-  selectedAlbum: AlbumData;
+  selectedSound: SelectedSound;
   user: Session["user"];
 }
 
-const Highlights: React.FC<HighlightsProps> = ({ selectedAlbum, user }) => {
+const Highlights: React.FC<HighlightsProps> = ({ selectedSound, user }) => {
   const sortOrder = "rating_high_to_low";
-  const reviewsQuery = useReviewsQuery(selectedAlbum, user, sortOrder);
+  const reviewsQuery = useReviewsQuery(selectedSound, user, sortOrder);
 
   const {
     data: reviewsData,

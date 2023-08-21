@@ -11,7 +11,7 @@ import { useCMDK } from "@/context/CMDKContext";
 import { animated, useSpring, useTransition } from "@react-spring/web";
 import { useDrag, useScroll } from "@use-gesture/react";
 import { Command } from "cmdk";
-import NavBar from "@/components/nav/Nav";
+import Nav from "@/components/nav/Nav";
 
 import Album from "./pages/album/Album";
 import Form from "./pages/form/Form";
@@ -65,7 +65,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     prevPageCount,
     setPrevPageCount,
   } = useCMDK();
-  const { setSelectedAlbum } = useCMDKAlbum();
+  const { setSelectedSound } = useCMDKAlbum();
 
   //Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -263,11 +263,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Adjust album context when navigating to an album page
   useEffect(() => {
-    if (activePage.name === "album" && activePage.album) {
-      setSelectedAlbum(activePage.album);
+    if (activePage.name === "album" && activePage.selectedSound) {
+      setSelectedSound(activePage.selectedSound);
     }
     console.log(pages);
-  }, [activePage, setSelectedAlbum, pages]);
+  }, [activePage, setSelectedSound, pages]);
 
   const transitions = useTransition(ActiveComponent, {
     from: { opacity: 0, blur: 5 },
@@ -313,8 +313,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           ref={ref}
           shouldFilter={false}
           onKeyDown={(e: React.KeyboardEvent) => {}}
+          loop
         >
-          <NavBar />
+          <Nav />
           {/* Container / Shapeshifter */}
           <animated.div
             {...dragBind()} // Shapeshifter dragging

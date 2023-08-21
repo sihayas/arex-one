@@ -5,12 +5,12 @@ import React, {
   useMemo,
   useEffect,
 } from "react";
-import { AlbumData } from "@/lib/global/interfaces";
+import { AlbumData, SelectedSound } from "@/lib/global/interfaces";
 
 // Define the shape of the Page data type
 export type Page = {
   name: string;
-  album?: AlbumData;
+  selectedSound?: SelectedSound;
   threadcrumbs?: string[];
   user?: string;
   scrollPosition?: number;

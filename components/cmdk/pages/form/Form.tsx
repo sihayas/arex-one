@@ -19,11 +19,11 @@ export default function Form() {
   const { data: session } = useSession();
   const userId = session?.user.id;
 
-  const { selectedAlbum } = useCMDKAlbum();
+  const { selectedSound } = useCMDKAlbum();
 
   const hasReviewed = useQuery(
-    ["userReview", selectedAlbum?.id, userId],
-    () => (userId ? fetchUserReview(selectedAlbum!.id, userId) : null),
+    ["userReview", selectedSound?.id, userId],
+    () => (userId ? fetchUserReview(selectedSound!.id, userId) : null),
     {
       retry: 1,
       refetchOnWindowFocus: false,
@@ -59,8 +59,8 @@ export default function Form() {
         entryText,
         hasReviewed,
         userId,
-        selectedAlbum?.id,
-        selectedAlbum?.attributes.name
+        selectedSound?.id,
+        selectedSound?.attributes.name
       ),
       {
         loading: "Submitting review...",
@@ -79,8 +79,8 @@ export default function Form() {
       <div className="flex w-full h-full">
         <Image
           className="rounded-2xl rounded-tr-none rounded-br-none"
-          src={selectedAlbum?.artworkUrl || `/images/placeholder.png`}
-          alt={`${selectedAlbum?.attributes.name} artwork`}
+          src={selectedSound?.artworkUrl || `/images/placeholder.png`}
+          alt={`${selectedSound?.attributes.name} artwork`}
           width={480}
           height={480}
           draggable="false"
@@ -89,8 +89,8 @@ export default function Form() {
           {/* Names */}
           <div className="flex items-center justify-center">
             <div className="text-xs text-grey">
-              {selectedAlbum?.attributes.name} -{" "}
-              {selectedAlbum?.attributes.artistName}
+              {selectedSound?.attributes.name} -{" "}
+              {selectedSound?.attributes.artistName}
             </div>
           </div>
           <div className="-mt-4">
