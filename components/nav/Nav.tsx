@@ -20,17 +20,12 @@ const Nav: React.FC = () => {
   const { selectedSound } = useCMDKAlbum();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [rating, setRating] = useState(0);
-
   const debouncedSetSearchQuery = debounce(setSearchQuery, 350);
 
   const handleNavTextChange = (value: string) => {
     setInputValue(value);
+    console.log("Input value changed to:", value);
     debouncedSetSearchQuery(value);
-  };
-
-  const handleRatingChange = (rating: number) => {
-    setRating(rating);
   };
 
   // Get search results based on debounced search query
@@ -93,7 +88,7 @@ const Nav: React.FC = () => {
                 error={error}
               />
             ) : (
-              <Form inputValue={inputValue} />
+              <Form />
             )}
           </animated.div>
 

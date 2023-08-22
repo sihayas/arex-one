@@ -132,7 +132,6 @@ model Review {
   loved     Boolean   @default(false)
   replay    Boolean   @default(false)
   content   String?   @db.MediumText
-  listened  Boolean   @default(true)
   likes     Like[]
   replies   Reply[]
   published Boolean   @default(false)

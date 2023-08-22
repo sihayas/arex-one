@@ -1,90 +1,74 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../lib/global/prisma";
 import { createReviewActivity } from "@/lib/middleware/createActivity";
-import { createNotificationForFollowers } from "@/lib/middleware/createNotification";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "POST") {
-    const {
-      listened,
-      rating,
-      loved,
-      reviewText,
-      isReReview,
-      authorId,
-      albumId,
-    } = req.body;
+  if (req.method !== "POST") {
+    console.log("Method not allowed:", req.method);
+    return res.status(405).json({ error: "Method not allowed." });
+  }
 
-    const album = await prisma.album.findUnique({
-      where: {
-        id: albumId,
-      },
-    });
+  const { rating, loved, content, replay, userId, albumId, songId } = req.body;
 
-    try {
-      const actualIsReReview =
-        isReReview ||
-        (await prisma.review.count({
-          where: {
-            authorId: authorId,
-            albumId: albumId,
-          },
-        })) > 0;
+  try {
+    const result = await prisma.$transaction(async (prisma) => {
+      let reviewData: any = {
+        loved,
+        rating,
+        content,
+        replay,
+        author: { connect: { id: userId } },
+        permalink: "",
+      };
+
+      if (albumId) {
+        reviewData.album = { connect: { id: albumId } };
+      }
+
+      if (songId) {
+        reviewData.track = { connect: { id: songId } }; // Assuming you have a song relationship in your schema
+      }
 
       const newReview = await prisma.review.create({
-        data: {
-          listened,
-          loved,
-          rating,
-          content: reviewText,
-          replay: actualIsReReview,
-          author: { connect: { id: authorId } },
-          album: { connect: { id: albumId } },
-          permalink: "", // Initially created with empty permalink
-        },
+        data: reviewData,
       });
 
-      // Update the review with its ID as permalink after creation
+      // Update the review with its ID as permalink
       const updatedReview = await prisma.review.update({
         where: { id: newReview.id },
         data: { permalink: `review/${newReview.id}` },
       });
 
-      // Increment the album's lovedCount
-      if (loved) {
+      if (albumId) {
+        // Increment the album's lovedCount and reviewsCount
         await prisma.album.update({
           where: { id: albumId },
-          data: { lastUpdated: new Date(), lovedCount: { increment: 1 } },
-        });
-      } else {
-        await prisma.album.update({
-          where: { id: albumId },
-          data: { lastUpdated: new Date() },
+          data: {
+            lastUpdated: new Date(),
+            lovedCount: loved ? { increment: 1 } : undefined,
+            reviewsCount: { increment: 1 },
+          },
         });
       }
 
-      // Update reviews count
-      await prisma.album.update({
-        where: { id: albumId },
-        data: { reviewsCount: { increment: 1 } },
-      });
+      // Additional logic for song updates can be added here
 
-      // Feed the review into the activity pipeline
-      try {
-        await createReviewActivity(newReview.id);
-      } catch (error) {
-        console.error("Failed to create activity:", error);
-      }
+      return updatedReview;
+    });
 
-      res.status(201).json(updatedReview);
+    // Feed the review into the activity pipeline
+    try {
+      await createReviewActivity(result.id);
     } catch (error) {
-      console.error("Failed to create review:", error);
-      res.status(500).json({ error: "Failed to create review." });
+      console.error("Failed to create activity:", error);
     }
-  } else {
-    res.status(405).json({ error: "Method not allowed." });
+
+    res.status(201).json(result);
+  } catch (error) {
+    console.error("Failed to create review:", error);
+    res.status(500).json({ error: "Failed to create review." });
   }
 }

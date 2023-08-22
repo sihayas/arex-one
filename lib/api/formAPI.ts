@@ -1,10 +1,10 @@
 import axios from "axios";
 
 // Fetch user review for the album and signed-in user
-export const fetchUserReview = async (albumId: string, userId: string) => {
+export const fetchUserReview = async (soundId: string, userId: string) => {
   try {
     const response = await axios.get(
-      `/api/review/formCheck?albumId=${albumId}&userId=${userId}`
+      `/api/review/formCheck?albumId=${soundId}&userId=${userId}`
     );
     return response.data.exists;
   } catch (error) {
@@ -13,27 +13,21 @@ export const fetchUserReview = async (albumId: string, userId: string) => {
   }
 };
 
-export const postReview = async (
-  listened: boolean,
-  rating: number,
-  loved: boolean,
-  reviewText: string,
-  isReReview: boolean,
-  authorId: string | undefined,
-  albumId: string | undefined,
-  albumName: string | undefined
-) => {
+export const postReview = async (submissionData: {
+  rating: number;
+  loved: boolean;
+  content: string;
+  replay: boolean;
+  userId: string | undefined;
+  albumId: string | undefined;
+  songId: string | undefined;
+}) => {
   try {
-    const response = await axios.post("/api/review/post/review", {
-      listened,
-      rating,
-      loved,
-      reviewText,
-      isReReview,
-      authorId,
-      albumId,
-      albumName,
-    });
+    console.log("Posting review...", submissionData);
+    const response = await axios.post(
+      "/api/review/post/review",
+      submissionData
+    );
 
     if (response.status === 201) {
       console.log("Review submitted successfully", response.data);

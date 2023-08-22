@@ -23,9 +23,6 @@ const Dial = ({ setRatingValue }: DialProps) => {
     } else if (e.key === "ArrowDown" && ratingIndex > 0) {
       setRatingIndex((prev) => prev - 1);
     }
-    // } else if (e.key === "Enter") {
-    //   inputRef.current && inputRef.current.focus();
-    // }
   };
 
   useEffect(() => {
