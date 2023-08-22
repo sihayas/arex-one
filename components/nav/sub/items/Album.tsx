@@ -12,6 +12,7 @@ const Album = ({ album }: { album: AlbumData }) => {
 
   return (
     <Command.Item
+      onMouseDown={(e) => e.preventDefault()}
       className="w-full p-4 hoverable-small border-b border-silver"
       onSelect={() =>
         handleSelectSearch(

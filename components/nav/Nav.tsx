@@ -11,19 +11,26 @@ import TextareaAutosize from "react-textarea-autosize";
 import Search from "./sub/Search";
 import Avatar from "./Avatar";
 import Form from "./sub/Form";
+import Dial from "./sub/items/Dial";
 
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
-  const { inputValue, setInputValue, expandInput, setExpandInput } = useCMDK();
+  const { inputValue, setInputValue, expandInput, setExpandInput, inputRef } =
+    useCMDK();
   const { selectedSound } = useCMDKAlbum();
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [rating, setRating] = useState(0);
 
   const debouncedSetSearchQuery = debounce(setSearchQuery, 350);
 
   const handleNavTextChange = (value: string) => {
     setInputValue(value);
     debouncedSetSearchQuery(value);
+  };
+
+  const handleRatingChange = (rating: number) => {
+    setRating(rating);
   };
 
   // Get search results based on debounced search query
@@ -36,13 +43,13 @@ const Nav: React.FC = () => {
         ? !selectedSound
           ? "500"
           : selectedSound.sound.type === "songs"
-          ? "128px"
+          ? "120px"
           : selectedSound.sound.type === "albums"
           ? "562px"
           : "0px"
         : "0px",
     from: { height: "36px" },
-    config: { tension: 975, friction: 70 },
+    config: { tension: 675, friction: 70 },
   });
 
   const onFocus = useCallback(() => {
@@ -70,10 +77,12 @@ const Nav: React.FC = () => {
   if (session) {
     left = (
       // Search
-      <div className="flex flex-col ">
+      <div className="flex flex-col">
         <div className="absolute h-fit flex flex-col justify-end bottom-[54px] right-0 w-[502px] bg-nav backdrop-blur-xl rounded-[22px] shadow-nav">
           <animated.div
-            className={`flex flex-col overflow-y-scroll scrollbar-none relative`}
+            className={`flex flex-col relative ${
+              selectedSound ? "overflow-visible" : "overflow-scroll"
+            }`}
             style={searchStyle}
           >
             {!selectedSound ? (
@@ -88,16 +97,24 @@ const Nav: React.FC = () => {
             )}
           </animated.div>
 
-          <TextareaAutosize
-            id="entryText"
-            className="w-full bg-transparent text-black text-sm focus:outline-none hoverable-medium resize-none px-4 py-2"
-            placeholder="&deg; search"
-            value={inputValue}
-            onChange={(e) => handleNavTextChange(e.target.value)}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            // ref={inputRef}
-          />
+          {/* Input */}
+          <div
+            className={`${
+              //Make space for the dial
+              selectedSound ? "ml-10" : "translate-x-0"
+            } transition-all  p-4 py-3 flex items-center`}
+          >
+            <TextareaAutosize
+              id="entryText"
+              className={`w-full bg-transparent text-violet text-sm focus:outline-none hoverable-medium resize-none`}
+              placeholder={`${selectedSound ? "type to log" : "rx"}`}
+              value={inputValue}
+              onChange={(e) => handleNavTextChange(e.target.value)}
+              onBlur={onBlur}
+              onFocus={onFocus}
+              ref={inputRef}
+            />
+          </div>
         </div>
 
         {/* Circles */}

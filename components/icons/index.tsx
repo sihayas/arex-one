@@ -1,54 +1,3 @@
-export function StarIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      data-name="Layer 1"
-      viewBox="0 0 32 32"
-      {...props}
-    >
-      <path
-        fill={props.color}
-        d="M16.5.7C16.5 12.3 12.5 16 1 16c11.6 0 15.5 3.9 15.5 15.4 0-11.5 3.8-15.4 15.4-15.4C20.3 16 16.5 12.2 16.5.6Z"
-      />
-    </svg>
-  );
-}
-
-export function PlayIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 16 16"
-      width={16}
-      height={16}
-      {...props}
-    >
-      <path
-        fill={props.color}
-        stroke={props.color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M4.6 3a.4.4 0 0 0-.6.4v9.2a.4.4 0 0 0 .6.4l7.8-4.7a.4.4 0 0 0 0-.6L4.6 3Z"
-      />
-    </svg>
-  );
-}
-
-export function ReplayStaticIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 72 72"
-      {...props}
-      fill={props.color}
-    >
-      <path d="M36 12c-4 0-7.7 1-11 2.7a4 4 0 0 0-1.3 6c1.2 1.5 3.2 2 5 1.1A16 16 0 0 1 51.8 34h-3a1.8 1.8 0 0 0-1.6 2.9l7.2 10.3c.7 1.1 2.3 1.1 3 0L64.7 37c.8-1.2 0-2.9-1.5-2.9h-3.3A24 24 0 0 0 36 12zM16 24c-.6 0-1.1.2-1.5.8L7.3 35c-.8 1.2 0 2.9 1.5 2.9h3.3A24 24 0 0 0 47 57.3a4 4 0 0 0 1.3-6 3.9 3.9 0 0 0-5-1.1A16 16 0 0 1 20.2 38h3c1.5 0 2.4-1.7 1.6-2.9l-7.2-10.3c-.4-.6-1-.8-1.5-.8z" />
-    </svg>
-  );
-}
-
 export function LoveIcon({ ...props }) {
   return (
     <svg
@@ -83,86 +32,6 @@ export function AsteriskIcon({ ...props }) {
   );
 }
 
-export function StarsIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      data-name="Layer 1"
-      viewBox="0 0 32 32"
-      {...props}
-    >
-      <path
-        fill={props.color}
-        d="M12.8 30.6a.6.6 0 0 1-.6-.6c0-8.6-2-10.5-10.5-10.5a.6.6 0 1 1 0-1.2c8.6 0 10.5-2 10.5-10.6a.6.6 0 1 1 1.2 0c0 8.6 2 10.6 10.6 10.6a.6.6 0 1 1 0 1.2c-8.6 0-10.6 2-10.6 10.5a.6.6 0 0 1-.6.6ZM7.6 19a6.7 6.7 0 0 1 5.2 5.2A6.7 6.7 0 0 1 18 19a6.7 6.7 0 0 1-5.2-5.2A6.7 6.7 0 0 1 7.6 19ZM30.3 7c-4.3 0-5.2-1-5.2-5.3a.6.6 0 1 0-1.2 0c0 4.4-1 5.3-5.3 5.3a.6.6 0 0 0 0 1.2c4.4 0 5.3.9 5.3 5.2a.6.6 0 0 0 1.2 0c0-4.3.9-5.2 5.2-5.2a.6.6 0 1 0 0-1.2Z"
-      />
-    </svg>
-  );
-}
-
-export function HomeIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      className="prefix__icon prefix__icon-tabler prefix__icon-tabler-circle-dotted absolute left-6 z-10"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" />
-      <path d="M7.5 4.2h0M4.2 7.5h0M3 12h0M4.2 16.5h0M7.5 19.8h0M12 21h0M16.5 19.8h0M19.8 16.5h0M21 12h0M19.8 7.5h0M16.5 4.2h0M12 3h0" />
-    </svg>
-  );
-}
-
-export function FavoritesIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      {...props}
-      className="shadow-low rounded-full"
-    >
-      <rect width={24} height={24} fill="#fff" rx={12} />
-      <path
-        fill={props.color}
-        d="M10 8c-.2 1.5-.2 2.4-.6 3-.6.8-1.6.8-3.4 1 1.8.2 2.8.3 3.4 1 .4.6.5 1.5.6 3 .2-2 .3-3 1.1-3.5.6-.3 1.5-.3 2.9-.5-1.7-.2-2.7-.3-3.3-.8-.5-.6-.5-1.5-.7-3.2Zm5-2c-.1 1.1-.2 1.8-.4 2.3-.5.5-1.2.6-2.6.7 1.4.2 2 .2 2.5.7.3.5.4 1.2.5 2.3.2-1.5.2-2.2.8-2.6.5-.2 1.2-.3 2.2-.4-1.3-.2-2-.2-2.4-.6C15.2 8 15 7.2 15 6Zm-1 8c0 .7-.1 1.2-.3 1.5-.3.4-.8.4-1.7.5.9.1 1.4.1 1.7.5.2.3.2.8.3 1.5.1-1 .1-1.5.6-1.7.3-.2.7-.2 1.4-.3-.8-.1-1.3-.1-1.6-.4-.3-.3-.3-.8-.4-1.6Z"
-      />
-    </svg>
-  );
-}
-
-export function HistoryIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      {...props}
-      className="shadow-low rounded-full"
-    >
-      <rect width={24} height={24} fill="#fff" rx={12} />
-      <path fill={props.color} d="m14 14 1.6 1.1V9L14 10" />
-      <path
-        stroke={props.color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m14 14 1.6 1.1V9L14 10"
-      />
-      <path
-        fill={props.color}
-        stroke={props.color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m8.4 12 4.2-3.1V15l-4.2-3Z"
-      />
-    </svg>
-  );
-}
 export function StarOneIcon({ ...props }) {
   return (
     <svg
@@ -328,6 +197,40 @@ export function SmallAviCap({ ...props }) {
         strokeLinejoin="round"
         strokeWidth={2}
         d="M28 13a12 12 0 1 1-24 0"
+      />
+    </svg>
+  );
+}
+
+export function ArrowIcon({ ...props }) {
+  return (
+    <svg
+      className={props.className}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 16 16"
+      {...props}
+    >
+      <path
+        fill={props.color}
+        d="M10.5 4a.5.5 0 0 1-.1.4L6.7 8l3.7 3.6a.5.5 0 1 1-.8.8l-4-4a.5.5 0 0 1 0-.8l4-4a.5.5 0 0 1 .9.4Z"
+      />
+    </svg>
+  );
+}
+
+export function SendIcon({ ...props }) {
+  return (
+    <svg
+      className={props.className}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 16 16"
+      {...props}
+    >
+      <path
+        fill={props.color}
+        d="M14.9 8.9 1.5 14.4a.7.7 0 0 1-.7 0 .8.8 0 0 1-.3-.7v-3.5a.8.8 0 0 1 .6-.7L8.4 8a.1.1 0 0 0 0-.2L1 6.5a.8.8 0 0 1-.6-.7V2.2a.7.7 0 0 1 .7-.7h.3L15 7.2A1 1 0 0 1 15 9Z"
       />
     </svg>
   );

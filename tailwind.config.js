@@ -19,7 +19,8 @@ module.exports = {
           "0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px 0px rgba(0, 0, 0, 0.02), 0px 2px 1px 0px rgba(0, 0, 0, 0.00), 0px 4px 1px 0px rgba(0, 0, 0, 0.00);",
         rating: "0px 0px 10px 0px rgba(0, 0, 0, 0.08);",
         index: "0px 1px 5px 0px rgba(0, 0, 0, 0.25)",
-        album: "0px 0px 14px 0px rgba(0, 0, 0, 0.15);",
+        album:
+          "0px 0px 0px 0px rgba(0, 0, 0, 0.11), 0px 6px 14px 0px rgba(0, 0, 0, 0.11), 0px 26px 26px 0px rgba(0, 0, 0, 0.10), 0px 58px 35px 0px rgba(0, 0, 0, 0.06), 0px 103px 41px 0px rgba(0, 0, 0, 0.02), 0px 161px 45px 0px rgba(0, 0, 0, 0.00)",
       },
       colors: {
         black: "#333333",
@@ -34,6 +35,7 @@ module.exports = {
         cursor: "rgba(108, 108, 108, 0.5)",
         red: "#FF0000",
         nav: "rgba(240, 240, 240, 0.65)",
+        violet: "rgb(75,61,103)",
       },
       fontFamily: {
         baskerville: ["Baskerville", "serif"],

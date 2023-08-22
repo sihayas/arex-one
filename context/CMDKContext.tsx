@@ -36,7 +36,7 @@ export type CMDKContextType = {
   previousPage: Page | null;
   prevPageCount: number;
   setPrevPageCount: React.Dispatch<React.SetStateAction<number>>;
-  inputRef: React.MutableRefObject<HTMLInputElement | null>;
+  inputRef: React.MutableRefObject<HTMLTextAreaElement | null>;
   inputValue: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   storedInputValue: string;
@@ -69,7 +69,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
 
   // Page states
   const [pages, setPages] = useState<Page[]>([

@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { useCMDKAlbum } from "@/context/CMDKAlbum";
 
 const GetSearchResults = (searchQuery: string) => {
+  const { selectedSound } = useCMDKAlbum();
   const { data, isInitialLoading, isFetching, error } = useQuery(
     ["albums", searchQuery],
     () =>
@@ -8,7 +10,7 @@ const GetSearchResults = (searchQuery: string) => {
         res.json()
       ),
     {
-      enabled: searchQuery.length > 0, // Query will not run if searchQuery is empty
+      enabled: !selectedSound, // Query will not run if searchQuery is empty
       retry: false,
       refetchOnWindowFocus: false,
     }
