@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useCMDK } from "@/context/CMDKContext";
@@ -6,7 +6,6 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import GetSearchResults from "@/lib/api/searchAPI";
 import { useSpring, animated } from "@react-spring/web";
 import { debounce } from "lodash";
-import { Command } from "cmdk";
 import TextareaAutosize from "react-textarea-autosize";
 
 import Search from "./sub/Search";
@@ -15,12 +14,12 @@ import Form from "./sub/Form";
 
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
-  const { selectedSound, setSelectedSound } = useCMDKAlbum();
-  const { inputRef, inputValue, setInputValue } = useCMDK();
+  const { inputValue, setInputValue, expandInput, setExpandInput } = useCMDK();
+  const { selectedSound } = useCMDKAlbum();
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const debouncedSetSearchQuery = debounce(setSearchQuery, 300);
+  const debouncedSetSearchQuery = debounce(setSearchQuery, 350);
 
   const handleNavTextChange = (value: string) => {
     setInputValue(value);
@@ -33,18 +32,26 @@ const Nav: React.FC = () => {
 
   const searchStyle = useSpring({
     height:
-      (session && data && inputValue.length > 0) || selectedSound
+      (data.length !== 0 && expandInput) || selectedSound
         ? !selectedSound
           ? "500"
           : selectedSound.sound.type === "songs"
           ? "128px"
           : selectedSound.sound.type === "albums"
-          ? "502px"
+          ? "562px"
           : "0px"
         : "0px",
     from: { height: "36px" },
     config: { tension: 975, friction: 70 },
   });
+
+  const onFocus = useCallback(() => {
+    setExpandInput(true);
+  }, [setExpandInput]);
+
+  const onBlur = useCallback(() => {
+    setExpandInput(false);
+  }, [setExpandInput]);
 
   let left;
 
@@ -63,10 +70,10 @@ const Nav: React.FC = () => {
   if (session) {
     left = (
       // Search
-      <div className="flex flex-col relative ">
-        <div className="absolute h-fit flex flex-col justify-end bottom-[54px] right-0 w-[502px] bg-nav bg-opacity-50 backdrop-blur-xl rounded-[22px] shadow-nav">
+      <div className="flex flex-col ">
+        <div className="absolute h-fit flex flex-col justify-end bottom-[54px] right-0 w-[502px] bg-nav backdrop-blur-xl rounded-[22px] shadow-nav">
           <animated.div
-            className={`flex flex-col overflow-y-scroll scrollbar-none`}
+            className={`flex flex-col overflow-y-scroll scrollbar-none relative`}
             style={searchStyle}
           >
             {!selectedSound ? (
@@ -81,13 +88,15 @@ const Nav: React.FC = () => {
             )}
           </animated.div>
 
-          <Command.Input
+          <TextareaAutosize
             id="entryText"
-            className={`w-full bg-transparent text-black text-sm focus:outline-none hoverable-medium resize-none px-4 py-2`}
+            className="w-full bg-transparent text-black text-sm focus:outline-none hoverable-medium resize-none px-4 py-2"
             placeholder="&deg; search"
             value={inputValue}
-            onValueChange={handleNavTextChange}
-            ref={inputRef}
+            onChange={(e) => handleNavTextChange(e.target.value)}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            // ref={inputRef}
           />
         </div>
 

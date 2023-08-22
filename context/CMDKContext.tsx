@@ -28,8 +28,8 @@ export type CMDKContextType = {
   setSelectedReviewId: React.Dispatch<React.SetStateAction<string | null>>;
   pages: Page[];
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
-  hideSearch: boolean;
-  setHideSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  expandInput: boolean;
+  setExpandInput: React.Dispatch<React.SetStateAction<boolean>>;
   activePage: Page;
   navigateBack: (pageNumber?: number) => void;
   resetPage: () => void;
@@ -39,6 +39,8 @@ export type CMDKContextType = {
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   inputValue: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
+  storedInputValue: string;
+  setStoredInputValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
 // Define the props for the CMDKProvider component
@@ -64,8 +66,9 @@ export const useCMDK = (): CMDKContextType => {
 export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   // Visiblity states
   const [isVisible, setIsVisible] = useState(false);
-  const [hideSearch, setHideSearch] = useState(true);
+  const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [storedInputValue, setStoredInputValue] = useState("");
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   // Page states
@@ -76,7 +79,6 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
 
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
-  // Use memoization for performance optimization, this will prevent unnecessary re-renders
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
     () => pages[pages.length - 2] || { name: "feed", width: 566, height: 1084 },
@@ -84,7 +86,6 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
   );
   const [isNavigating, setIsNavigating] = useState(false);
 
-  // Update your navigateBack function
   const navigateBack = useCallback(
     (pageNumber: number = 1) => {
       if (isNavigating) return;
@@ -110,7 +111,6 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
     [isNavigating]
   );
 
-  // Reset the pages to the index page
   const resetPage = useCallback(() => {
     setPages([{ name: "index", dimensions: { width: 922, height: 600 } }]);
   }, [setPages]);
@@ -143,8 +143,8 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         setSelectedReviewId,
         pages,
         setPages,
-        hideSearch,
-        setHideSearch,
+        expandInput,
+        setExpandInput,
         activePage,
         navigateBack,
         resetPage,
@@ -154,6 +154,8 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
         inputRef,
         inputValue,
         setInputValue,
+        storedInputValue,
+        setStoredInputValue,
       }}
     >
       {children}

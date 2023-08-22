@@ -53,26 +53,26 @@ const componentMap: Record<string, React.ComponentType<any>> = {
 };
 
 export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
-  //Context stuff
   const {
     pages,
-    hideSearch,
-    setHideSearch,
     activePage,
     navigateBack,
     previousPage,
     setPages,
     prevPageCount,
     setPrevPageCount,
-    inputRef,
+    inputValue,
+    setInputValue,
+    storedInputValue,
+    setStoredInputValue,
   } = useCMDK();
   const { selectedSound, setSelectedSound } = useCMDKAlbum();
 
-  //Element refs
+  // Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
   const shapeshifterContainerRef = useRef<HTMLDivElement | null>(null);
 
-  //Page Tracker
+  // Page Tracker
   const ActiveComponent = componentMap[activePage.name] || Index;
 
   // Shapeshift dimensions
@@ -295,13 +295,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     setPrevPageCount(pages.length);
   }, [pages.length, prevPageCount, shapeshifterContainerRef, setPrevPageCount]);
 
-  const onFocus = useCallback(() => {
-    setHideSearch(false);
-  }, [setHideSearch]);
-  const onBlur = useCallback(() => {
-    setHideSearch(true);
-  }, [setHideSearch]);
-
   return (
     <>
       <animated.div
@@ -320,11 +313,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           ref={ref}
           shouldFilter={false}
           onKeyDown={(e: React.KeyboardEvent) => {
-            if (
-              e.key === "Enter" &&
-              selectedSound &&
-              inputRef.current?.value === ""
-            ) {
+            if (e.key === "Enter" && selectedSound && inputValue === "") {
               e.preventDefault();
               setPages((prevPages) => [
                 ...prevPages,
@@ -338,13 +327,11 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                 },
               ]);
             }
-            if (
-              e.key === "Backspace" &&
-              selectedSound &&
-              inputRef.current?.value === ""
-            ) {
+            if (e.key === "Backspace" && selectedSound && inputValue === "") {
               e.preventDefault();
               setSelectedSound(null);
+              setInputValue(storedInputValue);
+              setStoredInputValue("");
             }
           }}
           loop

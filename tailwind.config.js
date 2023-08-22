@@ -19,6 +19,7 @@ module.exports = {
           "0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px 0px rgba(0, 0, 0, 0.02), 0px 2px 1px 0px rgba(0, 0, 0, 0.00), 0px 4px 1px 0px rgba(0, 0, 0, 0.00);",
         rating: "0px 0px 10px 0px rgba(0, 0, 0, 0.08);",
         index: "0px 1px 5px 0px rgba(0, 0, 0, 0.25)",
+        album: "0px 0px 14px 0px rgba(0, 0, 0, 0.15);",
       },
       colors: {
         black: "#333333",

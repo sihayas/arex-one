@@ -1,4 +1,4 @@
-import { AlbumData, SongData, UserData } from "@/lib/global/interfaces";
+import { AlbumData, SongData } from "@/lib/global/interfaces";
 
 import { Command } from "cmdk";
 
@@ -20,8 +20,9 @@ const Search = ({
   error,
 }: SearchProps) => {
   if (isInitialLoading || isFetching)
-    return <div className="text-xs">loading</div>;
-  if (error) return <div>Error</div>;
+    return <div className="text-xs absolute left-1/2 bottom-1/2">loading</div>;
+  if (error)
+    return <div className="text-xs absolute left-1/2 bottom-1/2">Error</div>;
 
   const appleData = searchData?.appleData || {};
   const userData = searchData?.users || {};

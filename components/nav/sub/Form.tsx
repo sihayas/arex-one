@@ -23,10 +23,10 @@ const Form = ({ inputValue }: FormProps) => {
   return (
     <>
       {selectedSound.sound.type === "albums" ? (
-        <div className="flex flex-col gap-4 p-6 w-full relative">
+        <div className="flex flex-col gap-4 p-6 w-full">
           <Image
             id={selectedSound.sound.id}
-            className="rounded-[6px] shadow-index"
+            className="rounded-[6px] shadow-album"
             src={albumArtworkUrl}
             alt={`${selectedSound.sound.attributes.name} artwork`}
             width={464}
@@ -34,7 +34,7 @@ const Form = ({ inputValue }: FormProps) => {
             draggable="false"
           />
 
-          <div className="absolute bottom-10 left-10 flex flex-col text-sm text-white">
+          <div className="flex flex-col text-sm text-gray1 items-center">
             <div className="font-semibold">
               {selectedSound.sound.attributes.name}
             </div>
