@@ -20,7 +20,7 @@ export const postReview = async (submissionData: {
   replay: boolean;
   userId: string | undefined;
   albumId: string | undefined;
-  songId: string | undefined;
+  trackId: string | undefined;
 }) => {
   try {
     console.log("Posting review...", submissionData);

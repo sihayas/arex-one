@@ -38,20 +38,23 @@ const Form = () => {
       event?.preventDefault();
 
       const gatherSubmissionData = () => {
+        let albumId = undefined;
+        let trackId = undefined;
+
+        if (selectedSound?.sound.type === "albums") {
+          albumId = selectedSound.sound.id;
+        } else if (selectedSound?.sound.type === "songs") {
+          trackId = selectedSound.sound.id;
+        }
+
         return {
           rating: rating,
           loved: loved,
           content: inputValue,
           replay: replay,
           userId: userId,
-          albumId:
-            selectedSound?.sound.type === "albums"
-              ? selectedSound.sound.id
-              : undefined,
-          songId:
-            selectedSound?.sound.type === "songs"
-              ? selectedSound.sound.id
-              : undefined,
+          albumId: albumId,
+          trackId: trackId,
         };
       };
 
@@ -215,7 +218,7 @@ const Form = () => {
           <div className="flex gap-1">
             <div className="">{selectedSound.sound.attributes.artistName}</div>
             <div>&ndash;</div>
-            <div className="">{selectedSound.sound.attributes.albumName}</div>
+            {/* <div className="">{selectedSound.sound.attributes.albumName}</div> */}
           </div>
         </div>
         {inputValue || rating > 0 ? (

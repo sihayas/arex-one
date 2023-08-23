@@ -12,7 +12,6 @@ import { LargeAviCap, SmallAviCap } from "../../../../icons";
 import Line from "@/components/cmdk/pages/entry/sub/icons/Line";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
-import handle from "@/pages/api/review/formCheck";
 
 interface EntryProps {
   review: ReviewData;
@@ -20,6 +19,7 @@ interface EntryProps {
 
 export const Entry: React.FC<EntryProps> = ({ review }) => {
   const { data: session } = useSession();
+  const isAlbum = review.albumId ? true : false;
 
   const { liked, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
@@ -37,13 +37,24 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
     <>
       <div className="flex flex-col group">
         {/* Artwork  */}
-        <div className="mb-1 ml-[2.75rem] z-10">
-          <ArtworkHeader
-            albumId={review.albumId}
-            rating={review.rating}
-            album={review.album}
-          />
-        </div>
+        {isAlbum ? (
+          <div className="mb-1 ml-[2.75rem] z-10">
+            <ArtworkHeader
+              albumId={review.albumId}
+              rating={review.rating}
+              album={review.album}
+            />
+          </div>
+        ) : (
+          <div className="mb-1 ml-[2.75rem] z-10">
+            <ArtworkHeader
+              songId={review.trackId}
+              rating={review.rating}
+              album={review.album}
+            />
+          </div>
+        )}
+
         {/* Avatar, Content+Like Button */}
         <div className="flex gap-2 items-end w-full">
           <div className="relative">
@@ -122,7 +133,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           <div className={`relative w-[484px]`}>
             <div
               onClick={handleEntryClick}
-              className={`w-[full] text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-[18px] rounded-bl-[6px] break-words overflow-visible hoverable-small`}
+              className={`w-[full] text-[13px] px-4 py-2 bg-white text-black border border-silver rounded-[18px] rounded-bl-[6px] break-words hoverable-small line-clamp-3`}
             >
               {review.content}
               <div

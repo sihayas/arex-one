@@ -124,7 +124,7 @@ model Review {
   activities Activity[]
   id        String    @id @default(cuid())
   album     Album?     @relation(fields: [albumId], references: [id])
-  albumId   String
+  albumId   String?
   track     Track?    @relation(fields: [trackId], references: [id])
   trackId   String?
   permalink String    @unique

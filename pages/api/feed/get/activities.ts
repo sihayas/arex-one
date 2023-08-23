@@ -51,6 +51,7 @@ export default async function handle(
               content: true,
               author: true,
               albumId: true,
+              trackId: true,
               rating: true,
               // check if user has liked
               likes: {

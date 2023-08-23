@@ -11,7 +11,7 @@ export default async function handle(
     return res.status(405).json({ error: "Method not allowed." });
   }
 
-  const { rating, loved, content, replay, userId, albumId, songId } = req.body;
+  const { rating, loved, content, replay, userId, albumId, trackId } = req.body;
 
   try {
     const result = await prisma.$transaction(async (prisma) => {
@@ -28,8 +28,8 @@ export default async function handle(
         reviewData.album = { connect: { id: albumId } };
       }
 
-      if (songId) {
-        reviewData.track = { connect: { id: songId } }; // Assuming you have a song relationship in your schema
+      if (trackId) {
+        reviewData.track = { connect: { id: trackId } }; // Assuming you have a song relationship in your schema
       }
 
       const newReview = await prisma.review.create({

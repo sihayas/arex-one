@@ -51,7 +51,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
       >
         {ratings.map((rating, i) => (
           <animated.div
-            className="w-full h-[40px] flex justify-center items-center text-center text-gray2 text-sm"
+            className="font-semibold w-full h-[40px] flex justify-center items-center text-center text-gray2 text-sm"
             key={i}
             style={{
               transform: props.value.to(

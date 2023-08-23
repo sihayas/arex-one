@@ -76,7 +76,8 @@ export const Entry = ({ translateY }: EntryProps) => {
   // If review album is different from selected album, fetch artwork
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
     review?.albumId,
-    "1032"
+    "1032",
+    "albumId"
   );
 
   if (!review || !artworkUrl) return null;
@@ -89,7 +90,7 @@ export const Entry = ({ translateY }: EntryProps) => {
           boxShadow: boxShadow,
         }}
         src={artworkUrl || "/public/images/default.png"}
-        alt={`${selectedSound?.attributes.name} artwork`}
+        alt={`${selectedSound?.sound.attributes.name} artwork`}
         width={516}
         height={516}
         onDragStart={(e) => e.preventDefault()}

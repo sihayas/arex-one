@@ -4,26 +4,33 @@ import Image from "next/image";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { useHandleSoundClick } from "@/hooks/handlePageChange/useHandleSoundClick";
 import { AlbumDBData } from "@/lib/global/interfaces";
-import { useCMDK } from "@/context/CMDKContext";
 
 import Stars from "@/components/global/Stars";
 
 interface ArtworkHeaderProps {
-  albumId: string;
+  albumId?: string;
+  songId?: string;
   rating?: number;
   album?: AlbumDBData;
 }
 
 export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
   albumId,
+  songId,
   rating,
 }) => {
   const { handleSelectSound } = useHandleSoundClick();
   const imgRef = React.useRef<HTMLImageElement>(null);
 
+  const type = albumId ? "albumId" : "songId";
+  const size = albumId ? "676" : songId ? "380" : "default";
+  const width = albumId ? 338 : songId ? 180 : 338; // default width
+  const height = albumId ? 338 : songId ? 180 : 338; // default height
+
   const { artworkUrl, albumData, isLoading } = useFetchArtworkUrl(
-    albumId,
-    "676"
+    albumId || songId,
+    size,
+    type
   );
 
   const handleClick = async () => {
@@ -36,7 +43,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
 
   return (
     <div onClick={handleClick} className="flex flex-col w-fit hoverable-medium">
-      {/* Art  */}
+      {/* Art */}
       <Image
         className="rounded-[8px] shadow-index"
         src={
@@ -45,12 +52,13 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
             : artworkUrl || "/images/default.webp"
         }
         alt={`artwork`}
-        width={338}
-        height={338}
+        width={width}
+        height={height}
         onDragStart={(e) => e.preventDefault()}
         draggable="false"
         ref={imgRef}
         loading="lazy"
+        quality={100}
       />
       <div className="relative">
         {rating ? (
@@ -63,14 +71,25 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
           </div>
         ) : null}
 
-        <div className="absolute flex flex-col bottom-4 left-4 rounded-lg gap-1">
-          <div className="font-semibold text-[13px] text-white">
-            {albumData?.attributes.name}
+        {type === "albumId" ? (
+          <div className="absolute flex flex-col bottom-4 left-4 rounded-lg gap-1">
+            <div className="font-semibold text-[13px] text-white">
+              {albumData?.attributes.name}
+            </div>
+            <div className="text-[13px] text-white">
+              {albumData?.attributes.artistName}
+            </div>
           </div>
-          <div className="text-[13px] text-white">
-            {albumData?.attributes.artistName}
+        ) : (
+          <div className="absolute flex flex-col translate-x-48 tra bottom-4 rounded-lg gap-1">
+            <div className="font-semibold text-[13px] text-black">
+              {albumData?.attributes.name}
+            </div>
+            <div className="text-[13px] text-black">
+              {albumData?.attributes.artistName}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 
@@ -14,7 +8,6 @@ import { Command } from "cmdk";
 import Nav from "@/components/nav/Nav";
 
 import Album from "./pages/album/Album";
-import Form from "./pages/form/Form";
 import Entry from "./pages/entry/Entry";
 import Index from "./pages/index/Index";
 import User from "./pages/user/User";
@@ -23,21 +16,13 @@ import Feed from "./pages/feed/Feed";
 
 import { debounce } from "lodash";
 
-type PageName =
-  | "feed"
-  | "index"
-  | "album"
-  | "entry"
-  | "form"
-  | "user"
-  | "signals";
+type PageName = "feed" | "index" | "album" | "entry" | "user" | "signals";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   feed: { width: 574, height: 1084 },
   index: { width: 922, height: 600 },
   album: { width: 658, height: 658 },
   entry: { width: 516, height: 608 },
-  form: { width: 960, height: 480 },
   user: { width: 532, height: 712 },
   signals: { width: 96, height: 712 },
 };
@@ -46,7 +31,6 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   index: Index,
   album: Album,
   entry: Entry,
-  form: Form,
   user: User,
   signals: Signals,
   feed: Feed,
