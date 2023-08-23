@@ -24,7 +24,6 @@ const Nav: React.FC = () => {
 
   const handleNavTextChange = (value: string) => {
     setInputValue(value);
-    console.log("Input value changed to:", value);
     debouncedSetSearchQuery(value);
   };
 
@@ -34,7 +33,7 @@ const Nav: React.FC = () => {
 
   const searchStyle = useSpring({
     height:
-      (data.length !== 0 && expandInput) || selectedSound
+      (data.length !== 0 && expandInput) || selectedSound || isInitialLoading
         ? !selectedSound
           ? "500"
           : selectedSound.sound.type === "songs"

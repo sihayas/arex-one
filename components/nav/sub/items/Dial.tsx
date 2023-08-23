@@ -10,7 +10,6 @@ interface DialProps {
 
 const Dial = ({ setRatingValue }: DialProps) => {
   const [ratingIndex, setRatingIndex] = useState(0);
-  const { inputRef } = useCMDK();
 
   const props = useSpring({
     value: ratingIndex,
@@ -39,7 +38,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
   return (
     <div
       ref={dialRef}
-      className="w-[36px] h-[36px] rounded-full border border-silver flex justify-center items-center overflow-hidden text-sm text-black hoverable-small scale-90 focus:scale-100 focus:outline-none transition-transform absolute -bottom-10 left-1 "
+      className="w-[36px] h-[36px] rounded-full border border-silver flex justify-center items-center overflow-hidden text-sm text-black hoverable-small scale-90 focus:scale-100 outline-none focus:shadow-rating transition-all absolute -bottom-10 left-1 "
       tabIndex={0}
       onKeyDown={handleKeyPress}
     >

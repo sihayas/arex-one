@@ -21,19 +21,16 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
   const { handleSelectSound } = useHandleSoundClick();
   const imgRef = React.useRef<HTMLImageElement>(null);
 
-  const { setIsVisible } = useCMDK();
   const { artworkUrl, albumData, isLoading } = useFetchArtworkUrl(
     albumId,
     "676"
   );
 
-  // Trigger CMDK
   const handleClick = async () => {
     const imgElement = imgRef.current;
 
     if (imgElement && albumData && artworkUrl) {
-      await handleSelectAlbum(imgElement, albumData, artworkUrl);
-      setIsVisible(true);
+      await handleSelectSound(imgElement, albumData, artworkUrl);
     }
   };
 
@@ -41,7 +38,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
     <div onClick={handleClick} className="flex flex-col w-fit hoverable-medium">
       {/* Art  */}
       <Image
-        className="rounded-[12px] shadow-index"
+        className="rounded-[8px] shadow-index"
         src={
           isLoading
             ? "/images/loading.webp"

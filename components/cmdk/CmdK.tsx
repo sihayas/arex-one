@@ -64,6 +64,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     inputValue,
     setInputValue,
     storedInputValue,
+    inputRef,
     setStoredInputValue,
   } = useCMDK();
   const { selectedSound, setSelectedSound } = useCMDKAlbum();
@@ -332,6 +333,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               setSelectedSound(null);
               setInputValue(storedInputValue);
               setStoredInputValue("");
+              inputRef?.current?.focus();
             }
           }}
           loop

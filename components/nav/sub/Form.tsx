@@ -91,6 +91,9 @@ const Form = () => {
           setLoved(true);
         }
         handleSubmit(null);
+      } else if (event.key.match(/^[a-zA-Z]$/)) {
+        // Check if the key is a letter
+        inputRef.current?.focus(); // Focus on the input if it is
       }
     };
 

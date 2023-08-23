@@ -124,7 +124,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           <div className={`relative w-[484px]`}>
             <div
               onClick={handleEntryClick}
-              className={`w-[full] text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words overflow-visible hoverable-small`}
+              className={`w-[full] text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-[18px] rounded-bl-[6px] break-words overflow-visible hoverable-small`}
             >
               {review.content}
               <div
