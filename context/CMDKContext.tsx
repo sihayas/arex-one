@@ -73,7 +73,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
 
   // Page states
   const [pages, setPages] = useState<Page[]>([
-    { name: "feed", dimensions: { width: 566, height: 1084 } },
+    { name: "feed", dimensions: { width: 574, height: 1084 } },
   ]);
   const [prevPageCount, setPrevPageCount] = useState(pages.length);
 
@@ -81,7 +81,7 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
 
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
-    () => pages[pages.length - 2] || { name: "feed", width: 566, height: 1084 },
+    () => pages[pages.length - 2] || { name: "feed", width: 574, height: 1084 },
     [pages]
   );
   const [isNavigating, setIsNavigating] = useState(false);

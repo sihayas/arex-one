@@ -20,7 +20,6 @@ interface EntryProps {
 
 export const Entry: React.FC<EntryProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setIsVisible } = useCMDK();
 
   const { liked, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
@@ -38,7 +37,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
     <>
       <div className="flex flex-col group">
         {/* Artwork  */}
-        <div className="mb-1 ml-9 z-10">
+        <div className="mb-1 ml-[2.75rem] z-10">
           <ArtworkHeader
             albumId={review.albumId}
             rating={review.rating}
@@ -49,11 +48,10 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         <div className="flex gap-2 items-end w-full">
           <div className="relative">
             <UserAvatar
-              className="max-w-6 max-h-6"
               imageSrc={review.author.image}
               altText={`${review.author.name}'s avatar`}
-              width={24}
-              height={24}
+              width={32}
+              height={32}
             />
 
             {review._count.replies === 1 && (

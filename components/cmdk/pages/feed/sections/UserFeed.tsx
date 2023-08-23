@@ -24,7 +24,7 @@ const UserFeed = ({ userId }: { userId: string | undefined }) => {
   return (
     <>
       {data.map((activity: ActivityData, index: number) => (
-        <div key={activity.id} className={index > 0 ? "pt-8" : ""}>
+        <div key={activity.id} className={index > 0 ? "pt-8 w-full" : ""}>
           {activity.review ? (
             <Entry review={activity.review} />
           ) : (

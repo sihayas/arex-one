@@ -100,8 +100,8 @@ const Nav: React.FC = () => {
           >
             <TextareaAutosize
               id="entryText"
-              className={`w-full bg-transparent text-violet text-sm focus:outline-none hoverable-medium resize-none`}
-              placeholder={`${selectedSound ? "type to log" : "rx"}`}
+              className={`w-full bg-transparent text-violet text-[13px] focus:outline-none hoverable-medium resize-none`}
+              placeholder={`${selectedSound ? "type..." : "rx"}`}
               value={inputValue}
               onChange={(e) => handleNavTextChange(e.target.value)}
               onBlur={onBlur}

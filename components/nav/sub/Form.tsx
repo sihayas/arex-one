@@ -85,11 +85,10 @@ const Form = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
         event.key === "Enter" &&
+        (event.metaKey || event.ctrlKey) &&
         inputRef.current === document.activeElement
       ) {
-        if (event.metaKey || event.ctrlKey) {
-          setLoved(true);
-        }
+        setLoved(true);
         handleSubmit(null);
       } else if (event.key.match(/^[a-zA-Z]$/)) {
         // Check if the key is a letter

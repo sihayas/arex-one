@@ -33,7 +33,7 @@ type PageName =
   | "signals";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
-  feed: { width: 566, height: 1084 },
+  feed: { width: 574, height: 1084 },
   index: { width: 922, height: 600 },
   album: { width: 658, height: 658 },
   entry: { width: 516, height: 608 },
