@@ -45,7 +45,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
     <div onClick={handleClick} className="flex flex-col w-fit hoverable-medium">
       {/* Art */}
       <Image
-        className="rounded-[8px] rounded-bl-2xl shadow-index"
+        className="rounded-[12px] shadow-new"
         src={
           isLoading
             ? "/images/loading.webp"
@@ -60,17 +60,6 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
         loading="lazy"
         quality={100}
       />
-      <div className="relative">
-        {rating ? (
-          <div className="absolute bottom-0 left-0">
-            <Stars
-              className="bg-white p-1 rounded-full border border-silver"
-              rating={rating}
-              color={"#000"}
-            />
-          </div>
-        ) : null}
-      </div>
     </div>
   );
 };

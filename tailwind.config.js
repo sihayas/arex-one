@@ -18,6 +18,8 @@ module.exports = {
         index: "0px 1px 5px 0px rgba(0, 0, 0, 0.25)",
         album:
           "0px 0px 0px 0px rgba(0, 0, 0, 0.11), 0px 6px 14px 0px rgba(0, 0, 0, 0.11), 0px 26px 26px 0px rgba(0, 0, 0, 0.10), 0px 58px 35px 0px rgba(0, 0, 0, 0.06), 0px 103px 41px 0px rgba(0, 0, 0, 0.02), 0px 161px 45px 0px rgba(0, 0, 0, 0.00)",
+        stars: "0px 1px 4px 0px rgba(0, 0, 0, 0.07);",
+        new: "0px 0px 0px 0px rgba(0, 0, 0, 0.07), 0px 1px 2px 0px rgba(0, 0, 0, 0.07), 0px 3px 3px 0px rgba(0, 0, 0, 0.06), 0px 6px 4px 0px rgba(0, 0, 0, 0.04), 0px 11px 4px 0px rgba(0, 0, 0, 0.01), 0px 17px 5px 0px rgba(0, 0, 0, 0.00);",
       },
       colors: {
         black: "#333333",

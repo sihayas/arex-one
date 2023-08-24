@@ -12,6 +12,7 @@ import { LargeAviCap, SmallAviCap } from "../../../../icons";
 import Line from "@/components/cmdk/pages/entry/sub/icons/Line";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
+import Stars from "@/components/global/Stars";
 
 interface EntryProps {
   review: ReviewData;
@@ -35,10 +36,10 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
 
   return (
     <>
-      <div className="flex flex-col group">
+      <div className="flex flex-col">
         {/* Artwork  */}
         {isAlbum ? (
-          <div className="mb-1 ml-[2.75rem] z-10">
+          <div className="ml-auto -mb-2">
             <ArtworkHeader
               albumId={review.albumId}
               rating={review.rating}
@@ -46,7 +47,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             />
           </div>
         ) : (
-          <div className="mb-1 ml-[2.75rem] z-10">
+          <div className="ml-auto">
             <ArtworkHeader
               songId={review.trackId}
               rating={review.rating}
@@ -55,103 +56,33 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           </div>
         )}
 
-        {/* Avatar, Content+Like Button */}
-        <div className="flex gap-2 items-end w-full">
-          <div className="relative">
-            <UserAvatar
-              imageSrc={review.author.image}
-              altText={`${review.author.name}'s avatar`}
-              width={32}
-              height={32}
-            />
-
-            {review._count.replies === 1 && (
-              <>
-                <Line className="absolute h-[46px] ml-[11px] translate-y-1" />
-                <UserAvatar
-                  className="absolute ml-1 mt-[3.25rem]"
-                  imageSrc={review.replies[0].author.image}
-                  altText={`${review.replies[0].author.name}'s avatar`}
-                  width={16}
-                  height={16}
-                />
-                <div className="absolute top-14 left-10 flex text-xs text-gray2 w-max">
-                  {review._count.likes > 0 && (
-                    <div>{review._count.likes} Heart</div>
-                  )}
-                </div>
-                <SmallAviCap
-                  className="absolute -left-1 top-[71px]"
-                  width={32}
-                  height={32}
-                />
-              </>
-            )}
-
-            {review._count.replies > 1 && (
-              <>
-                <Line className="absolute h-2 ml-[11px] translate-y-1" />
-                <UserAvatar
-                  className="absolute ml-[6px] mt-[1rem]"
-                  imageSrc={review.replies[0].author.image}
-                  altText={`${review.replies[0].author.name}'s avatar`}
-                  width={12}
-                  height={12}
-                />
-
-                <Line className="absolute h-[18px] ml-[11px] translate-y-8" />
-
-                <UserAvatar
-                  className="absolute ml-1 mt-[3.25rem]"
-                  imageSrc={review.replies[1].author.image}
-                  altText={`${review.replies[1].author.name}'s avatar`}
-                  width={16}
-                  height={16}
-                />
-                <div className="absolute top-14 left-10 flex gap-2 text-xs text-gray3 w-max">
-                  <div>{review._count.replies} Chains</div>
-                  <div>&middot;</div>
-                  {review._count.likes > 0 && (
-                    <div>{review._count.likes} Heart</div>
-                  )}
-                </div>
-                <SmallAviCap
-                  className="absolute -left-1 top-[71px]"
-                  width={32}
-                  height={32}
-                />
-              </>
-            )}
-
-            {review._count.replies === 0 && review._count.likes > 0 && (
-              <div className="absolute -bottom-[50px] left-10 text-xs text-gray3 w-max">
-                {review._count.likes} Heart
-              </div>
-            )}
+        {/* User */}
+        <div className="flex gap-2 items-center w-full relative">
+          <div className="absolute w-2 h-2 bg-white shadow-stars -top-2 left-7 rounded-full" />
+          <Stars
+            className="absolute bg-white p-1 rounded-full shadow-stars -top-8 left-8"
+            rating={review.rating}
+            color={"#000"}
+          />
+          <UserAvatar
+            imageSrc={review.author.image}
+            altText={`${review.author.name}'s avatar`}
+            width={32}
+            height={32}
+          />
+          <div
+            onClick={handleUserClick}
+            className={`font-medium text-[13px] text-black hoverable-small w-full`}
+          >
+            {review.author.name}
           </div>
+        </div>
 
-          <div className={`relative w-fit`}>
-            <div
-              onClick={handleEntryClick}
-              className={`w-[full] text-[13px] px-[8px] py-1 bg-white text-black border-b border-silver break-words hoverable-small line-clamp-3`}
-            >
-              {review.content}
-              <div
-                className={`absolute -right-2 -bottom-2 bg-white ${
-                  liked ? "opacity-100" : "opacity-0"
-                } group-hover:opacity-100 transition-opacity`}
-              >
-                <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
-              </div>
-            </div>
-            {/* Name  */}
-            <div
-              onClick={handleUserClick}
-              className={`absolute left-2 -bottom-6 font-medium text-[13px] text-black hoverable-small w-max`}
-            >
-              {review.author.name}
-            </div>
-          </div>
+        <div
+          onClick={handleEntryClick}
+          className={`pl-[40px] w-[full] text-[13px] text-black break-words hoverable-small line-clamp-3`}
+        >
+          {review.content}
         </div>
       </div>
       <hr
