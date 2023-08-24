@@ -3,17 +3,24 @@ import React, { useEffect, ReactNode, useCallback, useRef } from "react";
 import { useCMDK } from "@/context/CMDKContext";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { isVisible, setIsVisible } = useCMDK();
+  const { isVisible, setIsVisible, inputRef } = useCMDK();
   const mainContentRef = useRef<HTMLElement>(null);
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-      setIsVisible((prevIsVisible) => !prevIsVisible);
-      event.preventDefault();
-    } else if (event.key === "Escape") {
-      setIsVisible(false);
-    }
-  }, []);
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        setIsVisible((prevIsVisible) => !prevIsVisible);
+        event.preventDefault();
+      } else if (event.key === "Escape") {
+        if (inputRef && inputRef.current === document.activeElement) {
+          inputRef.current?.blur();
+        } else {
+          setIsVisible(false);
+        }
+      }
+    },
+    [inputRef]
+  );
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);

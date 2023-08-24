@@ -59,6 +59,25 @@ const Nav: React.FC = () => {
     setExpandInput(false);
   }, [setExpandInput]);
 
+  const handleKeyDown = (e) => {
+    if (
+      e.key === "Enter" &&
+      expandInput &&
+      selectedSound &&
+      inputRef.current?.value !== ""
+    ) {
+      e.preventDefault(); // Prevent the default behavior
+      const cursorPosition = e.target.selectionStart;
+      const value = e.target.value;
+      const newValue =
+        value.substring(0, cursorPosition) +
+        "\n" +
+        value.substring(cursorPosition);
+      handleNavTextChange(newValue); // Update the input value with the new line
+    }
+    // ... handle other keys or default behavior
+  };
+
   let left;
 
   if (!session) {
@@ -110,19 +129,14 @@ const Nav: React.FC = () => {
           >
             <TextareaAutosize
               id="entryText"
-              className={`w-full bg-transparent text-violet text-[13px] outline-none`}
+              className={`w-full bg-transparent text-violet text-[13px] outline-none resize-none`}
               placeholder={`${selectedSound && expandInput ? "type..." : "rx"}`}
               value={inputValue}
               onChange={(e) => handleNavTextChange(e.target.value)}
               onBlur={onBlur}
               onFocus={onFocus}
               ref={inputRef}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  console.log("Enter key pressed:", e);
-                  // You can log any other information here as needed
-                }
-              }}
+              onKeyDown={handleKeyDown}
             />
           </div>
         </animated.div>
@@ -135,7 +149,7 @@ const Nav: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-16 fixed right-8 bottom-8 z-50">{left}</div>
+    <div className="flex flex-col h-16 fixed right-8 bottom-3 z-50">{left}</div>
   );
 };
 
