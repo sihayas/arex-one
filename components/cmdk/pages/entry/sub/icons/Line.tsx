@@ -7,8 +7,8 @@ interface LineProps {
 
 const Line: React.FC<LineProps> = ({
   height = "fit",
-  width = "2px",
-  color = "#E5E5E5",
+  width = "1px",
+  color = "#ccc",
   className = "",
 }) => {
   return (
@@ -17,7 +17,6 @@ const Line: React.FC<LineProps> = ({
         height: height,
         backgroundColor: color,
         width: width,
-        borderRadius: "9999px",
       }}
       className={className}
     />

@@ -45,7 +45,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
     <div onClick={handleClick} className="flex flex-col w-fit hoverable-medium">
       {/* Art */}
       <Image
-        className="rounded-[12px] shadow-new"
+        className="rounded-[12px] shadow-stars"
         src={
           isLoading
             ? "/images/loading.webp"

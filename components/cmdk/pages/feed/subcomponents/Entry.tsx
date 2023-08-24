@@ -5,6 +5,14 @@ import { ReviewData } from "@/lib/global/interfaces";
 import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
 import { useHandleEntryClick } from "@/hooks/handlePageChange/useHandleEntryClick";
 import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInMonths,
+  differenceInSeconds,
+  differenceInYears,
+} from "date-fns";
 
 import { ArtworkHeader } from "./ArtworkHeader";
 import Line from "@/components/cmdk/pages/entry/sub/icons/Line";
@@ -54,16 +62,17 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           </div>
         )}
 
-        {/* User */}
+        {/* User + Username */}
         <div className="flex gap-2 items-center w-full relative">
           <div className="absolute w-2 h-2 bg-white shadow-stars -top-2 left-7 rounded-full" />
           <Stars
             className="absolute bg-white p-1 rounded-full shadow-stars -top-8 left-8 flex items-center gap-1 text-[10px] pr-2 font-semibold"
             rating={review.rating}
             color={"#000"}
-            names={review.album?.name}
+            names={review.album?.name || review.track?.name}
           />
           <UserAvatar
+            className="border border-silver"
             imageSrc={review.author.image}
             altText={`${review.author.name}'s avatar`}
             width={32}
@@ -71,30 +80,100 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           />
           <div
             onClick={handleUserClick}
-            className={`font-medium text-[13px] text-black hoverable-small w-full`}
+            className={`font-medium text-sm text-black hoverable-small w-full`}
           >
             {review.author.name}
           </div>
         </div>
 
-        <div
-          onClick={handleEntryClick}
-          className={`pl-[40px] w-[full] text-sm text-black break-words hoverable-small line-clamp-3`}
-        >
-          {review.content}
+        {/* Line + Content */}
+        <div className="flex">
+          <div className="flex flex-col w-10">
+            {review._count.replies > 0 && (
+              <Line className="flex-grow translate-x-4" />
+            )}
+          </div>
+          <div
+            onClick={handleEntryClick}
+            className={`w-[470px] text-sm text-black break-words hoverable-small line-clamp-3 pb-[4px]`}
+          >
+            {review.content}
+          </div>
         </div>
+
+        {/* Reply Avatars + Stats */}
+        <div className="flex items-center">
+          <div className="w-10">
+            {review._count.replies > 0 && (
+              <UserAvatar
+                className="translate-x-2 border border-silver"
+                imageSrc={review.replies[0].author.image}
+                altText={`${review.replies[0].author.name}'s avatar`}
+                width={16}
+                height={16}
+              />
+            )}
+          </div>
+          <div className="flex gap-2 text-[10px] text-gray2 w-max">
+            {(review._count.likes > 0 || review._count.replies > 0) && (
+              <div className="flex gap-1">
+                {review._count.replies > 0 && (
+                  <div>{review._count.replies} CHAINS</div>
+                )}
+                {review._count.replies > 0 && review._count.likes > 0 && (
+                  <div>&middot;&middot;&middot;</div>
+                )}
+                {review._count.likes > 0 && (
+                  <div>{review._count.likes} HEART</div>
+                )}
+              </div>
+            )}
+
+            {(review._count.likes > 0 || review._count.replies > 0) && (
+              <div>&#8211;</div>
+            )}
+            <div className="text-gray2 text-[10px]">
+              {formatDateShort(new Date(review.createdAt))}
+            </div>
+          </div>
+        </div>
+
+        {/* More than one reply*/}
+        {review._count.replies > 1 && (
+          <div className="flex flex-col">
+            <Line className="h-4 translate-x-4" />
+
+            <UserAvatar
+              className="translate-x-2 border border-silver"
+              imageSrc={review.replies[1].author.image}
+              altText={`${review.replies[1].author.name}'s avatar`}
+              width={16}
+              height={16}
+            />
+          </div>
+        )}
       </div>
-      <hr
-        className={`border-silver w-[100%] border-dashed ${
-          review._count.replies > 0 && review._count.likes > 0
-            ? "mt-[6.75rem]"
-            : review._count.replies > 0 && review._count.likes === 0
-            ? "mt-[6.75rem]"
-            : review._count.likes > 0 && review._count.replies === 0
-            ? "mt-[5.25rem]"
-            : "mt-[3.5rem]"
-        }`}
-      />
+      <hr className={`border-silver w-[100%] border-dashed mt-6`} />
     </>
   );
 };
+
+function formatDateShort(date: Date): string {
+  const now = new Date();
+  const yearsDifference = differenceInYears(now, date);
+  if (yearsDifference > 0) return `${yearsDifference}Y`;
+
+  const monthsDifference = differenceInMonths(now, date);
+  if (monthsDifference > 0) return `${monthsDifference}MO`;
+
+  const daysDifference = differenceInDays(now, date);
+  if (daysDifference > 0) return `${daysDifference}D`;
+
+  const hoursDifference = differenceInHours(now, date);
+  if (hoursDifference > 0) return `${hoursDifference}H`;
+
+  const minutesDifference = differenceInMinutes(now, date);
+  if (minutesDifference > 0) return `${minutesDifference}M`;
+
+  return `${differenceInSeconds(now, date)}s`;
+}

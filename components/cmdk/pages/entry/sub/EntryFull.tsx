@@ -147,19 +147,19 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
 function formatDateShort(date: Date): string {
   const now = new Date();
   const yearsDifference = differenceInYears(now, date);
-  if (yearsDifference > 0) return `${yearsDifference}y`;
+  if (yearsDifference > 0) return `${yearsDifference}Y`;
 
   const monthsDifference = differenceInMonths(now, date);
-  if (monthsDifference > 0) return `${monthsDifference}mo`;
+  if (monthsDifference > 0) return `${monthsDifference}MO`;
 
   const daysDifference = differenceInDays(now, date);
-  if (daysDifference > 0) return `${daysDifference}d`;
+  if (daysDifference > 0) return `${daysDifference}D`;
 
   const hoursDifference = differenceInHours(now, date);
-  if (hoursDifference > 0) return `${hoursDifference}h`;
+  if (hoursDifference > 0) return `${hoursDifference}H`;
 
   const minutesDifference = differenceInMinutes(now, date);
-  if (minutesDifference > 0) return `${minutesDifference}m`;
+  if (minutesDifference > 0) return `${minutesDifference}M`;
 
   return `${differenceInSeconds(now, date)}s`;
 }

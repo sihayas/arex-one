@@ -56,11 +56,15 @@ export default async function handle(
               album: {
                 select: { name: true },
               },
+              track: {
+                select: { name: true },
+              },
               // check if user has liked
               likes: {
                 select: { id: true },
                 where: { authorId: userId },
               },
+              createdAt: true,
               // include 2 reply images
               replies: {
                 take: 2,

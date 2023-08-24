@@ -134,7 +134,7 @@ const Form = () => {
     <div className="flex flex-col gap-4 p-6 w-full">
       <Image
         id={selectedFormSound.sound.id}
-        className="rounded-xl shadow-index"
+        className="rounded-xl shadow-stars"
         src={albumArtworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={464}
