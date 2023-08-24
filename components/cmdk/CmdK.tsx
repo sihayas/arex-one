@@ -299,7 +299,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* CMDK Inner Content  */}
         <Command
           className={`transition-opacity bg-white duration-150 w-full h-full ${
-            isVisible ? "opacity-100 drop-shadow-2xl" : "opacity-0"
+            isVisible ? "opacity-100 shadow-cmdkScaled2" : "opacity-0"
           }`}
           ref={ref}
           shouldFilter={false}

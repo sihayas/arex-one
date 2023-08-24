@@ -2,13 +2,11 @@ import React from "react";
 import { useSession } from "next-auth/react";
 
 import { ReviewData } from "@/lib/global/interfaces";
-import { useCMDK } from "@/context/CMDKContext";
 import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
 import { useHandleEntryClick } from "@/hooks/handlePageChange/useHandleEntryClick";
 import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
 
 import { ArtworkHeader } from "./ArtworkHeader";
-import { LargeAviCap, SmallAviCap } from "../../../../icons";
 import Line from "@/components/cmdk/pages/entry/sub/icons/Line";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
@@ -60,9 +58,10 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         <div className="flex gap-2 items-center w-full relative">
           <div className="absolute w-2 h-2 bg-white shadow-stars -top-2 left-7 rounded-full" />
           <Stars
-            className="absolute bg-white p-1 rounded-full shadow-stars -top-8 left-8"
+            className="absolute bg-white p-1 rounded-full shadow-stars -top-8 left-8 flex items-center gap-1 text-[10px] pr-2 font-semibold"
             rating={review.rating}
             color={"#000"}
+            names={review.album?.name}
           />
           <UserAvatar
             imageSrc={review.author.image}
@@ -80,7 +79,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
 
         <div
           onClick={handleEntryClick}
-          className={`pl-[40px] w-[full] text-[13px] text-black break-words hoverable-small line-clamp-3`}
+          className={`pl-[40px] w-[full] text-sm text-black break-words hoverable-small line-clamp-3`}
         >
           {review.content}
         </div>
