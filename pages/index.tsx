@@ -44,7 +44,7 @@ export default function Home() {
         <div className="flex flex-col gap-4 translate-y-1/3">
           <div className="">{session.user.name}*</div>
           <div onClick={() => signOut()} className="text-xs text-gray2">
-            disconnect
+            DISCONNECT
           </div>
         </div>
       </div>

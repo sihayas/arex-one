@@ -34,7 +34,7 @@ module.exports = {
         action: "rgb(255,94,0)",
         cursor: "rgba(108, 108, 108, 0.5)",
         red: "#FF0000",
-        nav: "rgba(240, 240, 240, 0.65)",
+        nav: "rgba(250, 250, 250, 0.75)",
         violet: "rgb(75,61,103)",
       },
       fontFamily: {

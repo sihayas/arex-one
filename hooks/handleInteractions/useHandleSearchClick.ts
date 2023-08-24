@@ -1,8 +1,7 @@
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
-import { useCMDK } from "@/context/CMDKContext";
-
 import { AlbumData, SongData } from "@/lib/global/interfaces";
+import { useCMDK } from "@/context/CMDKContext";
 
 export const useHandleSearchClick = () => {
   const { getDominantColor } = useDominantColor();

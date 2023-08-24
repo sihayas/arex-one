@@ -10,19 +10,33 @@ interface DialProps {
 
 const Dial = ({ setRatingValue }: DialProps) => {
   const [ratingIndex, setRatingIndex] = useState(0);
+  const { inputRef } = useCMDK();
 
   const props = useSpring({
     value: ratingIndex,
     config: { tension: 305, friction: 20 },
   });
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowUp" && ratingIndex < ratings.length - 1) {
-      setRatingIndex((prev) => prev + 1);
-    } else if (e.key === "ArrowDown" && ratingIndex > 0) {
-      setRatingIndex((prev) => prev - 1);
+  const handleKeyPress = (e) => {
+    // Check if the dial itself is focused or if the inputRef is focused and empty
+    if (
+      (document.activeElement === inputRef.current &&
+        inputRef.current?.value === "") ||
+      document.activeElement === dialRef.current
+    ) {
+      if (e.key === "ArrowUp" && ratingIndex < ratings.length - 1) {
+        setRatingIndex((prev) => prev + 1);
+      } else if (e.key === "ArrowDown" && ratingIndex > 0) {
+        setRatingIndex((prev) => prev - 1);
+      }
     }
   };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [ratingIndex, inputRef]);
 
   useEffect(() => {
     setRatingValue(ratings[ratingIndex]);
@@ -30,15 +44,12 @@ const Dial = ({ setRatingValue }: DialProps) => {
 
   const dialRef = useRef<HTMLDivElement>(null);
 
-  // Focus on the dial when the component mounts
-  useEffect(() => {
-    dialRef.current && dialRef.current.focus();
-  }, []);
-
   return (
     <div
       ref={dialRef}
-      className="w-[36px] h-[36px] rounded-full border border-silver flex justify-center items-center overflow-hidden text-sm text-black hoverable-small scale-90 focus:scale-100 outline-none focus:shadow-rating transition-all absolute -bottom-10 left-1 "
+      className={`w-[36px] h-[36px] rounded-full border border-silver flex justify-center items-center overflow-hidden text-sm text-black hoverable-small scale-90 focus:scale-100 outline-none ${
+        inputRef.current?.value === "" ? "shadow-rating" : ""
+      } focus:shadow-rating transition-all absolute -bottom-10 left-1`}
       tabIndex={0}
       onKeyDown={handleKeyPress}
     >

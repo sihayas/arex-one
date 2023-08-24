@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useCMDK } from "@/context/CMDKContext";
@@ -11,7 +11,6 @@ import TextareaAutosize from "react-textarea-autosize";
 import Search from "./sub/Search";
 import Avatar from "./Avatar";
 import Form from "./sub/Form";
-import Dial from "./sub/items/Dial";
 
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
@@ -25,24 +24,30 @@ const Nav: React.FC = () => {
   const handleNavTextChange = (value: string) => {
     setInputValue(value);
     debouncedSetSearchQuery(value);
+    console.log(expandInput);
   };
 
-  // Get search results based on debounced search query
   const { data, isInitialLoading, isFetching, error } =
     GetSearchResults(searchQuery);
 
   const searchStyle = useSpring({
-    height:
-      (data.length !== 0 && expandInput) || selectedSound || isInitialLoading
-        ? !selectedSound
-          ? "500"
-          : selectedSound.sound.type === "songs"
-          ? "120px"
-          : selectedSound.sound.type === "albums"
-          ? "562px"
-          : "0px"
-        : "0px",
-    from: { height: "36px" },
+    height: expandInput
+      ? !selectedSound
+        ? "500"
+        : selectedSound.sound.type === "songs"
+        ? "120px"
+        : selectedSound.sound.type === "albums"
+        ? "562px"
+        : "0px"
+      : "0px",
+    from: { height: "0px" },
+    config: { tension: 675, friction: 70 },
+  });
+
+  const inputWidthStyle = useSpring({
+    width: expandInput ? "502px" : "44px",
+    transform: expandInput ? "translateX(44px)" : "translateX(0px)",
+    from: { width: "44px", transform: "translateX(0px)" },
     config: { tension: 675, friction: 70 },
   });
 
@@ -72,7 +77,12 @@ const Nav: React.FC = () => {
     left = (
       // Search
       <div className="flex flex-col">
-        <div className="absolute h-fit flex flex-col justify-end bottom-[54px] right-0 w-[502px] bg-nav backdrop-blur-xl rounded-[22px] shadow-nav">
+        {/* Input Container */}
+        <animated.div
+          style={inputWidthStyle}
+          className="absolute flex flex-col justify-end bottom-[64px] right-[44px] bg-nav backdrop-blur-xl rounded-[22px] shadow-nav hoverable-small"
+        >
+          {/* Form / Search Results */}
           <animated.div
             className={`flex flex-col relative ${
               selectedSound ? "overflow-visible" : "overflow-scroll"
@@ -95,24 +105,29 @@ const Nav: React.FC = () => {
           <div
             className={`${
               //Make space for the dial
-              selectedSound ? "ml-10" : "translate-x-0"
-            } transition-all  p-4 py-3 flex items-center`}
+              selectedSound && expandInput ? "ml-10" : "translate-x-0"
+            } transition-all p-4 py-3 flex items-center`}
           >
             <TextareaAutosize
               id="entryText"
-              className={`w-full bg-transparent text-violet text-[13px] focus:outline-none hoverable-medium resize-none`}
-              placeholder={`${selectedSound ? "type..." : "rx"}`}
+              className={`w-full bg-transparent text-violet text-[13px] outline-none`}
+              placeholder={`${selectedSound && expandInput ? "type..." : "rx"}`}
               value={inputValue}
               onChange={(e) => handleNavTextChange(e.target.value)}
               onBlur={onBlur}
               onFocus={onFocus}
               ref={inputRef}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  console.log("Enter key pressed:", e);
+                  // You can log any other information here as needed
+                }
+              }}
             />
           </div>
-        </div>
+        </animated.div>
 
         {/* Circles */}
-        <Circle20 />
         <Circle12 />
         <Avatar />
       </div>
@@ -128,30 +143,6 @@ export default Nav;
 
 const Circle12 = () => (
   <svg className="-translate-x-3" height="12" width="12">
-    <circle
-      cx="6"
-      cy="6"
-      r="6"
-      fill="rgba(0, 0, 0, 0.05)"
-      style={{ backdropFilter: "blur(16px)" }}
-    />
-  </svg>
-);
-
-const Circle20 = () => (
-  <svg className="-translate-x-8" height="20" width="20">
-    <defs>
-      <clipPath id="halfCircleClip">
-        <rect x="0" y="10" width="20" height="10" />
-      </clipPath>
-    </defs>
-    <circle
-      cx="10"
-      cy="10"
-      r="10"
-      fill="rgba(0, 0, 0, 0.05)"
-      style={{ backdropFilter: "blur(16px)" }}
-      clipPath="url(#halfCircleClip)"
-    />
+    <circle cx="6" cy="6" r="6" fill="rgba(250,250,250,.65)" />
   </svg>
 );

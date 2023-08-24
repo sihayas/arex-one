@@ -17,7 +17,7 @@ const Form = () => {
   const userId = session?.user.id;
 
   const { selectedSound, setSelectedSound } = useCMDKAlbum();
-  const { inputRef, inputValue, setInputValue } = useCMDK();
+  const { inputRef, inputValue, setInputValue, expandInput } = useCMDK();
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);
@@ -134,7 +134,7 @@ const Form = () => {
     <div className="flex flex-col gap-4 p-6 w-full">
       <Image
         id={selectedSound.sound.id}
-        className="rounded-xl shadow-album"
+        className="rounded-xl shadow-index"
         src={albumArtworkUrl}
         alt={`${selectedSound.sound.attributes.name} artwork`}
         width={464}
@@ -254,10 +254,14 @@ const Form = () => {
   );
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit}>
+    <form
+      className="h-full overflow-hidden"
+      ref={formRef}
+      onSubmit={handleSubmit}
+    >
       {selectedSound.sound.type === "albums" && renderAlbumSection()}
       {selectedSound.sound.type === "songs" && renderSongSection()}
-      <Dial setRatingValue={handleRatingChange} />
+      {expandInput && <Dial setRatingValue={handleRatingChange} />}
     </form>
   );
 };

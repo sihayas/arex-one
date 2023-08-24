@@ -50,6 +50,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     storedInputValue,
     inputRef,
     setStoredInputValue,
+    setExpandInput,
   } = useCMDK();
   const { selectedSound, setSelectedSound } = useCMDKAlbum();
 
@@ -298,20 +299,22 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           ref={ref}
           shouldFilter={false}
           onKeyDown={(e: React.KeyboardEvent) => {
-            if (e.key === "Enter" && selectedSound && inputValue === "") {
-              e.preventDefault();
-              setPages((prevPages) => [
-                ...prevPages,
-                {
-                  name: "album",
-                  sound: selectedSound,
-                  dimensions: {
-                    width: 658,
-                    height: 658,
-                  },
-                },
-              ]);
-            }
+            // if (e.key === "Enter" && selectedSound && inputValue === "") {
+            //   e.preventDefault();
+            //   setExpandInput(false);
+            //   setPages((prevPages) => [
+            //     ...prevPages,
+            //     {
+            //       name: "album",
+            //       sound: selectedSound,
+            //       dimensions: {
+            //         width: 658,
+            //         height: 658,
+            //       },
+            //     },
+            //   ]);
+            //   window.history.pushState(null, "");
+            // }
             if (e.key === "Backspace" && selectedSound && inputValue === "") {
               e.preventDefault();
               setSelectedSound(null);

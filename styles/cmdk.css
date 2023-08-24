@@ -71,31 +71,3 @@
   display: flex;
   align-items: center;
 }
-
-.cmdk [cmdk-dialog] {
-  z-index: var(--layer-portal);
-  position: fixed;
-  left: 50%;
-  top: var(--page-top);
-  transform: translateX(-50%);
-}
-
-.cmdk [cmdk-dialog] [cmdk] {
-  width: 640px;
-  transform-origin: center center;
-  animation: dialogIn var(--transition-fast) forwards;
-}
-
-.cmdk [cmdk-dialog][data-state="closed"] [cmdk] {
-  animation: dialogOut var(--transition-fast) forwards;
-}
-
-.cmdk [cmdk-empty] {
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 64px;
-  white-space: pre-wrap;
-  color: var(--gray11);
-}

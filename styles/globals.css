@@ -75,14 +75,6 @@ a {
   pointer-events: none;
 }
 
-textarea::-webkit-scrollbar {
-  display: none;
-}
-
-textarea {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
 button {
   cursor: none;
 }
