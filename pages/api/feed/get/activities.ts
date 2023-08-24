@@ -54,10 +54,10 @@ export default async function handle(
               trackId: true,
               rating: true,
               album: {
-                select: { name: true },
+                select: { name: true, artist: true },
               },
               track: {
-                select: { name: true },
+                select: { name: true, album: true },
               },
               // check if user has liked
               likes: {

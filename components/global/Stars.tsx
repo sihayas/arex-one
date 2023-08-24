@@ -10,10 +10,17 @@ interface StarsProps {
   rating: number;
   className?: string;
   color?: string;
-  names?: string;
+  soundName?: string;
+  artist?: string;
 }
 
-const Stars: React.FC<StarsProps> = ({ rating, className, color, names }) => {
+const Stars: React.FC<StarsProps> = ({
+  rating,
+  className,
+  color,
+  soundName,
+  artist,
+}) => {
   const getStarIcon = (rating: number) => {
     switch (Math.floor(rating)) {
       case 1:
@@ -31,7 +38,7 @@ const Stars: React.FC<StarsProps> = ({ rating, className, color, names }) => {
 
   return (
     <div className={`${className}`}>
-      {getStarIcon(rating)} {names}
+      {getStarIcon(rating)} {soundName} &middot; {artist}
     </div>
   );
 };

@@ -39,7 +39,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
 
   const handleEntryClick = useHandleEntryClick(review.id);
   const handleUserClick = useHandleUserClick(review.author.id);
-
+  console.log(review);
   return (
     <>
       <div className="flex flex-col">
@@ -62,14 +62,15 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           </div>
         )}
 
-        {/* User + Username */}
+        {/* Rating + User + Username */}
         <div className="flex gap-2 items-center w-full relative">
           <div className="absolute w-2 h-2 bg-white shadow-stars -top-2 left-7 rounded-full" />
           <Stars
-            className="absolute bg-white p-1 rounded-full shadow-stars -top-8 left-8 flex items-center gap-1 text-[10px] pr-2 font-semibold"
+            className="absolute bg-white p-1 rounded-full shadow-stars -top-8 left-8 flex items-center gap-1 text-[10px] pr-2"
             rating={review.rating}
             color={"#000"}
-            names={review.album?.name || review.track?.name}
+            soundName={review.album?.name || review.track?.name}
+            artist={review.album?.artist || review.track?.album.artist}
           />
           <UserAvatar
             className="border border-silver"
@@ -77,6 +78,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             altText={`${review.author.name}'s avatar`}
             width={32}
             height={32}
+            userId={review.author.id}
           />
           <div
             onClick={handleUserClick}
@@ -87,7 +89,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         </div>
 
         {/* Line + Content */}
-        <div className="flex">
+        <div className="flex relative">
           <div className="flex flex-col w-10">
             {review._count.replies > 0 && (
               <Line className="flex-grow translate-x-4" />
@@ -98,6 +100,9 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             className={`w-[470px] text-sm text-black break-words hoverable-small line-clamp-3 pb-[4px]`}
           >
             {review.content}
+          </div>
+          <div className="absolute right-0 -bottom-5">
+            <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
           </div>
         </div>
 
@@ -111,10 +116,11 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
                 altText={`${review.replies[0].author.name}'s avatar`}
                 width={16}
                 height={16}
+                userId={review.replies[0].author.id}
               />
             )}
           </div>
-          <div className="flex gap-2 text-[10px] text-gray2 w-max">
+          <div className="flex gap-2 text-[10px] text-gray2 w-[470px]">
             {(review._count.likes > 0 || review._count.replies > 0) && (
               <div className="flex gap-1">
                 {review._count.replies > 0 && (
@@ -135,6 +141,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             <div className="text-gray2 text-[10px]">
               {formatDateShort(new Date(review.createdAt))}
             </div>
+            {/* <LikeButton handleLikeClick={handleLikeClick} liked={liked} /> */}
           </div>
         </div>
 
@@ -149,6 +156,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
               altText={`${review.replies[1].author.name}'s avatar`}
               width={16}
               height={16}
+              userId={review.replies[1].author.id}
             />
           </div>
         )}

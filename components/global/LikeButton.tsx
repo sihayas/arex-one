@@ -22,12 +22,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({ handleLikeClick, liked }) => {
         handleLikeClick(event);
         event.stopPropagation();
       }}
-      onMouseEnter={() => setColor("#000")}
       onMouseLeave={() => setColor(liked ? "#333" : "#CCC")}
       aria-label="like this entry"
     >
-      <div className="flex items-center border border-silver rounded-full p-1 hoverable-small translate-y-[1px] relative overflow-visible hover:invert">
-        <LoveIcon color={color} width={16} height={16} />
+      <div className="flex items-center p-1 hoverable-small translate-y-[1px] hover:invert">
+        <LoveIcon color={color} width={18} height={18} />
       </div>
     </button>
   );
