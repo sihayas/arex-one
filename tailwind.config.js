@@ -15,9 +15,6 @@ module.exports = {
         nav: "0px 0px 20px 0px rgba(0, 0, 0, 0.09)",
         cmdkScaled:
           "0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 11px 23px 0px rgba(0, 0, 0, 0.03), 0px 43px 43px 0px rgba(0, 0, 0, 0.03), 0px 96px 57px 0px rgba(0, 0, 0, 0.02), 0px 170px 68px 0px rgba(0, 0, 0, 0.00), 0px 266px 75px 0px rgba(0, 0, 0, 0.00)",
-        stars:
-          "0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px 0px rgba(0, 0, 0, 0.02), 0px 2px 1px 0px rgba(0, 0, 0, 0.00), 0px 4px 1px 0px rgba(0, 0, 0, 0.00);",
-        rating: "0px 0px 10px 0px rgba(0, 0, 0, 0.08);",
         index: "0px 1px 5px 0px rgba(0, 0, 0, 0.25)",
         album:
           "0px 0px 0px 0px rgba(0, 0, 0, 0.11), 0px 6px 14px 0px rgba(0, 0, 0, 0.11), 0px 26px 26px 0px rgba(0, 0, 0, 0.10), 0px 58px 35px 0px rgba(0, 0, 0, 0.06), 0px 103px 41px 0px rgba(0, 0, 0, 0.02), 0px 161px 45px 0px rgba(0, 0, 0, 0.00)",

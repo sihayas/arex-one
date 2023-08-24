@@ -34,11 +34,11 @@ const Album = ({ scale }: AlbumProps) => {
   const boxShadow = useMemo(() => {
     if (selectedSound?.colors[0]) {
       return `0px 0px 0px 0px ${selectedSound.colors[0]}, 0.11),
-        9px 11px 32px 0px ${selectedSound.colors[0]}, 0.11),
-        37px 45px 58px 0px ${selectedSound.colors[0]}, 0.09),
-        83px 100px 78px 0px ${selectedSound.colors[0]}, 0.05),
-        148px 178px 93px 0px ${selectedSound.colors[0]}, 0.02),
-        231px 279px 101px 0px ${selectedSound.colors[0]}, 0.00)`;
+        0px 6px 14px 0px ${selectedSound.colors[0]}, 0.11),
+        0px 26px 26px 0px ${selectedSound.colors[0]}, 0.10),
+        0px 58px 35px 0px ${selectedSound.colors[0]}, 0.06),
+        0px 103px 41px 0px ${selectedSound.colors[0]}, 0.02),
+        0px 161px 45px 0px ${selectedSound.colors[0]}, 0.00)`;
     }
     return undefined;
   }, [selectedSound?.colors]);

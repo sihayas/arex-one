@@ -7,7 +7,7 @@ export const useHandleSearchClick = () => {
   const { getDominantColor } = useDominantColor();
   const { setInputValue, setStoredInputValue, inputValue } = useCMDK();
 
-  const { setSelectedSound } = useCMDKAlbum();
+  const { setSelectedFormSound } = useCMDKAlbum();
 
   const handleSelectSearch = async (
     imgElement: HTMLImageElement,
@@ -22,7 +22,7 @@ export const useHandleSearchClick = () => {
       colors,
     };
 
-    setSelectedSound(selectedSound);
+    setSelectedFormSound(selectedSound);
     setStoredInputValue(inputValue);
     setInputValue("");
   };

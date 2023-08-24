@@ -4,6 +4,10 @@ import { SelectedSound } from "../lib/global/interfaces";
 export type AlbumDetailsContextType = {
   selectedSound: SelectedSound | null;
   setSelectedSound: React.Dispatch<React.SetStateAction<SelectedSound | null>>;
+  selectedFormSound: SelectedSound | null;
+  setSelectedFormSound: React.Dispatch<
+    React.SetStateAction<SelectedSound | null>
+  >;
 };
 
 type AlbumDetailsProviderProps = {
@@ -30,11 +34,16 @@ export const AlbumDetailsProvider = ({
     null
   );
 
+  const [selectedFormSound, setSelectedFormSound] =
+    useState<SelectedSound | null>(null);
+
   return (
     <AlbumDetailsContext.Provider
       value={{
         selectedSound,
         setSelectedSound,
+        selectedFormSound,
+        setSelectedFormSound,
       }}
     >
       {children}

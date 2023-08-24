@@ -52,7 +52,12 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     setStoredInputValue,
     setExpandInput,
   } = useCMDK();
-  const { selectedSound, setSelectedSound } = useCMDKAlbum();
+  const {
+    selectedSound,
+    setSelectedSound,
+    selectedFormSound,
+    setSelectedFormSound,
+  } = useCMDKAlbum();
 
   // Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -300,14 +305,15 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           shouldFilter={false}
           onKeyDown={(e: React.KeyboardEvent) => {
             // switch to album page from form
-            if (e.key === "Enter" && selectedSound && inputValue === "") {
+            if (e.key === "Enter" && selectedFormSound && inputValue === "") {
               e.preventDefault();
               setExpandInput(false);
+              setSelectedSound(selectedFormSound);
               setPages((prevPages) => [
                 ...prevPages,
                 {
                   name: "album",
-                  sound: selectedSound,
+                  sound: selectedFormSound,
                   dimensions: {
                     width: 658,
                     height: 658,
@@ -317,9 +323,14 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               inputRef?.current?.blur();
               window.history.pushState(null, "");
             }
-            if (e.key === "Backspace" && selectedSound && inputValue === "") {
+            // go back from form to search results
+            if (
+              e.key === "Backspace" &&
+              selectedFormSound &&
+              inputValue === ""
+            ) {
               e.preventDefault();
-              setSelectedSound(null);
+              setSelectedFormSound(null);
               setInputValue(storedInputValue);
               setStoredInputValue("");
               inputRef?.current?.focus();

@@ -16,7 +16,7 @@ const Nav: React.FC = () => {
   const { data: session, status } = useSession();
   const { inputValue, setInputValue, expandInput, setExpandInput, inputRef } =
     useCMDK();
-  const { selectedSound } = useCMDKAlbum();
+  const { selectedFormSound } = useCMDKAlbum();
 
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSetSearchQuery = debounce(setSearchQuery, 350);
@@ -24,7 +24,6 @@ const Nav: React.FC = () => {
   const handleNavTextChange = (value: string) => {
     setInputValue(value);
     debouncedSetSearchQuery(value);
-    console.log(expandInput);
   };
 
   const { data, isInitialLoading, isFetching, error } =
@@ -32,11 +31,11 @@ const Nav: React.FC = () => {
 
   const searchStyle = useSpring({
     height: expandInput
-      ? !selectedSound
+      ? !selectedFormSound
         ? "500"
-        : selectedSound.sound.type === "songs"
+        : selectedFormSound.sound.type === "songs"
         ? "120px"
-        : selectedSound.sound.type === "albums"
+        : selectedFormSound.sound.type === "albums"
         ? "562px"
         : "0px"
       : "0px",
@@ -59,11 +58,12 @@ const Nav: React.FC = () => {
     setExpandInput(false);
   }, [setExpandInput]);
 
+  // New line creation
   const handleKeyDown = (e) => {
     if (
       e.key === "Enter" &&
       expandInput &&
-      selectedSound &&
+      selectedFormSound &&
       inputRef.current?.value !== ""
     ) {
       e.preventDefault(); // Prevent the default behavior
@@ -104,11 +104,11 @@ const Nav: React.FC = () => {
           {/* Form / Search Results */}
           <animated.div
             className={`flex flex-col relative ${
-              selectedSound ? "overflow-visible" : "overflow-scroll"
+              selectedFormSound ? "overflow-visible" : "overflow-scroll"
             }`}
             style={searchStyle}
           >
-            {!selectedSound ? (
+            {!selectedFormSound ? (
               <Search
                 searchData={data}
                 isInitialLoading={isInitialLoading}
@@ -124,13 +124,15 @@ const Nav: React.FC = () => {
           <div
             className={`${
               //Make space for the dial
-              selectedSound && expandInput ? "ml-10" : "translate-x-0"
+              selectedFormSound && expandInput ? "ml-10" : "translate-x-0"
             } transition-all p-4 py-3 flex items-center`}
           >
             <TextareaAutosize
               id="entryText"
               className={`w-full bg-transparent text-violet text-[13px] outline-none resize-none`}
-              placeholder={`${selectedSound && expandInput ? "type..." : "rx"}`}
+              placeholder={`${
+                selectedFormSound && expandInput ? "type..." : "rx"
+              }`}
               value={inputValue}
               onChange={(e) => handleNavTextChange(e.target.value)}
               onBlur={onBlur}
@@ -141,7 +143,6 @@ const Nav: React.FC = () => {
           </div>
         </animated.div>
 
-        {/* Circles */}
         <Circle12 />
         <Avatar />
       </div>

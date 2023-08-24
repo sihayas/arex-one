@@ -45,7 +45,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
     <div onClick={handleClick} className="flex flex-col w-fit hoverable-medium">
       {/* Art */}
       <Image
-        className="rounded-[8px] shadow-index"
+        className="rounded-[8px] rounded-bl-2xl shadow-index"
         src={
           isLoading
             ? "/images/loading.webp"
@@ -62,7 +62,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
       />
       <div className="relative">
         {rating ? (
-          <div className="absolute -bottom-4 -left-4">
+          <div className="absolute bottom-0 left-0">
             <Stars
               className="bg-white p-1 rounded-full border border-silver"
               rating={rating}
@@ -70,26 +70,6 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
             />
           </div>
         ) : null}
-
-        {type === "albumId" ? (
-          <div className="absolute flex flex-col bottom-4 left-4 rounded-lg gap-1">
-            <div className="font-semibold text-[13px] text-white">
-              {albumData?.attributes.name}
-            </div>
-            <div className="text-[13px] text-white">
-              {albumData?.attributes.artistName}
-            </div>
-          </div>
-        ) : (
-          <div className="absolute flex flex-col translate-x-48 tra bottom-4 rounded-lg gap-1">
-            <div className="font-semibold text-[13px] text-black">
-              {albumData?.attributes.name}
-            </div>
-            <div className="text-[13px] text-black">
-              {albumData?.attributes.artistName}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

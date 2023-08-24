@@ -16,20 +16,20 @@ const Form = () => {
   const { data: session } = useSession();
   const userId = session?.user.id;
 
-  const { selectedSound, setSelectedSound } = useCMDKAlbum();
+  const { selectedFormSound, setSelectedFormSound } = useCMDKAlbum();
   const { inputRef, inputValue, setInputValue, expandInput } = useCMDK();
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);
 
   const replay = useQuery(
-    ["userReview", selectedSound?.sound.id, userId],
+    ["userReview", selectedFormSound?.sound.id, userId],
     () =>
-      selectedSound && userId
-        ? fetchUserReview(selectedSound.sound.id, userId)
+      selectedFormSound && userId
+        ? fetchUserReview(selectedFormSound.sound.id, userId)
         : null,
     {
-      enabled: !!selectedSound && !!userId,
+      enabled: !!selectedFormSound && !!userId,
     }
   ).data;
 
@@ -41,10 +41,10 @@ const Form = () => {
         let albumId = undefined;
         let trackId = undefined;
 
-        if (selectedSound?.sound.type === "albums") {
-          albumId = selectedSound.sound.id;
-        } else if (selectedSound?.sound.type === "songs") {
-          trackId = selectedSound.sound.id;
+        if (selectedFormSound?.sound.type === "albums") {
+          albumId = selectedFormSound.sound.id;
+        } else if (selectedFormSound?.sound.type === "songs") {
+          trackId = selectedFormSound.sound.id;
         }
 
         return {
@@ -62,7 +62,7 @@ const Form = () => {
 
       toast.promise(
         postReview(submissionData).then(() => {
-          setSelectedSound(null); // Set selectedSound to null on success
+          setSelectedFormSound(null); // Set selectedFormSound to null on success
           setInputValue(""); // Reset input value on success
         }),
         {
@@ -78,8 +78,8 @@ const Form = () => {
       inputValue,
       replay,
       userId,
-      selectedSound,
-      setSelectedSound,
+      selectedFormSound,
+      setSelectedFormSound,
       setInputValue,
     ]
   );
@@ -110,33 +110,33 @@ const Form = () => {
     inputValue,
     replay,
     userId,
-    selectedSound,
+    selectedFormSound,
     handleSubmit,
     inputRef,
   ]);
 
-  if (!selectedSound) return;
+  if (!selectedFormSound) return;
 
   const handleRatingChange = (rating: number) => {
     setRating(rating);
   };
 
   const albumArtworkUrl = generateArtworkUrl(
-    selectedSound.sound.attributes.artwork.url,
+    selectedFormSound.sound.attributes.artwork.url,
     "928"
   );
   const soundArtworkUrl = generateArtworkUrl(
-    selectedSound.sound.attributes.artwork.url,
+    selectedFormSound.sound.attributes.artwork.url,
     "260"
   );
 
   const renderAlbumSection = () => (
     <div className="flex flex-col gap-4 p-6 w-full">
       <Image
-        id={selectedSound.sound.id}
+        id={selectedFormSound.sound.id}
         className="rounded-xl shadow-index"
         src={albumArtworkUrl}
-        alt={`${selectedSound.sound.attributes.name} artwork`}
+        alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={464}
         height={464}
         quality={100}
@@ -159,10 +159,10 @@ const Form = () => {
         {/* Center / Names */}
         <div className="flex flex-col gap-1 text-sm text-gray items-center">
           <div className="font-semibold line-clamp-1">
-            {selectedSound.sound.attributes.name}
+            {selectedFormSound.sound.attributes.name}
           </div>
           <div className="line-clamp-1">
-            {selectedSound.sound.attributes.artistName}
+            {selectedFormSound.sound.attributes.artistName}
           </div>
         </div>
         {/* Right / Send */}
@@ -201,10 +201,10 @@ const Form = () => {
   const renderSongSection = () => (
     <div className="flex items-center gap-6 p-6 py-4 w-full relative">
       <Image
-        id={selectedSound.sound.id}
+        id={selectedFormSound.sound.id}
         className="rounded-[6px] shadow-index"
         src={soundArtworkUrl}
-        alt={`${selectedSound.sound.attributes.name} artwork`}
+        alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={80}
         height={80}
         quality={100}
@@ -213,12 +213,14 @@ const Form = () => {
       <div className="flex items-center justify-between w-full">
         <div className="flex flex-col text-sm text-black">
           <div className="font-semibold">
-            {selectedSound.sound.attributes.name}
+            {selectedFormSound.sound.attributes.name}
           </div>
           <div className="flex gap-1">
-            <div className="">{selectedSound.sound.attributes.artistName}</div>
+            <div className="">
+              {selectedFormSound.sound.attributes.artistName}
+            </div>
             <div>&ndash;</div>
-            {/* <div className="">{selectedSound.sound.attributes.albumName}</div> */}
+            {/* <div className="">{selectedFormSound.sound.attributes.albumName}</div> */}
           </div>
         </div>
         {inputValue || rating > 0 ? (
@@ -259,8 +261,8 @@ const Form = () => {
       ref={formRef}
       onSubmit={handleSubmit}
     >
-      {selectedSound.sound.type === "albums" && renderAlbumSection()}
-      {selectedSound.sound.type === "songs" && renderSongSection()}
+      {selectedFormSound.sound.type === "albums" && renderAlbumSection()}
+      {selectedFormSound.sound.type === "songs" && renderSongSection()}
       {expandInput && <Dial setRatingValue={handleRatingChange} />}
     </form>
   );
