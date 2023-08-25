@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { useCMDK } from "@/context/CMDKContext";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
@@ -10,9 +10,9 @@ import { SongData } from "@/lib/global/interfaces";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import Lowlights from "./sub/Lowlights";
 import Highlights from "./sub/Highlights";
-
 import { animated, SpringValue } from "@react-spring/web";
 import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import TabBar from "@/components/cmdk/pages/album/sub/TabBar";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -25,6 +25,8 @@ const Album = ({ scale }: AlbumProps) => {
   const { selectedSound } = useCMDKAlbum();
   const { scrollContainerRef } = useScrollPosition();
   const { bind, x, activeSection } = useDragAlbumLogic();
+
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const artworkUrl = generateArtworkUrl(
     selectedSound!.sound.attributes.artwork.url,
@@ -62,6 +64,10 @@ const Album = ({ scale }: AlbumProps) => {
     );
   }
 
+  const handleArtworkClick = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <animated.div
       ref={scrollContainerRef}
@@ -80,9 +86,12 @@ const Album = ({ scale }: AlbumProps) => {
       >
         {/* Album Artwork  */}
         <animated.img
+          onClick={handleArtworkClick}
+          // className="hover:-translate-x-4 transition-transform ease-in-out duration-500"
           style={{
             borderRadius: scale.to((value) => `${20 + (1 - value) * -12}px`),
             boxShadow: boxShadow,
+            //transform: isExpanded ? "translateX(-28rem)" : "",
           }}
           src={artworkUrl || "/public/images/default.png"}
           alt={`${selectedSound.sound.attributes.name} artwork`}
@@ -138,7 +147,7 @@ const Album = ({ scale }: AlbumProps) => {
         style={{
           transform: x.to((val) => `translateX(${val}px)`),
         }}
-        className="flex pt-[800px] gap-8 ml-[1030px] w-full"
+        className="flex pt-[800px] gap-8 ml-[1030px] w-full relative"
       >
         {activeSection === 0 && (
           <Highlights selectedSound={selectedSound} user={session!.user} />

@@ -31,7 +31,7 @@ const Highlights: React.FC<HighlightsProps> = ({ selectedSound, user }) => {
         ))
       ) : (
         <div className="text-xs text-gray2 p-2 uppercase">
-          surrender the sound
+          {/* surrender the sound */}
         </div>
       )}
     </div>
