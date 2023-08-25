@@ -37,7 +37,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
       <div className="flex relative">
         <div
           onClick={handleEntryClick}
-          className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words hoverable-medium`}
+          className={`w-full text-sm leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words hoverable-medium`}
         >
           {review.content}
         </div>
@@ -68,7 +68,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         />
         {/* Name  */}
         <div
-          className={`font-medium text-[13px] leading-normal text-black  transition-all duration-300 hover:text-[#000]`}
+          className={`font-medium text-sm leading-normal text-black  transition-all duration-300 hover:text-[#000]`}
         >
           {review.author?.name}
         </div>

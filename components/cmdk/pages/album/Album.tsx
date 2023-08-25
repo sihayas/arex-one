@@ -6,8 +6,8 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDrag/album";
 
+import { SongData } from "@/lib/global/interfaces";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
-import { OpenAIIcon } from "@/components/icons";
 import Lowlights from "./sub/Lowlights";
 import Highlights from "./sub/Highlights";
 
@@ -43,7 +43,7 @@ const Album = ({ scale }: AlbumProps) => {
     return undefined;
   }, [selectedSound?.colors]);
 
-  // Initialize album
+  // Initializes album and loads full details into selectedSound
   const { isLoading, isError } = useAlbumQuery();
 
   // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
@@ -72,13 +72,11 @@ const Album = ({ scale }: AlbumProps) => {
         style={{
           transform: scale.to(
             (value) =>
-              `scale3d(${value}, ${value}, ${value}) translate3d(${
-                (1 - value) * -84.25
-              }rem, ${(1 - value) * 8}rem, 0)`
+              `translate3d(${(1 - value) * -693}px, ${(1 - value) * 4}rem, 0)`
           ),
-          transformOrigin: "top center",
+          transformOrigin: "center",
         }}
-        className="fixed top-0 z-50"
+        className="fixed z-50"
       >
         {/* Album Artwork  */}
         <animated.img
@@ -96,15 +94,12 @@ const Album = ({ scale }: AlbumProps) => {
         {/* Album Metadata  */}
         <animated.div
           style={{
-            transform: scale.to(
-              (value) => `scale3d(${1 / value}, ${1 / value}, ${1 / value})`
-            ),
             transformOrigin: "center",
           }}
-          className="absolute grid items-center top-[724px] ml-[86px] w-[486px] gap-8"
+          className="absolute grid pt-4 top-[718px] ml-[86px] w-[486px] gap-8 will-change-transform h-[21.25rem] overflow-scroll scrollbar-none"
         >
           {/* Album Details  */}
-          <div className="flex flex-col gap-2 items-center justify-center">
+          <div className="flex flex-col items-end justify-end gap-2">
             <p className="text-sm text-black font-medium">
               {selectedSound.sound.attributes.name}
             </p>
@@ -116,21 +111,23 @@ const Album = ({ scale }: AlbumProps) => {
           <div className="flex items-center justify-center justify-self-center w-9 h-9 border border-silver text-sm text-black rounded-full font-medium">
             {/* {selectedSound.sound.averageRating} */}
           </div>
-
           {/* Consensus  */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <OpenAIIcon width={16} height={16} color={"#999"} />
-              <p className="font-medium text-gray2 text-xs">CONSENSUS</p>
+          <div className="flex gap-2">
+            <p className="font-bold text-gray2 text-sm">
+              {selectedSound.sound.relationships.tracks.data.length}
+            </p>
+            <div className="flex flex-col gap-2">
+              <p className="text-gray2 text-sm font-medium">SONGS</p>
+              <ul className="gap-1">
+                {selectedSound.sound.relationships.tracks.data.map(
+                  (track: SongData, index: number) => (
+                    <li key={index} className="text-gray2 text-sm">
+                      {track.attributes.name}
+                    </li>
+                  )
+                )}
+              </ul>
             </div>
-
-            {/* {data.album.notes ? (
-              <div className="text-xs text-gray2">
-                {selectedSound.attributes.editorialNotes.standard}
-              </div>
-            ) : (
-              <div className="ml-6 text-xs text-gray3">COMING SOON</div>
-            )} */}
           </div>
         </animated.div>
       </animated.div>

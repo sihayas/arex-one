@@ -3,7 +3,7 @@ import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 
 import { animated, useSpring, useTransition } from "@react-spring/web";
-import { useDrag, useScroll } from "@use-gesture/react";
+import { useDrag, useScroll, useWheel } from "@use-gesture/react";
 import { Command } from "cmdk";
 import Nav from "@/components/nav/Nav";
 
@@ -188,17 +188,17 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const scrollBind = useScroll(({ xy: [, y] }) => {
     if (activePage.name === "album") {
-      let newScale = 1 - y / 77;
+      let newScale = 1 - y / 50;
       if (newScale > 1) newScale = 1;
-      if (newScale < 0.738) newScale = 0.738;
+      if (newScale < 0.5) newScale = 0.5;
 
       let newWidth = 658 + (y / 77) * (1066 - 658);
       if (newWidth < 658) newWidth = 658;
       if (newWidth > 1066) newWidth = 1066;
 
-      let newHeight = 658 + (y / 300) * (888 - 658);
+      let newHeight = 658 + (y / 24) * (722 - 658);
       if (newHeight < 658) newHeight = 658;
-      if (newHeight > 888) newHeight = 888;
+      if (newHeight > 722) newHeight = 722;
 
       // Apply the new scale and width immediately to the spring animation
       set({

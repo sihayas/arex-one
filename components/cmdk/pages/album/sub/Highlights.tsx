@@ -30,7 +30,9 @@ const Highlights: React.FC<HighlightsProps> = ({ selectedSound, user }) => {
           <EntryAlbum key={review.id} review={review} />
         ))
       ) : (
-        <div className="text-xs text-gray2 p-2">surrender the sound.</div>
+        <div className="text-xs text-gray2 p-2 uppercase">
+          surrender the sound
+        </div>
       )}
     </div>
   );
