@@ -39,7 +39,6 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
 
   const handleEntryClick = useHandleEntryClick(review.id);
   const handleUserClick = useHandleUserClick(review.author.id);
-  console.log(review);
   return (
     <>
       <div className="flex flex-col">

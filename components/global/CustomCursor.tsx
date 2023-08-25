@@ -1,28 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { throttle } from "lodash";
-import { useCMDK } from "@/context/CMDKContext";
 import { useScrollContext } from "@/context/ScrollContext";
 
 const springConfig = { tension: 500, friction: 50 };
 
 function CustomCursor() {
-  const { activePage, isVisible } = useCMDK();
-
   // Cursor context
-  const { setCursorOnRight, cursorOnRight } = useScrollContext();
 
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [hoveredScale, setHoveredScale] = useState(1);
-  const [windowWidth, setWindowWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 0
-  );
-
-  const handleResize = () => {
-    setWindowWidth(window.innerWidth);
-  };
 
   // Reactive cursor size
   const { scale } = useSpring({
@@ -35,13 +24,6 @@ function CustomCursor() {
   const moveCursor = throttle((e: MouseEvent) => {
     const cursorX = e.clientX - cursorSize / 2;
     const cursorY = e.clientY - cursorSize / 2;
-
-    // Detect if the cursor is on the right side of the window
-    if (windowWidth !== 0 && cursorX > windowWidth / 2) {
-      setCursorOnRight(true);
-    } else {
-      setCursorOnRight(false);
-    }
 
     setCoords({ x: cursorX, y: cursorY });
   }, 16);
@@ -81,22 +63,6 @@ function CustomCursor() {
   };
 
   useEffect(() => {
-    // Only run this effect client-side
-    if (typeof window !== "undefined") {
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      };
-
-      window.addEventListener("resize", handleResize);
-
-      // Cleanup on unmount
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
-    }
-  }, []);
-
-  useEffect(() => {
     document.addEventListener("mousemove", moveCursor);
     document.addEventListener("mouseover", hoverCursor);
     document.addEventListener("mouseout", hoverCursor);
@@ -123,7 +89,7 @@ function CustomCursor() {
               coords.y
             )}px, 0) scale(${s})`
         ),
-        willChange: "transform, opacity",
+        willChange: "transform",
       }}
     />
   );

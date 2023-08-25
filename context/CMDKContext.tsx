@@ -84,32 +84,23 @@ export const CMDKProvider = ({ children }: CMDKProviderProps) => {
     () => pages[pages.length - 2] || { name: "feed", width: 574, height: 1084 },
     [pages]
   );
-  const [isNavigating, setIsNavigating] = useState(false);
 
-  const navigateBack = useCallback(
-    (pageNumber: number = 1) => {
-      if (isNavigating) return;
+  const navigateBack = useCallback(() => {
+    setPages((prevPages) => {
+      if (prevPages.length <= 1) {
+        return prevPages;
+      }
 
-      setIsNavigating(true);
+      // Make a shallow copy of the pages array
+      const newPages = [...prevPages];
 
-      setPages((prevPages) => {
-        if (prevPages.length <= 1) {
-          setIsNavigating(false);
-          return prevPages;
-        }
+      // Pop the last page off the array
+      newPages.pop();
 
-        console.log("navigating back");
-        const newPages = prevPages.slice(0, prevPages.length - pageNumber);
-
-        return newPages;
-      });
-
-      setTimeout(() => {
-        setIsNavigating(false);
-      }, 500);
-    },
-    [isNavigating]
-  );
+      return newPages;
+    });
+    console.log("navigating back");
+  }, []);
 
   const resetPage = useCallback(() => {
     setPages([{ name: "index", dimensions: { width: 922, height: 600 } }]);

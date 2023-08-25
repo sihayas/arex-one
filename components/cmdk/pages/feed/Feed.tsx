@@ -74,11 +74,11 @@ export default function Feed() {
       <div className="w-full h-[100vh] overflow-hidden relative">
         {/* Render the feed here using the data */}
         <animated.div
-          style={{
-            x,
-            ...scaleSpring,
-          }}
-          {...bind()}
+          // style={{
+          //   x,
+          //   ...scaleSpring,
+          // }}
+          // {...bind()}
           className="bg-white w-full h-full p-8 overflow-scroll scrollbar-none active:border border-silver rounded-[20px]"
         >
           {feedContent}

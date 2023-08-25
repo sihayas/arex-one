@@ -38,7 +38,6 @@ export const useHandleSoundClick = () => {
         },
       },
     ]);
-    console.log("selectedSound", selectedSound);
     window.history.pushState(null, "");
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useCMDKAlbum } from "@/context/CMDKAlbum";
 import { useCMDK } from "@/context/CMDKContext";
 
@@ -40,7 +40,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   const {
     pages,
     activePage,
-    navigateBack,
     previousPage,
     setPages,
     prevPageCount,
@@ -72,7 +71,8 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     height: PAGE_DIMENSIONS[previousPage!.name as PageName]?.height,
     config: {
       tension: 400,
-      friction: 77,
+      friction: 47,
+      mass: 0.2,
     },
   }));
   useEffect(() => {
@@ -121,7 +121,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       opacity: 1, // Initializing the opacity to 1 (100%)
       config: {
         tension: 400,
-        friction: 57,
+        friction: 47,
         mass: 0.2,
       },
     })
@@ -141,8 +141,36 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     return current;
   }
 
+  const navigateBack = useCallback(() => {
+    setPages((prevPages) => {
+      if (prevPages.length <= 1) {
+        return prevPages;
+      }
+
+      // Make a shallow copy of the pages array
+      const newPages = [...prevPages];
+
+      // Pop the last page off the array
+      newPages.pop();
+
+      return newPages;
+    });
+    console.log("navigating back");
+  }, []);
+
   const dragBind = useDrag(
-    ({ down, first, last, movement: [x, y], direction: [dirX, dirY] }) => {
+    ({
+      down,
+      first,
+      last,
+      movement: [x, y],
+      velocity: [vx, vy],
+      direction: [dirX, dirY],
+      swipe: [swipeX, swipeY],
+    }) => {
+      // Calculating the magnitude of the velocity vector
+      const velocityMagnitude = Math.sqrt(vx ** 2 + vy ** 2);
+
       // Initialize the initial width and height when the drag starts
       if (first) {
         initialWidth = width.get();
@@ -151,38 +179,61 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       }
 
       if (previousPage && previousPage.dimensions) {
-        let activeWidth = activePage.dimensions.width;
-        let activeHeight = activePage.dimensions.height;
+        let activeWidth = width.get();
+        let activeHeight = height.get();
 
         let prevWidth = previousPage.dimensions.width;
         let prevHeight = previousPage.dimensions.height;
 
-        let newWidth = adjustDimension(activeWidth, prevWidth, y);
-        let newHeight = adjustDimension(activeHeight, prevHeight, y);
-        let newOpacity = 1 - Math.abs(y) / 80; // Adjust this calculation to match your drag length
+        // Apply a damping factor to control the effect of the velocity
+        const dampingFactor = 4;
+
+        // Use the provided velocity with the damping factor
+        let speedFactor = 1 + velocityMagnitude * dampingFactor;
+
+        // Ensure speedFactor stays within reasonable bounds
+        speedFactor = Math.min(Math.max(speedFactor, 1), 10);
+
+        let newWidth = adjustDimension(activeWidth, prevWidth, y * speedFactor);
+        let newHeight = adjustDimension(
+          activeHeight,
+          prevHeight,
+          y * speedFactor
+        );
+
+        let newOpacity = 1 - Math.abs(y) / 20;
 
         set({ width: newWidth, height: newHeight, opacity: newOpacity });
 
         // Rubber-band back to initial if not met with target
         if (last) {
-          const isWidthCloseToTarget = Math.abs(newWidth - prevWidth) < 48;
-          const isHeightCloseToTarget = Math.abs(newHeight - prevHeight) < 48;
+          // Check if target dimensions are reached
+          if (newWidth === prevWidth && newHeight === prevHeight) {
+            console.log("newOpacity:", newOpacity);
+            set({
+              width: newWidth,
+              height: newHeight,
+              opacity: newOpacity + 0.001,
 
-          // If not close enough to the target dimensions, revert to initial dimensions
-          if (!isWidthCloseToTarget || !isHeightCloseToTarget) {
+              onRest: () => {
+                navigateBack();
+                set({
+                  opacity: 1,
+                });
+              },
+            });
+          } else {
+            // If target dimensions arent reached, rubber-band back to initial
             newWidth = initialWidth;
             newHeight = initialHeight;
-            newOpacity = initialOpacity; // Resetting the opacity
+            newOpacity = initialOpacity;
+            set({ width: newWidth, height: newHeight, opacity: newOpacity });
           }
-
-          set({ width: newWidth, height: newHeight, opacity: newOpacity });
-          setDebounced({ newWidth, newHeight });
-        }
-        if (newWidth === prevWidth && newHeight === prevHeight) {
-          set({ width: newWidth, height: newHeight, opacity: 1 });
-          navigateBack();
         }
       }
+    },
+    {
+      axis: "y",
     }
   );
 
@@ -261,20 +312,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
   }, [activePage, setSelectedSound, pages]);
 
   const transitions = useTransition(ActiveComponent, {
-    from: { opacity: 0, blur: 5 },
-    enter: { opacity: 1, blur: 0, delay: 150 },
-    leave: { opacity: 0, blur: 6 },
+    from: {},
+    enter: {},
+    leave: {},
     config: {
       duration: 150,
     },
   });
-
-  // Unmount cleanup
-  useEffect(() => {
-    return () => {
-      setDebounced.cancel();
-    };
-  }, [setDebounced]);
 
   useEffect(() => {
     if (pages.length > prevPageCount) {
@@ -338,6 +382,9 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
           }}
           loop
         >
+          <div className="absolute flex text-xs text-center z-0 text-gray2 top-1/2">
+            back to {previousPage?.name}
+          </div>
           <Nav />
           {/* Container / Shapeshifter */}
           <animated.div
@@ -349,9 +396,10 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
               height: height.to((h) => `${h}px`),
               opacity: opacity.to((o) => o),
               willChange: "width, height",
+              touchAction: "pan-y",
             }}
             ref={shapeshifterContainerRef}
-            className={`flex rounded-[20px] z-0 hoverable-large relative overflow-y-scroll scrollbar-none ${
+            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none ${
               isVisible ? `` : ""
             } `}
           >
@@ -362,6 +410,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
                   ...style,
                   position: "absolute",
                   width: "100%",
+                  backgroundColor: "white",
                 }}
               >
                 {Component === Album ? (

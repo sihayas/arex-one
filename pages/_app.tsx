@@ -26,7 +26,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           <CMDKProvider>
             <AlbumDetailsProvider>
               <ThreadcrumbProvider>
-                <CustomCursor />
+                {/* <CustomCursor /> */}
                 <Component {...pageProps} />
               </ThreadcrumbProvider>
             </AlbumDetailsProvider>
