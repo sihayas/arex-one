@@ -33,12 +33,12 @@ const Album = ({ scale }: AlbumProps) => {
 
   const boxShadow = useMemo(() => {
     if (selectedSound?.colors[0]) {
-      return `0px 0px 0px 0px ${selectedSound.colors[0]}, 0.11),
-        0px 6px 14px 0px ${selectedSound.colors[0]}, 0.11),
-        0px 26px 26px 0px ${selectedSound.colors[0]}, 0.10),
-        0px 58px 35px 0px ${selectedSound.colors[0]}, 0.06),
-        0px 103px 41px 0px ${selectedSound.colors[0]}, 0.02),
-        0px 161px 45px 0px ${selectedSound.colors[0]}, 0.00)`;
+      return `0px 0px 0px 0px ${selectedSound.colors[0]}, 0.15),
+        2px 2px 7px 0px ${selectedSound.colors[0]}, 0.15),
+        9px 9px 13px 0px ${selectedSound.colors[0]}, 0.13),
+        20px 20px 17px 0px ${selectedSound.colors[0]}, 0.08),
+        35px 36px 20px 0px ${selectedSound.colors[0]}, 0.02),
+        55px 57px 22px 0px ${selectedSound.colors[0]}, 0.00)`;
     }
     return undefined;
   }, [selectedSound?.colors]);
@@ -108,7 +108,7 @@ const Album = ({ scale }: AlbumProps) => {
             <p className="text-sm text-black font-medium">
               {selectedSound.sound.attributes.name}
             </p>
-            <p className="text-sm text-gray2">
+            <p className="text-sm text-black">
               {selectedSound.sound.attributes.artistName}
             </p>
           </div>

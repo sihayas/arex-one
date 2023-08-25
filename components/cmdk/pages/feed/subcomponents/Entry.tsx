@@ -120,7 +120,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
               />
             )}
           </div>
-          <div className="flex gap-2 text-[10px] text-gray2 w-[470px]">
+          <div className="flex gap-2 text-xs text-gray2 w-[470px]">
             {(review._count.likes > 0 || review._count.replies > 0) && (
               <div className="flex gap-1">
                 {review._count.replies > 0 && (
@@ -138,10 +138,9 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             {(review._count.likes > 0 || review._count.replies > 0) && (
               <div>&#8211;</div>
             )}
-            <div className="text-gray2 text-[10px]">
+            <div className="text-gray2 text-xs">
               {formatDateShort(new Date(review.createdAt))}
             </div>
-            {/* <LikeButton handleLikeClick={handleLikeClick} liked={liked} /> */}
           </div>
         </div>
 
