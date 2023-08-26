@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSpring, animated } from "@react-spring/web";
-import { useCMDK } from "@/context/Interface";
+import { useInterface } from "@/context/Interface";
 
 const ratings = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
@@ -10,7 +10,7 @@ interface DialProps {
 
 const Dial = ({ setRatingValue }: DialProps) => {
   const [ratingIndex, setRatingIndex] = useState(0);
-  const { inputRef } = useCMDK();
+  const { inputRef } = useInterface();
 
   const props = useSpring({
     value: ratingIndex,

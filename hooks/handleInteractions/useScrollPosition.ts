@@ -1,10 +1,10 @@
-import { useCMDK } from "@/context/Interface";
+import { useInterface } from "@/context/Interface";
 import { debounce } from "lodash";
 import { useRef } from "react";
 
 export function useScrollPosition() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const { setPages, pages } = useCMDK();
+  const { setPages, pages } = useInterface();
 
   // useEffect hook to save scroll position to pages
   const saveScrollPosition = debounce(() => {

@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 
-import { useCMDK } from "@/context/Interface";
-import { useCMDKAlbum } from "@/context/Sound";
+import { useInterface } from "@/context/Interface";
+import { useSound } from "@/context/Sound";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDrag/album";
 
@@ -12,7 +12,7 @@ import Lowlights from "./sub/Lowlights";
 import Highlights from "./sub/Highlights";
 import { animated, SpringValue } from "@react-spring/web";
 import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import TabBar from "@/components/cmdk/pages/album/sub/TabBar";
+import TabBar from "@/components/interface/pages/album/sub/TabBar";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -21,8 +21,8 @@ interface AlbumProps {
 const Album = ({ scale }: AlbumProps) => {
   // Hooks
   const { data: session } = useSession();
-  const { pages } = useCMDK();
-  const { selectedSound } = useCMDKAlbum();
+  const { pages } = useInterface();
+  const { selectedSound } = useSound();
   const { scrollContainerRef } = useScrollPosition();
   const { bind, x, activeSection } = useDragAlbumLogic();
 

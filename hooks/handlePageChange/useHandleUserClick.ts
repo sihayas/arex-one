@@ -1,7 +1,7 @@
-import { useCMDK } from "@/context/Interface";
+import { useInterface } from "@/context/Interface";
 
 export const useHandleUserClick = (authorId: string) => {
-  const { setPages, setIsVisible, isVisible } = useCMDK();
+  const { setPages, setIsVisible, isVisible } = useInterface();
 
   const handleUserClick = () => {
     setPages((prevPages) => [

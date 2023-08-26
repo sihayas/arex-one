@@ -5,7 +5,7 @@ import { useScrollContext } from "@/context/Scroll";
 
 const springConfig = { tension: 500, friction: 50 };
 
-function CustomCursor() {
+function Cursor() {
   // Cursor context
 
   const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -95,4 +95,4 @@ function CustomCursor() {
   );
 }
 
-export default React.memo(CustomCursor);
+export default React.memo(Cursor);

@@ -8,8 +8,8 @@ import { useState } from "react";
 import { ThreadcrumbProvider } from "../context/Threadcrumbs";
 import { AlbumDetailsProvider } from "../context/Sound";
 import { Toaster } from "sonner";
-import { CMDKProvider } from "../context/Interface";
-import CustomCursor from "@/components/global/CustomCursor";
+import { InterfaceProvider } from "../context/Interface";
+import Cursor from "@/components/global/Cursor";
 import { ScrollProvider } from "@/context/Scroll";
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -23,14 +23,14 @@ const App = ({ Component, pageProps }: AppProps) => {
           async
         />
         <ScrollProvider>
-          <CMDKProvider>
+          <InterfaceProvider>
             <AlbumDetailsProvider>
               <ThreadcrumbProvider>
-                {/* <CustomCursor /> */}
+                <Cursor />
                 <Component {...pageProps} />
               </ThreadcrumbProvider>
             </AlbumDetailsProvider>
-          </CMDKProvider>
+          </InterfaceProvider>
         </ScrollProvider>
         <Toaster />
         {/* <ReactQueryDevtools /> */}

@@ -5,7 +5,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import TabBar from "@/components/cmdk/pages/album/sub/TabBar";
+import TabBar from "@/components/interface/pages/album/sub/TabBar";
 
 export default function Home() {
   const { data: session, status } = useSession();

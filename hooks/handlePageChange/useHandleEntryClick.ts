@@ -1,8 +1,8 @@
-import { useCMDK } from "@/context/Interface";
+import { useInterface } from "@/context/Interface";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 export const useHandleEntryClick = (reviewId: string) => {
-  const { setPages, isVisible, setIsVisible } = useCMDK();
+  const { setPages, isVisible, setIsVisible } = useInterface();
   const { setThreadcrumbs } = useThreadcrumb();
 
   const handleEntryClick = () => {

@@ -1,13 +1,13 @@
-import { useCMDKAlbum } from "@/context/Sound";
+import { useSound } from "@/context/Sound";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
 import { AlbumData, SongData } from "@/lib/global/interfaces";
-import { useCMDK } from "@/context/Interface";
+import { useInterface } from "@/context/Interface";
 
 export const useHandleSearchClick = () => {
   const { getDominantColor } = useDominantColor();
-  const { setInputValue, setStoredInputValue, inputValue } = useCMDK();
+  const { setInputValue, setStoredInputValue, inputValue } = useInterface();
 
-  const { setSelectedFormSound } = useCMDKAlbum();
+  const { setSelectedFormSound } = useSound();
 
   const handleSelectSearch = async (
     imgElement: HTMLImageElement,

@@ -1,7 +1,7 @@
-import { useCMDK } from "@/context/Interface";
+import { useInterface } from "@/context/Interface";
 
 export const useHandleSignalClick = () => {
-  const { setPages } = useCMDK();
+  const { setPages } = useInterface();
 
   const handleSignalClick = () => {
     setPages((prevPages) => [

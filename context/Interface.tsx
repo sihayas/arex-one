@@ -8,7 +8,6 @@ import React, {
 import { SelectedSound } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
 
-// Define the shape of the Page data type
 export type Page = {
   name: string;
   selectedSound?: SelectedSound;
@@ -21,7 +20,6 @@ export type Page = {
   };
 };
 
-// Define the shape of the context data type
 export type InterfaceContext = {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -44,27 +42,27 @@ export type InterfaceContext = {
   setStoredInputValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
-// Define the props for the CMDKProvider component
+// Define the props for the InterfaceProvider component
 type InterfaceProviderProps = {
   children: React.ReactNode;
 };
 
 // Create the context, initialized as undefined
-export const CMDKContext = React.createContext<InterfaceContext | undefined>(
-  undefined
-);
+export const InterfaceContext = React.createContext<
+  InterfaceContext | undefined
+>(undefined);
 
 // Export a custom hook to consume the context
-export const useCMDK = (): InterfaceContext => {
-  const context = useContext(CMDKContext);
+export const useInterface = (): InterfaceContext => {
+  const context = useContext(InterfaceContext);
   if (!context) {
-    throw new Error("useCMDK must be used within CMDKProvider");
+    throw new Error("useInterface must be used within InterfaceProvider");
   }
   return context;
 };
 
 // Define the provider for the context
-export const CMDKProvider = ({ children }: InterfaceProviderProps) => {
+export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
   const { data: session, status } = useSession();
 
   // Visiblity states
@@ -118,10 +116,7 @@ export const CMDKProvider = ({ children }: InterfaceProviderProps) => {
       }
     };
 
-    // Add a listener for the  event
     window.addEventListener("popstate", handlePopState);
-
-    // Cleanup the listener when the component unmounts
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
@@ -129,7 +124,7 @@ export const CMDKProvider = ({ children }: InterfaceProviderProps) => {
 
   // Render the provider with the context value
   return (
-    <CMDKContext.Provider
+    <InterfaceContext.Provider
       value={{
         isVisible,
         setIsVisible,
@@ -153,6 +148,6 @@ export const CMDKProvider = ({ children }: InterfaceProviderProps) => {
       }}
     >
       {children}
-    </CMDKContext.Provider>
+    </InterfaceContext.Provider>
   );
 };

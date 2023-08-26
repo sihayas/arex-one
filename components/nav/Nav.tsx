@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { useCMDK } from "@/context/Interface";
-import { useCMDKAlbum } from "@/context/Sound";
+import { useInterface } from "@/context/Interface";
+import { useSound } from "@/context/Sound";
 import GetSearchResults from "@/lib/api/searchAPI";
 import { useSpring, animated } from "@react-spring/web";
 import { debounce } from "lodash";
@@ -15,8 +15,8 @@ import Form from "./sub/Form";
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
   const { inputValue, setInputValue, expandInput, setExpandInput, inputRef } =
-    useCMDK();
-  const { selectedFormSound } = useCMDKAlbum();
+    useInterface();
+  const { selectedFormSound } = useSound();
 
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSetSearchQuery = debounce(setSearchQuery, 350);

@@ -1,8 +1,8 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 
-import { useCMDK } from "@/context/Interface";
-import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
+import { useInterface } from "@/context/Interface";
+import useHandleLikeClick from "@/hooks/handleInteractions/useHandleLike";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import {
   differenceInDays,
@@ -26,7 +26,7 @@ interface EntryFullProps {
 
 export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setPages } = useCMDK();
+  const { setPages } = useInterface();
   const { threadcrumbs } = useThreadcrumb();
 
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(

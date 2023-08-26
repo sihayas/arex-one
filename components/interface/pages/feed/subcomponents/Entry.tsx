@@ -2,7 +2,7 @@ import React from "react";
 import { useSession } from "next-auth/react";
 
 import { ReviewData } from "@/lib/global/interfaces";
-import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
+import useHandleLikeClick from "@/hooks/handleInteractions/useHandleLike";
 import { useHandleEntryClick } from "@/hooks/handlePageChange/useHandleEntryClick";
 import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
 import {
@@ -15,7 +15,7 @@ import {
 } from "date-fns";
 
 import { ArtworkHeader } from "./ArtworkHeader";
-import Line from "@/components/cmdk/pages/entry/sub/icons/Line";
+import Line from "@/components/interface/pages/entry/sub/icons/Line";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { SelectedSound } from "../lib/global/interfaces";
 
-export type AlbumDetailsContextType = {
+export type SoundContextType = {
   selectedSound: SelectedSound | null;
   setSelectedSound: React.Dispatch<React.SetStateAction<SelectedSound | null>>;
   selectedFormSound: SelectedSound | null;
@@ -10,17 +10,17 @@ export type AlbumDetailsContextType = {
   >;
 };
 
-type AlbumDetailsProviderProps = {
+type SoundContextProviderProps = {
   children: React.ReactNode;
 };
 
-export const AlbumDetailsContext = React.createContext<
-  AlbumDetailsContextType | undefined
->(undefined);
+export const SoundContext = React.createContext<SoundContextType | undefined>(
+  undefined
+);
 
 // Export the hook
-export const useCMDKAlbum = (): AlbumDetailsContextType => {
-  const context = useContext(AlbumDetailsContext);
+export const useSound = (): SoundContextType => {
+  const context = useContext(SoundContext);
   if (!context) {
     throw new Error("useAlbumDetails must be used within AlbumDetailsProvider");
   }
@@ -29,7 +29,7 @@ export const useCMDKAlbum = (): AlbumDetailsContextType => {
 
 export const AlbumDetailsProvider = ({
   children,
-}: AlbumDetailsProviderProps) => {
+}: SoundContextProviderProps) => {
   const [selectedSound, setSelectedSound] = useState<SelectedSound | null>(
     null
   );
@@ -38,7 +38,7 @@ export const AlbumDetailsProvider = ({
     useState<SelectedSound | null>(null);
 
   return (
-    <AlbumDetailsContext.Provider
+    <SoundContext.Provider
       value={{
         selectedSound,
         setSelectedSound,
@@ -47,6 +47,6 @@ export const AlbumDetailsProvider = ({
       }}
     >
       {children}
-    </AlbumDetailsContext.Provider>
+    </SoundContext.Provider>
   );
 };

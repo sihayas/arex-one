@@ -1,9 +1,9 @@
-import { CMDK } from "./cmdk/CmdK";
+import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useCallback, useRef } from "react";
-import { useCMDK } from "@/context/Interface";
+import { useInterface } from "@/context/Interface";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { isVisible, setIsVisible, inputRef } = useCMDK();
+  const { isVisible, setIsVisible, inputRef } = useInterface();
   const mainContentRef = useRef<HTMLElement>(null);
 
   const handleKeyDown = useCallback(
@@ -49,7 +49,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <CMDK isVisible={isVisible} />
+      <Interface isVisible={isVisible} />
       <main
         ref={mainContentRef}
         id="main-content"

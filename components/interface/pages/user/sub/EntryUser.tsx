@@ -1,22 +1,24 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 
-import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
+import useHandleLikeClick from "@/hooks/handleInteractions/useHandleLike";
 import { useHandleEntryClick } from "@/hooks/handlePageChange/useHandleEntryClick";
 import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
-
+import { useInterface } from "@/context/Interface";
 import { ReviewData } from "@/lib/global/interfaces";
-import { StatLineIcon } from "@/components/icons";
-import LikeButton from "@/components/global/LikeButton";
-import Stars from "@/components/global/Stars";
-import UserAvatar from "@/components/global/UserAvatar";
 
-interface EntryAlbumProps {
+import { StatLineIcon } from "@/components/icons";
+import { ArtworkHeader } from "@/components/interface/pages/feed/subcomponents/ArtworkHeader";
+import UserAvatar from "@/components/global/UserAvatar";
+import LikeButton from "@/components/global/LikeButton";
+
+interface EntryUserProps {
   review: ReviewData;
 }
 
-export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
+export const EntryUser: React.FC<EntryUserProps> = ({ review }) => {
   const { data: session } = useSession();
+  const { setIsVisible } = useInterface();
 
   const { liked, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
@@ -33,30 +35,34 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
 
   return (
     <div className="flex flex-col gap-1 w-[484px] overflow-visible group">
+      <div className="ml-1 z-10">
+        <ArtworkHeader
+          albumId={review.albumId}
+          rating={review.rating}
+          album={review.album}
+        />
+      </div>
+
       {/* Review Content, Like Button  */}
       <div className="flex relative">
         <div
           onClick={handleEntryClick}
-          className={`w-full text-sm leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words hoverable-medium`}
+          className={`w-full text-[13px] leading-normal px-4 py-2 bg-white text-black border border-silver rounded-2xl rounded-bl-[4px] break-words hoverable-medium`}
         >
           {review.content}
         </div>
-        <Stars
-          className={
-            "absolute -left-3 -top-3 border border-silver rounded-full p-1 bg-white"
-          }
-          rating={review.rating}
-          color={"#333"}
-        />
 
-        <div className="absolute flex gap-2 -right-3 -bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute bg-white flex gap-2 -right-3 -bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
         </div>
       </div>
 
       {/* Username and Avatar */}
       <div
-        onClick={handleUserClick}
+        onClick={() => {
+          handleUserClick();
+          setIsVisible((prevIsVisible) => !prevIsVisible);
+        }}
         className="flex items-center gap-2 hoverable-small"
       >
         {/* Image & Star  */}
@@ -68,7 +74,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         />
         {/* Name  */}
         <div
-          className={`font-medium text-sm leading-normal text-black  transition-all duration-300 hover:text-[#000]`}
+          className={`font-medium text-[13px] leading-normal text-black  transition-all duration-300 hover:text-[#000]`}
         >
           {review.author?.name}
         </div>
@@ -88,7 +94,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
             {review.replies.slice(0, 3).map((reply, index) => (
               <UserAvatar
                 key={index}
-                className={`!border-2 border-white ${
+                className={`!border-2 border-white shadow-md ${
                   index !== 0 ? "-ml-1" : ""
                 }`}
                 imageSrc={reply.author.image}

@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
+import useHandleLikeClick from "@/hooks/handleInteractions/useHandleLike";
 
 import { ReplyData } from "@/lib/global/interfaces";
 import UserAvatar from "@/components/global/UserAvatar";
 import { ChainEndIcon } from "@/components/icons";
 import LikeButton from "@/components/global/LikeButton";
-import Line from "@/components/cmdk/pages/entry/sub/icons/Line";
+import Line from "@/components/interface/pages/entry/sub/icons/Line";
 
 interface ReplyProps {
   reply: ReplyData;

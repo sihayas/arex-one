@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchUserReview, postReview } from "@/lib/api/formAPI";
-import { useCMDKAlbum } from "@/context/Sound";
-import { useCMDK } from "@/context/Interface";
+import { useSound } from "@/context/Sound";
+import { useInterface } from "@/context/Interface";
 
 import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { SendIcon, ArrowIcon } from "@/components/icons";
@@ -16,8 +16,8 @@ const Form = () => {
   const { data: session } = useSession();
   const userId = session?.user.id;
 
-  const { selectedFormSound, setSelectedFormSound } = useCMDKAlbum();
-  const { inputRef, inputValue, setInputValue, expandInput } = useCMDK();
+  const { selectedFormSound, setSelectedFormSound } = useSound();
+  const { inputRef, inputValue, setInputValue, expandInput } = useInterface();
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);

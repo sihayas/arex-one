@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { useCMDKAlbum } from "@/context/Sound";
-import { useCMDK } from "@/context/Interface";
+import { useSound } from "@/context/Sound";
+import { useInterface } from "@/context/Interface";
 
 import { animated, useSpring, useTransition } from "@react-spring/web";
 import { useDrag, useScroll, useWheel } from "@use-gesture/react";
@@ -36,9 +36,10 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   feed: Feed,
 };
 
-export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
+export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const {
     pages,
+    navigateBack,
     activePage,
     previousPage,
     setPages,
@@ -50,13 +51,13 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     inputRef,
     setStoredInputValue,
     setExpandInput,
-  } = useCMDK();
+  } = useInterface();
   const {
     selectedSound,
     setSelectedSound,
     selectedFormSound,
     setSelectedFormSound,
-  } = useCMDKAlbum();
+  } = useSound();
 
   // Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -75,6 +76,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
       mass: 0.2,
     },
   }));
+
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
@@ -140,23 +142,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
     if (target < current) return Math.max(target, current - delta * 0.5);
     return current;
   }
-
-  const navigateBack = useCallback(() => {
-    setPages((prevPages) => {
-      if (prevPages.length <= 1) {
-        return prevPages;
-      }
-
-      // Make a shallow copy of the pages array
-      const newPages = [...prevPages];
-
-      // Pop the last page off the array
-      newPages.pop();
-
-      return newPages;
-    });
-    console.log("navigating back");
-  }, []);
 
   const dragBind = useDrag(
     ({

@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 import { useQuery } from "@tanstack/react-query";
-import { useCMDK } from "@/context/Interface";
+import { useInterface } from "@/context/Interface";
 import { useDragUserLogic } from "@/hooks/handleInteractions/useDrag/user";
 import { useHandleSignalClick } from "@/hooks/handlePageChange/useHandleSignalClick";
 
@@ -22,7 +22,7 @@ const favoritesMaxHeight = "592px";
 const reviewsMaxHeight = "";
 
 const User = () => {
-  const { pages } = useCMDK();
+  const { pages } = useInterface();
   const { data: session } = useSession();
 
   const signedInUserId = session?.user.id;

@@ -1,5 +1,5 @@
-import { useCMDK } from "@/context/Interface";
-import { useCMDKAlbum } from "@/context/Sound";
+import { useInterface } from "@/context/Interface";
+import { useSound } from "@/context/Sound";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
 import { AlbumData, SongData } from "@/lib/global/interfaces";
 
@@ -7,8 +7,8 @@ export const useHandleSoundClick = () => {
   const { getDominantColor } = useDominantColor();
 
   // CMDK context
-  const { setPages } = useCMDK();
-  const { setSelectedSound } = useCMDKAlbum();
+  const { setPages } = useInterface();
+  const { setSelectedSound } = useSound();
 
   // Set the album
   const handleSelectSound = async (

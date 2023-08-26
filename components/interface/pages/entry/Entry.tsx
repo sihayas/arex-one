@@ -2,8 +2,8 @@ import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-import { useCMDK } from "@/context/Interface";
-import { useCMDKAlbum } from "@/context/Sound";
+import { useInterface } from "@/context/Interface";
+import { useSound } from "@/context/Sound";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 
@@ -21,9 +21,9 @@ interface EntryProps {
 export const Entry = ({ translateY }: EntryProps) => {
   const { data: session } = useSession();
   // Context
-  const { activePage } = useCMDK();
+  const { activePage } = useInterface();
   const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
-  const { selectedSound } = useCMDKAlbum();
+  const { selectedSound } = useSound();
 
   const boxShadow = useMemo(() => {
     if (selectedSound?.colors[0]) {
