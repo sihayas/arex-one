@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { throttle } from "lodash";
-import { useScrollContext } from "@/context/ScrollContext";
+import { useScrollContext } from "@/context/Scroll";
 
 const springConfig = { tension: 500, friction: 50 };
 

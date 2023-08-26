@@ -1,6 +1,6 @@
 import { CMDK } from "./cmdk/CmdK";
 import React, { useEffect, ReactNode, useCallback, useRef } from "react";
-import { useCMDK } from "@/context/CMDKContext";
+import { useCMDK } from "@/context/Interface";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isVisible, setIsVisible, inputRef } = useCMDK();
@@ -19,7 +19,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         }
       }
     },
-    [inputRef]
+    [inputRef, setIsVisible]
   );
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   const handleDoubleClick = useCallback(() => {
     setIsVisible((prevIsVisible) => !prevIsVisible);
-  }, []);
+  }, [setIsVisible]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);

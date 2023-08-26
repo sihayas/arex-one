@@ -1,4 +1,4 @@
-import { useCMDK } from "@/context/CMDKContext";
+import { useCMDK } from "@/context/Interface";
 
 export const useHandleSignalClick = () => {
   const { setPages } = useCMDK();

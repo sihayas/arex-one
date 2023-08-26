@@ -2,8 +2,8 @@ import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-import { useCMDK } from "@/context/CMDKContext";
-import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { useCMDK } from "@/context/Interface";
+import { useCMDKAlbum } from "@/context/Sound";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 

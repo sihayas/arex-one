@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchUserReview, postReview } from "@/lib/api/formAPI";
-import { useCMDKAlbum } from "@/context/CMDKAlbum";
-import { useCMDK } from "@/context/CMDKContext";
+import { useCMDKAlbum } from "@/context/Sound";
+import { useCMDK } from "@/context/Interface";
 
 import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { SendIcon, ArrowIcon } from "@/components/icons";

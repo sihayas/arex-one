@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { useCMDKAlbum } from "@/context/CMDKAlbum";
-import { useCMDK } from "@/context/CMDKContext";
+import { useCMDKAlbum } from "@/context/Sound";
+import { useCMDK } from "@/context/Interface";
 
 import { animated, useSpring, useTransition } from "@react-spring/web";
 import { useDrag, useScroll, useWheel } from "@use-gesture/react";
@@ -205,7 +205,7 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
 
         set({ width: newWidth, height: newHeight, opacity: newOpacity });
 
-        // Rubber-band back to initial if not met with target
+        x; // Rubber-band back to initial if not met with target
         if (last) {
           // Check if target dimensions are reached
           if (newWidth === prevWidth && newHeight === prevHeight) {

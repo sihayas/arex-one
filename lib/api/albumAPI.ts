@@ -3,7 +3,7 @@ import { SelectedSound, AlbumData } from "../global/interfaces";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { getAlbumById, getAlbumBySongId } from "../global/musicKit";
-import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { useCMDKAlbum } from "@/context/Sound";
 
 interface UserSession {
   id: string;

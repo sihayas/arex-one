@@ -1,7 +1,7 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 
-import { useCMDK } from "@/context/CMDKContext";
+import { useCMDK } from "@/context/Interface";
 import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import {

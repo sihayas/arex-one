@@ -1,4 +1,4 @@
-import { useCMDK } from "@/context/CMDKContext";
+import { useCMDK } from "@/context/Interface";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 export const useHandleEntryClick = (reviewId: string) => {

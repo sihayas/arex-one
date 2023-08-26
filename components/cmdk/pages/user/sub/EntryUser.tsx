@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import useHandleLikeClick from "@/hooks/handleInteractions/useLike";
 import { useHandleEntryClick } from "@/hooks/handlePageChange/useHandleEntryClick";
 import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
-import { useCMDK } from "@/context/CMDKContext";
+import { useCMDK } from "@/context/Interface";
 import { ReviewData } from "@/lib/global/interfaces";
 
 import { StatLineIcon } from "@/components/icons";

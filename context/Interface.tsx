@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { SelectedSound } from "@/lib/global/interfaces";
+import { useSession } from "next-auth/react";
 
 // Define the shape of the Page data type
 export type Page = {
@@ -21,7 +22,7 @@ export type Page = {
 };
 
 // Define the shape of the context data type
-export type CMDKContextType = {
+export type InterfaceContext = {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   selectedReviewId: string | null;
@@ -44,17 +45,17 @@ export type CMDKContextType = {
 };
 
 // Define the props for the CMDKProvider component
-type CMDKProviderProps = {
+type InterfaceProviderProps = {
   children: React.ReactNode;
 };
 
 // Create the context, initialized as undefined
-export const CMDKContext = React.createContext<CMDKContextType | undefined>(
+export const CMDKContext = React.createContext<InterfaceContext | undefined>(
   undefined
 );
 
 // Export a custom hook to consume the context
-export const useCMDK = (): CMDKContextType => {
+export const useCMDK = (): InterfaceContext => {
   const context = useContext(CMDKContext);
   if (!context) {
     throw new Error("useCMDK must be used within CMDKProvider");
@@ -63,9 +64,11 @@ export const useCMDK = (): CMDKContextType => {
 };
 
 // Define the provider for the context
-export const CMDKProvider = ({ children }: CMDKProviderProps) => {
+export const CMDKProvider = ({ children }: InterfaceProviderProps) => {
+  const { data: session, status } = useSession();
+
   // Visiblity states
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");

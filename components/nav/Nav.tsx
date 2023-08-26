@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { useCMDK } from "@/context/CMDKContext";
-import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { useCMDK } from "@/context/Interface";
+import { useCMDKAlbum } from "@/context/Sound";
 import GetSearchResults from "@/lib/api/searchAPI";
 import { useSpring, animated } from "@react-spring/web";
 import { debounce } from "lodash";

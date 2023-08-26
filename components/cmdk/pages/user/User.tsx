@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 import { useQuery } from "@tanstack/react-query";
-import { useCMDK } from "@/context/CMDKContext";
+import { useCMDK } from "@/context/Interface";
 import { useDragUserLogic } from "@/hooks/handleInteractions/useDrag/user";
 import { useHandleSignalClick } from "@/hooks/handlePageChange/useHandleSignalClick";
 
@@ -46,7 +46,7 @@ const User = () => {
     () =>
       signedInUserId && userId ? isUserFollowing(signedInUserId, userId) : null,
     {
-      enabled: !!userId && !!signedInUserId,
+      enabled: !!session,
       onSuccess: (data) => {
         if (data !== null) {
           setFollowingAtoB(data.isFollowingAtoB);

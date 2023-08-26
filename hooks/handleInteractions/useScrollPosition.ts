@@ -1,4 +1,4 @@
-import { useCMDK } from "@/context/CMDKContext";
+import { useCMDK } from "@/context/Interface";
 import { debounce } from "lodash";
 import { useRef } from "react";
 

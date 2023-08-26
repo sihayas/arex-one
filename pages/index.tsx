@@ -86,23 +86,6 @@ export default function Home() {
       <div className="row-start-11 col-start-2 col-span-5">
         <div className="w-4 h-4 bg-action rounded-full hoverable-small"></div>
       </div>
-      {/* 
-      <div className="justify-self-center self-center text-black text-sm flex items-center gap-4">
-        <Image
-          className="rounded-full"
-          src={session.user.image}
-          alt="user avatar"
-          width={48}
-          height={48}
-        />
-        <div className="flex flex-col gap-4 translate-y-1/3">
-          <div className="">{session.user.name}*</div>
-          <div onClick={() => signOut()} className="text-xs text-gray2">
-            DISCONNECT
-          </div>
-        </div>
-      </div> */}
-      {/* Circle/Support/About */}
     </Layout>
   );
 }

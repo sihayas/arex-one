@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 
-import { useCMDK } from "@/context/CMDKContext";
-import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { useCMDK } from "@/context/Interface";
+import { useCMDKAlbum } from "@/context/Sound";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDrag/album";
 

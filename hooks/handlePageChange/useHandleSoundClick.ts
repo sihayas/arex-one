@@ -1,5 +1,5 @@
-import { useCMDK } from "@/context/CMDKContext";
-import { useCMDKAlbum } from "@/context/CMDKAlbum";
+import { useCMDK } from "@/context/Interface";
+import { useCMDKAlbum } from "@/context/Sound";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
 import { AlbumData, SongData } from "@/lib/global/interfaces";
 
