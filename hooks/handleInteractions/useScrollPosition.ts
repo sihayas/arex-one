@@ -1,22 +1,28 @@
 import { useInterface } from "@/context/Interface";
 import { debounce } from "lodash";
-import { useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 export function useScrollPosition() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const { setPages, pages } = useInterface();
+  const { pages, previousPage, activePage } = useInterface();
 
-  // useEffect hook to save scroll position to pages
-  const saveScrollPosition = debounce(() => {
-    const currentScrollPosition = scrollContainerRef.current?.scrollTop;
-    setPages((prevPages) => {
-      const currentPage = { ...prevPages[prevPages.length - 1] };
-      currentPage.scrollPosition = currentScrollPosition;
-      return [...prevPages.slice(0, -1), currentPage];
-    });
-  }, 150); // Delay scroll position update to prevent lag.
+  // Hook to save scroll position
+  useLayoutEffect(() => {
+    if (scrollContainerRef.current !== null && previousPage) {
+      const currentScrollPosition = scrollContainerRef.current.scrollTop;
+      previousPage.scrollPosition = currentScrollPosition;
+      console.log("current", currentScrollPosition);
+      console.log(pages);
+    }
+  }, [pages.length, pages, previousPage]);
 
-  // useEffect hook to restore scroll position
+  useLayoutEffect(() => {
+    if (scrollContainerRef.current !== null && activePage.scrollPosition > 0) {
+      scrollContainerRef.current.scrollTop = activePage.scrollPosition;
+    }
+  }, [activePage.scrollPosition]);
+
+  // hook to restore scroll position
   const restoreScrollPosition = () => {
     const scrollContainer = scrollContainerRef.current;
     const currentPage = pages[pages.length - 1];
@@ -52,7 +58,6 @@ export function useScrollPosition() {
 
   return {
     scrollContainerRef,
-    saveScrollPosition,
     restoreScrollPosition,
     handleInfiniteScroll,
   };

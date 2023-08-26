@@ -9,18 +9,16 @@ import Nav from "@/components/nav/Nav";
 
 import Album from "./pages/album/Album";
 import Entry from "./pages/entry/Entry";
-import Index from "./pages/index/Index";
 import User from "./pages/user/User";
 import Signals from "./pages/signals/Signals";
 import Feed from "./pages/feed/Feed";
 
 import { debounce } from "lodash";
 
-type PageName = "feed" | "index" | "album" | "entry" | "user" | "signals";
+type PageName = "feed" | "album" | "entry" | "user" | "signals";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   feed: { width: 574, height: 1084 },
-  index: { width: 922, height: 600 },
   album: { width: 658, height: 658 },
   entry: { width: 516, height: 608 },
   user: { width: 532, height: 712 },
@@ -28,7 +26,6 @@ const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
 };
 
 const componentMap: Record<string, React.ComponentType<any>> = {
-  index: Index,
   album: Album,
   entry: Entry,
   user: User,
@@ -64,7 +61,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const shapeshifterContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Page Tracker
-  const ActiveComponent = componentMap[activePage.name] || Index;
+  const ActiveComponent = componentMap[activePage.name] || Feed;
 
   // Shapeshift dimensions
   const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({

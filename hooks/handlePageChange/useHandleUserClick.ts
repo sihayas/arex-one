@@ -10,6 +10,7 @@ export const useHandleUserClick = (authorId: string) => {
         name: "user",
         user: authorId,
         dimensions: { width: 532, height: 712 },
+        scrollPosition: 0,
       },
     ]);
     !isVisible ? setIsVisible(true) : null;

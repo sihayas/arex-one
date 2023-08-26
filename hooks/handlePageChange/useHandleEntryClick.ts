@@ -15,6 +15,7 @@ export const useHandleEntryClick = (reviewId: string) => {
           width: 516,
           height: 610,
         },
+        scrollPosition: 0,
       },
     ]);
     setThreadcrumbs([reviewId]);

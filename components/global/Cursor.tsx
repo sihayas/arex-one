@@ -1,31 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { throttle } from "lodash";
-import { useScrollContext } from "@/context/Scroll";
 
 const springConfig = { tension: 500, friction: 50 };
 
 function Cursor() {
   // Cursor context
-
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [hoveredScale, setHoveredScale] = useState(1);
+
+  const cursorWorkerRef = React.useRef<Worker | null>(null);
 
   // Reactive cursor size
   const { scale } = useSpring({
     scale: clicked ? hoveredScale * 0.8 : hoveredScale,
     config: springConfig,
   });
-  const cursorSize = 40;
 
   // Track cursor position
   const moveCursor = throttle((e: MouseEvent) => {
-    const cursorX = e.clientX - cursorSize / 2;
-    const cursorY = e.clientY - cursorSize / 2;
-
-    setCoords({ x: cursorX, y: cursorY });
+    cursorWorkerRef.current?.postMessage({
+      x: e.clientX,
+      y: e.clientY,
+      hovered,
+      clicked,
+      hoveredScale,
+    });
   }, 16);
 
   const hoverCursor = (e: MouseEvent) => {
@@ -63,6 +65,16 @@ function Cursor() {
   };
 
   useEffect(() => {
+    cursorWorkerRef.current = new Worker(
+      new URL("./CursorWorker.ts", import.meta.url)
+    );
+
+    cursorWorkerRef.current.onmessage = (e) => {
+      const { newCoords, newScale } = e.data;
+      setCoords(newCoords);
+      setHoveredScale(newScale);
+    };
+
     document.addEventListener("mousemove", moveCursor);
     document.addEventListener("mouseover", hoverCursor);
     document.addEventListener("mouseout", hoverCursor);
@@ -75,6 +87,7 @@ function Cursor() {
       document.removeEventListener("mouseout", hoverCursor);
       document.removeEventListener("mousedown", clickCursor);
       document.removeEventListener("mouseup", releaseCursor);
+      cursorWorkerRef.current?.terminate();
     };
   }, []);
 

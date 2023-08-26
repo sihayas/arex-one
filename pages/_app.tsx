@@ -10,7 +10,6 @@ import { AlbumDetailsProvider } from "../context/Sound";
 import { Toaster } from "sonner";
 import { InterfaceProvider } from "../context/Interface";
 import Cursor from "@/components/global/Cursor";
-import { ScrollProvider } from "@/context/Scroll";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const [queryClient] = useState(() => new QueryClient());
@@ -22,16 +21,14 @@ const App = ({ Component, pageProps }: AppProps) => {
           src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"
           async
         />
-        <ScrollProvider>
-          <InterfaceProvider>
-            <AlbumDetailsProvider>
-              <ThreadcrumbProvider>
-                <Cursor />
-                <Component {...pageProps} />
-              </ThreadcrumbProvider>
-            </AlbumDetailsProvider>
-          </InterfaceProvider>
-        </ScrollProvider>
+        <InterfaceProvider>
+          <AlbumDetailsProvider>
+            <ThreadcrumbProvider>
+              <Cursor />
+              <Component {...pageProps} />
+            </ThreadcrumbProvider>
+          </AlbumDetailsProvider>
+        </InterfaceProvider>
         <Toaster />
         {/* <ReactQueryDevtools /> */}
       </SessionProvider>

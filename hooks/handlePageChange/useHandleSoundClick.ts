@@ -36,6 +36,7 @@ export const useHandleSoundClick = () => {
           width: 658,
           height: 658,
         },
+        scrollPosition: 0,
       },
     ]);
     window.history.pushState(null, "");

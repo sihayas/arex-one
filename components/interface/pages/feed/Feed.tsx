@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { fetchFeed } from "@/lib/api/feedAPI";
 import { useDragLogic } from "@/hooks/handleInteractions/useDrag/feed";
 import { useQuery } from "@tanstack/react-query";
 import { animated } from "@react-spring/web";
+import { useInterface } from "@/context/Interface";
+import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 
 // import NavBar from "@/components/nav/Nav";
 import SpotlightFeed from "@/components/interface/pages/feed/sections/SpotlightFeed";
@@ -14,21 +16,17 @@ import UserFeed from "@/components/interface/pages/feed/sections/UserFeed";
 export default function Feed() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
+
+  const { scrollContainerRef } = useScrollPosition(); //Ref for scroll container
+
   const [currentFeed, setCurrentFeed] = useState("default");
 
-  const navigateLeft = () => {
-    if (currentFeed === "spotlight") setCurrentFeed("in bloom");
-    else if (currentFeed === "in bloom") setCurrentFeed("default");
-  };
-
-  const navigateRight = () => {
-    if (currentFeed === "default") setCurrentFeed("in bloom");
-    else if (currentFeed === "in bloom") setCurrentFeed("spotlight");
-  };
-
+  // Drag logic
   const { bind, x, scaleSpring } = useDragLogic({
-    navigateLeft,
-    navigateRight,
+    navigateLeft: () =>
+      setCurrentFeed(currentFeed === "spotlight" ? "in bloom" : "default"),
+    navigateRight: () =>
+      setCurrentFeed(currentFeed === "default" ? "in bloom" : "spotlight"),
   });
 
   const { data, isLoading, error } = useQuery(
@@ -70,22 +68,21 @@ export default function Feed() {
   }
 
   return (
-    <div>
-      <div className="w-full h-[100vh] overflow-hidden relative">
-        {/* Render the feed here using the data */}
-        <animated.div
-          // style={{
-          //   x,
-          //   ...scaleSpring,
-          // }}
-          // {...bind()}
-          className="bg-white w-full h-full p-8 overflow-scroll scrollbar-none active:border border-silver rounded-[20px]"
-        >
-          {feedContent}
-          <div className="h-[8.5rem]"></div>
-        </animated.div>
-        {/* <NavBar /> */}
-      </div>
+    <div className="w-full h-[100vh] overflow-hidden relative">
+      {/* Render the feed here using the data */}
+      <animated.div
+        // style={{
+        //   x,
+        //   ...scaleSpring,
+        // }}
+        // {...bind()}
+        className="bg-white w-full h-full p-8 overflow-scroll scrollbar-none active:border border-silver rounded-[20px]"
+        ref={scrollContainerRef}
+      >
+        {feedContent}
+        <div className="h-[8.5rem]"></div>
+      </animated.div>
+      {/* <NavBar /> */}
     </div>
   );
 }

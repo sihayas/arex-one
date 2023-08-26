@@ -9,6 +9,7 @@ export const useHandleSignalClick = () => {
       {
         name: "signals",
         dimensions: { width: 96, height: 712 },
+        scrollPosition: 0,
       },
     ]);
   };

@@ -13,7 +13,7 @@ export type Page = {
   selectedSound?: SelectedSound;
   threadcrumbs?: string[];
   user?: string;
-  scrollPosition?: number;
+  scrollPosition: number;
   dimensions: {
     width: number;
     height: number;
@@ -74,7 +74,11 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
 
   // Page states
   const [pages, setPages] = useState<Page[]>([
-    { name: "feed", dimensions: { width: 574, height: 1084 } },
+    {
+      name: "feed",
+      dimensions: { width: 574, height: 1084 },
+      scrollPosition: 0,
+    },
   ]);
   const [prevPageCount, setPrevPageCount] = useState(pages.length);
 
