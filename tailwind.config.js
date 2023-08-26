@@ -41,8 +41,16 @@ module.exports = {
       fontFamily: {
         baskerville: ["Baskerville", "serif"],
       },
-      letterSpacing: {
-        tight: "-.02em",
+      gridRowStart: {
+        9: "9",
+        10: "10",
+        11: "11",
+      },
+      gridTemplateColumns: {
+        17: "repeat(17, minmax(0, 1fr))", // 17 columns
+      },
+      gridTemplateRows: {
+        11: "repeat(11, minmax(0, 1fr))", // 11 rows
       },
       transitionProperty: {
         opacity: "opacity",

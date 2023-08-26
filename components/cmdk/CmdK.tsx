@@ -209,7 +209,6 @@ export function CMDK({ isVisible }: { isVisible: boolean }): JSX.Element {
         if (last) {
           // Check if target dimensions are reached
           if (newWidth === prevWidth && newHeight === prevHeight) {
-            console.log("newOpacity:", newOpacity);
             set({
               width: newWidth,
               height: newHeight,

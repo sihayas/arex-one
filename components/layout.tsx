@@ -53,7 +53,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main
         ref={mainContentRef}
         id="main-content"
-        className={`h-screen grid relative ${
+        className={`h-screen grid grid-cols-17 grid-rows-11 gap-8 m-8 relative ${
           isVisible ? "animate-scale-down" : "animate-scale-up"
         }`}
       >
