@@ -108,7 +108,13 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
   }, []);
 
   const resetPage = useCallback(() => {
-    setPages([{ name: "index", dimensions: { width: 922, height: 600 } }]);
+    setPages([
+      {
+        name: "index",
+        dimensions: { width: 922, height: 600 },
+        scrollPosition: 0,
+      },
+    ]);
   }, [setPages]);
 
   useEffect(() => {
