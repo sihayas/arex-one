@@ -14,7 +14,7 @@ export const useHandleEntryClick = (reviewId: string) => {
         threadcrumbs: [reviewId],
         dimensions: {
           width: 574,
-          height: entryContainerRef.current?.offsetHeight || 0,
+          height: 158,
         },
         scrollPosition: 0,
       },

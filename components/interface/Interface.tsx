@@ -18,7 +18,7 @@ type PageName = "feed" | "album" | "entry" | "user" | "signals";
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   feed: { width: 574, height: 1084 },
   album: { width: 658, height: 658 },
-  entry: { width: 574, height: 164 },
+  entry: { width: 574, height: 158 },
   user: { width: 532, height: 712 },
   signals: { width: 96, height: 712 },
 };
@@ -56,17 +56,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Page Tracker
   const ActiveComponent = componentMap[activePage.name] || Feed;
 
-  // Shapeshift dimensions
-  const [dimensionsSpring, setDimensionsSpring] = useSpring(() => ({
-    width: PAGE_DIMENSIONS[previousPage!.name as PageName]?.width,
-    height: PAGE_DIMENSIONS[previousPage!.name as PageName]?.height,
-    config: {
-      tension: 400,
-      friction: 47,
-      mass: 0.2,
-    },
-  }));
-
   const [{ width, scale, height, translateY, opacity }, set] = useSpring(
     () => ({
       scale: 1,
@@ -83,21 +72,21 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   );
 
   useEffect(() => {
-    setDimensionsSpring({
-      to: async (next, cancel) => {
-        // If the page has custom dimensions, use them
-        const targetPageDimensions = activePage.dimensions;
-        await next({
-          width: targetPageDimensions?.width,
-          height: targetPageDimensions?.height,
+    requestAnimationFrame(() => {
+      if (activePage.name === "entry" && entryContainerRef.current) {
+        set({
+          height: entryContainerRef.current.offsetHeight,
+          width: entryContainerRef.current.offsetWidth,
         });
-      },
+      } else {
+        const targetPageDimensions = activePage.dimensions;
+        set({
+          height: targetPageDimensions.height,
+          width: targetPageDimensions.width,
+        });
+      }
     });
-    set({
-      width: activePage.dimensions.width,
-      height: activePage.dimensions.height,
-    });
-  }, [activePage.name, setDimensionsSpring, activePage.dimensions, set]);
+  }, [activePage.name, entryContainerRef.current, activePage.dimensions, set]);
 
   let initialWidth: number;
   let initialHeight: number;
@@ -252,14 +241,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
   }, [activePage, setSelectedSound, pages]);
 
-  useEffect(() => {
-    console.log("entryContainerRef", entryContainerRef);
-    if (entryContainerRef.current && activePage.name === "entry") {
-      set({
-        height: entryContainerRef.current.offsetHeight,
-      });
-    }
-  }, [entryContainerRef, activePage.name, set]);
+  // useEffect(() => {
+  //   if (entryContainerRef.current && activePage.name === "entry") {
+  //     requestAnimationFrame(() => {
+  //       set({
+  //         height: entryContainerRef.current?.offsetHeight,
+  //       });
+  //     });
+  //   }
+  // }, [entryContainerRef.current, activePage.name]);
 
   const transitions = useTransition(ActiveComponent, {
     from: { opacity: 0 },
@@ -332,7 +322,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {...dragBind()} // Shapeshifter dragging
             {...scrollBind()} // Custom page scrolling
             style={{
-              ...dimensionsSpring,
               width: width.to((w) => `${w}px`),
               height: height.to((h) => `${h}px`),
               opacity: opacity.to((o) => o),
