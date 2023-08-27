@@ -2,7 +2,8 @@ import { useInterface } from "@/context/Interface";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 export const useHandleEntryClick = (reviewId: string) => {
-  const { setPages, isVisible, setIsVisible } = useInterface();
+  const { setPages, isVisible, setIsVisible, entryContainerRef } =
+    useInterface();
   const { setThreadcrumbs } = useThreadcrumb();
 
   const handleEntryClick = () => {
@@ -13,7 +14,7 @@ export const useHandleEntryClick = (reviewId: string) => {
         threadcrumbs: [reviewId],
         dimensions: {
           width: 574,
-          height: 164,
+          height: entryContainerRef.current?.offsetHeight || 0,
         },
         scrollPosition: 0,
       },

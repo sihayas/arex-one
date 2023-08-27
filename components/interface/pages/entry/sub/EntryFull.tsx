@@ -27,7 +27,7 @@ interface EntryFullProps {
 
 export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setPages } = useInterface();
+  const { setPages, entryContainerRef } = useInterface();
   const { threadcrumbs } = useThreadcrumb();
 
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
@@ -40,7 +40,10 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   );
 
   return (
-    <div className="flex flex-col w-full p-8 z-10 bg-white rounded-[20px] overflow-hidden">
+    <div
+      ref={entryContainerRef}
+      className="flex flex-col w-full p-8 z-10 bg-white rounded-[20px] overflow-hidden"
+    >
       <div className="flex items-center gap-2 hoverable-small">
         <UserAvatar
           imageSrc={review.author.image}

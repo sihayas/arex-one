@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useSound } from "@/context/Sound";
 import { useInterface } from "@/context/Interface";
 
@@ -44,6 +44,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     inputRef,
     setStoredInputValue,
     setExpandInput,
+    entryContainerRef,
   } = useInterface();
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
     useSound();
@@ -250,6 +251,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       setSelectedSound(activePage.selectedSound);
     }
   }, [activePage, setSelectedSound, pages]);
+
+  useEffect(() => {
+    console.log("entryContainerRef", entryContainerRef);
+    if (entryContainerRef.current && activePage.name === "entry") {
+      set({
+        height: entryContainerRef.current.offsetHeight,
+      });
+    }
+  }, [entryContainerRef, activePage.name, set]);
 
   const transitions = useTransition(ActiveComponent, {
     from: { opacity: 0 },

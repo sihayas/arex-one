@@ -40,6 +40,7 @@ export type InterfaceContext = {
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   storedInputValue: string;
   setStoredInputValue: React.Dispatch<React.SetStateAction<string>>;
+  entryContainerRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 // Define the props for the InterfaceProvider component
@@ -63,14 +64,13 @@ export const useInterface = (): InterfaceContext => {
 
 // Define the provider for the context
 export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
-  const { data: session, status } = useSession();
-
-  // Visiblity states
   const [isVisible, setIsVisible] = useState(true);
+
   const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
+  const entryContainerRef = React.useRef<HTMLDivElement | null>(null);
 
   // Page states
   const [pages, setPages] = useState<Page[]>([
@@ -155,6 +155,7 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
         setInputValue,
         storedInputValue,
         setStoredInputValue,
+        entryContainerRef,
       }}
     >
       {children}
