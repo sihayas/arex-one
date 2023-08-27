@@ -24,7 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         <InterfaceProvider>
           <AlbumDetailsProvider>
             <ThreadcrumbProvider>
-              <Cursor />
+              {/* <Cursor /> */}
               <Component {...pageProps} />
             </ThreadcrumbProvider>
           </AlbumDetailsProvider>

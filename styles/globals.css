@@ -17,7 +17,7 @@ body {
   font-size: 1rem;
   height: 100vh;
   position: relative;
-  cursor: none;
+  /* cursor: none; */
   overflow: hidden;
   /* background-color: rgba(237, 237, 237, 0.792); */
 }
@@ -29,7 +29,7 @@ a {
 * {
   box-sizing: border-box;
   user-select: none;
-  cursor: none;
+  /* cursor: none; */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -76,7 +76,7 @@ a {
 }
 
 button {
-  cursor: none;
+  /* cursor: none; */
 }
 
 .cursor {
@@ -85,7 +85,7 @@ button {
   height: 40px;
   background: rgba(108, 108, 108, 0.5); /* 50% opaque gray */
   border-radius: 50%;
-  transform: translate(-50%, -50%);
+  /* transform: translate(-50%, -50%); */
   pointer-events: none;
   z-index: 9999;
   /* -webkit-backdrop-filter: invert(30%) blur(10px); */

@@ -24,6 +24,9 @@ export default function Home() {
             log in?
           </div>
         </Link> */}
+        <div className="row-start-1 col-start-1 text-sm text-black font-medium">
+          RX
+        </div>
         <div className="flex flex-col row-start-1 col-start-2 col-span-5 text-sm justify-between ">
           <div className="text-black tracking-widest">
             A DIGITAL METROPOLIS FOR THE LOVE OF{" "}
@@ -31,7 +34,7 @@ export default function Home() {
           </div>
           <div className="text-gray2">
             HEARING BRINGS US INTO THE LIVING WORLD, SIGHT MOVES US TOWARDS
-            ATROPHY & DEATH
+            ATROPHY & DEATH.
           </div>
         </div>
 
@@ -53,7 +56,7 @@ export default function Home() {
 
         <div className="row-start-9 col-start-2 col-span-5 self-end text-sm text-gray2 uppercase">
           <Link data-active={isActive("/signup")} href="/api/auth/signin">
-            CONNECT...
+            CONNECT WITH <span className="text-red">APPLE MUSIC</span>...
           </Link>
         </div>
       </Layout>

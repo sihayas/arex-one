@@ -12,7 +12,6 @@ import Lowlights from "./sub/Lowlights";
 import Highlights from "./sub/Highlights";
 import { animated, SpringValue } from "@react-spring/web";
 import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import TabBar from "@/components/interface/pages/album/sub/TabBar";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -47,8 +46,6 @@ const Album = ({ scale }: AlbumProps) => {
 
   // Initializes album and loads full details into selectedSound
   const { isLoading, isError } = useAlbumQuery();
-
-  // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
 
   // Load and error handling
   if (!selectedSound || isLoading) {

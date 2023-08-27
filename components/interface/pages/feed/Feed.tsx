@@ -5,7 +5,6 @@ import { fetchFeed } from "@/lib/api/feedAPI";
 import { useDragLogic } from "@/hooks/handleInteractions/useDrag/feed";
 import { useQuery } from "@tanstack/react-query";
 import { animated } from "@react-spring/web";
-import { useInterface } from "@/context/Interface";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 
 // import NavBar from "@/components/nav/Nav";
@@ -17,11 +16,10 @@ export default function Feed() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
-  const { scrollContainerRef } = useScrollPosition(); //Ref for scroll container
+  const { scrollContainerRef } = useScrollPosition();
 
   const [currentFeed, setCurrentFeed] = useState("default");
 
-  // Drag logic
   const { bind, x, scaleSpring } = useDragLogic({
     navigateLeft: () =>
       setCurrentFeed(currentFeed === "spotlight" ? "in bloom" : "default"),

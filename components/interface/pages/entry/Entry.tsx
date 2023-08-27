@@ -1,15 +1,17 @@
 import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 
 import { useInterface } from "@/context/Interface";
 import { useSound } from "@/context/Sound";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
+import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 
+import axios, { AxiosResponse } from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { animated, SpringValue } from "@react-spring/web";
-import axios, { AxiosResponse } from "axios";
 
 import { EntryFull } from "./sub/EntryFull";
 import { ReviewData } from "../../../../lib/global/interfaces";
@@ -24,15 +26,17 @@ export const Entry = ({ translateY }: EntryProps) => {
   const { activePage } = useInterface();
   const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
   const { selectedSound } = useSound();
+  const { scrollContainerRef } = useScrollPosition();
+  const targetElement = document.querySelector(".cmdk");
 
   const boxShadow = useMemo(() => {
     if (selectedSound?.colors[0]) {
-      return `0px 0px 0px 0px ${selectedSound.colors[0]}, 0.11),
-        9px 11px 32px 0px ${selectedSound.colors[0]}, 0.11),
-        37px 45px 58px 0px ${selectedSound.colors[0]}, 0.09),
-        83px 100px 78px 0px ${selectedSound.colors[0]}, 0.05),
-        148px 178px 93px 0px ${selectedSound.colors[0]}, 0.02),
-        231px 279px 101px 0px ${selectedSound.colors[0]}, 0.00)`;
+      return `0px 0px 0px 0px ${selectedSound.colors[0]}, 0.15),
+        2px 2px 7px 0px ${selectedSound.colors[0]}, 0.15),
+        9px 9px 13px 0px ${selectedSound.colors[0]}, 0.13),
+        20px 20px 17px 0px ${selectedSound.colors[0]}, 0.08),
+        35px 36px 20px 0px ${selectedSound.colors[0]}, 0.02),
+        55px 57px 22px 0px ${selectedSound.colors[0]}, 0.00)`;
     }
     return undefined;
   }, [selectedSound?.colors]);
@@ -76,7 +80,7 @@ export const Entry = ({ translateY }: EntryProps) => {
   // If review album is different from selected album, fetch artwork
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
     review?.albumId,
-    "1032",
+    "465",
     "albumId"
   );
 
@@ -84,27 +88,24 @@ export const Entry = ({ translateY }: EntryProps) => {
 
   return (
     <>
-      <Image
-        className="absolute rounded-[20px] rounded-b-none"
-        style={{
-          boxShadow: boxShadow,
-        }}
-        src={artworkUrl || "/public/images/default.png"}
-        alt={`${selectedSound?.sound.attributes.name} artwork`}
-        width={516}
-        height={516}
-        onDragStart={(e) => e.preventDefault()}
-        draggable="false"
-      />
+      {targetElement &&
+        createPortal(
+          <Image
+            className="fixed -top-[93px] -left-[93px] rounded-[20px] -z-10"
+            style={{
+              boxShadow: boxShadow,
+            }}
+            src={artworkUrl || "/public/images/default.png"}
+            alt={`${selectedSound?.sound.attributes.name} artwork`}
+            width={186}
+            height={186}
+            onDragStart={(e) => e.preventDefault()}
+            draggable="false"
+          />,
+          targetElement
+        )}
 
-      {/* Translate up 8rem  */}
-      <animated.div
-        style={{
-          transform: translateY.to((value) => `translateY(${value}rem)`),
-        }}
-      >
-        <EntryFull review={review} />
-      </animated.div>
+      <EntryFull review={review} />
     </>
   );
 };

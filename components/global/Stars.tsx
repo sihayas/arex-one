@@ -38,7 +38,8 @@ const Stars: React.FC<StarsProps> = ({
 
   return (
     <div className={`${className}`}>
-      {getStarIcon(rating)} {soundName} &middot; {artist}
+      {getStarIcon(rating)} <span className="font-medium">{soundName}</span>{" "}
+      &middot; {artist}
     </div>
   );
 };

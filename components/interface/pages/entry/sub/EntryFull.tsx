@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 
 import { useInterface } from "@/context/Interface";
 import useHandleLikeClick from "@/hooks/handleInteractions/useHandleLike";
+import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import {
   differenceInDays,
@@ -38,109 +39,81 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
     session
   );
 
-  const handleUserClick = () => {
-    setPages((prevPages) => [
-      ...prevPages,
-      {
-        name: "user",
-        user: review.author.id,
-        dimensions: {
-          width: 50,
-          height: 50,
-        },
-      },
-    ]);
-  };
-
   return (
-    <>
-      <div className="flex flex-col gap-4 w-full absolute top-[516px] p-8 z-10 bg-white rounded-[20px]">
-        {/* Review Content */}
+    <div className="flex flex-col w-full p-8 z-10 bg-white rounded-[20px] overflow-hidden">
+      <div className="flex items-center gap-2 hoverable-small">
+        <UserAvatar
+          imageSrc={review.author.image}
+          altText={`${review.author?.name}'s avatar`}
+          width={32}
+          height={32}
+          userId={review.author.id}
+        />
+        {/* Name  */}
         <div
-          className={`w-full text-[13px] text-black break-words hoverable-medium`}
+          className={`font-medium text-sm leading-normal text-black  transition-all duration-300`}
         >
-          {review.content}
+          {review.author.name}
         </div>
+      </div>
+      {/* Review Content */}
+      <div
+        className={`w-full text-sm text-black break-words hoverable-medium pl-10`}
+      >
+        {review.content}
+      </div>
+      <div className="flex items-center gap-2 hoverable-small pl-10 pt-4">
+        <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
+        {review.replies && review._count.replies > 0 && (
+          // Like & Avatar previews
+          <div className="flex items-center -ml-1">
+            {review.replies.slice(0, 3).map((reply, index) => (
+              <UserAvatar
+                key={index}
+                className={`!border-2 border-white ${
+                  index !== 0 ? "-ml-1" : ""
+                }`}
+                imageSrc={reply.author.image}
+                altText={`${reply.author.name}'s avatar`}
+                width={20}
+                height={20}
+                userId={reply.author.id}
+              />
+            ))}
 
-        {/* Attribution and stats */}
-        <div className="grid grid-cols-3 relative">
-          {/* Username and Avatar */}
-          <div
-            onClick={handleUserClick}
-            className="self-center flex items-center gap-2 hoverable-small"
-          >
-            <UserAvatar
-              imageSrc={review.author?.image}
-              altText={`${review.author?.name}'s avatar`}
-              width={24}
-              height={24}
-            />
-            {/* Name  */}
-            <div
-              className={`font-medium text-[13px] leading-normal text-black  transition-all duration-300`}
-            >
-              {review.author?.name}
-            </div>
-          </div>
-
-          <Stars
-            className="self-center justify-self-center border border-silver rounded-full p-1"
-            rating={review.rating}
-            color={"#000"}
-          />
-
-          {/* Replies and Likes  */}
-          <div className="self-center justify-self-end flex items-center gap-2 hoverable-small">
-            <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
-            {review.replies && review._count.replies > 0 && (
-              // Like & Avatar previews
-              <div className="flex items-center -ml-1">
-                {review.replies.slice(0, 3).map((reply, index) => (
-                  <UserAvatar
-                    key={index}
-                    className={`!border-2 border-white shadow-md ${
-                      index !== 0 ? "-ml-1" : ""
-                    }`}
-                    imageSrc={reply.author.image}
-                    altText={`${reply.author.name}'s avatar`}
-                    width={20}
-                    height={20}
-                  />
-                ))}
-
-                {review.replies && review._count.replies > 3 && (
-                  <div className="text-[10px] ml-1 text-gray2">
-                    + {review._count.replies - 3}
-                  </div>
-                )}
+            {review.replies && review._count.replies > 3 && (
+              <div className="text-[10px] ml-1 text-gray2">
+                + {review._count.replies - 3}
               </div>
             )}
-            {/* Date  */}
-            <div className="text-gray2 text-[10px]">
-              {formatDateShort(new Date(review.createdAt))}
-            </div>
           </div>
-
-          <div className="text-xs text-gray2 font-medium absolute -bottom-8">
-            {review._count.replies} chains
-          </div>
+        )}
+        {/* Date  */}
+        <div className="text-gray2 text-[10px]">
+          {formatDateShort(new Date(review.createdAt))}
         </div>
-
-        <RenderReplies threadcrumbs={threadcrumbs} />
-
-        {/* Reply Input  */}
-        <div className="w-[452px] absolute bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full z-20 border border-silver">
+      </div>
+      {/* <RenderReplies threadcrumbs={threadcrumbs} /> */}
+      {/* Reply Input  */}
+      {/* <div className="w-[452px] absolute bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full z-20 border border-silver">
           <UserAvatar
             className="border-2 border-white rounded-full"
             imageSrc={review.author?.image}
             altText={`${review.author?.name}'s avatar`}
             width={28}
             height={28}
+            userId={review.author.id}
           />
           <ReplyInput />
-        </div>
-      </div>
-    </>
+        </div> */}
+      <Stars
+        className="fixed bottom-4 left-1/2 transform -translate-x-1/2  bg-white p-1 rounded-full shadow-stars flex items-center gap-1 text-xs pr-2 "
+        rating={review.rating}
+        color={"#000"}
+        soundName={review.album?.name || review.track?.name}
+        artist={review.album?.artist || review.track?.album.artist}
+      />
+    </div>
   );
 };
 
@@ -161,5 +134,5 @@ function formatDateShort(date: Date): string {
   const minutesDifference = differenceInMinutes(now, date);
   if (minutesDifference > 0) return `${minutesDifference}M`;
 
-  return `${differenceInSeconds(now, date)}s`;
+  return `${differenceInSeconds(now, date)}S`;
 }

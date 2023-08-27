@@ -30,6 +30,13 @@ export default async function handle(
               artist: true,
             },
           },
+          track: {
+            select: {
+              id: true,
+              name: true,
+              album: true,
+            },
+          },
           // Check if liked
           likes: {
             select: { id: true },

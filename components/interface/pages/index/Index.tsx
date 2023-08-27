@@ -6,14 +6,10 @@ import BloomingSection from "./sub/BloomingSection";
 import SpotlightSection from "./sub/SpotlightSection";
 
 const Album = () => {
-  const { scrollContainerRef, saveScrollPosition, restoreScrollPosition } =
-    useScrollPosition();
+  const { scrollContainerRef } = useScrollPosition();
 
   const [activeState, setActiveState] = useState({ button: "spotlight" });
   const { bind, x, activeSection } = useDragIndexLogic();
-
-  // useEffect(restoreScrollPosition, [pages, restoreScrollPosition]);
-  // useEffect(saveScrollPosition, [pages, saveScrollPosition]);
 
   return (
     <div

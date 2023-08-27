@@ -13,14 +13,12 @@ import User from "./pages/user/User";
 import Signals from "./pages/signals/Signals";
 import Feed from "./pages/feed/Feed";
 
-import { debounce } from "lodash";
-
 type PageName = "feed" | "album" | "entry" | "user" | "signals";
 
 const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
   feed: { width: 574, height: 1084 },
   album: { width: 658, height: 658 },
-  entry: { width: 516, height: 608 },
+  entry: { width: 574, height: 164 },
   user: { width: 532, height: 712 },
   signals: { width: 96, height: 712 },
 };
@@ -40,8 +38,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     activePage,
     previousPage,
     setPages,
-    prevPageCount,
-    setPrevPageCount,
     inputValue,
     setInputValue,
     storedInputValue,
@@ -49,12 +45,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     setStoredInputValue,
     setExpandInput,
   } = useInterface();
-  const {
-    selectedSound,
-    setSelectedSound,
-    selectedFormSound,
-    setSelectedFormSound,
-  } = useSound();
+  const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
+    useSound();
 
   // Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -74,6 +66,21 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   }));
 
+  const [{ width, scale, height, translateY, opacity }, set] = useSpring(
+    () => ({
+      scale: 1,
+      width: activePage.dimensions.width,
+      height: activePage.dimensions.height,
+      translateY: 0,
+      opacity: 1, // Initializing the opacity to 1 (100%)
+      config: {
+        tension: 400,
+        friction: 47,
+        mass: 0.2,
+      },
+    })
+  );
+
   useEffect(() => {
     setDimensionsSpring({
       to: async (next, cancel) => {
@@ -89,42 +96,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       width: activePage.dimensions.width,
       height: activePage.dimensions.height,
     });
-  }, [activePage.name, setDimensionsSpring]);
-
-  // Update the page dimensions in pages stack
-  const setDebounced = useMemo(
-    () =>
-      debounce(({ newWidth, newHeight }) => {
-        setPages((prevPages) => {
-          const updatedPages = [...prevPages];
-          const activePageIndex = updatedPages.length - 1;
-          updatedPages[activePageIndex] = {
-            ...updatedPages[activePageIndex],
-            dimensions: {
-              width: newWidth,
-              height: newHeight,
-            },
-          };
-          return updatedPages;
-        });
-      }, 150),
-    [setPages]
-  );
-
-  const [{ width, scale, height, translateY, opacity }, set] = useSpring(
-    () => ({
-      scale: 1,
-      width: activePage.dimensions.width,
-      height: activePage.dimensions.height,
-      translateY: 0,
-      opacity: 1, // Initializing the opacity to 1 (100%)
-      config: {
-        tension: 400,
-        friction: 47,
-        mass: 0.2,
-      },
-    })
-  );
+  }, [activePage.name, setDimensionsSpring, activePage.dimensions, set]);
 
   let initialWidth: number;
   let initialHeight: number;
@@ -238,26 +210,16 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         width: newWidth,
         height: newHeight,
       });
-
-      // Defer updating the page dimensions
-      setDebounced({ newWidth, newHeight });
     } else if (activePage.name === "entry") {
-      let baseHeight = 610;
+      let baseHeight = 164;
       let newHeight = baseHeight + (y / 50) * (888 - baseHeight);
       if (newHeight < baseHeight) newHeight = baseHeight;
       if (newHeight > 888) newHeight = 888;
 
-      let translateY = -y / 20;
-      if (translateY < -4) translateY = -4;
-
       set({
-        width: 516,
+        width: 574,
         height: newHeight,
-        translateY: translateY,
       });
-
-      // Defer updating the page dimensions
-      setDebounced({ newWidth: 580, newHeight: newHeight });
     } else if (activePage.name === "user") {
       let baseHeight = 712;
       let newHeight = baseHeight + (y / 120) * (994 - baseHeight);
@@ -268,9 +230,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         height: newHeight,
         width: 532,
       });
-
-      // Defer updating the page dimensions
-      setDebounced({ newWidth: 532, newHeight: newHeight });
     }
   });
 
@@ -293,23 +252,13 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   }, [activePage, setSelectedSound, pages]);
 
   const transitions = useTransition(ActiveComponent, {
-    from: {},
-    enter: {},
-    leave: {},
+    from: { opacity: 0 },
+    enter: { opacity: 1, delay: 750 },
+    leave: { opacity: 0 },
     config: {
       duration: 150,
     },
   });
-
-  useEffect(() => {
-    if (pages.length > prevPageCount) {
-      if (shapeshifterContainerRef.current !== null) {
-        shapeshifterContainerRef.current.scrollTop = 0;
-      }
-    }
-
-    setPrevPageCount(pages.length);
-  }, [pages.length, prevPageCount, shapeshifterContainerRef, setPrevPageCount]);
 
   return (
     <>
@@ -343,6 +292,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
                     width: 658,
                     height: 658,
                   },
+                  scrollPosition: 0,
                 },
               ]);
               inputRef?.current?.blur();
@@ -372,7 +322,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {...dragBind()} // Shapeshifter dragging
             {...scrollBind()} // Custom page scrolling
             style={{
-              ...dimensionsSpring, // Finalize shapeshifter dimensions
+              ...dimensionsSpring,
               width: width.to((w) => `${w}px`),
               height: height.to((h) => `${h}px`),
               opacity: opacity.to((o) => o),
@@ -380,9 +330,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               touchAction: "pan-y",
             }}
             ref={shapeshifterContainerRef}
-            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none ${
-              isVisible ? `` : ""
-            } `}
+            className={`flex h-max rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none `}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
@@ -409,6 +357,26 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     </>
   );
 }
+
+// Update the page dimensions in pages stack
+// const setDebounced = useMemo(
+//   () =>
+//     debounce(({ newWidth, newHeight }) => {
+//       setPages((prevPages) => {
+//         const updatedPages = [...prevPages];
+//         const activePageIndex = updatedPages.length - 1;
+//         updatedPages[activePageIndex] = {
+//           ...updatedPages[activePageIndex],
+//           dimensions: {
+//             width: newWidth,
+//             height: newHeight,
+//           },
+//         };
+//         return updatedPages;
+//       });
+//     }, 150),
+//   [setPages]
+// );
 
 // const wheelBind = useWheel(({ event, last, delta, velocity }) => {
 //   const [, y] = delta;
