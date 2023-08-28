@@ -25,7 +25,7 @@ export default function Home() {
           </div>
         </Link> */}
         <div className="row-start-1 col-start-1 text-sm text-black font-medium">
-          RX
+          AREX
         </div>
         <div className="flex flex-col row-start-1 col-start-2 col-span-5 text-sm justify-between ">
           <div className="text-black tracking-widest">
