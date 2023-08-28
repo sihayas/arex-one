@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useSound } from "@/context/Sound";
 import { useInterface } from "@/context/Interface";
+import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { animated, useSpring, useTransition } from "@react-spring/web";
 import { useDrag, useScroll } from "@use-gesture/react";
@@ -38,6 +39,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   } = useInterface();
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
     useSound();
+  const { threadcrumbs, openThreads } = useThreadcrumb();
 
   // Element refs
   const ref = React.useRef<HTMLInputElement | null>(null);
@@ -68,6 +70,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           height: entryContainerRef.current.offsetHeight,
           width: entryContainerRef.current.offsetWidth,
         });
+        activePage.dimensions.height = entryContainerRef.current.offsetHeight;
       } else {
         const targetPageDimensions = activePage.dimensions;
         set({
@@ -221,15 +224,19 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
   }, [activePage, setSelectedSound, pages]);
 
-  // useEffect(() => {
-  //   if (entryContainerRef.current && activePage.name === "entry") {
-  //     requestAnimationFrame(() => {
-  //       set({
-  //         height: entryContainerRef.current?.offsetHeight,
-  //       });
-  //     });
-  //   }
-  // }, [entryContainerRef.current, activePage.name]);
+  useEffect(() => {
+    if (activePage.name === "entry") {
+      {
+        openThreads
+          ? set({
+              height: 724,
+            })
+          : set({
+              height: activePage.dimensions.height,
+            });
+      }
+    }
+  }, [openThreads, activePage.name, set, activePage.dimensions.height]);
 
   const transitions = useTransition(ActiveComponent, {
     from: { opacity: 0 },
@@ -244,7 +251,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     <>
       <animated.div
         style={{
-          ...visibilitySpring, // To appear
+          ...visibilitySpring,
         }}
         className={`cmdk  ${
           isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"

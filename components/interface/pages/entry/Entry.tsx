@@ -11,10 +11,12 @@ import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition"
 
 import axios, { AxiosResponse } from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { animated, SpringValue } from "@react-spring/web";
+import { SpringValue } from "@react-spring/web";
 
 import { EntryFull } from "./sub/EntryFull";
 import { ReviewData } from "../../../../lib/global/interfaces";
+import { ArrowIcon } from "@/components/icons";
+import RenderReplies from "./sub/reply/RenderReplies";
 
 interface EntryProps {
   translateY: SpringValue<number>;
@@ -24,7 +26,13 @@ export const Entry = ({ translateY }: EntryProps) => {
   const { data: session } = useSession();
   // Context
   const { activePage } = useInterface();
-  const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
+  const {
+    setReplyParent,
+    threadcrumbs,
+    setThreadcrumbs,
+    openThreads,
+    setOpenThreads,
+  } = useThreadcrumb();
   const { selectedSound } = useSound();
   const { scrollContainerRef } = useScrollPosition();
   const targetElement = document.querySelector(".cmdk");
@@ -84,6 +92,10 @@ export const Entry = ({ translateY }: EntryProps) => {
     "albumId"
   );
 
+  const handleOpenThreadsClick = () => {
+    setOpenThreads((prev) => !prev);
+  };
+
   if (!review || !artworkUrl) return null;
 
   return (
@@ -106,6 +118,22 @@ export const Entry = ({ translateY }: EntryProps) => {
         )}
 
       <EntryFull review={review} />
+      <div
+        onClick={handleOpenThreadsClick}
+        className="fixed flex flex-col items-center left-1/2 transform -translate-x-1/2 bottom-0 cursor-pointer z-10"
+      >
+        <div className="text-gray2 font-medium text-xs">
+          {review._count.replies} CHAINS
+        </div>
+        <ArrowIcon
+          className=" rotate-[90deg]"
+          width={24}
+          height={24}
+          color={"#ccc"}
+        />
+      </div>
+
+      {openThreads && <RenderReplies threadcrumbs={threadcrumbs} />}
     </>
   );
 };

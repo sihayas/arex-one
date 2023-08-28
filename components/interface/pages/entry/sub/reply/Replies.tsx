@@ -1,12 +1,13 @@
 // Renders a list of replies to a review or reply
 import Reply from "./Reply";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { ReplyData } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
 import styles from "@/styles/replies.module.css";
+import Line from "../icons/Line";
 
 interface RepliesProps {
   reviewId?: string | null;
@@ -43,29 +44,42 @@ function Replies({ reviewId }: RepliesProps) {
   return (
     <TransitionGroup component={null}>
       {replies && replies.length > 0 ? (
-        replies.map(
-          (reply: ReplyData) =>
+        replies.map((reply: ReplyData, index: number) => {
+          // Determine if the current reply and the previous reply are root replies
+          const isRoot = !reply.replyToId;
+          const prevIsRoot = index > 0 ? !replies[index - 1].replyToId : false;
+
+          return (
             // Only render the Reply component if it is selected or there is no selected reply
             (selectedReply === null || reply.id === selectedReply.id) && (
-              <CSSTransition
-                key={reply.id}
-                timeout={500}
-                classNames={{
-                  enter: styles["drop-enter"],
-                  enterActive: styles["drop-enter-active"],
-                  exit: styles["drop-exit"],
-                  exitActive: styles["drop-exit-active"],
-                  appear: styles["drop-appear"],
-                  appearActive: styles["drop-appear-active"],
-                }}
-                appear={true}
-              >
-                <Reply reply={reply} setSelectedReply={setSelectedReply} />
-              </CSSTransition>
+              <Fragment key={reply.id}>
+                {/* Render line or empty div based on conditions */}
+                {isRoot && prevIsRoot ? (
+                  <Line height="12px" />
+                ) : (
+                  <div style={{ height: "12px" }} />
+                )}
+
+                <CSSTransition
+                  timeout={500}
+                  classNames={{
+                    enter: styles["drop-enter"],
+                    enterActive: styles["drop-enter-active"],
+                    exit: styles["drop-exit"],
+                    exitActive: styles["drop-exit-active"],
+                    appear: styles["drop-appear"],
+                    appearActive: styles["drop-appear-active"],
+                  }}
+                  appear={true}
+                >
+                  <Reply reply={reply} setSelectedReply={setSelectedReply} />
+                </CSSTransition>
+              </Fragment>
             )
-        )
+          );
+        })
       ) : (
-        <div className="text-xs text-[#CCC] mt-4 -ml-1"></div>
+        <div className="text-xs text-[#CCC]"></div>
         // unthreaded
       )}
     </TransitionGroup>

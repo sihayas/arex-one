@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { useSession } from "next-auth/react";
 
 import { useInterface } from "@/context/Interface";
@@ -14,12 +14,9 @@ import {
 } from "date-fns";
 
 import { ReviewData } from "@/lib/global/interfaces";
-import { RenderReplies } from "./reply/RenderReplies";
-import ReplyInput from "./reply/ReplyInput";
 import Stars from "@/components/global/Stars";
 import LikeButton from "@/components/global/LikeButton";
 import UserAvatar from "@/components/global/UserAvatar";
-import { ArrowIcon } from "@/components/icons";
 
 interface EntryFullProps {
   review: ReviewData;
@@ -27,8 +24,7 @@ interface EntryFullProps {
 
 export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   const { data: session } = useSession();
-  const { setPages, entryContainerRef } = useInterface();
-  const { threadcrumbs } = useThreadcrumb();
+  const { entryContainerRef } = useInterface();
 
   const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
@@ -86,7 +82,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
             ))}
 
             {review.replies && review._count.replies > 3 && (
-              <div className="text-[10px] ml-1 text-gray2">
+              <div className="text-xs ml-1 text-gray2">
                 + {review._count.replies - 3}
               </div>
             )}
@@ -97,7 +93,6 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
           {formatDateShort(new Date(review.createdAt))}
         </div>
       </div>
-      {/* <RenderReplies threadcrumbs={threadcrumbs} /> */}
 
       <Stars
         className="fixed top-4 left-1/2 transform -translate-x-1/2  bg-stars p-1 rounded-full shadow-stars flex items-center gap-1 text-xs pr-2 border border-silver "
@@ -106,17 +101,6 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
         soundName={review.album?.name || review.track?.name}
         artist={review.album?.artist || review.track?.album.artist}
       />
-      <div className="fixed flex flex-col items-center left-1/2 transform -translate-x-1/2 bottom-0 cursor-pointer">
-        <div className="text-gray2 font-medium text-xs">
-          {review._count.replies} CHAINS
-        </div>
-        <ArrowIcon
-          className=" rotate-[90deg]"
-          width={24}
-          height={24}
-          color={"#ccc"}
-        />
-      </div>
     </div>
   );
 };
