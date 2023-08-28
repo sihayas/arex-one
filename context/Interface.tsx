@@ -111,7 +111,7 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
     setPages([
       {
         name: "index",
-        dimensions: { width: 922, height: 600 },
+        dimensions: { width: 574, height: 1084 },
         scrollPosition: 0,
       },
     ]);

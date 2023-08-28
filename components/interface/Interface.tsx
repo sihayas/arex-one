@@ -36,13 +36,13 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     setStoredInputValue,
     setExpandInput,
     entryContainerRef,
+    resetPage,
   } = useInterface();
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
     useSound();
-  const { threadcrumbs, openThreads } = useThreadcrumb();
+  const { openThreads } = useThreadcrumb();
 
   // Element refs
-  const ref = React.useRef<HTMLInputElement | null>(null);
   const shapeshifterContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Page Tracker
@@ -90,9 +90,11 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     target: number,
     delta: number
   ): number {
-    if (target > current) return Math.min(target, current + delta * 0.5);
-    if (target < current) return Math.max(target, current - delta * 0.5);
-    return current;
+    return target > current
+      ? Math.min(target, current + delta * 0.5)
+      : target < current
+      ? Math.max(target, current - delta * 0.5)
+      : current;
   }
 
   const dragBind = useDrag(
@@ -116,11 +118,19 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       }
 
       if (previousPage && previousPage.dimensions) {
+        // Get the current width and height
         let activeWidth = width.get();
         let activeHeight = height.get();
 
+        // Get the previous page's width and height
         let prevWidth = previousPage.dimensions.width;
         let prevHeight = previousPage.dimensions.height;
+
+        let feedWidth = 574;
+        let feedHeight = 1084;
+
+        let targetWidth = dirY > 0 ? prevWidth : feedWidth;
+        let targetHeight = dirY > 0 ? prevHeight : feedHeight;
 
         // Apply a damping factor to control the effect of the velocity
         const dampingFactor = 4;
@@ -131,35 +141,42 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         // Ensure speedFactor stays within reasonable bounds
         speedFactor = Math.min(Math.max(speedFactor, 1), 10);
 
-        let newWidth = adjustDimension(activeWidth, prevWidth, y * speedFactor);
+        let newWidth = adjustDimension(
+          activeWidth,
+          targetWidth,
+          Math.abs(y * speedFactor)
+        );
         let newHeight = adjustDimension(
           activeHeight,
-          prevHeight,
-          y * speedFactor
+          targetHeight,
+          Math.abs(y * speedFactor)
         );
 
         let newOpacity = 1 - Math.abs(y) / 20;
 
         set({ width: newWidth, height: newHeight, opacity: newOpacity });
-
-        x; // Rubber-band back to initial if not met with target
         if (last) {
           // Check if target dimensions are reached
-          if (newWidth === prevWidth && newHeight === prevHeight) {
+          if (newWidth === targetWidth && newHeight === targetHeight) {
             set({
               width: newWidth,
               height: newHeight,
               opacity: newOpacity + 0.001,
 
               onRest: () => {
-                navigateBack();
+                // Check the direction of dragging to decide the function to call
+                if (dirY > 0) {
+                  navigateBack();
+                } else {
+                  resetPage();
+                }
                 set({
                   opacity: 1,
                 });
               },
             });
           } else {
-            // If target dimensions arent reached, rubber-band back to initial
+            // If target dimensions aren't reached, rubber-band back to initial
             newWidth = initialWidth;
             newHeight = initialHeight;
             newOpacity = initialOpacity;
@@ -257,12 +274,11 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"
         }`}
       >
-        {/* CMDK Inner Content  */}
+        {/* CMDK Inner  */}
         <Command
-          className={`transition-opacity bg-white duration-150 w-full h-full ${
+          className={`flex transition-opacity bg-white duration-150 w-full h-full ${
             isVisible ? "opacity-100 shadow-cmdkScaled2" : "opacity-0"
           }`}
-          ref={ref}
           shouldFilter={false}
           onKeyDown={(e: React.KeyboardEvent) => {
             // switch to album page from form
@@ -300,9 +316,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           }}
           loop
         >
-          <div className="absolute flex text-xs text-center z-0 text-gray2 top-1/2">
-            back to {previousPage?.name}
-          </div>
           <Nav />
           {/* Container / Shapeshifter */}
           <animated.div
@@ -316,7 +329,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               touchAction: "pan-y",
             }}
             ref={shapeshifterContainerRef}
-            className={`flex h-max rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none `}
+            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none `}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (

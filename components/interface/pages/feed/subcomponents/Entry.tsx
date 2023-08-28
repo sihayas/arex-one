@@ -57,7 +57,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         <div className="flex gap-2 items-center w-full relative">
           <div className="absolute w-2 h-2 bg-white shadow-stars -top-2 left-7 rounded-full" />
           <Stars
-            className="absolute bg-stars border border-silver p-1 rounded-full shadow-stars -top-8 left-8 flex items-center gap-1 text-[10px] pr-2"
+            className="absolute bg-stars border border-silver p-1 rounded-full shadow-stars -top-8 left-8 flex items-center gap-1 text-xs pr-2"
             rating={review.rating}
             color={"#000"}
             soundName={review.album?.name || review.track?.name}
