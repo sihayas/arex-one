@@ -23,6 +23,7 @@ const SignalInterlinked = ({ follows, date }: SignalInterlinkedProps) => {
         altText={`${follows.follower.name}'s avatar`}
         width={24}
         height={24}
+        userId={follows.follower.id}
       />
 
       {/* red dot  */}

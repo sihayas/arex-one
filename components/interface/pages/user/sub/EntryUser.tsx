@@ -36,11 +36,7 @@ export const EntryUser: React.FC<EntryUserProps> = ({ review }) => {
   return (
     <div className="flex flex-col gap-1 w-[484px] overflow-visible group">
       <div className="ml-1 z-10">
-        <ArtworkHeader
-          albumId={review.albumId}
-          rating={review.rating}
-          album={review.album}
-        />
+        <ArtworkHeader albumId={review.albumId} album={review.album} />
       </div>
 
       {/* Review Content, Like Button  */}
@@ -71,6 +67,7 @@ export const EntryUser: React.FC<EntryUserProps> = ({ review }) => {
           altText={`${review.author?.name}'s avatar`}
           width={24}
           height={24}
+          userId={review.author.id}
         />
         {/* Name  */}
         <div
@@ -101,6 +98,7 @@ export const EntryUser: React.FC<EntryUserProps> = ({ review }) => {
                 altText={`${reply.author.name}'s avatar`}
                 width={20}
                 height={20}
+                userId={reply.author.id}
               />
             ))}
 

@@ -64,6 +64,7 @@ const SignalLiked = ({ like, date }: SignalLikedProps) => {
         altText={`${like.author.name}'s avatar`}
         width={24}
         height={24}
+        userId={like.author.id}
       />
     </div>
   );

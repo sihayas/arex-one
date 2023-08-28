@@ -65,6 +65,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           altText={`${review.author?.name}'s avatar`}
           width={24}
           height={24}
+          userId={review.author.id}
         />
         {/* Name  */}
         <div
@@ -95,6 +96,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
                 altText={`${reply.author.name}'s avatar`}
                 width={20}
                 height={20}
+                userId={reply.author.id}
               />
             ))}
 

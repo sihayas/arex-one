@@ -77,6 +77,7 @@ const SignalReplied = ({ reply, date }: SignalRepliedProps) => {
         altText={`${reply.author.name}'s avatar`}
         width={24}
         height={24}
+        userId={reply.author.id}
       />
     </div>
   );
