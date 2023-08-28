@@ -29,7 +29,7 @@ const UserFeed = ({ userId }: { userId: string | undefined }) => {
             <Entry review={activity.review} />
           ) : (
             // You may provide a placeholder or different handling if there's no review
-            <div>No review available for this activity.</div>
+            <div>no review available for this activity.</div>
           )}
         </div>
       ))}

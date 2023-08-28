@@ -42,9 +42,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     useSound();
   const { openThreads } = useThreadcrumb();
 
-  // Element refs
-  const shapeshifterContainerRef = useRef<HTMLDivElement | null>(null);
-
   // Page Tracker
   const ActiveComponent = componentMap[activePage.name] || Feed;
 
@@ -328,8 +325,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               willChange: "width, height",
               touchAction: "pan-y",
             }}
-            ref={shapeshifterContainerRef}
-            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none `}
+            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none`}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
@@ -338,7 +334,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
                   ...style,
                   position: "absolute",
                   width: "100%",
-                  backgroundColor: "white",
                 }}
               >
                 {Component === Album ? (

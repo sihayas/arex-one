@@ -151,7 +151,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           </div>
         )}
       </div>
-      <hr className={`border-silver w-[100%] border-dashed mt-6`} />
+      <hr className={`border-silver w-[100%] border-[.5px] mt-6`} />
     </>
   );
 };
