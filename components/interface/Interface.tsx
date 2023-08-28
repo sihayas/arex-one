@@ -273,7 +273,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       >
         {/* CMDK Inner  */}
         <Command
-          className={`flex transition-opacity bg-white duration-150 w-full h-full ${
+          className={`flex transition-opacity bg-white duration-150 w-full h-full border border-silver ${
             isVisible ? "opacity-100 shadow-cmdkScaled2" : "opacity-0"
           }`}
           shouldFilter={false}
@@ -325,7 +325,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               willChange: "width, height",
               touchAction: "pan-y",
             }}
-            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none`}
+            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scrolli scrollbar-none`}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
