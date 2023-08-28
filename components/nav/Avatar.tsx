@@ -5,7 +5,7 @@ import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick"
 export default function Avatar() {
   const { data: session } = useSession();
 
-  const handleUserClick = useHandleUserClick(session.user.id);
+  const handleUserClick = useHandleUserClick(session!.user.id);
 
   return (
     <div className="relative hoverable-medium">

@@ -28,11 +28,6 @@ export const SoundPreview = ({
         alt="alt"
         draggable="false"
         onDragStart={(e) => e.preventDefault()}
-        onClick={() => {
-          if (imageRef.current) {
-            handleSelectAlbum(imageRef.current, album, artworkUrl);
-          }
-        }}
       />
 
       {/* About  */}

@@ -4,7 +4,6 @@ import Image from "next/image";
 import { getAlbumById } from "@/lib/global/musicKit";
 
 import { useQuery } from "@tanstack/react-query";
-
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface AlbumProps {

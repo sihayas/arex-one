@@ -3,8 +3,8 @@ import Image from "next/image";
 import { Command } from "cmdk";
 
 import { SongData } from "@/lib/global/interfaces";
-import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { useHandleSearchClick } from "@/hooks/handleInteractions/useHandleSearchClick";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 const Song = ({ song }: { song: SongData }) => {
   const artworkUrl = GenerateArtworkUrl(song.attributes.artwork.url, "90");
