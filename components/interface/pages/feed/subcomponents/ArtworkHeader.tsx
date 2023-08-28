@@ -5,19 +5,15 @@ import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { useHandleSoundClick } from "@/hooks/handlePageChange/useHandleSoundClick";
 import { AlbumDBData } from "@/lib/global/interfaces";
 
-import Stars from "@/components/global/Stars";
-
 interface ArtworkHeaderProps {
   albumId?: string;
   songId?: string;
-  rating?: number;
   album?: AlbumDBData;
 }
 
 export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
   albumId,
   songId,
-  rating,
 }) => {
   const { handleSelectSound } = useHandleSoundClick();
   const imgRef = React.useRef<HTMLImageElement>(null);

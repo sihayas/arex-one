@@ -37,6 +37,7 @@ module.exports = {
         red: "#FF0000",
         nav: "rgba(250, 250, 250, 0.75)",
         violet: "rgb(75,61,103)",
+        stars: "rgba(250, 250, 255, 0.65)",
       },
       fontFamily: {
         baskerville: ["Baskerville", "serif"],

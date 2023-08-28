@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 
 import { useInterface } from "@/context/Interface";
 import useHandleLikeClick from "@/hooks/handleInteractions/useHandleLike";
-import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import {
   differenceInDays,
@@ -20,6 +19,7 @@ import ReplyInput from "./reply/ReplyInput";
 import Stars from "@/components/global/Stars";
 import LikeButton from "@/components/global/LikeButton";
 import UserAvatar from "@/components/global/UserAvatar";
+import { ArrowIcon } from "@/components/icons";
 
 interface EntryFullProps {
   review: ReviewData;
@@ -42,7 +42,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   return (
     <div
       ref={entryContainerRef}
-      className="flex flex-col w-full p-8 z-10 bg-white rounded-[20px] overflow-hidden"
+      className="flex flex-col w-full p-8 z-10 bg-white rounded-[20px] overflow-scroll relative max-h-[724px] "
     >
       <div className="flex items-center gap-2 hoverable-small">
         <UserAvatar
@@ -65,6 +65,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
       >
         {review.content}
       </div>
+      {/* Like & Avatar previews */}
       <div className="flex items-center gap-2 hoverable-small pl-10 pt-4">
         <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
         {review.replies && review._count.replies > 0 && (
@@ -92,30 +93,30 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
           </div>
         )}
         {/* Date  */}
-        <div className="text-gray2 text-[10px]">
+        <div className="text-gray2 text-xs ml-auto">
           {formatDateShort(new Date(review.createdAt))}
         </div>
       </div>
       {/* <RenderReplies threadcrumbs={threadcrumbs} /> */}
-      {/* Reply Input  */}
-      {/* <div className="w-[452px] absolute bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full z-20 border border-silver">
-          <UserAvatar
-            className="border-2 border-white rounded-full"
-            imageSrc={review.author?.image}
-            altText={`${review.author?.name}'s avatar`}
-            width={28}
-            height={28}
-            userId={review.author.id}
-          />
-          <ReplyInput />
-        </div> */}
+
       <Stars
-        className="fixed bottom-4 left-1/2 transform -translate-x-1/2  bg-white p-1 rounded-full shadow-stars flex items-center gap-1 text-xs pr-2 "
+        className="fixed top-4 left-1/2 transform -translate-x-1/2  bg-stars p-1 rounded-full shadow-stars flex items-center gap-1 text-xs pr-2 border border-silver "
         rating={review.rating}
         color={"#000"}
         soundName={review.album?.name || review.track?.name}
         artist={review.album?.artist || review.track?.album.artist}
       />
+      <div className="fixed flex flex-col items-center left-1/2 transform -translate-x-1/2 bottom-0 cursor-pointer">
+        <div className="text-gray2 font-medium text-xs">
+          {review._count.replies} CHAINS
+        </div>
+        <ArrowIcon
+          className=" rotate-[90deg]"
+          width={24}
+          height={24}
+          color={"#ccc"}
+        />
+      </div>
     </div>
   );
 };
@@ -138,4 +139,21 @@ function formatDateShort(date: Date): string {
   if (minutesDifference > 0) return `${minutesDifference}M`;
 
   return `${differenceInSeconds(now, date)}S`;
+}
+
+{
+  /* Reply Input  */
+}
+{
+  /* <div className="w-[452px] absolute bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full z-20 border border-silver">
+          <UserAvatar
+            className="border-2 border-white rounded-full"
+            imageSrc={review.author?.image}
+            altText={`${review.author?.name}'s avatar`}
+            width={28}
+            height={28}
+            userId={review.author.id}
+          />
+          <ReplyInput />
+        </div> */
 }

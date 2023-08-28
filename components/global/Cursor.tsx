@@ -6,28 +6,32 @@ const springConfig = { tension: 500, friction: 50 };
 
 function Cursor() {
   // Cursor context
+
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [hoveredScale, setHoveredScale] = useState(1);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
 
-  const cursorWorkerRef = React.useRef<Worker | null>(null);
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+  };
 
   // Reactive cursor size
   const { scale } = useSpring({
     scale: clicked ? hoveredScale * 0.8 : hoveredScale,
     config: springConfig,
   });
+  const cursorSize = 40;
 
   // Track cursor position
   const moveCursor = throttle((e: MouseEvent) => {
-    cursorWorkerRef.current?.postMessage({
-      x: e.clientX,
-      y: e.clientY,
-      hovered,
-      clicked,
-      hoveredScale,
-    });
+    const cursorX = e.clientX - cursorSize / 2;
+    const cursorY = e.clientY - cursorSize / 2;
+
+    setCoords({ x: cursorX, y: cursorY });
   }, 16);
 
   const hoverCursor = (e: MouseEvent) => {
@@ -65,16 +69,22 @@ function Cursor() {
   };
 
   useEffect(() => {
-    cursorWorkerRef.current = new Worker(
-      new URL("./CursorWorker.ts", import.meta.url)
-    );
+    // Only run this effect client-side
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
 
-    cursorWorkerRef.current.onmessage = (e) => {
-      const { newCoords, newScale } = e.data;
-      setCoords(newCoords);
-      setHoveredScale(newScale);
-    };
+      window.addEventListener("resize", handleResize);
 
+      // Cleanup on unmount
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
     document.addEventListener("mousemove", moveCursor);
     document.addEventListener("mouseover", hoverCursor);
     document.addEventListener("mouseout", hoverCursor);
@@ -87,7 +97,6 @@ function Cursor() {
       document.removeEventListener("mouseout", hoverCursor);
       document.removeEventListener("mousedown", clickCursor);
       document.removeEventListener("mouseup", releaseCursor);
-      cursorWorkerRef.current?.terminate();
     };
   }, []);
 
@@ -102,7 +111,7 @@ function Cursor() {
               coords.y
             )}px, 0) scale(${s})`
         ),
-        willChange: "transform",
+        willChange: "transform, opacity",
       }}
     />
   );

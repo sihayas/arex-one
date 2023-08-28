@@ -45,19 +45,11 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         {/* Artwork  */}
         {isAlbum ? (
           <div className="ml-auto -mb-2">
-            <ArtworkHeader
-              albumId={review.albumId}
-              rating={review.rating}
-              album={review.album}
-            />
+            <ArtworkHeader albumId={review.albumId} album={review.album} />
           </div>
         ) : (
           <div className="ml-auto">
-            <ArtworkHeader
-              songId={review.trackId}
-              rating={review.rating}
-              album={review.album}
-            />
+            <ArtworkHeader songId={review.trackId} album={review.album} />
           </div>
         )}
 
@@ -65,7 +57,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         <div className="flex gap-2 items-center w-full relative">
           <div className="absolute w-2 h-2 bg-white shadow-stars -top-2 left-7 rounded-full" />
           <Stars
-            className="absolute bg-white p-1 rounded-full shadow-stars -top-8 left-8 flex items-center gap-1 text-[10px] pr-2"
+            className="absolute bg-stars border border-silver p-1 rounded-full shadow-stars -top-8 left-8 flex items-center gap-1 text-[10px] pr-2"
             rating={review.rating}
             color={"#000"}
             soundName={review.album?.name || review.track?.name}
@@ -96,7 +88,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           </div>
           <div
             onClick={handleEntryClick}
-            className={`w-[470px] text-sm text-black break-words hoverable-small line-clamp-3 pb-[4px]`}
+            className={`w-[470px] text-sm text-black break-words hoverable-small line-clamp-6 pb-[4px]`}
           >
             {review.content}
           </div>

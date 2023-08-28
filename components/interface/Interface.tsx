@@ -13,16 +13,6 @@ import User from "./pages/user/User";
 import Signals from "./pages/signals/Signals";
 import Feed from "./pages/feed/Feed";
 
-type PageName = "feed" | "album" | "entry" | "user" | "signals";
-
-const PAGE_DIMENSIONS: Record<PageName, { width: number; height: number }> = {
-  feed: { width: 574, height: 1084 },
-  album: { width: 658, height: 658 },
-  entry: { width: 574, height: 158 },
-  user: { width: 532, height: 712 },
-  signals: { width: 96, height: 712 },
-};
-
 const componentMap: Record<string, React.ComponentType<any>> = {
   album: Album,
   entry: Entry,
@@ -198,16 +188,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       set({
         scale: newScale,
         width: newWidth,
-        height: newHeight,
-      });
-    } else if (activePage.name === "entry") {
-      let baseHeight = 164;
-      let newHeight = baseHeight + (y / 50) * (888 - baseHeight);
-      if (newHeight < baseHeight) newHeight = baseHeight;
-      if (newHeight > 888) newHeight = 888;
-
-      set({
-        width: 574,
         height: newHeight,
       });
     } else if (activePage.name === "user") {
