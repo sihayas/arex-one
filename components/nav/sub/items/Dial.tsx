@@ -17,7 +17,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
     config: { tension: 305, friction: 20 },
   });
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: any) => {
     // Check if the dial itself is focused or if the inputRef is focused and empty
     if (
       (document.activeElement === inputRef.current &&
