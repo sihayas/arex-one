@@ -1,4 +1,4 @@
-import { AlbumData, SongData } from "@/lib/global/interfaces";
+import { AlbumData, SongData, UserData } from "@/lib/global/interfaces";
 
 import { Command } from "cmdk";
 
@@ -34,7 +34,7 @@ const Search = ({
   const allData = [
     ...filteredAlbums.map((album: AlbumData) => ({ ...album, type: "albums" })),
     ...filteredSongs.map((song: SongData) => ({ ...song, type: "songs" })),
-    // ...userData.map((user: UserData) => ({ ...user, type: "users" })),
+    ...userData.map((user: UserData) => ({ ...user, type: "users" })),
   ];
 
   return (
