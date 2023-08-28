@@ -59,7 +59,7 @@ const Nav: React.FC = () => {
   }, [setExpandInput]);
 
   // New line creation
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: any) => {
     if (
       e.key === "Enter" &&
       expandInput &&
