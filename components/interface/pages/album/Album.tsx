@@ -10,14 +10,16 @@ import { SongData } from "@/lib/global/interfaces";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import Lowlights from "./sub/Lowlights";
 import Highlights from "./sub/Highlights";
-import { animated, SpringValue } from "@react-spring/web";
+import { animated, SpringValue, to } from "@react-spring/web";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface AlbumProps {
   scale: SpringValue<number>;
+  translateX: SpringValue<number>;
+  translateY: SpringValue<number>;
 }
 
-const Album = ({ scale }: AlbumProps) => {
+const Album = ({ scale, translateX, translateY }: AlbumProps) => {
   // Hooks
   const { data: session } = useSession();
   const { pages } = useInterface();
@@ -52,15 +54,6 @@ const Album = ({ scale }: AlbumProps) => {
     return <div>loading...</div>; // Replace with your preferred loading state
   }
 
-  if (isError) {
-    return (
-      <div>
-        <button onClick={pages.pop}>go back</button>
-        <button onClick={pages.pop}>retry</button>
-      </div>
-    );
-  }
-
   const handleArtworkClick = () => {
     setIsExpanded(!isExpanded);
   };
@@ -73,9 +66,9 @@ const Album = ({ scale }: AlbumProps) => {
       {/* Top Section */}
       <animated.div
         style={{
-          transform: scale.to(
-            (value) =>
-              `translate3d(${(1 - value) * -693}px, ${(1 - value) * 4}rem, 0)`
+          transform: to(
+            [scale, translateY],
+            (s, ty) => `translate3d(${0}px, ${ty}px, 0) scale(${s})`
           ),
           transformOrigin: "center",
         }}
@@ -88,7 +81,6 @@ const Album = ({ scale }: AlbumProps) => {
           style={{
             borderRadius: scale.to((value) => `${20 + (1 - value) * -12}px`),
             boxShadow: boxShadow,
-            //transform: isExpanded ? "translateX(-28rem)" : "",
           }}
           src={artworkUrl || "/public/images/default.png"}
           alt={`${selectedSound.sound.attributes.name} artwork`}
@@ -97,27 +89,6 @@ const Album = ({ scale }: AlbumProps) => {
           onDragStart={(e) => e.preventDefault()}
           draggable="false"
         />
-        {/* Album Metadata  */}
-        <animated.div
-          style={{
-            transformOrigin: "center",
-          }}
-          className="absolute grid pt-4 top-[718px] ml-[86px] w-[486px] gap-8 will-change-transform h-[21.25rem] overflow-scroll scrollbar-none"
-        >
-          {/* Album Details  */}
-          <div className="flex flex-col items-end justify-end gap-2">
-            <p className="text-sm text-black font-medium">
-              {selectedSound.sound.attributes.name}
-            </p>
-            <p className="text-sm text-black">
-              {selectedSound.sound.attributes.artistName}
-            </p>
-          </div>
-          {/* Rating  */}
-          <div className="flex items-center justify-center justify-self-center w-9 h-9 border border-silver text-sm text-black rounded-full font-medium">
-            {/* {selectedSound.sound.averageRating} */}
-          </div>
-        </animated.div>
       </animated.div>
 
       {/* Section Two / Entries  */}
@@ -126,39 +97,11 @@ const Album = ({ scale }: AlbumProps) => {
         style={{
           transform: x.to((val) => `translateX(${val}px)`),
         }}
-        className="flex pt-[800px] gap-8 ml-[1030px] w-full relative"
+        className="flex gap-8 p-8 pt-[900px] w-full relative"
       >
         {activeSection === 0 && (
           <Highlights selectedSound={selectedSound} user={session!.user} />
         )}
-
-        {activeSection === 1 && (
-          <Lowlights selectedSound={selectedSound} user={session!.user} />
-        )}
-      </animated.div>
-
-      {/* Section Headers */}
-      <animated.div
-        {...bind()}
-        style={{
-          transform: x.to((val) => `translateX(${0 + val * 0.98}px)`),
-        }}
-        className="fixed top-16 -right-11 flex gap-4"
-      >
-        <div
-          className={`text-sm font-medium ${
-            activeSection === 0 ? "text-black" : "text-gray3"
-          }`}
-        >
-          high<span className="font-light">lights</span>
-        </div>
-        <div
-          className={`text-sm font-medium ${
-            activeSection === 1 ? "text-black" : "text-gray3"
-          }`}
-        >
-          low<span className="font-light">lights</span>
-        </div>
       </animated.div>
     </animated.div>
   );

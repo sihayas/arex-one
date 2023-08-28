@@ -45,20 +45,20 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Page Tracker
   const ActiveComponent = componentMap[activePage.name] || Feed;
 
-  const [{ width, scale, height, translateY, opacity }, set] = useSpring(
-    () => ({
+  const [{ width, scale, height, translateY, translateX, opacity }, set] =
+    useSpring(() => ({
       scale: 1,
       width: activePage.dimensions.width,
       height: activePage.dimensions.height,
       translateY: 0,
+      translateX: 0,
       opacity: 1, // Initializing the opacity to 1 (100%)
       config: {
         tension: 400,
         friction: 47,
         mass: 0.2,
       },
-    })
-  );
+    }));
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -188,24 +188,30 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   );
 
   const scrollBind = useScroll(({ xy: [, y] }) => {
+    const scrollBound = 862;
+    const scaleBound = 0.89;
     if (activePage.name === "album") {
       let newScale = 1 - y / 50;
       if (newScale > 1) newScale = 1;
-      if (newScale < 0.5) newScale = 0.5;
+      if (newScale < scaleBound) newScale = scaleBound;
 
-      let newWidth = 658 + (y / 77) * (1066 - 658);
-      if (newWidth < 658) newWidth = 658;
-      if (newWidth > 1066) newWidth = 1066;
+      let translateValue = (y / 400) * scrollBound;
+      if (translateValue > scrollBound) translateValue = scrollBound;
 
-      let newHeight = 658 + (y / 24) * (722 - 658);
+      let newWidth = 658 + (y / 77) * (576 - 658);
+      if (newWidth < 576) newWidth = 576;
+      if (newWidth > 658) newWidth = 658;
+
+      let newHeight = 658 + (y / 24) * (1052 - 658);
       if (newHeight < 658) newHeight = 658;
-      if (newHeight > 722) newHeight = 722;
+      if (newHeight > 1052) newHeight = 1052;
 
       // Apply the new scale and width immediately to the spring animation
       set({
         scale: newScale,
         width: newWidth,
         height: newHeight,
+        translateY: translateValue,
       });
     } else if (activePage.name === "user") {
       let baseHeight = 712;
@@ -273,7 +279,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       >
         {/* CMDK Inner  */}
         <Command
-          className={`flex transition-opacity bg-white duration-150 w-full h-full border border-silver ${
+          className={`flex transition-opacity bg-white duration-150 w-full h-full ${
             isVisible ? "opacity-100 shadow-cmdkScaled2" : "opacity-0"
           }`}
           shouldFilter={false}
@@ -325,7 +331,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               willChange: "width, height",
               touchAction: "pan-y",
             }}
-            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scrolli scrollbar-none`}
+            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none`}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
@@ -337,7 +343,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
                 }}
               >
                 {Component === Album ? (
-                  <Component scale={scale} />
+                  <Component scale={scale} translateY={translateY} />
                 ) : Component === Entry ? (
                   <Component translateY={translateY} />
                 ) : (
