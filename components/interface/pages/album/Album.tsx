@@ -117,24 +117,6 @@ const Album = ({ scale }: AlbumProps) => {
           <div className="flex items-center justify-center justify-self-center w-9 h-9 border border-silver text-sm text-black rounded-full font-medium">
             {/* {selectedSound.sound.averageRating} */}
           </div>
-          {/* Consensus  */}
-          <div className="flex gap-2">
-            <p className="font-bold text-gray2 text-sm">
-              {selectedSound.sound.relationships.tracks.data.length}
-            </p>
-            <div className="flex flex-col gap-2">
-              <p className="text-gray2 text-sm font-medium">SONGS</p>
-              <ul className="gap-1">
-                {selectedSound.sound.relationships.tracks.data.map(
-                  (track: SongData, index: number) => (
-                    <li key={index} className="text-gray2 text-sm">
-                      {track.attributes.name}
-                    </li>
-                  )
-                )}
-              </ul>
-            </div>
-          </div>
         </animated.div>
       </animated.div>
 
@@ -183,3 +165,24 @@ const Album = ({ scale }: AlbumProps) => {
 };
 
 export default Album;
+
+// {
+//   /* Consensus  */
+// }
+// <div className="flex gap-2">
+//   <p className="font-bold text-gray2 text-sm">
+//     {selectedSound.sound.relationships.tracks.data.length}
+//   </p>
+//   <div className="flex flex-col gap-2">
+//     <p className="text-gray2 text-sm font-medium">SONGS</p>
+//     <ul className="gap-1">
+//       {selectedSound.sound.relationships.tracks.data.map(
+//         (track: SongData, index: number) => (
+//           <li key={index} className="text-gray2 text-sm">
+//             {track.attributes.name}
+//           </li>
+//         )
+//       )}
+//     </ul>
+//   </div>
+// </div>;
