@@ -11,7 +11,7 @@ import { useAlbumQuery } from "@/lib/api/albumAPI";
 import Lowlights from "./sub/Lowlights";
 import Highlights from "./sub/Highlights";
 import { animated, SpringValue } from "@react-spring/web";
-import generateArtworkUrl from "../../../../components/global/GenerateArtworkUrl";
+import GenerateArtworkUrl from "../../../../components/global/GenerateArtworkUrl";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -27,7 +27,7 @@ const Album = ({ scale }: AlbumProps) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const artworkUrl = generateArtworkUrl(
+  const artworkUrl = GenerateArtworkUrl(
     selectedSound!.sound.attributes.artwork.url,
     "1316"
   );

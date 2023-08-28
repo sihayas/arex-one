@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumById, getAlbumBySongId } from "@/lib/global/musicKit";
 import { AlbumData } from "@/lib/global/interfaces";
-import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface FetchArtworkResult {
   artworkUrl: string | null;
@@ -29,7 +29,7 @@ export default function useFetchArtworkUrl(
   if (result.data && !result.isError) {
     albumData = result.data;
     const urlTemplate = albumData.attributes.artwork.url;
-    artworkUrl = generateArtworkUrl(urlTemplate, size);
+    artworkUrl = GenerateArtworkUrl(urlTemplate, size);
   }
 
   return {

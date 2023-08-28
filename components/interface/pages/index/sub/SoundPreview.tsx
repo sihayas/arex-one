@@ -2,7 +2,7 @@ import { AlbumData } from "@/lib/global/interfaces";
 import Image from "next/image";
 import { useHandleSoundClick } from "@/hooks/handlePageChange/useHandleSoundClick";
 import { useRef } from "react";
-import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 export const SoundPreview = ({
   album,
@@ -13,7 +13,7 @@ export const SoundPreview = ({
 }) => {
   const { handleSelectSound } = useHandleSoundClick();
 
-  const artworkUrl = generateArtworkUrl(album.attributes.artwork.url, "800");
+  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "800");
   const imageRef = useRef(null); // Allows clicking art
 
   return (

@@ -8,7 +8,7 @@ import { fetchUserReview, postReview } from "@/lib/api/formAPI";
 import { useSound } from "@/context/Sound";
 import { useInterface } from "@/context/Interface";
 
-import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { SendIcon, ArrowIcon } from "@/components/icons";
 import Dial from "./items/Dial";
 
@@ -121,11 +121,11 @@ const Form = () => {
     setRating(rating);
   };
 
-  const albumArtworkUrl = generateArtworkUrl(
+  const albumArtworkUrl = GenerateArtworkUrl(
     selectedFormSound.sound.attributes.artwork.url,
     "928"
   );
-  const soundArtworkUrl = generateArtworkUrl(
+  const soundArtworkUrl = GenerateArtworkUrl(
     selectedFormSound.sound.attributes.artwork.url,
     "260"
   );

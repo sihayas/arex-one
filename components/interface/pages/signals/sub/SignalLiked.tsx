@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 
 import UserAvatar from "@/components/global/UserAvatar";
-import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface SignalLikedProps {
   like: LikeData;
@@ -30,7 +30,7 @@ const SignalLiked = ({ like, date }: SignalLikedProps) => {
     return <div>Loading or no album information available</div>;
   }
 
-  const url = generateArtworkUrl(data.attributes.artwork.url, "96");
+  const url = GenerateArtworkUrl(data.attributes.artwork.url, "96");
   const timeSince = formatDistanceToNow(new Date(date));
 
   return (

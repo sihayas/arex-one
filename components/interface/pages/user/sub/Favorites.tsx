@@ -5,7 +5,7 @@ import { getAlbumById } from "@/lib/global/musicKit";
 
 import { useQuery } from "@tanstack/react-query";
 
-import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface AlbumProps {
   albumId: string;
@@ -34,7 +34,7 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId, index }) => {
     return <div>Loading...</div>;
   }
 
-  const url = generateArtworkUrl(data.attributes.artwork.url, "722");
+  const url = GenerateArtworkUrl(data.attributes.artwork.url, "722");
 
   return (
     <Image

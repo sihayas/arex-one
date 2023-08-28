@@ -4,11 +4,11 @@ import { Command } from "cmdk";
 
 import { AlbumData } from "@/lib/global/interfaces";
 import { useHandleSearchClick } from "@/hooks/handleInteractions/useHandleSearchClick";
-import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 const Album = ({ album }: { album: AlbumData }) => {
   const { handleSelectSearch } = useHandleSearchClick();
-  const artworkUrl = generateArtworkUrl(album.attributes.artwork.url, "90");
+  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "90");
 
   return (
     <Command.Item

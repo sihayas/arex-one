@@ -3,11 +3,11 @@ import Image from "next/image";
 import { Command } from "cmdk";
 
 import { SongData } from "@/lib/global/interfaces";
-import generateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { useHandleSearchClick } from "@/hooks/handleInteractions/useHandleSearchClick";
 
 const Song = ({ song }: { song: SongData }) => {
-  const artworkUrl = generateArtworkUrl(song.attributes.artwork.url, "90");
+  const artworkUrl = GenerateArtworkUrl(song.attributes.artwork.url, "90");
   const { handleSelectSearch } = useHandleSearchClick();
 
   return (
