@@ -129,15 +129,4 @@ function formatDateShort(date: Date): string {
   /* Reply Input  */
 }
 {
-  /* <div className="w-[452px] absolute bottom-8 left-8 flex items-center gap-2 bg-blurEntry backdrop-blur-sm p-1 rounded-full z-20 border border-silver">
-          <UserAvatar
-            className="border-2 border-white rounded-full"
-            imageSrc={review.author?.image}
-            altText={`${review.author?.name}'s avatar`}
-            width={28}
-            height={28}
-            userId={review.author.id}
-          />
-          <ReplyInput />
-        </div> */
 }

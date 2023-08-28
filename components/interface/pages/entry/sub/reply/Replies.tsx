@@ -48,16 +48,17 @@ function Replies({ reviewId }: RepliesProps) {
           // Determine if the current reply and the previous reply are root replies
           const isRoot = !reply.replyToId;
           const prevIsRoot = index > 0 ? !replies[index - 1].replyToId : false;
-
           return (
             // Only render the Reply component if it is selected or there is no selected reply
             (selectedReply === null || reply.id === selectedReply.id) && (
               <Fragment key={reply.id}>
                 {/* Render line or empty div based on conditions */}
                 {isRoot && prevIsRoot ? (
-                  <Line height="12px" />
+                  <div className="flex flex-col items-center w-8">
+                    <Line height="12px" />
+                  </div>
                 ) : (
-                  <div style={{ height: "12px" }} />
+                  <div style={{ height: "12px" }}>&nbsp;</div>
                 )}
 
                 <CSSTransition

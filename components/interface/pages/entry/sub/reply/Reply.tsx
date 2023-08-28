@@ -104,7 +104,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
           {/* Content & Like Button  */}
           <div
             onClick={handleLoadReplies}
-            className={` text-black text-sm rounded-2xl rounded-bl-[4px] break-words `}
+            className={`w-[470px] text-black text-sm rounded-2xl rounded-bl-[4px] break-words `}
           >
             {reply.content}
           </div>
