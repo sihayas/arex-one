@@ -11,7 +11,7 @@ import { useAlbumQuery } from "@/lib/api/albumAPI";
 import Lowlights from "./sub/Lowlights";
 import Highlights from "./sub/Highlights";
 import { animated, SpringValue } from "@react-spring/web";
-import GenerateArtworkUrl from "../../../../components/global/GenerateArtworkUrl";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface AlbumProps {
   scale: SpringValue<number>;
