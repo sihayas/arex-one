@@ -86,7 +86,7 @@ const Album = ({ scale, translateY }: AlbumProps) => {
         />
 
         {/* Tab Bar, Interactions, Data */}
-        <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-20 ">
+        <div className="flex items-center absolute top-12 left-1/2 -translate-x-1/2 transform z-20 ">
           <TabBar
             songs={selectedSound.sound.relationships.tracks.data}
             onActiveTabChange={handleActiveTabChange}

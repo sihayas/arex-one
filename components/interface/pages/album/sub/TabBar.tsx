@@ -13,7 +13,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
 
   const handleTabChange = (newTabId: string | null) => {
     setActiveTab(newTabId);
-    onActiveTabChange(newTabId); // Notify parent
+    onActiveTabChange(newTabId);
   };
 
   return (
@@ -23,7 +23,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
         onClick={() => handleTabChange(null)}
         className={`${
           activeTab === null ? "" : "hover:text-gray3"
-        } whitespace-nowrap relative rounded-full px-3 py-1 text-xs font-semibold text-white outline-sky-400 transition focus-visible:outline-2 hoverable-small`}
+        } whitespace-nowrap relative rounded-full px-1 py-1 text-xs font-semibold text-white outline-sky-400 transition focus-visible:outline-2 hoverable-small`}
         style={{
           WebkitTapHighlightColor: "transparent",
         }}
@@ -31,7 +31,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
         {activeTab === null && (
           <motion.span
             layoutId="bubble"
-            className="absolute inset-0 z-10 bg-stars mix-blend-difference"
+            className="absolute inset-0 z-10 bg-blurWhite mix-blend-difference"
             style={{ borderRadius: 9999 }}
             transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
           />
@@ -63,7 +63,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
           {activeTab === song.id && (
             <motion.span
               layoutId="bubble"
-              className="absolute inset-0 z-10 bg-stars mix-blend-difference"
+              className="absolute inset-0 z-10 bg-blurWhite mix-blend-difference"
               style={{ borderRadius: 9999 }}
               transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
             />

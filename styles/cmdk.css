@@ -32,7 +32,7 @@
 }
 
 .cmdk [cmdk-item] {
-  cursor: none;
+  cursor: pointer;
   transition: all 0.3s ease-in-out;
   will-change: transform;
 }

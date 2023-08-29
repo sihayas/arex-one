@@ -92,7 +92,7 @@ button {
 }
 
 .hoverable {
-  cursor: none;
+  /* cursor: none; */
 }
 
 .pulse {
