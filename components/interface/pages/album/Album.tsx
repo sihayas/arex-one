@@ -12,6 +12,7 @@ import { animated, SpringValue, to } from "@react-spring/web";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 import TabBar from "./sub/TabBar";
+import Songs from "./sub/Songs";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -47,7 +48,6 @@ const Album = ({ scale, translateY }: AlbumProps) => {
 
   const handleActiveTabChange = (newActiveTabId: string | null) => {
     setActiveTabId(newActiveTabId);
-    console.log(newActiveTabId);
   };
 
   // Initializes album and loads full details into selectedSound
@@ -120,33 +120,12 @@ const Album = ({ scale, translateY }: AlbumProps) => {
         }}
         className="flex gap-8 p-8 pt-[900px] w-full relative"
       >
-        {activeSection === 0 && (
+        {activeTabId ? (
           <Highlights selectedSound={selectedSound} user={session!.user} />
-        )}
+        ) : null}
       </animated.div>
     </animated.div>
   );
 };
 
 export default Album;
-
-// {
-//   /* Consensus  */
-// }
-// <div className="flex gap-2">
-//   <p className="font-bold text-gray2 text-sm">
-//     {selectedSound.sound.relationships.tracks.data.length}
-//   </p>
-//   <div className="flex flex-col gap-2">
-//     <p className="text-gray2 text-sm font-medium">SONGS</p>
-//     <ul className="gap-1">
-//       {selectedSound.sound.relationships.tracks.data.map(
-//         (track: SongData, index: number) => (
-//           <li key={index} className="text-gray2 text-sm">
-//             {track.attributes.name}
-//           </li>
-//         )
-//       )}
-//     </ul>
-//   </div>
-// </div>;
