@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SelectedSound, AlbumData } from "../global/interfaces";
+import { SelectedSound, AlbumData, SongData } from "../global/interfaces";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { getAlbumById, getAlbumBySongId } from "../global/musicKit";
@@ -64,20 +64,20 @@ export async function fetchReviews({
   queryKey: [string, string, string];
   sort: string;
 }) {
-  const [, albumId, userId] = queryKey;
+  const [, soundId, userId] = queryKey;
   const response = await axios.get(
-    `/api/album/get/reviews?albumId=${albumId}&page=${pageParam}&sort=${sort}&userId=${userId}`
+    `/api/album/get/reviews?soundId=${soundId}&page=${pageParam}&sort=${sort}&userId=${userId}`
   );
   return response.data;
 }
 
 export function useReviewsQuery(
-  selectedSound: SelectedSound,
+  soundId: string,
   user: UserSession,
   sortOrder: string
 ) {
   return useInfiniteQuery(
-    ["reviews", selectedSound.sound.id, user.id, sortOrder],
+    ["reviews", soundId, user.id, sortOrder],
     ({ pageParam, queryKey }) =>
       fetchReviews({
         pageParam,
@@ -88,7 +88,7 @@ export function useReviewsQuery(
       getNextPageParam: (lastPage, pages) => {
         return lastPage.length === 10 ? pages.length + 1 : false;
       },
-      enabled: !!selectedSound,
+      enabled: !!soundId,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
         toast.success("loaded reviews");

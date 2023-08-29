@@ -1,6 +1,6 @@
 import React from "react";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
-import { AlbumData } from "@/lib/global/interfaces";
+import { AlbumData, SongData } from "@/lib/global/interfaces";
 import { EntryAlbum } from "./EntryAlbum";
 import { Session } from "next-auth/core/types";
 import { SelectedSound } from "@/lib/global/interfaces";

@@ -14,17 +14,17 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const albumId = Array.isArray(req.query.albumId)
-    ? req.query.albumId.join(",") // Convert array to string
-    : req.query.albumId;
+  const soundId = Array.isArray(req.query.soundId)
+    ? req.query.soundId.join(",") // Convert array to string
+    : req.query.soundId;
 
   const page = parseInt(req.query.page as string) || 1;
   const sort = req.query.sort || "newest";
   const userId =
     typeof req.query.userId === "string" ? req.query.userId : undefined;
 
-  if (!albumId || !userId) {
-    return res.status(400).json({ message: "Album ID is required" });
+  if (!soundId || !userId) {
+    return res.status(400).json({ message: "Sound ID is required" });
   }
 
   let orderBy: ReviewOrderByWithRelationInput | undefined;
@@ -43,7 +43,9 @@ export default async function handle(
 
   try {
     const reviews = await prisma.review.findMany({
-      where: { albumId },
+      where: {
+        OR: [{ trackId: soundId }, { albumId: soundId }],
+      },
       skip: (page - 1) * 10,
       take: 10,
       orderBy,

@@ -5,14 +5,14 @@ import { EntryAlbum } from "./EntryAlbum";
 import { Session } from "next-auth/core/types";
 import { SelectedSound } from "@/lib/global/interfaces";
 
-interface HighlightsProps {
-  selectedSound: SelectedSound;
+interface AlbumsProps {
+  albumId: string;
   user: Session["user"];
 }
 
-const Highlights: React.FC<HighlightsProps> = ({ selectedSound, user }) => {
+const Albums: React.FC<AlbumsProps> = ({ albumId, user }) => {
   const sortOrder = "rating_high_to_low";
-  const reviewsQuery = useReviewsQuery(selectedSound, user, sortOrder);
+  const reviewsQuery = useReviewsQuery(albumId, user, sortOrder);
 
   const {
     data: reviewsData,
@@ -38,4 +38,4 @@ const Highlights: React.FC<HighlightsProps> = ({ selectedSound, user }) => {
   );
 };
 
-export default Highlights;
+export default Albums;

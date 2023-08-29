@@ -7,9 +7,9 @@ import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition"
 import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDrag/album";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
-import Highlights from "./sub/Highlights";
 import { animated, SpringValue, to } from "@react-spring/web";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import Albums from "./sub/Albums";
 
 import TabBar from "./sub/TabBar";
 import Songs from "./sub/Songs";
@@ -120,9 +120,11 @@ const Album = ({ scale, translateY }: AlbumProps) => {
         }}
         className="flex gap-8 p-8 pt-[900px] w-full relative"
       >
-        {activeTabId ? (
-          <Highlights selectedSound={selectedSound} user={session!.user} />
-        ) : null}
+        {!activeTabId ? (
+          <Albums albumId={selectedSound.sound.id} user={session!.user} />
+        ) : (
+          <Songs songId={activeTabId} user={session!.user} />
+        )}
       </animated.div>
     </animated.div>
   );
