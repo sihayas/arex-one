@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import { use, useState } from "react";
 import PropTypes from "prop-types";
-import { SongData } from "@/lib/global/interfaces";
+import { SongData, TrackData } from "@/lib/global/interfaces";
 
 interface TabBarProps {
-  songs: SongData[];
+  songs: TrackData[];
   onActiveTabChange: (newActiveTabId: string | null) => void;
 }
 
@@ -49,18 +49,18 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
       </button>
 
       {/* Existing song tabs */}
-      {songs.map((song: SongData) => (
+      {songs.map((track: TrackData) => (
         <button
-          key={song.id}
-          onClick={() => handleTabChange(song.id)}
+          key={track.id}
+          onClick={() => handleTabChange(track.id)}
           className={`${
-            activeTab === song.id ? "" : "hover:text-gray3"
+            activeTab === track.id ? "" : "hover:text-gray3"
           } whitespace-nowrap relative rounded-full px-3 py-1 text-xs font-semibold text-white outline-sky-400 transition focus-visible:outline-2 hoverable-small`}
           style={{
             WebkitTapHighlightColor: "transparent",
           }}
         >
-          {activeTab === song.id && (
+          {activeTab === track.id && (
             <motion.span
               layoutId="bubble"
               className="absolute inset-0 z-10 bg-blurWhite mix-blend-difference"
@@ -68,7 +68,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
               transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
             />
           )}
-          {song.attributes.name}
+          {track.attributes.name}
         </button>
       ))}
     </div>

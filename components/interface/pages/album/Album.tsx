@@ -13,6 +13,7 @@ import Albums from "./sub/Albums";
 
 import TabBar from "./sub/TabBar";
 import Songs from "./sub/Songs";
+import { SongData } from "@/lib/global/interfaces";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -86,10 +87,12 @@ const Album = ({ scale, translateY }: AlbumProps) => {
 
         {/* Tab Bar */}
         <div className="flex items-center absolute top-12 left-1/2 -translate-x-1/2 transform z-20 ">
-          <TabBar
-            songs={selectedSound.sound.relationships.tracks.data}
-            onActiveTabChange={handleActiveTabChange}
-          />
+          {"relationships" in selectedSound.sound && (
+            <TabBar
+              songs={selectedSound.sound.relationships.tracks.data}
+              onActiveTabChange={handleActiveTabChange}
+            />
+          )}
         </div>
 
         {/* Rating & Stats */}
