@@ -16,7 +16,7 @@ export async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/post/album`, album);
   return response.data;
 }
-// Fetch detailed album data
+// Fetch detailed album data on album page load
 export function useAlbumQuery() {
   const { selectedSound, setSelectedSound } = useSound();
 
