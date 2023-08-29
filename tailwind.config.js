@@ -30,6 +30,7 @@ module.exports = {
         gray2: "#999999",
         gray3: "#CCCCCC",
         silver: "rgba(0, 0, 0, 0.05)",
+        silver2: "rgba(0, 0, 0, 0.1)",
         blurWhite: "rgba(255, 255, 255, 0.2)",
         blurDark: "rgba(0, 0, 0, 0.8)",
         action: "rgb(255,94,0)",
@@ -37,7 +38,7 @@ module.exports = {
         red: "#FF0000",
         nav: "rgba(250, 250, 250, 0.75)",
         violet: "rgb(75,61,103)",
-        stars: "rgba(250, 250, 255, 0.65)",
+        stars: "rgba(250, 250, 255, 0.75)",
       },
       fontFamily: {
         baskerville: ["Baskerville", "serif"],

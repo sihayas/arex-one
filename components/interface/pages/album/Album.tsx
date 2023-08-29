@@ -6,12 +6,12 @@ import { useSound } from "@/context/Sound";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDrag/album";
 
-import { SongData } from "@/lib/global/interfaces";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
-import Lowlights from "./sub/Lowlights";
 import Highlights from "./sub/Highlights";
 import { animated, SpringValue, to } from "@react-spring/web";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+
+import TabBar from "./sub/TabBar";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -54,10 +54,6 @@ const Album = ({ scale, translateX, translateY }: AlbumProps) => {
     return <div>loading...</div>; // Replace with your preferred loading state
   }
 
-  const handleArtworkClick = () => {
-    setIsExpanded(!isExpanded);
-  };
-
   return (
     <animated.div
       ref={scrollContainerRef}
@@ -66,21 +62,16 @@ const Album = ({ scale, translateX, translateY }: AlbumProps) => {
       {/* Top Section */}
       <animated.div
         style={{
-          transform: to(
-            [scale, translateY],
-            (s, ty) => `translate3d(${0}px, ${ty}px, 0) scale(${s})`
-          ),
-          transformOrigin: "center",
+          transform: translateY.to((ty) => `translate3d(0px, ${ty}px, 0)`),
         }}
-        className="fixed z-50"
+        className="fixed z-10"
       >
-        {/* Album Artwork  */}
+        {/* Artwork */}
         <animated.img
-          onClick={handleArtworkClick}
-          // className="hover:-translate-x-4 transition-transform ease-in-out duration-500"
           style={{
             borderRadius: scale.to((value) => `${20 + (1 - value) * -12}px`),
             boxShadow: boxShadow,
+            transform: scale.to((s) => `scale(${s})`),
           }}
           src={artworkUrl || "/public/images/default.png"}
           alt={`${selectedSound.sound.attributes.name} artwork`}
@@ -89,6 +80,29 @@ const Album = ({ scale, translateX, translateY }: AlbumProps) => {
           onDragStart={(e) => e.preventDefault()}
           draggable="false"
         />
+
+        {/* Tab Bar, Interactions, Data */}
+        <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-20">
+          <TabBar />
+        </div>
+
+        {/* Rating & Stats */}
+        <div
+          className="absolute top-[90px] left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full border border-white flex items-center justify-center"
+          style={{ borderWidth: "1px" }}
+        >
+          <span className="font-bold text-xl text-white">4.2</span>
+        </div>
+
+        {/* Rating & Stats */}
+        <div className="absolute top-[146px] left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+          <div className="font-medium text-sm text-white">
+            {selectedSound.sound.attributes.name}
+          </div>
+          <div className="text-sm text-white">
+            {selectedSound.sound.attributes.artistName}
+          </div>
+        </div>
       </animated.div>
 
       {/* Section Two / Entries  */}
