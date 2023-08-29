@@ -21,7 +21,7 @@ export default function Home() {
         </Head>
         {/* <Link data-active={isActive("/signup")} href="/api/auth/signin">
           <div className="justify-self-center self-center text-gray2 text-sm">
-            log in?
+            log in?...
           </div>
         </Link> */}
         <div className="row-start-1 col-start-1 text-sm text-black font-medium">
