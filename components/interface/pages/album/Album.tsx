@@ -22,10 +22,9 @@ interface AlbumProps {
 const Album = ({ scale, translateY }: AlbumProps) => {
   // Hooks
   const { data: session } = useSession();
-  const { pages } = useInterface();
   const { selectedSound } = useSound();
   const { scrollContainerRef } = useScrollPosition();
-  const { bind, x, activeSection } = useDragAlbumLogic();
+  const { bind, x } = useDragAlbumLogic();
 
   const [activeTabId, setActiveTabId] = useState<string | null>(null);
 
@@ -85,7 +84,7 @@ const Album = ({ scale, translateY }: AlbumProps) => {
           draggable="false"
         />
 
-        {/* Tab Bar, Interactions, Data */}
+        {/* Tab Bar */}
         <div className="flex items-center absolute top-12 left-1/2 -translate-x-1/2 transform z-20 ">
           <TabBar
             songs={selectedSound.sound.relationships.tracks.data}
