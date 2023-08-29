@@ -15,11 +15,10 @@ import TabBar from "./sub/TabBar";
 
 interface AlbumProps {
   scale: SpringValue<number>;
-  translateX: SpringValue<number>;
   translateY: SpringValue<number>;
 }
 
-const Album = ({ scale, translateX, translateY }: AlbumProps) => {
+const Album = ({ scale, translateY }: AlbumProps) => {
   // Hooks
   const { data: session } = useSession();
   const { pages } = useInterface();
@@ -27,7 +26,7 @@ const Album = ({ scale, translateX, translateY }: AlbumProps) => {
   const { scrollContainerRef } = useScrollPosition();
   const { bind, x, activeSection } = useDragAlbumLogic();
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [activeTabId, setActiveTabId] = useState<string | null>(null);
 
   const artworkUrl = GenerateArtworkUrl(
     selectedSound!.sound.attributes.artwork.url,
@@ -37,14 +36,19 @@ const Album = ({ scale, translateX, translateY }: AlbumProps) => {
   const boxShadow = useMemo(() => {
     if (selectedSound?.colors[0]) {
       return `0px 0px 0px 0px ${selectedSound.colors[0]}, 0.15),
-        2px 2px 7px 0px ${selectedSound.colors[0]}, 0.15),
-        9px 9px 13px 0px ${selectedSound.colors[0]}, 0.13),
-        20px 20px 17px 0px ${selectedSound.colors[0]}, 0.08),
-        35px 36px 20px 0px ${selectedSound.colors[0]}, 0.02),
-        55px 57px 22px 0px ${selectedSound.colors[0]}, 0.00)`;
+        0px -6px 13px 0px ${selectedSound.colors[0]}, 0.15),
+        0px -32px 23px 0px ${selectedSound.colors[0]}, 0.13),
+        0px -52px 31px 0px ${selectedSound.colors[0]}, 0.08),
+        0px -93px 37px 0px ${selectedSound.colors[0]}, 0.02),
+        0px -145px 41px 0px ${selectedSound.colors[0]}, 0.00)`;
     }
     return undefined;
   }, [selectedSound?.colors]);
+
+  const handleActiveTabChange = (newActiveTabId: string | null) => {
+    setActiveTabId(newActiveTabId);
+    console.log(newActiveTabId);
+  };
 
   // Initializes album and loads full details into selectedSound
   const { isLoading, isError } = useAlbumQuery();
@@ -69,7 +73,7 @@ const Album = ({ scale, translateX, translateY }: AlbumProps) => {
         {/* Artwork */}
         <animated.img
           style={{
-            borderRadius: scale.to((value) => `${20 + (1 - value) * -12}px`),
+            borderRadius: scale.to((value) => `${20 + (1 - value) * -72}px`),
             boxShadow: boxShadow,
             transform: scale.to((s) => `scale(${s})`),
           }}
@@ -83,7 +87,10 @@ const Album = ({ scale, translateX, translateY }: AlbumProps) => {
 
         {/* Tab Bar, Interactions, Data */}
         <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-20">
-          <TabBar />
+          <TabBar
+            songs={selectedSound.sound.relationships.tracks.data}
+            onActiveTabChange={handleActiveTabChange}
+          />
         </div>
 
         {/* Rating & Stats */}
@@ -91,15 +98,15 @@ const Album = ({ scale, translateX, translateY }: AlbumProps) => {
           className="absolute top-[90px] left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full border border-white flex items-center justify-center"
           style={{ borderWidth: "1px" }}
         >
-          <span className="font-bold text-xl text-white">4.2</span>
+          <span className="font-bold text-xl text-white"></span>
         </div>
 
         {/* Rating & Stats */}
         <div className="absolute top-[146px] left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <div className="font-medium text-sm text-white">
+          <div className="font-bold text-sm text-white">
             {selectedSound.sound.attributes.name}
           </div>
-          <div className="text-sm text-white">
+          <div className="font-medium text-sm text-white">
             {selectedSound.sound.attributes.artistName}
           </div>
         </div>

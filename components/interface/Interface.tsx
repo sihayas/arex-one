@@ -188,7 +188,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   );
 
   const scrollBind = useScroll(({ xy: [, y] }) => {
-    const scrollBound = 862;
+    const scrollBound = 846;
     const scaleBound = 0.89;
     if (activePage.name === "album") {
       let newScale = 1 - y / 50;

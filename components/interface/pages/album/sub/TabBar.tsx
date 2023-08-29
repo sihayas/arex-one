@@ -1,29 +1,34 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import PropTypes from "prop-types";
+import { SongData } from "@/lib/global/interfaces";
 
-let tabs = [
-  { id: "world", label: "HIGHLIGHTS" },
-  { id: "ny", label: "LOWLIGHTS" },
-  { id: "business", label: "RECENT" },
-];
+interface TabBarProps {
+  songs: SongData[];
+  onActiveTabChange: (newActiveTabId: string | null) => void;
+}
 
-export default function TabBar() {
-  let [activeTab, setActiveTab] = useState(tabs[0].id);
+export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
+  const [activeTab, setActiveTab] = useState(songs.length ? songs[0].id : null);
 
+  const handleTabChange = (newTabId: string) => {
+    setActiveTab(newTabId);
+    onActiveTabChange(newTabId); // <-- Notify parent
+  };
   return (
-    <div className="flex border rounded-full border-silver">
-      {tabs.map((tab) => (
+    <div className="flex border rounded-full border-blurWhite overflow-scroll max-w-[482px] scrollbar-none">
+      {songs.map((song: SongData) => (
         <button
-          key={tab.id}
-          onClick={() => setActiveTab(tab.id)}
+          key={song.id}
+          onClick={() => handleTabChange(song.id)}
           className={`${
-            activeTab === tab.id ? "" : "hover:text-gray3"
-          } relative rounded-full px-3 py-1 text-xs font-medium text-white outline-sky-400 transition focus-visible:outline-2 hoverable-small`}
+            activeTab === song.id ? "" : "hover:text-gray3"
+          } whitespace-nowrap relative rounded-full px-3 py-1 text-xs font-semibold text-white outline-sky-400 transition focus-visible:outline-2 hoverable-small`}
           style={{
             WebkitTapHighlightColor: "transparent",
           }}
         >
-          {activeTab === tab.id && (
+          {activeTab === song.id && (
             <motion.span
               layoutId="bubble"
               className="absolute inset-0 z-10 bg-stars mix-blend-difference"
@@ -31,9 +36,20 @@ export default function TabBar() {
               transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
             />
           )}
-          {tab.label}
+          {song.attributes.name}
         </button>
       ))}
     </div>
   );
 }
+
+TabBar.propTypes = {
+  songs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      attributes: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }).isRequired,
+    })
+  ).isRequired,
+};
