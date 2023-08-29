@@ -81,7 +81,7 @@ function Replies({ reviewId }: RepliesProps) {
         })
       ) : (
         <div className="text-xs text-[#CCC]"></div>
-        // unthreaded
+        // unthreadedd
       )}
     </TransitionGroup>
   );
