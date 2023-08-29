@@ -25,16 +25,16 @@ export default function Home() {
           </div>
         </Link> */}
         <div className="row-start-1 col-start-1 text-sm text-black font-medium">
-          AREX
+          AREX [alpha]
         </div>
         <div className="flex flex-col row-start-1 col-start-2 col-span-5 text-sm justify-between ">
           <div className="text-black tracking-widest">
-            A DIGITAL METROPOLIS FOR THE LOVE OF{" "}
-            <span className="font-medium tracking-normal">SOUND*</span>
+            A NETWORK FOR THE LOVE OF
+            <span className="font-medium tracking-normal"> SOUND*</span>
           </div>
           <div className="text-gray2">
-            HEARING BRINGS US INTO THE LIVING WORLD, SIGHT MOVES US TOWARDS
-            ATROPHY & DEATH.
+            HEARING ______ US INTO THE ______ _____, _____ MOVES US _______
+            _______ & _____.
           </div>
         </div>
 
@@ -43,15 +43,17 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col justify-evenly row-start-4 col-start-3 col-span-5 text-sm text-gray2 uppercase ">
-          <div className="">Define</div>
-          <div className="">Express</div>
-          <div className="">Interlink</div>
+          <div className="">PLACE</div>
+          <div className="">HOLD</div>
+          <div className="">ER</div>
         </div>
 
         <div className="row-start-5 row-span-1 col-start-3 col-span-4 items-end text-sm text-gray2 uppercase">
-          <span className="text-black">RX</span> exists for those few and far
+          {/* <span className="text-black">AREX</span> exists for those few and far
           between, to revel in the shared love for the inviisble waves that bind
-          us.
+          us. */}
+          <span className="text-black">AREX</span> exists for ...., to ... that
+          bind us.
         </div>
 
         <div className="row-start-9 col-start-2 col-span-5 self-end text-sm text-gray2 uppercase">
