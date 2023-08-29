@@ -30,18 +30,17 @@ const Stars: React.FC<StarsProps> = ({
       case 3:
         return <StarThreeIcon width={16} height={16} color={color} />;
       case 4:
-        return <StarFourIcon width={16} height={16} color={color} />;
+        return (
+          <div className="font-bold text-xs flex items-center gap-1">
+            4 <StarFourIcon width={16} height={16} color={color} />
+          </div>
+        );
       case 5:
         return <AsteriskIcon width={16} height={16} color={color} />;
     }
   };
 
-  return (
-    <div className={`${className}`}>
-      {getStarIcon(rating)} <span className="font-medium">{soundName}</span>{" "}
-      &middot; {artist}
-    </div>
-  );
+  return <div className={`${className}`}>{getStarIcon(rating)}</div>;
 };
 
 export default Stars;

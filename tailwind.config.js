@@ -22,7 +22,7 @@ module.exports = {
         new: "0px 0px 0px 0px rgba(0, 0, 0, 0.07), 0px 1px 2px 0px rgba(0, 0, 0, 0.07), 0px 3px 3px 0px rgba(0, 0, 0, 0.06), 0px 6px 4px 0px rgba(0, 0, 0, 0.04), 0px 11px 4px 0px rgba(0, 0, 0, 0.01), 0px 17px 5px 0px rgba(0, 0, 0, 0.00);",
         cmdkScaled2:
           "0px 0px 0px 0px rgba(0, 0, 0, 0.12), 4px 9px 22px 0px rgba(0, 0, 0, 0.11), 15px 37px 40px 0px rgba(0, 0, 0, 0.10), 35px 84px 55px 0px rgba(0, 0, 0, 0.06), 62px 149px 65px 0px rgba(0, 0, 0, 0.02), 97px 233px 71px 0px rgba(0, 0, 0, 0.00);",
-        entry: "0px 0px 2px 0px rgba(0, 0, 0, 0.06);",
+        entry: "0px 0px 2px rgba(0, 0, 0, 0.08)",
       },
       colors: {
         black: "#333333",

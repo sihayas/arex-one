@@ -67,7 +67,7 @@ const Album = ({ scale, translateY }: AlbumProps) => {
         style={{
           transform: translateY.to((ty) => `translate3d(0px, ${ty}px, 0)`),
         }}
-        className="fixed z-10"
+        className="sticky z-10 top-0"
       >
         {/* Artwork */}
         <animated.img
