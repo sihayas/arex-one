@@ -1,9 +1,14 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useSound } from "@/context/Sound";
 import { useInterface } from "@/context/Interface";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
-import { animated, useSpring, useTransition } from "@react-spring/web";
+import {
+  animated,
+  useSpring,
+  useSprings,
+  useTransition,
+} from "@react-spring/web";
 import { useDrag, useScroll } from "@use-gesture/react";
 import { Command } from "cmdk";
 import Nav from "@/components/nav/Nav";
@@ -60,14 +65,17 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       },
     }));
 
-  const [{ opacity: scrollOpacity }, setScroll] = useSpring(() => ({
-    opacity: 1,
-    config: {
-      tension: 400,
-      friction: 47,
-      mass: 0.2,
-    },
-  }));
+  const [{ opacity: scrollOpacity, scale: scrollScale }, setScroll] = useSpring(
+    () => ({
+      opacity: 1,
+      scale: 1,
+      config: {
+        tension: 400,
+        friction: 47,
+        mass: 0.2,
+      },
+    })
+  );
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -214,8 +222,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       if (newOpacity < 0) newOpacity = 0;
       if (newOpacity > 1) newOpacity = 1;
 
-      let newWidth = 658 + (y / 24) * (576 - 658);
-      if (newWidth < 576) newWidth = 576;
+      let newWidth = 658 + (y / 24) * (574 - 658);
+      if (newWidth < 574) newWidth = 574;
       if (newWidth > 658) newWidth = 658;
 
       let newHeight = 658 + (y / 24) * (1052 - 658);
@@ -226,12 +234,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       set({
         width: newWidth,
         height: newHeight,
-        scale: newScale,
         translateY: translateValue,
       });
       // Apply the unique scroll opacity
       setScroll({
         opacity: newOpacity,
+        scale: newScale,
       });
     } else if (activePage.name === "user") {
       let baseHeight = 712;
@@ -278,6 +286,14 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
   }, [openThreads, activePage.name, set, activePage.dimensions.height]);
 
+  // useEffect(() => {
+  //   // Trigger a scale down and up animation when pages array changes
+  //   set({ scale: 0.95 });
+  //   setTimeout(() => {
+  //     set({ scale: 1 });
+  //   }, 150);
+  // }, [pages, set]);
+
   const transitions = useTransition(ActiveComponent, {
     from: { opacity: 0 },
     enter: { opacity: 1, delay: 750 },
@@ -287,19 +303,63 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   });
 
+  const [ghostSprings, setGhostSprings] = useSprings(pages.length, (index) => ({
+    width: pages[index].dimensions.width,
+    height: pages[index].dimensions.height,
+    translateX: index * 120,
+    config: { tension: 200, friction: 80 },
+  }));
+
+  const [activeIndex, setActiveIndex] = useState(0); // Initialize to the index of the first page
+
+  useEffect(() => {
+    // Update activeIndex based on activePage.name
+    const newIndex = pages.findIndex((page) => page.name === activePage.name);
+    setActiveIndex(newIndex);
+  }, [activePage.name, pages]);
+
+  useEffect(() => {
+    setGhostSprings((index) => {
+      const isCurrentPage = pages[index].name === activePage.name;
+      const translateAmount =
+        index < activeIndex ? (activeIndex - index) * 120 : 0;
+      return {
+        width: isCurrentPage ? pages[index].dimensions.width : 576,
+        height: isCurrentPage ? pages[index].dimensions.height : 576,
+        translateX: translateAmount,
+      };
+    });
+  }, [pages, setGhostSprings, activePage.name, activeIndex]);
+
   return (
     <>
       <animated.div
         style={{
           ...visibilitySpring,
+          // scale: scale.to((s) => s),
         }}
         className={`cmdk border border-silver ${
           isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"
         }`}
       >
+        {/* Ghost Container for Breadcrumbs */}
+        {ghostSprings.map((props, index) => (
+          <animated.div
+            className="absolute border border-silver bg-silver rounded-3xl"
+            key={index}
+            style={{
+              width: props.width,
+              height: props.height,
+              transform: props.translateX.to((t) => `translateX(${t}px)`),
+            }}
+          >
+            {/* ghost container content */}
+          </animated.div>
+        ))}
+
         {/* CMDK Inner  */}
         <Command
-          className={`flex transition-opacity bg-white duration-150 w-full h-full ${
+          className={`cmdk-inner flex transition-opacity bg-white duration-150 w-full h-full ${
             isVisible ? "opacity-100 shadow-artworkFeed" : "opacity-0"
           }`}
           shouldFilter={false}
@@ -339,7 +399,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           }}
           loop
         >
-          <Nav />
           {/* Container / Shapeshifter */}
           <animated.div
             {...dragBind()} // Shapeshifter dragging
@@ -347,11 +406,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             style={{
               width: width.to((w) => `${w}px`),
               height: height.to((h) => `${h}px`),
+
               opacity: opacity.to((o) => o),
               willChange: "width, height",
               touchAction: "pan-y",
             }}
-            className={`flex rounded-[24px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none`}
+            className={`flex rounded-[24px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none bg-white`}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
@@ -365,8 +425,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               >
                 {Component === Album ? (
                   <Component
-                    scale={scale}
                     translateY={translateY}
+                    scale={scrollScale}
                     opacity={scrollOpacity}
                   />
                 ) : Component === Entry ? (
@@ -377,6 +437,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               </animated.div>
             ))}
           </animated.div>
+          <Nav />
         </Command>
       </animated.div>
     </>

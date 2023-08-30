@@ -6,7 +6,6 @@ import React, {
   useEffect,
 } from "react";
 import { SelectedSound } from "@/lib/global/interfaces";
-import { useSession } from "next-auth/react";
 
 export type Page = {
   name: string;
