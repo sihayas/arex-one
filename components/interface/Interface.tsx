@@ -52,13 +52,17 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       height: activePage.dimensions.height,
       translateY: 0,
       translateX: 0,
-      opacity: 1, // Initializing the opacity to 1 (100%)
+      opacity: 1,
       config: {
         tension: 400,
         friction: 47,
         mass: 0.2,
       },
     }));
+
+  const [{ opacity: scrollOpacity }, setScroll] = useSpring(() => ({
+    opacity: 1,
+  }));
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -190,6 +194,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const scrollBind = useScroll(({ xy: [, y] }) => {
     const scrollBound = 846;
     const scaleBound = 0.89;
+
+    const maxScrollForOpacity = 200;
+    const minScrollForOpacity = 0;
+
     if (activePage.name === "album") {
       let newScale = 1 - y / 50;
       if (newScale > 1) newScale = 1;
@@ -197,6 +205,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       let translateValue = (y / 400) * scrollBound;
       if (translateValue > scrollBound) translateValue = scrollBound;
+
+      let newOpacity = y / maxScrollForOpacity;
+      if (newOpacity < 0) newOpacity = 0;
+      if (newOpacity > 1) newOpacity = 1;
 
       let newWidth = 658 + (y / 77) * (576 - 658);
       if (newWidth < 576) newWidth = 576;
@@ -208,10 +220,14 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
       // Apply the new scale and width immediately to the spring animation
       set({
-        scale: newScale,
         width: newWidth,
         height: newHeight,
+        scale: newScale,
         translateY: translateValue,
+      });
+      // Apply the unique scroll opacity
+      setScroll({
+        opacity: newOpacity,
       });
     } else if (activePage.name === "user") {
       let baseHeight = 712;
@@ -340,10 +356,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
                   ...style,
                   position: "absolute",
                   width: "100%",
+                  height: "100%",
                 }}
               >
                 {Component === Album ? (
-                  <Component scale={scale} translateY={translateY} />
+                  <Component
+                    scale={scale}
+                    translateY={translateY}
+                    opacity={scrollOpacity}
+                  />
                 ) : Component === Entry ? (
                   <Component translateY={translateY} />
                 ) : (

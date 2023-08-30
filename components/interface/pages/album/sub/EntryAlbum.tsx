@@ -41,14 +41,16 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   return (
     <>
       <div className="flex flex-col">
-        {/* Rating + Content*/}
-        <div className="flex gap-2 items-center w-full relative">
-          <div className="absolute w-2 h-2 bg-white shadow-entry -top-2 -left-2 rounded-full" />
+        <div className="flex">
+          <div className="w-2 h-2 bg-white shadow-entry -top-2 -left-2 rounded-full" />
           <Stars
-            className="absolute bg-white shadow-entry p-1 px-2 rounded-full -top-8 left-0 flex items-center gap-1 text-xs"
+            className="bg-white shadow-entry p-1 px-2 rounded-full -top-8 left-0 flex items-center gap-1 text-xs"
             rating={review.rating}
             color={"#000"}
           />
+        </div>
+        {/* Rating + Content*/}
+        <div className="flex gap-2 items-center w-full relative">
           <div className="w-full px-4 py-2 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
             <div
               onClick={handleEntryClick}

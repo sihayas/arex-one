@@ -18,9 +18,10 @@ import { SongData } from "@/lib/global/interfaces";
 interface AlbumProps {
   scale: SpringValue<number>;
   translateY: SpringValue<number>;
+  opacity: SpringValue<number>;
 }
 
-const Album = ({ scale, translateY }: AlbumProps) => {
+const Album = ({ scale, translateY, opacity }: AlbumProps) => {
   // Hooks
   const { data: session } = useSession();
   const { selectedSound } = useSound();
@@ -68,7 +69,7 @@ const Album = ({ scale, translateY }: AlbumProps) => {
         style={{
           transform: translateY.to((ty) => `translate3d(0px, ${ty}px, 0)`),
         }}
-        className="sticky z-10 top-0"
+        className="fixed z-10 top-0"
       >
         {/* Artwork */}
         <animated.img
@@ -118,10 +119,11 @@ const Album = ({ scale, translateY }: AlbumProps) => {
       <animated.div
         {...bind()}
         style={{
-          transform: x.to((val) => `translateX(${val}px)`),
+          opacity: opacity.to((o) => o),
         }}
-        className="flex gap-8 p-8 pt-[900px] w-full relative"
+        className="w-full h-full"
       >
+        <div className="h-[400px]">&nbsp; </div>
         {!activeTabId ? (
           <Albums albumId={selectedSound.sound.id} user={session!.user} />
         ) : (
