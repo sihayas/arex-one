@@ -6,14 +6,23 @@ interface LikeButtonProps {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => Promise<void>;
   liked: boolean;
+  className?: string;
+  width?: number;
+  height?: number;
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({ handleLikeClick, liked }) => {
-  const [color, setColor] = useState(liked ? "#333" : "#CCC");
+const LikeButton: React.FC<LikeButtonProps> = ({
+  handleLikeClick,
+  liked,
+  className,
+  width = 16,
+  height = 16,
+}) => {
+  const [color, setColor] = useState(liked ? "#FF0000" : "#CCC");
 
   // Update color when `liked` changes
   useEffect(() => {
-    setColor(liked ? "#333" : "#CCC"); // Adjusted to be consistent with initial state
+    setColor(liked ? "#FF0000" : "#CCC"); // Adjusted to be consistent with initial state
   }, [liked]);
 
   return (
@@ -22,11 +31,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({ handleLikeClick, liked }) => {
         handleLikeClick(event);
         event.stopPropagation();
       }}
-      onMouseLeave={() => setColor(liked ? "#333" : "#CCC")}
-      aria-label="like this entry"
+      onMouseEnter={() => setColor(liked ? "#CCC" : "#000")}
+      onMouseLeave={() => setColor(liked ? "#FF0000" : "#CCC")}
     >
-      <div className="flex items-center hoverable-small hover:invert">
-        <LoveIcon color={color} width={16} height={16} />
+      <div className={`${className} flex items-center hoverable-small`}>
+        <LoveIcon color={color} width={width} height={height} />
       </div>
     </button>
   );

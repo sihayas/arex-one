@@ -72,6 +72,40 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
   const entryContainerRef = React.useRef<HTMLDivElement | null>(null);
 
+  // Dynamic height
+  useEffect(() => {
+    function updateDynamicHeight() {
+      const viewportHeight = window.innerHeight;
+      const newHeight = (viewportHeight * 98) / 100;
+
+      setPages((prevPages) => {
+        return prevPages.map((page) => {
+          if (page.name === "feed") {
+            return {
+              ...page,
+              dimensions: {
+                ...page.dimensions,
+                height: newHeight,
+              },
+            };
+          }
+          return page;
+        });
+      });
+    }
+
+    // Initial set
+    updateDynamicHeight();
+
+    // Update on window resize
+    window.addEventListener("resize", updateDynamicHeight);
+
+    return () => {
+      // Cleanup
+      window.removeEventListener("resize", updateDynamicHeight);
+    };
+  }, []);
+
   // Page states
   const [pages, setPages] = useState<Page[]>([
     {
@@ -117,8 +151,8 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
     ]);
   }, [setPages]);
 
+  // Function to handle the web browser back button
   useEffect(() => {
-    // Function to handle the web browser back button
     const handlePopState = () => {
       if (pages.length > 1) {
         navigateBack();

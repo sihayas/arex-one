@@ -44,26 +44,34 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
       <div className="flex flex-col">
         {/* Artwork  */}
         {isAlbum ? (
-          <div className="ml-auto mb-2">
+          <div className="ml-auto mb-2 relative">
             <ArtworkHeader albumId={review.albumId} album={review.album} />
           </div>
         ) : (
-          <div className="ml-auto mb-2">
+          <div className="ml-auto mb-2 relative">
             <ArtworkHeader songId={review.trackId} album={review.album} />
           </div>
         )}
 
         {/* Rating + Content*/}
-        <div className="flex gap-2 items-center w-full relative">
-          <div className="absolute w-2 h-2 bg-white shadow-entry -top-2 -left-2 rounded-full" />
+        <div className="flex items-center w-full relative">
+          <div className="absolute w-1 h-1 bg-white shadow-entry -top-1 -left-1 rounded-full" />
+          <div className="absolute w-3 h-3 bg-white shadow-entry -top-4 rounded-full" />
+          <LikeButton
+            className="absolute left-[10px] -top-[38px] bg-white p-[6px] pt-[7px] shadow-entry rounded-full"
+            handleLikeClick={handleLikeClick}
+            liked={liked}
+            width={12}
+            height={11}
+          />
           <Stars
-            className="absolute bg-white shadow-entry p-1 rounded-full -top-8 left-0 flex items-center gap-1 text-xs pr-2"
+            className="absolute bg-white shadow-entry p-1 rounded-full -top-[38px] left-[42px] flex items-center gap-1 text-xs pr-2"
             rating={review.rating}
             color={"#000"}
             soundName={review.album?.name || review.track?.name}
             artist={review.album?.artist || review.track?.album.artist}
           />
-          <div className="w-full px-4 py-2 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
+          <div className="w-full px-4 py-3 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
             <div
               onClick={handleEntryClick}
               className={`break-words hoverable-small line-clamp-6`}
@@ -132,7 +140,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           {review.likes && review._count.likes > 0 && (
             <div className="flex items-center text-xs text-gray2 mt-1">
               {review._count.likes}{" "}
-              {review._count.likes > 1 ? "hearts" : "heart"}
+              {review._count.likes > 1 ? "HEARTS" : "HEART"}
             </div>
           )}
         </div>
@@ -204,5 +212,4 @@ function formatDateShort(date: Date): string {
 // </div>;
 
 // <div className="absolute right-0 -bottom-5">
-//   <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
 // </div>;

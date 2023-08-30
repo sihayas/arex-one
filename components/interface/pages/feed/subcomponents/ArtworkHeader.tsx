@@ -38,10 +38,13 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
   };
 
   return (
-    <div onClick={handleClick} className="flex flex-col w-fit hoverable-medium">
+    <div
+      onClick={handleClick}
+      className="flex flex-col w-full hoverable-medium"
+    >
       {/* Art */}
       <Image
-        className="rounded-[12px] shadow-sm border border-silver"
+        className="rounded-[12px] shadow-artworkFeed border border-silver"
         src={
           isLoading
             ? "/images/loading.webp"

@@ -280,7 +280,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* CMDK Inner  */}
         <Command
           className={`flex transition-opacity bg-white duration-150 w-full h-full ${
-            isVisible ? "opacity-100 shadow-cmdkScaled2" : "opacity-0"
+            isVisible ? "opacity-100 shadow-artworkFeed" : "opacity-0"
           }`}
           shouldFilter={false}
           onKeyDown={(e: React.KeyboardEvent) => {
