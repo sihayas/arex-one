@@ -286,14 +286,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
   }, [openThreads, activePage.name, set, activePage.dimensions.height]);
 
-  // useEffect(() => {
-  //   // Trigger a scale down and up animation when pages array changes
-  //   set({ scale: 0.95 });
-  //   setTimeout(() => {
-  //     set({ scale: 1 });
-  //   }, 150);
-  // }, [pages, set]);
-
   const transitions = useTransition(ActiveComponent, {
     from: { opacity: 0 },
     enter: { opacity: 1, delay: 750 },
@@ -303,40 +295,40 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   });
 
+  const [activeIndex, setActiveIndex] = useState(0); // Initialize to the index of the first page
+
   const [ghostSprings, setGhostSprings] = useSprings(pages.length, (index) => ({
     width: pages[index].dimensions.width,
     height: pages[index].dimensions.height,
-    translateX: index * 120,
+    translateX: index * 48,
+    opacity: 0,
     config: { tension: 200, friction: 80 },
   }));
 
-  const [activeIndex, setActiveIndex] = useState(0); // Initialize to the index of the first page
-
   useEffect(() => {
-    // Update activeIndex based on activePage.name
-    const newIndex = pages.findIndex((page) => page.name === activePage.name);
+    const newIndex = pages.findIndex((page) => page.key === activePage.key);
     setActiveIndex(newIndex);
-  }, [activePage.name, pages]);
+  }, [activePage.key, pages]);
 
   useEffect(() => {
     setGhostSprings((index) => {
-      const isCurrentPage = pages[index].name === activePage.name;
+      const isCurrentPage = pages[index].key === activePage.key;
       const translateAmount =
-        index < activeIndex ? (activeIndex - index) * 120 : 0;
+        index < activeIndex ? (activeIndex - index) * 80 : 0;
       return {
         width: isCurrentPage ? pages[index].dimensions.width : 576,
         height: isCurrentPage ? pages[index].dimensions.height : 576,
         translateX: translateAmount,
+        opacity: isCurrentPage ? 0 : 1,
       };
     });
-  }, [pages, setGhostSprings, activePage.name, activeIndex]);
+  }, [pages, setGhostSprings, activePage.key, activeIndex]);
 
   return (
     <>
       <animated.div
         style={{
           ...visibilitySpring,
-          // scale: scale.to((s) => s),
         }}
         className={`cmdk border border-silver ${
           isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"
@@ -351,6 +343,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               width: props.width,
               height: props.height,
               transform: props.translateX.to((t) => `translateX(${t}px)`),
+              opacity: props.opacity,
             }}
           >
             {/* ghost container content */}

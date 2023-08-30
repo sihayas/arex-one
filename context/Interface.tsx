@@ -6,8 +6,10 @@ import React, {
   useEffect,
 } from "react";
 import { SelectedSound } from "@/lib/global/interfaces";
+import { v4 as uuidv4 } from "uuid";
 
 export type Page = {
+  key: string;
   name: string;
   selectedSound?: SelectedSound;
   threadcrumbs?: string[];
@@ -65,6 +67,8 @@ export const useInterface = (): InterfaceContext => {
 export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
+  const feedKey = uuidv4();
+
   const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
@@ -74,6 +78,7 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
   // Page states
   const [pages, setPages] = useState<Page[]>([
     {
+      key: feedKey,
       name: "feed",
       dimensions: { width: 574, height: 1084 },
       scrollPosition: 0,
@@ -85,8 +90,14 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
 
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
-    () => pages[pages.length - 2] || { name: "feed", width: 574, height: 1084 },
-    [pages]
+    () =>
+      pages[pages.length - 2] || {
+        key: feedKey,
+        name: "feed",
+        width: 574,
+        height: 1084,
+      },
+    [pages, feedKey]
   );
 
   const navigateBack = useCallback(() => {
@@ -109,12 +120,13 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
   const resetPage = useCallback(() => {
     setPages([
       {
+        key: feedKey,
         name: "index",
         dimensions: { width: 574, height: 1084 },
         scrollPosition: 0,
       },
     ]);
-  }, [setPages]);
+  }, [setPages, feedKey]);
 
   // Function to handle the web browser back button
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { useInterface } from "@/context/Interface";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
+import { v4 as uuidv4 } from "uuid";
 
 export const useHandleEntryClick = (reviewId: string) => {
   const { setPages, isVisible, setIsVisible, entryContainerRef } =
@@ -10,17 +11,17 @@ export const useHandleEntryClick = (reviewId: string) => {
     setPages((prevPages) => [
       ...prevPages,
       {
+        key: uuidv4(),
         name: "entry",
         threadcrumbs: [reviewId],
         dimensions: {
-          width: 574,
-          height: 158,
+          width: 576,
+          height: 576,
         },
         scrollPosition: 0,
       },
     ]);
     setThreadcrumbs([reviewId]);
-    !isVisible ? setIsVisible(true) : null;
     window.history.pushState(null, "");
   };
 
