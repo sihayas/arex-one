@@ -38,8 +38,14 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   return (
     <div
       ref={entryContainerRef}
-      className="flex flex-col w-full p-8 z-10 bg-white rounded-[20px] overflow-scroll relative max-h-[724px] "
+      className="flex flex-col w-full p-4 pl-2 pb-2 z-10 bg-white rounded-[20px] overflow-scroll relative max-h-[724px] "
     >
+      {/* Review Content */}
+      <div
+        className={`w-full text-sm text-black break-words hoverable-medium pl-10`}
+      >
+        {review.content}
+      </div>
       <div className="flex items-center gap-2 hoverable-small">
         <UserAvatar
           imageSrc={review.author.image}
@@ -54,53 +60,35 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
         >
           {review.author.name}
         </div>
-      </div>
-      {/* Review Content */}
-      <div
-        className={`w-full text-sm text-black break-words hoverable-medium pl-10`}
-      >
-        {review.content}
-      </div>
-      {/* Like & Avatar previews */}
-      <div className="flex items-center gap-2 hoverable-small pl-10 pt-4">
-        <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
-        {review.replies && review._count.replies > 0 && (
-          // Like & Avatar previews
-          <div className="flex items-center -ml-1">
-            {review.replies.slice(0, 3).map((reply, index) => (
-              <UserAvatar
-                key={index}
-                className={`!border-2 border-white ${
-                  index !== 0 ? "-ml-1" : ""
-                }`}
-                imageSrc={reply.author.image}
-                altText={`${reply.author.name}'s avatar`}
-                width={20}
-                height={20}
-                userId={reply.author.id}
-              />
-            ))}
 
-            {review.replies && review._count.replies > 3 && (
-              <div className="text-xs ml-1 text-gray2">
-                + {review._count.replies - 3}
-              </div>
-            )}
-          </div>
-        )}
-        {/* Date  */}
-        <div className="text-gray2 text-xs ml-auto">
-          {formatDateShort(new Date(review.createdAt))}
+        {/* Stats */}
+        <div className="flex items-center gap-2 hoverable-small ml-auto">
+          {review.replies && review._count.replies > 0 && (
+            // Like & Avatar previews
+            <div className="flex items-center -ml-1">
+              {review.replies.slice(0, 3).map((reply, index) => (
+                <UserAvatar
+                  key={index}
+                  className={`!border-2 border-white ${
+                    index !== 0 ? "-ml-1" : ""
+                  }`}
+                  imageSrc={reply.author.image}
+                  altText={`${reply.author.name}'s avatar`}
+                  width={20}
+                  height={20}
+                  userId={reply.author.id}
+                />
+              ))}
+
+              {review.replies && review._count.replies > 3 && (
+                <div className="text-xs ml-1 text-gray2">
+                  + {review._count.replies - 3}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
-
-      <Stars
-        className="fixed top-4 left-1/2 transform -translate-x-1/2  bg-stars p-1 rounded-full shadow-stars flex items-center gap-1 text-xs pr-2 border border-silver "
-        rating={review.rating}
-        color={"#000"}
-        soundName={review.album?.name || review.track?.name}
-        artist={review.album?.artist || review.track?.album.artist}
-      />
     </div>
   );
 };
@@ -124,9 +112,18 @@ function formatDateShort(date: Date): string {
 
   return `${differenceInSeconds(now, date)}S`;
 }
+{
+  /* Like & Avatar previews */
+}
 
-{
-  /* Reply Input  */
-}
-{
-}
+// <Stars
+//   className="fixed top-4 left-1/2 transform -translate-x-1/2  bg-stars p-1 rounded-full shadow-stars flex items-center gap-1 text-xs pr-2 border border-silver "
+//   rating={review.rating}
+//   color={"#000"}
+//   soundName={review.album?.name || review.track?.name}
+//   artist={review.album?.artist || review.track?.album.artist}
+// />
+//   {/* Date  */}
+//   <div className="text-gray2 text-xs ml-auto">
+//     {formatDateShort(new Date(review.createdAt))}
+//   </div>

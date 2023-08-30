@@ -19,11 +19,6 @@ export default function Home() {
         <Head>
           <title>rx</title>
         </Head>
-        {/* <Link data-active={isActive("/signup")} href="/api/auth/signin">
-          <div className="justify-self-center self-center text-gray2 text-sm">
-            log in?...
-          </div>
-        </Link> */}
         <div className="row-start-1 col-start-1 text-sm text-black font-medium">
           AREX [alpha]
         </div>
@@ -33,8 +28,8 @@ export default function Home() {
             <span className="font-medium tracking-normal"> SOUND*</span>
           </div>
           <div className="text-gray2">
-            HEARING ______ US INTO THE ______ _____, _____ MOVES US _______
-            _______ & _____.
+            HEARING BRINGS US INTO THE LIVING WORLD, SIGHT MOVES US TOWARDS
+            ATROPHY & DEATH.
           </div>
         </div>
 
@@ -49,11 +44,11 @@ export default function Home() {
         </div>
 
         <div className="row-start-5 row-span-1 col-start-3 col-span-4 items-end text-sm text-gray2 uppercase">
-          {/* <span className="text-black">AREX</span> exists for those few and far
-          between, to revel in the shared love for the inviisble waves that bind
-          us. */}
-          <span className="text-black">AREX</span> exists for ...., to ... that
-          bind us.
+          <span className="text-black">AREX</span> exists for those few and far
+          between, to revel in the shared love for the invisible waves that bind
+          us.
+          {/* <span className="text-black">AREX</span> exists for ...., to ... that
+          bind us. */}
         </div>
 
         <div className="row-start-9 col-start-2 col-span-5 self-end text-sm text-gray2 uppercase">

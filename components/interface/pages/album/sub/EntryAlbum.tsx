@@ -51,10 +51,10 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         </div>
         {/* Rating + Content*/}
         <div className="flex gap-2 items-center w-full relative">
-          <div className="w-full px-4 py-2 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
+          <div className="px-4 py-2 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
             <div
               onClick={handleEntryClick}
-              className={`break-words hoverable-small line-clamp-6`}
+              className={`break-words hoverable-small line-clamp-6 w-[480px]`}
             >
               {review.content}
             </div>
@@ -120,7 +120,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           {review.likes && review._count.likes > 0 && (
             <div className="flex items-center text-xs text-gray2 mt-1">
               {review._count.likes}{" "}
-              {review._count.likes > 1 ? "hearts" : "heart"}
+              {review._count.likes > 1 ? "HEARTS" : "HEART"}
             </div>
           )}
         </div>

@@ -62,6 +62,11 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const [{ opacity: scrollOpacity }, setScroll] = useSpring(() => ({
     opacity: 1,
+    config: {
+      tension: 400,
+      friction: 47,
+      mass: 0.2,
+    },
   }));
 
   useEffect(() => {
@@ -195,8 +200,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     const scrollBound = 846;
     const scaleBound = 0.89;
 
-    const maxScrollForOpacity = 200;
-    const minScrollForOpacity = 0;
+    const maxScrollForOpacity = 400;
 
     if (activePage.name === "album") {
       let newScale = 1 - y / 50;
@@ -210,7 +214,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       if (newOpacity < 0) newOpacity = 0;
       if (newOpacity > 1) newOpacity = 1;
 
-      let newWidth = 658 + (y / 77) * (576 - 658);
+      let newWidth = 658 + (y / 24) * (576 - 658);
       if (newWidth < 576) newWidth = 576;
       if (newWidth > 658) newWidth = 658;
 
@@ -289,7 +293,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         style={{
           ...visibilitySpring,
         }}
-        className={`cmdk  ${
+        className={`cmdk border border-silver ${
           isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"
         }`}
       >
@@ -347,7 +351,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               willChange: "width, height",
               touchAction: "pan-y",
             }}
-            className={`flex rounded-[20px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none`}
+            className={`flex rounded-[24px] z-10 hoverable-large relative overflow-y-scroll scrollbar-none`}
           >
             {/* Apply transition */}
             {transitions((style, Component) => (
