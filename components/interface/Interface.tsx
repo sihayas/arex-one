@@ -316,8 +316,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       const translateAmount =
         index < activeIndex ? (activeIndex - index) * 80 : 0;
       return {
-        width: isCurrentPage ? pages[index].dimensions.width : 576,
-        height: isCurrentPage ? pages[index].dimensions.height : 576,
+        width: isCurrentPage ? pages[index].dimensions.width : 572,
+        height: isCurrentPage ? pages[index].dimensions.height : 572,
         translateX: translateAmount,
         opacity: isCurrentPage ? 0 : 1,
       };

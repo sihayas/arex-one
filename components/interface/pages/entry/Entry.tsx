@@ -33,21 +33,8 @@ export const Entry = ({ translateY }: EntryProps) => {
     openThreads,
     setOpenThreads,
   } = useThreadcrumb();
-  const { selectedSound } = useSound();
-  const { scrollContainerRef } = useScrollPosition();
-  const targetElement = document.querySelector(".cmdk");
 
-  const boxShadow = useMemo(() => {
-    if (selectedSound?.colors[0]) {
-      return `0px 0px 0px 0px ${selectedSound.colors[0]}, 0.15),
-        2px 2px 7px 0px ${selectedSound.colors[0]}, 0.15),
-        9px 9px 13px 0px ${selectedSound.colors[0]}, 0.13),
-        20px 20px 17px 0px ${selectedSound.colors[0]}, 0.08),
-        35px 36px 20px 0px ${selectedSound.colors[0]}, 0.02),
-        55px 57px 22px 0px ${selectedSound.colors[0]}, 0.00)`;
-    }
-    return undefined;
-  }, [selectedSound?.colors]);
+  const { scrollContainerRef } = useScrollPosition();
 
   const firstThreadcrumb = activePage.threadcrumbs?.[0];
 
@@ -88,7 +75,7 @@ export const Entry = ({ translateY }: EntryProps) => {
   // If review album is different from selected album, fetch artwork
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
     review?.albumId,
-    "465",
+    "726",
     "albumId"
   );
 
@@ -100,24 +87,7 @@ export const Entry = ({ translateY }: EntryProps) => {
 
   return (
     <>
-      {targetElement &&
-        createPortal(
-          <Image
-            className="fixed -top-[93px] -left-[93px] rounded-[20px] -z-10"
-            style={{
-              boxShadow: boxShadow,
-            }}
-            src={artworkUrl || "/public/images/default.png"}
-            alt={`${selectedSound?.sound.attributes.name} artwork`}
-            width={186}
-            height={186}
-            onDragStart={(e) => e.preventDefault()}
-            draggable="false"
-          />,
-          targetElement
-        )}
-
-      <EntryFull review={review} />
+      <EntryFull review={review} artworkUrl={artworkUrl} />
       <div
         onClick={handleOpenThreadsClick}
         className="fixed flex flex-col items-center left-1/2 transform -translate-x-1/2 bottom-0 cursor-pointer z-10"

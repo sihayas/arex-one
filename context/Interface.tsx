@@ -80,7 +80,7 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
     {
       key: feedKey,
       name: "feed",
-      dimensions: { width: 574, height: 1084 },
+      dimensions: { width: 576, height: 1084 },
       scrollPosition: 0,
     },
   ]);
@@ -94,7 +94,7 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
       pages[pages.length - 2] || {
         key: feedKey,
         name: "feed",
-        width: 574,
+        width: 576,
         height: 1084,
       },
     [pages, feedKey]

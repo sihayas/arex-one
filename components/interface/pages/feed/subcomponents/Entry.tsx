@@ -74,7 +74,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           <div className="w-full px-4 py-3 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
             <div
               onClick={handleEntryClick}
-              className={`break-words hoverable-small line-clamp-6`}
+              className={`break-words hoverable-small line-clamp-6 w-[480px]`}
             >
               {review.content}
             </div>
