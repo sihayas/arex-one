@@ -1,20 +1,17 @@
 import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
+import Image from "next/image";
 
-import { useInterface } from "@/context/Interface";
 import { useSound } from "@/context/Sound";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
 import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDrag/album";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { animated, SpringValue, to } from "@react-spring/web";
-import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import { motion } from "framer-motion";
 import Albums from "./sub/Albums";
 
 import TabBar from "./sub/TabBar";
 import Songs from "./sub/Songs";
-import { SongData } from "@/lib/global/interfaces";
 
 interface AlbumProps {
   scale: SpringValue<number>;
@@ -31,10 +28,7 @@ const Album = ({ scale, translateY, opacity }: AlbumProps) => {
 
   const [activeTabId, setActiveTabId] = useState<string | null>(null);
 
-  const artworkUrl = GenerateArtworkUrl(
-    selectedSound!.sound.attributes.artwork.url,
-    "1316"
-  );
+  const artworkUrl = selectedSound?.artworkUrl;
 
   const boxShadow = useMemo(() => {
     if (selectedSound?.colors[0]) {
@@ -60,6 +54,7 @@ const Album = ({ scale, translateY, opacity }: AlbumProps) => {
     return <div>loading...</div>; // Replace with your preferred loading state
   }
 
+  console.log(selectedSound);
   return (
     <animated.div
       ref={scrollContainerRef}
@@ -72,22 +67,24 @@ const Album = ({ scale, translateY, opacity }: AlbumProps) => {
         }}
         className="fixed z-10 top-0"
       >
-        <motion.div layoutId="artwork">
-          {/* Artwork */}
-          <animated.img
-            style={{
-              borderRadius: scale.to((value) => `${20 + (1 - value) * -72}px`),
-              boxShadow: boxShadow,
-              transform: scale.to((s) => `scale(${s})`),
-            }}
+        {/* Artwork */}
+        <animated.div
+          className="overflow-hidden"
+          style={{
+            borderRadius: scale.to((value) => `${24 + (1 - value) * -72}px`),
+            boxShadow: boxShadow,
+            transform: scale.to((s) => `scale(${s})`),
+          }}
+          onDragStart={(e) => e.preventDefault()}
+          draggable="false"
+        >
+          <Image
             src={artworkUrl || "/public/images/default.png"}
             alt={`${selectedSound.sound.attributes.name} artwork`}
             width={658}
             height={658}
-            onDragStart={(e) => e.preventDefault()}
-            draggable="false"
           />
-        </motion.div>
+        </animated.div>
         {/* Tab Bar */}
         <div className="flex items-center absolute top-12 left-1/2 -translate-x-1/2 transform z-20 ">
           {"relationships" in selectedSound.sound && (

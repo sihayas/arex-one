@@ -39,15 +39,14 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
 
   const handleEntryClick = useHandleEntryClick(review.id);
   const handleUserClick = useHandleUserClick(review.author.id);
+
   return (
     <div className="flex flex-col items-center justify-center w-full">
       {/* Artwork  */}
       {isAlbum ? (
         <ArtworkHeader albumId={review.albumId} album={review.album} />
       ) : (
-        <div className="relative z-20">
-          <ArtworkHeader songId={review.trackId} album={review.album} />
-        </div>
+        <ArtworkHeader songId={review.trackId} album={review.album} />
       )}
       <div className="flex flex-col bg-blurWhite border border-silver backdrop-blur-xl p-4 z-10 rounded-3xl relative w-full shadow-stars -mt-20">
         {/* Bubbles  */}

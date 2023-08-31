@@ -3,12 +3,7 @@ import { useSound } from "@/context/Sound";
 import { useInterface } from "@/context/Interface";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
-import {
-  animated,
-  useSpring,
-  useSprings,
-  useTransition,
-} from "@react-spring/web";
+import { animated, useSpring, useTransition } from "@react-spring/web";
 import { useDrag, useScroll } from "@use-gesture/react";
 import { Command } from "cmdk";
 import Nav from "@/components/nav/Nav";
@@ -18,6 +13,8 @@ import Entry from "./pages/entry/Entry";
 import User from "./pages/user/User";
 import Signals from "./pages/signals/Signals";
 import Feed from "./pages/feed/Feed";
+
+import { motion, LayoutGroup } from "framer-motion";
 
 const componentMap: Record<string, React.ComponentType<any>> = {
   album: Album,
@@ -284,41 +281,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const transitions = useTransition(ActiveComponent, {
     from: { opacity: 0 },
-    enter: { opacity: 1, delay: 750 },
+    enter: { opacity: 1 },
     leave: { opacity: 0, delay: 750 },
     config: {
       duration: 750,
     },
   });
-
-  // const [activeIndex, setActiveIndex] = useState(0); // Initialize to the index of the first page
-
-  // const [ghostSprings, setGhostSprings] = useSprings(pages.length, (index) => ({
-  //   width: pages[index].dimensions.width,
-  //   height: pages[index].dimensions.height,
-  //   translateX: index * 48,
-  //   opacity: 0,
-  //   config: { tension: 200, friction: 80 },
-  // }));
-
-  // useEffect(() => {
-  //   const newIndex = pages.findIndex((page) => page.key === activePage.key);
-  //   setActiveIndex(newIndex);
-  // }, [activePage.key, pages]);
-
-  // useEffect(() => {
-  //   setGhostSprings((index) => {
-  //     const isCurrentPage = pages[index].key === activePage.key;
-  //     const translateAmount =
-  //       index < activeIndex ? (activeIndex - index) * 80 : 0;
-  //     return {
-  //       width: isCurrentPage ? pages[index].dimensions.width : 572,
-  //       height: isCurrentPage ? pages[index].dimensions.height : 572,
-  //       translateX: translateAmount,
-  //       opacity: isCurrentPage ? 0 : 1,
-  //     };
-  //   });
-  // }, [pages, setGhostSprings, activePage.key, activeIndex]);
 
   return (
     <>
@@ -330,22 +298,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"
         }`}
       >
-        {/* Ghost Container for Breadcrumbs */}
-        {/* {ghostSprings.map((props, index) => (
-          <animated.div
-            className="absolute border border-silver bg-silver rounded-3xl"
-            key={index}
-            style={{
-              width: props.width,
-              height: props.height,
-              transform: props.translateX.to((t) => `translateX(${t}px)`),
-              opacity: props.opacity,
-            }}
-          > */}
-        {/* ghost container content */}
-        {/* </animated.div> */}
-        {/*     ))} */}
-
         {/* CMDK Inner  */}
         <Command
           className={`cmdk-inner flex transition-opacity bg-white duration-150 w-full h-full ${

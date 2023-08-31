@@ -3,10 +3,8 @@ import Image from "next/image";
 
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 import { useHandleSoundClick } from "@/hooks/handlePageChange/useHandleSoundClick";
-import { useSound } from "@/context/Sound";
 import { AlbumDBData } from "@/lib/global/interfaces";
 import { useSpring, animated, to } from "@react-spring/web";
-import { motion } from "framer-motion";
 
 interface ArtworkHeaderProps {
   albumId?: string;
@@ -81,7 +79,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
   };
 
   return (
-    <motion.div className={`-m-8 ${isScaledDown ? "z-50" : ""}`}>
+    <div className={`-m-8 ${isScaledDown ? "z-50" : ""}`}>
       <animated.div
         onClick={handleClick}
         ref={imgRef}
@@ -93,7 +91,7 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
         }}
       >
         <Image
-          className="rounded-[16px] shadow-artworkFeed border border-silver"
+          className="rounded-[16px] shadow-artworkFeed"
           src={
             isLoading
               ? "/images/loading.webp"
@@ -109,6 +107,6 @@ export const ArtworkHeader: React.FC<ArtworkHeaderProps> = ({
           quality={100}
         />
       </animated.div>
-    </motion.div>
+    </div>
   );
 };

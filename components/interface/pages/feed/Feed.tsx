@@ -69,11 +69,6 @@ export default function Feed() {
     <div className="w-full h-[100vh] overflow-hidden relative">
       {/* Render the feed here using the data */}
       <animated.div
-        // style={{
-        //   x,
-        //   ...scaleSpring,
-        // }}
-        // {...bind()}
         className="bg-white w-full h-full overflow-scroll scrollbar-none active:border border-silver rounded-[20px]"
         ref={scrollContainerRef}
       >
