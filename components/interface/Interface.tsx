@@ -43,6 +43,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     entryContainerRef,
     resetPage,
   } = useInterface();
+
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
     useSound();
   const { openThreads } = useThreadcrumb();
@@ -222,17 +223,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       if (newOpacity < 0) newOpacity = 0;
       if (newOpacity > 1) newOpacity = 1;
 
-      let newWidth = 658 + (y / 24) * (574 - 658);
-      if (newWidth < 574) newWidth = 574;
-      if (newWidth > 658) newWidth = 658;
-
-      let newHeight = 658 + (y / 24) * (1052 - 658);
-      if (newHeight < 658) newHeight = 658;
+      let newHeight = 576 + (y / 24) * (1052 - 576);
+      if (newHeight < 576) newHeight = 576;
       if (newHeight > 1052) newHeight = 1052;
 
       // Apply the new scale and width immediately to the spring animation
       set({
-        width: newWidth,
         height: newHeight,
         translateY: translateValue,
       });
@@ -289,40 +285,40 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const transitions = useTransition(ActiveComponent, {
     from: { opacity: 0 },
     enter: { opacity: 1, delay: 750 },
-    leave: { opacity: 0 },
+    leave: { opacity: 0, delay: 750 },
     config: {
-      duration: 150,
+      duration: 750,
     },
   });
 
-  const [activeIndex, setActiveIndex] = useState(0); // Initialize to the index of the first page
+  // const [activeIndex, setActiveIndex] = useState(0); // Initialize to the index of the first page
 
-  const [ghostSprings, setGhostSprings] = useSprings(pages.length, (index) => ({
-    width: pages[index].dimensions.width,
-    height: pages[index].dimensions.height,
-    translateX: index * 48,
-    opacity: 0,
-    config: { tension: 200, friction: 80 },
-  }));
+  // const [ghostSprings, setGhostSprings] = useSprings(pages.length, (index) => ({
+  //   width: pages[index].dimensions.width,
+  //   height: pages[index].dimensions.height,
+  //   translateX: index * 48,
+  //   opacity: 0,
+  //   config: { tension: 200, friction: 80 },
+  // }));
 
-  useEffect(() => {
-    const newIndex = pages.findIndex((page) => page.key === activePage.key);
-    setActiveIndex(newIndex);
-  }, [activePage.key, pages]);
+  // useEffect(() => {
+  //   const newIndex = pages.findIndex((page) => page.key === activePage.key);
+  //   setActiveIndex(newIndex);
+  // }, [activePage.key, pages]);
 
-  useEffect(() => {
-    setGhostSprings((index) => {
-      const isCurrentPage = pages[index].key === activePage.key;
-      const translateAmount =
-        index < activeIndex ? (activeIndex - index) * 80 : 0;
-      return {
-        width: isCurrentPage ? pages[index].dimensions.width : 572,
-        height: isCurrentPage ? pages[index].dimensions.height : 572,
-        translateX: translateAmount,
-        opacity: isCurrentPage ? 0 : 1,
-      };
-    });
-  }, [pages, setGhostSprings, activePage.key, activeIndex]);
+  // useEffect(() => {
+  //   setGhostSprings((index) => {
+  //     const isCurrentPage = pages[index].key === activePage.key;
+  //     const translateAmount =
+  //       index < activeIndex ? (activeIndex - index) * 80 : 0;
+  //     return {
+  //       width: isCurrentPage ? pages[index].dimensions.width : 572,
+  //       height: isCurrentPage ? pages[index].dimensions.height : 572,
+  //       translateX: translateAmount,
+  //       opacity: isCurrentPage ? 0 : 1,
+  //     };
+  //   });
+  // }, [pages, setGhostSprings, activePage.key, activeIndex]);
 
   return (
     <>
@@ -335,7 +331,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         }`}
       >
         {/* Ghost Container for Breadcrumbs */}
-        {ghostSprings.map((props, index) => (
+        {/* {ghostSprings.map((props, index) => (
           <animated.div
             className="absolute border border-silver bg-silver rounded-3xl"
             key={index}
@@ -345,15 +341,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               transform: props.translateX.to((t) => `translateX(${t}px)`),
               opacity: props.opacity,
             }}
-          >
-            {/* ghost container content */}
-          </animated.div>
-        ))}
+          > */}
+        {/* ghost container content */}
+        {/* </animated.div> */}
+        {/*     ))} */}
 
         {/* CMDK Inner  */}
         <Command
           className={`cmdk-inner flex transition-opacity bg-white duration-150 w-full h-full ${
-            isVisible ? "opacity-100 shadow-artworkFeed" : "opacity-0"
+            isVisible ? "opacity-100 shadow-cmdkScaled2" : "opacity-0"
           }`}
           shouldFilter={false}
           onKeyDown={(e: React.KeyboardEvent) => {
@@ -365,6 +361,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               setPages((prevPages) => [
                 ...prevPages,
                 {
+                  key: selectedFormSound.sound.id,
                   name: "album",
                   sound: selectedFormSound,
                   dimensions: {
@@ -409,6 +406,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Apply transition */}
             {transitions((style, Component) => (
               <animated.div
+                className="flex items-center justify-center"
                 style={{
                   ...style,
                   position: "absolute",

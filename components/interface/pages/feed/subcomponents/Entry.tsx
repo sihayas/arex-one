@@ -43,15 +43,13 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
     <div className="flex flex-col items-center justify-center w-full">
       {/* Artwork  */}
       {isAlbum ? (
-        <div className="relative -mb-8">
-          <ArtworkHeader albumId={review.albumId} album={review.album} />
-        </div>
+        <ArtworkHeader albumId={review.albumId} album={review.album} />
       ) : (
-        <div className="relative -mb-8">
+        <div className="relative z-20">
           <ArtworkHeader songId={review.trackId} album={review.album} />
         </div>
       )}
-      <div className="flex flex-col bg-blurWhite border border-silver backdrop-blur-xl p-4 z-10 rounded-3xl relative w-full shadow-stars">
+      <div className="flex flex-col bg-blurWhite border border-silver backdrop-blur-xl p-4 z-10 rounded-3xl relative w-full shadow-stars -mt-20">
         {/* Bubbles  */}
         <div className="absolute w-1 h-1 bg-white shadow-entry -top-1 -left-1 rounded-full" />
         <div className="absolute w-3 h-3 bg-white shadow-entry -top-4 left-0 rounded-full" />

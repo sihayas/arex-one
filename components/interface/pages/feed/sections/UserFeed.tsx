@@ -24,11 +24,10 @@ const UserFeed = ({ userId }: { userId: string | undefined }) => {
   return (
     <>
       {data.map((activity: ActivityData, index: number) => (
-        <div key={activity.id} className={index > 0 ? "pt-6 w-full" : ""}>
+        <div key={activity.id} className={index > 0 ? "p-8 w-full" : "p-8"}>
           {activity.review ? (
             <Entry review={activity.review} />
           ) : (
-            // You may provide a placeholder or different handling if there's no review
             <div>no review available for this activity.</div>
           )}
         </div>

@@ -74,7 +74,7 @@ export default function Feed() {
         //   ...scaleSpring,
         // }}
         // {...bind()}
-        className="bg-white w-full h-full p-8 overflow-scroll scrollbar-none active:border border-silver rounded-[20px]"
+        className="bg-white w-full h-full overflow-scroll scrollbar-none active:border border-silver rounded-[20px]"
         ref={scrollContainerRef}
       >
         {feedContent}

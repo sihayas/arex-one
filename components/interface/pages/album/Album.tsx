@@ -9,6 +9,7 @@ import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDrag/album";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { animated, SpringValue, to } from "@react-spring/web";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import { motion } from "framer-motion";
 import Albums from "./sub/Albums";
 
 import TabBar from "./sub/TabBar";
@@ -71,21 +72,22 @@ const Album = ({ scale, translateY, opacity }: AlbumProps) => {
         }}
         className="fixed z-10 top-0"
       >
-        {/* Artwork */}
-        <animated.img
-          style={{
-            borderRadius: scale.to((value) => `${20 + (1 - value) * -72}px`),
-            boxShadow: boxShadow,
-            transform: scale.to((s) => `scale(${s})`),
-          }}
-          src={artworkUrl || "/public/images/default.png"}
-          alt={`${selectedSound.sound.attributes.name} artwork`}
-          width={658}
-          height={658}
-          onDragStart={(e) => e.preventDefault()}
-          draggable="false"
-        />
-
+        <motion.div layoutId="artwork">
+          {/* Artwork */}
+          <animated.img
+            style={{
+              borderRadius: scale.to((value) => `${20 + (1 - value) * -72}px`),
+              boxShadow: boxShadow,
+              transform: scale.to((s) => `scale(${s})`),
+            }}
+            src={artworkUrl || "/public/images/default.png"}
+            alt={`${selectedSound.sound.attributes.name} artwork`}
+            width={658}
+            height={658}
+            onDragStart={(e) => e.preventDefault()}
+            draggable="false"
+          />
+        </motion.div>
         {/* Tab Bar */}
         <div className="flex items-center absolute top-12 left-1/2 -translate-x-1/2 transform z-20 ">
           {"relationships" in selectedSound.sound && (
@@ -114,7 +116,6 @@ const Album = ({ scale, translateY, opacity }: AlbumProps) => {
           </div>
         </div>
       </animated.div>
-
       {/* Section Two / Entries  */}
       <animated.div
         {...bind()}

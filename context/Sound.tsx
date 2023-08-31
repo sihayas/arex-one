@@ -27,7 +27,7 @@ export const useSound = (): SoundContextType => {
   return context;
 };
 
-export const AlbumDetailsProvider = ({
+export const SoundDetailsProvider = ({
   children,
 }: SoundContextProviderProps) => {
   const [selectedSound, setSelectedSound] = useState<SelectedSound | null>(
