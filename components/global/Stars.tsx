@@ -45,7 +45,7 @@ const Stars: React.FC<StarsProps> = ({
       {artist && (
         <>
           <div className="">&middot;</div>
-          <div className="text-xs font-medium text-gray2">{artist}</div>
+          <div className="text-xs font-medium text-black">{artist}</div>
         </>
       )}
     </div>

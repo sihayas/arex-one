@@ -40,49 +40,47 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
   const handleEntryClick = useHandleEntryClick(review.id);
   const handleUserClick = useHandleUserClick(review.author.id);
   return (
-    <>
-      <div className="flex flex-col">
-        {/* Artwork  */}
-        {isAlbum ? (
-          <div className="ml-auto mb-2 relative">
-            <ArtworkHeader albumId={review.albumId} album={review.album} />
-          </div>
-        ) : (
-          <div className="ml-auto mb-2 relative">
-            <ArtworkHeader songId={review.trackId} album={review.album} />
-          </div>
-        )}
-
-        {/* Rating + Content*/}
-        <div className="flex items-center w-full relative">
-          <div className="absolute w-1 h-1 bg-white shadow-entry -top-1 -left-1 rounded-full" />
-          <div className="absolute w-3 h-3 bg-white shadow-entry -top-4 rounded-full" />
-          <LikeButton
-            className="absolute left-[10px] -top-[38px] bg-white p-[6px] pt-[7px] shadow-entry rounded-full"
-            handleLikeClick={handleLikeClick}
-            liked={liked}
-            width={12}
-            height={11}
-          />
-          <Stars
-            className="absolute bg-white shadow-entry p-1 rounded-full -top-[38px] left-[42px] flex items-center gap-1 text-xs pr-2"
-            rating={review.rating}
-            color={"#000"}
-            soundName={review.album?.name || review.track?.name}
-            artist={review.album?.artist || review.track?.album.artist}
-          />
-          <div className="w-full px-4 py-3 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
-            <div
-              onClick={handleEntryClick}
-              className={`break-words hoverable-small line-clamp-6 w-[480px]`}
-            >
-              {review.content}
-            </div>
+    <div className="flex flex-col items-center justify-center w-full">
+      {/* Artwork  */}
+      {isAlbum ? (
+        <div className="relative -mb-8">
+          <ArtworkHeader albumId={review.albumId} album={review.album} />
+        </div>
+      ) : (
+        <div className="relative -mb-8">
+          <ArtworkHeader songId={review.trackId} album={review.album} />
+        </div>
+      )}
+      <div className="flex flex-col bg-blurWhite border border-silver backdrop-blur-xl p-4 z-10 rounded-3xl relative w-full shadow-stars">
+        {/* Bubbles  */}
+        <div className="absolute w-1 h-1 bg-white shadow-entry -top-1 -left-1 rounded-full" />
+        <div className="absolute w-3 h-3 bg-white shadow-entry -top-4 left-0 rounded-full" />
+        <LikeButton
+          className="absolute left-[10px] -top-[38px] bg-white p-[6px] pt-[7px] shadow-entry rounded-full"
+          handleLikeClick={handleLikeClick}
+          liked={liked}
+          width={12}
+          height={11}
+        />
+        <Stars
+          className="absolute bg-blurWhite backdrop-blur-xl border border-silver shadow-entry p-1 rounded-full -top-[38px] left-[42px] flex items-center gap-1 text-xs pr-2"
+          rating={review.rating}
+          color={"#000"}
+          soundName={review.album?.name || review.track?.name}
+          artist={review.album?.artist || review.track?.album.artist}
+        />
+        {/* Content*/}
+        <div className="flex items-center w-full">
+          <div
+            onClick={handleEntryClick}
+            className={` pl-10 break-words hoverable-small line-clamp-6 w-full text-sm text-black`}
+          >
+            {review.content}
           </div>
         </div>
 
         {/* Attribution */}
-        <div className="flex items-center gap-2 pt-2">
+        <div className="flex items-center gap-2">
           <UserAvatar
             className="border border-silver"
             imageSrc={review.author.image}
@@ -146,7 +144,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         </div>
       </div>
       <hr className={`border-silver w-[100%] border-[.5px] mt-6`} />
-    </>
+    </div>
   );
 };
 
