@@ -16,10 +16,9 @@ import Songs from "./sub/Songs";
 interface AlbumProps {
   scale: SpringValue<number>;
   translateY: SpringValue<number>;
-  opacity: SpringValue<number>;
 }
 
-const Album = ({ scale, translateY, opacity }: AlbumProps) => {
+const Album = ({ scale, translateY }: AlbumProps) => {
   // Hooks
   const { data: session } = useSession();
   const { selectedSound } = useSound();
@@ -114,13 +113,7 @@ const Album = ({ scale, translateY, opacity }: AlbumProps) => {
         </div>
       </animated.div>
       {/* Section Two / Entries  */}
-      <animated.div
-        {...bind()}
-        style={{
-          opacity: opacity.to((o) => o),
-        }}
-        className="w-full h-full"
-      >
+      <animated.div {...bind()} className="w-full h-full">
         <div className="h-[400px]">&nbsp; </div>
         {!activeTabId ? (
           <Albums albumId={selectedSound.sound.id} user={session!.user} />
