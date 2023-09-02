@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
-import { useDragIndexLogic } from "@/hooks/handleInteractions/useDrag/index";
+import { useScrollPosition } from "@/hooks/useInteractions/useScrollPosition";
+import { useDragIndexLogic } from "@/hooks/useDrag/index";
 import { animated } from "@react-spring/web";
 import BloomingSection from "./sub/BloomingSection";
 import SpotlightSection from "./sub/SpotlightSection";

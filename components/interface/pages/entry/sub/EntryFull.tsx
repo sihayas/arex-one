@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 import { useInterface } from "@/context/Interface";
-import useHandleLikeClick from "@/hooks/handleInteractions/useHandleLike";
+import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import {
   differenceInDays,

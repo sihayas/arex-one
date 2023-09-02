@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import useHandleLikeClick from "@/hooks/handleInteractions/useHandleLike";
+import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 
 import { ReplyData } from "@/lib/global/interfaces";
 import UserAvatar from "@/components/global/UserAvatar";

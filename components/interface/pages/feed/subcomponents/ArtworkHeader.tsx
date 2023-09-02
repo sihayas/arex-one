@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
-import { useHandleSoundClick } from "@/hooks/handlePageChange/useHandleSoundClick";
 import { AlbumDBData } from "@/lib/global/interfaces";
 import { useSpring, animated, to } from "@react-spring/web";
+import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 interface ArtworkHeaderProps {
   albumId?: string;

@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 
 import { useSound } from "@/context/Sound";
-import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
+import { useScrollPosition } from "@/hooks/useInteractions/useScrollPosition";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { animated } from "@react-spring/web";

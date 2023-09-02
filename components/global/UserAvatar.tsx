@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
+import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 interface UserAvatarProps {
   imageSrc: string | undefined;

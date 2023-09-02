@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { fetchFeed } from "@/lib/api/feedAPI";
-import { useDragLogic } from "@/hooks/handleInteractions/useDrag/feed";
+import { useDragLogic } from "@/hooks/useDrag/feed";
 import { useQuery } from "@tanstack/react-query";
 import { animated } from "@react-spring/web";
-import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
+import { useScrollPosition } from "@/hooks/useInteractions/useScrollPosition";
 
 // import NavBar from "@/components/nav/Nav";
 import SpotlightFeed from "@/components/interface/pages/feed/sections/SpotlightFeed";

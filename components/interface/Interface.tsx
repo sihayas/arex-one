@@ -13,8 +13,8 @@ import User from "./pages/user/User";
 import Signals from "./pages/signals/Signals";
 import Feed from "./pages/feed/Feed";
 
-import { useInterfaceDrag } from "@/hooks/handleInteractions/useDrag/interface";
-import { useInterfaceScroll } from "@/hooks/handleInteractions/useScroll/interface";
+import { useInterfaceDrag } from "@/hooks/useDrag/interface";
+import { useInterfaceScroll } from "@/hooks/useScroll/interface";
 
 import { AnimatePresence, motion } from "framer-motion";
 

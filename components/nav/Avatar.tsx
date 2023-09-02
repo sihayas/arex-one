@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
+import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 export default function Avatar() {
   const { data: session } = useSession();

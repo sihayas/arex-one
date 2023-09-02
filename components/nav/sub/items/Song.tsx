@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Command } from "cmdk";
 
 import { SongData } from "@/lib/global/interfaces";
-import { useHandleSearchClick } from "@/hooks/handleInteractions/useHandleSearchClick";
+import { useHandleSearchClick } from "@/hooks/useInteractions/useHandleSearchClick";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 const Song = ({ song }: { song: SongData }) => {

@@ -1,6 +1,6 @@
 import { AlbumData } from "@/lib/global/interfaces";
 import Image from "next/image";
-import { useHandleSoundClick } from "@/hooks/handlePageChange/useHandleSoundClick";
+import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { useRef } from "react";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 

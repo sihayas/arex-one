@@ -1,7 +1,7 @@
 import { UserData } from "@/lib/global/interfaces";
 import Image from "next/image";
 import { Command } from "cmdk";
-import { useHandleUserClick } from "@/hooks/handlePageChange/useHandleUserClick";
+import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 const User = ({ user }: { user: UserData }) => {
   const handleUserClick = useHandleUserClick(user.id);

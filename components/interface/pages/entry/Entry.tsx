@@ -7,7 +7,7 @@ import { useInterface } from "@/context/Interface";
 import { useSound } from "@/context/Sound";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
-import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
+import { useScrollPosition } from "@/hooks/useInteractions/useScrollPosition";
 
 import axios, { AxiosResponse } from "axios";
 import { useQuery } from "@tanstack/react-query";
