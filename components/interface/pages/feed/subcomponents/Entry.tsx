@@ -48,98 +48,101 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
       ) : (
         <ArtworkHeader songId={review.trackId} album={review.album} />
       )}
-      <div className="flex flex-col bg-blurWhite border border-silver backdrop-blur-xl p-4 z-10 rounded-3xl relative w-full shadow-stars -mt-20">
-        {/* Bubbles  */}
-        <div className="absolute w-1 h-1 bg-white shadow-entry -top-1 -left-1 rounded-full" />
-        <div className="absolute w-3 h-3 bg-white shadow-entry -top-4 left-0 rounded-full" />
-        <LikeButton
-          className="absolute left-[10px] -top-[38px] bg-white p-[6px] pt-[7px] shadow-entry rounded-full"
-          handleLikeClick={handleLikeClick}
-          liked={liked}
-          width={12}
-          height={11}
-        />
-        <Stars
-          className="absolute bg-blurWhite backdrop-blur-xl border border-silver shadow-entry p-1 rounded-full -top-[38px] left-[42px] flex items-center gap-1 text-xs pr-2"
-          rating={review.rating}
-          color={"#000"}
-          soundName={review.album?.name || review.track?.name}
-          artist={review.album?.artist || review.track?.album.artist}
-        />
-        {/* Content*/}
-        <div className="flex items-center w-full">
-          <div
-            onClick={handleEntryClick}
-            className={` pl-10 break-words hoverable-small line-clamp-6 w-full text-sm text-black`}
-          >
-            {review.content}
-          </div>
-        </div>
-
-        {/* Attribution */}
-        <div className="flex items-center gap-2">
-          <UserAvatar
-            className="border border-silver"
-            imageSrc={review.author.image}
-            altText={`${review.author.name}'s avatar`}
-            width={32}
-            height={32}
-            userId={review.author.id}
+      <div className="p-8 py-0 w-full h-full">
+        <div className="flex flex-col bg-blurWhite border border-silver backdrop-blur-xl p-4 z-10 rounded-3xl relative w-full shadow-stars ">
+          {/* Bubbles  */}
+          <div className="absolute w-1 h-1 bg-white shadow-entry -top-1 -left-1 rounded-full" />
+          <div className="absolute w-3 h-3 bg-white shadow-entry -top-4 left-0 rounded-full" />
+          <LikeButton
+            className="absolute left-[10px] -top-[38px] bg-white p-[6px] pt-[7px] shadow-entry rounded-full"
+            handleLikeClick={handleLikeClick}
+            liked={liked}
+            width={12}
+            height={11}
           />
-          <div
-            onClick={handleUserClick}
-            className={`font-medium text-sm text-black hoverable-small w-full`}
-          >
-            {review.author.name}
+          <Stars
+            className="absolute bg-blurWhite backdrop-blur-xl border border-silver shadow-entry p-1 rounded-full -top-[38px] left-[42px] flex items-center gap-1 text-xs pr-2"
+            rating={review.rating}
+            color={"#000"}
+            soundName={review.album?.name || review.track?.name}
+            artist={review.album?.artist || review.track?.album.artist}
+          />
+          {/* Content*/}
+          <div className="flex items-center w-full">
+            <div
+              onClick={handleEntryClick}
+              className={` pl-10 break-words hoverable-small line-clamp-6 w-full text-sm text-black`}
+            >
+              {review.content}
+            </div>
           </div>
-        </div>
 
-        {/* Replies and Likes  */}
-        <div className="flex items-center gap-2 hoverable-small relative">
-          {/* Avatar previews */}
-          {review.replies && review._count.replies > 0 && (
-            <div className="flex items-center ml-[28px] mt-1">
-              <StatLineIcon
-                color={"#CCC"}
-                width={10}
-                height={11}
-                className={"absolute top-[4px] left-[11px]"}
-              />
-              {review.replies.slice(0, 3).map((reply, index) => (
-                <UserAvatar
-                  key={index}
-                  className={`!border-2 border-white ${
-                    index !== 0 ? "-ml-1" : ""
-                  }`}
-                  imageSrc={reply.author.image}
-                  altText={`${reply.author.name}'s avatar`}
-                  width={24}
-                  height={24}
-                  userId={reply.author.id}
+          {/* Attribution */}
+          <div className="flex items-center gap-2">
+            <UserAvatar
+              className="border border-silver"
+              imageSrc={review.author.image}
+              altText={`${review.author.name}'s avatar`}
+              width={32}
+              height={32}
+              userId={review.author.id}
+            />
+            <div
+              onClick={handleUserClick}
+              className={`font-medium text-sm text-black hoverable-small w-full`}
+            >
+              {review.author.name}
+            </div>
+          </div>
+
+          {/* Replies and Likes  */}
+          <div className="flex items-center gap-2 hoverable-small relative">
+            {/* Avatar previews */}
+            {review.replies && review._count.replies > 0 && (
+              <div className="flex items-center ml-[28px] mt-1">
+                <StatLineIcon
+                  color={"#CCC"}
+                  width={10}
+                  height={11}
+                  className={"absolute top-[4px] left-[11px]"}
                 />
-              ))}
+                {review.replies.slice(0, 3).map((reply, index) => (
+                  <UserAvatar
+                    key={index}
+                    className={`!border-2 border-white ${
+                      index !== 0 ? "-ml-1" : ""
+                    }`}
+                    imageSrc={reply.author.image}
+                    altText={`${reply.author.name}'s avatar`}
+                    width={24}
+                    height={24}
+                    userId={reply.author.id}
+                  />
+                ))}
 
-              {/* show count + word chain(s) */}
-              <div className="text-xs text-gray2 ml-2">
-                {`${review._count.replies} CHAIN${
-                  review._count.replies > 1 ? "S" : ""
-                }`}
+                {/* show count + word chain(s) */}
+                <div className="text-xs text-gray2 ml-2">
+                  {`${review._count.replies} CHAIN${
+                    review._count.replies > 1 ? "S" : ""
+                  }`}
+                </div>
               </div>
-            </div>
-          )}
-          {/* Reply Count  */}
-          {review._count.replies > 0 && review._count.likes > 0 && (
-            <div className="text-xs text-gray3 mt-1">+</div>
-          )}
+            )}
+            {/* Reply Count  */}
+            {review._count.replies > 0 && review._count.likes > 0 && (
+              <div className="text-xs text-gray3 mt-1">+</div>
+            )}
 
-          {review.likes && review._count.likes > 0 && (
-            <div className="flex items-center text-xs text-gray2 mt-1">
-              {review._count.likes}{" "}
-              {review._count.likes > 1 ? "HEARTS" : "HEART"}
-            </div>
-          )}
+            {review.likes && review._count.likes > 0 && (
+              <div className="flex items-center text-xs text-gray2 mt-1">
+                {review._count.likes}{" "}
+                {review._count.likes > 1 ? "HEARTS" : "HEART"}
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
       <hr className={`border-silver w-[100%] border-[.5px] mt-6`} />
     </div>
   );
@@ -164,47 +167,3 @@ function formatDateShort(date: Date): string {
 
   return `${differenceInSeconds(now, date)}s`;
 }
-
-// <div className="text-gray2 text-xs">
-//   {formatDateShort(new Date(review.createdAt))}
-// </div>;
-
-// {
-//   /* Reply Avatars + Stats */
-// }
-// <div className="flex items-center">
-//   <div className="w-10">
-//     {review._count.replies > 0 && (
-//       <UserAvatar
-//         className="translate-x-2 border border-silver"
-//         imageSrc={review.replies[0].author.image}
-//         altText={`${review.replies[0].author.name}'s avatar`}
-//         width={16}
-//         height={16}
-//         userId={review.replies[0].author.id}
-//       />
-//     )}
-//   </div>
-//   <div className="flex gap-2 text-xs text-gray2 w-[470px]">
-//     {(review._count.likes > 0 || review._count.replies > 0) && (
-//       <div className="flex gap-1">
-//         {review._count.replies > 0 && (
-//           <div>{review._count.replies} CHAINS</div>
-//         )}
-//         {review._count.replies > 0 && review._count.likes > 0 && (
-//           <div>&middot;&middot;&middot;</div>
-//         )}
-//         {review._count.likes > 0 && (
-//           <div>{review._count.likes} HEART</div>
-//         )}
-//       </div>
-//     )}
-
-//     {(review._count.likes > 0 || review._count.replies > 0) && (
-//       <div>&#8211;</div>
-//     )}
-//   </div>
-// </div>;
-
-// <div className="absolute right-0 -bottom-5">
-// </div>;

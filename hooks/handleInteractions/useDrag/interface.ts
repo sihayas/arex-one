@@ -5,13 +5,11 @@ import { useInterface } from "@/context/Interface";
 type UseInterfaceDragProps = {
   width: SpringValue<number>;
   height: SpringValue<number>;
-  opacity: SpringValue<number>;
   set: (props: any) => void;
 };
 
 let initialWidth: number;
 let initialHeight: number;
-let initialOpacity: number;
 
 function adjustDimension(
   current: number,
@@ -28,7 +26,6 @@ function adjustDimension(
 export function useInterfaceDrag({
   width,
   height,
-  opacity,
   set,
 }: UseInterfaceDragProps) {
   const { navigateBack, previousPage, resetPage } = useInterface();
@@ -48,7 +45,6 @@ export function useInterfaceDrag({
       if (first) {
         initialWidth = width.get();
         initialHeight = height.get();
-        initialOpacity = opacity.get();
       }
 
       if (previousPage && previousPage.dimensions) {
@@ -86,17 +82,13 @@ export function useInterfaceDrag({
           Math.abs(y * speedFactor)
         );
 
-        let newOpacity = 1 - Math.abs(y) / 20;
-
-        set({ width: newWidth, height: newHeight, opacity: newOpacity });
+        set({ width: newWidth, height: newHeight });
         if (last) {
           // Check if target dimensions are reached
           if (newWidth === targetWidth && newHeight === targetHeight) {
             set({
               width: newWidth,
-              height: newHeight,
-              opacity: newOpacity + 0.001,
-
+              height: newHeight + 0.00000002,
               onRest: () => {
                 // Check the direction of dragging to decide the function to call
                 if (dirY > 0) {
@@ -113,8 +105,7 @@ export function useInterfaceDrag({
             // If target dimensions aren't reached, rubber-band back to initial
             newWidth = initialWidth;
             newHeight = initialHeight;
-            newOpacity = initialOpacity;
-            set({ width: newWidth, height: newHeight, opacity: newOpacity });
+            set({ width: newWidth, height: newHeight });
           }
         }
       }

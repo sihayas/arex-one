@@ -240,3 +240,43 @@ export function SendIcon({ ...props }) {
     </svg>
   );
 }
+
+export function ArrowUpIcon({ ...props }) {
+  return (
+    <svg
+      className={props.className}
+      width={24}
+      height={24}
+      fill="none"
+      {...props}
+    >
+      <path
+        stroke={props.color}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M17.25 10.25 12 4.75l-5.25 5.5M12 19.25V5.75"
+      />
+    </svg>
+  );
+}
+
+export function ArrowDownIcon({ ...props }) {
+  return (
+    <svg
+      className={props.className}
+      width={24}
+      height={24}
+      fill="none"
+      {...props}
+    >
+      <path
+        stroke={props.color}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M17.25 13.75 12 19.25l-5.25-5.5M12 18.25V4.75"
+      />
+    </svg>
+  );
+}

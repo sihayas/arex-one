@@ -90,14 +90,8 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
 
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
-    () =>
-      pages[pages.length - 2] || {
-        key: feedKey,
-        name: "feed",
-        width: 576,
-        height: 1084,
-      },
-    [pages, feedKey]
+    () => pages[pages.length - 2] || null,
+    [pages]
   );
 
   const navigateBack = useCallback(() => {

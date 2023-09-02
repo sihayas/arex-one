@@ -4,26 +4,19 @@ import Image from "next/image";
 
 import { useSound } from "@/context/Sound";
 import { useScrollPosition } from "@/hooks/handleInteractions/useScrollPosition";
-import { useDragAlbumLogic } from "@/hooks/handleInteractions/useDrag/album";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
-import { animated, SpringValue, to } from "@react-spring/web";
+import { animated } from "@react-spring/web";
 import Albums from "./sub/Albums";
 
 import TabBar from "./sub/TabBar";
 import Songs from "./sub/Songs";
 
-interface AlbumProps {
-  scale: SpringValue<number>;
-  translateY: SpringValue<number>;
-}
-
-const Album = ({ scale, translateY }: AlbumProps) => {
+const Album = () => {
   // Hooks
   const { data: session } = useSession();
   const { selectedSound } = useSound();
   const { scrollContainerRef } = useScrollPosition();
-  const { bind, x } = useDragAlbumLogic();
 
   const [activeTabId, setActiveTabId] = useState<string | null>(null);
 
@@ -53,37 +46,32 @@ const Album = ({ scale, translateY }: AlbumProps) => {
     return <div>loading...</div>; // Replace with your preferred loading state
   }
 
-  console.log(selectedSound);
   return (
-    <animated.div
+    <div
       ref={scrollContainerRef}
       className="flex flex-col items-center h-full w-full"
     >
       {/* Top Section */}
-      <animated.div
-        style={{
-          transform: translateY.to((ty) => `translate3d(0px, ${ty}px, 0)`),
-        }}
-        className="fixed z-10 top-0"
-      >
+      <animated.div className="fixed z-10 top-0 w-full h-full">
         {/* Artwork */}
-        <animated.div
-          className="overflow-hidden"
-          style={{
-            borderRadius: scale.to((value) => `${24 + (1 - value) * -72}px`),
-            boxShadow: boxShadow,
-            transform: scale.to((s) => `scale(${s})`),
-          }}
+        <div
+          className="overflow-hidden fixed top-1/2 transform -translate-y-1/2 rounded-[24px] w-full h-full"
           onDragStart={(e) => e.preventDefault()}
           draggable="false"
+          // style={{
+          //   boxShadow: boxShadow,
+          // }}
         >
           <Image
             src={artworkUrl || "/public/images/default.png"}
             alt={`${selectedSound.sound.attributes.name} artwork`}
-            width={658}
-            height={658}
+            width={576}
+            height={576}
+            quality={100}
+            draggable="false"
+            onDragStart={(e) => e.preventDefault()}
           />
-        </animated.div>
+        </div>
         {/* Tab Bar */}
         <div className="flex items-center absolute top-12 left-1/2 -translate-x-1/2 transform z-20 ">
           {"relationships" in selectedSound.sound && (
@@ -102,7 +90,7 @@ const Album = ({ scale, translateY }: AlbumProps) => {
           <span className="font-bold text-xl text-white"></span>
         </div>
 
-        {/* Rating & Stats */}
+        {/* Names */}
         <div className="absolute top-[146px] left-1/2 transform -translate-x-1/2 flex flex-col items-center">
           <div className="font-bold text-sm text-white">
             {selectedSound.sound.attributes.name}
@@ -113,15 +101,15 @@ const Album = ({ scale, translateY }: AlbumProps) => {
         </div>
       </animated.div>
       {/* Section Two / Entries  */}
-      <animated.div {...bind()} className="w-full h-full">
+      <div className="w-full h-full">
         <div className="h-[400px]">&nbsp; </div>
         {!activeTabId ? (
           <Albums albumId={selectedSound.sound.id} user={session!.user} />
         ) : (
           <Songs songId={activeTabId} user={session!.user} />
         )}
-      </animated.div>
-    </animated.div>
+      </div>
+    </div>
   );
 };
 

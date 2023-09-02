@@ -65,15 +65,15 @@ export default function Feed() {
       break;
   }
 
+  console.log("rendering feed");
   return (
     <div className="w-full h-[100vh] overflow-hidden relative">
       {/* Render the feed here using the data */}
       <animated.div
-        className="bg-white w-full h-full overflow-scroll scrollbar-none border-silver rounded-[20px]"
+        className="bg-white w-full h-full overflow-scroll scrollbar-none border-silver rounded-[24px] flex flex-col gap-8"
         ref={scrollContainerRef}
       >
         {feedContent}
-        <div className="h-[8.5rem]"></div>
       </animated.div>
       {/* <NavBar /> */}
     </div>

@@ -16,6 +16,8 @@ import Feed from "./pages/feed/Feed";
 import { useInterfaceDrag } from "@/hooks/handleInteractions/useDrag/interface";
 import { useInterfaceScroll } from "@/hooks/handleInteractions/useScroll/interface";
 
+import { AnimatePresence, motion } from "framer-motion";
+
 const componentMap: Record<string, React.ComponentType<any>> = {
   album: Album,
   entry: Entry,
@@ -78,7 +80,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     });
   }, [activePage.name, entryContainerRef.current, activePage.dimensions, set]);
 
-  const dragBind = useInterfaceDrag({ width, height, opacity, set });
+  const dragBind = useInterfaceDrag({ width, height, set });
 
   const scrollBind = useInterfaceScroll({
     activePage,
@@ -186,7 +188,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             style={{
               width: width.to((w) => `${w}px`),
               height: height.to((h) => `${h}px`),
-              opacity: opacity.to((o) => o),
               willChange: "width, height",
               touchAction: "pan-y",
             }}
@@ -203,13 +204,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
                   height: "100%",
                 }}
               >
-                {Component === Album ? (
-                  <Component translateY={translateY} scale={scale} />
-                ) : Component === Entry ? (
-                  <Component translateY={translateY} />
-                ) : (
-                  <Component />
-                )}
+                <Component />
               </animated.div>
             ))}
           </animated.div>
