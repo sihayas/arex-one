@@ -7,29 +7,27 @@ interface FetchArtworkResult {
   artworkUrl: string | null;
   albumData: AlbumData | null;
   isLoading: boolean;
-  type?: string;
 }
 
 export default function useFetchArtworkUrl(
-  id: string | undefined, // This can be albumId or songId
+  id: string | undefined,
   size: string,
-  type: "albumId" | "songId" // Define the type as either "albumId" or "songId"
+  type: "albumId" | "songId"
 ): FetchArtworkResult {
-  const result = useQuery<AlbumData, Error>(
-    [type, id],
-    () => (type === "albumId" ? getAlbumById(id!) : getAlbumBySongId(id!)), // Based on type, call the appropriate function
-    {
-      enabled: !!id,
-    }
-  );
+  // Initialize Query
+  const fetchFn = type === "albumId" ? getAlbumById : getAlbumBySongId;
+  const result = useQuery<AlbumData, Error>([type, id], () => fetchFn(id!), {
+    enabled: !!id,
+  });
 
+  // Initialize Return Variables
   let artworkUrl: string | null = null;
   let albumData: AlbumData | null = null;
 
+  // Update Return Variables if Data is Available
   if (result.data && !result.isError) {
     albumData = result.data;
-    const urlTemplate = albumData.attributes.artwork.url;
-    artworkUrl = GenerateArtworkUrl(urlTemplate, size);
+    artworkUrl = GenerateArtworkUrl(albumData.attributes.artwork.url, size);
   }
 
   return {

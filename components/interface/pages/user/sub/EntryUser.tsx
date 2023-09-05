@@ -10,7 +10,7 @@ import { useInterface } from "@/context/Interface";
 import { ReviewData } from "@/lib/global/interfaces";
 
 import { StatLineIcon } from "@/components/icons";
-import { ArtworkHeader } from "@/components/interface/pages/feed/subcomponents/ArtworkHeader";
+import { ArtworkHeader } from "@/components/interface/pages/feed/subcomponents/Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 

@@ -3,13 +3,22 @@ import { useDrag } from "@use-gesture/react";
 import { useInterface } from "@/context/Interface";
 
 type UseInterfaceDragProps = {
-  width: SpringValue<number>;
-  height: SpringValue<number>;
   set: (props: any) => void;
+  scaleX: SpringValue<number>;
+  scaleY: SpringValue<number>;
 };
 
-let initialWidth: number;
-let initialHeight: number;
+function adjustTranslation(
+  current: number,
+  target: number,
+  delta: number
+): number {
+  return target > current
+    ? Math.min(target, current + delta)
+    : target < current
+    ? Math.max(target, current - delta)
+    : current;
+}
 
 function adjustDimension(
   current: number,
@@ -23,12 +32,20 @@ function adjustDimension(
     : current;
 }
 
+let initialWidth: number;
+let initialHeight: number;
+let initialScaleX: number;
+let initialScaleY: number;
+
+const feedWidth = 576;
+const feedHeight = 1084;
+
 export function useInterfaceDrag({
-  width,
-  height,
   set,
+  scaleX,
+  scaleY,
 }: UseInterfaceDragProps) {
-  const { navigateBack, previousPage, resetPage } = useInterface();
+  const { navigateBack, previousPage, resetPage, activePage } = useInterface();
   return useDrag(
     ({
       down,
@@ -43,69 +60,92 @@ export function useInterfaceDrag({
 
       // Initialize the initial width and height when the drag starts
       if (first) {
-        initialWidth = width.get();
-        initialHeight = height.get();
+        initialScaleX = scaleX.get();
+        initialScaleY = scaleY.get();
       }
 
       if (previousPage && previousPage.dimensions) {
-        // Get the current width and height
-        let activeWidth = width.get();
-        let activeHeight = height.get();
+        // Target for dragging up = feed, dragging down = previous page
+        let targetWidth = dirY > 0 ? previousPage.dimensions.width : feedWidth;
+        let targetHeight =
+          dirY > 0 ? previousPage.dimensions.height : feedHeight;
 
-        // Get the previous page's width and height
-        let prevWidth = previousPage.dimensions.width;
-        let prevHeight = previousPage.dimensions.height;
+        // Calculate the target scale relative to the initial scale.
+        // This ensures smooth scaling transitions when switching pages.
+        const targetScaleY = (targetHeight / 576) * initialScaleY;
+        const targetScaleX = (targetWidth / 576) * initialScaleX;
 
-        let feedWidth = 574;
-        let feedHeight = 1084;
-
-        let targetWidth = dirY > 0 ? prevWidth : feedWidth;
-        let targetHeight = dirY > 0 ? prevHeight : feedHeight;
+        // Get the translateX and translateY for going back
+        let targetTranslateX = -(activePage.translate?.x || 0);
+        let targetTranslateY = -(activePage.translate?.y || 0);
 
         // Apply a damping factor to control the effect of the velocity
         const dampingFactor = 4;
 
         // Use the provided velocity with the damping factor
         let speedFactor = 1 + velocityMagnitude * dampingFactor;
-
-        // Ensure speedFactor stays within reasonable bounds
         speedFactor = Math.min(Math.max(speedFactor, 1), 10);
 
-        let newWidth = adjustDimension(
-          activeWidth,
-          targetWidth,
-          Math.abs(y * speedFactor)
-        );
-        let newHeight = adjustDimension(
-          activeHeight,
-          targetHeight,
-          Math.abs(y * speedFactor)
-        );
+        // Ensure speedFactor stays within reasonable bounds
+        const scaleDelta = Math.abs(y * speedFactor); // Adjust the divisor to control scaling speed
 
-        set({ width: newWidth, height: newHeight });
+        // Interpolate the scale factor during the drag based on y-axis
+        let newScaleY =
+          initialScaleY + (targetScaleY - initialScaleY) * (scaleDelta / 800);
+
+        // Interpolate the scale factor during the drag based on x-axis
+        let newScaleX =
+          initialScaleX + (targetScaleX - initialScaleX) * (scaleDelta / 800);
+
+        let newTranslateX =
+          x +
+          (targetTranslateX - x) *
+            Math.min(1, 0.1 / Math.abs(targetTranslateX - x));
+        let newTranslateY =
+          y +
+          (targetTranslateY - y) *
+            Math.min(1, 0.1 / Math.abs(targetTranslateY - y));
+
+        newScaleX = Math.min(Math.max(newScaleX, 0.75), targetScaleX);
+        newScaleY = Math.min(Math.max(newScaleY, 0.75), targetScaleY);
+
+        set({
+          translateX: newTranslateX,
+          translateY: newTranslateY,
+          scaleX: newScaleX,
+          scaleY: newScaleY,
+        });
+
+        // Upon letting go
         if (last) {
-          // Check if target dimensions are reached
-          if (newWidth === targetWidth && newHeight === targetHeight) {
+          // Check if target positioning is reached
+          if (newScaleX === targetScaleX && newScaleY === targetScaleY) {
+            console.log("target reached");
+
+            {
+              dirY > 0 ? navigateBack() : resetPage();
+            }
+
             set({
-              width: newWidth,
-              height: newHeight + 0.00000002,
-              onRest: () => {
-                // Check the direction of dragging to decide the function to call
-                if (dirY > 0) {
-                  navigateBack();
-                } else {
-                  resetPage();
-                }
-                set({
-                  opacity: 1,
-                });
-              },
+              translateX: 0,
+              translateY: 0,
+              scaleX: targetScaleX,
+              scaleY: targetScaleY,
+              // Load the previous page maybe for performance?
+              onRest: () => {},
             });
           } else {
             // If target dimensions aren't reached, rubber-band back to initial
-            newWidth = initialWidth;
-            newHeight = initialHeight;
-            set({ width: newWidth, height: newHeight });
+            newScaleX = initialScaleX;
+            newScaleY = initialScaleY;
+            newTranslateX = 0;
+            newTranslateY = 0;
+            set({
+              scaleX: newScaleX,
+              scaleY: newScaleY,
+              translateX: 0,
+              translateY: 0,
+            });
           }
         }
       }

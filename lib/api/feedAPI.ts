@@ -2,8 +2,10 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export const fetchFeed = async (userId: string) => {
-  const res = await axios.get(`/api/feed/get/activities?userId=${userId}`);
+export const fetchFeed = async (userId: string, page: number = 1) => {
+  const res = await axios.get(
+    `/api/feed/get/activities?userId=${userId}&page=${page}`
+  );
   return res.data;
 };
 

@@ -15,18 +15,13 @@ export function useInterfaceScroll({
     const scrollBound = 846;
 
     if (activePage.name === "album") {
-      let translateValue = (y / 400) * scrollBound;
-      if (translateValue > scrollBound) translateValue = scrollBound;
-
-      let newHeight = 576 + (y / 400) * (1052 - 576);
-      if (newHeight < 576) newHeight = 576;
-      if (newHeight > 1052) newHeight = 1052;
-
-      // Apply the new scale and width immediately to the spring animation
-      set({
-        height: newHeight,
-        translateY: translateValue,
-      });
+      // let newHeight = 576 + (y / 400) * (1052 - 576);
+      // if (newHeight < 576) newHeight = 576;
+      // if (newHeight > 1052) newHeight = 1052;
+      // // Apply the new scale and width immediately to the spring animation
+      // set({
+      //   height: newHeight,
+      // });
     } else if (activePage.name === "user") {
       let baseHeight = 712;
       let newHeight = baseHeight + (y / 120) * (994 - baseHeight);

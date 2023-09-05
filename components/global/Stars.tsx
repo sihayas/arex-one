@@ -24,15 +24,15 @@ const Stars: React.FC<StarsProps> = ({
   const getStarIcon = (rating: number) => {
     switch (Math.floor(rating)) {
       case 1:
-        return <StarOneIcon width={16} height={16} color={color} />;
+        return <StarOneIcon width={18} height={18} color={color} />;
       case 2:
-        return <StarTwoIcon width={16} height={16} color={color} />;
+        return <StarTwoIcon width={18} height={18} color={color} />;
       case 3:
-        return <StarThreeIcon width={16} height={16} color={color} />;
+        return <StarThreeIcon width={18} height={18} color={color} />;
       case 4:
-        return <StarFourIcon width={16} height={16} color={color} />;
+        return <StarFourIcon width={18} height={18} color={color} />;
       case 5:
-        return <AsteriskIcon width={16} height={16} color={color} />;
+        return <AsteriskIcon width={18} height={18} color={color} />;
     }
   };
 

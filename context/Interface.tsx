@@ -19,6 +19,14 @@ export type Page = {
     width: number;
     height: number;
   };
+  translate?: {
+    x: number;
+    y: number;
+  };
+  scale?: {
+    x: number;
+    y: number;
+  };
 };
 
 export type InterfaceContext = {
@@ -65,7 +73,7 @@ export const useInterface = (): InterfaceContext => {
 
 // Define the provider for the context
 export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   const feedKey = uuidv4();
 
@@ -90,8 +98,14 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
 
   const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
   const previousPage: Page = useMemo(
-    () => pages[pages.length - 2] || null,
-    [pages]
+    () =>
+      pages[pages.length - 2] || {
+        key: feedKey,
+        name: "feed",
+        width: 576,
+        height: 1084,
+      },
+    [pages, feedKey]
   );
 
   const navigateBack = useCallback(() => {
@@ -116,7 +130,7 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
       {
         key: feedKey,
         name: "index",
-        dimensions: { width: 574, height: 1084 },
+        dimensions: { width: 576, height: 1084 },
         scrollPosition: 0,
       },
     ]);

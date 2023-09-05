@@ -17,10 +17,6 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={pageProps.session}>
-        <Script
-          src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"
-          async
-        />
         <InterfaceProvider>
           <SoundDetailsProvider>
             <ThreadcrumbProvider>

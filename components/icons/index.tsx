@@ -241,6 +241,24 @@ export function SendIcon({ ...props }) {
   );
 }
 
+export function EntryBlob({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 13 47"
+      {...props}
+    >
+      <path
+        fill="#F4F4F4"
+        fillRule="evenodd"
+        d="M13 0v5.1c0 1.7 0 3.5-.7 5.1a9.8 9.8 0 0 1-3 4l-4 3.3L2 20c-1 .8-2 2-2 3.4 0 1.5 1 2.6 2 3.4l3.2 2.6 4 3.3a9.8 9.8 0 0 1 3.1 4c.6 1.6.7 3.4.7 5V47"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
 export function ArrowUpIcon({ ...props }) {
   return (
     <svg

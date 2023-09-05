@@ -11,20 +11,13 @@ module.exports = {
   theme: {
     extend: {
       boxShadow: {
-        low: "0px 0px 1px 0px rgba(0, 0, 0, 0.25)",
         nav: "0px 0px 20px 0px rgba(0, 0, 0, 0.09)",
-        cmdkScaled:
-          "0px 0px 0px 0px rgba(0, 0, 0, 0.03), 0px 11px 23px 0px rgba(0, 0, 0, 0.03), 0px 43px 43px 0px rgba(0, 0, 0, 0.03), 0px 96px 57px 0px rgba(0, 0, 0, 0.02), 0px 170px 68px 0px rgba(0, 0, 0, 0.00), 0px 266px 75px 0px rgba(0, 0, 0, 0.00)",
-        index: "0px 1px 5px 0px rgba(0, 0, 0, 0.25)",
         album:
           "0px 0px 0px 0px rgba(0, 0, 0, 0.11), 0px 6px 14px 0px rgba(0, 0, 0, 0.11), 0px 26px 26px 0px rgba(0, 0, 0, 0.10), 0px 58px 35px 0px rgba(0, 0, 0, 0.06), 0px 103px 41px 0px rgba(0, 0, 0, 0.02), 0px 161px 45px 0px rgba(0, 0, 0, 0.00)",
-        stars: "0px 1px 4px 0px rgba(0, 0, 0, 0.07);",
-        new: "0px 0px 0px 0px rgba(0, 0, 0, 0.07), 0px 1px 2px 0px rgba(0, 0, 0, 0.07), 0px 3px 3px 0px rgba(0, 0, 0, 0.06), 0px 6px 4px 0px rgba(0, 0, 0, 0.04), 0px 11px 4px 0px rgba(0, 0, 0, 0.01), 0px 17px 5px 0px rgba(0, 0, 0, 0.00);",
         cmdkScaled2:
           "0px 0px 0px 0px rgba(0, 0, 0, 0.12), 4px 9px 22px 0px rgba(0, 0, 0, 0.11), 15px 37px 40px 0px rgba(0, 0, 0, 0.10), 35px 84px 55px 0px rgba(0, 0, 0, 0.06), 62px 149px 65px 0px rgba(0, 0, 0, 0.02), 97px 233px 71px 0px rgba(0, 0, 0, 0.00);",
-        entry: "0px 0px 2px rgba(0, 0, 0, 0.11);",
-        artworkFeed:
-          "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04);",
+        feedArt:
+          "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
       },
       colors: {
         black: "#333333",
@@ -32,6 +25,7 @@ module.exports = {
         gray1: "#777777",
         gray2: "#999999",
         gray3: "#CCCCCC",
+        gray4: "rgba(60, 60, 67, 0.6)",
         silver: "rgba(0, 0, 0, 0.05)",
         silver2: "rgba(0, 0, 0, 0.1)",
         blurWhite: "rgba(255, 255, 255, 0.2)",
@@ -42,6 +36,8 @@ module.exports = {
         nav: "rgba(250, 250, 250, 0.75)",
         violet: "rgb(75,61,103)",
         stars: "rgba(250, 250, 255, 0.75)",
+        white2: "rgba(255, 255, 255, 0.85)",
+        white3: "rgba(255, 255, 255, 0.5)",
       },
       fontFamily: {
         baskerville: ["Baskerville", "serif"],
@@ -52,10 +48,18 @@ module.exports = {
         11: "11",
       },
       gridTemplateColumns: {
-        17: "repeat(17, minmax(0, 1fr))", // 17 columns
+        17: "repeat(17, minmax(0, 1fr))",
+        feed: `repeat(12, 32px)`,
+      },
+      gridColumnGap: {
+        feed: "32px",
       },
       gridTemplateRows: {
-        11: "repeat(11, minmax(0, 1fr))", // 11 rows
+        11: "repeat(11, minmax(0, 1fr))",
+        feed: `repeat(17, 32px)`,
+      },
+      gridRowGap: {
+        feed: "32px",
       },
       transitionProperty: {
         opacity: "opacity",

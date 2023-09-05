@@ -42,7 +42,7 @@ export const useHandleUserClick = (authorId: string) => {
         key: uuidv4(),
         name: "user",
         user: authorId,
-        dimensions: { width: 532, height: 712 },
+        dimensions: { width: 576, height: 712 },
         scrollPosition: 0,
       },
     ]);
@@ -75,13 +75,17 @@ export const useHandleSoundClick = () => {
   const { getDominantColor } = useDominantColor();
 
   // CMDK context
-  const { setPages } = useInterface();
+  const { setPages, pages } = useInterface();
   const { setSelectedSound } = useSound();
 
   const handleSelectSound = async (
     imgElement: HTMLImageElement,
     sound: AlbumData | SongData,
-    artworkUrl: string
+    artworkUrl: string,
+    translate: {
+      x: number;
+      y: number;
+    }
   ) => {
     const colors = getDominantColor(imgElement);
 
@@ -104,9 +108,14 @@ export const useHandleSoundClick = () => {
           height: 576,
         },
         scrollPosition: 0,
+        translate: {
+          x: translate.x,
+          y: translate.y,
+        },
       },
     ]);
     window.history.pushState(null, "");
+    console.log(pages);
   };
 
   return { handleSelectSound };
