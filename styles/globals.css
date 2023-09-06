@@ -64,10 +64,6 @@ a {
   }
 }
 
-.pointer-events-none {
-  pointer-events: none;
-}
-
 button {
   /* cursor: none; */
 }

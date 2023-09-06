@@ -56,7 +56,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           <div className="px-4 py-2 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
             <div
               onClick={handleEntryClick}
-              className={`break-words hoverable-small line-clamp-6 w-[480px]`}
+              className={`break-words hoverable-small line-clamp-6 w-full`}
             >
               {review.content}
             </div>

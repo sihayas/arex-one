@@ -134,29 +134,20 @@ const User = () => {
 
   const renderFooter = () =>
     isOwnProfile ? (
-      <div className="flex flex-col fixed p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full rounded-b-[20px]">
-        {/* Footer */}
-        <div className="flex items-center justify-between">
-          <div className="flex gap-2 items-center">
-            <Image
-              className="border-[1.5px] border-silver rounded-full"
-              src={user.image}
-              alt={`${user.name}'s avatar`}
-              width={48}
-              height={48}
-            />
-            <div className="text-xs font-medium text-[#000]">{user.name}</div>
-          </div>
-          <div
-            onClick={handleSignalClick}
-            className="flex items-center gap-2 font-mono text-xs hoverable-small"
-          >
-            <span className="w-[12px] h-[12px] rounded-full bg-[#FFC700]" />
-          </div>
+      <div className="flex flex-col z-50 border-t border-silver border-dashed w-full mt-auto">
+        <div className="flex gap-2 items-center pt-8">
+          <Image
+            className="border-[1.5px] border-silver rounded-full"
+            src={user.image}
+            alt={`${user.name}'s avatar`}
+            width={48}
+            height={48}
+          />
+          <div className="text-sm font-medium text-[#000]">{user.name}</div>
         </div>
       </div>
     ) : (
-      <div className="flex fixed items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full rounded-b-[20px]">
+      <div className="flex items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full rounded-b-[20px]">
         <div className="flex gap-2 items-center">
           <Image
             className="border-[1.5px] border-silver rounded-full"
@@ -174,18 +165,14 @@ const User = () => {
     );
 
   return (
-    <div className="flex flex-col w-full h-full relative overflow-hidden">
-      <div className="absolute right-6 top-6 font-semibold text-[#000]">rx</div>
-
+    <div className="flex flex-col w-[480px] h-[600px] overflow-scroll p-8">
       {/* Container */}
-      <animated.div className="flex w-full h-full">
-        <Favorites
+      {/* <Favorites
           favorites={user.favorites}
           reviews={user._count.reviews}
           sounds={user.uniqueAlbumCount}
           bio={user.bio}
-        />
-      </animated.div>
+        /> */}
 
       {renderFooter()}
     </div>

@@ -17,7 +17,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
   };
 
   return (
-    <div className="flex rounded-full overflow-scroll max-w-[450px] scrollbar-none bg-silver2 backdrop-blur-xl">
+    <div className="flex rounded-full overflow-scroll max-w-[352px] scrollbar-none bg-silver2 backdrop-blur-xl">
       {/* Default button */}
       <button
         onClick={() => handleTabChange(null)}

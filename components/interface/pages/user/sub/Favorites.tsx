@@ -54,7 +54,7 @@ const Favorites: React.FC<FavoritesProps> = ({
   bio,
 }) => {
   return (
-    <div className="flex flex-col gap-6 overflow-hidden mt-[108px] w-full h-full">
+    <div className="flex flex-col gap-6 overflow-hidden w-full h-full">
       <div className="flex gap-6 flex-row-reverse overflow-y-scroll scrollbar-none">
         {favorites?.map((fav, index) => (
           <FavoriteAlbum

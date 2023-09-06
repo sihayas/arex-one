@@ -74,6 +74,9 @@ module.exports = {
       width: {
         fill: "-webkit-fill-available",
       },
+      height: {
+        fill: "-webkit-fill-available",
+      },
     },
   },
   plugins: [

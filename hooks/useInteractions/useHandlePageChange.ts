@@ -39,10 +39,10 @@ export const useHandleUserClick = (authorId: string) => {
     setPages((prevPages) => [
       ...prevPages,
       {
-        key: uuidv4(),
+        key: authorId,
         name: "user",
         user: authorId,
-        dimensions: { width: 576, height: 712 },
+        dimensions: { width: 480, height: 928 },
         scrollPosition: 0,
       },
     ]);
@@ -75,17 +75,13 @@ export const useHandleSoundClick = () => {
   const { getDominantColor } = useDominantColor();
 
   // CMDK context
-  const { setPages, pages } = useInterfaceContext();
+  const { setPages, pages, setIsVisible } = useInterfaceContext();
   const { setSelectedSound } = useSound();
 
   const handleSelectSound = async (
     imgElement: HTMLImageElement,
     sound: AlbumData | SongData,
-    artworkUrl: string,
-    translate: {
-      x: number;
-      y: number;
-    }
+    artworkUrl: string
   ) => {
     const colors = getDominantColor(imgElement);
 
@@ -104,18 +100,13 @@ export const useHandleSoundClick = () => {
         name: "album",
         sound: selectedSound,
         dimensions: {
-          width: 576,
-          height: 576,
+          width: 480,
+          height: 928,
         },
         scrollPosition: 0,
-        translate: {
-          x: translate.x,
-          y: translate.y,
-        },
       },
     ]);
-    window.history.pushState(null, "");
-    console.log(pages);
+    setIsVisible(true);
   };
 
   return { handleSelectSound };

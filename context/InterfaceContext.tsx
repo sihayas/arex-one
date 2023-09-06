@@ -83,7 +83,7 @@ export const InterfaceContextProvider = ({
         {
           key: session.user.id,
           name: "user",
-          dimensions: { width: 576, height: 712 },
+          dimensions: { width: 480, height: 928 },
           scrollPosition: 0,
         },
       ]);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSound } from "@/context/Sound";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -9,16 +9,14 @@ import Nav from "@/components/nav/Nav";
 import Album from "./pages/album/Album";
 import Entry from "./pages/entry/Entry";
 import User from "./pages/user/User";
-import Signals from "./pages/signals/Signals";
 
 import { useInterfaceDrag } from "@/hooks/useDrag/interface";
-import { useSession } from "next-auth/react";
+import { debounce } from "lodash";
 
 const componentMap: Record<string, React.ComponentType<any>> = {
   album: Album,
   entry: Entry,
   user: User,
-  signals: Signals,
 };
 
 export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
@@ -58,7 +56,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const visibilitySpring = useSpring({
     transform: isVisible
       ? `translate(-10vw, -50%) scale(1)`
-      : `translate(-10vw, -50%) scale(0.95)`,
+      : `translate(-10vw, -50%) scale(0.97)`,
     opacity: isVisible ? 1 : 0,
     config: {
       tension: 200,
@@ -66,9 +64,45 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     },
   });
 
-  const activePage = pages[pages.length - 1];
   // Page Tracker
+  const activePage = pages[pages.length - 1];
   const ActiveComponent = componentMap[activePage.name] || User;
+
+  const activeComponentRef = useRef(null); // Create a ref to observe active component
+
+  useEffect(() => {
+    const handleResize = debounce(() => {
+      requestAnimationFrame(() => {
+        if (activeComponentRef.current) {
+          const { clientWidth: targetWidth, clientHeight: targetHeight } =
+            activeComponentRef.current;
+
+          const baseHeight = 480;
+          const baseWidth = 480;
+
+          const scaleFactorY = targetHeight / baseHeight;
+          const scaleFactorX = targetWidth / baseWidth;
+
+          set({
+            scaleX: scaleFactorX,
+            scaleY: scaleFactorY,
+          });
+        }
+      });
+    }, 250); // 200ms debounce
+
+    const resizeObserver = new ResizeObserver(handleResize);
+
+    if (activeComponentRef.current) {
+      resizeObserver.observe(activeComponentRef.current);
+    }
+
+    return () => {
+      // Clean up
+      resizeObserver.disconnect();
+      handleResize.cancel();
+    };
+  }, [activeComponentRef, set]);
 
   return (
     <animated.div
@@ -81,7 +115,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     >
       {/* CMDK Inner  */}
       <Command
-        className={`cmdk-inner flex bg-white duration-150 relative`}
+        className={`cmdk-inner flex`}
         shouldFilter={false}
         onKeyDown={(e: React.KeyboardEvent) => {
           // switch to album page from form
@@ -115,14 +149,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           }
         }}
         loop
+        // Dimensions of CMDK change to hold new page content...
         style={{
-          width: 576,
-          height: 712,
+          width: activePage.dimensions.width,
+          height: activePage.dimensions.height,
         }}
       >
-        {/* Container / Shapeshifter / Magnifying Glass  */}
+        {/* Shapeshifter dragging */}
         <animated.div
-          {...dragBind()} // Shapeshifter dragging
+          {...dragBind()}
           style={{
             transform: to(
               [scaleX, scaleY, translateX, translateY],
@@ -130,33 +165,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
                 `scaleX(${sX}) scaleY(${sY}) translateX(${tX}px) translateY(${tY}px)`
             ),
           }}
-          className={`flex rounded-[24px] bg-transparent overflow-hidden w-[576px] h-[576px] z-20 ${
-            isVisible ? "shadow-cmdkScaled2" : ""
-          } `}
+          className={`flex rounded-3xl bg-transparent overflow-hidden w-[480px] h-[480px] z-10 border border-silver2 shadow-2xl`}
         ></animated.div>
+
         {/* Actual page content */}
-        <div className="flex absolute w-full h-full">
+        <div ref={activeComponentRef} className={`flex absolute w-fit h-fit`}>
           <ActiveComponent />
         </div>
-        {/* <Nav /> */}
+        <Nav />
       </Command>
     </animated.div>
   );
 }
-// useEffect(() => {
-//   requestAnimationFrame(() => {
-//     const targetHeight = activePage.dimensions.height; // 1084
-//     const targetWidth = activePage.dimensions.width; // can also be 576 or another value
-
-//     const baseHeight = 576; // Base Height
-//     const baseWidth = 576; // Base Width
-
-//     const scaleFactorY = targetHeight / baseHeight;
-//     const scaleFactorX = targetWidth / baseWidth;
-
-//     set({
-//       scaleX: scaleFactorX,
-//       scaleY: scaleFactorY,
-//     });
-//   });
-// }, [activePage.name, entryContainerRef.current, activePage.dimensions, set]);

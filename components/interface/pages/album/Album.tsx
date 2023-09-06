@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 
 import { useSound } from "@/context/Sound";
-import { useScrollPosition } from "@/hooks/useInteractions/useScrollPosition";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import { animated } from "@react-spring/web";
@@ -48,31 +47,25 @@ const Album = () => {
   return (
     <div
       // ref={scrollContainerRef}
-      className="flex flex-col items-center h-full w-full"
+      className="flex flex-col items-center justify-center h-[480px] w-[480px] overflow-scroll p-8"
     >
       {/* Top Section */}
-      <animated.div className="fixed z-10 top-0 w-full h-full">
-        {/* Artwork */}
-        <div
-          className="overflow-hidden fixed top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 rounded-[12px] w-fit h-fit"
-          onDragStart={(e) => e.preventDefault()}
+      <div className="z-10 w-full h-full relative">
+        <Image
+          className="rounded-2xl "
+          src={artworkUrl || "/public/images/default.png"}
+          alt={`${selectedSound.sound.attributes.name} artwork`}
+          width={416}
+          height={416}
+          quality={100}
           draggable="false"
+          onDragStart={(e) => e.preventDefault()}
           style={{
             boxShadow: boxShadow,
           }}
-        >
-          <Image
-            src={artworkUrl || "/public/images/default.png"}
-            alt={`${selectedSound.sound.attributes.name} artwork`}
-            width={512}
-            height={512}
-            quality={100}
-            draggable="false"
-            onDragStart={(e) => e.preventDefault()}
-          />
-        </div>
+        />
         {/* Tab Bar */}
-        <div className="flex items-center absolute bottom-12 left-1/2 -translate-x-1/2 transform z-20 ">
+        <div className="flex items-center absolute bottom-4 left-1/2 -translate-x-1/2 transform z-20 ">
           {"relationships" in selectedSound.sound && (
             <TabBar
               songs={selectedSound.sound.relationships.tracks.data}
@@ -90,7 +83,7 @@ const Album = () => {
         </div>
 
         {/* Names */}
-        <div className="absolute bottom-[146px] left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
           <div className="font-bold text-sm text-white">
             {selectedSound.sound.attributes.name}
           </div>
@@ -98,16 +91,15 @@ const Album = () => {
             {selectedSound.sound.attributes.artistName}
           </div>
         </div>
-      </animated.div>
+      </div>
       {/* Section Two / Entries  */}
-      <div className="w-full h-full">
-        {/* <div className="h-[400px]">&nbsp; </div> */}
+      {/* <div className="w-full h-full">
         {!activeTabId ? (
           <Albums albumId={selectedSound.sound.id} user={session!.user} />
         ) : (
           <Songs songId={activeTabId} user={session!.user} />
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

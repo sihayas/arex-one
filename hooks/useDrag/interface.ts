@@ -45,7 +45,7 @@ export function useInterfaceDrag({
   scaleX,
   scaleY,
 }: UseInterfaceDragProps) {
-  const { navigateBack, previousPage, resetPage, activePage } =
+  const { navigateBack, previousPage, resetPage, activePage, pages } =
     useInterfaceContext();
   return useDrag(
     ({
@@ -56,6 +56,8 @@ export function useInterfaceDrag({
       velocity: [vx, vy],
       direction: [dirX, dirY],
     }) => {
+      const activePage = pages[pages.length - 1];
+
       // Calculating the magnitude of the velocity vector
       const velocityMagnitude = Math.sqrt(vx ** 2 + vy ** 2);
 
@@ -73,8 +75,8 @@ export function useInterfaceDrag({
 
         // Calculate the target scale relative to the initial scale.
         // This ensures smooth scaling transitions when switching pages.
-        const targetScaleY = (targetHeight / 576) * initialScaleY;
-        const targetScaleX = (targetWidth / 576) * initialScaleX;
+        const targetScaleY = (targetHeight / 480) * initialScaleY;
+        const targetScaleX = (targetWidth / 480) * initialScaleX;
 
         // Get the translateX and translateY for going back
         let targetTranslateX = -(activePage.translate?.x || 0);

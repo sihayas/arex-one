@@ -14,6 +14,14 @@ interface ArtworkProps {
 
 export const Artwork: React.FC<ArtworkProps> = ({ albumId, songId, type }) => {
   const { handleSelectSound } = useHandleSoundClick();
+  const ref = React.useRef<HTMLImageElement>(null);
+
+  const handleSoundClick = async () => {
+    const imgElement = ref.current;
+    if (imgElement && albumData && artworkUrl) {
+      await handleSelectSound(imgElement, albumData, artworkUrl);
+    }
+  };
 
   const renderSize = albumId ? "960" : "380";
   const width = albumId ? 384 : 180;
@@ -27,6 +35,7 @@ export const Artwork: React.FC<ArtworkProps> = ({ albumId, songId, type }) => {
 
   return (
     <Image
+      onClick={handleSoundClick}
       className="rounded-[7.5px] shadow-feedArt"
       src={artworkUrl || "/images/default.webp"}
       alt={`artwork`}
@@ -36,6 +45,7 @@ export const Artwork: React.FC<ArtworkProps> = ({ albumId, songId, type }) => {
       draggable="false"
       loading="lazy"
       quality={100}
+      ref={ref}
     />
   );
 };
