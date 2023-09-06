@@ -57,9 +57,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Spring CMDK visibility
   const visibilitySpring = useSpring({
     transform: isVisible
-      ? `translate(-15%, -50%) scale(1)`
-      : `translate(-15%, -50%) scale(0.95)`,
-    opacity: isVisible ? 1 : 0, // Add this line for opacity
+      ? `translate(-10vw, -50%) scale(1)`
+      : `translate(-10vw, -50%) scale(0.95)`,
+    opacity: isVisible ? 1 : 0,
     config: {
       tension: 200,
       friction: 40,
@@ -133,13 +133,11 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           className={`flex rounded-[24px] bg-transparent overflow-hidden w-[576px] h-[576px] z-20 ${
             isVisible ? "shadow-cmdkScaled2" : ""
           } `}
-        >
-          {/* Actual page content */}
-          <div className="flex absolute w-full h-full">
-            <ActiveComponent />
-          </div>
-        </animated.div>
-
+        ></animated.div>
+        {/* Actual page content */}
+        <div className="flex absolute w-full h-full">
+          <ActiveComponent />
+        </div>
         {/* <Nav /> */}
       </Command>
     </animated.div>
