@@ -76,7 +76,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         {/* Rating & Info */}
         <div className="flex items-center pt-4 gap-2">
           <Stars
-            className="bg-[#767680] bg-opacity-10  p-1 rounded-full -top-[38px] left-[42px] flex items-center gap-1"
+            className="bg-[#767680] bg-opacity-10 p-[6px] rounded-full flex items-center gap-1"
             rating={review.rating}
             color={"rgba(60, 60, 67, 0.6)"}
           />
@@ -89,7 +89,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`pl-[34px] break-words line-clamp-6 w-full text-sm text-gray4 pt-2`}
+          className={`pl-[38px] break-words line-clamp-6 w-full text-sm text-gray4 pt-2`}
         >
           {review.content}
         </div>

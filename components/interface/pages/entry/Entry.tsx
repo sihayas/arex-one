@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 
-import { useInterface } from "@/context/Interface";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSound } from "@/context/Sound";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
@@ -25,7 +25,7 @@ interface EntryProps {
 export const Entry = ({ translateY }: EntryProps) => {
   const { data: session } = useSession();
   // Context
-  const { activePage } = useInterface();
+  const { activePage } = useInterfaceContext();
   const {
     setReplyParent,
     threadcrumbs,
@@ -33,8 +33,6 @@ export const Entry = ({ translateY }: EntryProps) => {
     openThreads,
     setOpenThreads,
   } = useThreadcrumb();
-
-  const { scrollContainerRef } = useScrollPosition();
 
   const firstThreadcrumb = activePage.threadcrumbs?.[0];
 

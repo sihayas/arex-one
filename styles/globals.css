@@ -37,36 +37,30 @@ a {
 }
 
 .animate-scale-down {
-  opacity: 0; /* Fades out */
-  transition: all 0.33s; /* 0.5s transition duration for everything */
-  animation: scale-down 0.33s forwards;
+  animation: scale-down 1.33s forwards;
 }
 
 .animate-scale-up {
-  opacity: 1; /* Fades in */
-  transition: all 0.33s; /* 0.5s transition duration for everything */
-  animation: scale-up 0.33s forwards;
+  animation: scale-up 0.44s forwards;
 }
 
+/* Scales down main content/feed */
 @keyframes scale-down {
   0% {
-    transform: scale(1);
-    opacity: 1; /* Starts fully visible */
+    filter: blur(0px);
   }
   100% {
-    transform: scale(0.92); /* Scales down to 92% */
-    opacity: 0; /* Ends fully transparent */
+    filter: blur(10px);
   }
 }
 
+/* Scales up / focuses main content/feed */
 @keyframes scale-up {
   0% {
-    transform: scale(0.92); /* Starts at 92% */
-    opacity: 0; /* Starts fully transparent */
+    filter: blur(10px);
   }
   100% {
-    transform: scale(1); /* Restores to original size */
-    opacity: 1; /* Ends fully visible */
+    filter: blur(0px);
   }
 }
 
@@ -89,28 +83,4 @@ button {
   z-index: 9999;
   /* -webkit-backdrop-filter: invert(30%) blur(10px); */
   backdrop-filter: blur(4px);
-}
-
-.hoverable {
-  /* cursor: none; */
-}
-
-.pulse {
-  animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.selected-item {
-  background-color: #f0f0f0; /* Choose your desired color */
 }

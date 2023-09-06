@@ -8,7 +8,7 @@ import { useState } from "react";
 import { ThreadcrumbProvider } from "../context/Threadcrumbs";
 import { SoundDetailsProvider } from "../context/Sound";
 import { Toaster } from "sonner";
-import { InterfaceProvider } from "../context/Interface";
+import { InterfaceContextProvider } from "../context/InterfaceContext";
 import Cursor from "@/components/global/Cursor";
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -17,14 +17,14 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={pageProps.session}>
-        <InterfaceProvider>
+        <InterfaceContextProvider>
           <SoundDetailsProvider>
             <ThreadcrumbProvider>
               {/* <Cursor /> */}
               <Component {...pageProps} />
             </ThreadcrumbProvider>
           </SoundDetailsProvider>
-        </InterfaceProvider>
+        </InterfaceContextProvider>
         <Toaster />
         {/* <ReactQueryDevtools /> */}
       </SessionProvider>

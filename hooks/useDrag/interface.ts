@@ -1,6 +1,6 @@
 import { SpringValue } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
-import { useInterface } from "@/context/Interface";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 type UseInterfaceDragProps = {
   set: (props: any) => void;
@@ -45,7 +45,8 @@ export function useInterfaceDrag({
   scaleX,
   scaleY,
 }: UseInterfaceDragProps) {
-  const { navigateBack, previousPage, resetPage, activePage } = useInterface();
+  const { navigateBack, previousPage, resetPage, activePage } =
+    useInterfaceContext();
   return useDrag(
     ({
       down,

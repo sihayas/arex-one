@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchUserReview, postReview } from "@/lib/api/formAPI";
 import { useSound } from "@/context/Sound";
-import { useInterface } from "@/context/Interface";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { SendIcon, ArrowIcon } from "@/components/icons";
@@ -17,7 +17,8 @@ const Form = () => {
   const userId = session?.user.id;
 
   const { selectedFormSound, setSelectedFormSound } = useSound();
-  const { inputRef, inputValue, setInputValue, expandInput } = useInterface();
+  const { inputRef, inputValue, setInputValue, expandInput } =
+    useInterfaceContext();
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);

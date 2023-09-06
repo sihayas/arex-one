@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 import { useQuery } from "@tanstack/react-query";
-import { useInterface } from "@/context/Interface";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useDragUserLogic } from "@/hooks/useDrag/user";
 import { useHandleSignalClick } from "@/hooks/useInteractions/useHandlePageChange";
 
@@ -16,17 +16,16 @@ import {
 import { animated } from "@react-spring/web";
 
 import Favorites from "./sub/Favorites";
-import Soundtrack from "./sub/Soundtrack";
 
 const favoritesMaxHeight = "592px";
 const reviewsMaxHeight = "";
 
 const User = () => {
-  const { pages } = useInterface();
+  const { pages } = useInterfaceContext();
   const { data: session } = useSession();
 
   const signedInUserId = session?.user.id;
-  const userId = pages[pages.length - 1].user;
+  const userId = pages[pages.length - 1].key;
   const isOwnProfile = session?.user.id === userId;
 
   const handleSignalClick = useHandleSignalClick();
@@ -34,12 +33,6 @@ const User = () => {
   const [followingAtoB, setFollowingAtoB] = useState<boolean | null>(null);
   const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
-
-  // Use the drag logic hook
-  const { bind, x, activeSection } = useDragUserLogic();
-
-  const coraColor = activeSection === 0 ? "#000" : "#999";
-  const soundtrackColor = activeSection === 1 ? "#000" : "#999";
 
   const { data: followStatus, refetch: refetchFollowStatus } = useQuery(
     ["followStatus", signedInUserId, userId],
@@ -139,23 +132,6 @@ const User = () => {
     </div>
   );
 
-  const renderHeader = () => (
-    <animated.div
-      {...bind()}
-      style={{
-        transform: x.to((val) => `translateX(${val * 0.94}px)`),
-      }}
-      className=" absolute top-[72px] -right-16 flex gap-4"
-    >
-      <div className="text-sm font-medium" style={{ color: coraColor }}>
-        @cora
-      </div>
-      <div className="text-sm text-gray3" style={{ color: soundtrackColor }}>
-        soundtrack
-      </div>
-    </animated.div>
-  );
-
   const renderFooter = () =>
     isOwnProfile ? (
       <div className="flex flex-col fixed p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full rounded-b-[20px]">
@@ -200,25 +176,15 @@ const User = () => {
   return (
     <div className="flex flex-col w-full h-full relative overflow-hidden">
       <div className="absolute right-6 top-6 font-semibold text-[#000]">rx</div>
-      {renderHeader()}
 
       {/* Container */}
-      <animated.div
-        className="flex w-[200%] h-full"
-        {...bind()}
-        style={{
-          transform: x.to((val) => `translateX(${val}px)`),
-          maxHeight:
-            activeSection === 0 ? favoritesMaxHeight : reviewsMaxHeight,
-        }}
-      >
+      <animated.div className="flex w-full h-full">
         <Favorites
           favorites={user.favorites}
           reviews={user._count.reviews}
           sounds={user.uniqueAlbumCount}
           bio={user.bio}
         />
-        <Soundtrack reviews={user.reviews} />
       </animated.div>
 
       {renderFooter()}

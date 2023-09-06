@@ -1,10 +1,12 @@
 import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useCallback, useRef } from "react";
-import { useInterface } from "@/context/Interface";
+import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useSession } from "next-auth/react";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { isVisible, setIsVisible, inputRef } = useInterface();
+  const { isVisible, setIsVisible, inputRef, pages } = useInterfaceContext();
   const mainContentRef = useRef<HTMLElement>(null);
+  const { data: session, status } = useSession();
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -49,7 +51,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {/* <Interface isVisible={isVisible} /> */}
+      {session && pages.length > 0 && <Interface isVisible={isVisible} />}
       <main
         ref={mainContentRef}
         id="main-content"

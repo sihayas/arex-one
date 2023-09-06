@@ -4,7 +4,7 @@ import Head from "next/head";
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import UserFeed from "@/components/interface/pages/feed/sections/UserFeed";
+import FeedUser from "@/components/index/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
 import Line from "@/components/interface/pages/entry/sub/icons/Line";
 
@@ -13,6 +13,10 @@ export default function Home() {
   const router = useRouter();
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
+
+  if (status === "loading") {
+    return <div>&nbsp;</div>; // or some other placeholder
+  }
 
   if (!session) {
     return (
@@ -82,11 +86,11 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col overflow-scroll max-h-screen max-w-screen gap-10 p-12 pt-24 relative z-10">
-        <UserFeed userId={session.user.id} />
+        <FeedUser userId={session.user.id} />
       </div>
 
       <div
-        className="absolute bottom-0 left-0 text-sm text-gray3 uppercase hover:text-red/60 cursor-pointer"
+        className="fixed bottom-0 left-0 text-sm text-gray3 uppercase hover:text-red/60 cursor-pointer"
         onClick={() => signOut()}
         onMouseOver={(e) => (e.currentTarget.textContent = "DISCONNECT")}
         onMouseOut={(e) => (e.currentTarget.textContent = "CONNECTED")}

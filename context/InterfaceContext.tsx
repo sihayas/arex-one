@@ -1,12 +1,6 @@
-import React, {
-  useState,
-  useCallback,
-  useContext,
-  useMemo,
-  useEffect,
-} from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import { SelectedSound } from "@/lib/global/interfaces";
-import { v4 as uuidv4 } from "uuid";
+import { useSession } from "next-auth/react";
 
 export type Page = {
   key: string;
@@ -38,12 +32,7 @@ export type InterfaceContext = {
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
   expandInput: boolean;
   setExpandInput: React.Dispatch<React.SetStateAction<boolean>>;
-  activePage: Page;
   navigateBack: (pageNumber?: number) => void;
-  resetPage: () => void;
-  previousPage: Page | null;
-  prevPageCount: number;
-  setPrevPageCount: React.Dispatch<React.SetStateAction<number>>;
   inputRef: React.MutableRefObject<HTMLTextAreaElement | null>;
   inputValue: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
@@ -53,7 +42,7 @@ export type InterfaceContext = {
 };
 
 // Define the props for the InterfaceProvider component
-type InterfaceProviderProps = {
+type InterfaceContextProviderProps = {
   children: React.ReactNode;
 };
 
@@ -63,50 +52,45 @@ export const InterfaceContext = React.createContext<
 >(undefined);
 
 // Export a custom hook to consume the context
-export const useInterface = (): InterfaceContext => {
+export const useInterfaceContext = (): InterfaceContext => {
   const context = useContext(InterfaceContext);
   if (!context) {
-    throw new Error("useInterface must be used within InterfaceProvider");
+    throw new Error("useInterfaceContextmust be used within InterfaceProvider");
   }
   return context;
 };
 
 // Define the provider for the context
-export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
-  const [isVisible, setIsVisible] = useState(false);
+export const InterfaceContextProvider = ({
+  children,
+}: InterfaceContextProviderProps) => {
+  const { data: session, status } = useSession();
 
-  const feedKey = uuidv4();
+  const [isVisible, setIsVisible] = useState(false);
 
   const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
+
   const entryContainerRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Page states
-  const [pages, setPages] = useState<Page[]>([
-    {
-      key: feedKey,
-      name: "feed",
-      dimensions: { width: 576, height: 1084 },
-      scrollPosition: 0,
-    },
-  ]);
-  const [prevPageCount, setPrevPageCount] = useState(pages.length);
+  const [pages, setPages] = useState<Page[]>([]);
+
+  useEffect(() => {
+    if (session) {
+      setPages([
+        {
+          key: session.user.id,
+          name: "user",
+          dimensions: { width: 576, height: 712 },
+          scrollPosition: 0,
+        },
+      ]);
+    }
+  }, [session]);
 
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
-
-  const activePage: Page = useMemo(() => pages[pages.length - 1], [pages]);
-  const previousPage: Page = useMemo(
-    () =>
-      pages[pages.length - 2] || {
-        key: feedKey,
-        name: "feed",
-        width: 576,
-        height: 1084,
-      },
-    [pages, feedKey]
-  );
 
   const navigateBack = useCallback(() => {
     setPages((prevPages) => {
@@ -122,19 +106,7 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
 
       return newPages;
     });
-    console.log("navigating back");
   }, []);
-
-  const resetPage = useCallback(() => {
-    setPages([
-      {
-        key: feedKey,
-        name: "index",
-        dimensions: { width: 576, height: 1084 },
-        scrollPosition: 0,
-      },
-    ]);
-  }, [setPages, feedKey]);
 
   // Function to handle the web browser back button
   useEffect(() => {
@@ -152,7 +124,7 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
   }, [pages, navigateBack]);
 
   // Render the provider with the context value
-  return (
+  return session ? (
     <InterfaceContext.Provider
       value={{
         isVisible,
@@ -163,12 +135,7 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
         setPages,
         expandInput,
         setExpandInput,
-        activePage,
         navigateBack,
-        resetPage,
-        previousPage,
-        prevPageCount,
-        setPrevPageCount,
         inputRef,
         inputValue,
         setInputValue,
@@ -179,5 +146,5 @@ export const InterfaceProvider = ({ children }: InterfaceProviderProps) => {
     >
       {children}
     </InterfaceContext.Provider>
-  );
+  ) : null; // or replace with a loading component
 };

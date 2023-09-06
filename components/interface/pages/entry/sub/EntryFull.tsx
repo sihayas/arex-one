@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-import { useInterface } from "@/context/Interface";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import {
@@ -28,7 +28,7 @@ interface EntryFullProps {
 
 export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
   const { data: session } = useSession();
-  const { entryContainerRef } = useInterface();
+  const { entryContainerRef } = useInterfaceContext();
 
   const { selectedSound } = useSound();
 

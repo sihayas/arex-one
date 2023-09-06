@@ -1,11 +1,12 @@
 import { useSound } from "@/context/Sound";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
 import { AlbumData, SongData } from "@/lib/global/interfaces";
-import { useInterface } from "@/context/Interface";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 export const useHandleSearchClick = () => {
   const { getDominantColor } = useDominantColor();
-  const { setInputValue, setStoredInputValue, inputValue } = useInterface();
+  const { setInputValue, setStoredInputValue, inputValue } =
+    useInterfaceContext();
 
   const { setSelectedFormSound } = useSound();
 

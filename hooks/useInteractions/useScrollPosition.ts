@@ -1,9 +1,9 @@
-import { useInterface } from "@/context/Interface";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useLayoutEffect, useRef } from "react";
 
 export function useScrollPosition() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const { pages, previousPage, activePage } = useInterface();
+  const { pages, previousPage, activePage } = useInterfaceContext();
 
   // Hook to save scroll position
   // useLayoutEffect(() => {
