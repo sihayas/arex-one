@@ -1,23 +1,22 @@
-import { useSession } from "next-auth/react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 import { useSound } from "@/context/Sound";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
-import { animated } from "@react-spring/web";
 import Albums from "./sub/Albums";
 
 import TabBar from "./sub/TabBar";
 import Songs from "./sub/Songs";
+import { motion } from "framer-motion";
 
 const Album = () => {
   // Hooks
-  const { data: session } = useSession();
   const { selectedSound } = useSound();
-  // const { scrollContainerRef } = useScrollPosition();
 
   const [activeTabId, setActiveTabId] = useState<string | null>(null);
+  const [containerHeight, setContainerHeight] = useState(480); // Set initial height
+  const scrollContainerRef = useRef(null);
 
   const artworkUrl = selectedSound?.artworkUrl;
 
@@ -36,6 +35,11 @@ const Album = () => {
     setActiveTabId(newActiveTabId);
   };
 
+  const handleScroll = () => {
+    const currentScrollTop = scrollContainerRef.current.scrollTop;
+    setContainerHeight(480 + currentScrollTop); // Change this formula as needed
+  };
+
   // Initializes album and loads full details into selectedSound
   const { isLoading, isError } = useAlbumQuery();
 
@@ -44,13 +48,18 @@ const Album = () => {
     return <div>loading...</div>; // Replace with your preferred loading state
   }
 
+  console.log("rerender");
+
   return (
-    <div
-      // ref={scrollContainerRef}
-      className="flex flex-col items-center justify-center h-[480px] w-[480px] overflow-scroll p-8"
+    <motion.div
+      layoutScroll
+      style={{ height: containerHeight, overflow: "scroll" }}
+      ref={scrollContainerRef}
+      onScroll={handleScroll}
+      className="flex flex-col items-center justify-center  w-[480px] p-8"
     >
       {/* Top Section */}
-      <div className="z-10 w-full h-full relative">
+      <motion.div layout="position" className="w-full h-full relative">
         <Image
           className="rounded-2xl "
           src={artworkUrl || "/public/images/default.png"}
@@ -64,6 +73,7 @@ const Album = () => {
             boxShadow: boxShadow,
           }}
         />
+
         {/* Tab Bar */}
         <div className="flex items-center absolute bottom-4 left-1/2 -translate-x-1/2 transform z-20 ">
           {"relationships" in selectedSound.sound && (
@@ -91,7 +101,38 @@ const Album = () => {
             {selectedSound.sound.attributes.artistName}
           </div>
         </div>
-      </div>
+      </motion.div>
+      <motion.div layout="position" className="w-full h-full relative">
+        <Image
+          className="rounded-2xl "
+          src={artworkUrl || "/public/images/default.png"}
+          alt={`${selectedSound.sound.attributes.name} artwork`}
+          width={416}
+          height={416}
+          quality={100}
+          draggable="false"
+          onDragStart={(e) => e.preventDefault()}
+          style={{
+            boxShadow: boxShadow,
+          }}
+        />
+      </motion.div>
+      <motion.div layout="position" className="w-full h-full relative">
+        <Image
+          className="rounded-2xl "
+          src={artworkUrl || "/public/images/default.png"}
+          alt={`${selectedSound.sound.attributes.name} artwork`}
+          width={416}
+          height={416}
+          quality={100}
+          draggable="false"
+          onDragStart={(e) => e.preventDefault()}
+          style={{
+            boxShadow: boxShadow,
+          }}
+        />
+      </motion.div>
+
       {/* Section Two / Entries  */}
       {/* <div className="w-full h-full">
         {!activeTabId ? (
@@ -100,7 +141,7 @@ const Album = () => {
           <Songs songId={activeTabId} user={session!.user} />
         )}
       </div> */}
-    </div>
+    </motion.div>
   );
 };
 

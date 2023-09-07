@@ -4,7 +4,6 @@ import Image from "next/image";
 
 import { useQuery } from "@tanstack/react-query";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useDragUserLogic } from "@/hooks/useDrag/user";
 import { useHandleSignalClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 import {

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { AlbumData } from "@/lib/global/interfaces";
+import { motion } from "framer-motion";
 
 interface ArtworkProps {
   album: AlbumData;
@@ -23,26 +24,20 @@ export const Artwork = ({ album }: ArtworkProps) => {
   };
 
   return (
-    <Image
-      onClick={handleSoundClick}
-      className="rounded-[7.5px] shadow-feedArt"
-      src={artworkUrl || "/images/default.webp"}
-      alt={`artwork`}
-      width={384}
-      height={384}
-      onDragStart={(e) => e.preventDefault()}
-      draggable="false"
-      loading="lazy"
-      quality={100}
-      ref={ref}
-    />
+    <motion.div layoutId={`album-${album.id}`}>
+      <Image
+        onClick={handleSoundClick}
+        className="rounded-[7.5px] shadow-feedArt"
+        src={artworkUrl || "/images/default.webp"}
+        alt={`artwork`}
+        width={384}
+        height={384}
+        onDragStart={(e) => e.preventDefault()}
+        draggable="false"
+        loading="lazy"
+        quality={100}
+        ref={ref}
+      />
+    </motion.div>
   );
 };
-
-// const imgElement = imgRef.current;
-// if (imgElement && albumData && artworkUrl) {
-//   await handleSelectSound(imgElement, albumData, artworkUrl, {
-//     x: translateX,
-//     y: translateY,
-//   }); // Pass the translate values here
-// }

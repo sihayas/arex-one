@@ -2,6 +2,7 @@ import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useCallback, useRef } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSession } from "next-auth/react";
+import { LayoutGroup } from "framer-motion";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isVisible, setIsVisible, inputRef, pages } = useInterfaceContext();
@@ -50,7 +51,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [handleKeyDown, handleDoubleClick]);
 
   return (
-    <>
+    <LayoutGroup>
       {session && pages.length > 0 && (
         <div
           className={`${
@@ -67,6 +68,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         {children}
       </main>
-    </>
+    </LayoutGroup>
   );
 }

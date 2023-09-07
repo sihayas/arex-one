@@ -164,7 +164,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
                 `scaleX(${sX}) scaleY(${sY}) translateX(${tX}px) translateY(${tY}px)`
             ),
           }}
-          className={`flex rounded-3xl bg-transparent overflow-hidden w-[480px] h-[480px] z-10 border border-silver2 shadow-2xl`}
+          className={`flex rounded-3xl bg-transparent overflow-hidden w-[480px] h-[480px] z-0 border border-silver2 shadow-2xl`}
         ></animated.div>
 
         {/* Actual page content */}

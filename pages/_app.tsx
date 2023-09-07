@@ -9,7 +9,6 @@ import { ThreadcrumbProvider } from "../context/Threadcrumbs";
 import { SoundDetailsProvider } from "../context/Sound";
 import { Toaster } from "sonner";
 import { InterfaceContextProvider } from "../context/InterfaceContext";
-import Cursor from "@/components/global/Cursor";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const [queryClient] = useState(() => new QueryClient());
@@ -20,7 +19,6 @@ const App = ({ Component, pageProps }: AppProps) => {
         <InterfaceContextProvider>
           <SoundDetailsProvider>
             <ThreadcrumbProvider>
-              {/* <Cursor /> */}
               <Component {...pageProps} />
             </ThreadcrumbProvider>
           </SoundDetailsProvider>
