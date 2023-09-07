@@ -150,9 +150,7 @@ const Nav: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-16 fixed -right-[66px] -bottom-[84px] z-50">
-      {left}
-    </div>
+    <div className="flex flex-col h-16 z-50 bottom-0 right-0 fixed">{left}</div>
   );
 };
 

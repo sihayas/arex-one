@@ -76,3 +76,14 @@ export const getAlbumBySongId = async (songId: string) => {
   });
   return response.data.data[0];
 };
+
+// Seach for multiple albums by song IDs
+export const getAlbumsBySongIds = async (songIds: string[]) => {
+  const baseURL = "https://api.music.apple.com/v1/catalog/us/songs/";
+  const response = await axios.get(`${baseURL}?ids=${songIds.join(",")}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.data;
+};

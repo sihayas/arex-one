@@ -70,6 +70,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const activeComponentRef = useRef(null); // Create a ref to observe active component
 
+  // Main content resize observer
   useEffect(() => {
     const handleResize = debounce(() => {
       requestAnimationFrame(() => {
@@ -89,7 +90,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           });
         }
       });
-    }, 250); // 200ms debounce
+    }, 250);
 
     const resizeObserver = new ResizeObserver(handleResize);
 
@@ -106,12 +107,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   return (
     <animated.div
+      className={`cmdk`}
       style={{
         ...visibilitySpring,
       }}
-      className={`cmdk ${
-        isVisible ? "pointer-events-auto" : "!shadow-none pointer-events-none"
-      }`}
     >
       {/* CMDK Inner  */}
       <Command

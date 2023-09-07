@@ -1,37 +1,26 @@
 import React from "react";
 import Image from "next/image";
 
-import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
-import { AlbumDBData } from "@/lib/global/interfaces";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
+import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import { AlbumData } from "@/lib/global/interfaces";
 
 interface ArtworkProps {
-  albumId?: string;
-  songId?: string;
-  album?: AlbumDBData;
-  type: "albumId" | "songId";
+  album: AlbumData;
 }
 
-export const Artwork: React.FC<ArtworkProps> = ({ albumId, songId, type }) => {
+export const Artwork = ({ album }: ArtworkProps) => {
   const { handleSelectSound } = useHandleSoundClick();
   const ref = React.useRef<HTMLImageElement>(null);
 
+  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "960");
+
   const handleSoundClick = async () => {
     const imgElement = ref.current;
-    if (imgElement && albumData && artworkUrl) {
-      await handleSelectSound(imgElement, albumData, artworkUrl);
+    if (imgElement && album && artworkUrl) {
+      await handleSelectSound(imgElement, album, artworkUrl);
     }
   };
-
-  const renderSize = albumId ? "960" : "380";
-  const width = albumId ? 384 : 180;
-  const height = albumId ? 384 : 180;
-
-  const { artworkUrl, albumData, isLoading } = useFetchArtworkUrl(
-    albumId || songId,
-    renderSize,
-    type
-  );
 
   return (
     <Image
@@ -39,8 +28,8 @@ export const Artwork: React.FC<ArtworkProps> = ({ albumId, songId, type }) => {
       className="rounded-[7.5px] shadow-feedArt"
       src={artworkUrl || "/images/default.webp"}
       alt={`artwork`}
-      width={width}
-      height={height}
+      width={384}
+      height={384}
       onDragStart={(e) => e.preventDefault()}
       draggable="false"
       loading="lazy"

@@ -51,7 +51,15 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {session && pages.length > 0 && <Interface isVisible={isVisible} />}
+      {session && pages.length > 0 && (
+        <div
+          className={`${
+            isVisible ? "pointer-events-auto" : "pointer-events-none"
+          }`}
+        >
+          <Interface isVisible={isVisible} />
+        </div>
+      )}
       <main
         ref={mainContentRef}
         id="main-content"

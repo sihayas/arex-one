@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchFeed } from "@/lib/api/feedAPI";
+import { fetchFeedAndMergeAlbums } from "@/lib/api/feedAPI";
 import { Entry } from "@/components/index/feed/subcomponents/Entry";
 import { ActivityData } from "@/lib/global/interfaces";
 
@@ -8,7 +8,7 @@ const FeedUser = ({ userId }: { userId: string | undefined }) => {
     ["feed", userId],
     () =>
       userId
-        ? fetchFeed(userId)
+        ? fetchFeedAndMergeAlbums(userId)
         : Promise.reject(new Error("User ID is undefined")),
     { enabled: !!userId }
   );

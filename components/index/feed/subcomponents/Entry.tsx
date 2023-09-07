@@ -3,10 +3,7 @@ import { useSession } from "next-auth/react";
 
 import { ReviewData } from "@/lib/global/interfaces";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
-import {
-  useHandleEntryClick,
-  useHandleUserClick,
-} from "@/hooks/useInteractions/useHandlePageChange";
+import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
 import {
   differenceInDays,
   differenceInHours,
@@ -20,7 +17,7 @@ import { Artwork } from "./Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
-import { StatLineIcon, EntryBlob } from "@/components/icons";
+import { EntryBlob } from "@/components/icons";
 
 interface EntryProps {
   review: ReviewData;
@@ -28,7 +25,7 @@ interface EntryProps {
 
 export const Entry: React.FC<EntryProps> = ({ review }) => {
   const { data: session } = useSession();
-  const isAlbum = review.albumId ? true : false;
+  const album = review.appleAlbumData;
 
   const { liked, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
@@ -40,7 +37,6 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
   );
 
   const handleEntryClick = useHandleEntryClick(review.id);
-  const handleUserClick = useHandleUserClick(review.author.id);
 
   return (
     <div className="flex items-end">
@@ -55,24 +51,10 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           height={48}
           userId={review.author.id}
         />
-        {/* <div
-          onClick={handleUserClick}
-          className="font-medium text-sm text-gray2"
-        >
-          {review.author.name}
-        </div> */}
       </div>
       <div className="flex flex-col w-full bg-[#F4F4F4] p-4 max-w-[416px] rounded-[13px] relative">
         {/* Artwork & Entry  */}
-        {isAlbum ? (
-          <Artwork
-            albumId={review.albumId}
-            album={review.album}
-            type="albumId"
-          />
-        ) : (
-          <Artwork songId={review.trackId} album={review.album} type="songId" />
-        )}
+        <Artwork album={album} />
         {/* Rating & Info */}
         <div className="flex items-center pt-4 gap-2">
           <Stars
@@ -81,8 +63,8 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             color={"rgba(60, 60, 67, 0.6)"}
           />
           <div className="flex flex-col  text-xs text-gray4">
-            <p className="font-medium">{review.album?.name}</p>
-            <p>{review.album?.artist}</p>
+            <p className="font-medium">{album.attributes.name}</p>
+            <p>{album.attributes.artistName}</p>
           </div>
         </div>
 
