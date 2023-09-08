@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSound } from "@/context/Sound";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 
 import { animated, to, useSpring } from "@react-spring/web";
 import { Command } from "cmdk";
@@ -10,28 +10,22 @@ import Album from "./pages/album/Album";
 import Entry from "./pages/entry/Entry";
 import User from "./pages/user/User";
 
-import { useInterfaceDrag } from "@/hooks/useDrag/interface";
 import { debounce } from "lodash";
-import {
-  motion,
-  useAnimation,
-  useMotionValue,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, useAnimate, useScroll, useTransform } from "framer-motion";
 
-const componentMap: Record<string, React.ComponentType<any>> = {
+const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
   entry: Entry,
   user: User,
 };
 
-type PageName = "album" | "user";
+type PageName = "album" | "user" | "entry";
 
 const getDimensions = (pageName: PageName) => {
   const dimensions = {
     album: { width: 480, height: 480 },
     user: { width: 480, height: 600 },
+    entry: { width: 480, height: 480 },
   };
 
   return dimensions[pageName] || { width: 480, height: 480 };
@@ -51,7 +45,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
     useSound();
-
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Spring CMDK visibility
@@ -67,29 +60,51 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   });
 
   // Page Tracker
-  const activePage = pages[pages.length - 1];
-  const ActiveComponent = componentMap[activePage.name] || User;
+  const activePage: Page = pages[pages.length - 1];
+  const activePageName: PageName = activePage.name as PageName;
+  const ActiveComponent = componentMap[activePageName];
 
-  const controls = useAnimation();
   const { scrollY } = useScroll({
     container: scrollContainerRef,
   });
 
   // Shapeshift while scrolling through a page.
-  const maxScroll = 124;
+  const maxScroll = 64;
   const newHeight = useTransform(scrollY, [0, maxScroll], [480, 928]);
+  const newWidth = useTransform(scrollY, [0, maxScroll], [480, 620]);
 
-  // Shapeshift when going to a page
+  // Shapeshift on page change.
+  const [scope, animate] = useAnimate();
+
   useEffect(() => {
-    const { width, height } = getDimensions(activePage.name);
-
-    controls.start({
+    // Animate dimensions on page ~change~
+    const { width, height } = getDimensions(activePageName);
+    animate(scope.current, {
       width: `${width}px`,
       height: `${height}px`,
     });
-  }, [activePage, controls]);
 
-  console.log(newHeight.get());
+    // Animate dimensions on page ~scroll~
+    const shiftHeight = () => {
+      animate(scope.current, {
+        height: newHeight.get(),
+      });
+    };
+
+    const shiftWidth = () => {
+      animate(scope.current, {
+        width: newWidth.get(),
+      });
+    };
+
+    const unsubHeight = newHeight.on("change", shiftHeight);
+    const unsubWidth = newWidth.on("change", shiftWidth);
+
+    return () => {
+      unsubHeight();
+      unsubWidth();
+    };
+  }, [activePageName, animate, scope, newHeight, newWidth]);
 
   return (
     <animated.div
@@ -137,10 +152,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       >
         {/* Shapeshifter / Window, lays atop the rendered content */}
         <motion.div
-          // style={{
-          //   height: newHeight,
-          // }}
-          animate={controls}
+          drag
+          dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+          dragTransition={{ bounceStiffness: 400, bounceDamping: 20 }}
+          ref={scope}
           className={`flex items-center justify-center rounded-3xl bg-transparent overflow-hidden z-0 border border-silver2 shadow-2xl relative`}
         >
           {/* Base layout / dimensions for a page */}

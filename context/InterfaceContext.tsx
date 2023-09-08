@@ -73,6 +73,7 @@ export const InterfaceContextProvider = ({
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
 
   const [pages, setPages] = useState<Page[]>([]);
+  const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
   useEffect(() => {
     if (session) {
@@ -86,8 +87,6 @@ export const InterfaceContextProvider = ({
       ]);
     }
   }, [session]);
-
-  const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
   const navigateBack = useCallback(() => {
     setPages((prevPages) => {
