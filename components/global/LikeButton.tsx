@@ -34,7 +34,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       onMouseEnter={() => setColor(liked ? "#CCC" : "#000")}
       onMouseLeave={() => setColor(liked ? "#FF0000" : "#CCC")}
     >
-      <div className={`${className} flex items-center hoverable-small`}>
+      <div className={`${className} flex items-center `}>
         <LoveIcon color={color} width={width} height={height} />
       </div>
     </button>

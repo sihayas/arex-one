@@ -39,7 +39,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   return (
     <Image
       onClick={handleUserClick}
-      className={`rounded-full hoverable-small border border-silver ${className}`}
+      className={`rounded-full  border border-silver ${className}`}
       src={imageSrc}
       alt={altText}
       height={height}

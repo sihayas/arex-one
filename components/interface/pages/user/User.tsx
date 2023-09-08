@@ -114,7 +114,7 @@ const User = () => {
   }
 
   const renderFollowButton = () => (
-    <div className="flex gap-1 items-center justify-center hoverable-small">
+    <div className="flex gap-1 items-center justify-center ">
       <div
         className="w-[6px] h-[6px] rounded-full"
         style={{ backgroundColor: linkColor }}

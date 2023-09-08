@@ -12,7 +12,6 @@
 
 /* CMDK INNER */
 .cmdk [cmdk-root] {
-  font-family: var(--font-sans);
   position: relative;
   align-items: center;
   justify-content: center;

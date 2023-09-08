@@ -99,7 +99,7 @@ const Nav: React.FC = () => {
         {/* Input Container */}
         <animated.div
           style={inputWidthStyle}
-          className="absolute flex flex-col justify-end bottom-[64px] right-[44px] bg-nav backdrop-blur-xl rounded-[22px] shadow-nav hoverable-small"
+          className="absolute flex flex-col justify-end bottom-[64px] right-[44px] bg-nav backdrop-blur-xl rounded-[22px] shadow-nav "
         >
           {/* Form / Search Results */}
           <animated.div

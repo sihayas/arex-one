@@ -56,7 +56,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           <div className="px-4 py-2 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
             <div
               onClick={handleEntryClick}
-              className={`break-words hoverable-small line-clamp-6 w-full`}
+              className={`break-words  line-clamp-6 w-full`}
             >
               {review.content}
             </div>
@@ -75,14 +75,14 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           />
           <div
             onClick={handleUserClick}
-            className={`font-medium text-sm text-black hoverable-small w-full`}
+            className={`font-medium text-sm text-black  w-full`}
           >
             {review.author.name}
           </div>
         </div>
 
         {/* Replies and Likes  */}
-        <div className="flex items-center gap-2 hoverable-small relative">
+        <div className="flex items-center gap-2  relative">
           {/* Avatar previews */}
           {review.replies && review._count.replies > 0 && (
             <div className="flex items-center ml-[28px] mt-1">

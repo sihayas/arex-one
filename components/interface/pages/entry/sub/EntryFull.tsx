@@ -89,9 +89,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
           artist={review.album?.artist || review.track?.album.artist}
         />
         <div className="w-full px-4 py-3 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
-          <div className={`break-words hoverable-small line-clamp-6`}>
-            {review.content}
-          </div>
+          <div className={`break-words  line-clamp-6`}>{review.content}</div>
         </div>
       </div>
 
@@ -105,15 +103,13 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
           height={32}
           userId={review.author.id}
         />
-        <div
-          className={`font-medium text-sm text-black hoverable-small w-full`}
-        >
+        <div className={`font-medium text-sm text-black  w-full`}>
           {review.author.name}
         </div>
       </div>
 
       {/* Replies and Likes  */}
-      <div className="flex items-center gap-2 hoverable-small relative">
+      <div className="flex items-center gap-2  relative">
         {/* Avatar previews */}
         {review.replies && review._count.replies > 0 && (
           <div className="flex items-center ml-[28px] mt-1">

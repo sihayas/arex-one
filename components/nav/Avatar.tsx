@@ -8,7 +8,7 @@ export default function Avatar() {
   const handleUserClick = useHandleUserClick(session!.user.id);
 
   return (
-    <div className="relative hoverable-medium">
+    <div className="relative ">
       <Image
         onClick={handleUserClick}
         className="rounded-full"

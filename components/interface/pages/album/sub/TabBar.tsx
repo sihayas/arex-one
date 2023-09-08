@@ -23,7 +23,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
         onClick={() => handleTabChange(null)}
         className={`${
           activeTab === null ? "" : "hover:text-gray3"
-        } whitespace-nowrap relative rounded-full px-1 py-1 text-xs font-semibold text-white outline-sky-400 transition focus-visible:outline-2 hoverable-small`}
+        } whitespace-nowrap relative rounded-full px-1 py-1 text-xs font-semibold text-white outline-sky-400 transition focus-visible:outline-2 `}
         style={{
           WebkitTapHighlightColor: "transparent",
         }}
@@ -55,7 +55,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
           onClick={() => handleTabChange(track.id)}
           className={`${
             activeTab === track.id ? "" : "hover:text-gray3"
-          } whitespace-nowrap relative rounded-full px-3 py-1 text-xs font-semibold text-white outline-sky-400 transition focus-visible:outline-2 hoverable-small`}
+          } whitespace-nowrap relative rounded-full px-3 py-1 text-xs font-semibold text-white outline-sky-400 transition focus-visible:outline-2 `}
           style={{
             WebkitTapHighlightColor: "transparent",
           }}

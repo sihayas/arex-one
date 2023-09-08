@@ -47,7 +47,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
   return (
     <div
       ref={dialRef}
-      className={`w-[36px] h-[36px] rounded-full border border-silver flex justify-center items-center overflow-hidden text-sm text-black hoverable-small scale-90 focus:scale-100 outline-none ${
+      className={`w-[36px] h-[36px] rounded-full border border-silver flex justify-center items-center overflow-hidden text-sm text-black  scale-90 focus:scale-100 outline-none ${
         inputRef.current?.value === "" ? "shadow-rating" : ""
       } focus:shadow-rating transition-all absolute -bottom-10 left-1`}
       tabIndex={0}

@@ -8,7 +8,7 @@ const User = ({ user }: { user: UserData }) => {
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full p-4 hoverable-small border-b border-silver"
+      className="w-full p-4  border-b border-silver"
       key={user.id}
       onSelect={handleUserClick}
     >

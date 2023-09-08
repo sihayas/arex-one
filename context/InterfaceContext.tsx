@@ -38,7 +38,6 @@ export type InterfaceContext = {
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   storedInputValue: string;
   setStoredInputValue: React.Dispatch<React.SetStateAction<string>>;
-  entryContainerRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 // Define the props for the InterfaceProvider component
@@ -72,8 +71,6 @@ export const InterfaceContextProvider = ({
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
-
-  const entryContainerRef = React.useRef<HTMLDivElement | null>(null);
 
   const [pages, setPages] = useState<Page[]>([]);
 
@@ -141,7 +138,6 @@ export const InterfaceContextProvider = ({
         setInputValue,
         storedInputValue,
         setStoredInputValue,
-        entryContainerRef,
       }}
     >
       {children}
