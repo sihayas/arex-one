@@ -191,7 +191,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
           dragTransition={{ bounceStiffness: 400, bounceDamping: 20 }}
           ref={scope}
-          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-0 shadow-2xl`}
+          className={`flex items-start justify-center rounded-3xl bg-white/80 overflow-hidden z-0 shadow-2xl`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -211,7 +211,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           </div>
         </motion.div>
 
-        {/* <Nav /> */}
+        <Nav />
       </Command>
     </motion.div>
   );

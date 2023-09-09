@@ -39,8 +39,8 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
 
   return (
     <div className="flex flex-col p-8 w-full pt-0">
-      {/* Rating & Info */}
-      <div className="flex items-start gap-2 w-full bg-[#F4F4F4] p-4 max-w-[416px] rounded-[13px]">
+      {/* Rating & Content */}
+      <div className="flex items-start gap-2 w-full bg-[#F4F4F4] p-4 max-w-[416px] rounded-[13px] relative">
         <div className="flex items-center">
           <Stars
             className="bg-[#767680] bg-opacity-10 p-[6px] rounded-full flex items-center gap-1"
@@ -48,24 +48,33 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
             color={"rgba(60, 60, 67, 0.6)"}
           />
         </div>
-
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-gray4`}
+          className={`break-words line-clamp-6 w-full text-sm text-gray4 pt-[5px]`}
         >
           {review.content}
         </div>
+        {/* Like Button */}
+        <LikeButton
+          className={
+            "absolute -bottom-2 bg-[#E5E5E6] p-2 rounded-full border-2 border-white"
+          }
+          handleLikeClick={handleLikeClick}
+          liked={liked}
+          width={12}
+          height={12}
+        />
       </div>
       <EntryBlobAlbum
-        className="mr-auto"
+        className="mr-auto translate-x-2"
         width={47}
         height={13}
         fill={"#F4F4F4"}
       />
       <div className="flex items-center gap-2">
         <UserAvatar
-          className="border-4 border-white ml-2"
+          className="border-4 border-[#F4F4F4] ml-4"
           imageSrc={review.author.image}
           altText={`${review.author.name}'s avatar`}
           width={32}
@@ -99,13 +108,3 @@ function formatDateShort(date: Date): string {
 
   return `${differenceInSeconds(now, date)}s`;
 }
-
-// <EntryBlob width={13} height={47} fill={"#F4F4F4"} />
-// <UserAvatar
-//   className="border-4 border-white"
-//   imageSrc={review.author.image}
-//   altText={`${review.author.name}'s avatar`}
-//   width={48}
-//   height={48}
-//   userId={review.author.id}
-// />

@@ -18,11 +18,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   width = 16,
   height = 16,
 }) => {
-  const [color, setColor] = useState(liked ? "#FF0000" : "#CCC");
+  const [color, setColor] = useState(liked ? "#000" : "#FFF");
 
   // Update color when `liked` changes
   useEffect(() => {
-    setColor(liked ? "#FF0000" : "#CCC"); // Adjusted to be consistent with initial state
+    setColor(liked ? "#000" : "#FFF"); // Adjusted to be consistent with initial state
   }, [liked]);
 
   return (
@@ -31,8 +31,8 @@ const LikeButton: React.FC<LikeButtonProps> = ({
         handleLikeClick(event);
         event.stopPropagation();
       }}
-      onMouseEnter={() => setColor(liked ? "#CCC" : "#000")}
-      onMouseLeave={() => setColor(liked ? "#FF0000" : "#CCC")}
+      onMouseEnter={() => setColor(liked ? "#FFF" : "#000")}
+      onMouseLeave={() => setColor(liked ? "#000" : "#FFF")}
     >
       <div className={`${className} flex items-center `}>
         <LoveIcon color={color} width={width} height={height} />
