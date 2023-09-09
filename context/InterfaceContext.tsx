@@ -76,7 +76,7 @@ export const InterfaceContextProvider = ({
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (session) {
+    if (session && !pages.length) {
       setPages([
         {
           key: session.user.id,
@@ -86,7 +86,7 @@ export const InterfaceContextProvider = ({
         },
       ]);
     }
-  }, [session]);
+  }, [session, pages]);
 
   const navigateBack = useCallback(() => {
     setPages((prevPages) => {

@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSound } from "@/context/Sound";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 
-import { animated, to, useSpring } from "@react-spring/web";
 import { Command } from "cmdk";
 import Nav from "@/components/nav/Nav";
 
@@ -10,7 +9,6 @@ import Album from "./pages/album/Album";
 import Entry from "./pages/entry/Entry";
 import User from "./pages/user/User";
 
-import { debounce } from "lodash";
 import { motion, useAnimate, useScroll, useTransform } from "framer-motion";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
@@ -23,12 +21,21 @@ type PageName = "album" | "user" | "entry";
 
 const getDimensions = (pageName: PageName) => {
   const dimensions = {
-    album: { width: 480, height: 480 },
-    user: { width: 480, height: 600 },
-    entry: { width: 480, height: 480 },
+    album: {
+      base: { width: 544, height: 544 },
+      target: { width: 480, height: 1056 }, // Placeholder values
+    },
+    user: {
+      base: { width: 480, height: 600 },
+      target: { width: 520, height: 650 }, // Placeholder values
+    },
+    entry: {
+      base: { width: 480, height: 480 },
+      target: { width: 500, height: 500 }, // Placeholder values
+    },
   };
 
-  return dimensions[pageName] || { width: 480, height: 480 };
+  return dimensions[pageName];
 };
 
 export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
@@ -47,75 +54,103 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     useSound();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Spring CMDK visibility
-  const visibilitySpring = useSpring({
-    transform: isVisible
-      ? `translate(-50%, -50%) scale(1)`
-      : `translate(-50%, -50%) scale(0.98)`,
-    opacity: isVisible ? 1 : 0,
-    config: {
-      tension: 200,
-      friction: 40,
-    },
-  });
-
   // Page Tracker
   const activePage: Page = pages[pages.length - 1];
   const activePageName: PageName = activePage.name as PageName;
   const ActiveComponent = componentMap[activePageName];
 
+  // Dimensions
+  const { base, target } = getDimensions(activePageName);
+
+  // Scroll tracker
   const { scrollY } = useScroll({
     container: scrollContainerRef,
   });
+  const maxScroll = 64;
 
   // Shapeshift while scrolling through a page.
-  const maxScroll = 64;
-  const newHeight = useTransform(scrollY, [0, maxScroll], [480, 928]);
-  const newWidth = useTransform(scrollY, [0, maxScroll], [480, 620]);
+  const scale = useTransform(scrollY, [0, 64], [1, 0.9375]);
+
+  const newWidth = useTransform(
+    scrollY,
+    [0, maxScroll],
+    [base.width, target.width]
+  );
+
+  const newHeight = useTransform(
+    scrollY,
+    [0, maxScroll],
+    [base.height, target.height]
+  );
 
   // Shapeshift on page change.
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
-    // Animate dimensions on page ~change~
-    const { width, height } = getDimensions(activePageName);
     animate(scope.current, {
-      width: `${width}px`,
-      height: `${height}px`,
+      width: `${base.width}px`,
+      height: `${base.height}px`,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 50,
+      },
     });
+
+    const shiftWidth = () => {
+      animate(scope.current, {
+        width: newWidth.get(),
+        transition: {
+          type: "spring",
+          stiffness: 100,
+          damping: 50,
+        },
+      });
+    };
 
     // Animate dimensions on page ~scroll~
     const shiftHeight = () => {
       animate(scope.current, {
         height: newHeight.get(),
+        transition: {
+          type: "spring",
+          stiffness: 100,
+          damping: 10,
+        },
       });
     };
 
-    const shiftWidth = () => {
-      animate(scope.current, {
-        width: newWidth.get(),
-      });
-    };
-
-    const unsubHeight = newHeight.on("change", shiftHeight);
     const unsubWidth = newWidth.on("change", shiftWidth);
+    const unsubHeight = newHeight.on("change", shiftHeight);
 
     return () => {
       unsubHeight();
       unsubWidth();
     };
-  }, [activePageName, animate, scope, newHeight, newWidth]);
+  }, [animate, base.height, base.width, newHeight, newWidth, scope]);
 
   return (
-    <animated.div
+    <motion.div
       className={`cmdk`}
-      style={{
-        ...visibilitySpring,
+      initial={{
+        transform: `translate(-50%, -50%) scale(0.98)`,
+        opacity: 0,
       }}
+      animate={
+        isVisible
+          ? {
+              transform: `translate(-50%, -50%) scale(1)`,
+              opacity: 1,
+            }
+          : {
+              transform: `translate(-50%, -50%) scale(0.98)`,
+              opacity: 0,
+            }
+      }
     >
       {/* CMDK Inner  */}
       <Command
-        className={`cmdk-inner flex relative`}
+        className={`cmdk-inner flex`}
         shouldFilter={false}
         onKeyDown={(e: React.KeyboardEvent) => {
           // switch to album page from form
@@ -156,11 +191,11 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
           dragTransition={{ bounceStiffness: 400, bounceDamping: 20 }}
           ref={scope}
-          className={`flex items-center justify-center rounded-3xl bg-transparent overflow-hidden z-0 border border-silver2 shadow-2xl relative`}
+          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-0 shadow-2xl`}
         >
           {/* Base layout / dimensions for a page */}
           <div
-            className={`flex absolute w-full h-full`}
+            className={`flex absolute`}
             style={{
               width: `${activePage.dimensions.width}px`,
               height: `${activePage.dimensions.height}px`,
@@ -169,15 +204,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className="flex flex-col items-center justify-center overflow-scroll w-full relative p-8"
+              className="flex flex-col items-center overflow-scroll w-full h-full relative scrollbar-none"
             >
-              <ActiveComponent />
+              <ActiveComponent scale={scale} />
             </div>
           </div>
         </motion.div>
 
-        <Nav />
+        {/* <Nav /> */}
       </Command>
-    </animated.div>
+    </motion.div>
   );
 }

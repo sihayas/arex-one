@@ -50,14 +50,14 @@ a {
     filter: blur(0px);
   }
   100% {
-    filter: blur(2px);
+    filter: blur(4px);
   }
 }
 
 /* Scales up / focuses main content/feed */
 @keyframes scale-up {
   0% {
-    filter: blur(2px);
+    filter: blur(4px);
   }
   100% {
     filter: blur(0px);
