@@ -1,10 +1,8 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 
 import { useQuery } from "@tanstack/react-query";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useHandleSignalClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { AsteriskIcon, StatsIcon } from "@/components/icons";
 
 import {
@@ -13,10 +11,10 @@ import {
   getUserById,
   isUserFollowing,
 } from "@/lib/api/userAPI";
-import { animated } from "@react-spring/web";
 
 import Favorites from "./sub/Favorites";
-import { AlbumData } from "@/lib/global/interfaces";
+import Stats from "./sub/Stats";
+import UserAvatar from "@/components/global/UserAvatar";
 
 const User = () => {
   const { pages } = useInterfaceContext();
@@ -30,20 +28,26 @@ const User = () => {
   const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
 
+  const [activeTab, setActiveTab] = useState<"stats" | "favorites">("favorites");
+  const handleStatsClick = () => setActiveTab("stats");
+  const handleFavoritesClick = () => setActiveTab("favorites");
+
   const { data: followStatus, refetch: refetchFollowStatus } = useQuery(
     ["followStatus", signedInUserId, userId],
     () =>
       signedInUserId && userId ? isUserFollowing(signedInUserId, userId) : null,
     {
       enabled: !!session,
-      onSuccess: (data) => {
-        if (data !== null) {
-          setFollowingAtoB(data.isFollowingAtoB);
-          setFollowingBtoA(data.isFollowingBtoA);
-        }
-      },
     }
   );
+
+  useEffect(() => {
+    if (followStatus !== null) {
+      setFollowingAtoB(followStatus.isFollowingAtoB);
+      setFollowingBtoA(followStatus.isFollowingBtoA);
+    }
+  }, [followStatus]);
+
 
   // Function to handle follow/unfollow
   const handleFollow = async () => {
@@ -61,7 +65,7 @@ const User = () => {
         await follow(signedInUserId, userId);
         setFollowingAtoB(true);
       }
-      refetchFollowStatus();
+      await refetchFollowStatus();
     } catch (error) {
       console.error("Error following/unfollowing", error);
     } finally {
@@ -78,17 +82,14 @@ const User = () => {
   } = useQuery(
     ["user", userId],
     () => {
-      if (!userId || !session?.user.id) {
-        throw new Error("userId must be defined");
-      }
-      return getUserById(userId, session.user.id);
+      return getUserById(userId, session!.user.id);
     },
     {
       enabled: !!userId,
     }
   );
 
-  let linkText = "link?";
+  let linkText = "LINK";
   let linkColor = "#999";
   if (followingAtoB && followingBtoA) {
     linkText = "INTERLINKED";
@@ -97,17 +98,8 @@ const User = () => {
     linkText = "LINKED";
     linkColor = "#000";
   } else if (followingBtoA) {
-    linkText = "INTERLINK?";
+    linkText = "INTERLINK";
     linkColor = "#FFEA00";
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    console.error(error);
-    return <div>Error</div>;
   }
 
   const renderFollowButton = () => (
@@ -129,20 +121,42 @@ const User = () => {
   );
 
   return (
-    <div className="flex flex-col p-8 w-full">
-      <div className="text-sm text-gray2 uppercase font-medium">YEAR 1</div>
-      <div className="text-sm text-gray3 uppercase mt-[13px]">LAST PLAYED</div>
-
-      <div className="flex items-center gap-6 mt-8">
-        <AsteriskIcon width={10} height={10} color={"#000"} />
-        <StatsIcon width={10} height={10} color={"#CCC"} />
+      <div className="flex flex-col items-end p-8 w-full h-full relative">
+        {isLoading ? (
+            <div>Loading...</div>
+        ) : isError ? (
+            <div>Error</div>
+        ) : (
+            <>
+              <div className="text-sm text-black font-semibold leading-3">@{user.name}</div>
+              <div className="text-xs text-gray3 uppercase leading-3 mt-[13px]">LAST PLAYED</div>
+              <div className="flex items-center gap-6 mt-[33px]">
+                <StatsIcon onClick={handleStatsClick} width={10} height={10} color={"#CCC"} />
+                <AsteriskIcon onClick={handleFavoritesClick} width={10} height={10} color={"#000"} />
+              </div>
+              <div className="flex flex-col mt-[44px] gap-7">
+                {activeTab === "favorites" ? (
+                    <Favorites favorites={user.favorites} />
+                ) : (
+                    <Stats />
+                )}
+              </div>
+              <div className="absolute left-2 top-2 flex items-center gap-2">
+                <UserAvatar
+                    className="shadow-md border border-none"
+                    imageSrc={user.image}
+                    altText={`${user.name}'s avatar`}
+                    width={48}
+                    height={48}
+                    userId={user.id}
+                />
+                {renderFollowButton()}
+              </div>
+            </>
+        )}
       </div>
-
-      <div className="flex flex-col mt-[52px]">
-        <Favorites favorites={user.favorites} bio={user.bio} />
-      </div>
-    </div>
   );
+
 };
 
 export default User;

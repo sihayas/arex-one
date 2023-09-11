@@ -129,6 +129,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     };
   }, [animate, base.height, base.width, newHeight, newWidth, scope]);
 
+  console.log(pages);
+
   return (
     <motion.div
       className={`cmdk`}
@@ -148,7 +150,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             }
       }
     >
-      {/* CMDK Inner  */}
+      {/* CMD-K Inner  */}
       <Command
         className={`cmdk-inner flex`}
         shouldFilter={false}
@@ -185,13 +187,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         }}
         loop
       >
-        {/* Shapeshifter / Window, lays atop the rendered content */}
+        {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
-          drag
-          dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-          dragTransition={{ bounceStiffness: 400, bounceDamping: 20 }}
           ref={scope}
-          className={`flex items-start justify-center rounded-3xl bg-white/90 overflow-hidden z-0 shadow-2xl`}
+          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-0 shadow-2xl`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -204,14 +203,14 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className="flex flex-col items-center overflow-scroll w-full h-full relative scrollbar-none"
+              className="flex flex-col items-center overflow-scroll w-full h-full relative scrollbar-none z-10"
             >
               <ActiveComponent scale={scale} />
             </div>
           </div>
         </motion.div>
 
-        {/* <Nav /> */}
+         {/*<Nav />*/}
       </Command>
     </motion.div>
   );

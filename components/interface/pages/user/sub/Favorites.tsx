@@ -1,57 +1,61 @@
-import React from "react";
-import Image from "next/image";
+import React from 'react';
+import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
+import { getAlbumsByIds } from '@/lib/global/musicKit';
+import GenerateArtworkUrl from '@/components/global/GenerateArtworkUrl';
+import { AlbumData } from '@/lib/global/interfaces';
 
-import { getAlbumById } from "@/lib/global/musicKit";
 
-import { useQuery } from "@tanstack/react-query";
-import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-
-interface AlbumProps {
-  albumId: string;
-  index: number;
+type FavoriteAlbumProps = {
+    albumData: AlbumData;
+    index: number;
 }
 
-interface Favorites {
-  album: {
-    id: string;
-  };
-}
-
-interface FavoritesProps {
-  favorites: Favorites[];
-  bio: string;
-}
-
-const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId, index }) => {
-  const { data, isLoading } = useQuery(["album", albumId], () =>
-    getAlbumById(albumId)
-  );
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const url = GenerateArtworkUrl(data.attributes.artwork.url, "722");
+const FavoriteAlbum = ({ albumData, index }: FavoriteAlbumProps) => {
+  const url = GenerateArtworkUrl(albumData.attributes.artwork.url, '160');
+  const leftOffset = 32 + (index * 88);
 
   return (
-    <div className="flex items-center">
-      <div className=" w-[10px] h-[10px] bg-black rounded-[1px]" />
-      <div className="ml-[54px] text-sm text-black">{data.attributes.name}</div>
-    </div>
+      <div className="grid gap-x-8 items-center" style={{ gridTemplateColumns: '160px 32px' }}>
+        <div className="absolute top-1/2 -translate-y-1/2 blur-2xl" style={{ left: `${leftOffset}px` }}>
+          <Image
+              className="rounded-[6px] border border-silver"
+              src={url || '/images/default.webp'}
+              alt="artwork"
+              width={80}
+              height={80}
+              onDragStart={(e) => e.preventDefault()}
+              draggable="false"
+          />
+        </div>
+        <div className="text-sm text-black leading-3 line-clamp-1 ml-auto uppercase">{albumData.attributes.name}</div>
+        <div className="w-[10px] h-[10px] bg-black rounded-[2px] ml-auto" />
+
+      </div>
   );
 };
 
-const Favorites: React.FC<FavoritesProps> = ({ favorites, bio }) => {
+
+interface FavoritesProps {
+  favorites: {
+    album: {
+      id: string;
+    };
+  }[];
+}
+
+
+const Favorites = ({ favorites }:FavoritesProps) => {
+  const albumIds = favorites.map(fav => fav.album.id);
+  const { data, isLoading } = useQuery(['albums', albumIds], () => getAlbumsByIds(albumIds));
+
   return (
-    <>
-      {favorites?.map((fav, index) => (
-        <FavoriteAlbum
-          key={fav.album.id}
-          albumId={fav.album.id}
-          index={index}
-        />
-      ))}
-    </>
+      <>
+        {isLoading && <div>Loading...</div>}
+        {data?.map((albumData: AlbumData, index:number) => (
+            <FavoriteAlbum key={albumData.id} albumData={albumData} index={index} />
+        ))}
+      </>
   );
 };
 
