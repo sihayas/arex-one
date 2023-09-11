@@ -26,8 +26,8 @@ const getDimensions = (pageName: PageName) => {
       target: { width: 480, height: 1056 }, // Placeholder values
     },
     user: {
-      base: { width: 480, height: 600 },
-      target: { width: 520, height: 650 }, // Placeholder values
+      base: { width: 532, height: 320 },
+      target: { width: 532, height: 320 }, // Placeholder values
     },
     entry: {
       base: { width: 480, height: 480 },
@@ -191,7 +191,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
           dragTransition={{ bounceStiffness: 400, bounceDamping: 20 }}
           ref={scope}
-          className={`flex items-start justify-center rounded-3xl bg-white/80 overflow-hidden z-0 shadow-2xl`}
+          className={`flex items-start justify-center rounded-3xl bg-white/90 overflow-hidden z-0 shadow-2xl`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -211,7 +211,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           </div>
         </motion.div>
 
-        <Nav />
+        {/* <Nav /> */}
       </Command>
     </motion.div>
   );

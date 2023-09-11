@@ -28,10 +28,36 @@ export function LoveIcon({ ...props }) {
 
 export function AsteriskIcon({ ...props }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" {...props}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={10}
+      height={10}
+      fill="none"
+      className={props.className}
+    >
       <path
-        d="m17.7 17 6.2 8.4-2.4 1.6-5.5-8.7-5.5 8.7-2.3-1.6 6.2-8.4-9.3-2.4L6 12l9.1 3.2L14.5 5h3L17 15.2l9-3.2.8 2.7Z"
         fill={props.color}
+        d="m5.811 5.455 2.856 3.817L7.562 10 5.028 6.046 2.495 10l-1.06-.728L4.29 5.455.008 4.365l.414-1.183 4.192 1.454L4.337 0H5.72l-.23 4.636 4.146-1.454.369 1.227L5.81 5.455Z"
+      />
+    </svg>
+  );
+}
+
+export function StatsIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={11}
+      height={10}
+      fill="none"
+      {...props}
+      className={props.className}
+    >
+      <path
+        fill={props.color}
+        fillRule="evenodd"
+        d="M4.545.082 4.342 2.52h2.972L7.524 0l.988.082-.203 2.438h2.147v.992h-2.23l-.248 2.976H9.96v.992H7.896L7.686 10l-.988-.082L6.9 7.48H3.929L3.719 10l-.988-.082.203-2.438H.539v-.992h2.478l.247-2.976h-2.23V2.52h2.313L3.557 0l.988.082Zm-.285 3.43-.248 2.976h2.971l.248-2.976H4.26Z"
+        clipRule="evenodd"
       />
     </svg>
   );

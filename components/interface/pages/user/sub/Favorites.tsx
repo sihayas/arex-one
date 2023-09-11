@@ -19,8 +19,6 @@ interface Favorites {
 
 interface FavoritesProps {
   favorites: Favorites[];
-  reviews: number;
-  sounds: number;
   bio: string;
 }
 
@@ -36,49 +34,24 @@ const FavoriteAlbum: React.FC<AlbumProps> = ({ albumId, index }) => {
   const url = GenerateArtworkUrl(data.attributes.artwork.url, "722");
 
   return (
-    <Image
-      className={`rounded-lg shadow-index ${index === 0 ? "mr-6" : ""} `}
-      src={url}
-      alt={`${data.attributes.name}'s artwork`}
-      width={361}
-      height={361}
-      draggable="false"
-    />
+    <div className="flex items-center">
+      <div className=" w-[10px] h-[10px] bg-black rounded-[1px]" />
+      <div className="ml-[54px] text-sm text-black">{data.attributes.name}</div>
+    </div>
   );
 };
 
-const Favorites: React.FC<FavoritesProps> = ({
-  favorites,
-  reviews,
-  sounds,
-  bio,
-}) => {
+const Favorites: React.FC<FavoritesProps> = ({ favorites, bio }) => {
   return (
-    <div className="flex flex-col gap-6 overflow-hidden w-full h-full">
-      <div className="flex gap-6 flex-row-reverse overflow-y-scroll scrollbar-none">
-        {favorites?.map((fav, index) => (
-          <FavoriteAlbum
-            key={fav.album.id}
-            albumId={fav.album.id}
-            index={index}
-          />
-        ))}
-        <div className="w-6"></div>
-      </div>
-
-      <div className="w-full flex flex-col gap-2 justify-end text-xs text-gray2 pl-6">
-        <div className="font-semibold text-[10px] pb-2">YEAR 1</div>
-        <div className="flex gap-2">
-          <div className="min-w-[43px]">CODA</div>
-          <div className="font-semibold">{reviews}</div>
-        </div>
-        <div className="flex gap-2">
-          <div className="">SOUND</div>
-          <div className="font-semibold">{sounds}</div>
-        </div>
-        <div className="text-black">{bio}</div>
-      </div>
-    </div>
+    <>
+      {favorites?.map((fav, index) => (
+        <FavoriteAlbum
+          key={fav.album.id}
+          albumId={fav.album.id}
+          index={index}
+        />
+      ))}
+    </>
   );
 };
 

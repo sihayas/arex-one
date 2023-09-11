@@ -58,7 +58,7 @@ const Album = ({ scale }) => {
   return (
     <>
       {/* Top Section */}
-      <motion.div className="sticky -top-72 pt-4 z-20">
+      <motion.div className="sticky -top-[318px] pt-4 z-20">
         <Image
           ref={scope}
           src={artworkUrl || "/public/images/default.png"}
@@ -70,7 +70,7 @@ const Album = ({ scale }) => {
           onDragStart={(e) => e.preventDefault()}
           style={{ boxShadow: boxShadow }}
         />
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex flex-col gap-2 w-full items-center justify-center">
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col gap-2 w-full items-center justify-center">
           <div className="flex flex-col items-center">
             <div className="font-bold text-sm text-white">
               {selectedSound.sound.attributes.name}

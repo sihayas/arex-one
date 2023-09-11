@@ -51,7 +51,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-gray4 pt-[5px]`}
+          className={`break-words line-clamp-6 w-full text-sm text-gray4`}
         >
           {review.content}
         </div>

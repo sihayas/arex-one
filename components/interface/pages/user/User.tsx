@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useHandleSignalClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { AsteriskIcon, StatsIcon } from "@/components/icons";
 
 import {
   follow,
@@ -15,9 +16,7 @@ import {
 import { animated } from "@react-spring/web";
 
 import Favorites from "./sub/Favorites";
-
-const favoritesMaxHeight = "592px";
-const reviewsMaxHeight = "";
+import { AlbumData } from "@/lib/global/interfaces";
 
 const User = () => {
   const { pages } = useInterfaceContext();
@@ -26,8 +25,6 @@ const User = () => {
   const signedInUserId = session?.user.id;
   const userId = pages[pages.length - 1].key;
   const isOwnProfile = session?.user.id === userId;
-
-  const handleSignalClick = useHandleSignalClick();
 
   const [followingAtoB, setFollowingAtoB] = useState<boolean | null>(null);
   const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
@@ -131,49 +128,19 @@ const User = () => {
     </div>
   );
 
-  const renderFooter = () =>
-    isOwnProfile ? (
-      <div className="flex flex-col z-50 border-t border-silver border-dashed w-full mt-auto">
-        <div className="flex gap-2 items-center pt-8">
-          <Image
-            className="border-[1.5px] border-silver rounded-full"
-            src={user.image}
-            alt={`${user.name}'s avatar`}
-            width={48}
-            height={48}
-          />
-          <div className="text-sm font-medium text-[#000]">{user.name}</div>
-        </div>
-      </div>
-    ) : (
-      <div className="flex items-center justify-between p-6 bottom-0 z-50 bg-white border-t border-silver border-dashed w-full rounded-b-[20px]">
-        <div className="flex gap-2 items-center">
-          <Image
-            className="border-[1.5px] border-silver rounded-full"
-            src={user.image}
-            alt={`${user.name}'s avatar`}
-            width={48}
-            height={48}
-          />
-          <div className="text-xs font-medium text-[#000]">{user.name}</div>
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          {renderFollowButton()}
-        </div>
-      </div>
-    );
-
   return (
-    <div className="flex flex-col w-[480px] h-[600px] overflow-scroll p-8">
-      {/* Container */}
-      {/* <Favorites
-          favorites={user.favorites}
-          reviews={user._count.reviews}
-          sounds={user.uniqueAlbumCount}
-          bio={user.bio}
-        /> */}
+    <div className="flex flex-col p-8 w-full">
+      <div className="text-sm text-gray2 uppercase font-medium">YEAR 1</div>
+      <div className="text-sm text-gray3 uppercase mt-[13px]">LAST PLAYED</div>
 
-      {renderFooter()}
+      <div className="flex items-center gap-6 mt-8">
+        <AsteriskIcon width={10} height={10} color={"#000"} />
+        <StatsIcon width={10} height={10} color={"#CCC"} />
+      </div>
+
+      <div className="flex flex-col mt-[52px]">
+        <Favorites favorites={user.favorites} bio={user.bio} />
+      </div>
     </div>
   );
 };
