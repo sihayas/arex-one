@@ -132,7 +132,7 @@ const Form = () => {
   );
 
   const renderAlbumSection = () => (
-    <div className="flex flex-col gap-4 p-6 w-full">
+    <div className="flex w-full flex-col gap-4 p-6">
       <Image
         id={selectedFormSound.sound.id}
         className="rounded-xl shadow-stars"
@@ -150,7 +150,7 @@ const Form = () => {
         {!inputValue ? (
           <div className="flex items-center">
             <ArrowIcon color={"#999"} width={16} height={16} />
-            <div className="text-xs text-gray1 px-1 rounded border border-silver w-fit font-semibold">
+            <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
               backspace
             </div>
           </div>
@@ -158,7 +158,7 @@ const Form = () => {
           <div></div>
         )}
         {/* Center / Names */}
-        <div className="flex flex-col gap-1 text-sm text-gray items-center">
+        <div className="flex flex-col items-center gap-1 text-sm text-gray">
           <div className="font-semibold line-clamp-1">
             {selectedFormSound.sound.attributes.name}
           </div>
@@ -168,23 +168,23 @@ const Form = () => {
         </div>
         {/* Right / Send */}
         {inputValue || rating > 0 ? (
-          <div className="justify-self-end flex flex-col items-end gap-1">
+          <div className="flex flex-col items-end gap-1 justify-self-end">
             <div className="flex items-center gap-2">
-              <div className="text-xs text-gray1 px-1 rounded border border-silver w-fit font-semibold">
+              <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
                 enter / send
               </div>
               <SendIcon color={"#999"} width={16} height={16} />
             </div>
             <div className="flex items-center gap-2">
-              <div className="text-xs text-gray1 px-1 rounded border border-silver w-fit font-semibold">
+              <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
                 ⌘ enter / send love
               </div>
               <SendIcon color={"#999"} width={16} height={16} />
             </div>
           </div>
         ) : (
-          <div className="justify-self-end flex items-center">
-            <div className="text-xs text-gray1 px-1 rounded border border-silver w-fit font-semibold">
+          <div className="flex items-center justify-self-end">
+            <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
               enter
             </div>
             <ArrowIcon
@@ -200,7 +200,7 @@ const Form = () => {
   );
 
   const renderSongSection = () => (
-    <div className="flex items-center gap-6 p-6 py-4 w-full relative">
+    <div className="relative flex w-full items-center gap-6 p-6 py-4">
       <Image
         id={selectedFormSound.sound.id}
         className="rounded-[6px] shadow-index"
@@ -211,7 +211,7 @@ const Form = () => {
         quality={100}
         draggable="false"
       />
-      <div className="flex items-center justify-between w-full">
+      <div className="flex w-full items-center justify-between">
         <div className="flex flex-col text-sm text-black">
           <div className="font-semibold">
             {selectedFormSound.sound.attributes.name}
@@ -227,21 +227,21 @@ const Form = () => {
         {inputValue || rating > 0 ? (
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <div className="text-xs text-gray1 px-1 rounded border border-silver w-fit font-semibold">
+              <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
                 enter / send
               </div>
               <SendIcon color={"#999"} width={16} height={16} />
             </div>
             <div className="flex items-center gap-2">
-              <div className="text-xs text-gray1 px-1 rounded border border-silver w-fit font-semibold">
+              <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
                 ⌘ enter / send love
               </div>
               <SendIcon color={"#999"} width={16} height={16} />
             </div>
           </div>
         ) : (
-          <div className="justify-self-end flex items-center">
-            <div className="text-xs text-gray1 px-1 rounded border border-silver w-fit font-semibold">
+          <div className="flex items-center justify-self-end">
+            <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
               enter
             </div>
             <ArrowIcon

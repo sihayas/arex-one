@@ -24,12 +24,12 @@ export default function Home() {
         <Head>
           <title>rx</title>
         </Head>
-        <div className="h-screen w-screen grid grid-cols-17 grid-rows-11 gap-8 m-8 ">
-          <div className="row-start-1 col-start-1 text-sm text-black font-medium">
+        <div className="m-8 grid h-screen w-screen gap-8 grid-cols-17 grid-rows-11">
+          <div className="col-start-1 row-start-1 text-sm font-medium text-black">
             AREX [alpha]
           </div>
-          <div className="flex flex-col row-start-1 col-start-2 col-span-5 text-sm justify-between ">
-            <div className="text-black tracking-widest">
+          <div className="col-span-5 col-start-2 row-start-1 flex flex-col justify-between text-sm">
+            <div className="tracking-widest text-black">
               A NETWORK FOR THE LOVE OF
               <span className="font-medium tracking-normal"> SOUND*</span>
             </div>
@@ -39,17 +39,17 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="row-start-3 col-start-3 col-span-5 self-end text-sm text-gray2 uppercase">
+          <div className="col-span-5 col-start-3 row-start-3 self-end text-sm uppercase text-gray2">
             MORE THAN JUST A FEED
           </div>
 
-          <div className="flex flex-col justify-evenly row-start-4 col-start-3 col-span-5 text-sm text-gray2 uppercase ">
+          <div className="col-span-5 col-start-3 row-start-4 flex flex-col justify-evenly text-sm uppercase text-gray2">
             <div className="">PLACE</div>
             <div className="">HOLD</div>
             <div className="">ER</div>
           </div>
 
-          <div className="row-start-5 row-span-1 col-start-3 col-span-4 items-end text-sm text-gray2 uppercase">
+          <div className="col-span-4 col-start-3 row-span-1 row-start-5 items-end text-sm uppercase text-gray2">
             <span className="text-black">AREX</span> exists for those few and
             far between, to revel in the shared love for the invisible waves
             that bind us.
@@ -57,7 +57,7 @@ export default function Home() {
           bind us. */}
           </div>
 
-          <div className="row-start-9 col-start-2 col-span-5 self-end text-sm text-gray2 uppercase">
+          <div className="col-span-5 col-start-2 self-end text-sm uppercase row-start-9 text-gray2">
             <Link data-active={isActive("/signup")} href="/api/auth/signin">
               CONNECT WITH <span className="text-red">APPLE MUSIC</span>...
             </Link>
@@ -73,7 +73,7 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="flex flex-col translate-x-12 translate-y-12 absolute z-20">
+      <div className="absolute z-20 flex translate-x-12 translate-y-12 flex-col">
         <UserAvatar
           className="border-2 border-[#F4F4F4]"
           imageSrc={session.user.image}
@@ -85,12 +85,12 @@ export default function Home() {
         <Line className="absolute translate-x-6" height="100vh" />
       </div>
 
-      <div className="flex flex-col overflow-scroll max-h-screen max-w-screen gap-10 p-12 pt-24 relative z-10">
+      <div className="relative z-10 flex max-h-screen flex-col gap-10 overflow-scroll p-12 pt-24 max-w-screen">
         <FeedUser userId={session.user.id} />
       </div>
 
       <div
-        className="fixed bottom-0 left-0 text-sm text-gray3 uppercase hover:text-red/60 cursor-pointer"
+        className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60"
         onClick={() => signOut()}
         onMouseOver={(e) => (e.currentTarget.textContent = "DISCONNECT")}
         onMouseOut={(e) => (e.currentTarget.textContent = "CONNECTED")}

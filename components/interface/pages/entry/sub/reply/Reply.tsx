@@ -55,7 +55,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
   return (
     <div>
       {isChild && reply.replyTo && (
-        <div className="flex flex-col items-center w-8">
+        <div className="flex w-8 flex-col items-center">
           {reply.rootReply && (
             <UserAvatar
               className="-mb-2"
@@ -94,7 +94,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
             userId={reply.author.id}
           />
           <Line height="33px" className="flex-grow" />
-          <div className="w-2 h-2 bg-gray3 rounded-full"></div>
+          <div className="h-2 w-2 rounded-full bg-gray3"></div>
         </div>
 
         <div className="flex flex-col">
@@ -121,12 +121,12 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
 //   reply.rootReply ? (
 //     <>
 //       {/* Chain Line Top  */}
-//       <Line className="flex flex-col flex-grow -mt-1 h-6 ml-[11px] -mb-1" />
+//       <Line className="-mt-1 -mb-1 flex h-6 flex-grow flex-col ml-[11px]" />
 
 //       {/* Root Reply  */}
-//       <div className="flex gap-2 items-end h-[25px] pb-1">
+//       <div className="flex items-end gap-2 pb-1 h-[25px]">
 //         {/* Avatar & Chain  */}
-//         <div className="min-w-[24px] translate-x-1 relative">
+//         <div className="relative translate-x-1 min-w-[24px]">
 //           {/* Chain Cap  */}
 //           {reply.rootReply ? (
 //             <ChainEndIcon
@@ -171,7 +171,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
 //     <>
 //       {/* Chain Line Top  */}
 //       {!reply.rootReply ? (
-//         <Line className="flex flex-grow flex-col h-6 ml-[11px] -mb-1 -mt-1" />
+//         <Line className="-mt-1 -mb-1 flex h-6 flex-grow flex-col ml-[11px]" />
 //       ) : null}
 
 //       {/* Parent Reply  */}
@@ -180,7 +180,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
 //           !reply.rootReply ? "h-[21px]" : ""
 //         }`}
 //       >
-//         <div className="min-w-[24px] translate-x-1 relative">
+//         <div className="relative translate-x-1 min-w-[24px]">
 //           <Line className="flex-grow -translate-y-1" />
 //           <UserAvatar
 //             imageSrc={
@@ -211,12 +211,12 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
 // {
 //   /* Like Count  */
 // }
-// <div className="absolute flex flex-col items-center right-[18px] -bottom-2">
+// <div className="absolute -bottom-2 flex flex-col items-center right-[18px]">
 //   <LikeButton handleLikeClick={handleLikeClick} liked={liked} />
 
 //   {/* Name  */}
 //   <div className="flex gap-2">
-//     <div className="w-[24px] flex flex-col translate-x-[11px]">
+//     <div className="flex flex-col w-[24px] translate-x-[11px]">
 //       <Line className={`flex-grow ${!isChild ? "" : "mt-1"}`} />
 //     </div>
 

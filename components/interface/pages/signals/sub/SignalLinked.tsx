@@ -12,9 +12,9 @@ const SignalInterlinked = ({ follows, date }: SignalInterlinkedProps) => {
   const timeSince = formatDistanceToNow(new Date(date));
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full h-full">
+    <div className="flex h-full w-full flex-col items-center gap-2">
       {/* notification time since */}
-      <div className="text-gray2 text-[10px] uppercase">{timeSince}</div>
+      <div className="uppercase text-gray2 text-[10px]">{timeSince}</div>
 
       {/* follower */}
       <UserAvatar

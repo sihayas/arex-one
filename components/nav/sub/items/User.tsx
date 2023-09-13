@@ -8,11 +8,11 @@ const User = ({ user }: { user: UserData }) => {
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full p-4  border-b border-silver"
+      className="w-full border-b p-4 border-silver"
       key={user.id}
       onSelect={handleUserClick}
     >
-      <div className="flex gap-4 items-center w-full">
+      <div className="flex w-full items-center gap-4">
         <Image
           id={user.id}
           className="rounded-full shadow-index"
@@ -23,7 +23,7 @@ const User = ({ user }: { user: UserData }) => {
           draggable="false"
         />
 
-        <div className="flex text-sm text-black font-medium">{user.name}</div>
+        <div className="flex text-sm font-medium text-black">{user.name}</div>
       </div>
     </Command.Item>
   );

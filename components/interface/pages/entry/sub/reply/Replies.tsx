@@ -54,7 +54,7 @@ function Replies({ reviewId }: RepliesProps) {
               <Fragment key={reply.id}>
                 {/* Render line or empty div based on conditions */}
                 {isRoot && prevIsRoot ? (
-                  <div className="flex flex-col items-center w-8">
+                  <div className="flex w-8 flex-col items-center">
                     <Line height="12px" />
                   </div>
                 ) : (

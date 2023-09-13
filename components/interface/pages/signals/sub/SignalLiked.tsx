@@ -34,8 +34,8 @@ const SignalLiked = ({ like, date }: SignalLikedProps) => {
   const timeSince = formatDistanceToNow(new Date(date));
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full h-full">
-      <div className="text-gray2 text-[10px] uppercase">{timeSince}</div>
+    <div className="flex h-full w-full flex-col items-center gap-2">
+      <div className="uppercase text-gray2 text-[10px]">{timeSince}</div>
 
       <Image
         className="rounded shadow-index"

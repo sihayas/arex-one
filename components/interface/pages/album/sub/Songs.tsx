@@ -22,13 +22,13 @@ const Songs: React.FC<SongsProps> = ({ songId, user }) => {
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
   return (
-    <div className="flex flex-col gap-8 pb-96 w-full h-full">
+    <div className="flex h-full w-full flex-col gap-8 pb-96">
       {flattenedReviews?.length > 0 ? (
         flattenedReviews.map((review) => (
           <EntryAlbum key={review.id} review={review} />
         ))
       ) : (
-        <div className="text-xs text-gray2 p-2 uppercase">
+        <div className="p-2 text-xs uppercase text-gray2">
           {/* surrender the sound */}
         </div>
       )}

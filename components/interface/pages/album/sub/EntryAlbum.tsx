@@ -38,7 +38,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   const handleEntryClick = useHandleEntryClick(review.id);
 
   return (
-    <div className="flex flex-col p-8 w-full pt-0">
+    <div className="flex w-full flex-col p-8 pt-0">
       {/* Rating & Content */}
       <div className="flex items-start gap-2 w-full bg-[#F4F4F4] p-4 max-w-[416px] rounded-[13px] relative">
         <div className="flex items-center">
@@ -81,7 +81,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           height={32}
           userId={review.author.id}
         />
-        <div className="text-sm text-gray2 font-medium">
+        <div className="text-sm font-medium text-gray2">
           {review.author.name}
         </div>
       </div>

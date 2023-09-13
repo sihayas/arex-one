@@ -13,7 +13,7 @@ const Song = ({ song }: { song: SongData }) => {
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full p-4  border-b border-silver"
+      className="w-full border-b p-4 border-silver"
       onSelect={() =>
         handleSelectSearch(
           document.getElementById(song.id) as HTMLImageElement,
@@ -23,7 +23,7 @@ const Song = ({ song }: { song: SongData }) => {
       }
       key={song.id}
     >
-      <div className="flex gap-4 items-center w-full">
+      <div className="flex w-full items-center gap-4">
         <Image
           id={song.id}
           className="rounded-lg shadow-index"
@@ -36,11 +36,11 @@ const Song = ({ song }: { song: SongData }) => {
 
         <div className="flex flex-col justify-center overflow-hidden">
           {/* Top */}
-          <div className="text-sm font-medium text-black text-ellipsis overflow-hidden whitespace-nowrap">
+          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-black">
             {song.attributes.name}
           </div>
           {/* Bottom */}
-          <div className="flex gap-[6px] items-center text-gray text-xs">
+          <div className="flex items-center text-xs gap-[6px] text-gray">
             <div className="line-clamp-1">{song.attributes.albumName}</div>
             <div>&ndash;</div>
             <div className="line-clamp-1">{song.attributes.artistName}</div>

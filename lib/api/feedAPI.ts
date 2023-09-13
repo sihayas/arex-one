@@ -35,7 +35,6 @@ export const fetchFeed = async (userId: string, page: number = 1) => {
   const res = await axios.get(
     `/api/feed/get/activities?userId=${userId}&page=${page}`
   );
-  console.log(res.data);
   return res.data;
 };
 

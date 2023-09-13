@@ -58,7 +58,7 @@ const Album = ({ scale }) => {
   return (
     <>
       {/* Top Section */}
-      <motion.div className="sticky -top-[318px] pt-4 z-20">
+      <motion.div className="sticky z-20 pt-4 -top-[318px]">
         <Image
           ref={scope}
           src={artworkUrl || "/public/images/default.png"}
@@ -70,21 +70,21 @@ const Album = ({ scale }) => {
           onDragStart={(e) => e.preventDefault()}
           style={{ boxShadow: boxShadow }}
         />
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col gap-2 w-full items-center justify-center">
+        <div className="absolute bottom-12 left-1/2 flex w-full -translate-x-1/2 transform flex-col items-center justify-center gap-2">
           <div className="flex flex-col items-center">
-            <div className="font-bold text-sm text-white">
+            <div className="text-sm font-bold text-white">
               {selectedSound.sound.attributes.name}
             </div>
-            <div className="font-medium text-sm text-white">
+            <div className="text-sm font-medium text-white">
               {selectedSound.sound.attributes.artistName}
             </div>
           </div>
 
           <div
-            className="w-12 h-12 rounded-full border border-white flex items-center justify-center"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-white"
             style={{ borderWidth: "1px" }}
           >
-            <span className="font-bold text-xl text-white"></span>
+            <span className="text-xl font-bold text-white"></span>
           </div>
 
           {/* Tab Bar */}
@@ -100,7 +100,7 @@ const Album = ({ scale }) => {
       </motion.div>
 
       {/* Section Two / Entries  */}
-      <div className="w-full h-full pb-96">
+      <div className="h-full w-full pb-96">
         {!activeTabId ? (
           <Albums albumId={selectedSound.sound.id} user={session!.user} />
         ) : (

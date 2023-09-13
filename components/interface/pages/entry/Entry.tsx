@@ -88,13 +88,13 @@ export const Entry = ({ translateY }: EntryProps) => {
       <EntryFull review={review} artworkUrl={artworkUrl} />
       <div
         onClick={handleOpenThreadsClick}
-        className="fixed flex flex-col items-center left-1/2 transform -translate-x-1/2 bottom-0 cursor-pointer z-10"
+        className="fixed bottom-0 left-1/2 z-10 flex -translate-x-1/2 transform cursor-pointer flex-col items-center"
       >
-        <div className="text-gray2 font-medium text-xs">
+        <div className="text-xs font-medium text-gray2">
           {review._count.replies} CHAINS
         </div>
         <ArrowIcon
-          className=" rotate-[90deg]"
+          className="rotate-[90deg]"
           width={24}
           height={24}
           color={"#ccc"}

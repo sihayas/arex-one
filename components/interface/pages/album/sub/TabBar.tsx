@@ -17,7 +17,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
   };
 
   return (
-    <div className="flex rounded-full overflow-scroll max-w-[448px] scrollbar-none bg-silver2 backdrop-blur-xl">
+    <div className="flex overflow-scroll rounded-full backdrop-blur-xl max-w-[448px] scrollbar-none bg-silver2">
       {/* Default button */}
       <button
         onClick={() => handleTabChange(null)}
@@ -31,7 +31,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
         {activeTab === null && (
           <motion.span
             layoutId="bubble"
-            className="absolute inset-0 z-10 bg-blurWhite mix-blend-difference"
+            className="absolute inset-0 z-10 mix-blend-difference bg-blurWhite"
             style={{ borderRadius: 9999 }}
             transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
           />
@@ -63,7 +63,7 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
           {activeTab === track.id && (
             <motion.span
               layoutId="bubble"
-              className="absolute inset-0 z-10 bg-blurWhite mix-blend-difference"
+              className="absolute inset-0 z-10 mix-blend-difference bg-blurWhite"
               style={{ borderRadius: 9999 }}
               transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
             />

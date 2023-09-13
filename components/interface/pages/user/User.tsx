@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 import { useQuery } from "@tanstack/react-query";
 import { useInterfaceContext } from "@/context/InterfaceContext";
@@ -13,8 +14,8 @@ import {
 } from "@/lib/api/userAPI";
 
 import Favorites from "./sub/Favorites";
-import Stats from "./sub/Stats";
 import UserAvatar from "@/components/global/UserAvatar";
+
 
 const User = () => {
   const { pages } = useInterfaceContext();
@@ -29,8 +30,16 @@ const User = () => {
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
 
   const [activeTab, setActiveTab] = useState<"stats" | "favorites">("favorites");
-  const handleStatsClick = () => setActiveTab("stats");
-  const handleFavoritesClick = () => setActiveTab("favorites");
+
+  const handleStatsClick = () => {
+    console.log("Stats Clicked");
+    setActiveTab("stats");
+  };
+  const handleFavoritesClick = () => {
+    console.log("Favorites Clicked");
+    setActiveTab("favorites");
+  };
+
 
   const { data: followStatus, refetch: refetchFollowStatus } = useQuery(
     ["followStatus", signedInUserId, userId],
@@ -38,15 +47,15 @@ const User = () => {
       signedInUserId && userId ? isUserFollowing(signedInUserId, userId) : null,
     {
       enabled: !!session,
+      onSuccess: (data) => {
+        if (data !== null) {
+          setFollowingAtoB(data.isFollowingAtoB);
+          setFollowingBtoA(data.isFollowingBtoA);
+        }
+      },
     }
   );
 
-  useEffect(() => {
-    if (followStatus !== null) {
-      setFollowingAtoB(followStatus.isFollowingAtoB);
-      setFollowingBtoA(followStatus.isFollowingBtoA);
-    }
-  }, [followStatus]);
 
 
   // Function to handle follow/unfollow
@@ -65,7 +74,7 @@ const User = () => {
         await follow(signedInUserId, userId);
         setFollowingAtoB(true);
       }
-      await refetchFollowStatus();
+      refetchFollowStatus();
     } catch (error) {
       console.error("Error following/unfollowing", error);
     } finally {
@@ -90,7 +99,7 @@ const User = () => {
   );
 
   let linkText = "LINK";
-  let linkColor = "#999";
+  let linkColor = "#CCC";
   if (followingAtoB && followingBtoA) {
     linkText = "INTERLINKED";
     linkColor = "#00FF00";
@@ -102,14 +111,21 @@ const User = () => {
     linkColor = "#FFEA00";
   }
 
+
   const renderFollowButton = () => (
-    <div className="flex gap-1 items-center justify-center ">
+    <div className="flex items-center justify-center absolute left-[50px] top-6">
       <div
-        className="w-[6px] h-[6px] rounded-full"
+        className="rounded-full w-[9px] h-[9px]"
         style={{ backgroundColor: linkColor }}
       />
+      {/* Horizontal Line */}
+        <div
+            className="w-[24px] h-[1px]"
+            style={{ backgroundColor: linkColor }}
+        />
+
       <button
-        className={`text-xs font-mono hover:underline transition-all duration-300${
+        className={`text-xs hover:underline transition-all duration-300${
           loadingFollow ? " pulse" : ""
         }`}
         style={{ color: linkColor }}
@@ -121,37 +137,61 @@ const User = () => {
   );
 
   return (
-      <div className="flex flex-col items-end p-8 w-full h-full relative">
+      <div className="flex gap-2 h-full w-full relative">
         {isLoading ? (
             <div>Loading...</div>
         ) : isError ? (
             <div>Error</div>
         ) : (
             <>
-              <div className="text-sm text-black font-semibold leading-3">@{user.name}</div>
-              <div className="text-xs text-gray3 uppercase leading-3 mt-[13px]">LAST PLAYED</div>
-              <div className="flex items-center gap-6 mt-[33px]">
-                <StatsIcon onClick={handleStatsClick} width={10} height={10} color={"#CCC"} />
-                <AsteriskIcon onClick={handleFavoritesClick} width={10} height={10} color={"#000"} />
-              </div>
-              <div className="flex flex-col mt-[44px] gap-7">
-                {activeTab === "favorites" ? (
-                    <Favorites favorites={user.favorites} />
-                ) : (
-                    <Stats />
-                )}
-              </div>
-              <div className="absolute left-2 top-2 flex items-center gap-2">
+              {/* Avatar / Follow*/}
+              <div className="flex flex-col h-full">
                 <UserAvatar
-                    className="shadow-md border border-none"
+                    className="border shadow-md z-10 ml-2 mt-2"
                     imageSrc={user.image}
                     altText={`${user.name}'s avatar`}
                     width={48}
                     height={48}
                     userId={user.id}
+                    style={{borderColor: linkColor}}
                 />
-                {renderFollowButton()}
+
+                <div className="ml-8 mt-6 tracking-tighter text-xl font-semibold">{user.name}</div>
+
+
+                {/*Essentials */}
+                <div className="flex flex-col mt-[43px] ml-8 h-full">
+                  <div className="flex gap-2">
+                    <Favorites favorites={user.favorites} />
+                  </div>
+                  <div className="text-gray3 text-xs leading-3 mt-[13px]">ESSENTIALS</div>
+                </div>
+
+                {/* Follow Button */}
+                {!isOwnProfile && renderFollowButton()}
               </div>
+
+
+
+              {/* Stats */}
+              <div className="flex flex-col ml-auto pr-8 pt-6 gap-8">
+              {/*  Joined */}
+                <div className="flex flex-col items-end w-full gap-[6px]">
+                  <div className="text-gray3 text-xs leading-3">RX SINCE</div>
+                  <div className="text-black text-sm leading-3">August</div>
+                </div>
+
+                <div className="flex flex-col items-end w-full gap-[6px]">
+                  <div className="text-gray3 text-xs">SOUNDS</div>
+                  <div className="text-black text-sm">{user._count.reviews}</div>
+                </div>
+                <div className="flex flex-col items-end w-full gap-[6px]">
+                  <div className="text-gray3 text-xs">LINKS</div>
+                  <div className="text-black text-sm">{user._count.followers}</div>
+                </div>
+              </div>
+
+
             </>
         )}
       </div>

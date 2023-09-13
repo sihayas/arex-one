@@ -33,7 +33,7 @@ export const useHandleEntryClick = (reviewId: string) => {
 
 // Handle User Click
 export const useHandleUserClick = (authorId: string) => {
-  const { setPages } = useInterfaceContext();
+  const { setPages, setIsVisible } = useInterfaceContext();
 
   const handleUserClick = () => {
     setPages((prevPages) => [
@@ -46,29 +46,14 @@ export const useHandleUserClick = (authorId: string) => {
         scrollPosition: 0,
       },
     ]);
+    setIsVisible(true);
   };
 
   return handleUserClick;
 };
 
 // Handle Signal Click
-export const useHandleSignalClick = () => {
-  const { setPages } = useInterfaceContext();
 
-  const handleSignalClick = () => {
-    setPages((prevPages) => [
-      ...prevPages,
-      {
-        key: uuidv4(),
-        name: "signals",
-        dimensions: { width: 96, height: 712 },
-        scrollPosition: 0,
-      },
-    ]);
-  };
-
-  return handleSignalClick;
-};
 
 // Handle Sound Click
 export const useHandleSoundClick = () => {

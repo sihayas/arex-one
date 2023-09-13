@@ -129,7 +129,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     };
   }, [animate, base.height, base.width, newHeight, newWidth, scope]);
 
-  console.log(pages);
 
   return (
     <motion.div

@@ -56,10 +56,10 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
   return (
     <div
       ref={entryContainerRef}
-      className="flex flex-col w-full p-8 z-10 bg-white rounded-[20px] overflow-scroll relative max-h-[724px] "
+      className="relative z-10 flex w-full flex-col overflow-scroll bg-white p-8 rounded-[20px] max-h-[724px]"
     >
       <Image
-        className="rounded-[12px] -z-10 ml-auto mb-[70px]"
+        className="-z-10 ml-auto rounded-[12px] mb-[70px]"
         style={{
           boxShadow: boxShadow,
         }}
@@ -71,24 +71,24 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
         draggable="false"
       />
       {/* Rating + Content*/}
-      <div className="flex items-center w-full relative">
-        <div className="absolute w-1 h-1 bg-white shadow-entry -top-1 -left-1 rounded-full" />
-        <div className="absolute w-3 h-3 bg-white shadow-entry -top-4 rounded-full" />
+      <div className="relative flex w-full items-center">
+        <div className="absolute -top-1 -left-1 h-1 w-1 rounded-full bg-white shadow-entry" />
+        <div className="absolute -top-4 h-3 w-3 rounded-full bg-white shadow-entry" />
         <LikeButton
-          className="absolute left-[10px] -top-[38px] bg-white p-[6px] pt-[7px] shadow-entry rounded-full"
+          className="absolute rounded-full bg-white left-[10px] -top-[38px] p-[6px] pt-[7px] shadow-entry"
           handleLikeClick={handleLikeClick}
           liked={liked}
           width={12}
           height={11}
         />
         <Stars
-          className="absolute bg-white shadow-entry p-1 rounded-full -top-[38px] left-[42px] flex items-center gap-1 text-xs pr-2"
+          className="absolute flex items-center gap-1 rounded-full bg-white p-1 pr-2 text-xs shadow-entry -top-[38px] left-[42px]"
           rating={review.rating}
           color={"#000"}
           soundName={review.album?.name || review.track?.name}
           artist={review.album?.artist || review.track?.album.artist}
         />
-        <div className="w-full px-4 py-3 shadow-entry rounded-2xl rounded-bl-[4px] text-sm text-black">
+        <div className="w-full rounded-2xl px-4 py-3 text-sm text-black shadow-entry rounded-bl-[4px]">
           <div className={`break-words  line-clamp-6`}>{review.content}</div>
         </div>
       </div>
@@ -109,10 +109,10 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
       </div>
 
       {/* Replies and Likes  */}
-      <div className="flex items-center gap-2  relative">
+      <div className="relative flex items-center gap-2">
         {/* Avatar previews */}
         {review.replies && review._count.replies > 0 && (
-          <div className="flex items-center ml-[28px] mt-1">
+          <div className="mt-1 flex items-center ml-[28px]">
             <StatLineIcon
               color={"#CCC"}
               width={10}
@@ -134,7 +134,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
             ))}
 
             {/* show count + word chain(s) */}
-            <div className="text-xs text-gray2 ml-2">
+            <div className="ml-2 text-xs text-gray2">
               {`${review._count.replies} CHAIN${
                 review._count.replies > 1 ? "S" : ""
               }`}
@@ -143,11 +143,11 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review, artworkUrl }) => {
         )}
         {/* Reply Count  */}
         {review._count.replies > 0 && review._count.likes > 0 && (
-          <div className="text-xs text-gray3 mt-1">+</div>
+          <div className="mt-1 text-xs text-gray3">+</div>
         )}
 
         {review.likes && review._count.likes > 0 && (
-          <div className="flex items-center text-xs text-gray2 mt-1">
+          <div className="mt-1 flex items-center text-xs text-gray2">
             {review._count.likes} {review._count.likes > 1 ? "HEARTS" : "HEART"}
           </div>
         )}
@@ -180,13 +180,13 @@ function formatDateShort(date: Date): string {
 }
 
 // <Stars
-//   className="fixed top-4 left-1/2 transform -translate-x-1/2  bg-stars p-1 rounded-full shadow-stars flex items-center gap-1 text-xs pr-2 border border-silver "
+//   className="fixed top-4 left-1/2 flex -translate-x-1/2 transform items-center gap-1 rounded-full border p-1 pr-2 text-xs bg-stars shadow-stars border-silver"
 //   rating={review.rating}
 //   color={"#000"}
 //   soundName={review.album?.name || review.track?.name}
 //   artist={review.album?.artist || review.track?.album.artist}
 // />
 //   {/* Date  */}
-//   <div className="text-gray2 text-xs ml-auto">
+//   <div className="ml-auto text-xs text-gray2">
 //     {formatDateShort(new Date(review.createdAt))}
 //   </div>

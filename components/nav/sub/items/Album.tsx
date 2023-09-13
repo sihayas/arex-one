@@ -13,7 +13,7 @@ const Album = ({ album }: { album: AlbumData }) => {
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full p-4  border-b border-silver"
+      className="w-full border-b p-4 border-silver"
       onSelect={() =>
         handleSelectSearch(
           document.getElementById(album.id) as HTMLImageElement,
@@ -22,7 +22,7 @@ const Album = ({ album }: { album: AlbumData }) => {
         )
       }
     >
-      <div className="flex gap-4 items-center w-full">
+      <div className="flex w-full items-center gap-4">
         <Image
           id={album.id}
           className="rounded-lg shadow-index"
@@ -37,7 +37,7 @@ const Album = ({ album }: { album: AlbumData }) => {
           <div className="text-sm font-medium text-black line-clamp-1">
             {album.attributes.name}
           </div>
-          <div className="flex gap-[6px] items-center text-gray text-xs">
+          <div className="flex items-center text-xs gap-[6px] text-gray">
             <div className="line-clamp-1">{album.attributes.artistName}</div>
             <div>&middot;</div>
             <div className="">{album.attributes.releaseDate.split("-")[0]}</div>

@@ -73,7 +73,7 @@
 //   };
 
 //   return (
-//     <div className="flex items-center w-full">
+//     <div className="flex w-full items-center">
 //       <TextareaAutosize
 //         className={`text-sm text-grey outline-none bg-transparent w-full resize-none`}
 //         value={replyContent}

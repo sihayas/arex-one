@@ -20,9 +20,9 @@ const Search = ({
   error,
 }: SearchProps) => {
   if (isInitialLoading || isFetching)
-    return <div className="text-xs absolute left-1/2 bottom-1/2">loading</div>;
+    return <div className="absolute bottom-1/2 left-1/2 text-xs">loading</div>;
   if (error)
-    return <div className="text-xs absolute left-1/2 bottom-1/2">Error</div>;
+    return <div className="absolute bottom-1/2 left-1/2 text-xs">Error</div>;
 
   const appleData = searchData?.appleData || {};
   const userData = searchData?.users || {};

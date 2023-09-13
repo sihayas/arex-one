@@ -35,8 +35,8 @@ const SignalReplied = ({ reply, date }: SignalRepliedProps) => {
   const timeSince = formatDistanceToNow(new Date(date));
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full h-full">
-      <div className="text-gray2 text-[10px] uppercase">{timeSince}</div>
+    <div className="flex h-full w-full flex-col items-center gap-2">
+      <div className="uppercase text-gray2 text-[10px]">{timeSince}</div>
 
       {/* album art */}
       <Image
@@ -50,7 +50,7 @@ const SignalReplied = ({ reply, date }: SignalRepliedProps) => {
 
       {/* Reply to a review = 3 dots, Reply to a Reply = 3 x 3 dots */}
       {reply.replyTo ? (
-        <div className="flex items-center gap-2 justify-between">
+        <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1">
             <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />
             <div className="w-[4px] h-[4px] rounded-full bg-[#000]" />

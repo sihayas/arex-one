@@ -82,7 +82,7 @@ const Nav: React.FC = () => {
 
   if (!session) {
     left = (
-      <div className="flex items-center justify-between rounded-full h-8">
+      <div className="flex h-8 items-center justify-between rounded-full">
         log in
       </div>
     );
@@ -99,7 +99,7 @@ const Nav: React.FC = () => {
         {/* Input Container */}
         <animated.div
           style={inputWidthStyle}
-          className="absolute flex flex-col justify-end bottom-[64px] right-[44px] bg-nav backdrop-blur-xl rounded-[22px] shadow-nav "
+          className="absolute flex flex-col justify-end backdrop-blur-xl bottom-[64px] right-[44px] bg-nav rounded-[22px] shadow-nav"
         >
           {/* Form / Search Results */}
           <animated.div
@@ -150,7 +150,7 @@ const Nav: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-16 z-50 bottom-0 right-0 fixed">{left}</div>
+    <div className="fixed right-0 bottom-0 z-50 flex h-16 flex-col">{left}</div>
   );
 };
 

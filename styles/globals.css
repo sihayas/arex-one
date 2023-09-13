@@ -47,7 +47,7 @@ a {
 }
 
 .animate-scale-down {
-  animation: scale-down 1.33s forwards;
+  animation: scale-down .33s forwards;
 }
 
 .animate-scale-up {
@@ -57,20 +57,24 @@ a {
 /* Scales down main content/feed */
 @keyframes scale-down {
   0% {
-    filter: blur(0px);
+    scale: 1;
+    opacity: 1;
   }
   100% {
-    filter: blur(24px);
+    scale: 0.98;
+    opacity: 0;
   }
 }
 
 /* Scales up / focuses main content/feed */
 @keyframes scale-up {
   0% {
-    filter: blur(24px);
+    scale: 0.98;
+    opacity: 0;
   }
   100% {
-    filter: blur(0px);
+    scale: 1;
+    opacity: 1;
   }
 }
 

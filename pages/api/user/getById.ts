@@ -54,9 +54,6 @@ export default async function handle(
                   },
                 },
               },
-              _count: {
-                select: { replies: true, likes: true },
-              },
             },
           },
           favorites: {
@@ -77,7 +74,7 @@ export default async function handle(
             },
           },
           _count: {
-            select: { reviews: true },
+            select: { reviews: true, followers: true },
           },
         },
       });
