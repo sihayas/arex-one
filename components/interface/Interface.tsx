@@ -26,8 +26,8 @@ const getDimensions = (pageName: PageName) => {
       target: { width: 480, height: 1056 }, // Placeholder values
     },
     user: {
-      base: { width: 532, height: 320 },
-      target: { width: 532, height: 320 }, // Placeholder values
+      base: { width: 640, height: 384 },
+      target: { width: 640, height: 384 }, // Placeholder values
     },
     entry: {
       base: { width: 480, height: 480 },
@@ -189,7 +189,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-0 shadow-2xl`}
+          className={`flex items-start justify-center rounded-[32px] bg-white overflow-hidden z-0 shadow-2xl`}
         >
           {/* Base layout / dimensions for a page */}
           <div

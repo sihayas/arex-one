@@ -27,7 +27,6 @@ export const fetchFeedAndMergeAlbums = async (
     }
   });
 
-  console.log(feedData);
   return feedData;
 };
 

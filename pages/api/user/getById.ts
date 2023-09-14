@@ -12,12 +12,30 @@ export default async function handle(
       ? req.query.sessionUserId
       : undefined;
 
+  // Exit early if no user ID is provided
   if (!sessionUserId) {
     return res.status(400).json({ error: "User ID is required." });
   }
 
   if (req.method === "GET") {
     try {
+      const followAtoB = await prisma.follows.findFirst({
+        where: {
+          followerId: String(sessionUserId),
+          followingId: String(id),
+        },
+      });
+
+      const followBtoA = await prisma.follows.findFirst({
+        where: {
+          followerId: String(id),
+          followingId: String(sessionUserId),
+        },
+      });
+
+      const isFollowingAtoB = followAtoB != null;
+      const isFollowingBtoA = followBtoA != null;
+
       const distinctAlbumIds = await prisma.review.findMany({
         where: { authorId: String(id) },
         distinct: ["albumId"],
@@ -35,7 +53,7 @@ export default async function handle(
               id: true,
               content: true,
               author: true,
-              albumId: true,
+              album: true,
               rating: true,
               // check if user has liked
               likes: {
@@ -43,34 +61,22 @@ export default async function handle(
                 where: { authorId: sessionUserId },
               },
               // include 2 reply images
-              replies: {
-                take: 2,
-                select: {
-                  author: {
-                    select: {
-                      image: true,
-                      name: true,
-                    },
-                  },
-                },
-              },
+              // replies: {
+              //   take: 2,
+              //   select: {
+              //     author: {
+              //       select: {
+              //         image: true,
+              //         name: true,
+              //       },
+              //     },
+              //   },
+              // },
             },
           },
           favorites: {
             include: {
               album: true,
-            },
-          },
-          // Include 3 followers and their images
-          followers: {
-            take: 3,
-            select: {
-              follower: {
-                select: {
-                  image: true,
-                  name: true,
-                },
-              },
             },
           },
           _count: {
@@ -80,8 +86,10 @@ export default async function handle(
       });
 
       if (user) {
-        const userWithLikes = {
+        const userWithLikesAndFollowStatus = {
           ...user,
+          isFollowingAtoB,
+          isFollowingBtoA,
           reviews: user.reviews.map((review) => {
             return {
               ...review,
@@ -91,7 +99,7 @@ export default async function handle(
           uniqueAlbumCount,
         };
 
-        res.status(200).json(userWithLikes);
+        res.status(200).json(userWithLikesAndFollowStatus);
       }
     } catch (error) {
       console.error("Error fetching user:", error);
