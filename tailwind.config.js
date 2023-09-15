@@ -18,6 +18,7 @@ module.exports = {
           "0px 0px 0px 0px rgba(0, 0, 0, 0.12), 4px 9px 22px 0px rgba(0, 0, 0, 0.11), 15px 37px 40px 0px rgba(0, 0, 0, 0.10), 35px 84px 55px 0px rgba(0, 0, 0, 0.06), 62px 149px 65px 0px rgba(0, 0, 0, 0.02), 97px 233px 71px 0px rgba(0, 0, 0, 0.00);",
         feedArt:
           "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
+        soundtrackArt: ";",
       },
       colors: {
         black: "#333333",
