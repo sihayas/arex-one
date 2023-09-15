@@ -31,12 +31,12 @@ const SoundtrackItem = ({ albumData, containerRef }: SoundtrackItemProps) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["0 0", "1 0"], // top of target to bottom of container, top of target to center of container
-    // the higher u make the 2nd value the earlier the animation starts from the bottom of the scrol
+    offset: ["0 2.1", "0 1.61"],
     container: containerRef,
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [0.29, 1]);
+  const scaleSpring = useSpring(scale);
 
   const url = GenerateArtworkUrl(albumData.attributes.artwork.url, "555");
 
@@ -45,7 +45,7 @@ const SoundtrackItem = ({ albumData, containerRef }: SoundtrackItemProps) => {
   });
 
   return (
-    <div ref={ref} className="flex justify-between">
+    <div className="flex justify-between">
       <div className="flex flex-col gap-[6px]">
         <div className="text-black leading-3 text-sm">
           {albumData.attributes.name}
@@ -57,10 +57,11 @@ const SoundtrackItem = ({ albumData, containerRef }: SoundtrackItemProps) => {
       <motion.div
         style={{
           display: "flex",
-          scale: scale,
+          scale: scaleSpring,
         }}
       >
         <Image
+          ref={ref}
           className="rounded-[8px] shadow-md"
           src={url || "/images/default.webp"}
           alt="artwork"
@@ -85,7 +86,7 @@ const Soundtrack = ({ sounds }: SoundtrackProps) => {
   return (
     <div
       ref={containerRef}
-      className="flex flex-col w-full overflow-scroll h-full"
+      className="flex flex-col w-full overflow-scroll h-full pt-[81px] px-8 pb-8 gap-8"
     >
       {data?.map((albumData: AlbumData, index: number) => (
         <SoundtrackItem
