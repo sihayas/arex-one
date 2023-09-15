@@ -74,13 +74,13 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.width, target.width]
+    [base.width, target.width],
   );
 
   const newHeight = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.height, target.height]
+    [base.height, target.height],
   );
 
   // Shapeshift on page change.
@@ -128,7 +128,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       unsubWidth();
     };
   }, [animate, base.height, base.width, newHeight, newWidth, scope]);
-
 
   return (
     <motion.div
@@ -189,7 +188,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-[32px] bg-white overflow-hidden z-0 shadow-2xl`}
+          className={`flex items-start justify-center rounded-[32px] bg-white overflow-hidden z-0 shadow-2xl border border-silver`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -209,7 +208,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           </div>
         </motion.div>
 
-         {/*<Nav />*/}
+        {/*<Nav />*/}
       </Command>
     </motion.div>
   );

@@ -147,7 +147,7 @@ model Review {
   @@index([trackId])
 }
 
-//Diary is just review without text, Rating is just a rating score no tags + no listened (obvious), no comments
+// Diary is just review without text, Rating is just a rating score no tags + no listened (obvious), no comments
 
 model Like {
   activities Activity[]

@@ -1,21 +1,21 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-
 
 import { useQuery } from "@tanstack/react-query";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import ParticlesComponent from "@/components/interface/pages/user/sub/ParticlesComponent";
 
-
-import {
-  follow,
-  unfollow,
-  getUserById,
-} from "@/lib/api/userAPI";
+import { follow, unfollow, getUserById } from "@/lib/api/userAPI";
 
 import Favorites from "./sub/Favorites";
 import UserAvatar from "@/components/global/UserAvatar";
+import Soundtrack from "@/components/interface/pages/user/sub/Soundtrack";
 
+const linkProps = {
+  INTERLINKED: { text: "INTERLINKED", color: "#00FF00" },
+  LINKED: { text: "LINKED", color: "#000" },
+  INTERLINK: { text: "INTERLINK", color: "#FFEA00" },
+  LINK: { text: "LINK", color: "#CCC" },
+};
 
 const User = () => {
   const { pages } = useInterfaceContext();
@@ -29,22 +29,26 @@ const User = () => {
   const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
 
+  const [activeTab, setActiveTab] = useState<"profile" | "soundtrack">(
+    "profile",
+  );
+
+  const handleSoundtrackClick = () => {
+    setActiveTab("soundtrack");
+  };
+
   // Handle follow/unfollow
   const handleFollow = async () => {
     if (!sessionUserId || !userId) {
       console.log("User is not signed in or user to follow/unfollow not found");
       return;
     }
-
     setLoadingFollow(true);
     try {
-      if (followingAtoB) {
-        await unfollow(sessionUserId, userId);
-        setFollowingAtoB(false);
-      } else {
-        await follow(sessionUserId, userId);
-        setFollowingAtoB(true);
-      }
+      followingAtoB
+        ? await unfollow(sessionUserId, userId)
+        : await follow(sessionUserId, userId);
+      setFollowingAtoB(!followingAtoB);
     } catch (error) {
       console.error("Error following/unfollowing", error);
     } finally {
@@ -57,12 +61,9 @@ const User = () => {
     data: user,
     isLoading,
     isError,
-  } = useQuery(
-    ["user", userId],
-    () => {
-      return getUserById(userId, sessionUserId!);
-    }
-  );
+  } = useQuery(["user", userId], () => {
+    return getUserById(userId, sessionUserId!);
+  });
 
   useEffect(() => {
     if (user) {
@@ -71,18 +72,16 @@ const User = () => {
     }
   }, [user]);
 
-  let linkText = "LINK";
-  let linkColor = "#CCC";
-  if (followingAtoB && followingBtoA) {
-    linkText = "INTERLINKED";
-    linkColor = "#00FF00";
-  } else if (followingAtoB) {
-    linkText = "LINKED";
-    linkColor = "#000";
-  } else if (followingBtoA) {
-    linkText = "INTERLINK";
-    linkColor = "#FFEA00";
-  }
+  const linkStatus =
+    followingAtoB && followingBtoA
+      ? "INTERLINKED"
+      : followingAtoB
+      ? "LINKED"
+      : followingBtoA
+      ? "INTERLINK"
+      : "LINK";
+
+  const { text: linkText, color: linkColor } = linkProps[linkStatus];
 
   const renderFollowButton = () => (
     <div className="flex items-center justify-center absolute left-[50px] top-6">
@@ -91,14 +90,14 @@ const User = () => {
         style={{ backgroundColor: linkColor }}
       />
       {/* Horizontal Line */}
-        <div
-            className="w-[24px] h-[1px]"
-            style={{ backgroundColor: linkColor }}
-        />
+      <div
+        className="w-[24px] h-[1px]"
+        style={{ backgroundColor: linkColor }}
+      />
 
       <button
-        className={`text-xs hover:underline transition-all duration-300${
-          loadingFollow ? " pulse" : ""
+        className={`text-xs hover:underline transition-all duration-300 ${
+          loadingFollow ? "pulse" : ""
         }`}
         style={{ color: linkColor }}
         onClick={handleFollow}
@@ -108,62 +107,68 @@ const User = () => {
     </div>
   );
 
-  return (
-      <div className="flex gap-2 h-full w-full relative">
-        {isLoading ? (
-            <div>Loading...</div>
-        ) : isError ? (
-            <div>Error</div>
-        ) : (
-            <>
-              {/* Avatar / Favorites*/}
-              <div className="flex flex-col h-full">
-                <UserAvatar
-                    className="border border-silver z-10 ml-2 mt-2"
-                    imageSrc={user.image}
-                    altText={`${user.name}'s avatar`}
-                    width={88}
-                    height={88}
-                    userId={user.id}
-                    // style={{borderColor: linkColor}}
-                />
+  console.log("user", user);
+  return activeTab === "profile" ? (
+    <div className="flex gap-2 h-full w-full relative">
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : isError ? (
+        <div>Error</div>
+      ) : (
+        <>
+          <UserAvatar
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border border-silver z-10"
+            imageSrc={user.image}
+            altText={`${user.name}'s avatar`}
+            width={88}
+            height={88}
+            userId={user.id}
+          />
+          {/* Essentials */}
+          <div className="flex flex-col ml-8 mt-[160px] h-full">
+            <h1 className="text-gray3 text-xs leading-3 font-medium">
+              ESSENTIALS
+            </h1>
+            <div className="flex flex-col gap-8 mt-5">
+              <Favorites favorites={user.favorites} />
+            </div>
+            {/* Follow Button */}
+            {!isOwnProfile && renderFollowButton()}
+          </div>
 
-                {/*Essentials */}
-                <div className="flex flex-col ml-8 mt-16 h-full">
-                  <div className="text-gray3 text-xs leading-3 font-medium">ESSENTIALS</div>
-                  <div className="flex flex-col gap-8 mt-5">
-                    <Favorites favorites={user.favorites} />
-                  </div>
-                </div>
-
-
-                {/* Follow Button */}
-                {!isOwnProfile && renderFollowButton()}
+          {/* Stats */}
+          <div className="flex flex-col ml-auto gap-8 pt-8 pr-8">
+            {/* Joined */}
+            <div className="flex flex-col items-end w-full gap-[6px]">
+              <div className="text-gray3 text-xs leading-3 font-medium">
+                EVERSINCE
               </div>
-
-              {/* Stats */}
-              <div className="flex flex-col ml-auto gap-8 pt-8 pr-8">
-                {/*  Joined */}
-                <div className="flex flex-col items-end w-full gap-[6px]">
-                  <div className="text-gray3 text-xs leading-3 font-medium">RX SINCE</div>
-                  <div className="text-black text-sm leading-3">August</div>
-                </div>
-
-                <div className="flex flex-col items-end w-full gap-[6px]">
-                  <div className="text-gray3 text-xs font-medium">SOUNDS</div>
-                  <div className="text-black text-sm">{user._count.reviews}</div>
-                </div>
-                <div className="flex flex-col items-end w-full gap-[6px]">
-                  <div className="text-gray3 text-xs font-medium">LINKS</div>
-                  <div className="text-black text-sm">{user._count.followers}</div>
-                </div>
+              <div className="text-black text-sm leading-3">August</div>
+            </div>
+            {/* Sounds */}
+            <div className="flex flex-col items-end w-full gap-[6px]">
+              <div
+                onClick={handleSoundtrackClick}
+                className="text-gray3 text-xs font-medium cursor-pointer"
+              >
+                SOUNDS
               </div>
-              {/*<div className="absolute bottom-8 left-8 tracking-tighter text-xl font-semibold text-black">@{user.name}</div>*/}
-            </>
-        )}
-      </div>
+              <div className="text-black text-sm">
+                {user.uniqueAlbums.length}
+              </div>
+            </div>
+            {/* Links */}
+            <div className="flex flex-col items-end w-full gap-[6px]">
+              <div className="text-gray3 text-xs font-medium">LINKS</div>
+              <div className="text-black text-sm">{user._count.followers}</div>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  ) : (
+    activeTab === "soundtrack" && <Soundtrack sounds={user.uniqueAlbums} />
   );
-
 };
 
 export default User;

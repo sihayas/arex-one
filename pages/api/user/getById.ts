@@ -19,6 +19,8 @@ export default async function handle(
 
   if (req.method === "GET") {
     try {
+
+      // Check user's following status
       const followAtoB = await prisma.follows.findFirst({
         where: {
           followerId: String(sessionUserId),
@@ -36,12 +38,15 @@ export default async function handle(
       const isFollowingAtoB = followAtoB != null;
       const isFollowingBtoA = followBtoA != null;
 
-      const distinctAlbumIds = await prisma.review.findMany({
+      // Grab distinct sounds from user's reviews sorted by most recent
+      const uniqueAlbums = await prisma.review.findMany({
         where: { authorId: String(id) },
+        select: { albumId: true},
+        orderBy: {
+          createdAt: 'desc'
+        },
         distinct: ["albumId"],
-        select: { albumId: true },
       });
-      const uniqueAlbumCount = distinctAlbumIds.length;
 
       const user = await prisma.user.findUnique({
         where: {
@@ -60,18 +65,6 @@ export default async function handle(
                 select: { id: true },
                 where: { authorId: sessionUserId },
               },
-              // include 2 reply images
-              // replies: {
-              //   take: 2,
-              //   select: {
-              //     author: {
-              //       select: {
-              //         image: true,
-              //         name: true,
-              //       },
-              //     },
-              //   },
-              // },
             },
           },
           favorites: {
@@ -96,7 +89,7 @@ export default async function handle(
               likedByUser: review.likes.length > 0,
             };
           }),
-          uniqueAlbumCount,
+          uniqueAlbums,
         };
 
         res.status(200).json(userWithLikesAndFollowStatus);
