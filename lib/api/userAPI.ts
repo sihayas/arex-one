@@ -6,7 +6,7 @@ export const follow = async (followerId: string, followingId: string) => {
 
 export const unfollow = async (followerId: string, followingId: string) => {
   await axios.delete(
-    `/api/user/unfollow?followerId=${followerId}&followingId=${followingId}`
+    `/api/user/unfollow?followerId=${followerId}&followingId=${followingId}`,
   );
 };
 
@@ -21,6 +21,12 @@ export const fetchNotificationsForUser = async (userId: string) => {
     throw new Error("user id is required");
   }
   const url = `/api/user/getNotifications?userId=${userId}`;
+  const response = await axios.get(url);
+  return response.data;
+};
+
+export const getSoundtrack = async (userId: string) => {
+  const url = `/api/user/getSoundtrack?userId=${userId}`;
   const response = await axios.get(url);
   return response.data;
 };

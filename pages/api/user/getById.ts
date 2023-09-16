@@ -3,7 +3,7 @@ import { prisma } from "../../../lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { id } = req.query;
 
@@ -19,8 +19,7 @@ export default async function handle(
 
   if (req.method === "GET") {
     try {
-
-      // Check user's following status
+      // Is the signed-in user following the user whose profile they're viewing?
       const followAtoB = await prisma.follows.findFirst({
         where: {
           followerId: String(sessionUserId),
@@ -28,6 +27,7 @@ export default async function handle(
         },
       });
 
+      // Is the user whose profile is being viewed following the signed-in user?
       const followBtoA = await prisma.follows.findFirst({
         where: {
           followerId: String(id),
@@ -38,35 +38,24 @@ export default async function handle(
       const isFollowingAtoB = followAtoB != null;
       const isFollowingBtoA = followBtoA != null;
 
-      // Grab distinct sounds from user's reviews sorted by most recent
-      const uniqueAlbums = await prisma.review.findMany({
-        where: { authorId: String(id) },
-        select: { albumId: true},
-        orderBy: {
-          createdAt: 'desc'
-        },
-        distinct: ["albumId"],
-      });
-
       const user = await prisma.user.findUnique({
         where: {
           id: String(id),
         },
         include: {
-          reviews: {
-            select: {
-              id: true,
-              content: true,
-              author: true,
-              album: true,
-              rating: true,
-              // check if user has liked
-              likes: {
-                select: { id: true },
-                where: { authorId: sessionUserId },
-              },
-            },
-          },
+          // reviews: {
+          //   select: {
+          //     id: true,
+          //     content: true,
+          //     author: true,
+          //     album: true,
+          //     rating: true,
+          //     likes: {
+          //       select: { id: true },
+          //       where: { authorId: sessionUserId },
+          //     },
+          //   },
+          // },
           favorites: {
             include: {
               album: true,
@@ -78,18 +67,24 @@ export default async function handle(
         },
       });
 
+      // Fetch the uniqueAlbums count
+      const uniqueAlbums = await prisma.review.groupBy({
+        by: ["albumId"],
+        where: { authorId: String(id) },
+        _count: {
+          albumId: true,
+        },
+      });
+
       if (user) {
         const userWithLikesAndFollowStatus = {
           ...user,
           isFollowingAtoB,
           isFollowingBtoA,
-          reviews: user.reviews.map((review) => {
-            return {
-              ...review,
-              likedByUser: review.likes.length > 0,
-            };
-          }),
-          uniqueAlbums,
+          _count: {
+            ...user._count, // existing counts for reviews and followers
+          },
+          uniqueAlbums: uniqueAlbums, // adding the new count here
         };
 
         res.status(200).json(userWithLikesAndFollowStatus);
