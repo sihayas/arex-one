@@ -188,7 +188,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-[32px] bg-white overflow-hidden z-0 shadow-2xl`}
+          className={`flex items-start justify-center rounded-[32px] bg-white overflow-hidden z-0 border border-silver`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -208,7 +208,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           </div>
         </motion.div>
 
-        <Nav />
+        {/*<Nav />*/}
       </Command>
     </motion.div>
   );

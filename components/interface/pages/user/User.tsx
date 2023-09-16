@@ -38,7 +38,7 @@ const User = () => {
 
   const handleSoundtrackClick = () => {
     setActiveTab("soundtrack");
-    setImageProps({ x: "-19rem", y: "-200%", scale: 0.64 }); // Change these values as you like
+    setImageProps({ x: "-20rem", y: "-12rem", scale: 0.64 }); // Change these values as you like
   };
 
   const handleImageClick = () => {
@@ -55,7 +55,7 @@ const User = () => {
       ) : (
         <>
           <motion.div
-            className="absolute left-1/2 top-1/2 z-20 rounded-full overflow-hidden"
+            className="absolute left-1/2 top-1/2 z-20 rounded-full overflow-hidden border border-silver"
             initial={{
               x: imageProps.x,
               y: imageProps.y,
@@ -69,7 +69,7 @@ const User = () => {
             transition={{
               type: "spring",
               stiffness: 400,
-              damping: 45,
+              damping: 40,
             }}
           >
             <Image

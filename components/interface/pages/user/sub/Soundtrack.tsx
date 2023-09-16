@@ -34,7 +34,7 @@ const SoundtrackItem = ({
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["0 1.89", "0 1.2"],
+    offset: ["0 2.3", "0 1.2"],
     // Bug, offset considers container at the top of the screen always. So we need to offset the offset
     container: containerRef,
   });
