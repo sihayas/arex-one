@@ -48,11 +48,11 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     inputRef,
     setStoredInputValue,
     setExpandInput,
+    scrollContainerRef,
   } = useInterfaceContext();
 
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
     useSound();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Page Tracker
   const activePage: Page = pages[pages.length - 1];
@@ -68,9 +68,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   });
   const maxScroll = 64;
 
-  // Shapeshift while scrolling through a page.
+  // Shapeshift album art while scrolling through album page.
   const scale = useTransform(scrollY, [0, 64], [1, 0.9375]);
 
+  // Shift width and height of shape-shifter/window while scrolling towards target.
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
@@ -87,6 +88,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
+    // Initial window dimension shift towards target page
     animate(scope.current, {
       width: `${base.width}px`,
       height: `${base.height}px`,
@@ -97,6 +99,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       },
     });
 
+    // Animate dimensions on page ~scroll~, listens for changes via unsub method below
     const shiftWidth = () => {
       animate(scope.current, {
         width: newWidth.get(),
@@ -108,7 +111,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       });
     };
 
-    // Animate dimensions on page ~scroll~
+    // Animate dimensions on page ~scroll~, listens for changes via unsub method below
     const shiftHeight = () => {
       animate(scope.current, {
         height: newHeight.get(),
@@ -201,7 +204,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className="flex flex-col items-center overflow-scroll w-full h-full relative scrollbar-none z-10"
+              className="flex flex-col overflow-scroll w-full h-full scrollbar-none z-10 snap-mandatory snap-y"
             >
               <ActiveComponent scale={scale} />
             </div>

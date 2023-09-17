@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useContext, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { SelectedSound } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
 
@@ -6,20 +12,11 @@ export type Page = {
   key: string;
   name: string;
   selectedSound?: SelectedSound;
-  threadcrumbs?: string[];
   user?: string;
   scrollPosition: number;
   dimensions: {
     width: number;
     height: number;
-  };
-  translate?: {
-    x: number;
-    y: number;
-  };
-  scale?: {
-    x: number;
-    y: number;
   };
 };
 
@@ -38,6 +35,7 @@ export type InterfaceContext = {
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   storedInputValue: string;
   setStoredInputValue: React.Dispatch<React.SetStateAction<string>>;
+  scrollContainerRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 // Define the props for the InterfaceProvider component
@@ -64,14 +62,17 @@ export const InterfaceContextProvider = ({
   children,
 }: InterfaceContextProviderProps) => {
   const { data: session, status } = useSession();
-
   const [isVisible, setIsVisible] = useState(false);
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Input states
   const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
 
+  // Page states
   const [pages, setPages] = useState<Page[]>([]);
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
@@ -137,6 +138,7 @@ export const InterfaceContextProvider = ({
         setInputValue,
         storedInputValue,
         setStoredInputValue,
+        scrollContainerRef,
       }}
     >
       {children}

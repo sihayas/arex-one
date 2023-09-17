@@ -52,9 +52,6 @@ export const useHandleUserClick = (authorId: string) => {
   return handleUserClick;
 };
 
-// Handle Signal Click
-
-
 // Handle Sound Click
 export const useHandleSoundClick = () => {
   const { getDominantColor } = useDominantColor();
@@ -66,7 +63,7 @@ export const useHandleSoundClick = () => {
   const handleSelectSound = async (
     imgElement: HTMLImageElement,
     sound: AlbumData | SongData,
-    artworkUrl: string
+    artworkUrl: string,
   ) => {
     const colors = getDominantColor(imgElement);
 

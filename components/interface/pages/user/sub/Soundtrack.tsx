@@ -8,6 +8,7 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { getSoundtrack } from "@/lib/api/userAPI";
 import Stars from "@/components/global/Stars";
 import format from "date-fns/format";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 type SoundtrackData = {
   albumId: string;
@@ -22,21 +23,21 @@ type SoundtrackItemProps = {
   albumData: AlbumData; // existing album data
   rating: number; // new field for rating
   createdAt: string; // new field for created date
-  containerRef: React.MutableRefObject<null>;
 };
 
 const SoundtrackItem = ({
   albumData,
-  containerRef,
   rating,
   createdAt,
 }: SoundtrackItemProps) => {
+  const { scrollContainerRef } = useInterfaceContext();
+
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["0 2.3", "0 1.2"],
     // Bug, offset considers container at the top of the screen always. So we need to offset the offset
-    container: containerRef,
+    container: scrollContainerRef,
   });
 
   // Plays the animation in reverse when exiting the offset
@@ -72,7 +73,7 @@ const SoundtrackItem = ({
   const url = GenerateArtworkUrl(albumData.attributes.artwork.url, "720");
 
   return (
-    <motion.div className="flex justify-between snap-center gap-4">
+    <motion.div className="flex justify-between snap-center gap-4 p-8 py-0">
       {/* Names */}
       <motion.div
         style={{
@@ -121,8 +122,6 @@ const SoundtrackItem = ({
 };
 
 const Soundtrack = ({ userId }: { userId: string }) => {
-  const containerRef = useRef(null);
-
   const {
     data: mergedData,
     isLoading,
@@ -152,10 +151,7 @@ const Soundtrack = ({ userId }: { userId: string }) => {
   });
 
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col w-full overflow-scroll h-full pt-[81px] px-8 pb-8 snap-mandatory snap-y"
-    >
+    <>
       {isLoading ? (
         <p>Loading...</p>
       ) : isError ? (
@@ -167,11 +163,10 @@ const Soundtrack = ({ userId }: { userId: string }) => {
             rating={item.rating}
             createdAt={item.createdAt}
             albumData={item.albumDetails}
-            containerRef={containerRef}
           />
         ))
       )}
-    </div>
+    </>
   );
 };
 
