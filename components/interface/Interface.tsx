@@ -71,7 +71,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Shapeshift album art while scrolling through album page.
   const scale = useTransform(scrollY, [0, 64], [1, 0.9375]);
 
-  // Shift width and height of shape-shifter/window while scrolling towards target.
+  // Shift width and height of shape-shifter/window while scrolling
+  // towards four score and seven years ago our fathers brought forth on
+  // this target okay okay okay
+  // target.
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
@@ -99,7 +102,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       },
     });
 
-    // Animate dimensions on page ~scroll~, listens for changes via unsub method below
+    // Animate dimensions on page ~scroll~, listens for changes via unsub
+    // method below
     const shiftWidth = () => {
       animate(scope.current, {
         width: newWidth.get(),
@@ -191,7 +195,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-[32px] bg-white overflow-hidden z-0 border border-silver`}
+          className={`flex items-start justify-center rounded-[32px] bg-white overflow-hidden z-0 shadow-interface outline-1 outline-lightSilver`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -204,7 +208,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className="flex flex-col overflow-scroll w-full h-full scrollbar-none z-10 snap-mandatory snap-y"
+              className={`flex flex-col items-center overflow-scroll
+               w-full h-full scrollbar-none z-10 ${
+                 activePage.name === "user"
+                   ? "snap-mandatory snap-y"
+                   : "flex-col"
+               }`}
             >
               <ActiveComponent scale={scale} />
             </div>

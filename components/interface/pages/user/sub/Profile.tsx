@@ -80,9 +80,9 @@ const Profile: React.FC<ProfileProps> = ({
   return (
     <>
       {/* Essentials */}
-      <div className="flex flex-col ml-8 pt-[160px] h-full">
+      <div className="flex flex-col ml-8 pt-[180px] h-full">
         <h1 className="text-gray3 text-xs leading-3 font-medium">ESSENTIALS</h1>
-        <div className="flex flex-col gap-8 mt-5">
+        <div className="flex flex-col gap-8 mt-[6px]">
           <Favorites favorites={userData.favorites} />
         </div>
         {/* Follow Button */}

@@ -41,10 +41,10 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
   return (
     <div className="flex items-end">
       {/* Attribution / Left Side */}
-      <div className="flex flex-row-reverse items-center gap-2 pb-2">
+      <div className="flex flex-row-reverse items-center gap-2 pb-10">
         <EntryBlob width={13} height={47} fill={"#F4F4F4"} />
         <UserAvatar
-          className="border-4 border-white"
+          className="outline outline-white !border-none"
           imageSrc={review.author.image}
           altText={`${review.author.name}'s avatar`}
           width={48}
@@ -53,33 +53,43 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         />
       </div>
       {/* Entry / Right Side */}
-      <div className="flex flex-col w-full bg-[#F4F4F4] p-4 max-w-[340px] rounded-[13px] relative p-4">
-        {/* Artwork */}
-        <Artwork album={album} />
-        {/* Rating & Names */}
-        <div className="grid items-center mt-4 relative mb-2">
-          <Stars
-            className="absolute top-1/2 transform -translate-y-1/2 bg-[#767680] bg-opacity-10 p-[6px] rounded-full self-center"
-            rating={review.rating}
-            color={"rgba(60, 60, 67, 0.6)"}
-          />
+      <div className="flex flex-col max-w-[340px]">
+        {/*Entry Content*/}
+        <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4">
+          {/* Artwork */}
+          <Artwork album={album} />
+          {/* Rating & Names */}
+          <div className="grid items-center mt-4 relative mb-2">
+            <Stars
+              className="absolute top-1/2 transform -translate-y-1/2 bg-[#767680] bg-opacity-10 p-[6px] rounded-full self-center"
+              rating={review.rating}
+              color={"rgba(60, 60, 67, 0.6)"}
+            />
 
-          <div className="flex flex-col text-gray4 gap-1 w-full">
-            <p className="font-medium leading-3 text-sm text-center">
-              {album.attributes.name}
-            </p>
-            <p className="leading-3 text-xs text-center">
-              {album.attributes.artistName}
-            </p>
+            <div className="flex flex-col text-gray4 gap-1 w-full">
+              <p className="font-medium leading-3 text-sm text-center">
+                {album.attributes.name}
+              </p>
+              <p className="leading-3 text-xs text-center">
+                {album.attributes.artistName}
+              </p>
+            </div>
+          </div>
+
+          {/* Content*/}
+          <div
+            onClick={handleEntryClick}
+            className={`break-words line-clamp-6 w-full text-sm text-gray4`}
+          >
+            {review.content}
           </div>
         </div>
-
-        {/* Content*/}
-        <div
-          onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-gray4`}
-        >
-          {review.content}
+        {/* Attribution */}
+        <div className="flex justify-between items-center p-4 pt-1">
+          <p className="text-gray2 text-sm">{review.author.name}</p>
+          <p className="text-sm text-gray2">
+            {formatDateShort(new Date(review.createdAt))}
+          </p>
         </div>
       </div>
     </div>
