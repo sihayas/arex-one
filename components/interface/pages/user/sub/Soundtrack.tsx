@@ -63,7 +63,10 @@ const SoundtrackItem = ({
   const shadow = useTransform(
     modifiedProgress,
     [0, 1],
-    ["0px 0px 0px 0px rgba(0,0,0,0)", "0px 1px 24px 0px rgba(0, 0, 0, 0.25)"],
+    [
+      "0px 0px 0px 0px rgba(0,0,0,0)",
+      "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
+    ],
   );
 
   const url = GenerateArtworkUrl(albumData.attributes.artwork.url, "720");

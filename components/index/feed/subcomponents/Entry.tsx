@@ -33,14 +33,14 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
     "/api/review/post/like",
     "reviewId",
     review.id,
-    session
+    session,
   );
 
   const handleEntryClick = useHandleEntryClick(review.id);
 
   return (
     <div className="flex items-end">
-      {/* Attribution */}
+      {/* Attribution / Left Side */}
       <div className="flex flex-row-reverse items-center gap-2 pb-2">
         <EntryBlob width={13} height={47} fill={"#F4F4F4"} />
         <UserAvatar
@@ -52,27 +52,32 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           userId={review.author.id}
         />
       </div>
-      <div className="flex flex-col w-full bg-[#F4F4F4] p-4 max-w-[416px] rounded-[13px] relative">
-        {/* Artwork & Entry  */}
+      {/* Entry / Right Side */}
+      <div className="flex flex-col w-full bg-[#F4F4F4] p-4 max-w-[340px] rounded-[13px] relative p-4">
+        {/* Artwork */}
         <Artwork album={album} />
-        {/* Rating & Info */}
-        <div className="flex items-center gap-2 pt-4">
+        {/* Rating & Names */}
+        <div className="grid items-center mt-4 relative mb-2">
           <Stars
-            className="bg-[#767680] bg-opacity-10 p-[6px] rounded-full flex items-center gap-1"
+            className="absolute top-1/2 transform -translate-y-1/2 bg-[#767680] bg-opacity-10 p-[6px] rounded-full self-center"
             rating={review.rating}
             color={"rgba(60, 60, 67, 0.6)"}
           />
-          <div className="flex text-sm text-gray4 gap-1">
-            <p className="font-medium">{album.attributes.name}</p>
-            &middot;
-            <p>{album.attributes.artistName}</p>
+
+          <div className="flex flex-col text-gray4 gap-1 w-full">
+            <p className="font-medium leading-3 text-sm text-center">
+              {album.attributes.name}
+            </p>
+            <p className="leading-3 text-xs text-center">
+              {album.attributes.artistName}
+            </p>
           </div>
         </div>
 
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`pl-[38px] break-words line-clamp-6 w-full text-sm text-gray4`}
+          className={`break-words line-clamp-6 w-full text-sm text-gray4`}
         >
           {review.content}
         </div>
