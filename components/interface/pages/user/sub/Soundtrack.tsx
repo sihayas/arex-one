@@ -1,3 +1,4 @@
+// Fetches user sound history.
 import React from "react";
 
 import { useQuery } from "@tanstack/react-query";
@@ -5,7 +6,7 @@ import { getAlbumsByIds } from "@/lib/global/musicKit";
 import { AlbumData } from "@/lib/global/interfaces";
 import { getSoundtrack } from "@/lib/api/userAPI";
 
-import SoundtrackItem from "./SoundtrackItem";
+import SoundtrackItem from "./components/SoundtrackItem";
 
 type SoundtrackData = {
   albumId: string;

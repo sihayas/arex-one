@@ -1,15 +1,15 @@
-// ParticlesComponent.tsx
+// ProfileParticles.tsx
 import React, { useCallback } from "react";
 import type { Container, Engine } from "tsparticles-engine";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { loadPerlinNoisePath } from "tsparticles-path-perlin-noise";
 
-interface ParticlesComponentProps {
+interface ProfileParticlesProps {
   colors: string[][];
 }
 
-const ParticlesComponent: React.FC<ParticlesComponentProps> = ({ colors }) => {
+const ProfileParticles: React.FC<ProfileParticlesProps> = ({ colors }) => {
   // Default colors
   const defaultColors = [
     "rgb(29, 20, 48)",
@@ -128,4 +128,4 @@ const ParticlesComponent: React.FC<ParticlesComponentProps> = ({ colors }) => {
   );
 };
 
-export default ParticlesComponent;
+export default ProfileParticles;
