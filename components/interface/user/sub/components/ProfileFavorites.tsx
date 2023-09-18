@@ -5,7 +5,7 @@ import { getAlbumsByIds } from "@/lib/global/musicKit";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { AlbumData } from "@/lib/global/interfaces";
 import ColorThief from "colorthief";
-import ProfileParticles from "@/components/interface/pages/user/sub/components/ProfileParticles";
+import ProfileParticles from "@/components/interface/user/sub/components/ProfileParticles";
 
 type FavoriteItemProps = {
   albumData: AlbumData;

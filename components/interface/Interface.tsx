@@ -5,9 +5,9 @@ import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { Command } from "cmdk";
 import Nav from "@/components/nav/Nav";
 
-import Album from "./pages/album/Album";
-import Entry from "./pages/entry/Entry";
-import User from "./pages/user/User";
+import Album from "@/components/interface/album/Album";
+import Entry from "@/components/interface/entry/Entry";
+import User from "@/components/interface/user/User";
 
 import { motion, useAnimate, useScroll, useTransform } from "framer-motion";
 

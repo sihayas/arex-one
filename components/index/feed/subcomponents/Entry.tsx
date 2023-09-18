@@ -33,7 +33,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
     "/api/review/post/like",
     "reviewId",
     review.id,
-    session,
+    session
   );
 
   const handleEntryClick = useHandleEntryClick(review.id);
@@ -57,29 +57,30 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         {/*Entry Content*/}
         <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4">
           {/* Artwork */}
-          <Artwork album={album} />
-          {/* Rating & Names */}
-          <div className="grid items-center mt-4 relative mb-2">
+          <div className="relative">
+            <Artwork album={album} />
             <Stars
-              className="absolute top-1/2 transform -translate-y-1/2 bg-[#767680] bg-opacity-10 p-[6px] rounded-full self-center"
+              className="absolute -bottom-2 -left-2 bg-[#E5E5E6] p-[6px] rounded-full shadow-sm"
               rating={review.rating}
-              color={"rgba(60, 60, 67, 0.6)"}
+              color={"#808084"}
             />
-
-            <div className="flex flex-col text-gray4 gap-1 w-full">
-              <p className="font-medium leading-3 text-sm text-center">
-                {album.attributes.name}
-              </p>
-              <p className="leading-3 text-xs text-center">
+          </div>
+          {/* Rating & Names */}
+          <div className="flex mt-[22px] items-start relative gap-2">
+            <div className="flex flex-col gap-1">
+              <div className="font-medium text-xs text-gray4 leading-none">
                 {album.attributes.artistName}
-              </p>
+              </div>
+              <div className="font-medium text-sm text-gray4 leading-none">
+                {album.attributes.name}
+              </div>
             </div>
           </div>
 
           {/* Content*/}
           <div
             onClick={handleEntryClick}
-            className={`break-words line-clamp-6 w-full text-sm text-gray4`}
+            className={`break-words line-clamp-6 w-full text-sm text-gray4 mt-[5px] leading-normal`}
           >
             {review.content}
           </div>
@@ -87,9 +88,6 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         {/* Attribution */}
         <div className="flex justify-between items-center p-4 pt-1">
           <p className="text-gray2 text-sm">{review.author.name}</p>
-          <p className="text-sm text-gray2">
-            {formatDateShort(new Date(review.createdAt))}
-          </p>
         </div>
       </div>
     </div>

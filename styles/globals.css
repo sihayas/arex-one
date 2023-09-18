@@ -2,6 +2,7 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+
 :root {
   --size: 1500;
   --cmdk-shadow: 0 16px 70px rgb(0 0 0 / 20%);
@@ -40,6 +41,8 @@ a {
   user-select: none;
   /* cursor: none; */
   -webkit-font-smoothing: antialiased;
+  margin: 0;
+    padding: 0;
 }
 
 #main-content {

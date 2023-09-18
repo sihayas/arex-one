@@ -7,7 +7,7 @@ import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 import { ReplyData } from "@/lib/global/interfaces";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
-import Line from "@/components/interface/pages/entry/sub/icons/Line";
+import Line from "@/components/interface/entry/sub/icons/Line";
 
 interface ReplyProps {
   reply: ReplyData;
@@ -49,7 +49,7 @@ export default function Reply({ reply, setSelectedReply }: ReplyProps) {
     "/api/reply/post/like",
     "replyId",
     reply.id,
-    session
+    session,
   );
 
   return (

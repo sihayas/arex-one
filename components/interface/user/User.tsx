@@ -8,8 +8,8 @@ import { motion } from "framer-motion";
 
 import UserAvatar from "@/components/global/UserAvatar";
 
-import Soundtrack from "@/components/interface/pages/user/sub/Soundtrack";
-import Profile from "@/components/interface/pages/user/sub/Profile";
+import Soundtrack from "@/components/interface/user/sub/Soundtrack";
+import Profile from "@/components/interface/user/sub/Profile";
 import { getUserById } from "@/lib/api/userAPI";
 
 const User = () => {

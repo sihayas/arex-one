@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { SpringValue } from "@react-spring/web";
 
 import { EntryFull } from "./sub/EntryFull";
-import { ReviewData } from "../../../../lib/global/interfaces";
+import { ReviewData } from "@/lib/global/interfaces";
 import { ArrowIcon } from "@/components/icons";
 import RenderReplies from "./sub/reply/RenderReplies";
 
@@ -47,13 +47,13 @@ export const Entry = ({ translateY }: EntryProps) => {
     ["review", reviewId, session?.user?.id],
     async () => {
       const response: AxiosResponse<ReviewData> = await axios.get(
-        `/api/review/get/byId?id=${reviewId}&userId=${session?.user?.id || ""}`
+        `/api/review/get/byId?id=${reviewId}&userId=${session?.user?.id || ""}`,
       );
       return response.data;
     },
     {
       enabled: !!reviewId,
-    }
+    },
   );
 
   // Set default reply parent
@@ -74,7 +74,7 @@ export const Entry = ({ translateY }: EntryProps) => {
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
     review?.albumId,
     "726",
-    "albumId"
+    "albumId",
   );
 
   const handleOpenThreadsClick = () => {

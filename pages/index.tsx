@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import FeedUser from "@/components/index/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
-import Line from "@/components/interface/pages/entry/sub/icons/Line";
+import Line from "@/components/interface/entry/sub/icons/Line";
 
 export default function Home() {
   const { data: session, status } = useSession();
