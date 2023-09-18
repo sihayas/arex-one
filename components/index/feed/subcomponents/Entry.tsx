@@ -18,6 +18,7 @@ import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
 import { EntryBlob } from "@/components/icons";
+import Line from "@/components/interface/entry/sub/icons/Line";
 
 interface EntryProps {
   review: ReviewData;
@@ -57,18 +58,16 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         {/*Entry Content*/}
         <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4">
           {/* Artwork */}
-          <div className="relative">
-            <Artwork album={album} />
+          <Artwork album={album} />
+          {/* Rating & Names */}
+          <div className="flex mt-4 items-start relative gap-2">
             <Stars
-              className="absolute -bottom-2 -left-2 bg-[#E5E5E6] p-[6px] rounded-full shadow-sm"
+              className=" bg-[#E5E5E6] p-[6px] rounded-full"
               rating={review.rating}
               color={"#808084"}
             />
-          </div>
-          {/* Rating & Names */}
-          <div className="flex mt-[22px] items-start relative gap-2">
             <div className="flex flex-col gap-1">
-              <div className="font-medium text-xs text-gray4 leading-none">
+              <div className="text-xs text-gray4 leading-none">
                 {album.attributes.artistName}
               </div>
               <div className="font-medium text-sm text-gray4 leading-none">
@@ -80,14 +79,16 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           {/* Content*/}
           <div
             onClick={handleEntryClick}
-            className={`break-words line-clamp-6 w-full text-sm text-gray4 mt-[5px] leading-normal`}
+            className={`break-words line-clamp-6 w-full text-sm text-gray4 mt-[5px] leading-normal pl-9`}
           >
             {review.content}
           </div>
         </div>
         {/* Attribution */}
-        <div className="flex justify-between items-center p-4 pt-1">
-          <p className="text-gray2 text-sm">{review.author.name}</p>
+        <div className="flex justify-between items-center p-4 pt-[2px]">
+          <p className="text-gray2 text-sm leading-none">
+            {review.author.name}
+          </p>
         </div>
       </div>
     </div>
