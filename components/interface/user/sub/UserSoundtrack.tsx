@@ -51,7 +51,7 @@ const UserSoundtrack = ({ userId }: { userId: string }) => {
   return (
     <div
       ref={containerRef}
-      className="flex flex-col w-1/2 overflow-scroll h-full pt-[52px] snap-mandatory snap-y"
+      className="flex flex-col w-1/2 overflow-scroll h-full pt-8 gap-8"
     >
       {isLoading ? (
         <p>Loading...</p>
