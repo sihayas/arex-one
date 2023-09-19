@@ -60,24 +60,20 @@ a {
 /* Scales down main content/feed */
 @keyframes scale-down {
   0% {
-    scale: 1;
-    opacity: 1;
+    filter: blur(0);
   }
   100% {
-    scale: 0.98;
-    opacity: 0;
+    filter: blur(24px);
   }
 }
 
 /* Scales up / focuses main content/feed */
 @keyframes scale-up {
   0% {
-    scale: 0.98;
-    opacity: 0;
+    filter: blur(10px);
   }
   100% {
-    scale: 1;
-    opacity: 1;
+    filter: blur(0);
   }
 }
 

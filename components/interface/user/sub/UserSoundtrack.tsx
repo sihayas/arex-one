@@ -1,5 +1,5 @@
 // Fetches user sound history.
-import React from "react";
+import React, { useRef } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumsByIds } from "@/lib/global/musicKit";
@@ -17,7 +17,9 @@ type ExtendedSoundtrackData = SoundtrackData & {
   albumDetails: AlbumData;
 };
 
-const Soundtrack = ({ userId }: { userId: string }) => {
+const UserSoundtrack = ({ userId }: { userId: string }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const {
     data: mergedData,
     isLoading,
@@ -47,7 +49,10 @@ const Soundtrack = ({ userId }: { userId: string }) => {
   });
 
   return (
-    <>
+    <div
+      ref={containerRef}
+      className="flex flex-col w-1/2 overflow-scroll h-full pt-[52px] snap-mandatory snap-y"
+    >
       {isLoading ? (
         <p>Loading...</p>
       ) : isError ? (
@@ -59,11 +64,12 @@ const Soundtrack = ({ userId }: { userId: string }) => {
             rating={item.rating}
             createdAt={item.createdAt}
             albumData={item.albumDetails}
+            containerRef={containerRef}
           />
         ))
       )}
-    </>
+    </div>
   );
 };
 
-export default Soundtrack;
+export default UserSoundtrack;

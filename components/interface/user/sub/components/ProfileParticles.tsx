@@ -33,11 +33,11 @@ const ProfileParticles: React.FC<ProfileParticlesProps> = ({ colors }) => {
   return (
     <div
       style={{
-        width: "320px",
-        height: "320px",
+        width: "1280px",
+        height: "384px",
         position: "absolute",
         zIndex: -1,
-        filter: "blur(60px)",
+        filter: "blur(80px)",
         top: "50%",
         right: "128px",
         transform: "translate(0, -50%)",
@@ -54,7 +54,7 @@ const ProfileParticles: React.FC<ProfileParticlesProps> = ({ colors }) => {
               value: preparedColors,
             },
             number: {
-              value: 9,
+              value: 12,
               density: {
                 enable: false,
                 area: 5000,
@@ -68,7 +68,7 @@ const ProfileParticles: React.FC<ProfileParticlesProps> = ({ colors }) => {
               value: 1,
             },
             size: {
-              value: 120,
+              value: 40,
             },
             move: {
               enable: true,

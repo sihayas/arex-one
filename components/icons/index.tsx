@@ -238,13 +238,14 @@ export function ArrowIcon({ ...props }) {
     <svg
       className={props.className}
       xmlns="http://www.w3.org/2000/svg"
+      width={5}
+      height={9}
       fill="none"
-      viewBox="0 0 16 16"
       {...props}
     >
       <path
-        fill={props.color}
-        d="M10.5 4a.5.5 0 0 1-.1.4L6.7 8l3.7 3.6a.5.5 0 1 1-.8.8l-4-4a.5.5 0 0 1 0-.8l4-4a.5.5 0 0 1 .9.4Z"
+        fill="#CCC"
+        d="M0 .498a.493.493 0 0 0 .143.35L3.74 4.439.143 8.031a.495.495 0 0 0 .7.7l3.941-3.942a.493.493 0 0 0 0-.7L.843.148A.493.493 0 0 0 0 .498Z"
       />
     </svg>
   );

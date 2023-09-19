@@ -26,8 +26,8 @@ const getDimensions = (pageName: PageName) => {
       target: { width: 480, height: 1056 }, // Placeholder values
     },
     user: {
-      base: { width: 640, height: 384 },
-      target: { width: 640, height: 384 }, // Placeholder values
+      base: { width: 384, height: 512 },
+      target: { width: 384, height: 512 }, // Placeholder values
     },
     entry: {
       base: { width: 480, height: 480 },
@@ -195,7 +195,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-[32px] bg-white overflow-hidden z-0 shadow-interface outline-1 outline-lightSilver`}
+          className={`flex items-start justify-center rounded-[20px] bg-white/80 overflow-hidden z-0 shadow-interface border border-silver`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -209,11 +209,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             <div
               ref={scrollContainerRef}
               className={`flex flex-col items-center overflow-scroll
-               w-full h-full scrollbar-none z-10 ${
-                 activePage.name === "user"
-                   ? "snap-mandatory snap-y"
-                   : "flex-col"
-               }`}
+               w-full h-full scrollbar-none z-10`}
             >
               <ActiveComponent scale={scale} />
             </div>
