@@ -6,7 +6,7 @@ import { getAlbumsByIds } from "@/lib/global/musicKit";
 import { AlbumData } from "@/lib/global/interfaces";
 import { getSoundtrack } from "@/lib/api/userAPI";
 
-import SoundtrackItem from "./components/SoundtrackItem";
+import Item from "./components/Item";
 import format from "date-fns/format";
 
 type SoundtrackData = {
@@ -77,11 +77,10 @@ const Soundtrack = ({ userId }: { userId: string }) => {
                   {currentMonth}
                 </h2>
               )}
-              <SoundtrackItem
+              <Item
                 rating={item.rating}
                 createdAt={item.createdAt}
                 albumData={item.albumDetails}
-                containerRef={containerRef}
               />
             </Fragment>
           );

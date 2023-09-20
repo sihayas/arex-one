@@ -7,19 +7,13 @@ import format from "date-fns/format";
 import Stars from "@/components/global/Stars";
 import Image from "next/image";
 
-type SoundtrackItemProps = {
+type ItemProps = {
   albumData: AlbumData;
   rating: number;
   createdAt: string;
-  containerRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
-const SoundtrackItem = ({
-  albumData,
-  rating,
-  createdAt,
-  containerRef,
-}: SoundtrackItemProps) => {
+const Item = ({ albumData, rating, createdAt }: ItemProps) => {
   const ref = useRef(null);
 
   const url = GenerateArtworkUrl(albumData.attributes.artwork.url, "160");
@@ -33,7 +27,7 @@ const SoundtrackItem = ({
           rating={rating}
           color={"rgba(60, 60, 67, 0.6)"}
         />
-        <div className="flex flex-col items-end gap-[10px]">
+        <div className="flex flex-col items-end gap-[6px]">
           <div className="text-gray2 leading-none text-xs w-[192px] line-clamp-1">
             {albumData.attributes.artistName}
           </div>
@@ -58,4 +52,4 @@ const SoundtrackItem = ({
   );
 };
 
-export default SoundtrackItem;
+export default Item;
