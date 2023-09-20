@@ -11,10 +11,10 @@ import { motion, useAnimate, useMotionValueEvent } from "framer-motion";
 import TabBar from "./sub/TabBar";
 import Songs from "./sub/Songs";
 
-const Album = ({ scale }) => {
+const Album = ({ scale }: any) => {
   // Hooks
   const { selectedSound } = useSound();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const [activeTabId, setActiveTabId] = useState<string | null>(null);
 

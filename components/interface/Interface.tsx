@@ -69,7 +69,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const maxScroll = 64;
 
   // Shapeshift album art while scrolling through album page.
-  const scale = useTransform(scrollY, [0, 64], [1, 0.9375]);
+  const scale = useTransform(scrollY, [0, 64], [1, 0.8]);
 
   // Shift width and height of shape-shifter/window while scrolling
   // towards four score and seven years ago our fathers brought forth on

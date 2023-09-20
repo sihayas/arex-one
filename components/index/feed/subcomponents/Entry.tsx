@@ -34,7 +34,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
     "/api/review/post/like",
     "reviewId",
     review.id,
-    session
+    session,
   );
 
   const handleEntryClick = useHandleEntryClick(review.id);
@@ -60,13 +60,13 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           {/* Artwork */}
           <Artwork album={album} />
           {/* Rating & Names */}
-          <div className="flex mt-4 items-start relative gap-2">
+          <div className="flex items-center relative gap-2 mt-4">
             <Stars
-              className=" bg-[#E5E5E6] p-[6px] rounded-full"
+              className="bg-[#E5E5E6] p-2 rounded-full"
               rating={review.rating}
               color={"#808084"}
             />
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col justify-center gap-[6px]">
               <div className="text-xs text-gray4 leading-none">
                 {album.attributes.artistName}
               </div>
@@ -76,16 +76,24 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
             </div>
           </div>
 
+          {/* Line */}
+          <Line
+            className="ml-auto mt-[14px] -mr-4 rounded-full"
+            width={"288px"}
+            height={"1px"}
+            color={"rgba(0, 0, 0, 0.05)"}
+          />
+
           {/* Content*/}
           <div
             onClick={handleEntryClick}
-            className={`break-words line-clamp-6 w-full text-sm text-gray4 mt-[5px] leading-normal pl-9`}
+            className={`break-words line-clamp-6 w-full text-sm text-gray4 mt-[3px] leading-normal pl-9`}
           >
             {review.content}
           </div>
         </div>
         {/* Attribution */}
-        <div className="flex justify-between items-center p-4 pt-[2px]">
+        <div className="flex justify-between items-center p-4 pt-[6px]">
           <p className="text-gray2 text-sm leading-none">
             {review.author.name}
           </p>

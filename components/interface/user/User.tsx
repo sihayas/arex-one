@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 
 import Soundtrack from "@/components/interface/user/sub/Soundtrack";
 import { follow, getUserById, unfollow } from "@/lib/api/userAPI";
-import { UserData } from "@/lib/global/interfaces";
 import Essentials from "@/components/interface/user/sub/components/Essentials";
 import { ArrowIcon } from "@/components/icons";
 
@@ -23,10 +22,12 @@ const User = () => {
   const { data: session } = useSession();
   const { pages } = useInterfaceContext();
 
+  // User IDs
   const authenticatedUserId = session?.user.id;
   const pageUserId = pages[pages.length - 1].key;
   const isOwnProfile = authenticatedUserId === pageUserId;
 
+  // Store following status
   const [followingAtoB, setFollowingAtoB] = useState<boolean | null>(null);
   const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
   const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
@@ -46,6 +47,7 @@ const User = () => {
     "profile",
   );
 
+  // Get user data
   const {
     data: user,
     isLoading,
