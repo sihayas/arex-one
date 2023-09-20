@@ -5,7 +5,7 @@ import { getAlbumsByIds } from "@/lib/global/musicKit";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { AlbumData } from "@/lib/global/interfaces";
 import ColorThief from "colorthief";
-import ProfileParticles from "@/components/interface/user/sub/components/ProfileParticles";
+import Particle from "@/components/interface/user/sub/components/Particle";
 
 type EssentialItemProps = {
   albumData: AlbumData;
@@ -34,8 +34,15 @@ const EssentialItem: React.FC<EssentialItemProps> = ({
       <div className="flex flex-col gap-[10px]">
         <div className="flex items-center gap-2">
           <svg width="10" height="10">
-            <rect width="10" height="10" style={{ fill: svgColor }} />
+            <rect
+              width="10"
+              height="10"
+              rx="2"
+              ry="2"
+              style={{ fill: svgColor }}
+            />
           </svg>
+
           <div className="text-black leading-none text-sm">{name}</div>
         </div>
         <div className="pl-[18px] text-gray2 leading-none text-xs">
@@ -46,8 +53,8 @@ const EssentialItem: React.FC<EssentialItemProps> = ({
         className="absolute rounded-[8px] shadow-md opacity-0 top-1/2 transform -translate-y-1/2 right-[128px]"
         src={url || "/images/default.webp"}
         alt="artwork"
-        width={320}
-        height={320}
+        width={1}
+        height={1}
         quality={100}
         onLoadingComplete={(img) => handlePaletteGenerated(img)}
       />
@@ -55,7 +62,7 @@ const EssentialItem: React.FC<EssentialItemProps> = ({
   );
 };
 
-interface ProfileEssentialsProps {
+interface EssentialsProps {
   favorites: {
     album: {
       id: string;
@@ -63,7 +70,7 @@ interface ProfileEssentialsProps {
   }[];
 }
 
-const ProfileEssentials: React.FC<ProfileEssentialsProps> = ({ favorites }) => {
+const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {
   const [colors, setColors] = useState<string[][]>([]);
   const albumIds = favorites.map((fav) => fav.album.id);
   const { data, isLoading } = useQuery(["albums", albumIds], () =>
@@ -79,7 +86,7 @@ const ProfileEssentials: React.FC<ProfileEssentialsProps> = ({ favorites }) => {
 
   return (
     <div className="flex flex-col mt-[19px] gap-7">
-      <ProfileParticles colors={colors} />
+      <Particle colors={colors} />
       {isLoading ? (
         <div>Loading...</div>
       ) : (
@@ -95,4 +102,4 @@ const ProfileEssentials: React.FC<ProfileEssentialsProps> = ({ favorites }) => {
   );
 };
 
-export default ProfileEssentials;
+export default Essentials;

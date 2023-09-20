@@ -24,17 +24,16 @@ const SoundtrackItem = ({
 
   const url = GenerateArtworkUrl(albumData.attributes.artwork.url, "160");
 
-  console.log(containerRef);
   return (
-    <div className="flex justify-between items-start px-8 w-full">
+    <div className="flex justify-between items-center px-8 w-full">
       {/* Names & Rating */}
       <div className="flex gap-2 items-center">
         <Stars
-          className="bg-[#767680] bg-opacity-10 p-[6px] rounded-full flex items-center gap-1"
+          className="bg-[#767680] bg-opacity-10 p-[6px] rounded-full flex items-center gap-1 border border-lightSilver"
           rating={rating}
           color={"rgba(60, 60, 67, 0.6)"}
         />
-        <div className="flex flex-col gap-[2px]">
+        <div className="flex flex-col items-end gap-[10px]">
           <div className="text-gray2 leading-none text-xs w-[192px] line-clamp-1">
             {albumData.attributes.artistName}
           </div>
@@ -46,11 +45,11 @@ const SoundtrackItem = ({
       {/* Artwork */}
       <motion.div>
         <Image
-          className="rounded-md"
+          className="rounded-[8px] border border-silver"
           ref={ref}
           src={url || "/images/default.webp"}
           alt="artwork"
-          width={65}
+          width={64}
           height={64}
           quality={100}
         />

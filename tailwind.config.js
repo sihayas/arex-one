@@ -14,7 +14,7 @@ module.exports = {
         nav: "0px 0px 20px 0px rgba(0, 0, 0, 0.09)",
         album:
           "0px 0px 0px 0px rgba(0, 0, 0, 0.11), 0px 6px 14px 0px rgba(0, 0, 0, 0.11), 0px 26px 26px 0px rgba(0, 0, 0, 0.10), 0px 58px 35px 0px rgba(0, 0, 0, 0.06), 0px 103px 41px 0px rgba(0, 0, 0, 0.02), 0px 161px 45px 0px rgba(0, 0, 0, 0.00)",
-        interface: "0px 1px 4px 0px rgba(0, 0, 0, 0.04)",
+        interface: "0px 1px 16px 0px rgba(0, 0, 0, 0.04)",
         feedArt:
           "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
       },
@@ -25,7 +25,7 @@ module.exports = {
         gray2: "#999999",
         gray3: "#CCCCCC",
         gray4: "rgba(60, 60, 67, 0.6)",
-        silver: "rgba(0, 0, 0, 0.05)",
+        silver: "rgba(0, 0, 0, 0.1)",
         lightSilver: "rgba(0, 0, 0, 0.02)",
         blurWhite: "rgba(255, 255, 255, 0.2)",
         blurDark: "rgba(0, 0, 0, 0.8)",
