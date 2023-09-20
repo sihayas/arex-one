@@ -23,6 +23,16 @@ export default function Home() {
       <Layout>
         <Head>
           <title>rx</title>
+          <meta
+            name="theme-color"
+            content="#1a5d8d"
+            media="(prefers-color-scheme: light)"
+          />
+          <meta
+            name="theme-color"
+            content="#06568F"
+            media="(prefers-color-scheme: dark)"
+          />
         </Head>
         <div className="m-8 grid h-screen w-screen gap-8 grid-cols-17 grid-rows-11">
           <div className="col-start-1 row-start-1 text-sm font-medium text-black">
@@ -73,7 +83,7 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="absolute z-20 flex translate-x-12 translate-y-12 flex-col">
+      <div className="absolute z-0 flex translate-x-12 translate-y-12 flex-col">
         <UserAvatar
           className="border-2 border-[#F4F4F4]"
           imageSrc={session.user.image}
@@ -85,7 +95,7 @@ export default function Home() {
         <Line className="absolute translate-x-6" height="100vh" />
       </div>
 
-      <div className="relative z-10 flex max-h-screen flex-col gap-10 overflow-scroll p-12 pt-24 max-w-screen">
+      <div className="relative z-10 flex max-h-screen flex-col gap-10 overflow-scroll pl-10 p-12 pt-32 max-w-screen">
         <FeedUser userId={session.user.id} />
       </div>
 
