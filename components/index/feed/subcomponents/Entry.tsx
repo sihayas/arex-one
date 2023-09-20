@@ -4,14 +4,6 @@ import { useSession } from "next-auth/react";
 import { ReviewData } from "@/lib/global/interfaces";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInMonths,
-  differenceInSeconds,
-  differenceInYears,
-} from "date-fns";
 
 import { Artwork } from "./Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
@@ -91,6 +83,11 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           >
             {review.content}
           </div>
+          <LikeButton
+            handleLikeClick={handleLikeClick}
+            liked={liked}
+            className="absolute -bottom-2 -right-2"
+          />
         </div>
         {/* Attribution */}
         <div className="flex justify-between items-center p-4 pt-[6px]">
@@ -102,23 +99,3 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
     </div>
   );
 };
-
-function formatDateShort(date: Date): string {
-  const now = new Date();
-  const yearsDifference = differenceInYears(now, date);
-  if (yearsDifference > 0) return `${yearsDifference}Y`;
-
-  const monthsDifference = differenceInMonths(now, date);
-  if (monthsDifference > 0) return `${monthsDifference}MO`;
-
-  const daysDifference = differenceInDays(now, date);
-  if (daysDifference > 0) return `${daysDifference}D`;
-
-  const hoursDifference = differenceInHours(now, date);
-  if (hoursDifference > 0) return `${hoursDifference}H`;
-
-  const minutesDifference = differenceInMinutes(now, date);
-  if (minutesDifference > 0) return `${minutesDifference}M`;
-
-  return `${differenceInSeconds(now, date)}s`;
-}
