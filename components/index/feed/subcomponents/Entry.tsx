@@ -48,9 +48,9 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           <p className="text-[#3C3C43]/60 font-medium text-sm leading-none">
             {review.author.name}
           </p>
-          <div className="w-2 h-2 bg-[#E5E5E6] border border-silver rounded-full absolute left-7 -translate-y-4" />
+          <div className="w-2 h-2 bg-[#E5E5E6] border border-silver rounded-full absolute left-7 -translate-y-5" />
           <Stars
-            className="absolute left-8 -translate-y-8"
+            className="absolute left-[2.25rem] -translate-y-[2.25rem]"
             rating={review.rating}
             soundName={album.attributes.name}
             artist={album.attributes.artistName}
