@@ -82,7 +82,7 @@ TabBar.propTypes = {
       attributes: PropTypes.shape({
         name: PropTypes.string.isRequired,
       }).isRequired,
-    })
+    }),
   ).isRequired,
   onActiveTabChange: PropTypes.func.isRequired,
 };

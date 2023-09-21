@@ -3,7 +3,7 @@ import { useSound } from "@/context/Sound";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 
 import { Command } from "cmdk";
-import Nav from "@/components/nav/Nav";
+import Nav from "@/components/interface/nav/Nav";
 
 import Album from "@/components/interface/album/Album";
 import Entry from "@/components/interface/entry/Entry";
@@ -72,9 +72,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const scale = useTransform(scrollY, [0, 64], [1, 0.8]);
 
   // Shift width and height of shape-shifter/window while scrolling
-  // towards four score and seven years ago our fathers brought forth on
-  // this target okay okay okay
-  // target.
+  // towards target
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
@@ -140,17 +138,23 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     <motion.div
       className={`cmdk`}
       initial={{
-        transform: `translate(-50%, -50%) scale(0.98)`,
+        x: "-50%",
+        y: "-50%",
+        scale: 0.98,
         opacity: 0,
       }}
       animate={
         isVisible
           ? {
-              transform: `translate(-50%, -50%) scale(1)`,
+              x: "-50%",
+              y: "-50%",
+              scale: 1,
               opacity: 1,
             }
           : {
-              transform: `translate(-50%, -50%) scale(0.98)`,
+              x: "-50%",
+              y: "-50%",
+              scale: 0.98,
               opacity: 0,
             }
       }

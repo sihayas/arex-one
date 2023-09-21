@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
@@ -6,7 +6,12 @@ import { useSound } from "@/context/Sound";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import Albums from "./sub/Albums";
-import { motion, useAnimate, useMotionValueEvent } from "framer-motion";
+import {
+  motion,
+  useAnimate,
+  useMotionValueEvent,
+  useTransform,
+} from "framer-motion";
 
 import TabBar from "./sub/TabBar";
 import Songs from "./sub/Songs";
@@ -44,8 +49,9 @@ const Album = ({ scale }: any) => {
         type: "spring",
       },
     });
-    console.log(scale.get());
   });
+
+  const borderRadius = useTransform(scale, [0, 1], [20, 8]);
 
   // Initializes album and loads full details into selectedSound
   const { isLoading } = useAlbumQuery();
@@ -59,17 +65,18 @@ const Album = ({ scale }: any) => {
     <>
       {/* Top Section */}
       <motion.div className="sticky z-20 pt-4 -top-[318px]">
-        <Image
-          ref={scope}
-          src={artworkUrl || "/public/images/default.png"}
-          alt={`${selectedSound.sound.attributes.name} artwork`}
-          width={512}
-          height={512}
-          quality={100}
-          draggable="false"
-          onDragStart={(e) => e.preventDefault()}
-          style={{ boxShadow: boxShadow }}
-        />
+        <motion.div style={{ borderRadius, overflow: "hidden" }}>
+          <Image
+            ref={scope}
+            src={artworkUrl || "/public/images/default.png"}
+            alt={`${selectedSound.sound.attributes.name} artwork`}
+            width={512}
+            height={512}
+            quality={100}
+            draggable="false"
+            onDragStart={(e) => e.preventDefault()}
+          />
+        </motion.div>
         <div className="absolute bottom-12 left-1/2 flex w-full -translate-x-1/2 transform flex-col items-center justify-center gap-2">
           <div className="flex flex-col items-center">
             <div className="text-sm font-bold text-white">
@@ -106,6 +113,15 @@ const Album = ({ scale }: any) => {
         ) : (
           <Songs songId={activeTabId} user={session!.user} />
         )}
+      </div>
+
+      <div className="gradient-blur">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
     </>
   );

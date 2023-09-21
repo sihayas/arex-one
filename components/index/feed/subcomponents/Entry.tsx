@@ -30,7 +30,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
   const handleEntryClick = useHandleEntryClick(review.id);
 
   return (
-    <div className="flex flex-col max-w-[340px]">
+    <div className="flex flex-col max-w-[364px]">
       {/*Entry Content*/}
       <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4">
         {/* Artwork */}

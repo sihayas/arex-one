@@ -83,7 +83,7 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="absolute z-0 flex translate-x-12 translate-y-12 flex-col">
+      <div className="absolute flex translate-x-12 translate-y-12 flex-col">
         <UserAvatar
           className="border-2 border-[#F4F4F4]"
           imageSrc={session.user.image}
@@ -92,7 +92,7 @@ export default function Home() {
           height={48}
           userId={session.user.id}
         />
-        <Line className="absolute translate-x-6" height="100vh" />
+        <Line className="absolute translate-x-6 z-0" height="100vh" />
       </div>
 
       <div className="relative z-10 flex max-h-screen flex-col gap-10 overflow-scroll pl-10 p-12 pt-32 max-w-screen">

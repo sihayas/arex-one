@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         }
       }
     },
-    [inputRef, setIsVisible]
+    [inputRef, setIsVisible],
   );
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       {session && pages.length > 0 && (
         <div
           className={`${
-            isVisible ? "pointer-events-auto" : "pointer-events-none"
+            isVisible ? "pointer-events-auto" : "pointer-events-none hidden"
           }`}
         >
           <Interface isVisible={isVisible} />

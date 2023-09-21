@@ -17,6 +17,7 @@ import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
 import { EntryBlobAlbum } from "@/components/icons";
+import { Artwork } from "@/components/index/feed/subcomponents/Artwork";
 
 interface EntryAlbumProps {
   review: ReviewData;
@@ -24,7 +25,6 @@ interface EntryAlbumProps {
 
 export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   const { data: session } = useSession();
-  const album = review.appleAlbumData;
 
   const { liked, handleLikeClick } = useHandleLikeClick(
     review.likedByUser!,
@@ -32,58 +32,46 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
     "/api/review/post/like",
     "reviewId",
     review.id,
-    session
+    session,
   );
 
   const handleEntryClick = useHandleEntryClick(review.id);
 
   return (
-    <div className="flex w-full flex-col p-8 pt-0">
-      {/* Rating & Content */}
-      <div className="flex items-start gap-2 w-full bg-[#F4F4F4] p-4 max-w-[416px] rounded-[13px] relative">
-        <div className="flex items-center">
+    <div className="flex flex-col w-[416px]">
+      {/*Entry Content*/}
+      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4">
+        {/* Rating & Names */}
+        <div className="flex items-center relative gap-2 ">
+          <UserAvatar
+            className="!border-none outline outline-1 outline-silver"
+            imageSrc={review.author.image}
+            altText={`${review.author.name}'s avatar`}
+            width={32}
+            height={32}
+            userId={review.author.id}
+          />
+          <p className="text-[#3C3C43]/60 font-medium text-sm leading-none">
+            {review.author.name}
+          </p>
+          <div className="w-2 h-2 bg-[#E5E5E6] border border-silver rounded-full absolute left-7 -translate-y-5" />
           <Stars
-            className="bg-[#767680] bg-opacity-10 p-[6px] rounded-full flex items-center gap-1"
+            className="absolute left-[2.25rem] -translate-y-[2.25rem]"
             rating={review.rating}
-            color={"rgba(60, 60, 67, 0.6)"}
           />
         </div>
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-gray4`}
+          className={`break-words line-clamp-6 w-full text-sm text-gray4 -mt-[4px] leading-normal pl-10`}
         >
           {review.content}
         </div>
-        {/* Like Button */}
         <LikeButton
-          className={
-            "absolute -bottom-2 bg-[#E5E5E6] p-2 rounded-full border-2 border-white"
-          }
           handleLikeClick={handleLikeClick}
           liked={liked}
-          width={12}
-          height={12}
+          className="absolute -bottom-2 -right-2"
         />
-      </div>
-      <EntryBlobAlbum
-        className="mr-auto translate-x-2"
-        width={47}
-        height={13}
-        fill={"#F4F4F4"}
-      />
-      <div className="flex items-center gap-2">
-        <UserAvatar
-          className="border-4 border-[#F4F4F4] ml-4"
-          imageSrc={review.author.image}
-          altText={`${review.author.name}'s avatar`}
-          width={32}
-          height={32}
-          userId={review.author.id}
-        />
-        <div className="text-sm font-medium text-gray2">
-          {review.author.name}
-        </div>
       </div>
     </div>
   );

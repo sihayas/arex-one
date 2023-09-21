@@ -25,7 +25,6 @@ interface EntryProps {
 export const Entry = ({ translateY }: EntryProps) => {
   const { data: session } = useSession();
   // Context
-  const { activePage } = useInterfaceContext();
   const {
     setReplyParent,
     threadcrumbs,
@@ -47,13 +46,13 @@ export const Entry = ({ translateY }: EntryProps) => {
     ["review", reviewId, session?.user?.id],
     async () => {
       const response: AxiosResponse<ReviewData> = await axios.get(
-        `/api/review/get/byId?id=${reviewId}&userId=${session?.user?.id || ""}`,
+        `/api/review/get/byId?id=${reviewId}&userId=${session?.user?.id || ""}`
       );
       return response.data;
     },
     {
       enabled: !!reviewId,
-    },
+    }
   );
 
   // Set default reply parent
@@ -74,7 +73,7 @@ export const Entry = ({ translateY }: EntryProps) => {
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
     review?.albumId,
     "726",
-    "albumId",
+    "albumId"
   );
 
   const handleOpenThreadsClick = () => {
