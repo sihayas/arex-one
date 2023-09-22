@@ -108,7 +108,7 @@ button {
   position: fixed;
   z-index: 5;
   inset: auto 0 0 0;
-  height: 65%;
+  height: 5%;
   pointer-events: none;
 }
 .gradient-blur > div,

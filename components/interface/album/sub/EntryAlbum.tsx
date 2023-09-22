@@ -26,8 +26,8 @@ interface EntryAlbumProps {
 export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   const { data: session } = useSession();
 
-  const { liked, handleLikeClick } = useHandleLikeClick(
-    review.likedByUser!,
+  const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
+    review.likedByUser,
     review.likes,
     "/api/review/post/like",
     "reviewId",
@@ -40,7 +40,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   return (
     <div className="flex flex-col w-[416px]">
       {/*Entry Content*/}
-      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4">
+      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 outline outline-silver outline-1">
         {/* Rating & Names */}
         <div className="flex items-center relative gap-2 ">
           <UserAvatar
@@ -71,6 +71,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           handleLikeClick={handleLikeClick}
           liked={liked}
           className="absolute -bottom-2 -right-2"
+          likeCount={likeCount}
         />
       </div>
     </div>

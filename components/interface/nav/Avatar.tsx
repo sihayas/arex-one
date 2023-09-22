@@ -20,6 +20,7 @@ export default function Avatar() {
         height={32}
         width={32}
         alt={"avatar-image"}
+        quality={100}
       />
     </div>
   );

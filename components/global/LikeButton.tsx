@@ -8,12 +8,14 @@ interface LikeButtonProps {
   ) => Promise<void>;
   liked: boolean;
   className?: string;
+  likeCount?: number;
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({
   handleLikeClick,
   liked,
   className,
+  likeCount,
 }) => {
   const [color, setColor] = useState(liked ? "#000" : "#CCC");
   const [dotColor, setDotColor] = useState(liked ? "#000" : "#CCC");
@@ -43,10 +45,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div
-        className="absolute bottom-0 right-0 w-4 h-4 border border-[2.5px] border-white rounded-full z-30"
-        style={{ backgroundColor: dotColor }}
-      />
       <motion.div
         className="absolute bottom-0 right-0 bg-[#E5E5E6] outline outline-[2.5px] outline-white p-2 flex items-center rounded-full origin-bottom-right"
         initial={{ scale: 0.5714, x: 0, y: 0 }}
@@ -58,6 +56,14 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       >
         <LoveIcon color={color} />
       </motion.div>
+      <div
+        className="absolute bottom-0 right-0 w-4 h-4 border border-[2.5px] border-white rounded-full z-30"
+        style={{ backgroundColor: dotColor }}
+      />
+
+      <div className="text-xs text-gray2 absolute -bottom-3 right-[4px] leading-[75%] flex font-medium">
+        {likeCount} {/* Displaying likeCount */}
+      </div>
     </button>
   );
 };

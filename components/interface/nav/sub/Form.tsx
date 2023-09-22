@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
@@ -31,7 +31,7 @@ const Form = () => {
         : null,
     {
       enabled: !!selectedFormSound && !!userId,
-    }
+    },
   ).data;
 
   const handleSubmit = useCallback(
@@ -70,7 +70,7 @@ const Form = () => {
           loading: "Submitting review...",
           success: "Review submitted successfully", // Just a string message
           error: "Error submitting review",
-        }
+        },
       );
     },
     [
@@ -82,7 +82,7 @@ const Form = () => {
       selectedFormSound,
       setSelectedFormSound,
       setInputValue,
-    ]
+    ],
   );
 
   useEffect(() => {
@@ -124,18 +124,18 @@ const Form = () => {
 
   const albumArtworkUrl = GenerateArtworkUrl(
     selectedFormSound.sound.attributes.artwork.url,
-    "928"
+    "928",
   );
   const soundArtworkUrl = GenerateArtworkUrl(
     selectedFormSound.sound.attributes.artwork.url,
-    "260"
+    "260",
   );
 
   const renderAlbumSection = () => (
     <div className="flex w-full flex-col gap-4 p-6">
       <Image
         id={selectedFormSound.sound.id}
-        className="rounded-xl shadow-stars"
+        className="rounded-md shadow-feedArt"
         src={albumArtworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={464}

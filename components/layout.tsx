@@ -55,7 +55,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       {session && pages.length > 0 && (
         <div
           className={`${
-            isVisible ? "pointer-events-auto" : "pointer-events-none hidden"
+            isVisible ? "pointer-events-auto" : "pointer-events-none"
           }`}
         >
           <Interface isVisible={isVisible} />

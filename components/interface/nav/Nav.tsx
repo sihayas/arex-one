@@ -32,22 +32,22 @@ const Nav: React.FC = () => {
   const searchStyle = useSpring({
     height: expandInput
       ? !selectedFormSound
-        ? "500"
+        ? "480"
         : selectedFormSound.sound.type === "songs"
         ? "120px"
         : selectedFormSound.sound.type === "albums"
-        ? "562px"
+        ? "462px"
         : "0px"
       : "0px",
     from: { height: "0px" },
-    config: { tension: 675, friction: 70 },
+    config: { tension: 750, friction: 70 },
   });
 
   const inputWidthStyle = useSpring({
-    width: expandInput ? "502px" : "44px",
+    width: expandInput ? "400px" : "44px",
     transform: expandInput ? "translateX(44px)" : "translateX(0px)",
     from: { width: "44px", transform: "translateX(0px)" },
-    config: { tension: 675, friction: 70 },
+    config: { tension: 750, friction: 70 },
   });
 
   const onFocus = useCallback(() => {
@@ -99,7 +99,7 @@ const Nav: React.FC = () => {
         {/* Input Container */}
         <animated.div
           style={inputWidthStyle}
-          className="absolute flex flex-col justify-end backdrop-blur-xl bottom-[64px] right-[44px] bg-nav rounded-[22px] shadow-nav"
+          className="absolute flex flex-col justify-end backdrop-blur-xl -bottom-4 -right-4 bg-nav rounded-[22px] outline outline-1 outline-silver"
         >
           {/* Form / Search Results */}
           <animated.div
@@ -142,15 +142,12 @@ const Nav: React.FC = () => {
             />
           </div>
         </animated.div>
-
-        <Circle12 />
-        <Avatar />
       </div>
     );
   }
 
   return (
-    <div className="fixed right-0 bottom-0 z-50 flex h-16 flex-col">{left}</div>
+    <div className="fixed right-0 bottom-0 z-50 flex flex-col">{left}</div>
   );
 };
 

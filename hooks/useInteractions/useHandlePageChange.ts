@@ -82,8 +82,8 @@ export const useHandleSoundClick = () => {
         name: "album",
         sound: selectedSound,
         dimensions: {
-          width: 544,
-          height: 928,
+          width: 480,
+          height: 1056,
         },
         scrollPosition: 0,
       },

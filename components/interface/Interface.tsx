@@ -22,7 +22,7 @@ type PageName = "album" | "user" | "entry";
 const getDimensions = (pageName: PageName) => {
   const dimensions = {
     album: {
-      base: { width: 544, height: 544 },
+      base: { width: 480, height: 480 },
       target: { width: 480, height: 1056 }, // Placeholder values
     },
     user: {
@@ -69,7 +69,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const maxScroll = 64;
 
   // Shapeshift album art while scrolling through album page.
-  const scale = useTransform(scrollY, [0, 64], [1, 0.8]);
 
   // Shift width and height of shape-shifter/window while scrolling
   // towards target
@@ -199,7 +198,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-[20px] bg-white/80 overflow-hidden z-0 shadow-interface border border-silver`}
+          className={`flex items-start justify-center rounded-[20px] bg-white overflow-hidden z-0 shadow-interface outline outline-1 outline-silver`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -212,15 +211,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className={`flex flex-col items-center overflow-scroll
+              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden
                w-full h-full scrollbar-none z-10`}
             >
-              <ActiveComponent scale={scale} />
+              <ActiveComponent />
             </div>
           </div>
         </motion.div>
 
-        {/*<Nav />*/}
+        <Nav />
       </Command>
     </motion.div>
   );

@@ -64,13 +64,15 @@ export function StarOneIcon({ ...props }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
+      width={16}
+      height={16}
       fill="none"
-      viewBox="0 0 21 21"
       {...props}
+      className={props.className}
     >
       <path
-        fill={props.color}
-        d="M10.1 3.3c-.3 2.6-.4 4.2-1 5.2-1 1.3-2.7 1.4-5.9 1.7 3.1.4 4.8.5 5.8 1.7.8 1 .9 2.6 1.1 5.2.4-3.4.5-5 2-6 1-.5 2.5-.6 4.9-.9-3-.3-4.6-.4-5.6-1.3-.9-1-1-2.7-1.3-5.6Z"
+        fill="#333"
+        d="M8 0c0 6 2 8 8 8-6 0-8 2-8 8 0-6-2-8-8-8 6 0 8-2 8-8Z"
       />
     </svg>
   );
