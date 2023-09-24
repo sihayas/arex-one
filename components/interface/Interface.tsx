@@ -23,7 +23,7 @@ const getDimensions = (pageName: PageName) => {
   const dimensions = {
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 1056 }, // Placeholder values
+      target: { width: 480, height: 768 }, // Placeholder values
     },
     user: {
       base: { width: 384, height: 512 },
@@ -67,8 +67,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     container: scrollContainerRef,
   });
   const maxScroll = 64;
-
-  // Shapeshift album art while scrolling through album page.
 
   // Shift width and height of shape-shifter/window while scrolling
   // towards target
@@ -218,7 +216,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             </div>
           </div>
         </motion.div>
-
         <Nav />
       </Command>
     </motion.div>

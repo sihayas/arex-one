@@ -40,7 +40,7 @@ const Album = () => {
 
   // Rating footer opacity
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
-  const albumOpacity = useTransform(scrollY, [0, 160], [1, 0]);
+  const albumOpacity = useTransform(scrollY, [0, 384], [1, 0]);
 
   // Initializes album and loads full details into selectedSound context
   const { isLoading } = useAlbumQuery();
@@ -57,7 +57,7 @@ const Album = () => {
             className="sticky z-0 p-8 -top-[384px] pointer-events-none"
           >
             <Image
-              className="rounded-[16px] rounded-b-none border border-silver"
+              className="rounded-[16px] rounded-b-none outline outline-1 outline-silver"
               src={selectedSound.artworkUrl || "/public/images/default.png"}
               alt={`${selectedSound.sound.attributes.name} artwork`}
               width={416}
@@ -102,7 +102,7 @@ const Album = () => {
                 <div className="tracking-tighter text-[22px] leading-[75%] w-12">
                   4.5
                 </div>
-                <div className="tracking-tighter text-xs leading-[75%] w-12 text-gray2">
+                <div className="tracking-tighter text-xs leading-[75%] w-12 text-black">
                   / 24 444
                 </div>
               </div>

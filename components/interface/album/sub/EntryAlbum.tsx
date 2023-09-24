@@ -40,7 +40,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   return (
     <div className="flex flex-col w-[416px]">
       {/*Entry Content*/}
-      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 outline outline-silver outline-1">
+      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4">
         {/* Rating & Names */}
         <div className="flex items-center relative gap-2 ">
           <UserAvatar
