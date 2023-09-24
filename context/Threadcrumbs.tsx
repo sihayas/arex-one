@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { ReviewData, ReplyData } from "../lib/global/interfaces";
 
 type ThreadcrumbProviderType = {
@@ -17,13 +17,11 @@ export type ThreadcrumbContextType = {
     React.SetStateAction<ReviewData | ReplyData | null>
   >;
   setThreadcrumbs: React.Dispatch<React.SetStateAction<string[]>>;
-  openThreads: boolean;
-  setOpenThreads: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // Create the context with a default empty object
 export const ThreadcrumbContext = createContext<ThreadcrumbContextType | null>(
-  null
+  null,
 );
 
 // Create a hook to use the context
@@ -37,10 +35,9 @@ export const useThreadcrumb = () => {
 
 // Create a provider component
 export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
-  const [openThreads, setOpenThreads] = useState(false);
   const [threadcrumbs, setThreadcrumbs] = useState<string[]>([]);
   const [replyParent, setReplyParent] = useState<ReviewData | ReplyData | null>(
-    null
+    null,
   );
 
   const addToThreadcrumbs = (id: string) => {
@@ -66,7 +63,7 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
         "Removed Threadcrumbs Up To:",
         id,
         " New Threadcrumbs:",
-        newThreadcrumbs
+        newThreadcrumbs,
       ); // log the updated threadcrumb state
     }
   };
@@ -88,8 +85,6 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
         replyParent,
         setReplyParent,
         setThreadcrumbs,
-        openThreads,
-        setOpenThreads,
       }}
     >
       {children}

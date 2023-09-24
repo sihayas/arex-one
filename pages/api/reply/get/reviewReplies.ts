@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 
 const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 
@@ -28,9 +28,9 @@ async function getRootReply(rootReplyId: string, replyToId: string | null) {
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  const { id, pageSize = 10, lastId = null, userId } = req.query;
+  const { reviewId, pageSize = 10, lastId = null, userId } = req.query;
 
   // Input validation
   if (
@@ -54,12 +54,13 @@ export default async function handle(
       // Fetch all replies pertaining to the [review] passed in request.
       const replies = await prisma.reply.findMany({
         where: {
-          reviewId: String(id),
+          reviewId: String(reviewId),
+          replyToId: null,
         },
         take: Number(pageSize),
         cursor: lastId ? { id: String(lastId) } : undefined,
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
         include: {
           author: {
@@ -69,17 +70,7 @@ export default async function handle(
             },
           },
           likes: true,
-          replyTo: {
-            include: {
-              author: {
-                select: {
-                  name: true,
-                  image: true,
-                },
-              },
-            },
-          },
-          // Fetch replies to each reply
+          // Count replies and fetch an image for a reply
           replies: {
             include: {
               author: {
@@ -88,37 +79,27 @@ export default async function handle(
                 },
               },
             },
-            take: 3, // Limit to 3 replies per reply
-            orderBy: {
-              createdAt: "desc",
+            take: 1, // Limit to 3 replies per reply
+            select: {
+              _count: true,
             },
           },
         },
       });
 
       if (replies) {
-        const promises = replies.map(async (reply) => {
-          let rootReply = null;
-          let repliesCount = null;
-
-          if (reply.rootReplyId !== null) {
-            const rootReplyData = await getRootReply(
-              reply.rootReplyId,
-              reply.replyToId
-            );
-            rootReply = rootReplyData.rootReply;
-            repliesCount = rootReplyData.repliesCount;
-          }
+        const promises = replies.map(async (reply: any) => {
+          // Here repliesCount is fetched directly from the query
+          const repliesCount = reply.replies._count;
 
           const likedByUser = userId
-            ? reply.likes.some((like) => {
+            ? reply.likes.some((like: any) => {
                 return like.authorId === userId;
               })
             : false;
 
           return {
             ...reply,
-            rootReply,
             repliesCount,
             likedByUser,
           };
@@ -128,7 +109,7 @@ export default async function handle(
 
         res.status(200).json(repliesWithUserLike);
       } else {
-        console.log("No replies found for review id:", id);
+        console.log("No replies found for review id:", reviewId);
         res.status(404).json({ error: "No replies found." });
       }
     } catch (error) {

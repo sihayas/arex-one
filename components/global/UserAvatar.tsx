@@ -21,7 +21,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   width = 32,
   quality = 100,
   userId,
-    style,
+  style,
 }) => {
   const handleUserClick = useHandleUserClick(userId);
   if (!imageSrc) {
@@ -42,7 +42,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   return (
     <Image
       onClick={handleUserClick}
-      className={`rounded-full  border border-silver ${className}`}
+      className={`rounded-full ${className}`}
       src={imageSrc}
       alt={altText}
       height={height}

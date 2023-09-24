@@ -27,30 +27,29 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
     session,
   );
 
-  const handleEntryClick = useHandleEntryClick(review.id);
+  const handleEntryClick = useHandleEntryClick(review);
 
   return (
-    <div className="flex flex-col max-w-[364px]">
+    <div className="flex flex-col max-w-[416px]">
       {/*Entry Content*/}
       <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4">
         {/* Artwork */}
         <Artwork album={album} />
         {/* Rating & Names */}
-        <div className="flex items-center relative gap-2 mt-4">
+        <div className="flex items-center relative gap-2 pt-8">
           <UserAvatar
-            className="!border-none outline outline-1 outline-silver"
+            className="outline outline-2 outline-[#E5E5E6] z-10"
             imageSrc={review.author.image}
             altText={`${review.author.name}'s avatar`}
-            width={32}
-            height={32}
+            width={40}
+            height={40}
             userId={review.author.id}
           />
-          <p className="text-[#3C3C43]/60 font-medium text-sm leading-none">
+          <p className="text-[#3C3C43]/60 font-medium text-sm leading-[75%] mt-[5px]">
             {review.author.name}
           </p>
-          <div className="w-2 h-2 bg-[#E5E5E6] border border-silver rounded-full absolute left-7 -translate-y-5" />
           <Stars
-            className="absolute left-[2.25rem] -translate-y-[2.25rem]"
+            className="absolute left-[28px] -translate-y-[22px]"
             rating={review.rating}
             soundName={album.attributes.name}
             artist={album.attributes.artistName}
@@ -59,7 +58,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-gray4 -mt-[4px] leading-normal pl-10`}
+          className={`break-words line-clamp-6 w-full text-sm text-gray4 -mt-[7px] leading-normal pl-12`}
         >
           {review.content}
         </div>

@@ -191,6 +191,7 @@ export interface ReplyData {
   rootReplyId?: string;
   rootReply?: ReplyData | null;
   repliesCount?: number;
+  _count?: number;
 }
 
 export interface ReviewFormInputs {

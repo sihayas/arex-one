@@ -2,29 +2,31 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useSound } from "@/context/Sound";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
-import { AlbumData, SongData } from "@/lib/global/interfaces";
+import { AlbumData, ReviewData, SongData } from "@/lib/global/interfaces";
 import { v4 as uuidv4 } from "uuid";
 
 // Handle Entry Click
-export const useHandleEntryClick = (reviewId: string) => {
-  const { setPages } = useInterfaceContext();
+export const useHandleEntryClick = (review: ReviewData) => {
+  const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();
 
   const handleEntryClick = () => {
+    setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
       {
         key: uuidv4(),
         name: "entry",
-        threadcrumbs: [reviewId],
+        threadcrumbs: [review.id],
         dimensions: {
-          width: 576,
-          height: 576,
+          width: 480,
+          height: 768,
         },
         scrollPosition: 0,
+        review: review,
       },
     ]);
-    setThreadcrumbs([reviewId]);
+    setThreadcrumbs([review.id]);
     window.history.pushState(null, "");
   };
 
@@ -57,7 +59,7 @@ export const useHandleSoundClick = () => {
   const { getDominantColor } = useDominantColor();
 
   // CMDK context
-  const { setPages, pages, setIsVisible } = useInterfaceContext();
+  const { setPages, setIsVisible } = useInterfaceContext();
   const { setSelectedSound } = useSound();
 
   const handleSelectSound = async (

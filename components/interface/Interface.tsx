@@ -21,17 +21,17 @@ type PageName = "album" | "user" | "entry";
 
 const getDimensions = (pageName: PageName) => {
   const dimensions = {
-    album: {
-      base: { width: 480, height: 480 },
-      target: { width: 480, height: 768 }, // Placeholder values
-    },
     user: {
       base: { width: 384, height: 512 },
       target: { width: 384, height: 512 }, // Placeholder values
     },
+    album: {
+      base: { width: 480, height: 480 },
+      target: { width: 480, height: 768 }, // Placeholder values
+    },
     entry: {
       base: { width: 480, height: 480 },
-      target: { width: 500, height: 500 }, // Placeholder values
+      target: { width: 480, height: 768 }, // Placeholder values
     },
   };
 
@@ -196,7 +196,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-[20px] bg-white overflow-hidden z-0 shadow-interface outline outline-1 outline-silver`}
+          className={`flex items-start justify-center rounded-[20px] bg-white overflow-hidden z-0 shadow-interface outline outline-1 outline-lightSilver`}
         >
           {/* Base layout / dimensions for a page */}
           <div

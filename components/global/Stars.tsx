@@ -23,13 +23,13 @@ const Stars: React.FC<StarsProps> = ({
   const getStarIcon = (rating: number) => {
     switch (Math.floor(rating)) {
       case 1:
-        return <StarOneIcon width={14} height={14} color={"#808084"} />;
+        return <StarOneIcon width={12} height={12} color={"#808084"} />;
       case 2:
-        return <StarTwoIcon width={14} height={14} color={"#808084"} />;
+        return <StarTwoIcon width={12} height={12} color={"#808084"} />;
       case 3:
-        return <StarThreeIcon width={14} height={14} color={"#808084"} />;
+        return <StarThreeIcon width={12} height={12} color={"#808084"} />;
       case 4:
-        return <StarFourIcon width={14} height={14} color={"#808084"} />;
+        return <StarFourIcon width={12} height={12} color={"#808084"} />;
       case 5:
         return <AsteriskIcon />;
     }
@@ -37,7 +37,7 @@ const Stars: React.FC<StarsProps> = ({
 
   return (
     <div
-      className={`flex items-center gap-1 bg-[#E5E5E6] outline outline-1 outline-silver rounded-full p-[6px] pr-2 ${className}`}
+      className={`flex items-center gap-1 bg-[#E5E5E6] rounded-full p-2 ${className}`}
     >
       <div>{getStarIcon(rating)}</div>
       {soundName && (

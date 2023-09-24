@@ -7,12 +7,14 @@ import React, {
 } from "react";
 import { SelectedSound } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
+import { ReviewData } from "@/lib/global/interfaces";
 
 export type Page = {
   key: string;
   name: string;
-  selectedSound?: SelectedSound;
+  sound?: SelectedSound;
   user?: string;
+  review?: ReviewData;
   scrollPosition: number;
   dimensions: {
     width: number;
@@ -23,8 +25,6 @@ export type Page = {
 export type InterfaceContext = {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedReviewId: string | null;
-  setSelectedReviewId: React.Dispatch<React.SetStateAction<string | null>>;
   pages: Page[];
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
   expandInput: boolean;
@@ -74,8 +74,8 @@ export const InterfaceContextProvider = ({
 
   // Page states
   const [pages, setPages] = useState<Page[]>([]);
-  const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
+  // Initialize pages
   useEffect(() => {
     if (session && !pages.length) {
       setPages([
@@ -126,8 +126,6 @@ export const InterfaceContextProvider = ({
       value={{
         isVisible,
         setIsVisible,
-        selectedReviewId,
-        setSelectedReviewId,
         pages,
         setPages,
         expandInput,
@@ -143,5 +141,5 @@ export const InterfaceContextProvider = ({
     >
       {children}
     </InterfaceContext.Provider>
-  ) : null; // or replace with a loading component
+  ) : null;
 };

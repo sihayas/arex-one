@@ -57,7 +57,7 @@ const Album = () => {
             className="sticky z-0 p-8 -top-[384px] pointer-events-none"
           >
             <Image
-              className="rounded-[16px] rounded-b-none outline outline-1 outline-silver"
+              className="rounded-[16px] outline outline-1 outline-silver"
               src={selectedSound.artworkUrl || "/public/images/default.png"}
               alt={`${selectedSound.sound.attributes.name} artwork`}
               width={416}

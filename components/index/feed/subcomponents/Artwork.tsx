@@ -8,13 +8,15 @@ import { motion } from "framer-motion";
 
 interface ArtworkProps {
   album: AlbumData;
+  width?: number;
+  height?: number;
 }
 
-export const Artwork = ({ album }: ArtworkProps) => {
+export const Artwork = ({ album, width = 384, height = 384 }: ArtworkProps) => {
   const { handleSelectSound } = useHandleSoundClick();
   const ref = React.useRef<HTMLImageElement>(null);
 
-  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "830");
+  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "960");
 
   const handleSoundClick = async () => {
     const imgElement = ref.current;
@@ -30,8 +32,8 @@ export const Artwork = ({ album }: ArtworkProps) => {
         className="rounded-[7.5px] border border-silver"
         src={artworkUrl || "/images/default.webp"}
         alt={`artwork`}
-        width={332}
-        height={332}
+        width={width}
+        height={height}
         onDragStart={(e) => e.preventDefault()}
         draggable="false"
         loading="lazy"
