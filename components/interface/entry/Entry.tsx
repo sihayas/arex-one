@@ -1,14 +1,8 @@
-import { useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
 
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 
-import axios, { AxiosResponse } from "axios";
-import { useQuery } from "@tanstack/react-query";
-
-import { ReviewData } from "@/lib/global/interfaces";
-import RenderReplies from "./sub/reply/RenderReplies";
+import Replies from "@/components/interface/entry/sub/reply/Replies";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { EntryFull } from "@/components/interface/entry/sub/EntryFull";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
@@ -26,17 +20,7 @@ export const Entry = () => {
 
   const activePage: Page = pages[pages.length - 1];
 
-  // Context
-  const { setReplyParent, threadcrumbs, setThreadcrumbs } = useThreadcrumb();
-
   const review = activePage.review;
-
-  // Set default reply parent
-  useEffect(() => {
-    if (review) {
-      setReplyParent(review);
-    }
-  }, [review, setReplyParent]);
 
   // If review album is different from selected album, fetch artwork
   const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
@@ -45,14 +29,23 @@ export const Entry = () => {
     "albumId",
   );
 
-  if (!review || !artworkUrl) return null;
-
   return (
     <div className="w-full h-full">
-      <motion.div style={{ scale: springScale, willChange: "transform" }}>
-        <EntryFull review={review} />
-      </motion.div>
-      <RenderReplies threadcrumbs={threadcrumbs} />
+      {review && artworkUrl ? (
+        <>
+          <motion.div
+            style={{
+              scale: springScale,
+              willChange: "transform",
+            }}
+          >
+            <EntryFull review={review} />
+          </motion.div>
+          <div className="p-8 flex flex-col gap-4">
+            <Replies />
+          </div>
+        </>
+      ) : null}
     </div>
   );
 };

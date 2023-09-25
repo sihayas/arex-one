@@ -62,7 +62,7 @@ export default async function handle(
         orderBy: {
           createdAt: "desc",
         },
-        include: {
+        select: {
           author: {
             select: {
               name: true,
@@ -70,20 +70,18 @@ export default async function handle(
             },
           },
           likes: true,
-          // Count replies and fetch an image for a reply
           replies: {
-            include: {
+            select: {
+              _count: true,
               author: {
                 select: {
                   image: true,
                 },
               },
             },
-            take: 1, // Limit to 3 replies per reply
-            select: {
-              _count: true,
-            },
+            take: 1,
           },
+          content: true,
         },
       });
 

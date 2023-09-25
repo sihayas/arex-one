@@ -8,59 +8,41 @@ import { ReplyData } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
 import styles from "@/styles/replies.module.css";
 import Line from "../icons/Line";
-
-interface RepliesProps {
-  reviewId?: string | null;
-  userId?: string;
-  setLoadingReplies?: (loading: boolean) => void;
-}
-
-const fetchReplies = ({ reviewId, userId }: RepliesProps) => {
-  const url = `/api/reply/get/reviewReplies?id=${reviewId}&userId=${userId}`;
-  return axios.get(url).then((res) => res.data);
-};
+import { getRootRepliesForReview } from "@/lib/api/entryAPI";
+import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 
 // Replies component
-function Replies({ reviewId }: RepliesProps) {
-  const [selectedReply, setSelectedReply] = useState<ReplyData | null>(null);
+function Replies() {
+  const { pages } = useInterfaceContext();
   const { data: session } = useSession();
+  const [selectedReply, setSelectedReply] = useState<ReplyData | null>(null);
+
+  const activePage: Page = pages[pages.length - 1];
+  const reviewId = activePage.review?.id;
+
   const userId = session?.user.id;
 
-  const fetchRepliesQuery = useQuery(["replies", { reviewId, userId }], () =>
-    fetchReplies({ reviewId, userId })
+  // Fetch root replies for the review using React Query
+  const {
+    data: replies,
+    isLoading: isLoadingReplies,
+    isError,
+  } = useQuery(
+    ["rootReplies", reviewId, userId],
+    () => getRootRepliesForReview(reviewId, session?.user.id),
+    {
+      enabled: !!reviewId && !!session?.user.id, // Only run the query if
+    },
   );
-
-  if (fetchRepliesQuery.isLoading) {
-    return <div></div>;
-  }
-
-  if (fetchRepliesQuery.isError) {
-    return <div>ehroar</div>;
-  }
-
-  const replies = fetchRepliesQuery.data;
-  console.log(replies);
 
   return (
     <TransitionGroup component={null}>
       {replies && replies.length > 0 ? (
         replies.map((reply: ReplyData, index: number) => {
-          // Determine if the current reply and the previous reply are root replies
-          const isRoot = !reply.replyToId;
-          const prevIsRoot = index > 0 ? !replies[index - 1].replyToId : false;
           return (
             // Only render the Reply component if it is selected or there is no selected reply
             (selectedReply === null || reply.id === selectedReply.id) && (
               <Fragment key={reply.id}>
-                {/* Render line or empty div based on conditions */}
-                {isRoot && prevIsRoot ? (
-                  <div className="flex w-8 flex-col items-center">
-                    <Line height="12px" />
-                  </div>
-                ) : (
-                  <div style={{ height: "12px" }}>&nbsp;</div>
-                )}
-
                 <CSSTransition
                   timeout={500}
                   classNames={{
