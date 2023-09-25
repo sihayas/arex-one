@@ -10,13 +10,3 @@ export const getRootRepliesForReview = async (
   console.log("response.data", response.data);
   return response.data;
 };
-
-interface RepliesProps {
-  reviewId?: string;
-  userId?: string;
-  setLoadingReplies?: (loading: boolean) => void;
-}
-export const fetchReplies = ({ reviewId, userId }: RepliesProps) => {
-  const url = `/api/reply/get/reviewReplies?id=${reviewId}&userId=${userId}`;
-  return axios.get(url).then((res) => res.data);
-};

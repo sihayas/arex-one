@@ -3,29 +3,6 @@ import { prisma } from "@/lib/global/prisma";
 
 const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 
-async function getRootReply(rootReplyId: string, replyToId: string | null) {
-  if (rootReplyId !== replyToId && replyToId !== null) {
-    const rootReply = await prisma.reply.findUnique({
-      where: { id: rootReplyId },
-      include: {
-        author: {
-          select: {
-            name: true,
-            image: true,
-          },
-        },
-      },
-    });
-
-    const repliesCount = await prisma.reply.count({
-      where: { rootReplyId },
-    });
-
-    return { rootReply, repliesCount: repliesCount - 2 };
-  }
-  return { rootReply: null, repliesCount: null };
-}
-
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -49,6 +26,16 @@ export default async function handle(
     return;
   }
 
+  if (typeof reviewId !== "string") {
+    res.status(400).json({ error: "Invalid reviewId. Must be a string." });
+    return;
+  }
+
+  if (userId !== undefined && typeof userId !== "string") {
+    res.status(400).json({ error: "Invalid userId. Must be a string." });
+    return;
+  }
+
   if (req.method === "GET") {
     try {
       // Fetch all replies pertaining to the [review] passed in request.
@@ -69,10 +56,13 @@ export default async function handle(
               image: true,
             },
           },
-          likes: true,
+          likes: {
+            select: { id: true },
+            where: { authorId: userId },
+          },
+          // Grab a reply if it exists
           replies: {
             select: {
-              _count: true,
               author: {
                 select: {
                   image: true,
@@ -82,23 +72,18 @@ export default async function handle(
             take: 1,
           },
           content: true,
+          _count: {
+            select: { replies: true, likes: true },
+          },
         },
       });
 
       if (replies) {
         const promises = replies.map(async (reply: any) => {
-          // Here repliesCount is fetched directly from the query
-          const repliesCount = reply.replies._count;
-
-          const likedByUser = userId
-            ? reply.likes.some((like: any) => {
-                return like.authorId === userId;
-              })
-            : false;
+          const likedByUser = reply.likes.length > 0;
 
           return {
             ...reply,
-            repliesCount,
             likedByUser,
           };
         });

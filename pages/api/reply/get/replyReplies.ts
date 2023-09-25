@@ -1,16 +1,15 @@
 // Fetch replies to a reply by [replyId]
-
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 import { getSession } from "next-auth/react";
 
 const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  const { replyId, pageSize = 10, lastId = null } = req.query;
+  const { replyId, pageSize = 10, lastId = null, userId } = req.query;
   const session = await getSession({ req });
 
   // Input validation
@@ -30,9 +29,19 @@ export default async function handle(
     return;
   }
 
+  if (typeof replyId !== "string") {
+    res.status(400).json({ error: "Invalid replyId. Must be a string." });
+    return;
+  }
+
+  if (userId !== undefined && typeof userId !== "string") {
+    res.status(400).json({ error: "Invalid userId. Must be a string." });
+    return;
+  }
+
   if (req.method === "GET") {
     try {
-      // Fetch all replies pertaining to the [replyId] passed in request.
+      // Fetch replies pertaining to the [replyId] passed in request.
       const replies = await prisma.reply.findMany({
         where: {
           replyToId: String(replyId),
@@ -40,41 +49,47 @@ export default async function handle(
         take: Number(pageSize),
         cursor: lastId ? { id: String(lastId) } : undefined,
         orderBy: {
-          id: "asc",
+          createdAt: "desc",
         },
-        include: {
+        select: {
           author: {
             select: {
               name: true,
               image: true,
             },
           },
-          likes: true,
-          // Count the number of replies for each reply to the reply
+          likes: {
+            select: { id: true },
+            where: { authorId: userId },
+          },
           replies: {
-            include: {
+            select: {
               author: {
                 select: {
                   image: true,
                 },
               },
             },
-            take: 3, // Limit to 3 replies per reply
-            orderBy: {
-              id: "asc",
-            },
+            take: 1,
+          },
+          content: true,
+          _count: {
+            select: { replies: true, likes: true },
           },
         },
       });
 
       if (replies) {
-        // Add likedByUser field to each reply
-        const repliesWithUserLike = replies.map((reply) => ({
-          ...reply,
-          likedByUser: session
-            ? reply.likes.some((like) => like.authorId === session.user.id)
-            : false,
-        }));
+        const promises = replies.map(async (reply: any) => {
+          const likedByUser = reply.likes.length > 0;
+
+          return {
+            ...reply,
+            likedByUser,
+          };
+        });
+
+        const repliesWithUserLike = await Promise.all(promises);
 
         res.status(200).json(repliesWithUserLike);
       } else {

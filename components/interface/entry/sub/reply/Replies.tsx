@@ -1,13 +1,11 @@
 // Renders a list of replies to a review or reply
 import Reply from "./Reply";
 import { Fragment, useState } from "react";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { ReplyData } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
 import styles from "@/styles/replies.module.css";
-import Line from "../icons/Line";
 import { getRootRepliesForReview } from "@/lib/api/entryAPI";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -31,7 +29,7 @@ function Replies() {
     ["rootReplies", reviewId, userId],
     () => getRootRepliesForReview(reviewId, session?.user.id),
     {
-      enabled: !!reviewId && !!session?.user.id, // Only run the query if
+      enabled: !!reviewId && !!session?.user.id,
     },
   );
 
