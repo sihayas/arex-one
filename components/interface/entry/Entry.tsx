@@ -6,10 +6,14 @@ import Replies from "@/components/interface/entry/sub/reply/Replies";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { EntryFull } from "@/components/interface/entry/sub/EntryFull";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import ReplyInput from "@/components/interface/entry/sub/reply/ReplyInput";
+import { useThreadcrumb } from "@/context/Threadcrumbs";
+import { useEffect } from "react";
 
 export const Entry = () => {
   const { data: session } = useSession();
   const { pages, scrollContainerRef } = useInterfaceContext();
+  const { setReplyParent } = useThreadcrumb();
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -22,16 +26,19 @@ export const Entry = () => {
 
   const review = activePage.review;
 
+  useEffect(() => {
+    if (review) {
+      setReplyParent(review);
+      console.log("set reply parent to review");
+    }
+  }, [review, setReplyParent]);
+
   // If review album is different from selected album, fetch artwork
-  const { artworkUrl, isLoading: isArtworkLoading } = useFetchArtworkUrl(
-    review?.albumId,
-    "726",
-    "albumId",
-  );
+  const { artworkUrl } = useFetchArtworkUrl(review?.albumId, "726", "albumId");
 
   return (
-    <div className="w-full h-full">
-      {review && artworkUrl ? (
+    <div className="w-full h-full relative">
+      {review ? (
         <>
           <motion.div
             style={{
@@ -44,6 +51,9 @@ export const Entry = () => {
           <div className="p-8 flex flex-wrap gap-4">
             <Replies />
           </div>
+          <div className="fixed w-full top-0 p-8">
+            <ReplyInput />
+          </div>
         </>
       ) : null}
     </div>
@@ -51,23 +61,3 @@ export const Entry = () => {
 };
 
 export default Entry;
-
-// const reviewId = activePage.review?.id;
-//
-// // Get review data
-// const {
-//   data: review,
-//   error,
-//   isLoading,
-// } = useQuery(
-//   ["review", reviewId, session?.user.id],
-//   async () => {
-//     const response: AxiosResponse<ReviewData> = await axios.get(
-//       `/api/review/get/byId?id=${reviewId}&userId=${session?.user.id}`,
-//     );
-//     return response.data;
-//   },
-//   {
-//     enabled: !!reviewId,
-//   },
-// );

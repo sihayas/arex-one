@@ -50,6 +50,7 @@ export default async function handle(
           createdAt: "desc",
         },
         select: {
+          id: true,
           author: {
             select: {
               name: true,
@@ -75,6 +76,7 @@ export default async function handle(
           _count: {
             select: { replies: true, likes: true },
           },
+          reviewId: true,
         },
       });
 

@@ -215,9 +215,9 @@ export interface UserData {
   email: string;
   emailVerified?: string;
   id: string;
-  image?: string;
+  image: string;
   likes?: LikeData[];
-  name?: string;
+  name: string;
   password?: string;
   replies?: ReplyData[];
   reviews?: ReviewData[];

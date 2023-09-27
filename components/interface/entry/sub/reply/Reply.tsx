@@ -1,97 +1,98 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 
 import { ReplyData } from "@/lib/global/interfaces";
 import UserAvatar from "@/components/global/UserAvatar";
-import LikeButton from "@/components/global/LikeButton";
 import Line from "@/components/interface/entry/sub/icons/Line";
 
 interface ReplyProps {
   reply: ReplyData;
-  setSelectedReply: (reply: ReplyData | null) => void;
 }
 
-export default function Reply({ reply, setSelectedReply }: ReplyProps) {
+export default function Reply({ reply }: ReplyProps) {
   const replyCount = reply._count ? reply._count.replies : 0;
   const replyChild = reply.replies?.[0];
 
-  const { data: session } = useSession();
   const { addToThreadcrumbs, removeUpToId, setReplyParent, threadcrumbs } =
     useThreadcrumb();
 
   // Handle loading of replies
   const handleLoadReplies = () => {
-    if (threadcrumbs) {
-      setSelectedReply(reply);
+    if (threadcrumbs && !threadcrumbs.includes(reply.id)) {
       addToThreadcrumbs(reply.id);
       setReplyParent(reply);
-      console.log("Added to threadcrumbs");
+      console.log("added reply to thre", threadcrumbs);
     } else {
       handleGoBack();
-      console.log("No threadcrumbs context");
+      console.log("went back using load replies:", threadcrumbs);
     }
   };
 
   // Handle "Go Back" button click
   const handleGoBack = () => {
     removeUpToId(reply.id);
-    setSelectedReply(null);
     setReplyParent(reply);
   };
 
-  const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
-    reply.likedByUser,
-    reply.likes,
-    "/api/reply/post/like",
-    "replyId",
-    reply.id,
-    session,
-  );
+  const handleReplyParent = (reply: ReplyData) => {
+    setReplyParent(reply);
+  };
+
+  // const { liked, likeCount, handleLikeClick } = useHandleLikeClick(
+  //   reply.likedByUser,
+  //   reply.likes,
+  //   "/api/reply/post/like",
+  //   "replyId",
+  //   reply.id,
+  //   session,
+  // );
 
   return (
-    <div className="flex flex-col gap-1">
-      {/* Content  */}
-      <div
-        onClick={handleLoadReplies}
-        className={`w-fit max-w-[416px] text-gray4 text-sm rounded-2xl rounded-bl-[4px] break-words bg-[#F4F4F4] px-3 py-[6px] leading-normal`}
-      >
-        {reply.content}
-      </div>
-
-      {/* Attribution */}
-      <div className="flex items-center gap-2">
-        <UserAvatar
-          className="w-[32px] h-[32px] border border-[#F4F4F4]"
-          imageSrc={reply.author.image}
-          altText={`${reply.author.name}'s avatar`}
+    <div className="flex flex-col">
+      <div className="flex gap-1 items-end">
+        <Image
+          className="w-[32px] h-[32px] outline outline-1 outline-[#F4F4F4] rounded-full"
+          src={reply.author.image}
+          alt={`${reply.author.name}'s avatar`}
           width={32}
           height={32}
-          userId={reply.author.id}
+          onClick={() => handleReplyParent(reply)}
         />
-        <div className={`font-medium text-sm text-gray2 leading-[75%]`}>
-          {reply.author.name}
+
+        {/* Attribution */}
+        <div className="flex flex-col gap-1">
+          <div className={`font-medium text-sm text-gray2 leading-[75%] pl-2`}>
+            {reply.author.name}
+          </div>
+          {/* Content  */}
+          <div
+            onClick={handleLoadReplies}
+            className={`w-fit max-w-[416px] text-gray4 text-sm rounded-2xl rounded-bl-[4px] break-words bg-[#F4F4F4] px-2 py-[6px] leading-normal`}
+          >
+            {reply.content}
+          </div>
         </div>
       </div>
 
       {replyCount > 0 && (
-        <div
-          onClick={handleLoadReplies}
-          className="w-8 flex flex-col gap-1 items-center"
-        >
+        <div className="w-8 flex flex-col items-center">
           <Line height={"16px"} className={"ml-auto mr-auto"} />
           <div className="flex items-center ml-1">
             <UserAvatar
-              className="w-6 h-6 border border-[#F4F4F4]"
+              className="w-6 h-6 outline outline-1 outline-[#F4F4F4]"
               imageSrc={replyChild?.author.image}
               altText={`${reply.author.name}'s avatar`}
               width={24}
               height={24}
               userId={reply.author.id}
             />
-            <div className="text-sm text-gray2 leading-[75%] ml-3">
+            <div
+              onClick={handleLoadReplies}
+              className="text-xs text-gray2 leading-[75%] ml-3 cursor-pointer"
+            >
               {replyCount}
             </div>
           </div>

@@ -52,6 +52,7 @@ export default async function handle(
           createdAt: "desc",
         },
         select: {
+          id: true,
           author: {
             select: {
               name: true,

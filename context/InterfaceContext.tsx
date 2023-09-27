@@ -121,7 +121,7 @@ export const InterfaceContextProvider = ({
   }, [pages, navigateBack]);
 
   // Render the provider with the context value
-  return session ? (
+  return (
     <InterfaceContext.Provider
       value={{
         isVisible,
@@ -141,5 +141,5 @@ export const InterfaceContextProvider = ({
     >
       {children}
     </InterfaceContext.Provider>
-  ) : null;
+  );
 };

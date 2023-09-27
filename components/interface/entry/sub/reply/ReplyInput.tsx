@@ -1,96 +1,125 @@
-// import { useState } from "react";
-// import { useSession } from "next-auth/react";
+import React, { useState } from "react";
+import { useSession } from "next-auth/react";
 
-// import axios from "axios";
-// import TextareaAutosize from "react-textarea-autosize";
+import axios from "axios";
+import TextareaAutosize from "react-textarea-autosize";
 
-// import { ReviewData, ReplyData } from "@/lib/global/interfaces";
-// import { useThreadcrumb } from "@/context/Threadcrumbs";
+import { ReviewData, ReplyData } from "@/lib/global/interfaces";
+import { useThreadcrumb } from "@/context/Threadcrumbs";
+import UserAvatar from "@/components/global/UserAvatar";
 
-// interface ReplyInputProps {
-//   replyParent: ReviewData | ReplyData | null;
-//   replyContent: string;
-//   userId: string | undefined;
-// }
+interface ReplyInputProps {
+  replyParent: ReviewData | ReplyData | null;
+  replyContent: string;
+  userId: string | undefined;
+  type: "review" | "reply";
+}
 
-// const handleAddReply = async ({
-//   replyParent,
-//   replyContent,
-//   userId,
-// }: ReplyInputProps) => {
-//   if (!replyParent) return;
+// Determine if replying to a review or a reply
+const isReview = (data: ReviewData | ReplyData): data is ReviewData => {
+  return (data as ReviewData).albumId !== undefined;
+};
 
-//   // Determine if replyParent is a review or reply
-//   const isReview = "albumId" in replyParent;
+const handleAddReply = async ({
+  replyParent,
+  replyContent,
+  userId,
+  type,
+}: ReplyInputProps) => {
+  if (!replyParent) return;
 
-//   // Grab review Id from either review or reply
-//   const reviewId = isReview ? replyParent.id : replyParent.reviewId;
+  let reviewId = null;
+  let replyId = null;
+  let rootReplyId = null;
 
-//   // If replyParent is a review, replyId is null; otherwise, it's the replyParent id
-//   const replyId = isReview ? null : replyParent.id;
+  // If reply input is responding to a review.
+  if (isReview(replyParent) && type === "review") {
+    reviewId = replyParent.id;
+  } else if (!isReview(replyParent) && type === "reply") {
+    // If reply input is responding to a reply.
+    reviewId = replyParent.reviewId;
+    replyId = replyParent.id;
+    rootReplyId = replyParent.rootReplyId;
+  }
 
-//   // If replyParent is a review, rootReplyId is null ()
-//   const rootReplyId = isReview ? null : replyParent.rootReplyId;
+  const body = {
+    replyId,
+    reviewId,
+    rootReplyId,
+    content: replyContent,
+    userId,
+  };
 
-//   // Create the body object based on replyId or reviewId
-//   const body = {
-//     replyId,
-//     reviewId,
-//     rootReplyId,
-//     content: replyContent,
-//     userId,
-//   };
-//   try {
-//     const res = await axios.post("/api/review/post/reply", body);
+  try {
+    const res = await axios.post("/api/review/post/reply", body);
+    if (res.status === 200) {
+      console.log("submitted reply");
+    } else {
+      console.error(`Error adding reply: ${res.status}`);
+    }
+  } catch (error) {
+    console.error("Error adding reply:", error);
+  }
+};
 
-//     if (res.status === 200) {
-//       console.log("submmited reply");
-//     } else {
-//       console.error(`Error adding reply: ${res.status}`);
-//     }
-//   } catch (error) {
-//     console.error("Error adding reply:", error);
-//   }
-// };
+const ReplyInput = () => {
+  const { data: session } = useSession();
+  const userId = session?.user.id;
 
-// const ReplyInput = () => {
-//   const { data: session } = useSession();
-//   const userId = session?.user.id;
+  const { replyParent } = useThreadcrumb();
+  const [replyContent, setReplyContent] = useState("");
 
-//   const { replyParent } = useThreadcrumb();
-//   const [replyContent, setReplyContent] = useState("");
+  const handleReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setReplyContent(e.target.value);
+  };
 
-//   const handleReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-//     setReplyContent(e.target.value);
-//   };
+  const handleReplySubmit = () => {
+    let type: "review" | "reply" | null = null;
+    if (replyParent) {
+      if (isReview(replyParent)) {
+        type = "review";
+      } else if (replyParent) {
+        type = "reply";
+      }
+    }
 
-//   const handleReplySubmit = () => {
-//     handleAddReply({
-//       replyParent,
-//       replyContent,
-//       userId,
-//     });
-//   };
+    if (type && replyContent && userId && replyParent) {
+      handleAddReply({
+        replyParent,
+        replyContent,
+        userId,
+        type,
+      });
+    }
+  };
 
-//   return (
-//     <div className="flex w-full items-center">
-//       <TextareaAutosize
-//         className={`text-sm text-grey outline-none bg-transparent w-full resize-none`}
-//         value={replyContent}
-//         onChange={handleReplyChange}
-//       />
-//       <button
-//         type="submit"
-//         onClick={handleReplySubmit}
-//         disabled={!replyContent}
-//         className={`transition-opacity duration-300 ease-in-out ${
-//           replyContent ? "opacity-100 " : "opacity-0 cursor-default"
-//         }`}
-//       >
-//         <div className="text-xs">submit</div>
-//       </button>
-//     </div>
-//   );
-// };
+  return (
+    <div className="flex items-center gap-2 border border-silver rounded-full z-50">
+      <UserAvatar
+        className=""
+        imageSrc={session?.user.image}
+        altText={`${session?.user.name}'s avatar`}
+        width={32}
+        height={32}
+        userId={session!.user.id}
+      />
+      <TextareaAutosize
+        className={`text-sm text-black outline-none bg-transparent w-full resize-none`}
+        value={replyContent}
+        onChange={handleReplyChange}
+      />
+      <button
+        type="submit"
+        onClick={handleReplySubmit}
+        disabled={!replyContent}
+        className={`transition-opacity duration-300 ease-in-out ${
+          replyContent ? "opacity-100 " : "opacity-0 cursor-default"
+        }`}
+      >
+        <div className="text-xs">submit</div>
+      </button>
+    </div>
+  );
+};
 
-// export default ReplyInput;
+export default ReplyInput;

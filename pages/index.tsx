@@ -11,11 +11,12 @@ import Line from "@/components/interface/entry/sub/icons/Line";
 export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
 
   if (status === "loading") {
-    return <div>&nbsp;</div>; // or some other placeholder
+    return <div>loading </div>; // or some other placeholder
   }
 
   if (!session) {
@@ -23,16 +24,6 @@ export default function Home() {
       <Layout>
         <Head>
           <title>rx</title>
-          <meta
-            name="theme-color"
-            content="#1a5d8d"
-            media="(prefers-color-scheme: light)"
-          />
-          <meta
-            name="theme-color"
-            content="#06568F"
-            media="(prefers-color-scheme: dark)"
-          />
         </Head>
         <div className="m-8 grid h-screen w-screen gap-8 grid-cols-17 grid-rows-11">
           <div className="col-start-1 row-start-1 text-sm font-medium text-black">

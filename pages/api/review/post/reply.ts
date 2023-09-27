@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { reviewId, replyId, content, userId } = req.body;
   let rootReplyId = req.body.rootReplyId;
@@ -127,8 +127,8 @@ export default async function handle(
                 recipientId: authorId,
                 activityId: activity.id,
               },
-            })
-          )
+            }),
+          ),
       );
 
       res.status(200).json(createdReply);
