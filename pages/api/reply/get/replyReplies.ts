@@ -77,6 +77,7 @@ export default async function handle(
           _count: {
             select: { replies: true, likes: true },
           },
+          reviewId: true,
         },
       });
 

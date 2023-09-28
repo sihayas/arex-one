@@ -1,3 +1,5 @@
+import React from "react";
+
 interface LineProps {
   height?: string;
   width?: string;
@@ -7,7 +9,7 @@ interface LineProps {
 
 const Line: React.FC<LineProps> = ({
   height = "fit",
-  width = "1.5px",
+  width = "2px",
   color = "rgba(0, 0, 0, 0.1)",
   className = "",
 }) => {

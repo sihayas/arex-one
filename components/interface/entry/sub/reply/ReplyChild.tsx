@@ -6,10 +6,8 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { ReplyData } from "@/lib/global/interfaces";
 import Line from "@/components/interface/entry/sub/icons/Line";
-import { StatLineIcon } from "@/components/icons";
 import { useQuery } from "@tanstack/react-query";
 import { fetchReplies } from "@/lib/api/entryAPI";
-import ReplyChild from "./ReplyChild";
 
 import ColorThief from "colorthief";
 import {
@@ -17,12 +15,17 @@ import {
   increaseSaturation,
 } from "@/hooks/global/useDominantColor";
 
-interface ReplyProps {
+interface ReplyChildProps {
   reply: ReplyData;
   level: number;
+  parentColor: string;
 }
 
-export default function Reply({ reply, level }: ReplyProps) {
+export default function ReplyChild({
+  reply,
+  level,
+  parentColor,
+}: ReplyChildProps) {
   const { data: session } = useSession();
   const { setReplyParent } = useThreadcrumb();
   const userId = session?.user.id;
@@ -40,7 +43,7 @@ export default function Reply({ reply, level }: ReplyProps) {
     const saturatedColorStr = `rgb(${saturatedColorArray.join(",")})`;
     setSaturatedColor(saturatedColorStr); // Set the saturated color string
 
-    const blendedColorArray = blendWithBackground(saturatedColorArray, 0.5); // Create a lighter color (baseline)
+    const blendedColorArray = blendWithBackground(saturatedColorArray, 0.25); // Create a lighter color (baseline)
     const blendedColorStr = `rgb(${blendedColorArray.join(",")})`;
     setBlendedColor(blendedColorStr); // Set the blended color string
   };
@@ -49,28 +52,29 @@ export default function Reply({ reply, level }: ReplyProps) {
     setReplyParent(reply);
   };
 
-  const handleLoadReplies = () => {
-    refetch().then(() => {
-      // console.log("Child Replies:", childReplies);
-    });
-  };
-
   const { data: childReplies, refetch } = useQuery(
     ["replies", reply.id],
     () => fetchReplies({ replyId: reply.id, userId }),
     { enabled: false },
   );
 
-  // Styles
+  const handleLoadReplies = () => {
+    refetch().then(() => {
+      console.log("Child Replies:", childReplies);
+    });
+  };
+
   const flexDirection = level % 2 === 0 ? "flex-row" : "flex-row-reverse";
-  const loadMoreAlignment = level % 2 === 0 ? "items-start" : "items-end";
   const nameAlignment = level % 2 === 0 ? "" : "items-end";
+  const loadMoreAlignment = level % 2 === 0 ? "items-start" : "items-end";
   const namePadding = level % 2 === 0 ? "pl-2" : "pr-2";
   const borderRadius =
     level % 2 === 0 ? "rounded-bl-[4px]" : "rounded-br-[4px]";
 
   return (
     <div className="flex flex-col relative w-full">
+      {/* Spacing */}
+      <div className="h-4"></div>
       {/* Main Reply */}
       <div className={`flex gap-1 items-end ${flexDirection}`}>
         <Image
@@ -84,7 +88,7 @@ export default function Reply({ reply, level }: ReplyProps) {
         />
 
         {/* Attribution & Content */}
-        <div className={`flex flex-col gap-1 ${nameAlignment}`}>
+        <div className={`flex flex-col gap-1 min-w-[344px] ${nameAlignment}`}>
           <div
             className={`font-medium text-sm text-gray2 leading-[75%] ${namePadding}`}
           >
@@ -93,10 +97,18 @@ export default function Reply({ reply, level }: ReplyProps) {
           {/* Content  */}
           <div
             onClick={handleLoadReplies}
-            className={`w-fit max-w-[380px] text-gray4 text-sm rounded-2xl ${borderRadius} break-all bg-[#F4F4F4] px-2 py-[6px] leading-normal`}
+            className={`w-fit max-w-[344px] text-gray4 text-sm rounded-2xl ${borderRadius} break-all bg-[#F4F4F4] px-2 py-[6px] leading-normal`}
           >
             {reply.content}
           </div>
+        </div>
+
+        <div className="flex flex-col h-full w-full">
+          {/*  Parent Line Color */}
+          <Line
+            className={"flex flex-grow ml-auto mr-auto"}
+            color={parentColor}
+          />
         </div>
       </div>
 
@@ -107,24 +119,23 @@ export default function Reply({ reply, level }: ReplyProps) {
           {/* Line Chain Here */}
           <div
             onClick={handleLoadReplies}
-            className="h-full w-8 absolute flex flex-col cursor-pointer mt-1"
+            className="h-full w-8 absolute flex flex-col cursor-pointer"
           >
-            {/*<Line*/}
-            {/*  className={"flex flex-grow w-8 ml-auto mr-auto"}*/}
-            {/*  color={blendedColor}*/}
-            {/*/>*/}
-            <StatLineIcon color={blendedColor} className="ml-3.5" />
+            <Line
+              className={"flex flex-grow w-8 ml-auto mr-auto"}
+              color={blendedColor}
+            />
           </div>
 
           {/* Load Children Here */}
-          <div className="flex flex-col w-full">
+          <div className="mt-8 flex flex-col gap-4 w-full">
             {childReplies?.map((childReply: ReplyData, index: number) => (
               <ReplyChild
                 key={childReply.id}
                 reply={childReply}
                 level={level + 1}
                 parentColor={saturatedColor}
-              />
+              /> // Recursive call here
             ))}
           </div>
         </div>

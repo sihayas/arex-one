@@ -91,7 +91,7 @@ export default function Home() {
       </div>
 
       <div
-        className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60"
+        className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"
         onClick={() => signOut()}
         onMouseOver={(e) => (e.currentTarget.textContent = "DISCONNECT")}
         onMouseOut={(e) => (e.currentTarget.textContent = "CONNECTED")}
