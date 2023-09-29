@@ -58,7 +58,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-gray4 -mt-[7px] leading-normal pl-12`}
+          className={`break-words line-clamp-6 w-full text-sm text-gray4 -mt-[7px] leading-normal pl-12 cursor-pointer`}
         >
           {review.content}
         </div>

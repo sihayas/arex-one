@@ -231,8 +231,8 @@ export function StatLineIcon({ ...props }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={14}
-      height={14}
+      width={32}
+      height={24}
       fill="none"
       className={props.className}
       {...props}
@@ -242,7 +242,7 @@ export function StatLineIcon({ ...props }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}
-        d="M13 13H5a4 4 0 0 1-4-4V1"
+        d="M28 16h-8a4 4 0 0 1-4-4V4"
       />
     </svg>
   );

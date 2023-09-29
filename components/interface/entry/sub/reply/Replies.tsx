@@ -24,7 +24,7 @@ function Replies() {
   return (
     <>
       {replies && replies.length > 0 ? (
-        replies.map((reply: ReplyData) => {
+        replies.map((reply: ReplyData, index: number) => {
           return <Reply key={reply.id} reply={reply} level={0} />;
         })
       ) : (

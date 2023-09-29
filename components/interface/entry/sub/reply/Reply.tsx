@@ -16,6 +16,7 @@ import {
   blendWithBackground,
   increaseSaturation,
 } from "@/hooks/global/useDominantColor";
+import UserAvatar from "@/components/global/UserAvatar";
 
 interface ReplyProps {
   reply: ReplyData;
@@ -32,7 +33,7 @@ export default function Reply({ reply, level }: ReplyProps) {
   const [saturatedColor, setSaturatedColor] = React.useState<string>("");
 
   const replyCount = reply._count ? reply._count.replies : 0;
-  // const replyChild = reply.replies?.[0];
+  const replyChild = reply.replies?.[0];
 
   const handlePaletteGenerated = (img: HTMLImageElement) => {
     const color: [number, number, number] = colorThief.getColor(img);
@@ -40,7 +41,7 @@ export default function Reply({ reply, level }: ReplyProps) {
     const saturatedColorStr = `rgb(${saturatedColorArray.join(",")})`;
     setSaturatedColor(saturatedColorStr); // Set the saturated color string
 
-    const blendedColorArray = blendWithBackground(saturatedColorArray, 0.5); // Create a lighter color (baseline)
+    const blendedColorArray = blendWithBackground(saturatedColorArray, 0.25); // Create a lighter color (baseline)
     const blendedColorStr = `rgb(${blendedColorArray.join(",")})`;
     setBlendedColor(blendedColorStr); // Set the blended color string
   };
@@ -63,11 +64,12 @@ export default function Reply({ reply, level }: ReplyProps) {
 
   // Styles
   const flexDirection = level % 2 === 0 ? "flex-row" : "flex-row-reverse";
-  const loadMoreAlignment = level % 2 === 0 ? "items-start" : "items-end";
-  const nameAlignment = level % 2 === 0 ? "" : "items-end";
-  const namePadding = level % 2 === 0 ? "pl-2" : "pr-2";
+
+  const reverseAlignment = level % 2 === 0 ? "items-start" : "items-end";
   const borderRadius =
     level % 2 === 0 ? "rounded-bl-[4px]" : "rounded-br-[4px]";
+
+  const reverseStatLine = level % 2 === 0 ? "" : "transform scale-x-[-1]";
 
   return (
     <div className="flex flex-col relative w-full">
@@ -84,10 +86,8 @@ export default function Reply({ reply, level }: ReplyProps) {
         />
 
         {/* Attribution & Content */}
-        <div className={`flex flex-col gap-1 ${nameAlignment}`}>
-          <div
-            className={`font-medium text-sm text-gray2 leading-[75%] ${namePadding}`}
-          >
+        <div className={`flex flex-col gap-1 ${reverseAlignment}`}>
+          <div className={`font-medium text-sm text-gray2 leading-[75%] px-2`}>
             {reply.author.name}
           </div>
           {/* Content  */}
@@ -100,26 +100,57 @@ export default function Reply({ reply, level }: ReplyProps) {
         </div>
       </div>
 
+      {/* Stats */}
       {replyCount > 0 && (
         <div
-          className={`min-h-[16px] flex flex-col relative w-full ${loadMoreAlignment}`}
+          onClick={handleLoadReplies}
+          className={`min-h-[16px] flex flex-col relative w-full ${reverseAlignment}`}
         >
-          {/* Line Chain Here */}
-          <div
-            onClick={handleLoadReplies}
-            className="h-full w-8 absolute flex flex-col cursor-pointer mt-1"
-          >
-            {/*<Line*/}
-            {/*  className={"flex flex-grow w-8 ml-auto mr-auto"}*/}
-            {/*  color={blendedColor}*/}
-            {/*/>*/}
-            <StatLineIcon color={blendedColor} className="ml-3.5" />
-          </div>
+          <>
+            {/* Create baseline if children fetched */}
+            {childReplies ? (
+              <div
+                onClick={handleLoadReplies}
+                className="absolute flex flex-col cursor-pointer h-full w-8"
+              >
+                <Line
+                  className={"flex flex-grow ml-auto mr-auto"}
+                  color={blendedColor}
+                />
+              </div>
+            ) : (
+              // Show stat-line if replies exist
+              <>
+                <div
+                  className={`cursor-pointer flex items-end w-full gap-1 ${flexDirection}`}
+                >
+                  <StatLineIcon
+                    color={blendedColor}
+                    className={`${reverseStatLine}`}
+                  />
+                  <Image
+                    className="outline outline-2 rounded-full"
+                    src={
+                      replyChild?.author.image ||
+                      "/public/images/default-avatar.png"
+                    }
+                    alt={`${reply.author.name}'s avatar`}
+                    width={16}
+                    height={16}
+                  />
+                  <div className="text-xs text-gray2 leading-[16px]">
+                    {replyCount}
+                  </div>
+                </div>
+              </>
+            )}
+          </>
 
           {/* Load Children Here */}
           <div className="flex flex-col w-full">
             {childReplies?.map((childReply: ReplyData, index: number) => (
               <ReplyChild
+                index={index}
                 key={childReply.id}
                 reply={childReply}
                 level={level + 1}
