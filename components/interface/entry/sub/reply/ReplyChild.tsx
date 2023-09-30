@@ -64,7 +64,7 @@ export default function ReplyChild({
 
   const handleLoadReplies = () => {
     refetch().then(() => {
-      console.log("Child Replies:", childReplies);
+      console.log("Child RenderReplies:", childReplies);
     });
   };
 
@@ -78,11 +78,15 @@ export default function ReplyChild({
   const reverseStatLine = level % 2 === 0 ? "" : "transform scale-x-[-1]";
 
   return (
-    <div className={`flex flex-col relative w-full`}>
+    <div
+      className={`flex flex-col relative w-full  ${
+        index === 0 ? "pt-10" : "pt-4"
+      }`}
+    >
       {/* Main Reply */}
       <div className={`flex gap-1 items-end ${flexDirection}`}>
         <Image
-          className="w-[32px] h-[32px] outline outline-1 outline-[#F4F4F4] rounded-full"
+          className="w-[32px] h-[32px] outline outline-1 outline-gray3 rounded-full"
           src={reply.author.image}
           alt={`${reply.author.name}'s avatar`}
           width={32}
@@ -95,11 +99,7 @@ export default function ReplyChild({
         <div
           className={`flex flex-col gap-1 min-w-[344px] ${reverseAlignment}`}
         >
-          <div
-            className={`font-medium text-sm text-gray2 leading-[75%] px-2 ${
-              index === 0 ? "pt-10" : "pt-4"
-            }`}
-          >
+          <div className={`font-medium text-sm text-gray2 leading-[75%] px-2`}>
             {reply.author.name}
           </div>
           {/* Content  */}
@@ -114,7 +114,9 @@ export default function ReplyChild({
         <div className="flex flex-col h-full w-full">
           {/*  Parent Line Color */}
           <Line
-            className={"flex flex-grow ml-auto mr-auto"}
+            className={`flex flex-grow ml-auto mr-auto ${
+              index === 0 ? "-mt-8" : "-mt-4"
+            }`}
             color={parentColor}
           />
         </div>
@@ -131,7 +133,7 @@ export default function ReplyChild({
             {childReplies ? (
               <div
                 onClick={handleLoadReplies}
-                className="absolute flex flex-col cursor-pointer h-full w-8"
+                className="absolute flex flex-col cursor-pointer h-full w-8 pt-2"
               >
                 <Line
                   className={"flex flex-grow ml-auto mr-auto"}
@@ -145,7 +147,7 @@ export default function ReplyChild({
                   className={`cursor-pointer flex items-end gap-1 ${flexDirection}`}
                 >
                   <StatLineIcon
-                    color={blendedColor}
+                    color={"#CCC"}
                     className={`${reverseStatLine}`}
                   />
                   <Image

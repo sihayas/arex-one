@@ -6,8 +6,8 @@ import { useSession } from "next-auth/react";
 import { fetchReplies } from "@/lib/api/entryAPI";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 
-// Replies component
-function Replies() {
+// RenderReplies component
+function RenderReplies() {
   const { pages } = useInterfaceContext();
   const { data: session } = useSession();
 
@@ -35,4 +35,4 @@ function Replies() {
   );
 }
 
-export default Replies;
+export default RenderReplies;

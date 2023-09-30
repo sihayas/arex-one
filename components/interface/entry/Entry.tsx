@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 
 import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
 
-import Replies from "@/components/interface/entry/sub/reply/Replies";
+import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { EntryFull } from "@/components/interface/entry/sub/EntryFull";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
@@ -49,7 +49,7 @@ export const Entry = () => {
             <EntryFull review={review} />
           </motion.div>
           <div className="p-8 flex flex-wrap gap-8">
-            <Replies />
+            <RenderReplies />
           </div>
           <div className="fixed w-full top-0 p-8">
             <ReplyInput />

@@ -7,16 +7,13 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyData } from "@/lib/global/interfaces";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import { StatLineIcon } from "@/components/icons";
-import { useQuery } from "@tanstack/react-query";
-import { fetchReplies } from "@/lib/api/entryAPI";
-import ReplyChild from "./ReplyChild";
 
 import ColorThief from "colorthief";
 import {
   blendWithBackground,
   increaseSaturation,
 } from "@/hooks/global/useDominantColor";
-import UserAvatar from "@/components/global/UserAvatar";
+import RenderChildReplies from "@/components/interface/entry/sub/reply/RenderChildReplies";
 
 interface ReplyProps {
   reply: ReplyData;
@@ -31,10 +28,13 @@ export default function Reply({ reply, level }: ReplyProps) {
   const colorThief = new ColorThief();
   const [blendedColor, setBlendedColor] = React.useState<string>("#000000");
   const [saturatedColor, setSaturatedColor] = React.useState<string>("");
+  const [showChildReplies, setShowChildReplies] =
+    React.useState<boolean>(false);
 
   const replyCount = reply._count ? reply._count.replies : 0;
   const replyChild = reply.replies?.[0];
 
+  // Generate color pallette
   const handlePaletteGenerated = (img: HTMLImageElement) => {
     const color: [number, number, number] = colorThief.getColor(img);
     const saturatedColorArray = increaseSaturation(color, 0.5); // +50%
@@ -51,24 +51,14 @@ export default function Reply({ reply, level }: ReplyProps) {
   };
 
   const handleLoadReplies = () => {
-    refetch().then(() => {
-      // console.log("Child Replies:", childReplies);
-    });
+    setShowChildReplies((prev) => !prev); // (2) Toggle the state on clicking
   };
-
-  const { data: childReplies, refetch } = useQuery(
-    ["replies", reply.id],
-    () => fetchReplies({ replyId: reply.id, userId }),
-    { enabled: false },
-  );
 
   // Styles
   const flexDirection = level % 2 === 0 ? "flex-row" : "flex-row-reverse";
-
   const reverseAlignment = level % 2 === 0 ? "items-start" : "items-end";
   const borderRadius =
     level % 2 === 0 ? "rounded-bl-[4px]" : "rounded-br-[4px]";
-
   const reverseStatLine = level % 2 === 0 ? "" : "transform scale-x-[-1]";
 
   return (
@@ -76,7 +66,7 @@ export default function Reply({ reply, level }: ReplyProps) {
       {/* Main Reply */}
       <div className={`flex gap-1 items-end ${flexDirection}`}>
         <Image
-          className="w-[32px] h-[32px] outline outline-1 outline-[#F4F4F4] rounded-full"
+          className="w-[32px] h-[32px] outline outline-1 outline-gray3 rounded-full"
           src={reply.author.image}
           alt={`${reply.author.name}'s avatar`}
           width={32}
@@ -111,7 +101,7 @@ export default function Reply({ reply, level }: ReplyProps) {
             {childReplies ? (
               <div
                 onClick={handleLoadReplies}
-                className="absolute flex flex-col cursor-pointer h-full w-8"
+                className="absolute flex flex-col cursor-pointer h-full w-8 pt-2"
               >
                 <Line
                   className={"flex flex-grow ml-auto mr-auto"}
@@ -119,13 +109,13 @@ export default function Reply({ reply, level }: ReplyProps) {
                 />
               </div>
             ) : (
-              // Show stat-line if replies exist
+              // Show curved stat-line if replies exist
               <>
                 <div
                   className={`cursor-pointer flex items-end w-full gap-1 ${flexDirection}`}
                 >
                   <StatLineIcon
-                    color={blendedColor}
+                    color={"#CCC"}
                     className={`${reverseStatLine}`}
                   />
                   <Image
@@ -146,18 +136,13 @@ export default function Reply({ reply, level }: ReplyProps) {
             )}
           </>
 
-          {/* Load Children Here */}
-          <div className="flex flex-col w-full">
-            {childReplies?.map((childReply: ReplyData, index: number) => (
-              <ReplyChild
-                index={index}
-                key={childReply.id}
-                reply={childReply}
-                level={level + 1}
-                parentColor={saturatedColor}
-              />
-            ))}
-          </div>
+          {showChildReplies && (
+            <RenderChildReplies
+              parentReplyId={reply.id}
+              saturatedColor={saturatedColor}
+              level={level + 1}
+            />
+          )}
         </div>
       )}
     </div>

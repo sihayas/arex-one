@@ -238,11 +238,11 @@ export function StatLineIcon({ ...props }) {
       {...props}
     >
       <path
-        stroke={props.color}
+        stroke="#CCC"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}
-        d="M28 16h-8a4 4 0 0 1-4-4V4"
+        d="M28 16h-8a4 4 0 0 1-4-4V1"
       />
     </svg>
   );

@@ -29,7 +29,7 @@ export const Artwork = ({ album, width = 384, height = 384 }: ArtworkProps) => {
     <motion.div layoutId={`album-${album.id}`}>
       <Image
         onClick={handleSoundClick}
-        className="rounded-[7.5px] border border-silver"
+        className="rounded-[7.5px] border border-silver shadow-feedArt"
         src={artworkUrl || "/images/default.webp"}
         alt={`artwork`}
         width={width}
