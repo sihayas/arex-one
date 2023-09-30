@@ -234,15 +234,15 @@ export function StatLineIcon({ ...props }) {
       width={32}
       height={24}
       fill="none"
-      className={props.className}
       {...props}
+      className={props.className}
     >
       <path
-        stroke="#CCC"
+        stroke="#d8d8d8"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}
-        d="M28 16h-8a4 4 0 0 1-4-4V1"
+        d="M28 16h-8a4 4 0 0 1-4-4V8"
       />
     </svg>
   );

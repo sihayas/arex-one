@@ -1,5 +1,4 @@
 import React from "react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 import { useThreadcrumb } from "@/context/Threadcrumbs";
@@ -8,50 +7,30 @@ import { ReplyData } from "@/lib/global/interfaces";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import { StatLineIcon } from "@/components/icons";
 
-import ColorThief from "colorthief";
-import {
-  blendWithBackground,
-  increaseSaturation,
-} from "@/hooks/global/useDominantColor";
-import RenderChildReplies from "@/components/interface/entry/sub/reply/RenderChildReplies";
+import RenderChildren from "@/components/interface/entry/sub/reply/RenderChildren";
 
 interface ReplyProps {
   reply: ReplyData;
   level: number;
+  isChild: boolean;
+  index?: number;
 }
 
-export default function Reply({ reply, level }: ReplyProps) {
-  const { data: session } = useSession();
+export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const { setReplyParent } = useThreadcrumb();
-  const userId = session?.user.id;
-
-  const colorThief = new ColorThief();
-  const [blendedColor, setBlendedColor] = React.useState<string>("#000000");
-  const [saturatedColor, setSaturatedColor] = React.useState<string>("");
   const [showChildReplies, setShowChildReplies] =
     React.useState<boolean>(false);
 
   const replyCount = reply._count ? reply._count.replies : 0;
   const replyChild = reply.replies?.[0];
 
-  // Generate color pallette
-  const handlePaletteGenerated = (img: HTMLImageElement) => {
-    const color: [number, number, number] = colorThief.getColor(img);
-    const saturatedColorArray = increaseSaturation(color, 0.5); // +50%
-    const saturatedColorStr = `rgb(${saturatedColorArray.join(",")})`;
-    setSaturatedColor(saturatedColorStr); // Set the saturated color string
-
-    const blendedColorArray = blendWithBackground(saturatedColorArray, 0.25); // Create a lighter color (baseline)
-    const blendedColorStr = `rgb(${blendedColorArray.join(",")})`;
-    setBlendedColor(blendedColorStr); // Set the blended color string
-  };
-
   const handleReplyParent = (reply: ReplyData) => {
     setReplyParent(reply);
   };
 
   const handleLoadReplies = () => {
-    setShowChildReplies((prev) => !prev); // (2) Toggle the state on clicking
+    // setShowChildReplies((prev) => !prev);
+    setShowChildReplies(true);
   };
 
   // Styles
@@ -60,9 +39,14 @@ export default function Reply({ reply, level }: ReplyProps) {
   const borderRadius =
     level % 2 === 0 ? "rounded-bl-[4px]" : "rounded-br-[4px]";
   const reverseStatLine = level % 2 === 0 ? "" : "transform scale-x-[-1]";
+  const maxWidth = isChild ? "max-w-[344px]" : "max-w-[380px]";
 
   return (
-    <div className="flex flex-col relative w-full">
+    <div
+      className={`flex flex-col relative w-full ${
+        index === 0 && isChild ? "pt-10" : "pt-4"
+      } `}
+    >
       {/* Main Reply */}
       <div className={`flex gap-1 items-end ${flexDirection}`}>
         <Image
@@ -72,7 +56,6 @@ export default function Reply({ reply, level }: ReplyProps) {
           width={32}
           height={32}
           onClick={() => handleReplyParent(reply)}
-          onLoadingComplete={(img) => handlePaletteGenerated(img)}
         />
 
         {/* Attribution & Content */}
@@ -83,7 +66,7 @@ export default function Reply({ reply, level }: ReplyProps) {
           {/* Content  */}
           <div
             onClick={handleLoadReplies}
-            className={`w-fit max-w-[380px] text-gray4 text-sm rounded-2xl ${borderRadius} break-all bg-[#F4F4F4] px-2 py-[6px] leading-normal`}
+            className={`w-fit ${maxWidth} ${borderRadius}  text-gray4 text-sm rounded-2xl break-all bg-[#F4F4F4] px-3 py-[7px] leading-normal`}
           >
             {reply.content}
           </div>
@@ -98,14 +81,11 @@ export default function Reply({ reply, level }: ReplyProps) {
         >
           <>
             {/* Create baseline if children fetched */}
-            {childReplies ? (
-              <div
-                onClick={handleLoadReplies}
-                className="absolute flex flex-col cursor-pointer h-full w-8 pt-2"
-              >
+            {showChildReplies ? (
+              <div className="absolute flex flex-col cursor-pointer h-full w-8 pt-2">
                 <Line
                   className={"flex flex-grow ml-auto mr-auto"}
-                  color={blendedColor}
+                  color={"rgba(0,0,0,0.1)"}
                 />
               </div>
             ) : (
@@ -137,11 +117,7 @@ export default function Reply({ reply, level }: ReplyProps) {
           </>
 
           {showChildReplies && (
-            <RenderChildReplies
-              parentReplyId={reply.id}
-              saturatedColor={saturatedColor}
-              level={level + 1}
-            />
+            <RenderChildren parentReplyId={reply.id} level={level + 1} />
           )}
         </div>
       )}

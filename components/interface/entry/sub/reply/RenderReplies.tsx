@@ -24,8 +24,10 @@ function RenderReplies() {
   return (
     <>
       {replies && replies.length > 0 ? (
-        replies.map((reply: ReplyData, index: number) => {
-          return <Reply key={reply.id} reply={reply} level={0} />;
+        replies.map((reply: ReplyData) => {
+          return (
+            <Reply key={reply.id} reply={reply} level={0} isChild={false} />
+          );
         })
       ) : (
         <div className="text-xs text-[#CCC]"></div>
