@@ -48,9 +48,7 @@ export const Entry = () => {
           >
             <EntryFull review={review} />
           </motion.div>
-          <div className="p-8 flex flex-wrap gap-8">
-            <RenderReplies />
-          </div>
+          <RenderReplies />
           <div className="fixed w-full top-0 p-8">
             <ReplyInput />
           </div>

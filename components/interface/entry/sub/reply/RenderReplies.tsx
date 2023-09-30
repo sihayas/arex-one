@@ -16,13 +16,13 @@ function RenderReplies() {
 
   const userId = session?.user.id;
 
-  // Render review replies
+  // Fetch review replies
   const { data: replies } = useQuery(["replies", reviewId], () =>
     fetchReplies({ reviewId, userId }),
   );
 
   return (
-    <>
+    <div className="flex flex-wrap p-8">
       {replies && replies.length > 0 ? (
         replies.map((reply: ReplyData) => {
           return (
@@ -33,7 +33,7 @@ function RenderReplies() {
         <div className="text-xs text-[#CCC]"></div>
         // un-chained
       )}
-    </>
+    </div>
   );
 }
 

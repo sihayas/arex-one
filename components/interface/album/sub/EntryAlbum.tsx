@@ -35,7 +35,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
     session,
   );
 
-  const handleEntryClick = useHandleEntryClick(review.id);
+  const handleEntryClick = useHandleEntryClick(review);
 
   return (
     <div className="flex flex-col w-[416px]">

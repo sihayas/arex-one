@@ -6,6 +6,7 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyData } from "@/lib/global/interfaces";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import { StatLineIcon } from "@/components/icons";
+import DashedLine from "@/components/global/DashedLine";
 
 import RenderChildren from "@/components/interface/entry/sub/reply/RenderChildren";
 
@@ -40,17 +41,14 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
     level % 2 === 0 ? "rounded-bl-[4px]" : "rounded-br-[4px]";
   const reverseStatLine = level % 2 === 0 ? "" : "transform scale-x-[-1]";
   const maxWidth = isChild ? "max-w-[344px]" : "max-w-[380px]";
+  const width = isChild ? "w-[344px]" : "w-[380px]";
 
   return (
-    <div
-      className={`flex flex-col relative w-full ${
-        index === 0 && isChild ? "pt-10" : "pt-4"
-      } `}
-    >
+    <div className={`flex flex-col relative w-full pt-4`}>
       {/* Main Reply */}
       <div className={`flex gap-1 items-end ${flexDirection}`}>
         <Image
-          className="w-[32px] h-[32px] outline outline-1 outline-gray3 rounded-full"
+          className="w-[32px] h-[32px] rounded-full outline outline-1 outline-[#E5E5E6]"
           src={reply.author.image}
           alt={`${reply.author.name}'s avatar`}
           width={32}
@@ -59,18 +57,30 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         />
 
         {/* Attribution & Content */}
-        <div className={`flex flex-col gap-1 ${reverseAlignment}`}>
+        <div className={`flex flex-col gap-1 ${reverseAlignment} ${width}`}>
           <div className={`font-medium text-sm text-gray2 leading-[75%] px-2`}>
             {reply.author.name}
           </div>
           {/* Content  */}
           <div
             onClick={handleLoadReplies}
-            className={`w-fit ${maxWidth} ${borderRadius}  text-gray4 text-sm rounded-2xl break-all bg-[#F4F4F4] px-3 py-[7px] leading-normal`}
+            className={`w-fit ${maxWidth} ${borderRadius} text-gray4 text-sm rounded-[20px] break-all bg-[#F4F4F4] px-3 py-[7px] leading-normal`}
           >
             {reply.content}
           </div>
         </div>
+
+        {/* Fill Parent Dashed Line */}
+        {isChild && (
+          <div className="flex flex-col justify-center h-full mr-auto w-8">
+            <Line
+              color={"#e5e5e6"}
+              className={`flex flex-grow ml-auto mr-auto ${
+                index === 0 && "-mt-3"
+              }`}
+            />
+          </div>
+        )}
       </div>
 
       {/* Stats */}
@@ -79,13 +89,13 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           onClick={handleLoadReplies}
           className={`min-h-[16px] flex flex-col relative w-full ${reverseAlignment}`}
         >
+          {/* Create baseline if children fetched */}
           <>
-            {/* Create baseline if children fetched */}
             {showChildReplies ? (
-              <div className="absolute flex flex-col cursor-pointer h-full w-8 pt-2">
-                <Line
-                  className={"flex flex-grow ml-auto mr-auto"}
-                  color={"rgba(0,0,0,0.1)"}
+              <div className="absolute flex flex-col cursor-pointer h-full w-8 pt-1">
+                <DashedLine
+                  className={"flex flex-grow ml-auto mr-auto mb-8"}
+                  color={"#e5e5e6"}
                 />
               </div>
             ) : (

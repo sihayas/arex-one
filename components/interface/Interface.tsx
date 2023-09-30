@@ -31,7 +31,7 @@ const getDimensions = (pageName: PageName) => {
     },
     entry: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 888 }, // Placeholder values
+      target: { width: 480, height: 1024 }, // Placeholder values
     },
   };
 

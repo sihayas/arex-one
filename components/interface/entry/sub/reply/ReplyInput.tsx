@@ -94,7 +94,7 @@ const ReplyInput = () => {
   };
 
   return (
-    <div className="flex items-center gap-2 border border-silver rounded-full z-50">
+    <div className="flex items-center gap-2 border border-silver rounded-full z-50 bg-white">
       <UserAvatar
         className=""
         imageSrc={session?.user.image}

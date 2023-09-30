@@ -22,7 +22,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
   );
 
   return (
-    <div className="flex flex-col w-full pb-8">
+    <div className="flex flex-col w-full mb-8">
       {childReplies && childReplies.length > 0 ? (
         childReplies.map(
           (childReply: ReplyData, index: number, isChild: true) => {

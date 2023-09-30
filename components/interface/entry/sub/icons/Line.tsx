@@ -9,7 +9,7 @@ interface LineProps {
 
 const Line: React.FC<LineProps> = ({
   height = "fit",
-  width = "2px",
+  width = "1.5px",
   color = "rgba(0, 0, 0, 0.1)",
   className = "",
 }) => {
