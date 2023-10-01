@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSpring, animated } from "@react-spring/web";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInputContext } from "@/context/InputContext";
 
 const ratings = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
@@ -10,7 +10,8 @@ interface DialProps {
 
 const Dial = ({ setRatingValue }: DialProps) => {
   const [ratingIndex, setRatingIndex] = useState(0);
-  const { inputRef } = useInterfaceContext();
+
+  const { inputRef } = useInputContext();
 
   const props = useSpring({
     value: ratingIndex,
@@ -56,7 +57,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
       <animated.div
         style={{
           transform: props.value.to(
-            (value) => `translateY(${-(value - 5) * 40}px)`
+            (value) => `translateY(${-(value - 5) * 40}px)`,
           ),
         }}
       >
@@ -66,7 +67,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
             key={i}
             style={{
               transform: props.value.to(
-                (value) => `scale(${1 - Math.abs(i - value) * 0.5})`
+                (value) => `scale(${1 - Math.abs(i - value) * 0.5})`,
               ),
             }}
           >

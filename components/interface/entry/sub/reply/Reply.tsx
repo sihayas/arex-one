@@ -6,7 +6,7 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyData } from "@/lib/global/interfaces";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import { StatLineIcon } from "@/components/icons";
-import DashedLine from "@/components/global/DashedLine";
+import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
 
 import RenderChildren from "@/components/interface/entry/sub/reply/RenderChildren";
 
@@ -57,8 +57,8 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         />
 
         {/* Attribution & Content */}
-        <div className={`flex flex-col gap-1 ${reverseAlignment} ${width}`}>
-          <div className={`font-medium text-sm text-gray2 leading-[75%] px-2`}>
+        <div className={`flex flex-col gap-[6px] ${reverseAlignment} ${width}`}>
+          <div className={`font-medium text-sm text-gray2 leading-[75%] px-3`}>
             {reply.author.name}
           </div>
           {/* Content  */}

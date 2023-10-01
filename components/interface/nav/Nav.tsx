@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSound } from "@/context/Sound";
 import GetSearchResults from "@/lib/api/searchAPI";
 import { useSpring, animated } from "@react-spring/web";
@@ -9,13 +8,13 @@ import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
 
 import Search from "./sub/Search";
-import Avatar from "./Avatar";
 import Form from "./sub/Form";
+import { useInputContext } from "@/context/InputContext";
 
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
   const { inputValue, setInputValue, expandInput, setExpandInput, inputRef } =
-    useInterfaceContext();
+    useInputContext();
   const { selectedFormSound } = useSound();
 
   const [searchQuery, setSearchQuery] = useState("");

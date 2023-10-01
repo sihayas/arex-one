@@ -27,14 +27,7 @@ export type InterfaceContext = {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   pages: Page[];
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
-  expandInput: boolean;
-  setExpandInput: React.Dispatch<React.SetStateAction<boolean>>;
   navigateBack: (pageNumber?: number) => void;
-  inputRef: React.MutableRefObject<HTMLTextAreaElement | null>;
-  inputValue: string;
-  setInputValue: React.Dispatch<React.SetStateAction<string>>;
-  storedInputValue: string;
-  setStoredInputValue: React.Dispatch<React.SetStateAction<string>>;
   scrollContainerRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
@@ -65,12 +58,6 @@ export const InterfaceContextProvider = ({
   const [isVisible, setIsVisible] = useState(false);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  // Input states
-  const [expandInput, setExpandInput] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [storedInputValue, setStoredInputValue] = useState("");
-  const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
 
   // Page states
   const [pages, setPages] = useState<Page[]>([]);
@@ -128,14 +115,7 @@ export const InterfaceContextProvider = ({
         setIsVisible,
         pages,
         setPages,
-        expandInput,
-        setExpandInput,
         navigateBack,
-        inputRef,
-        inputValue,
-        setInputValue,
-        storedInputValue,
-        setStoredInputValue,
         scrollContainerRef,
       }}
     >

@@ -37,11 +37,11 @@ const Stars: React.FC<StarsProps> = ({
 
   return (
     <div
-      className={`flex items-center gap-1 bg-[#E5E5E6] rounded-full p-2 ${className}`}
+      className={`flex items-center gap-1 bg-[#F4F4F4] rounded-full p-[6px] ${className}`}
     >
       <div>{getStarIcon(rating)}</div>
       {soundName && (
-        <div className="text-xs font-medium text-[#808084] leading-[75%]">
+        <div className="text-xs font-medium text-[rgb(60 60 67 / 0.9)] leading-[75%]">
           {soundName}
         </div>
       )}

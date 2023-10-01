@@ -17,12 +17,12 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   className,
   likeCount,
 }) => {
-  const [color, setColor] = useState(liked ? "#000" : "#CCC");
+  const [color, setColor] = useState(liked ? "#000" : "#FFF");
   const [dotColor, setDotColor] = useState(liked ? "#000" : "#CCC");
   const controls = useAnimation();
 
   useEffect(() => {
-    setColor(liked ? "#000" : "#CCC");
+    setColor(liked ? "#000" : "#FFF");
   }, [liked]);
 
   const handleMouseEnter = () => {
@@ -46,11 +46,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       onMouseLeave={handleMouseLeave}
     >
       <motion.div
-        className="absolute bottom-0 right-0 bg-[#E5E5E6] outline outline-[2.5px] outline-white p-2 flex items-center rounded-full origin-bottom-right"
+        className="absolute bottom-0 right-0 bg-[#E5E5E6] outline outline-4 outline-white p-2 flex items-center rounded-full origin-bottom-right"
         initial={{ scale: 0.5714, x: 0, y: 0 }}
         animate={controls}
         variants={{
-          hover: { scale: 1, x: "-8px", y: "-8px" },
+          hover: { scale: 1, x: "-10px", y: "-10px" },
           initial: { scale: 0.5714, x: 0, y: 0 },
         }}
       >

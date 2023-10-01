@@ -44,14 +44,15 @@ export const Entry = () => {
             style={{
               scale: springScale,
               willChange: "transform",
+              paddingBottom: "32rem",
             }}
           >
             <EntryFull review={review} />
           </motion.div>
           <RenderReplies />
-          <div className="fixed w-full top-0 p-8">
-            <ReplyInput />
-          </div>
+          {/*<div className="fixed w-full top-0 p-8">*/}
+          {/*  <ReplyInput />*/}
+          {/*</div>*/}
         </>
       ) : null}
     </div>

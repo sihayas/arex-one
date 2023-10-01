@@ -11,14 +11,16 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { SendIcon, ArrowIcon } from "@/components/icons";
 import Dial from "./items/Dial";
+import { useInputContext } from "@/context/InputContext";
 
 const Form = () => {
   const { data: session } = useSession();
   const userId = session?.user.id;
 
   const { selectedFormSound, setSelectedFormSound } = useSound();
+
   const { inputRef, inputValue, setInputValue, expandInput } =
-    useInterfaceContext();
+    useInputContext();
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);

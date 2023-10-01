@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useSound } from "@/context/Sound";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
+import { useInputContext } from "@/context/InputContext";
 
 import { Command } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
@@ -42,14 +43,18 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const {
     pages,
     setPages,
+
+    scrollContainerRef,
+  } = useInterfaceContext();
+
+  const {
     inputValue,
     setInputValue,
     storedInputValue,
     inputRef,
     setStoredInputValue,
     setExpandInput,
-    scrollContainerRef,
-  } = useInterfaceContext();
+  } = useInputContext();
 
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
     useSound();
@@ -98,7 +103,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     });
 
     // Animate dimensions on page ~scroll~, listens for changes via unsub
-    // method below
     const shiftWidth = () => {
       animate(scope.current, {
         width: newWidth.get(),

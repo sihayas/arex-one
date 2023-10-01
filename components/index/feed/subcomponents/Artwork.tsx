@@ -12,11 +12,11 @@ interface ArtworkProps {
   height?: number;
 }
 
-export const Artwork = ({ album, width = 384, height = 384 }: ArtworkProps) => {
+export const Artwork = ({ album, width = 334, height = 334 }: ArtworkProps) => {
   const { handleSelectSound } = useHandleSoundClick();
   const ref = React.useRef<HTMLImageElement>(null);
 
-  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "960");
+  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "835");
 
   const handleSoundClick = async () => {
     const imgElement = ref.current;

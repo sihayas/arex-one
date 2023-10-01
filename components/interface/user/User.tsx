@@ -90,7 +90,7 @@ const User = () => {
   };
 
   return (
-    <div className="w-full h-full overflow-hidden flex flex-col hiii">
+    <div className="w-full h-full overflow-hidden flex flex-col">
       {isLoading ? (
         <div>Loading...</div>
       ) : isError ? (

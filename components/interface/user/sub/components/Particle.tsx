@@ -33,7 +33,7 @@ const Particle: React.FC<ParticleProps> = ({ colors }) => {
   return (
     <div
       style={{
-        width: "768px",
+        width: "384px",
         height: "512px",
         position: "absolute",
         zIndex: -1,

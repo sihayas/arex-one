@@ -23,13 +23,13 @@ const FeedUser = ({ userId }: { userId: string | undefined }) => {
       {error && "an error has occurred"}
       {data &&
         data.map((activity: ActivityData, index: number) => (
-          <div key={activity.id}>
+          <>
             {activity.review ? (
               <Entry review={activity.review} />
             ) : (
               "No review available for this activity."
             )}
-          </div>
+          </>
         ))}
     </>
   );

@@ -33,7 +33,7 @@ export function AsteriskIcon({ ...props }) {
       {...props}
     >
       <path
-        fill="#808084"
+        fill="rgb(60 60 67 / 0.9)"
         d="m6.967 6.545 3.428 4.581L9.069 12 6.027 7.255 2.985 12l-1.272-.874 3.428-4.58L0 5.236l.497-1.419L5.53 5.563 5.197 0h1.66L6.58 5.563l4.977-1.745L12 5.29 6.967 6.545Z"
       />
     </svg>
@@ -235,13 +235,12 @@ export function StatLineIcon({ ...props }) {
       height={24}
       fill="none"
       {...props}
-      className={props.className}
     >
       <path
-        stroke="#d8d8d8"
+        stroke="#E5E5E6"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth={2}
+        strokeWidth={1.5}
         d="M28 16h-8a4 4 0 0 1-4-4V8"
       />
     </svg>

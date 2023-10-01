@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import FeedUser from "@/components/index/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
 import Line from "@/components/interface/entry/sub/icons/Line";
+import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -83,10 +84,10 @@ export default function Home() {
           height={48}
           userId={session.user.id}
         />
-        <Line className="absolute translate-x-6 z-0" height="100vh" />
+        <DashedLine className="absolute translate-x-6 z-0" height="100vh" />
       </div>
 
-      <div className="relative z-10 flex max-h-screen flex-col gap-10 overflow-scroll pl-10 p-12 pt-32 max-w-screen">
+      <div className="relative z-10 flex max-h-screen flex-col gap-10 overflow-scroll pl-12 p-12 pt-32 max-w-screen">
         <FeedUser userId={session.user.id} />
       </div>
 

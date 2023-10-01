@@ -2,9 +2,11 @@ import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useCallback, useRef } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSession } from "next-auth/react";
+import { useInputContext } from "@/context/InputContext";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { isVisible, setIsVisible, inputRef, pages } = useInterfaceContext();
+  const { isVisible, setIsVisible, pages } = useInterfaceContext();
+  const { inputRef } = useInputContext();
   const mainContentRef = useRef<HTMLElement>(null);
   const { data: session, status } = useSession();
 
