@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useSound } from "@/context/Sound";
 import GetSearchResults from "@/lib/api/searchAPI";
 import { useSpring, animated } from "@react-spring/web";
+import { motion } from "framer-motion";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -44,7 +45,7 @@ const Nav: React.FC = () => {
 
   const inputWidthStyle = useSpring({
     width: expandInput ? "400px" : "44px",
-    transform: expandInput ? "translateX(44px)" : "translateX(0px)",
+    transform: expandInput ? "translateX(200px)" : "translateX(0px)",
     from: { width: "44px", transform: "translateX(0px)" },
     config: { tension: 750, friction: 70 },
   });
@@ -98,27 +99,8 @@ const Nav: React.FC = () => {
         {/* Input Container */}
         <animated.div
           style={inputWidthStyle}
-          className="absolute flex flex-col justify-end backdrop-blur-xl -bottom-4 -right-4 bg-nav rounded-[22px] shadow-sm"
+          className="absolute flex flex-col justify-end backdrop-blur-xl -bottom-0 -right-0 bg-nav rounded-3xl shadow-sm"
         >
-          {/* Form / Search Results */}
-          <animated.div
-            className={`flex flex-col relative ${
-              selectedFormSound ? "overflow-visible" : "overflow-scroll"
-            }`}
-            style={searchStyle}
-          >
-            {!selectedFormSound ? (
-              <Search
-                searchData={data}
-                isInitialLoading={isInitialLoading}
-                isFetching={isFetching}
-                error={error}
-              />
-            ) : (
-              <Form />
-            )}
-          </animated.div>
-
           {/* Input */}
           <div
             className={`${
@@ -140,20 +122,48 @@ const Nav: React.FC = () => {
               onKeyDown={handleKeyDown}
             />
           </div>
+          {/* Form / Search Results */}
+          <animated.div
+            className={`flex flex-col relative ${
+              selectedFormSound ? "overflow-visible" : "overflow-scroll"
+            }`}
+            style={searchStyle}
+          >
+            {!selectedFormSound ? (
+              <Search
+                searchData={data}
+                isInitialLoading={isInitialLoading}
+                isFetching={isFetching}
+                error={error}
+              />
+            ) : (
+              <Form />
+            )}
+          </animated.div>
         </animated.div>
       </div>
     );
   }
 
+  // Define the initial and animate values for framer-motion
+  const initialPosition = { bottom: 0, right: 0 };
+  const centerPosition = {
+    bottom: "50%",
+    right: "50%",
+    translateX: "50%",
+    translateY: "50%",
+  };
+
   return (
-    <div className="fixed right-0 bottom-0 z-50 flex flex-col">{left}</div>
+    <motion.div
+      className="fixed z-50 flex flex-col"
+      initial={initialPosition}
+      animate={expandInput ? centerPosition : initialPosition}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    >
+      {left}
+    </motion.div>
   );
 };
 
 export default Nav;
-
-const Circle12 = () => (
-  <svg className="-translate-x-3" height="12" width="12">
-    <circle cx="6" cy="6" r="6" fill="rgba(250,250,250,.65)" />
-  </svg>
-);

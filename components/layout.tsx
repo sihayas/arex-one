@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const { isVisible, setIsVisible, pages } = useInterfaceContext();
   const { inputRef } = useInputContext();
   const mainContentRef = useRef<HTMLElement>(null);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -26,16 +26,16 @@ export default function Layout({ children }: { children: ReactNode }) {
     [inputRef, setIsVisible],
   );
 
+  const handleDoubleClick = useCallback(() => {
+    setIsVisible((prevIsVisible) => !prevIsVisible);
+  }, [setIsVisible]);
+
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown]);
-
-  const handleDoubleClick = useCallback(() => {
-    setIsVisible((prevIsVisible) => !prevIsVisible);
-  }, [setIsVisible]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);

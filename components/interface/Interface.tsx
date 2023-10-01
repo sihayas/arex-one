@@ -74,7 +74,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const maxScroll = 64;
 
   // Shift width and height of shape-shifter/window while scrolling
-  // towards target
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
@@ -91,17 +90,37 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
-    // Initial window dimension shift towards target page
-    animate(scope.current, {
-      width: `${base.width}px`,
-      height: `${base.height}px`,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 50,
-      },
-    });
+    const sequence = async () => {
+      // Scale down
+      await animate(
+        scope.current,
+        {
+          scale: 0.95,
+        },
+        { type: "spring", stiffness: 400, damping: 40 },
+      );
 
+      // Scale up
+      await animate(
+        scope.current,
+        {
+          scale: 1.05,
+        },
+        { type: "spring", stiffness: 400, damping: 40 },
+      );
+
+      // Initial window dimension shift towards target page
+      await animate(
+        scope.current,
+        {
+          width: `${base.width}px`,
+          height: `${base.height}px`,
+        },
+        { type: "spring", stiffness: 400, damping: 40 },
+      );
+    };
+
+    sequence();
     // Animate dimensions on page ~scroll~, listens for changes via unsub
     const shiftWidth = () => {
       animate(scope.current, {
@@ -141,7 +160,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       initial={{
         x: "-50%",
         y: "-50%",
-        scale: 0.98,
+        scale: 0.95,
         opacity: 0,
       }}
       animate={
@@ -155,8 +174,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           : {
               x: "-50%",
               y: "-50%",
-              scale: 0.98,
+              scale: 0.95,
               opacity: 0,
+              zIndex: -1,
             }
       }
     >

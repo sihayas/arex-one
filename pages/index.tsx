@@ -77,7 +77,7 @@ export default function Home() {
 
       <div className="absolute flex translate-x-12 translate-y-12 flex-col">
         <UserAvatar
-          className="border-2 border-[#F4F4F4]"
+          className="border-2 border-[#F4F4F4] z-10"
           imageSrc={session.user.image}
           altText={`${session.user.name}'s avatar`}
           width={48}

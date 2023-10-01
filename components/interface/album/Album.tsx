@@ -35,12 +35,12 @@ const Album = () => {
   });
 
   // Album art scale
-  const scale = useTransform(scrollY, [0, 24], [1, 1.1538]);
+  const scale = useTransform(scrollY, [0, 24], [1, 1.07]);
   const springScale = useSpring(scale, { damping: 20, stiffness: 200 });
 
   // Rating footer opacity
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
-  const albumOpacity = useTransform(scrollY, [0, 384], [1, 0]);
+  const blurOpacity = useTransform(scrollY, [0, 160], [0, 1]);
 
   // Initializes album and loads full details into selectedSound context
   const { isLoading } = useAlbumQuery();
@@ -53,15 +53,15 @@ const Album = () => {
         <>
           {/* Top Section */}
           <motion.div
-            style={{ scale: springScale, opacity: albumOpacity }}
-            className="sticky z-0 p-8 -top-[384px] pointer-events-none"
+            style={{ scale: springScale }}
+            className="sticky z-0 p-4 -top-[100%] pointer-events-none"
           >
             <Image
-              className="rounded-[16px] outline outline-1 outline-silver"
+              className="rounded-lg outline outline-1 outline-silver"
               src={selectedSound.artworkUrl || "/public/images/default.png"}
               alt={`${selectedSound.sound.attributes.name} artwork`}
-              width={416}
-              height={416}
+              width={448}
+              height={448}
               quality={100}
               draggable="false"
               onDragStart={(e) => e.preventDefault()}
@@ -75,14 +75,17 @@ const Album = () => {
             ) : (
               <Songs songId={activeTabId} user={session!.user} />
             )}
-            <div className="gradient-blur">
+            <motion.div
+              style={{ opacity: blurOpacity }}
+              className="gradient-blur"
+            >
               <div></div>
               <div></div>
               <div></div>
               <div></div>
               <div></div>
               <div></div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Rating */}

@@ -19,7 +19,7 @@ export const Entry = () => {
     container: scrollContainerRef,
   });
 
-  const scale = useTransform(scrollY, [0, 12], [0.867, 1]);
+  const scale = useTransform(scrollY, [0, 12], [0.93, 1]);
   const springScale = useSpring(scale, { damping: 20, stiffness: 200 });
 
   const activePage: Page = pages[pages.length - 1];
@@ -37,14 +37,14 @@ export const Entry = () => {
   const { artworkUrl } = useFetchArtworkUrl(review?.albumId, "726", "albumId");
 
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full relative mb-96">
       {review ? (
         <>
           <motion.div
             style={{
               scale: springScale,
               willChange: "transform",
-              paddingBottom: "32rem",
+              marginTop: "-8px",
             }}
           >
             <EntryFull review={review} />

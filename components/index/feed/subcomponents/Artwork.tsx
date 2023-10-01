@@ -26,7 +26,7 @@ export const Artwork = ({ album, width = 334, height = 334 }: ArtworkProps) => {
   };
 
   return (
-    <motion.div layoutId={`album-${album.id}`}>
+    <>
       <Image
         onClick={handleSoundClick}
         className="rounded-[7.5px] border border-silver shadow-feedArt"
@@ -40,6 +40,6 @@ export const Artwork = ({ album, width = 334, height = 334 }: ArtworkProps) => {
         quality={100}
         ref={ref}
       />
-    </motion.div>
+    </>
   );
 };

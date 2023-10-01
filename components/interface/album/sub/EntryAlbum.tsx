@@ -44,7 +44,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         {/* Rating & Names */}
         <div className="flex items-center relative gap-2">
           <UserAvatar
-            className="outline outline-2 outline-[#E5E5E6] z-10"
+            className="outline outline-2 outline-[#E5E5E6] z-0"
             imageSrc={review.author.image}
             altText={`${review.author.name}'s avatar`}
             width={40}
