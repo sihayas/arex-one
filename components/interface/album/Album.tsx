@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
@@ -7,16 +6,8 @@ import { useSound } from "@/context/Sound";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import Albums from "./sub/Albums";
-import {
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
-import TabBar from "./sub/TabBar";
 import Songs from "./sub/Songs";
 import { StarOneIcon } from "@/components/icons";
 import { useInterfaceContext } from "@/context/InterfaceContext";
@@ -37,7 +28,7 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  let x = useTransform(scrollY, [0, 124], [0, 240]);
+  let x = useTransform(scrollY, [0, 48], [0, 480]);
 
   let springX = useSpring(x, { damping: 20, stiffness: 200 });
 
@@ -64,33 +55,28 @@ const Album = () => {
   return (
     <div className="w-full h-full">
       {!selectedSound || isLoading ? (
-        <div>loading...</div> // Your preferred loading state
+        <div>loading...</div>
       ) : (
         <>
-          {createPortal(
-            <motion.div
-              style={{
-                x: springX,
-                y: springX,
-                boxShadow: boxShadow,
-                borderRadius: borderRadius,
-              }}
-              className="pointer-events-none overflow-hidden absolute top-0 left-0"
-            >
-              <Image
-                className="outline outline-1 outline-silver"
-                src={selectedSound.artworkUrl || "/public/images/default.png"}
-                alt={`${selectedSound.sound.attributes.name} artwork`}
-                width={480}
-                height={480}
-                quality={100}
-                draggable="false"
-                onDragStart={(e) => e.preventDefault()}
-              />
-            </motion.div>,
-            document.getElementById("cmdk"),
-          )}
-
+          <motion.div
+            style={{
+              x: springX,
+              boxShadow: boxShadow,
+              borderRadius: borderRadius,
+            }}
+            className="pointer-events-none overflow-hidden"
+          >
+            <Image
+              className="outline outline-1 outline-silver"
+              src={selectedSound.artworkUrl || "/public/images/default.png"}
+              alt={`${selectedSound.sound.attributes.name} artwork`}
+              width={480}
+              height={480}
+              quality={100}
+              draggable="false"
+              onDragStart={(e) => e.preventDefault()}
+            />
+          </motion.div>
           {/* Section Two / Entries */}
           <div className="h-full w-full pb-[100vh]">
             {!activeTabId ? (
@@ -110,7 +96,6 @@ const Album = () => {
               <div></div>
             </motion.div>
           </div>
-
           {/* Rating */}
           <motion.div
             style={{ opacity }}

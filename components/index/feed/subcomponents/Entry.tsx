@@ -18,9 +18,9 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
   const { data: session } = useSession();
   const album = review.appleAlbumData;
 
-  const { liked, handleLikeClick } = useHandleLikeClick(
-    review.likedByUser!,
-    review.likes,
+  const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
+    review.likedByUser,
+    review._count.likes,
     "/api/review/post/like",
     "reviewId",
     review.id,
@@ -29,6 +29,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
 
   const handleEntryClick = useHandleEntryClick(review);
 
+  console.log(review);
   return (
     <div className="flex max-w-[398px]">
       <UserAvatar
@@ -39,7 +40,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
         height={48}
         userId={review.author.id}
       />
-      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 -ml-2">
+      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 -ml-3">
         {/* Artwork */}
         <Artwork album={album} />
         {/* Rating & Names */}
@@ -63,6 +64,8 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
           handleLikeClick={handleLikeClick}
           liked={liked}
           className="absolute -bottom-2 -right-2"
+          likeCount={likeCount}
+          replyCount={review._count.replies}
         />
       </div>
     </div>

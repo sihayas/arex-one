@@ -186,3 +186,8 @@ a {
           rgba(0, 0, 0, 1) 100%
   );
 }
+
+
+.rtl {
+    direction: rtl;
+}

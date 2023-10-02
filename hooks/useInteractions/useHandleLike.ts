@@ -3,14 +3,14 @@ import axios from "axios";
 
 const useHandleLikeClick = (
   initialLikedByUser: boolean,
-  initialLikes: any[],
+  initialLikes: number,
   likeApiUrl: string,
   idKey: string,
   idValue: any,
-  session: any
+  session: any,
 ) => {
   const [liked, setLiked] = useState(initialLikedByUser);
-  const [likeCount, setLikeCount] = useState(initialLikes.length);
+  const [likeCount, setLikeCount] = useState(initialLikes);
 
   const handleLikeClick = async () => {
     if (!session) return;

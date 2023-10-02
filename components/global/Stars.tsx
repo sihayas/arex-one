@@ -41,7 +41,7 @@ const Stars: React.FC<StarsProps> = ({
     >
       <div>{getStarIcon(rating)}</div>
       {soundName && (
-        <div className="text-xs font-medium text-[rgb(60 60 67 / 0.9)] leading-[75%]">
+        <div className="text-xs font-medium text-[rgba(60,60,67,.9)] leading-[75%]">
           {soundName}
         </div>
       )}

@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { AlbumData } from "@/lib/global/interfaces";
-import { motion } from "framer-motion";
 
 interface ArtworkProps {
   album: AlbumData;
@@ -29,7 +28,7 @@ export const Artwork = ({ album, width = 334, height = 334 }: ArtworkProps) => {
     <>
       <Image
         onClick={handleSoundClick}
-        className="rounded-[7.5px] border border-silver shadow-feedArt"
+        className="rounded-[7.5px] border border-silver"
         src={artworkUrl || "/images/default.webp"}
         alt={`artwork`}
         width={width}

@@ -28,7 +28,7 @@ const getDimensions = (pageName: PageName) => {
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 768 }, // Placeholder values
+      target: { width: 480, height: 1024 }, // Placeholder values
     },
     entry: {
       base: { width: 480, height: 480 },
@@ -99,7 +99,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         },
         {
           type: "spring",
-          stiffness: 400,
+          stiffness: 600,
           damping: 40,
         },
       );
@@ -108,7 +108,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       await animate(
         scope.current,
         {
-          scale: [0.95, 1], // Bounce up to 1.05 and then settle back to 1
+          scale: [0.95, 1],
           width: `${base.width}px`,
           height: `${base.height}px`,
         },
@@ -116,8 +116,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           type: "spring",
           stiffness: 400,
           damping: 40,
-          // You can adjust the times to control the duration of each keyframe
-          times: [0, 1], // The animation will bounce up to 1.05 and then settle back to 1
         },
       );
     };
@@ -182,6 +180,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               zIndex: -1,
             }
       }
+      transition={{
+        default: { type: "spring", stiffness: 500, damping: 50 },
+        // opacity: { duration: 0.3 },
+      }}
     >
       {/* CMD-K Inner  */}
       <Command

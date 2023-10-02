@@ -28,7 +28,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
 
   const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
     review.likedByUser,
-    review.likes,
+    review._count.likes,
     "/api/review/post/like",
     "reviewId",
     review.id,
@@ -71,6 +71,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           liked={liked}
           className="absolute -bottom-2 -right-2"
           likeCount={likeCount}
+          replyCount={review._count.replies}
         />
       </div>
     </div>
