@@ -1,19 +1,18 @@
 import { useSound } from "@/context/Sound";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
 import { AlbumData, SongData } from "@/lib/global/interfaces";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInputContext } from "@/context/InputContext";
 
 export const useHandleSearchClick = () => {
   const { getDominantColor } = useDominantColor();
-  const { setInputValue, setStoredInputValue, inputValue } =
-    useInterfaceContext();
+  const { setInputValue, setStoredInputValue, inputValue } = useInputContext();
 
   const { setSelectedFormSound } = useSound();
 
   const handleSelectSearch = async (
     imgElement: HTMLImageElement,
     sound: AlbumData | SongData,
-    artworkUrl: string
+    artworkUrl: string,
   ) => {
     const colors = getDominantColor(imgElement);
 

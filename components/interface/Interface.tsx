@@ -97,26 +97,28 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {
           scale: 0.95,
         },
-        { type: "spring", stiffness: 400, damping: 40 },
-      );
-
-      // Scale up
-      await animate(
-        scope.current,
         {
-          scale: 1.05,
+          type: "spring",
+          stiffness: 400,
+          damping: 40,
         },
-        { type: "spring", stiffness: 400, damping: 40 },
       );
 
-      // Initial window dimension shift towards target page
+      // Scale up and dimension shift
       await animate(
         scope.current,
         {
+          scale: [0.95, 1], // Bounce up to 1.05 and then settle back to 1
           width: `${base.width}px`,
           height: `${base.height}px`,
         },
-        { type: "spring", stiffness: 400, damping: 40 },
+        {
+          type: "spring",
+          stiffness: 400,
+          damping: 40,
+          // You can adjust the times to control the duration of each keyframe
+          times: [0, 1], // The animation will bounce up to 1.05 and then settle back to 1
+        },
       );
     };
 
@@ -152,15 +154,16 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       unsubHeight();
       unsubWidth();
     };
-  }, [animate, base.height, base.width, newHeight, newWidth, scope]);
+  }, [animate, base.height, base.width, newHeight, newWidth, scope, pages]);
 
   return (
     <motion.div
       className={`cmdk`}
+      id={`cmdk`}
       initial={{
         x: "-50%",
         y: "-50%",
-        scale: 0.95,
+        scale: 0.97,
         opacity: 0,
       }}
       animate={
@@ -174,7 +177,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           : {
               x: "-50%",
               y: "-50%",
-              scale: 0.95,
+              scale: 0.97,
               opacity: 0,
               zIndex: -1,
             }

@@ -29,9 +29,9 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   return (
     <div className="flex flex-col max-w-[480px]">
       {/*Entry Content*/}
-      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] rounded-b-none relative p-8">
+      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] rounded-b-none relative p-4">
         {/* Artwork */}
-        <Artwork width={416} height={416} album={album} />
+        <Artwork width={448} height={448} album={album} />
         {/* Rating & Names */}
         <div className="flex items-center relative gap-2 pt-8">
           <UserAvatar

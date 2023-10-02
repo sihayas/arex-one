@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
@@ -8,6 +9,7 @@ import { useAlbumQuery } from "@/lib/api/albumAPI";
 import Albums from "./sub/Albums";
 import {
   motion,
+  useMotionValue,
   useMotionValueEvent,
   useScroll,
   useSpring,
@@ -30,13 +32,16 @@ const Album = () => {
   const handleActiveTabChange = (newActiveTabId: string | null) => {
     setActiveTabId(newActiveTabId);
   };
+
   const { scrollY } = useScroll({
     container: scrollContainerRef,
   });
 
-  // Album art scale
-  const scale = useTransform(scrollY, [0, 24], [1, 1.07]);
-  const springScale = useSpring(scale, { damping: 20, stiffness: 200 });
+  let x = useTransform(scrollY, [0, 124], [0, 240]);
+
+  let springX = useSpring(x, { damping: 20, stiffness: 200 });
+
+  const borderRadius = useTransform(scrollY, [0, 120], ["20px", "8px"]);
 
   // Rating footer opacity
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
@@ -45,31 +50,49 @@ const Album = () => {
   // Initializes album and loads full details into selectedSound context
   const { isLoading } = useAlbumQuery();
 
+  const boxShadow = useMemo(() => {
+    if (selectedSound?.colors[0]) {
+      return `0px 3px 6px 0px ${selectedSound.colors[0]}, 0.15),
+        0px 11px 11px 0px ${selectedSound.colors[0]}, 0.13),
+        0px 26px 16px 0px ${selectedSound.colors[0]}, 0.08),
+        0px 46px 18px 0px ${selectedSound.colors[0]}, 0.02),
+        0px 72px 20px 0px ${selectedSound.colors[0]}, 0.00)`;
+    }
+    return undefined;
+  }, [selectedSound?.colors]);
+
   return (
     <div className="w-full h-full">
       {!selectedSound || isLoading ? (
         <div>loading...</div> // Your preferred loading state
       ) : (
         <>
-          {/* Top Section */}
-          <motion.div
-            style={{ scale: springScale }}
-            className="sticky z-0 p-4 -top-[100%] pointer-events-none"
-          >
-            <Image
-              className="rounded-lg outline outline-1 outline-silver"
-              src={selectedSound.artworkUrl || "/public/images/default.png"}
-              alt={`${selectedSound.sound.attributes.name} artwork`}
-              width={448}
-              height={448}
-              quality={100}
-              draggable="false"
-              onDragStart={(e) => e.preventDefault()}
-            />
-          </motion.div>
+          {createPortal(
+            <motion.div
+              style={{
+                x: springX,
+                y: springX,
+                boxShadow: boxShadow,
+                borderRadius: borderRadius,
+              }}
+              className="pointer-events-none overflow-hidden absolute top-0 left-0"
+            >
+              <Image
+                className="outline outline-1 outline-silver"
+                src={selectedSound.artworkUrl || "/public/images/default.png"}
+                alt={`${selectedSound.sound.attributes.name} artwork`}
+                width={480}
+                height={480}
+                quality={100}
+                draggable="false"
+                onDragStart={(e) => e.preventDefault()}
+              />
+            </motion.div>,
+            document.getElementById("cmdk"),
+          )}
 
           {/* Section Two / Entries */}
-          <div className="h-full w-full pb-96">
+          <div className="h-full w-full pb-[100vh]">
             {!activeTabId ? (
               <Albums albumId={selectedSound.sound.id} user={session!.user} />
             ) : (
@@ -118,14 +141,3 @@ const Album = () => {
 };
 
 export default Album;
-
-// const boxShadow = useMemo(() => {
-//   if (selectedSound?.colors[0]) {
-//     return `0px 3px 6px 0px ${selectedSound.colors[0]}, 0.15),
-//         0px 11px 11px 0px ${selectedSound.colors[0]}, 0.13),
-//         0px 26px 16px 0px ${selectedSound.colors[0]}, 0.08),
-//         0px 46px 18px 0px ${selectedSound.colors[0]}, 0.02),
-//         0px 72px 20px 0px ${selectedSound.colors[0]}, 0.00)`;
-//   }
-//   return undefined;
-// }, [selectedSound?.colors]);
