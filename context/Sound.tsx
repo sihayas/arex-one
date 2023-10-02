@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { SelectedSound } from "../lib/global/interfaces";
+import { SelectedSound } from "@/lib/global/interfaces";
 
 export type SoundContextType = {
   selectedSound: SelectedSound | null;
@@ -15,7 +15,7 @@ type SoundContextProviderProps = {
 };
 
 export const SoundContext = React.createContext<SoundContextType | undefined>(
-  undefined
+  undefined,
 );
 
 // Export the hook
@@ -31,7 +31,7 @@ export const SoundDetailsProvider = ({
   children,
 }: SoundContextProviderProps) => {
   const [selectedSound, setSelectedSound] = useState<SelectedSound | null>(
-    null
+    null,
   );
 
   const [selectedFormSound, setSelectedFormSound] =

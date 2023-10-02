@@ -18,6 +18,7 @@ import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
 import { EntryBlobAlbum } from "@/components/icons";
 import { Artwork } from "@/components/index/feed/subcomponents/Artwork";
+import { useSound } from "@/context/Sound";
 
 interface EntryAlbumProps {
   review: ReviewData;
@@ -25,6 +26,20 @@ interface EntryAlbumProps {
 
 export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   const { data: session } = useSession();
+  const { selectedSound } = useSound();
+
+  // Since it's rendered within an album page, assume the selected
+  // sound/album is the same as the review
+  let mergedReview: ReviewData = review;
+
+  if (selectedSound) {
+    mergedReview = {
+      ...review,
+      appleAlbumData: {
+        ...selectedSound.sound,
+      },
+    };
+  }
 
   const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
     review.likedByUser,
@@ -35,34 +50,31 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
     session,
   );
 
-  const handleEntryClick = useHandleEntryClick(review);
+  const handleEntryClick = useHandleEntryClick(mergedReview);
 
   return (
-    <div className="flex flex-col w-[416px]">
-      {/*Entry Content*/}
-      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 pt-8">
+    <div className="flex w-[416px]">
+      <UserAvatar
+        className="z-10 w-12 h-12 translate-y-[6px] outline outline-4 outline-white"
+        imageSrc={review.author.image}
+        altText={`${review.author.name}'s avatar`}
+        width={48}
+        height={48}
+        userId={review.author.id}
+      />
+      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 -ml-3">
         {/* Rating & Names */}
-        <div className="flex items-center relative gap-2">
-          <UserAvatar
-            className="outline outline-2 outline-[#E5E5E6] z-0"
-            imageSrc={review.author.image}
-            altText={`${review.author.name}'s avatar`}
-            width={40}
-            height={40}
-            userId={review.author.id}
-          />
-          <p className="text-[#3C3C43]/60 font-medium text-sm leading-none mt-[5px]">
-            {review.author.name}
-          </p>
-          <Stars
-            className="absolute left-[28px] -translate-y-[22px]"
-            rating={review.rating}
-          />
-        </div>
+        <Stars
+          className="outline-4 outline-white outline w-fit -mt-7"
+          rating={review.rating}
+        />
+        <p className="text-[#3C3C43]/90 font-medium text-sm leading-[75%] mt-[13px] pl-2">
+          {review.author.name}
+        </p>
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-gray4 -mt-[7px] leading-normal pl-12`}
+          className={`break-words line-clamp-6 w-full text-sm text-gray4 leading-normal cursor-pointer mt-[5px] pl-2`}
         >
           {review.content}
         </div>

@@ -5,7 +5,7 @@ import { useDominantColor } from "@/hooks/global/useDominantColor";
 import { AlbumData, ReviewData, SongData } from "@/lib/global/interfaces";
 import { v4 as uuidv4 } from "uuid";
 
-// Handle Entry Click
+// Handle FeedEntry Click
 export const useHandleEntryClick = (review: ReviewData) => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();

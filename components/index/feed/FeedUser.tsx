@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchFeedAndMergeAlbums } from "@/lib/api/feedAPI";
-import { Entry } from "@/components/index/feed/subcomponents/Entry";
+import { FeedEntry } from "@/components/index/feed/subcomponents/FeedEntry";
 import { ActivityData } from "@/lib/global/interfaces";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -25,7 +25,7 @@ const FeedUser = ({ userId }: { userId: string | undefined }) => {
         data.map((activity: ActivityData, index: number) => (
           <>
             {activity.review ? (
-              <Entry review={activity.review} />
+              <FeedEntry review={activity.review} />
             ) : (
               "No review available for this activity."
             )}

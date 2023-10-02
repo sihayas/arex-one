@@ -22,7 +22,8 @@ const Albums: React.FC<AlbumsProps> = ({ albumId, user }) => {
   const flattenedReviews = reviewsData?.pages.flat() || [];
 
   return (
-    <div className="flex flex-col  h-full w-full items-center p-8 pt-4 gap-8">
+    // Gap-5 to align with statistics
+    <div className="flex flex-col h-full w-full items-center p-8 pt-4 gap-9">
       {flattenedReviews?.length > 0 ? (
         flattenedReviews.map((review) => (
           <EntryAlbum key={review.id} review={review} />

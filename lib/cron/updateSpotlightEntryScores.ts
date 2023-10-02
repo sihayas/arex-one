@@ -46,10 +46,10 @@ export async function updateSpotlightEntryScores() {
 
     console.log(
       `Updated entry ${JSON.stringify(
-        entry
-      )} / with new spotlight score: ${trendingScore}`
+        entry,
+      )} / with new spotlight score: ${trendingScore}`,
     );
   }
 
-  console.log("Entry spotlight scores updated successfully");
+  console.log("FeedEntry spotlight scores updated successfully");
 }

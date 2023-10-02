@@ -55,9 +55,9 @@ export async function updateBloomingEntryScores() {
     await client.zadd("bloomingEntries", bloomingScore, entry.id);
 
     console.log(
-      `Updated entry ${entry.id} /  with new trending score: ${bloomingScore}`
+      `Updated entry ${entry.id} /  with new trending score: ${bloomingScore}`,
     );
   }
 
-  console.log("Entry blooming scores updated successfully");
+  console.log("FeedEntry blooming scores updated successfully");
 }

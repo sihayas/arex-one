@@ -1,7 +1,7 @@
 // Get reviews for an album
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 
 type SortOrder = "asc" | "desc";
 
@@ -12,7 +12,7 @@ interface ReviewOrderByWithRelationInput {
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const soundId = Array.isArray(req.query.soundId)
     ? req.query.soundId.join(",") // Convert array to string

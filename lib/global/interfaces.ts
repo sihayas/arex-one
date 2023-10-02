@@ -1,9 +1,8 @@
 export interface ReviewData {
   appleAlbumData: AlbumData;
-  album?: AlbumDBData;
-  albumId?: string;
-  track?: TrackDBData;
-  trackId?: string;
+  album: AlbumDBData;
+  track: TrackDBData;
+  trackId: string;
   author: {
     id: string;
     image: string;
@@ -54,7 +53,7 @@ export interface TrackDBData {
 }
 
 export interface SelectedSound {
-  sound: AlbumData | SongData;
+  sound: AlbumData;
   artworkUrl: string;
   colors: string[];
 }

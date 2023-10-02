@@ -11,7 +11,6 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useEffect } from "react";
 
 export const Entry = () => {
-  const { data: session } = useSession();
   const { pages, scrollContainerRef } = useInterfaceContext();
   const { setReplyParent } = useThreadcrumb();
 
@@ -34,7 +33,7 @@ export const Entry = () => {
   }, [review, setReplyParent]);
 
   // If review album is different from selected album, fetch artwork
-  const { artworkUrl } = useFetchArtworkUrl(review?.albumId, "726", "albumId");
+  // const { artworkUrl } = useFetchArtworkUrl(review?.albumId, "726", "albumId");
 
   return (
     <div className="w-full h-full relative mb-96">

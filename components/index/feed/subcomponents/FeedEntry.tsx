@@ -14,7 +14,7 @@ interface EntryProps {
   review: ReviewData;
 }
 
-export const Entry: React.FC<EntryProps> = ({ review }) => {
+export const FeedEntry: React.FC<EntryProps> = ({ review }) => {
   const { data: session } = useSession();
   const album = review.appleAlbumData;
 
@@ -73,7 +73,7 @@ export const Entry: React.FC<EntryProps> = ({ review }) => {
 };
 
 // <div className="flex flex-col max-w-[416px]">
-//   {/*Entry Content*/}
+//   {/*FeedEntry Content*/}
 //   <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4">
 //     {/* Artwork */}
 //     <Artwork album={album} />

@@ -18,8 +18,8 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   const album = review.appleAlbumData;
 
   const { liked, handleLikeClick } = useHandleLikeClick(
-    review.likedByUser!,
-    review.likes,
+    review.likedByUser,
+    review._count.likes,
     "/api/review/post/like",
     "reviewId",
     review.id,
@@ -28,7 +28,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
 
   return (
     <div className="flex flex-col max-w-[480px]">
-      {/*Entry Content*/}
+      {/*FeedEntry Content*/}
       <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] rounded-b-none relative p-4">
         {/* Artwork */}
         <Artwork width={448} height={448} album={album} />
@@ -62,6 +62,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
           handleLikeClick={handleLikeClick}
           liked={liked}
           className="absolute -bottom-2 right-6"
+          replyCount={review._count.replies}
         />
       </div>
     </div>
