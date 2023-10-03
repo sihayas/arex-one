@@ -40,12 +40,7 @@ const getDimensions = (pageName: PageName) => {
 };
 
 export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
-  const {
-    pages,
-    setPages,
-
-    scrollContainerRef,
-  } = useInterfaceContext();
+  const { pages, setPages, scrollContainerRef } = useInterfaceContext();
 
   const {
     inputValue,

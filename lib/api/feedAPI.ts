@@ -3,12 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { getAlbumsByIds } from "../global/musicKit";
 import { ActivityData, AlbumData } from "../global/interfaces";
+import { useInfiniteQuery } from "@tanstack/react-query/src";
 
 export const fetchFeedAndMergeAlbums = async (
   userId: string,
-  page: number = 1,
+  pageParam: number = 1,
 ) => {
-  const feedData = await fetchFeed(userId, page);
+  const feedData = await fetchFeed(userId, pageParam);
 
   // 2. Extract Album IDs
   const albumIds = feedData
@@ -34,9 +35,9 @@ export const fetchFeedAndMergeAlbums = async (
   return feedData;
 };
 
-export const fetchFeed = async (userId: string, page: number = 1) => {
+export const fetchFeed = async (userId: string, pageParam: number = 1) => {
   const res = await axios.get(
-    `/api/feed/get/activities?userId=${userId}&page=${page}`,
+    `/api/feed/get/activities?userId=${userId}&page=${pageParam}`,
   );
   return res.data;
 };

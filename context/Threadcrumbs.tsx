@@ -43,14 +43,12 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
   const addToThreadcrumbs = (id: string) => {
     const newThreadcrumbs = [...threadcrumbs, id];
     setThreadcrumbs(newThreadcrumbs);
-    console.log("New Threadcrumbs:", newThreadcrumbs);
   };
 
   const removeLastThreadcrumb = () => {
     const newThreadcrumbs = [...threadcrumbs];
     newThreadcrumbs.pop();
     setThreadcrumbs(newThreadcrumbs);
-    console.log("Removed Threadcrumb:", newThreadcrumbs);
   };
 
   const removeUpToId = (id: string) => {
@@ -59,23 +57,12 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
     if (index !== -1) {
       newThreadcrumbs.splice(index); // remove all elements starting from index
       setThreadcrumbs(newThreadcrumbs);
-      console.log(
-        "Removed Threadcrumbs Up To:",
-        id,
-        " New Threadcrumbs:",
-        newThreadcrumbs,
-      ); // log the updated threadcrumb state
     }
   };
 
   const resetThreadcrumbs = () => {
     setThreadcrumbs([]);
-    // console.log("current crumbs:", threadcrumbs);
   };
-
-  useEffect(() => {
-    console.log(replyParent, "reply parent changed");
-  }, [replyParent]);
 
   return (
     <ThreadcrumbContext.Provider

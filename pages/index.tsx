@@ -6,12 +6,18 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import FeedUser from "@/components/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
-import Line from "@/components/interface/entry/sub/icons/Line";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
@@ -87,9 +93,17 @@ export default function Home() {
         <DashedLine className="absolute translate-x-6 z-0" height="100vh" />
       </div>
 
-      <div className="relative z-10 flex max-h-screen flex-col gap-10 overflow-scroll pl-12 p-12 pt-32 max-w-screen">
-        <FeedUser userId={session.user.id} />
-      </div>
+      <motion.div
+        ref={scrollContainerRef}
+        className="relative z-10 flex max-h-screen flex-col gap-10 overflow-scroll pl-12 p-12 pt-32 max-w-screen"
+      >
+        {scrollContainerRef && (
+          <FeedUser
+            userId={session.user.id}
+            scrollContainerRef={scrollContainerRef}
+          />
+        )}
+      </motion.div>
 
       <div
         className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"

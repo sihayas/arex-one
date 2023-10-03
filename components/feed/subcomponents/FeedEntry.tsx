@@ -28,8 +28,6 @@ export const FeedEntry: React.FC<EntryProps> = ({ review }) => {
   );
 
   const handleEntryClick = useHandleEntryClick(review);
-
-  console.log(review);
   return (
     <div className="flex max-w-[398px]">
       <UserAvatar
