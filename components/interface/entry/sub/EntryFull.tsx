@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { ReviewData } from "@/lib/global/interfaces";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 
-import { Artwork } from "@/components/index/feed/subcomponents/Artwork";
+import { Artwork } from "@/components/feed/subcomponents/Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";

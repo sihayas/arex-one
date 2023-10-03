@@ -4,7 +4,7 @@ import Head from "next/head";
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import FeedUser from "@/components/index/feed/FeedUser";
+import FeedUser from "@/components/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";

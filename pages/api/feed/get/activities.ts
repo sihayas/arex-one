@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "GET") {
     const userId =
@@ -76,6 +76,11 @@ export default async function handle(
                       name: true,
                     },
                   },
+                },
+              },
+              album: {
+                select: {
+                  id: true,
                 },
               },
               _count: {

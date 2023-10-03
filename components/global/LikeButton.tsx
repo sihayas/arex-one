@@ -62,10 +62,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       <motion.div
         className="absolute bottom-0 right-0 bg-[#E5E5E6] outline outline-4 outline-white p-2 flex items-center rounded-full origin-bottom-right"
         animate={controls}
-        initial={{ scale: 0.5714, x: 0, y: 0 }}
+        initial={{ scale: 0.5714, x: 0, y: 0, opacity: 0 }}
         variants={{
-          hover: { scale: 1, x: "-10px", y: "-10px" },
-          initial: { scale: 0.5714, x: 0, y: 0 },
+          hover: { scale: 1, x: "-10px", y: "-10px", opacity: 1 },
+          initial: { scale: 0.5714, x: 0, y: 0, opacity: 1 },
         }}
       >
         <LoveIcon color={color} />

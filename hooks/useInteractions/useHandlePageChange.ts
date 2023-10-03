@@ -10,7 +10,7 @@ export const useHandleEntryClick = (review: ReviewData) => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();
 
-  const handleEntryClick = () => {
+  return () => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
@@ -29,15 +29,13 @@ export const useHandleEntryClick = (review: ReviewData) => {
     setThreadcrumbs([review.id]);
     window.history.pushState(null, "");
   };
-
-  return handleEntryClick;
 };
 
 // Handle User Click
 export const useHandleUserClick = (authorId: string) => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
-  const handleUserClick = () => {
+  return () => {
     setPages((prevPages) => [
       ...prevPages,
       {
@@ -50,8 +48,6 @@ export const useHandleUserClick = (authorId: string) => {
     ]);
     setIsVisible(true);
   };
-
-  return handleUserClick;
 };
 
 // Handle Sound Click
@@ -64,7 +60,7 @@ export const useHandleSoundClick = () => {
 
   const handleSelectSound = async (
     imgElement: HTMLImageElement,
-    sound: AlbumData | SongData,
+    sound: AlbumData,
     artworkUrl: string,
   ) => {
     const colors = getDominantColor(imgElement);

@@ -16,8 +16,6 @@ import {
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
-import { EntryBlobAlbum } from "@/components/icons";
-import { Artwork } from "@/components/index/feed/subcomponents/Artwork";
 import { useSound } from "@/context/Sound";
 
 interface EntryAlbumProps {

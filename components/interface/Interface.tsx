@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useSound } from "@/context/Sound";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useInputContext } from "@/context/InputContext";
@@ -245,6 +245,14 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             </div>
           </div>
         </motion.div>
+        {/*<div className="flex items-center justify-center w-full p-8 pt-4 gap-1">*/}
+        {/*  /!*Name Goes Here - If name is Sound = Album, User = User, Entry =*/}
+        {/*   Entry*!/*/}
+        {/*  <div className="text-xs text-gray3 font-medium pr-3">ALBUM</div>*/}
+        {/*  /!* If Album/Sound, *!/*/}
+        {/*  <div className="text-xs text-black">UTOPIA</div>*/}
+        {/*  <div className="text-xs text-gray2">TRAVIS SCOTT</div>*/}
+        {/*</div>*/}
         <Nav />
       </Command>
     </motion.div>
