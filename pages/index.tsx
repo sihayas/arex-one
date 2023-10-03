@@ -19,6 +19,16 @@ export default function Home() {
   const router = useRouter();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
+  // Track scrolling for infinite scroll
+  const { scrollYProgress } = useScroll({
+    container: scrollContainerRef,
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", () => {
+    const progress = scrollYProgress.get();
+    console.log(progress);
+  });
+
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
 
@@ -81,21 +91,22 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div className="absolute flex translate-x-12 translate-y-12 flex-col">
-        <UserAvatar
-          className="border-2 border-[#F4F4F4] z-10"
-          imageSrc={session.user.image}
-          altText={`${session.user.name}'s avatar`}
-          width={48}
-          height={48}
-          userId={session.user.id}
-        />
-        <DashedLine className="absolute translate-x-6 z-0" height="100vh" />
-      </div>
+      <UserAvatar
+        className="fixed translate-x-14 translate-y-12 z-50 shadow-album outline outline-[#FFF] outline-1"
+        imageSrc={session.user.image}
+        altText={`${session.user.name}'s avatar`}
+        width={32}
+        height={32}
+        userId={session.user.id}
+      />
+      <DashedLine
+        className="absolute translate-x-[4.5rem] translate-y-12"
+        height="100vh"
+      />
 
       <motion.div
         ref={scrollContainerRef}
-        className="relative z-10 flex max-h-screen flex-col gap-10 overflow-scroll pl-12 p-12 pt-32 max-w-screen"
+        className="relative flex max-h-screen flex-col gap-10 overflow-scroll pl-12 p-12 pt-32 max-w-screen"
       >
         {scrollContainerRef && (
           <FeedUser

@@ -31,9 +31,6 @@ module.exports = {
         red: "#FF0000",
         violet: "rgb(75,61,103)",
       },
-      fontFamily: {
-        baskerville: ["Baskerville", "serif"],
-      },
       gridRowStart: {
         9: "9",
         10: "10",

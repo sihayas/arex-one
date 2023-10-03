@@ -31,7 +31,7 @@ export const FeedEntry: React.FC<EntryProps> = ({ review }) => {
   return (
     <div className="flex max-w-[398px]">
       <UserAvatar
-        className="z-10 w-12 h-12 translate-y-[347px] outline outline-4 outline-white"
+        className="w-12 h-12 translate-y-[347px] outline outline-4 outline-white z-10"
         imageSrc={review.author.image}
         altText={`${review.author.name}'s avatar`}
         width={48}
