@@ -62,7 +62,9 @@ const Albums: React.FC<AlbumsProps> = ({ albumId, user }) => {
           )}
         </button>
       ) : (
-        <div className="text-xs text-action">end of line</div>
+        <div className="text-xs text-action uppercase tracking-widest">
+          end of line
+        </div>
       )}
     </div>
   );

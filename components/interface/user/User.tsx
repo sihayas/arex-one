@@ -106,46 +106,45 @@ const User = () => {
           >
             <div className="w-1/2 h-full flex flex-col">
               <Essentials favorites={user.favorites} />
-
-              {/* Stats */}
-              <div className="flex flex-col mx-8">
-                {/* Sounds */}
-                <div
-                  onClick={handleSoundtrackClick}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "64px 64px 32px",
-                    width: "100%",
-                    paddingTop: "138px",
-                    cursor: "pointer",
-                  }}
-                >
-                  <div className="text-gray2 text-xs leading-none font-medium">
-                    SOUNDS
-                  </div>
-                  <div className="text-black text-xs leading-none ml-[29px]">
-                    {user.uniqueAlbums.length}
-                  </div>
-                  <ArrowIcon className="mt-[1px]" />
-                </div>
-                {/* Links */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "64px 64px 32px",
-                    width: "100%",
-                    paddingTop: "20px",
-                  }}
-                >
-                  <div className="text-gray2 text-xs leading-none font-medium">
-                    LINKS
-                  </div>
-                  <div className="text-black text-xs leading-none ml-[29px]">
-                    {user._count.followers}
-                  </div>
-                  <ArrowIcon className="mt-[1px]" />
-                </div>
-              </div>
+              {/*/!* Stats *!/*/}
+              {/*<div className="flex flex-col mx-8">*/}
+              {/*  /!* Sounds *!/*/}
+              {/*  <div*/}
+              {/*    onClick={handleSoundtrackClick}*/}
+              {/*    style={{*/}
+              {/*      display: "grid",*/}
+              {/*      gridTemplateColumns: "64px 64px 32px",*/}
+              {/*      width: "100%",*/}
+              {/*      paddingTop: "138px",*/}
+              {/*      cursor: "pointer",*/}
+              {/*    }}*/}
+              {/*  >*/}
+              {/*    <div className="text-black text-xs leading-none font-medium font-mono">*/}
+              {/*      SOUNDS*/}
+              {/*    </div>*/}
+              {/*    <div className="text-gray2 text-xs leading-none ml-[29px]">*/}
+              {/*      {user.uniqueAlbums.length}*/}
+              {/*    </div>*/}
+              {/*    <ArrowIcon className="mt-[1px]" />*/}
+              {/*  </div>*/}
+              {/*  /!* Links *!/*/}
+              {/*  <div*/}
+              {/*    style={{*/}
+              {/*      display: "grid",*/}
+              {/*      gridTemplateColumns: "64px 64px 32px",*/}
+              {/*      width: "100%",*/}
+              {/*      paddingTop: "20px",*/}
+              {/*    }}*/}
+              {/*  >*/}
+              {/*    <div className="text-gray2 text-xs leading-none font-medium font-mono">*/}
+              {/*      LINKS*/}
+              {/*    </div>*/}
+              {/*    <div className="text-xs leading-none ml-[29px] text-gray2">*/}
+              {/*      {user._count.followers}*/}
+              {/*    </div>*/}
+              {/*    <ArrowIcon className="mt-[1px]" />*/}
+              {/*  </div>*/}
+              {/*</div>*/}
             </div>
             {activeTab === "soundtrack" ? (
               <Soundtrack userId={pageUserId} />
@@ -153,16 +152,10 @@ const User = () => {
           </motion.div>
 
           {/* Footer */}
-          <div
-            className={`absolute bottom-0 w-full flex justify-between p-4 ${
-              activeTab === "profile"
-                ? "border-t border-dashed border-silver"
-                : ""
-            }`}
-          >
-            <div className="flex items-center gap-2 w-full">
+          <div className={`absolute bottom-0 w-full flex justify-between p-6`}>
+            <div className="flex flex-row-reverse items-center gap-3 w-full">
               <Image
-                className={`rounded-full border border-silver`}
+                className={`rounded-full outline outline-black outline-[.5px]`}
                 onClick={handleImageClick}
                 src={user.image}
                 alt={`${user.name}'s avatar`}
@@ -170,9 +163,9 @@ const User = () => {
                 height={42}
               />
               {activeTab !== "soundtrack" ? (
-                <div className="flex justify-between w-full">
+                <div className="flex justify-between w-fit">
                   <div className="text-sm text-black font-medium">
-                    @{user.name}
+                    {user.name}
                   </div>
 
                   {!isOwnProfile && (

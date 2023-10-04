@@ -240,16 +240,46 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             </div>
           </div>
         </motion.div>
-        {/*<div className="flex items-center justify-center w-full p-8 pt-4 gap-1">*/}
-        {/*  /!*Name Goes Here - If name is Sound = Album, User = User, Entry =*/}
-        {/*   Entry*!/*/}
-        {/*  <div className="text-xs text-gray3 font-medium pr-3">ALBUM</div>*/}
-        {/*  /!* If Album/Sound, *!/*/}
-        {/*  <div className="text-xs text-black">UTOPIA</div>*/}
-        {/*  <div className="text-xs text-gray2">TRAVIS SCOTT</div>*/}
-        {/*</div>*/}
         <Nav />
+        {renderPageContent(activePage)}
       </Command>
     </motion.div>
+  );
+}
+
+function renderPageContent(page: Page) {
+  const { name, sound, user } = page;
+
+  let typeLabel, mainContent, subContent;
+
+  console.log(page);
+
+  switch (name.toLowerCase()) {
+    case "album":
+      typeLabel = "ALBUM";
+      mainContent = sound?.sound.attributes.name || "Unknown Album";
+      subContent = sound?.sound.attributes.artistName || "Unknown Artist";
+      break;
+    case "user":
+      typeLabel = "USER";
+      mainContent = user || "Unknown User";
+      break;
+    case "entry":
+      typeLabel = "ENTRY";
+      mainContent = "Entry Content"; // Assume some default or fallback content
+      break;
+    default:
+      typeLabel = "UNKNOWN";
+      mainContent = "Unknown Content";
+  }
+
+  return (
+    <div className="flex items-center justify-center w-full p-8 pt-4 gap-1 fixed -bottom-16">
+      <div className="text-xs text-gray3 font-medium pr-3 font-mono">
+        {typeLabel}
+      </div>
+      <div className="text-xs text-black">{mainContent}</div>
+      <div className="text-xs text-gray2">{subContent}</div>
+    </div>
   );
 }

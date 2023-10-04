@@ -86,11 +86,11 @@ const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {
 
   return (
     <div className="flex flex-col mx-8">
-      <h1 className="text-gray2 text-xs leading-none font-medium mt-[31px]">
+      <h1 className="text-gray2 text-xs leading-none font-medium mt-[31px] font-mono">
         ESSENTIALS
       </h1>
       <div className="flex flex-col mt-[19px] gap-7">
-        <Particle colors={colors} />
+        {/*<Particle colors={colors} />*/}
         {isLoading ? (
           <div>Loading...</div>
         ) : (
