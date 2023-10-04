@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 import React from "react";
+import { UserData } from "@/lib/global/interfaces";
 
 interface UserAvatarProps {
   imageSrc: string | undefined;
@@ -9,7 +10,7 @@ interface UserAvatarProps {
   width?: number;
   quality?: number;
   className?: string;
-  userId: string;
+  user: UserData;
   style?: React.CSSProperties;
 }
 
@@ -20,10 +21,10 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   height = 32,
   width = 32,
   quality = 100,
-  userId,
+  user,
   style,
 }) => {
-  const handleUserClick = useHandleUserClick(userId);
+  const handleUserClick = useHandleUserClick(user);
   if (!imageSrc) {
     return (
       <div

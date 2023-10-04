@@ -5,6 +5,7 @@ import { getAlbumsByIds } from "@/lib/global/musicKit";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { AlbumData } from "@/lib/global/interfaces";
 import ColorThief from "colorthief";
+import { AlbumDBData } from "@/lib/global/interfaces";
 import Particle from "@/components/interface/user/sub/components/Particle";
 
 type EssentialItemProps = {
@@ -63,11 +64,7 @@ const EssentialItem: React.FC<EssentialItemProps> = ({
 };
 
 interface EssentialsProps {
-  favorites: {
-    album: {
-      id: string;
-    };
-  }[];
+  favorites: AlbumData[];
 }
 
 const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {

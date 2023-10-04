@@ -7,13 +7,16 @@ import React, {
 } from "react";
 import { SelectedSound } from "@/lib/global/interfaces";
 import { useSession } from "next-auth/react";
-import { ReviewData } from "@/lib/global/interfaces";
+import { ReviewData, UserData } from "@/lib/global/interfaces";
+import { useQuery } from "@tanstack/react-query";
+import { getUserById } from "@/lib/api/userAPI";
+import { v4 as uuidv4 } from "uuid";
 
 export type Page = {
   key: string;
   name: string;
   sound?: SelectedSound;
-  user?: string;
+  user?: UserData;
   review?: ReviewData;
   scrollPosition: number;
   dimensions: {
@@ -45,7 +48,9 @@ export const InterfaceContext = React.createContext<
 export const useInterfaceContext = (): InterfaceContext => {
   const context = useContext(InterfaceContext);
   if (!context) {
-    throw new Error("useInterfaceContextmust be used within InterfaceProvider");
+    throw new Error(
+      "useInterfaceContext must be used within" + " InterfaceProvider",
+    );
   }
   return context;
 };
@@ -62,19 +67,33 @@ export const InterfaceContextProvider = ({
   // Page states
   const [pages, setPages] = useState<Page[]>([]);
 
+  // Query for user data
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery(
+    ["user", session?.user?.id],
+    () => getUserById(session?.user?.id || "", session?.user?.id || ""),
+    {
+      enabled: !!session?.user?.id, // Only run the query if session.user.id is available
+    },
+  );
+
   // Initialize pages
   useEffect(() => {
-    if (session && !pages.length) {
+    if (session && !pages.length && user) {
       setPages([
         {
-          key: session.user.id,
+          key: uuidv4(),
           name: "user",
+          user: user,
           dimensions: { width: 384, height: 512 },
           scrollPosition: 0,
         },
       ]);
     }
-  }, [session, pages]);
+  }, [session, pages, user]);
 
   const navigateBack = useCallback(() => {
     setPages((prevPages) => {

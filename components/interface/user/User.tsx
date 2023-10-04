@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 import Soundtrack from "@/components/interface/user/sub/Soundtrack";
 import { follow, getUserById, unfollow } from "@/lib/api/userAPI";
 import Essentials from "@/components/interface/user/sub/components/Essentials";
-import { ArrowIcon } from "@/components/icons";
 
 const linkProps = {
   INTERLINKED: { text: "INTERLINKED", color: "#00FF00" },
@@ -24,8 +23,8 @@ const User = () => {
 
   // User IDs
   const authenticatedUserId = session?.user.id;
-  const pageUserId = pages[pages.length - 1].key;
-  const isOwnProfile = authenticatedUserId === pageUserId;
+  const pageUser = pages[pages.length - 1].user;
+  const isOwnProfile = authenticatedUserId === pageUser!.id;
 
   // Store following status
   const [followingAtoB, setFollowingAtoB] = useState<boolean | null>(null);
@@ -47,14 +46,14 @@ const User = () => {
     "profile",
   );
 
-  // Get user data
+  // Get comprehensive user data
   const {
     data: user,
     isLoading,
     isError,
-  } = useQuery(["user", pageUserId], () => {
-    return getUserById(pageUserId, authenticatedUserId!);
-  });
+  } = useQuery(["user", pageUser ? pageUser.id : undefined], () =>
+    pageUser ? getUserById(pageUser.id, authenticatedUserId!) : null,
+  );
 
   useEffect(() => {
     if (user) {
@@ -72,15 +71,15 @@ const User = () => {
   };
 
   const handleFollow = async () => {
-    if (!authenticatedUserId || !pageUserId) {
+    if (!authenticatedUserId || !pageUser) {
       console.log("User is not signed in or user to follow/unfollow not found");
       return;
     }
     setLoadingFollow(true);
     try {
       followingAtoB
-        ? await unfollow(authenticatedUserId, pageUserId)
-        : await follow(authenticatedUserId, pageUserId);
+        ? await unfollow(authenticatedUserId, pageUser.id)
+        : await follow(authenticatedUserId, pageUser.id);
       setFollowingAtoB(!followingAtoB);
     } catch (error) {
       console.error("Error following/unfollowing", error);
@@ -106,48 +105,9 @@ const User = () => {
           >
             <div className="w-1/2 h-full flex flex-col">
               <Essentials favorites={user.favorites} />
-              {/*/!* Stats *!/*/}
-              {/*<div className="flex flex-col mx-8">*/}
-              {/*  /!* Sounds *!/*/}
-              {/*  <div*/}
-              {/*    onClick={handleSoundtrackClick}*/}
-              {/*    style={{*/}
-              {/*      display: "grid",*/}
-              {/*      gridTemplateColumns: "64px 64px 32px",*/}
-              {/*      width: "100%",*/}
-              {/*      paddingTop: "138px",*/}
-              {/*      cursor: "pointer",*/}
-              {/*    }}*/}
-              {/*  >*/}
-              {/*    <div className="text-black text-xs leading-none font-medium font-mono">*/}
-              {/*      SOUNDS*/}
-              {/*    </div>*/}
-              {/*    <div className="text-gray2 text-xs leading-none ml-[29px]">*/}
-              {/*      {user.uniqueAlbums.length}*/}
-              {/*    </div>*/}
-              {/*    <ArrowIcon className="mt-[1px]" />*/}
-              {/*  </div>*/}
-              {/*  /!* Links *!/*/}
-              {/*  <div*/}
-              {/*    style={{*/}
-              {/*      display: "grid",*/}
-              {/*      gridTemplateColumns: "64px 64px 32px",*/}
-              {/*      width: "100%",*/}
-              {/*      paddingTop: "20px",*/}
-              {/*    }}*/}
-              {/*  >*/}
-              {/*    <div className="text-gray2 text-xs leading-none font-medium font-mono">*/}
-              {/*      LINKS*/}
-              {/*    </div>*/}
-              {/*    <div className="text-xs leading-none ml-[29px] text-gray2">*/}
-              {/*      {user._count.followers}*/}
-              {/*    </div>*/}
-              {/*    <ArrowIcon className="mt-[1px]" />*/}
-              {/*  </div>*/}
-              {/*</div>*/}
             </div>
-            {activeTab === "soundtrack" ? (
-              <Soundtrack userId={pageUserId} />
+            {activeTab === "soundtrack" && pageUser ? (
+              <Soundtrack userId={pageUser.id} />
             ) : null}
           </motion.div>
 

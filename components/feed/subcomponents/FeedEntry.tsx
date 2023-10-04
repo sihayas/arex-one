@@ -28,6 +28,7 @@ export const FeedEntry: React.FC<EntryProps> = ({ review }) => {
   );
 
   const handleEntryClick = useHandleEntryClick(review);
+
   return (
     <div className="flex max-w-[398px]">
       <UserAvatar
@@ -36,7 +37,7 @@ export const FeedEntry: React.FC<EntryProps> = ({ review }) => {
         altText={`${review.author.name}'s avatar`}
         width={48}
         height={48}
-        userId={review.author.id}
+        user={review.author}
       />
       <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 -ml-3">
         {/* Artwork */}

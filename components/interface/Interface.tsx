@@ -262,7 +262,7 @@ function renderPageContent(page: Page) {
       break;
     case "user":
       typeLabel = "USER";
-      mainContent = user || "Unknown User";
+      mainContent = user?.name || "Unknown User";
       break;
     case "entry":
       typeLabel = "ENTRY";

@@ -3,12 +3,7 @@ export interface ReviewData {
   album: AlbumDBData;
   track: TrackDBData;
   trackId: string;
-  author: {
-    id: string;
-    image: string;
-    name: string;
-    username: string;
-  };
+  author: UserData;
   content: string | null;
   createdAt: string;
   id: string;
@@ -222,6 +217,9 @@ export interface UserData {
   reviews?: ReviewData[];
   username?: string;
   bio?: string;
+  isFollowingAtoB: boolean;
+  isFollowingBtoA: boolean;
+  favorites: AlbumDBData[];
 }
 
 export interface ActivityData {

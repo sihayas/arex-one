@@ -2,7 +2,12 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useSound } from "@/context/Sound";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
-import { AlbumData, ReviewData, SongData } from "@/lib/global/interfaces";
+import {
+  AlbumData,
+  ReviewData,
+  SongData,
+  UserData,
+} from "@/lib/global/interfaces";
 import { v4 as uuidv4 } from "uuid";
 
 // Handle FeedEntry Click
@@ -32,16 +37,16 @@ export const useHandleEntryClick = (review: ReviewData) => {
 };
 
 // Handle User Click
-export const useHandleUserClick = (authorId: string) => {
+export const useHandleUserClick = (author: UserData) => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
   return () => {
     setPages((prevPages) => [
       ...prevPages,
       {
-        key: authorId,
+        key: uuidv4(),
         name: "user",
-        user: authorId,
+        user: author,
         dimensions: { width: 384, height: 512 },
         scrollPosition: 0,
       },
