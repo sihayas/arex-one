@@ -36,8 +36,11 @@ export default async function handle(
       const activities = await prisma.activity.findMany({
         skip, // Skip records based on pagination
         take: limit, // Limit records based on pagination
+        orderBy: {
+          createdAt: "desc",
+        },
         where: {
-          // Activities where authorId is in following list of signed in user
+          // Activities where authorId is in following list of signed-in user
           OR: [
             {
               review: {
@@ -47,9 +50,6 @@ export default async function handle(
               },
             },
           ],
-        },
-        orderBy: {
-          createdAt: "desc",
         },
         include: {
           review: {
@@ -66,18 +66,7 @@ export default async function handle(
                 where: { authorId: userId },
               },
               createdAt: true,
-              // include 2 reply images
-              replies: {
-                take: 2,
-                select: {
-                  author: {
-                    select: {
-                      image: true,
-                      name: true,
-                    },
-                  },
-                },
-              },
+              // To grab album data from Apple API
               album: {
                 select: {
                   id: true,

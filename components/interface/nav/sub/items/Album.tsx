@@ -13,12 +13,12 @@ const Album = ({ album }: { album: AlbumData }) => {
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full border-b p-4 border-silver"
+      className="w-full p-4 will-change-transform"
       onSelect={() =>
         handleSelectSearch(
           document.getElementById(album.id) as HTMLImageElement,
           album,
-          artworkUrl
+          artworkUrl,
         )
       }
     >
@@ -34,13 +34,13 @@ const Album = ({ album }: { album: AlbumData }) => {
         />
 
         <div className="flex flex-col justify-center overflow-hidden">
-          <div className="text-sm font-medium text-black line-clamp-1">
-            {album.attributes.name}
-          </div>
           <div className="flex items-center text-xs gap-[6px] text-gray">
-            <div className="line-clamp-1">{album.attributes.artistName}</div>
-            <div>&middot;</div>
-            <div className="">{album.attributes.releaseDate.split("-")[0]}</div>
+            <div className="font-medium">ALBUM</div>
+            {/*<div>&middot;</div>*/}
+            {/*<div className="line-clamp-1">{album.attributes.artistName}</div>*/}
+          </div>
+          <div className="text-sm text-black line-clamp-1">
+            {album.attributes.name}
           </div>
         </div>
       </div>

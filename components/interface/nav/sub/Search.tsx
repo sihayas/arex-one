@@ -21,8 +21,8 @@ const Search = ({
 }: SearchProps) => {
   if (isInitialLoading || isFetching)
     return <div className="absolute bottom-1/2 left-1/2 text-xs">loading</div>;
-  if (error)
-    return <div className="absolute bottom-1/2 left-1/2 text-xs">Error</div>;
+
+  if (!searchData) return null;
 
   const appleData = searchData?.appleData || {};
   const userData = searchData?.users || {};
@@ -34,7 +34,7 @@ const Search = ({
   const allData = [
     ...filteredAlbums.map((album: AlbumData) => ({ ...album, type: "albums" })),
     ...filteredSongs.map((song: SongData) => ({ ...song, type: "songs" })),
-    ...userData.map((user: UserData) => ({ ...user, type: "users" })),
+    // ...userData.map((user: UserData) => ({ ...user, type: "users" })),
   ];
 
   return (

@@ -48,9 +48,9 @@ const Dial = ({ setRatingValue }: DialProps) => {
   return (
     <div
       ref={dialRef}
-      className={`w-[36px] h-[36px] rounded-full border border-silver flex justify-center items-center overflow-hidden text-sm text-black  scale-90 focus:scale-100 outline-none ${
+      className={`w-[36px] h-[36px] rounded-full border border-black flex justify-center items-center overflow-hidden text-sm text-black  scale-90 focus:scale-100 outline-none ${
         inputRef.current?.value === "" ? "shadow-rating" : ""
-      } focus:shadow-rating transition-all absolute -bottom-10 left-1`}
+      } focus:shadow-rating transition-all absolute -bottom-[37px] left-[3px]`}
       tabIndex={0}
       onKeyDown={handleKeyPress}
     >
@@ -63,7 +63,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
       >
         {ratings.map((rating, i) => (
           <animated.div
-            className="flex w-full items-center justify-center text-center text-sm font-semibold h-[40px] text-gray2"
+            className="flex w-full items-center justify-center text-center text-sm font-semibold h-[40px] text-black"
             key={i}
             style={{
               transform: props.value.to(

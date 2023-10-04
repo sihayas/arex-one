@@ -13,12 +13,12 @@ const Song = ({ song }: { song: SongData }) => {
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full border-b p-4 border-silver"
+      className="w-full p-4 will-change-transform"
       onSelect={() =>
         handleSelectSearch(
           document.getElementById(song.id) as HTMLImageElement,
           song,
-          artworkUrl
+          artworkUrl,
         )
       }
       key={song.id}
@@ -35,15 +35,15 @@ const Song = ({ song }: { song: SongData }) => {
         />
 
         <div className="flex flex-col justify-center overflow-hidden">
-          {/* Top */}
-          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium text-black">
-            {song.attributes.name}
-          </div>
           {/* Bottom */}
-          <div className="flex items-center text-xs gap-[6px] text-gray">
-            <div className="line-clamp-1">{song.attributes.albumName}</div>
-            <div>&ndash;</div>
+          <div className="flex items-center text-xs gap-1 text-gray">
+            <div className="line-clamp-1 font-medium">SONG</div>
+            <div>&middot;</div>
             <div className="line-clamp-1">{song.attributes.artistName}</div>
+          </div>
+          {/* Top */}
+          <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-black">
+            {song.attributes.name}
           </div>
         </div>
       </div>

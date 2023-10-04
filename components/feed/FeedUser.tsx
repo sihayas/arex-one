@@ -4,6 +4,7 @@ import { FeedEntry } from "@/components/feed/subcomponents/FeedEntry";
 import { ActivityData } from "@/lib/global/interfaces";
 import React from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
+import { JellyComponent } from "@/components/global/Loading";
 
 const FeedUser = ({
   userId,
@@ -45,20 +46,30 @@ const FeedUser = ({
       {error && "an error has occurred"}
       {data &&
         data.pages.map((page, i) =>
-          page.map((activity: ActivityData, index: number) => (
+          page.map((activity: ActivityData) => (
             <>
               {activity.review ? (
-                <FeedEntry review={activity.review} />
+                <FeedEntry key={activity.review.id} review={activity.review} />
               ) : (
                 "No review available for this activity."
               )}
             </>
           )),
         )}
-      {hasNextPage && (
+      {hasNextPage ? (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-          {isFetchingNextPage ? "Loading more..." : "Load More"}
+          {isFetchingNextPage ? (
+            <JellyComponent
+              className={"fixed left-[247px] bottom-8"}
+              key="jelly"
+              isVisible={isFetchingNextPage}
+            />
+          ) : (
+            "more"
+          )}
         </button>
+      ) : (
+        <div className="text-xs text-action">end of line</div>
       )}
     </>
   );

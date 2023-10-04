@@ -4,12 +4,14 @@ import type { Container, Engine } from "tsparticles-engine";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { loadPerlinNoisePath } from "tsparticles-path-perlin-noise";
+import { useInputContext } from "@/context/InputContext";
 
 interface ParticleProps {
   colors: string[][];
 }
 
 const Particle: React.FC<ParticleProps> = ({ colors }) => {
+  const { expandInput } = useInputContext();
   // Default colors
   const defaultColors = [
     "rgb(29, 20, 48)",
@@ -48,6 +50,7 @@ const Particle: React.FC<ParticleProps> = ({ colors }) => {
         init={particlesInit}
         loaded={particlesLoaded}
         options={{
+          pauseOnBlur: true,
           fpsLimit: 120,
           particles: {
             color: {

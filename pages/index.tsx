@@ -7,28 +7,12 @@ import { useRouter } from "next/router";
 import FeedUser from "@/components/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
-import {
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useScroll,
-} from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-
-  // Track scrolling for infinite scroll
-  const { scrollYProgress } = useScroll({
-    container: scrollContainerRef,
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", () => {
-    const progress = scrollYProgress.get();
-    console.log(progress);
-  });
-
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
 

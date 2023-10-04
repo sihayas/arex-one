@@ -1,9 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useSound } from "@/context/Sound";
 import GetSearchResults from "@/lib/api/searchAPI";
-import { useSpring, animated } from "@react-spring/web";
 import { motion } from "framer-motion";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
@@ -11,6 +10,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import Search from "./sub/Search";
 import Form from "./sub/Form";
 import { useInputContext } from "@/context/InputContext";
+import { useAnimate } from "framer-motion";
 
 const Nav: React.FC = () => {
   const { data: session, status } = useSession();
@@ -29,26 +29,41 @@ const Nav: React.FC = () => {
   const { data, isInitialLoading, isFetching, error } =
     GetSearchResults(searchQuery);
 
-  const searchStyle = useSpring({
-    height: expandInput
-      ? !selectedFormSound
-        ? "480"
-        : selectedFormSound.sound.type === "songs"
-        ? "120px"
-        : selectedFormSound.sound.type === "albums"
-        ? "462px"
-        : "0px"
-      : "0px",
-    from: { height: "0px" },
-    config: { tension: 750, friction: 70 },
-  });
+  const [scope, animate] = useAnimate();
+  const [inputScope, inputAnimate] = useAnimate();
 
-  const inputWidthStyle = useSpring({
-    width: expandInput ? "400px" : "44px",
-    transform: expandInput ? "translateX(200px)" : "translateX(0px)",
-    from: { width: "44px", transform: "translateX(0px)" },
-    config: { tension: 750, friction: 70 },
-  });
+  useEffect(() => {
+    // Define the height based on the conditions
+    let height = "0px";
+    if (expandInput) {
+      if (selectedFormSound) {
+        height =
+          selectedFormSound.sound.type === "songs"
+            ? "120px"
+            : selectedFormSound.sound.type === "albums"
+            ? "451px"
+            : "0px";
+      } else {
+        height = inputValue ? "480px" : "0px";
+      }
+    }
+
+    // Animate the height
+    animate(
+      scope.current,
+      { height: height },
+      { type: "spring", stiffness: 300, damping: 30 },
+    );
+  }, [expandInput, selectedFormSound, inputValue, animate]);
+
+  useEffect(() => {
+    // Animate the width
+    inputAnimate(
+      inputScope.current,
+      { width: expandInput ? "400px" : "40px" },
+      { type: "spring", stiffness: 400, damping: 40 },
+    );
+  }, [expandInput, inputAnimate]);
 
   const onFocus = useCallback(() => {
     setExpandInput(true);
@@ -97,66 +112,74 @@ const Nav: React.FC = () => {
       // Search
       <div className="flex flex-col">
         {/* Input Container */}
-        <animated.div
-          style={inputWidthStyle}
-          className="absolute flex flex-col justify-end backdrop-blur-xl -bottom-0 -right-0 bg-nav rounded-3xl shadow-sm"
+        <div
+          ref={inputScope}
+          className="absolute flex flex-col justify-end backdrop-blur-xl -bottom-0 -right-0 rounded-3xl outline outline-[.5px] outline-silver bg-nav"
         >
+          {/* Form / Search Results / Top */}
+          <div
+            ref={scope}
+            className={`flex flex-col relative ${
+              selectedFormSound
+                ? "overflow-visible"
+                : "overflow-scroll" + " scrollbar-none"
+            }`}
+          >
+            {/* If no selected form sound render search results */}
+            {selectedFormSound && expandInput ? (
+              <Form />
+            ) : (
+              !selectedFormSound &&
+              inputValue && (
+                <Search
+                  searchData={data}
+                  isInitialLoading={isInitialLoading}
+                  isFetching={isFetching}
+                  error={error}
+                />
+              )
+            )}
+          </div>
+
           {/* Input */}
           <div
             className={`${
               //Make space for the dial
-              selectedFormSound && expandInput ? "ml-10" : "translate-x-0"
-            } transition-all p-4 py-3 flex items-center`}
+              selectedFormSound && expandInput ? "ml-10" : ""
+            } transition-all p-3 flex items-center`}
           >
             <TextareaAutosize
               id="entryText"
-              className={`w-full bg-transparent text-violet text-[13px] outline-none resize-none`}
+              className={`w-full bg-transparent text-xs outline-none resize-none text-black`}
               placeholder={`${
-                selectedFormSound && expandInput ? "type..." : "rx"
+                selectedFormSound && expandInput
+                  ? "Type & Enter: Post, Enter: View, Backspace: Cancel."
+                  : "RX"
               }`}
-              value={inputValue}
+              value={expandInput ? inputValue : ""}
               onChange={(e) => handleNavTextChange(e.target.value)}
               onBlur={onBlur}
               onFocus={onFocus}
               ref={inputRef}
               onKeyDown={handleKeyDown}
+              minRows={1}
             />
           </div>
-          {/* Form / Search Results */}
-          <animated.div
-            className={`flex flex-col relative ${
-              selectedFormSound ? "overflow-visible" : "overflow-scroll"
-            }`}
-            style={searchStyle}
-          >
-            {!selectedFormSound ? (
-              <Search
-                searchData={data}
-                isInitialLoading={isInitialLoading}
-                isFetching={isFetching}
-                error={error}
-              />
-            ) : (
-              <Form />
-            )}
-          </animated.div>
-        </animated.div>
+        </div>
       </div>
     );
   }
 
   // Define the initial and animate values for framer-motion
-  const initialPosition = { bottom: 0, right: 0 };
+  const initialPosition = { x: 20, y: 20 };
   const centerPosition = {
-    bottom: "50%",
-    right: "50%",
-    translateX: "50%",
-    translateY: "50%",
+    x: 20,
+    y: 20,
   };
 
   return (
     <motion.div
-      className="fixed z-50 flex flex-col"
+      className="fixed z-50 flex flex-col bottom-0 right-0"
       initial={initialPosition}
       animate={expandInput ? centerPosition : initialPosition}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}

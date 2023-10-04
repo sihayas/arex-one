@@ -6,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchUserReview, postReview } from "@/lib/api/formAPI";
 import { useSound } from "@/context/Sound";
-import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { SendIcon, ArrowIcon } from "@/components/icons";
@@ -134,10 +133,10 @@ const Form = () => {
   );
 
   const renderAlbumSection = () => (
-    <div className="flex w-full flex-col gap-4 p-6">
+    <div className="flex w-full flex-col gap-4 p-4">
       <Image
         id={selectedFormSound.sound.id}
-        className="rounded-md shadow-feedArt"
+        className="rounded-lg shadow-feedArt"
         src={albumArtworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={464}
@@ -147,62 +146,20 @@ const Form = () => {
         priority={true}
       />
 
-      <div className="grid grid-cols-3 items-center text-center">
-        {/* Left / Back */}
-        {!inputValue ? (
-          <div className="flex items-center">
-            <ArrowIcon color={"#999"} width={16} height={16} />
-            <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
-              backspace
-            </div>
-          </div>
-        ) : (
-          <div></div>
-        )}
-        {/* Center / Names */}
-        <div className="flex flex-col items-center gap-1 text-sm text-gray">
-          <div className="font-semibold line-clamp-1">
-            {selectedFormSound.sound.attributes.name}
-          </div>
-          <div className="line-clamp-1">
-            {selectedFormSound.sound.attributes.artistName}
-          </div>
+      {/* Center / Names */}
+      <div className="flex flex-col gap-[9px] text-sm text-black w-full">
+        <div className="line-clamp-1 text-xs leading-none">
+          {selectedFormSound.sound.attributes.artistName}
         </div>
-        {/* Right / Send */}
-        {inputValue || rating > 0 ? (
-          <div className="flex flex-col items-end gap-1 justify-self-end">
-            <div className="flex items-center gap-2">
-              <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
-                enter / send
-              </div>
-              <SendIcon color={"#999"} width={16} height={16} />
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
-                ⌘ enter / send love
-              </div>
-              <SendIcon color={"#999"} width={16} height={16} />
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center justify-self-end">
-            <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
-              enter
-            </div>
-            <ArrowIcon
-              className={"rotate-180"}
-              color={"#999"}
-              width={16}
-              height={16}
-            />
-          </div>
-        )}
+        <div className="line-clamp-1 leading-none">
+          {selectedFormSound.sound.attributes.name}
+        </div>
       </div>
     </div>
   );
 
   const renderSongSection = () => (
-    <div className="relative flex w-full items-center gap-6 p-6 py-4">
+    <div className="relative flex w-full items-center gap-4 p-4 py-4">
       <Image
         id={selectedFormSound.sound.id}
         className="rounded-[6px] shadow-index"

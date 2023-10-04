@@ -30,6 +30,7 @@ module.exports = {
         action: "rgb(255,94,0)",
         red: "#FF0000",
         violet: "rgb(75,61,103)",
+        nav: "rgba(255, 255, 255, 0.92)",
       },
       gridRowStart: {
         9: "9",

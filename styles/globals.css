@@ -32,6 +32,10 @@ body {
   /* background-color: rgba(237, 237, 237, 0.792); */
 }
 
+input{
+
+}
+
 a {
   text-decoration: none;
 }
@@ -190,4 +194,17 @@ a {
 
 .rtl {
     direction: rtl;
+}
+
+::-webkit-input-placeholder {
+    font-family: italic;
+}
+:-moz-placeholder {
+    font-style: italic;
+}
+::-moz-placeholder {
+    font-style: italic;
+}
+:-ms-input-placeholder {
+    font-style: italic;
 }
