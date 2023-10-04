@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { getAlbumsByIds } from "../global/musicKit";
 import { ActivityData, AlbumData } from "../global/interfaces";
-import { useInfiniteQuery } from "@tanstack/react-query/src";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-export const fetchFeedAndMergeAlbums = async (
+const fetchFeedAndMergeAlbums = async (
   userId: string,
   pageParam: number = 1,
 ) => {
@@ -42,6 +42,51 @@ export const fetchFeed = async (userId: string, pageParam: number = 1) => {
   return res.data;
 };
 
+export const useFeedQuery = (userId: string | undefined) => {
+  const result = useInfiniteQuery(
+    ["feed", userId],
+    ({ pageParam = 1 }) => {
+      if (!userId) {
+        return Promise.reject(new Error("User ID is undefined"));
+      }
+      return fetchFeedAndMergeAlbums(userId, pageParam);
+    },
+    {
+      getNextPageParam: (lastPage, pages) => pages.length,
+      enabled: !!userId,
+    },
+  );
+
+  return {
+    data: result.data,
+    error: result.error,
+    fetchNextPage: result.fetchNextPage,
+    hasNextPage: result.hasNextPage,
+    isFetchingNextPage: result.isFetchingNextPage,
+  };
+};
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // export const useFetchBloomingEntries = (page: number) => {
 //   // Grab blooming entries from redis
 //   const bloomingEntriesQuery = useQuery(["bloomingEntries", page], async () => {

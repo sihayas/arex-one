@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { searchAlbums } from "../../../../lib/global/musicKit";
-import { prisma } from "../../../../lib/global/prisma"; // Make sure to import Prisma client
+import { searchAlbums } from "@/lib/global/musicKit";
+import { prisma } from "@/lib/global/prisma"; // Make sure to import Prisma
+// client
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { query } = req.query;
 

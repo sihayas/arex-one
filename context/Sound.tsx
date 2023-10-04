@@ -1,12 +1,19 @@
 import React, { useContext, useState } from "react";
-import { SelectedSound } from "@/lib/global/interfaces";
+import { AlbumData, SelectedSound, SongData } from "../lib/global/interfaces";
+
+type ExtendedSound = SelectedSound & {
+  sound: SongData | AlbumData;
+};
+
+// Form can either be for a song or an album. Interface sound can only be an
+// album obviously.
 
 export type SoundContextType = {
   selectedSound: SelectedSound | null;
   setSelectedSound: React.Dispatch<React.SetStateAction<SelectedSound | null>>;
-  selectedFormSound: SelectedSound | null;
+  selectedFormSound: ExtendedSound | null;
   setSelectedFormSound: React.Dispatch<
-    React.SetStateAction<SelectedSound | null>
+    React.SetStateAction<ExtendedSound | null>
   >;
 };
 
@@ -35,7 +42,7 @@ export const SoundDetailsProvider = ({
   );
 
   const [selectedFormSound, setSelectedFormSound] =
-    useState<SelectedSound | null>(null);
+    useState<ExtendedSound | null>(null);
 
   return (
     <SoundContext.Provider

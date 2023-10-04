@@ -197,8 +197,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
                 name: "album",
                 sound: selectedFormSound,
                 dimensions: {
-                  width: 658,
-                  height: 658,
+                  width: 480,
+                  height: 1024,
                 },
                 scrollPosition: 0,
               },

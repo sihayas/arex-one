@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SelectedSound, AlbumData, SongData } from "../global/interfaces";
+import { AlbumData } from "../global/interfaces";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { getAlbumById, getAlbumBySongId } from "../global/musicKit";
@@ -12,7 +12,8 @@ interface UserSession {
   gender: string;
 }
 
-export async function initializeAlbum(album: AlbumData) {
+// Helper to update/create albums
+async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/post/album`, album);
   return response.data;
 }
@@ -51,48 +52,60 @@ export function useAlbumQuery() {
     },
     {
       enabled: !!selectedSound,
-    }
+    },
   );
 }
 
+// Helper function for fetching album reviews
 export async function fetchReviews({
   pageParam = 1,
-  queryKey,
+  soundId,
+  userId,
   sort,
 }: {
   pageParam?: number;
-  queryKey: [string, string, string];
+  soundId: string;
+  userId: string;
   sort: string;
 }) {
-  const [, soundId, userId] = queryKey;
   const response = await axios.get(
-    `/api/album/get/reviews?soundId=${soundId}&page=${pageParam}&sort=${sort}&userId=${userId}`
+    `/api/album/get/reviews?soundId=${soundId}&page=${pageParam}&sort=${sort}&userId=${userId}`,
   );
   return response.data;
 }
 
-export function useReviewsQuery(
+// Main hook for fetching album reviews
+export const useReviewsQuery = (
   soundId: string,
   user: UserSession,
-  sortOrder: string
-) {
-  return useInfiniteQuery(
+  sortOrder: string,
+) => {
+  const result = useInfiniteQuery(
     ["reviews", soundId, user.id, sortOrder],
-    ({ pageParam, queryKey }) =>
+    ({ pageParam = 1 }) =>
       fetchReviews({
         pageParam,
-        queryKey: queryKey as [string, string, string],
+        soundId,
+        userId: user.id,
         sort: sortOrder,
       }),
     {
       getNextPageParam: (lastPage, pages) => {
-        return lastPage.length === 10 ? pages.length + 1 : false;
+        return lastPage.length === 6 ? pages.length + 1 : false;
       },
       enabled: !!soundId,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
         toast.success("loaded reviews");
       },
-    }
+    },
   );
-}
+
+  return {
+    data: result.data,
+    error: result.error,
+    fetchNextPage: result.fetchNextPage,
+    hasNextPage: result.hasNextPage,
+    isFetchingNextPage: result.isFetchingNextPage,
+  };
+};

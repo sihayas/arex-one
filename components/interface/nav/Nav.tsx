@@ -90,7 +90,6 @@ const Nav: React.FC = () => {
         value.substring(cursorPosition);
       handleNavTextChange(newValue); // Update the input value with the new line
     }
-    // ... handle other keys or default behavior
   };
 
   let left;

@@ -8,7 +8,7 @@ import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 const Album = ({ album }: { album: AlbumData }) => {
   const { handleSelectSearch } = useHandleSearchClick();
-  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "90");
+  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "800");
 
   return (
     <Command.Item

@@ -29,8 +29,7 @@ const Album = () => {
   });
 
   let x = useTransform(scrollY, [0, 48], [0, 480]);
-
-  let springX = useSpring(x, { damping: 20, stiffness: 200 });
+  let springX = useSpring(x, { damping: 80, stiffness: 800 });
 
   const borderRadius = useTransform(scrollY, [0, 120], ["20px", "8px"]);
 

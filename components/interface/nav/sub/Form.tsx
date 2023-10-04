@@ -24,6 +24,7 @@ const Form = () => {
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);
 
+  // Check if the user has already reviewed the sound
   const replay = useQuery(
     ["userReview", selectedFormSound?.sound.id, userId],
     () =>
@@ -68,8 +69,8 @@ const Form = () => {
           setInputValue(""); // Reset input value on success
         }),
         {
-          loading: "Submitting review...",
-          success: "Review submitted successfully", // Just a string message
+          loading: "sending...",
+          success: "sent", // Just a string message
           error: "Error submitting review",
         },
       );
@@ -123,13 +124,9 @@ const Form = () => {
     setRating(rating);
   };
 
-  const albumArtworkUrl = GenerateArtworkUrl(
+  const artworkUrl = GenerateArtworkUrl(
     selectedFormSound.sound.attributes.artwork.url,
-    "928",
-  );
-  const soundArtworkUrl = GenerateArtworkUrl(
-    selectedFormSound.sound.attributes.artwork.url,
-    "260",
+    "800",
   );
 
   const renderAlbumSection = () => (
@@ -137,7 +134,7 @@ const Form = () => {
       <Image
         id={selectedFormSound.sound.id}
         className="rounded-lg shadow-feedArt"
-        src={albumArtworkUrl}
+        src={artworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={464}
         height={464}
@@ -163,7 +160,7 @@ const Form = () => {
       <Image
         id={selectedFormSound.sound.id}
         className="rounded-[6px] shadow-index"
-        src={soundArtworkUrl}
+        src={artworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={80}
         height={80}

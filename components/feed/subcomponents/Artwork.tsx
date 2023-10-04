@@ -25,20 +25,18 @@ export const Artwork = ({ album, width = 334, height = 334 }: ArtworkProps) => {
   };
 
   return (
-    <>
-      <Image
-        onClick={handleSoundClick}
-        className="rounded-[7.5px] border border-silver"
-        src={artworkUrl || "/images/default.webp"}
-        alt={`artwork`}
-        width={width}
-        height={height}
-        onDragStart={(e) => e.preventDefault()}
-        draggable="false"
-        loading="lazy"
-        quality={100}
-        ref={ref}
-      />
-    </>
+    <Image
+      onClick={handleSoundClick}
+      className="rounded-[7.5px] border border-silver"
+      src={artworkUrl || "/images/default.webp"}
+      alt={`artwork`}
+      width={width}
+      height={height}
+      onDragStart={(e) => e.preventDefault()}
+      draggable="false"
+      loading="lazy"
+      quality={100}
+      ref={ref}
+    />
   );
 };

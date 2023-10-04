@@ -7,7 +7,7 @@ import { useHandleSearchClick } from "@/hooks/useInteractions/useHandleSearchCli
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 const Song = ({ song }: { song: SongData }) => {
-  const artworkUrl = GenerateArtworkUrl(song.attributes.artwork.url, "90");
+  const artworkUrl = GenerateArtworkUrl(song.attributes.artwork.url, "800");
   const { handleSelectSearch } = useHandleSearchClick();
 
   return (
