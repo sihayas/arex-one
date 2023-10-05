@@ -70,6 +70,16 @@ module.exports = {
     },
   },
   plugins: [
+    function ({ addUtilities }) {
+      addUtilities(
+        {
+          ".h-albums": {
+            height: "calc(100% - 64px)",
+          },
+        },
+        ["responsive", "hover"],
+      );
+    },
     plugin(function ({ addUtilities }) {
       addUtilities({
         ".shadow-bubble": {

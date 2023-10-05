@@ -182,7 +182,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     >
       {/* CMD-K Inner  */}
       <Command
-        className={`cmdk-inner flex`}
+        className={`cmdk-inner flex rounded-3xl`}
         shouldFilter={false}
         onKeyDown={(e: React.KeyboardEvent) => {
           // switch to album page from form
@@ -220,7 +220,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-[20px] bg-white overflow-hidden z-0 shadow-interface outline outline-1 outline-lightSilver`}
+          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-0 shadow-interface outline outline-1 outline-lightSilver`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -273,9 +273,9 @@ function renderPageContent(page: Page) {
   }
 
   return (
-    <div className="flex items-center justify-center w-full p-8 pt-4 gap-1 fixed -bottom-16">
-      <div className="text-xs text-gray3 font-medium pr-3">{typeLabel}</div>
-      <div className="text-xs text-black font-semibold">{mainContent}</div>
+    <div className="flex items-center justify-center w-full p-8 pt-4 fixed -bottom-16 uppercase">
+      <div className="text-xs text-gray3 font-medium pr-4">{typeLabel}</div>
+      <div className="text-xs text-black font-semibold pr-2">{mainContent}</div>
       <div className="text-xs text-black">{subContent}</div>
     </div>
   );

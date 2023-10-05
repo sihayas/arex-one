@@ -29,7 +29,7 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  let y = useTransform(scrollY, [0, 48], [0, -480]);
+  let y = useTransform(scrollY, [0, 24], [0, -416]);
   let springY = useSpring(y, { damping: 80, stiffness: 800 });
 
   const borderRadius = useTransform(scrollY, [0, 120], ["20px", "8px"]);
@@ -70,7 +70,7 @@ const Album = () => {
               boxShadow: boxShadow,
               borderRadius: borderRadius,
             }}
-            className="pointer-events-none overflow-hidden"
+            className="pointer-events-none overflow-hidden sticky -top-0 z-50"
           >
             <Image
               className="outline outline-1 outline-silver"
@@ -84,24 +84,22 @@ const Album = () => {
             />
           </motion.div>
           {/* Section Two / Entries */}
-          <div className="h-full w-full pb-[100vh]">
-            {!activeTabId ? (
-              <Albums albumId={selectedSound.sound.id} user={session!.user} />
-            ) : (
-              <Songs songId={activeTabId} user={session!.user} />
-            )}
-            <motion.div
-              style={{ opacity: blurOpacity }}
-              className="gradient-blur"
-            >
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </motion.div>
-          </div>
+          {!activeTabId ? (
+            <Albums albumId={selectedSound.sound.id} user={session!.user} />
+          ) : (
+            <Songs songId={activeTabId} user={session!.user} />
+          )}
+          <motion.div
+            style={{ opacity: blurOpacity }}
+            className="gradient-blur"
+          >
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </motion.div>
           {/* Rating */}
           <motion.div
             style={{ opacity }}
