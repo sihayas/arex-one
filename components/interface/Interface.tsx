@@ -275,8 +275,8 @@ function renderPageContent(page: Page) {
   return (
     <div className="flex items-center justify-center w-full p-8 pt-4 gap-1 fixed -bottom-16">
       <div className="text-xs text-gray3 font-medium pr-3">{typeLabel}</div>
-      <div className="text-xs text-black">{mainContent}</div>
-      <div className="text-xs text-gray2">{subContent}</div>
+      <div className="text-xs text-black font-semibold">{mainContent}</div>
+      <div className="text-xs text-black">{subContent}</div>
     </div>
   );
 }

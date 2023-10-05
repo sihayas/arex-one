@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schem
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -55,19 +52,21 @@ model VerificationToken {
 model User {
   notifications Notification[]
   id            String    @id @default(cuid())
+  email         String    @unique
   username      String?   @unique
   name          String
   bio           String?
-  email         String    @unique
   image         String?
   emailVerified String?
   password      String?
+
   favorites     Favorite[]
   following     Follows[] @relation("following")
   followers     Follows[] @relation("follower")
   reviews       Review[]
   replies       Reply[]
   likes         Like[]
+
   dateJoined    DateTime  @default(now()) @map(name: "date_joined")
   dateUpdated   DateTime  @updatedAt @map(name: "date_updated")
   accounts      Account[]
@@ -137,10 +136,12 @@ model Review {
   published Boolean   @default(false)
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
+
+  viewsCount    Int      @default(0)
+
+  deletedAt DateTime? @map(name: "deleted_at")
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @updatedAt @map(name: "updated_at")
-
-  viewsCount    Int      @default(0) // Track number of views
 
   @@index([albumId])
   @@index([authorId])
@@ -158,6 +159,7 @@ model Like {
   reviewId  String?
   reply     Reply?   @relation(fields: [replyId], references: [id])
   replyId String?
+
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 
@@ -182,8 +184,11 @@ model Reply {
   author      User      @relation(fields: [authorId], references: [id])
   authorId    String
   likes       Like[]
+
+
   createdAt   DateTime  @default(now()) @map(name: "created_at")
   updatedAt   DateTime  @updatedAt @map(name: "updated_at")
+  deletedAt DateTime? @map(name: "deleted_at")
 
   @@index([reviewId])
   @@index([authorId])
@@ -213,10 +218,13 @@ model Activity {
   // Polymorphic relations
   review      Review?      @relation(fields: [reviewId], references: [id])
   reviewId    String?
+
   like        Like?        @relation(fields: [likeId], references: [id])
   likeId      String?
+
   follow      Follows?     @relation(fields: [followId], references: [id])
   followId    String?
+
   reply      Reply?        @relation(fields: [replyId], references: [id])
   replyId    String?
 

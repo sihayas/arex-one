@@ -29,8 +29,8 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  let x = useTransform(scrollY, [0, 48], [0, 480]);
-  let springX = useSpring(x, { damping: 80, stiffness: 800 });
+  let y = useTransform(scrollY, [0, 48], [0, -480]);
+  let springY = useSpring(y, { damping: 80, stiffness: 800 });
 
   const borderRadius = useTransform(scrollY, [0, 120], ["20px", "8px"]);
 
@@ -66,7 +66,7 @@ const Album = () => {
         <>
           <motion.div
             style={{
-              x: springX,
+              y: springY,
               boxShadow: boxShadow,
               borderRadius: borderRadius,
             }}

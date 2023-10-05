@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAlbumsByIds } from "@/lib/global/musicKit";
 
 export const follow = async (followerId: string, followingId: string) => {
   await axios.post(`/api/user/follow`, { followerId, followingId });
@@ -14,6 +15,16 @@ export const getUserById = async (userId: string, sessionUserId: string) => {
   const url = `/api/user/getById?id=${userId}&sessionUserId=${sessionUserId}`;
   const response = await axios.get(url);
   return response.data;
+};
+
+export const getUserDataAndAlbums = async (
+  userId: string,
+  sessionUserId: string,
+) => {
+  const userData = await getUserById(userId, sessionUserId);
+  const albumIds = userData.favorites.map((fav: any) => fav.album.id);
+  const albumsData = await getAlbumsByIds(albumIds);
+  return { userData, albumsData };
 };
 
 export const fetchNotificationsForUser = async (userId: string) => {

@@ -48,10 +48,6 @@ a {
     padding: 0;
 }
 
-#main-content {
-  background-color: white;
-}
-
 .animate-scale-down {
   animation: scale-down .33s forwards;
 }

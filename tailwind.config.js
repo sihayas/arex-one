@@ -25,7 +25,7 @@ module.exports = {
         gray2: "#999999",
         gray3: "#CCCCCC",
         gray4: "rgba(60, 60, 67, 0.6)",
-        silver: "rgba(0, 0, 0, 0.1)",
+        silver: "rgba(0, 0, 0, 0.05)",
         lightSilver: "rgba(0, 0, 0, 0.02)",
         action: "rgb(255,94,0)",
         red: "#FF0000",

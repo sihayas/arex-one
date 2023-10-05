@@ -13,7 +13,7 @@ export const JellyComponent: React.FC<Props> = ({ isVisible, className }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: isVisible ? 1 : 0 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.3, delay: isVisible ? 5 : 0 }} // Added delay here
       className={className}
     >
       <div className={styles.jelly}></div>

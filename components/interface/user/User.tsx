@@ -7,9 +7,15 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion } from "framer-motion";
 
 import Soundtrack from "@/components/interface/user/sub/Soundtrack";
-import { follow, getUserById, unfollow } from "@/lib/api/userAPI";
+import {
+  follow,
+  getUserById,
+  getUserDataAndAlbums,
+  unfollow,
+} from "@/lib/api/userAPI";
 import Essentials from "@/components/interface/user/sub/components/Essentials";
 import { format } from "date-fns";
+import { JellyComponent } from "@/components/global/Loading";
 
 const linkProps = {
   INTERLINKED: { text: "INTERLINKED", color: "#00FF00" },
@@ -48,20 +54,20 @@ const User = () => {
   );
 
   // Get comprehensive user data
-  const {
-    data: user,
-    isLoading,
-    isError,
-  } = useQuery(["user", pageUser ? pageUser.id : undefined], () =>
-    pageUser ? getUserById(pageUser.id, authenticatedUserId!) : null,
+  const { data, isLoading, isError } = useQuery(
+    ["userDataAndAlbums", pageUser ? pageUser.id : undefined],
+    () =>
+      pageUser ? getUserDataAndAlbums(pageUser.id, authenticatedUserId!) : null,
   );
 
+  const { userData, albumsData } = data || {};
+
   useEffect(() => {
-    if (user) {
-      setFollowingAtoB(user.isFollowingAtoB);
-      setFollowingBtoA(user.isFollowingBtoA);
+    if (userData) {
+      setFollowingAtoB(userData.isFollowingAtoB);
+      setFollowingBtoA(userData.isFollowingBtoA);
     }
-  }, [user]);
+  }, [userData]);
 
   const handleSoundtrackClick = () => {
     setActiveTab("soundtrack");
@@ -92,7 +98,13 @@ const User = () => {
   return (
     <div className="w-full h-full overflow-hidden flex flex-col">
       {isLoading ? (
-        <div>Loading...</div>
+        <JellyComponent
+          className={
+            "absolute left-1/2 top-1/2 translate-x-1/2 translate-y-1/2"
+          }
+          key="jelly"
+          isVisible={true}
+        />
       ) : isError ? (
         <div>Error</div>
       ) : (
@@ -107,7 +119,7 @@ const User = () => {
             <div className="w-1/2 h-full flex flex-col p-8 justify-between">
               <div className="flex flex-col gap-7 mt-5">
                 <div className="text-sm text-black font-medium leading-none">
-                  {user.name}
+                  {userData.name}
                 </div>
                 {/* Since */}
                 <div className="flex flex-col gap-[10px]">
@@ -115,7 +127,7 @@ const User = () => {
                     SINCE
                   </div>
                   <div className="text-black font-medium text-sm leading-none">
-                    {format(new Date(user.dateJoined), "MM.dd.yy")}
+                    {format(new Date(userData.dateJoined), "MM.dd.yy")}
                   </div>
                 </div>
                 {/* Sounds */}
@@ -127,7 +139,7 @@ const User = () => {
                     UNIQUE SOUNDS
                   </div>
                   <div className="text-black font-medium text-sm leading-none">
-                    {user.uniqueAlbums.length}
+                    {userData.uniqueAlbums.length}
                   </div>
                 </div>
                 {/* Following / Followers */}
@@ -138,18 +150,18 @@ const User = () => {
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-black rounded-full" />
                     <div className="text-black font-medium text-sm leading-none">
-                      {user._count.followers}
+                      {userData._count.followers}
                     </div>
 
                     <div className="w-2 h-2 bg-[#FFEA00] rounded-full ml-2" />
                     <div className="text-[#FFEA00] font-medium text-sm leading-none">
-                      {user._count.followers}
+                      {userData._count.followers}
                     </div>
                   </div>
                 </div>
               </div>
 
-              <Essentials favorites={user.favorites} />
+              <Essentials favorites={albumsData} />
             </div>
 
             {activeTab === "soundtrack" && pageUser ? (
@@ -159,8 +171,8 @@ const User = () => {
           <Image
             className={`fixed top-8 right-8 rounded-full outline outline-black outline-[.5px]`}
             onClick={handleImageClick}
-            src={user.image}
-            alt={`${user.name}'s avatar`}
+            src={userData.image}
+            alt={`${userData.name}'s avatar`}
             width={64}
             height={64}
           />
