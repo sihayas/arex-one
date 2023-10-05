@@ -28,7 +28,7 @@ export const useHandleEntryClick = (review: ReviewData) => {
           height: 1024,
         },
         scrollPosition: 0,
-        review: review,
+        entry: review,
       },
     ]);
     setThreadcrumbs([review.id]);
@@ -47,7 +47,7 @@ export const useHandleUserClick = (author: UserData) => {
         key: uuidv4(),
         name: "user",
         user: author,
-        dimensions: { width: 384, height: 512 },
+        dimensions: { width: 352, height: 512 },
         scrollPosition: 0,
       },
     ]);

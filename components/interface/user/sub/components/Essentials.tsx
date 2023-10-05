@@ -31,35 +31,15 @@ const EssentialItem: React.FC<EssentialItemProps> = ({
   };
 
   return (
-    <>
-      <div className="flex flex-col gap-[10px]">
-        <div className="flex items-center gap-2">
-          <svg width="10" height="10">
-            <rect
-              width="10"
-              height="10"
-              rx="2"
-              ry="2"
-              style={{ fill: svgColor }}
-            />
-          </svg>
-
-          <div className="text-black leading-none text-sm">{name}</div>
-        </div>
-        <div className="pl-[18px] text-gray2 leading-none text-xs">
-          {artistName}
-        </div>
-      </div>
-      <Image
-        className="absolute rounded-[8px] shadow-md opacity-0 top-1/2 transform -translate-y-1/2 right-[128px]"
-        src={url || "/images/default.webp"}
-        alt="artwork"
-        width={1}
-        height={1}
-        quality={100}
-        onLoadingComplete={(img) => handlePaletteGenerated(img)}
-      />
-    </>
+    <Image
+      className="rounded-[8px] shadow-md"
+      src={url || "/images/default.webp"}
+      alt="artwork"
+      width={90}
+      height={90}
+      quality={100}
+      onLoadingComplete={(img) => handlePaletteGenerated(img)}
+    />
   );
 };
 
@@ -69,6 +49,7 @@ interface EssentialsProps {
 
 const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {
   const [colors, setColors] = useState<string[][]>([]);
+  // @ts-ignore
   const albumIds = favorites.map((fav) => fav.album.id);
   const { data, isLoading } = useQuery(["albums", albumIds], () =>
     getAlbumsByIds(albumIds),
@@ -82,11 +63,11 @@ const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {
   };
 
   return (
-    <div className="flex flex-col mx-8">
-      <h1 className="text-gray2 text-xs leading-none font-medium mt-[31px] font-mono">
+    <div className="flex flex-col gap-[14px]">
+      <div className="text-xs text-gray2 font-mono leading-none text-center">
         ESSENTIALS
-      </h1>
-      <div className="flex flex-col mt-[19px] gap-7">
+      </div>
+      <div className="flex gap-[9px]">
         {/*<Particle colors={colors} />*/}
         {isLoading ? (
           <div>Loading...</div>

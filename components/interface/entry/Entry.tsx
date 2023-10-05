@@ -1,7 +1,3 @@
-import { useSession } from "next-auth/react";
-
-import useFetchArtworkUrl from "@/hooks/global/useFetchArtworkUrl";
-
 import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { EntryFull } from "@/components/interface/entry/sub/EntryFull";
@@ -23,21 +19,23 @@ export const Entry = () => {
 
   const activePage: Page = pages[pages.length - 1];
 
-  const review = activePage.review;
+  const entry = activePage.entry;
 
   useEffect(() => {
-    if (review) {
-      setReplyParent(review);
+    if (entry) {
+      setReplyParent(entry);
       console.log("set reply parent to review");
     }
-  }, [review, setReplyParent]);
+  }, [entry, setReplyParent]);
+
+  console.log(entry);
 
   // If review album is different from selected album, fetch artwork
   // const { artworkUrl } = useFetchArtworkUrl(review?.albumId, "726", "albumId");
 
   return (
     <div className="w-full h-full relative mb-96">
-      {review ? (
+      {entry ? (
         <>
           <motion.div
             style={{
@@ -46,7 +44,7 @@ export const Entry = () => {
               marginTop: "-8px",
             }}
           >
-            <EntryFull review={review} />
+            <EntryFull review={entry} />
           </motion.div>
           <RenderReplies />
           {/*<div className="fixed w-full top-0 p-8">*/}

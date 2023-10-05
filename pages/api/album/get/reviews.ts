@@ -57,13 +57,7 @@ export default async function handle(
         take: 6,
         orderBy,
         include: {
-          author: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-            },
-          },
+          author: true,
           // Check if liked
           likes: {
             select: { id: true },

@@ -23,8 +23,8 @@ type PageName = "album" | "user" | "entry";
 const getDimensions = (pageName: PageName) => {
   const dimensions = {
     user: {
-      base: { width: 384, height: 512 },
-      target: { width: 384, height: 512 }, // Placeholder values
+      base: { width: 352, height: 512 },
+      target: { width: 352, height: 512 }, // Placeholder values
     },
     album: {
       base: { width: 480, height: 480 },
@@ -248,11 +248,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 }
 
 function renderPageContent(page: Page) {
-  const { name, sound, user } = page;
+  const { name, sound, user, entry } = page;
 
   let typeLabel, mainContent, subContent;
-
-  console.log(page);
 
   switch (name.toLowerCase()) {
     case "album":
@@ -266,7 +264,8 @@ function renderPageContent(page: Page) {
       break;
     case "entry":
       typeLabel = "ENTRY";
-      mainContent = "Entry Content"; // Assume some default or fallback content
+      mainContent = entry?.appleAlbumData.attributes.name;
+      subContent = "by @" + entry?.author.name;
       break;
     default:
       typeLabel = "UNKNOWN";
@@ -275,9 +274,7 @@ function renderPageContent(page: Page) {
 
   return (
     <div className="flex items-center justify-center w-full p-8 pt-4 gap-1 fixed -bottom-16">
-      <div className="text-xs text-gray3 font-medium pr-3 font-mono">
-        {typeLabel}
-      </div>
+      <div className="text-xs text-gray3 font-medium pr-3">{typeLabel}</div>
       <div className="text-xs text-black">{mainContent}</div>
       <div className="text-xs text-gray2">{subContent}</div>
     </div>

@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
 import Image from "next/image";
+import React, { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useSound } from "@/context/Sound";
@@ -11,6 +11,7 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Songs from "./sub/Songs";
 import { StarOneIcon } from "@/components/icons";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import { JellyComponent } from "@/components/global/Loading";
 
 const Album = () => {
   // Hooks
@@ -54,7 +55,13 @@ const Album = () => {
   return (
     <div className="w-full h-full">
       {!selectedSound || isLoading ? (
-        <div>loading...</div>
+        <JellyComponent
+          className={
+            "absolute left-1/2 top-1/2 translate-x-1/2 translate-y-1/2"
+          }
+          key="jelly"
+          isVisible={true}
+        />
       ) : (
         <>
           <motion.div

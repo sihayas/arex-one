@@ -58,7 +58,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         altText={`${review.author.name}'s avatar`}
         width={48}
         height={48}
-        userId={review.author.id}
+        user={review.author}
       />
       <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 -ml-3">
         {/* Rating & Names */}

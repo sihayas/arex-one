@@ -40,7 +40,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
             altText={`${review.author.name}'s avatar`}
             width={40}
             height={40}
-            userId={review.author.id}
+            user={review.author}
           />
           <p className="text-[#3C3C43]/60 font-medium text-sm leading-[75%] mt-[5px]">
             {review.author.name}

@@ -17,7 +17,7 @@ export type Page = {
   name: string;
   sound?: SelectedSound;
   user?: UserData;
-  review?: ReviewData;
+  entry?: ReviewData;
   scrollPosition: number;
   dimensions: {
     width: number;
@@ -74,9 +74,9 @@ export const InterfaceContextProvider = ({
     isError,
   } = useQuery(
     ["user", session?.user?.id],
-    () => getUserById(session?.user?.id || "", session?.user?.id || ""),
+    () => getUserById(session?.user.id || "", session?.user.id || ""),
     {
-      enabled: !!session?.user?.id, // Only run the query if session.user.id is available
+      enabled: !!session?.user.id, // Only run the query if session.user.id is available
     },
   );
 
@@ -88,7 +88,7 @@ export const InterfaceContextProvider = ({
           key: uuidv4(),
           name: "user",
           user: user,
-          dimensions: { width: 384, height: 512 },
+          dimensions: { width: 352, height: 512 },
           scrollPosition: 0,
         },
       ]);

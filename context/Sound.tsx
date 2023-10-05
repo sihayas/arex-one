@@ -6,7 +6,7 @@ type ExtendedSound = SelectedSound & {
 };
 
 // Form can either be for a song or an album. Interface sound can only be an
-// album obviously.
+// album obviously
 
 export type SoundContextType = {
   selectedSound: SelectedSound | null;
