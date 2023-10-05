@@ -7,7 +7,7 @@ const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
 const isUnwanted = (title: string) => {
   const unwantedKeywords = ["remix", "edition", "mix"];
   return unwantedKeywords.some((keyword) =>
-    title.toLowerCase().includes(keyword)
+    title.toLowerCase().includes(keyword),
   );
 };
 
@@ -17,7 +17,7 @@ export const searchAlbums = async (keyword: string) => {
   const limit = 12;
   const types = "albums,songs";
   const url = `${baseURL}?term=${encodeURIComponent(
-    keyword
+    keyword,
   )}&limit=${limit}&types=${types}`;
 
   const response = await axios.get(url, {
@@ -34,7 +34,7 @@ export const searchAlbums = async (keyword: string) => {
     .filter(
       (album: AlbumData) =>
         !album.attributes.isSingle && // Check if the album is not a single
-        !isUnwanted(album.attributes.name) // Check if the album title contains unwanted keywords
+        !isUnwanted(album.attributes.name), // Check if the album title contains unwanted keywords
     )
     .slice(0, 3); // Limit to 8 results
 
@@ -77,7 +77,7 @@ export const getAlbumBySongId = async (songId: string) => {
   return response.data.data[0];
 };
 
-// Seach for multiple albums by song IDs
+// Search for multiple albums by song IDs
 export const getAlbumsBySongIds = async (songIds: string[]) => {
   const baseURL = "https://api.music.apple.com/v1/catalog/us/songs/";
   const response = await axios.get(`${baseURL}?ids=${songIds.join(",")}`, {

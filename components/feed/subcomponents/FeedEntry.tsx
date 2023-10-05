@@ -30,35 +30,48 @@ export const FeedEntry: React.FC<EntryProps> = ({ review }) => {
   const handleEntryClick = useHandleEntryClick(review);
 
   return (
-    <div className="flex max-w-[398px]">
+    <div className="flex max-w-[392px]">
       <UserAvatar
-        className="w-12 h-12 translate-y-[347px] outline outline-4 outline-white z-10"
+        className="w-10 h-10 translate-y-[416px] outline outline-2 outline-white z-10"
         imageSrc={review.author.image}
         altText={`${review.author.name}'s avatar`}
         width={48}
         height={48}
         user={review.author}
       />
-      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 -ml-3">
+      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative border border-silver -ml-4">
         {/* Artwork */}
         <Artwork album={album} />
-        {/* Rating & Names */}
-        <Stars
-          className="outline-4 outline-white outline w-fit -mt-3"
-          rating={review.rating}
-          soundName={album.attributes.name}
-          artist={album.attributes.artistName}
-        />
-        <p className="text-[#3C3C43]/90 font-medium text-sm leading-[75%] mt-[13px] pl-2">
-          {review.author.name}
-        </p>
-        {/* Content*/}
-        <div
-          onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-[#3C3C43]/90 leading-normal cursor-pointer mt-[5px] pl-2`}
-        >
-          {review.content}
+        {/* Rating & Sound Names */}
+        <div className="flex items-center justify-between p-4 pb-[14px]">
+          <Stars
+            rating={review.rating}
+            soundName={album.attributes.name}
+            artist={album.attributes.artistName}
+          />
+          <div className="flex flex-col gap-2">
+            <p className="text-xs tracking-tight text-[rgba(60,60,67,.9)] text-end leading-[75%]">
+              {album.attributes.name}
+            </p>
+            <p className="text-xs tracking-tight text-[rgba(60,60,67,.6)] text-end leading-[75%]">
+              {album.attributes.artistName}
+            </p>
+          </div>
         </div>
+
+        <div className="flex flex-col gap-[6px] p-4 pt-0">
+          <p className="text-[#3C3C43]/90 font-medium text-sm leading-[75%] pl-2">
+            {review.author.name}
+          </p>
+          {/* Content*/}
+          <div
+            onClick={handleEntryClick}
+            className={`break-words line-clamp-6 w-full text-sm text-[#3C3C43]/90 leading-normal cursor-pointer pl-2`}
+          >
+            {review.content}
+          </div>
+        </div>
+
         <LikeButton
           handleLikeClick={handleLikeClick}
           liked={liked}

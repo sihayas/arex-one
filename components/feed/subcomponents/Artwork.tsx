@@ -11,7 +11,7 @@ interface ArtworkProps {
   height?: number;
 }
 
-export const Artwork = ({ album, width = 334, height = 334 }: ArtworkProps) => {
+export const Artwork = ({ album, width = 368, height = 368 }: ArtworkProps) => {
   const { handleSelectSound } = useHandleSoundClick();
   const ref = React.useRef<HTMLImageElement>(null);
 
@@ -27,7 +27,7 @@ export const Artwork = ({ album, width = 334, height = 334 }: ArtworkProps) => {
   return (
     <Image
       onClick={handleSoundClick}
-      className="rounded-[7.5px] border border-silver"
+      className="rounded-t-[13px] rounded-b-none"
       src={artworkUrl || "/images/default.webp"}
       alt={`artwork`}
       width={width}
