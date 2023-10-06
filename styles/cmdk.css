@@ -10,14 +10,14 @@
 }
 
 /* CMDK INNER */
-.cmdk [cmdk-root] {
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-}
+/*.cmdk [cmdk-root] {*/
+/*  position: relative;*/
+/*  align-items: center;*/
+/*  justify-content: center;*/
+/*  border-radius: 20px;*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*}*/
 
 .cmdk [cmdk-input] {
   width: 100%;

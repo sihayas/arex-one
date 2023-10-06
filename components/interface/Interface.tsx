@@ -182,7 +182,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     >
       {/* CMD-K Inner  */}
       <Command
-        className={`cmdk-inner flex rounded-3xl`}
+        className={`cmdk-inner flex rounded-3xl `}
         shouldFilter={false}
         onKeyDown={(e: React.KeyboardEvent) => {
           // switch to album page from form
@@ -220,7 +220,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-0 shadow-interface outline outline-1 outline-lightSilver`}
+          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-0 shadow-interface outline outline-[.5px] outline-silver`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -233,8 +233,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden
-               w-full h-full scrollbar-none z-10`}
+              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden w-full h-full scrollbar-none z-10 rounded-3xl`}
             >
               <ActiveComponent />
             </div>

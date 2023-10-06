@@ -91,7 +91,7 @@ export const useReviewsQuery = (
       }),
     {
       getNextPageParam: (lastPage, pages) => {
-        return lastPage.length === 6 ? pages.length + 1 : false;
+        return lastPage.length === 10 ? pages.length + 1 : false;
       },
       enabled: !!soundId,
       refetchOnWindowFocus: false,

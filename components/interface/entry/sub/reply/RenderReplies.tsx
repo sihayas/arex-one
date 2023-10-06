@@ -12,7 +12,7 @@ function RenderReplies() {
   const { data: session } = useSession();
 
   const activePage: Page = pages[pages.length - 1];
-  const reviewId = activePage.review?.id;
+  const reviewId = activePage.entry?.id;
 
   const userId = session?.user.id;
 

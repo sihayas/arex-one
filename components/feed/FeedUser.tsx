@@ -1,7 +1,7 @@
 import { useFeedQuery } from "@/lib/api/feedAPI";
 import { FeedEntry } from "@/components/feed/subcomponents/FeedEntry";
 import { ActivityData } from "@/lib/global/interfaces";
-import React from "react";
+import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
 
@@ -27,21 +27,20 @@ const FeedUser = ({
     }
   });
 
+  const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
+
   return (
     <>
       {error && "an error has occurred"}
-      {data &&
-        data.pages.map((page, i) =>
-          page.map((activity: ActivityData) => (
-            <>
-              {activity.review ? (
-                <FeedEntry key={activity.review.id} review={activity.review} />
-              ) : (
-                "No review available for this activity."
-              )}
-            </>
-          )),
-        )}
+      {allActivities.map((activity: ActivityData, i) => (
+        <Fragment key={activity.id}>
+          {activity.review ? (
+            <FeedEntry review={activity.review} />
+          ) : (
+            "No review available for this activity."
+          )}
+        </Fragment>
+      ))}
       {hasNextPage ? (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           {isFetchingNextPage ? (

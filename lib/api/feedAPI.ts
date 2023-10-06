@@ -1,5 +1,4 @@
 // This fetch function is used by react-query
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { getAlbumsByIds } from "../global/musicKit";
 import { ActivityData, AlbumData } from "../global/interfaces";
@@ -8,8 +7,22 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 const fetchFeedAndMergeAlbums = async (
   userId: string,
   pageParam: number = 1,
+  limit: number = 6,
 ) => {
-  const feedData = await fetchFeed(userId, pageParam);
+  const res = await axios.get(
+    `/api/feed/get/activities?userId=${userId}&page=${pageParam}&limit=${limit}`,
+  );
+
+  // Check if res.data.data has the correct structure
+  if (
+    !res.data.data ||
+    !res.data.data.activities ||
+    !res.data.data.pagination
+  ) {
+    throw new Error("Unexpected server response structure");
+  }
+
+  const feedData = res.data.data.activities;
 
   // 2. Extract Album IDs
   const albumIds = feedData
@@ -32,27 +45,26 @@ const fetchFeedAndMergeAlbums = async (
     }
   });
 
-  return feedData;
+  return {
+    data: feedData, // this is your activities data
+    pagination: res.data.data.pagination, // this is your pagination data
+  };
 };
 
-export const fetchFeed = async (userId: string, pageParam: number = 1) => {
-  const res = await axios.get(
-    `/api/feed/get/activities?userId=${userId}&page=${pageParam}`,
-  );
-  return res.data;
-};
-
-export const useFeedQuery = (userId: string | undefined) => {
+export const useFeedQuery = (userId: string | undefined, limit: number = 6) => {
   const result = useInfiniteQuery(
     ["feed", userId],
     ({ pageParam = 1 }) => {
       if (!userId) {
         return Promise.reject(new Error("User ID is undefined"));
       }
-      return fetchFeedAndMergeAlbums(userId, pageParam);
+      return fetchFeedAndMergeAlbums(userId, pageParam, limit);
     },
     {
-      getNextPageParam: (lastPage, pages) => pages.length,
+      getNextPageParam: (lastPage, allPages) => {
+        const lastPageData = allPages[allPages.length - 1];
+        return lastPageData.pagination?.nextPage || null;
+      },
       enabled: !!userId,
     },
   );
@@ -65,6 +77,7 @@ export const useFeedQuery = (userId: string | undefined) => {
     isFetchingNextPage: result.isFetchingNextPage,
   };
 };
+
 //
 //
 //
