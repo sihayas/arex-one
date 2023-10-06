@@ -9,11 +9,12 @@ const FeedUser = ({
   userId,
   scrollContainerRef,
 }: {
-  userId?: string;
+  userId: string;
   scrollContainerRef: React.RefObject<HTMLDivElement>;
 }) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useFeedQuery(userId);
+
   // Track scrolling for infinite scroll
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,
@@ -23,7 +24,9 @@ const FeedUser = ({
     const progress = scrollYProgress.get();
 
     if (progress > 0.9 && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      fetchNextPage().catch((error) => {
+        console.error("Error fetching next page:", error);
+      });
     }
   });
 

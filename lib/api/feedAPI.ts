@@ -51,7 +51,7 @@ const fetchFeedAndMergeAlbums = async (
   };
 };
 
-export const useFeedQuery = (userId: string | undefined, limit: number = 6) => {
+export const useFeedQuery = (userId: string, limit: number = 6) => {
   const result = useInfiniteQuery(
     ["feed", userId],
     ({ pageParam = 1 }) => {

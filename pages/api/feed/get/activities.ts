@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
+import { validateQuery } from "@/lib/middleware/validateQuery";
 
 export default async function handle(
   req: NextApiRequest,
@@ -9,6 +10,7 @@ export default async function handle(
     const userId =
       typeof req.query.userId === "string" ? req.query.userId : undefined;
 
+    // Validation
     if (!userId) {
       return res.status(400).json({ error: "User ID is required." });
     }
@@ -16,7 +18,6 @@ export default async function handle(
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 6;
 
-    // Pagination validation
     if (isNaN(page) || page < 1) {
       return res.status(400).json({ error: "Invalid page number." });
     }
@@ -66,7 +67,6 @@ export default async function handle(
               id: true,
               content: true,
               author: true,
-              albumId: true,
               trackId: true,
               rating: true,
               // check if user has liked
@@ -90,6 +90,8 @@ export default async function handle(
         },
       });
 
+      // Pagination logic, check if there are more pages by conirming theres
+      // more than the limit
       const hasMorePages = activities.length > limit;
       if (hasMorePages) {
         activities.pop(); // remove the extra item if there are more pages
@@ -109,14 +111,6 @@ export default async function handle(
         return activity;
       });
 
-      console.log({
-        hasMorePages,
-        page,
-        limit,
-        activitiesLength: activities.length,
-        nextPage: hasMorePages ? page + 1 : null,
-      });
-
       res.status(200).json({
         data: {
           activities: activitiesWithUserLike,
@@ -127,7 +121,10 @@ export default async function handle(
       });
     } catch (error) {
       console.error("Failed to fetch activities:", error);
-      res.status(500).json({ error: "Failed to fetch activities." });
+      res
+        .status(500)
+        // @ts-ignore
+        .json({ error: `Failed to fetch activities: ${error.message}` });
     }
   } else {
     res.status(405).json({ error: "Method not allowed." });
