@@ -6,21 +6,28 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
 
-interface AlbumsProps {
-  albumId: string;
+interface RenderEntriesProps {
+  soundId: string;
   user: Session["user"];
+  sortOrder: "newest" | "oldest" | "highest" | "lowest" | "most" | "least";
 }
 
-const Albums: React.FC<AlbumsProps> = ({ albumId, user }) => {
-  const sortOrder = "newest";
-  const reviewsQuery = useReviewsQuery(albumId, user, sortOrder);
+const RenderEntries: React.FC<RenderEntriesProps> = ({
+  soundId,
+  user,
+  sortOrder = "newest",
+}) => {
+  // Get entries & flatten
   const {
-    data: reviewsData,
+    data: entries,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = reviewsQuery;
+  } = useReviewsQuery(soundId, user, sortOrder);
 
+  const flattenedEntries = entries?.pages.flat() || [];
+
+  // Initialize infinite scroll
   const { scrollContainerRef } = useInterfaceContext();
 
   const { scrollYProgress } = useScroll({
@@ -37,14 +44,12 @@ const Albums: React.FC<AlbumsProps> = ({ albumId, user }) => {
     }
   });
 
-  const flattenedReviews = reviewsData?.pages.flat() || [];
-
   return (
     // Gap-5 to align with statistics
     <div className="flex flex-col h-albums min-w-full items-center p-8 pt-8 gap-9">
-      {flattenedReviews?.length > 0 ? (
-        flattenedReviews.map((review) => (
-          <EntryAlbum key={review.id} review={review} />
+      {flattenedEntries?.length > 0 ? (
+        flattenedEntries.map((entry) => (
+          <EntryAlbum key={entry.id} review={entry} />
         ))
       ) : (
         <div className="p-2 text-xs uppercase text-gray2">
@@ -64,7 +69,7 @@ const Albums: React.FC<AlbumsProps> = ({ albumId, user }) => {
           )}
         </button>
       ) : (
-        <div className="text-xs text-action uppercase tracking-widest">
+        <div className="text-xs text-action uppercase tracking-widest font-thin">
           end of line
         </div>
       )}
@@ -72,4 +77,4 @@ const Albums: React.FC<AlbumsProps> = ({ albumId, user }) => {
   );
 };
 
-export default Albums;
+export default RenderEntries;

@@ -17,7 +17,6 @@ import {
   useTransform,
   Variants,
 } from "framer-motion";
-import Tab from "@/components/interface/album/sub/Tab";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
@@ -166,7 +165,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         await animateRoot(
           rootScope.current,
           {
-            x: "-20%",
+            x: "-50%",
             y: "-50%",
             scale: 1,
             opacity: 1,

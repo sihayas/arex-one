@@ -1,9 +1,9 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { TrackData, SongData } from "@/lib/global/interfaces";
+import { TrackData } from "@/lib/global/interfaces";
 import { motion } from "framer-motion";
-import { Command } from "cmdk";
 import React from "react";
+import Line from "@/components/interface/entry/sub/icons/Line";
 
 interface TabBarProps {
   songs: TrackData[];
@@ -28,29 +28,9 @@ const TabBar = ({ songs, onActiveSongChange }: TabBarProps) => {
       initial={{ height: "32px" }}
       animate={{ height: expand ? "352px" : "32px" }}
       transition={{ type: "spring", damping: 30, stiffness: 400 }}
-      className={`flex flex-col absolute right-8 bottom-8 bg-silver rounded-2xl w-[128px] scrollbar-none overflow-scroll`}
+      className={`flex absolute right-8 bottom-8 w-[128px] scrollbar-none overflow-scroll`}
     >
-      <div className="flex flex-col space-y-1 p-2">
-        {/* Album / Disable Filter Button */}
-        <button
-          onClick={() => handleTabChange(null)}
-          className={`${
-            activeSong !== null ? "" : "hover:text-white/60"
-          } relative rounded-full px-[6px] py-1 text-xs text-black outline-sky-400 transition focus-visible:outline-2`}
-          style={{
-            WebkitTapHighlightColor: "transparent",
-          }}
-        >
-          {activeSong === null && (
-            <motion.span
-              layoutId="bubble"
-              className="absolute inset-0 bg-white mix-blend-difference z-10"
-              style={{ borderRadius: 9999 }}
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            />
-          )}
-          {activeSong === null ? "TRACKS" : `${activeSong.attributes.name}`}
-        </button>
+      <div className="flex flex-col w-full">
         {/* Tracks */}
         {songs.map((track, index) => (
           <button
@@ -62,25 +42,33 @@ const TabBar = ({ songs, onActiveSongChange }: TabBarProps) => {
             }
             className={`${
               activeSong && activeSong.id === track.id
-                ? "scale-105"
+                ? "!text-gray2"
                 : "hover:text-black"
-            } relative rounded-full px-[6px] py-1 text-xs text-gray4 outline-sky-400 transition focus-visible:outline-2`}
+            } relative text-xs text-gray3 transition w-full flex items-center justify-between p-2 pr-0`}
             style={{
               WebkitTapHighlightColor: "transparent",
             }}
           >
+            <p className="max-w-[104px] text-start line-clamp-2">
+              {track.attributes.name}
+            </p>
             {activeSong && activeSong.id === track.id && (
               <motion.span
                 layoutId="bubble"
-                className="absolute inset-0 bg-white mix-blend-darken z-10"
+                className="bg-gray2 z-10 w-2 h-2 -right-1 top-1/2 -translate-y-1/2 transform outline outline-4 outline-white"
                 style={{ borderRadius: 9999 }}
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            {track.attributes.name}
           </button>
         ))}
       </div>
+      <Line
+        width={"4px"}
+        color={"#E5E5E5"}
+        className={`sticky top-0 right-[6px] flex flex-grow rounded -z-10`}
+        height={"100%"}
+      />
     </motion.div>
   );
 };
@@ -96,5 +84,5 @@ TabBar.propTypes = {
       }).isRequired,
     }),
   ).isRequired,
-  onActiveTabChange: PropTypes.func.isRequired,
+  onActiveSongChange: PropTypes.func.isRequired,
 };

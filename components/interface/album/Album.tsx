@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useSound } from "@/context/Sound";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
-import Albums from "./sub/Albums";
+import RenderEntries from "./sub/RenderEntries";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import TabBar from "@/components/interface/album/sub/TabBar";
 
@@ -22,8 +22,16 @@ const Album = () => {
   const { scrollContainerRef } = useInterfaceContext();
 
   const [activeSong, setActiveSong] = useState<TrackData | null>(null);
+  const [sortOrder, setSortOrder] = useState<
+    "newest" | "oldest" | "highest" | "lowest" | "most" | "least"
+  >("newest");
+
   const handleActiveSongChange = (newActiveSong: TrackData | null) => {
     setActiveSong(newActiveSong);
+  };
+
+  const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
+    setSortOrder(newSortOrder);
   };
 
   const { scrollY } = useScroll({
@@ -91,9 +99,10 @@ const Album = () => {
             </div>
           </motion.div>
           {/* Section Two / Entries */}
-          <Albums
-            albumId={`${!activeSong ? selectedSound.sound.id : activeSong.id}`}
+          <RenderEntries
+            soundId={`${!activeSong ? selectedSound.sound.id : activeSong.id}`}
             user={session!.user}
+            sortOrder={sortOrder}
           />
 
           <motion.div
@@ -113,22 +122,6 @@ const Album = () => {
             style={{ opacity }}
             className="fixed flex bottom-0 left-1/2 transform -translate-x-1/2 w-full p-8 z-10"
           >
-            <div className="flex flex-col">
-              <div className="text-xs font-medium text-gray2 leading-none w-[128px]">
-                STARS
-              </div>
-
-              <div className="flex items-end mt-2">
-                <div className="mb-2">
-                  <StarOneIcon color={"black"} />
-                </div>
-                <div className="text-[22px] leading-[75%] w-12">3.2</div>
-                <div className="tracking-tighter text-xs leading-[75%] w-12 text-black">
-                  / 24 444
-                </div>
-              </div>
-            </div>
-
             {"relationships" in selectedSound.sound && (
               <TabBar
                 songs={selectedSound.sound.relationships.tracks.data}

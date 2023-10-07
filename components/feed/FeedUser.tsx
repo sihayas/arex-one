@@ -4,8 +4,6 @@ import { ActivityData } from "@/lib/global/interfaces";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
-import TabBar from "@/components/interface/album/sub/TabBar";
-import Tab from "@/components/interface/album/sub/Tab";
 
 const FeedUser = ({
   userId,
