@@ -48,6 +48,22 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     </>
   );
 
+  const renderCounts = () => {
+    if (likeCount && replyCount) {
+      return (
+        <>
+          {formatText(likeCount, "HEART", "HEARTS")}&nbsp;:&nbsp;
+          {formatText(replyCount, "CHAIN", "CHAINS")}
+        </>
+      );
+    } else if (likeCount) {
+      return formatText(likeCount, "HEART", "HEARTS");
+    } else if (replyCount) {
+      return formatText(replyCount, "CHAIN", "CHAINS");
+    }
+    return null;
+  };
+
   return (
     <button
       className={`${className} group`}
@@ -77,8 +93,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       />
 
       <div className="text-xs text-gray2 absolute -bottom-3 right-[8px] leading-[75%]">
-        {formatText(likeCount, "HEART", "HEARTS")}&nbsp;:&nbsp;
-        {formatText(replyCount, "CHAIN", "CHAINS")}
+        {renderCounts()}
       </div>
     </button>
   );

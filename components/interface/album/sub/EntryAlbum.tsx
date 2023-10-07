@@ -51,28 +51,23 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   const handleEntryClick = useHandleEntryClick(mergedReview);
 
   return (
-    <div className="flex w-[416px]">
+    <div className="flex bg-[#F4F4F4] rounded-[16px] relative w-[416px]">
       <UserAvatar
-        className="z-10 w-12 h-12 translate-y-[6px] outline outline-4 outline-white"
+        className="w-10 h-10 outline outline-2 outline-white"
         imageSrc={review.author.image}
         altText={`${review.author.name}'s avatar`}
-        width={48}
-        height={48}
+        width={40}
+        height={40}
         user={review.author}
       />
-      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative p-4 -ml-3">
-        {/* Rating & Names */}
-        <Stars
-          className="outline-4 outline-white outline w-fit -mt-7"
-          rating={review.rating}
-        />
-        <p className="text-[#3C3C43]/90 font-medium text-sm leading-[75%] mt-[13px] pl-2">
+      <div className="flex flex-col w-full pb-4 pr-4 pl-2 pt-4 gap-[7px]">
+        <p className="text-[#3C3C43]/90 font-medium text-sm leading-[75%]">
           {review.author.name}
         </p>
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-[#3C3C43]/90 leading-normal cursor-pointer mt-[5px] pl-2`}
+          className={`break-words line-clamp-6 w-full text-sm text-[#3C3C43]/90 leading-normal cursor-pointer`}
         >
           {review.content}
         </div>

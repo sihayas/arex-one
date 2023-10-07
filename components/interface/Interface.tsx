@@ -166,7 +166,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         await animateRoot(
           rootScope.current,
           {
-            x: "-50%",
+            x: "-20%",
             y: "-50%",
             scale: 1,
             opacity: 1,

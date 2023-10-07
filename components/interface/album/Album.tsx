@@ -9,7 +9,7 @@ import Albums from "./sub/Albums";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import TabBar from "@/components/interface/album/sub/TabBar";
 
-import Songs from "./sub/Songs";
+import { TrackData } from "@/lib/global/interfaces";
 import { StarOneIcon } from "@/components/icons";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
@@ -21,9 +21,9 @@ const Album = () => {
 
   const { scrollContainerRef } = useInterfaceContext();
 
-  const [activeTabId, setActiveTabId] = useState<string | null>(null);
-  const handleActiveTabChange = (newActiveTabId: string | null) => {
-    setActiveTabId(newActiveTabId);
+  const [activeSong, setActiveSong] = useState<TrackData | null>(null);
+  const handleActiveSongChange = (newActiveSong: TrackData | null) => {
+    setActiveSong(newActiveSong);
   };
 
   const { scrollY } = useScroll({
@@ -33,7 +33,7 @@ const Album = () => {
   let y = useTransform(scrollY, [0, 24], [0, -416]);
   let springY = useSpring(y, { damping: 80, stiffness: 800 });
 
-  const borderRadius = useTransform(scrollY, [0, 120], ["20px", "8px"]);
+  const borderRadius = useTransform(scrollY, [0, 120], ["24px", "8px"]);
 
   // Rating footer opacity
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
@@ -83,14 +83,32 @@ const Album = () => {
               draggable="false"
               onDragStart={(e) => e.preventDefault()}
             />
+            {/*  Circle with Number Inside */}
+            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+              <div className="flex items-center justify-center w-[96px] h-[96px] rounded-full outline outline-white">
+                <div className="text-4xl font-medium text-white/90">4.2</div>
+              </div>
+            </div>
           </motion.div>
           {/* Section Two / Entries */}
           <Albums
-            albumId={`${!activeTabId ? selectedSound.sound.id : activeTabId}`}
+            albumId={`${!activeSong ? selectedSound.sound.id : activeSong.id}`}
             user={session!.user}
           />
 
-          {/* Rating */}
+          <motion.div
+            style={{ opacity: blurOpacity }}
+            className="gradient-blur"
+          >
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </motion.div>
+
+          {/* Rating & Sort */}
           <motion.div
             style={{ opacity }}
             className="fixed flex bottom-0 left-1/2 transform -translate-x-1/2 w-full p-8 z-10"
@@ -110,15 +128,14 @@ const Album = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
 
-          {"relationships" in selectedSound.sound && (
-            <TabBar
-              songs={selectedSound.sound.relationships.tracks.data}
-              onActiveTabChange={handleActiveTabChange}
-              albumName={selectedSound.sound.attributes.name}
-            />
-          )}
+            {"relationships" in selectedSound.sound && (
+              <TabBar
+                songs={selectedSound.sound.relationships.tracks.data}
+                onActiveSongChange={handleActiveSongChange}
+              />
+            )}
+          </motion.div>
         </>
       )}
     </div>
@@ -126,15 +143,3 @@ const Album = () => {
 };
 
 export default Album;
-
-// <motion.div
-//     style={{ opacity: blurOpacity }}
-//     className="gradient-blur"
-// >
-//   <div></div>
-//   <div></div>
-//   <div></div>
-//   <div></div>
-//   <div></div>
-//   <div></div>
-// </motion.div>

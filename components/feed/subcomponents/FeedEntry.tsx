@@ -35,8 +35,8 @@ export const FeedEntry: React.FC<EntryProps> = ({ review }) => {
         className="w-10 h-10 translate-y-[416px] outline outline-2 outline-white z-10"
         imageSrc={review.author.image}
         altText={`${review.author.name}'s avatar`}
-        width={48}
-        height={48}
+        width={40}
+        height={40}
         user={review.author}
       />
       <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] relative border border-silver -ml-4">

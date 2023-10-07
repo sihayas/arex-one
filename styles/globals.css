@@ -88,7 +88,7 @@ a {
 
 .gradient-blur {
   position: fixed;
-  z-index: 5;
+  z-index: 10;
   inset: auto 0 0 0;
   height: 5%;
   pointer-events: none;
@@ -186,7 +186,6 @@ a {
           rgba(0, 0, 0, 1) 100%
   );
 }
-
 
 .rtl {
     direction: rtl;

@@ -4,7 +4,7 @@ import { Command } from "cmdk";
 import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 const User = ({ user }: { user: UserData }) => {
-  const handleUserClick = useHandleUserClick(user.id);
+  const handleUserClick = useHandleUserClick(user);
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
