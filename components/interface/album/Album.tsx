@@ -126,6 +126,7 @@ const Album = () => {
               <TabBar
                 songs={selectedSound.sound.relationships.tracks.data}
                 onActiveSongChange={handleActiveSongChange}
+                albumName={selectedSound.sound.attributes.name}
               />
             )}
           </motion.div>
