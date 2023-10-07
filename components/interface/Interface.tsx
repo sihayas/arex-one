@@ -10,7 +10,14 @@ import Album from "@/components/interface/album/Album";
 import Entry from "@/components/interface/entry/Entry";
 import User from "@/components/interface/user/User";
 
-import { motion, useAnimate, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useAnimate,
+  useScroll,
+  useTransform,
+  Variants,
+} from "framer-motion";
+import Tab from "@/components/interface/album/sub/Tab";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
@@ -83,6 +90,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Shapeshift on page change.
   const [scope, animate] = useAnimate();
+  const [rootScope, animateRoot] = useAnimate();
 
   useEffect(() => {
     const sequence = async () => {
@@ -149,82 +157,97 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     };
   }, [animate, base.height, base.width, newHeight, newWidth, scope, pages]);
 
-  return (
-    <motion.div
-      className={`cmdk`}
-      id={`cmdk`}
-      initial={{
-        x: "-50%",
-        y: "-50%",
-        scale: 0.97,
-        opacity: 0,
-      }}
-      animate={
-        isVisible
-          ? {
-              x: "-50%",
-              y: "-50%",
-              scale: 1,
-              opacity: 1,
-            }
-          : {
-              x: "-50%",
-              y: "-50%",
-              scale: 0.97,
-              opacity: 0,
-              zIndex: -1,
-            }
+  // useAnimate is necessary to visor the root because in-line motion.div
+  // breaks the filter in Album page
+  useEffect(() => {
+    const animateParent = async () => {
+      if (isVisible) {
+        // Animate to visible state
+        await animateRoot(
+          rootScope.current,
+          {
+            x: "-50%",
+            y: "-50%",
+            scale: 1,
+            opacity: 1,
+          },
+          {
+            type: "spring",
+            stiffness: 500,
+            damping: 50,
+          },
+        );
+      } else {
+        // Animate to hidden state
+        await animateRoot(
+          rootScope.current,
+          {
+            x: "-50%",
+            y: "-50%",
+            scale: 0.97,
+            opacity: 0,
+          },
+          {
+            type: "spring",
+            stiffness: 500,
+            damping: 50,
+          },
+        );
       }
-      transition={{
-        default: { type: "spring", stiffness: 500, damping: 50 },
-        // opacity: { duration: 0.3 },
-      }}
-    >
+    };
+
+    animateParent();
+  }, [animate, isVisible, scope]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // switch to album page from form
+    if (e.key === "Enter" && selectedFormSound && inputValue === "") {
+      e.preventDefault();
+      setExpandInput(false);
+      setSelectedSound(selectedFormSound);
+      setPages((prevPages) => [
+        ...prevPages,
+        {
+          key: selectedFormSound.sound.id,
+          name: "album",
+          sound: selectedFormSound,
+          dimensions: {
+            width: 480,
+            height: 1024,
+          },
+          scrollPosition: 0,
+        },
+      ]);
+      inputRef?.current?.blur();
+      window.history.pushState(null, "");
+    }
+    // go back from form to search results
+    if (e.key === "Backspace" && selectedFormSound && inputValue === "") {
+      e.preventDefault();
+      setSelectedFormSound(null);
+      setInputValue(storedInputValue);
+      setStoredInputValue("");
+      inputRef?.current?.focus();
+    }
+  };
+
+  return (
+    <div ref={rootScope} className={`cmdk z-10 `}>
       {/* CMD-K Inner  */}
       <Command
-        className={`cmdk-inner flex rounded-3xl `}
+        className={`cmdk-inner flex rounded-3xl`}
         shouldFilter={false}
-        onKeyDown={(e: React.KeyboardEvent) => {
-          // switch to album page from form
-          if (e.key === "Enter" && selectedFormSound && inputValue === "") {
-            e.preventDefault();
-            setExpandInput(false);
-            setSelectedSound(selectedFormSound);
-            setPages((prevPages) => [
-              ...prevPages,
-              {
-                key: selectedFormSound.sound.id,
-                name: "album",
-                sound: selectedFormSound,
-                dimensions: {
-                  width: 480,
-                  height: 1024,
-                },
-                scrollPosition: 0,
-              },
-            ]);
-            inputRef?.current?.blur();
-            window.history.pushState(null, "");
-          }
-          // go back from form to search results
-          if (e.key === "Backspace" && selectedFormSound && inputValue === "") {
-            e.preventDefault();
-            setSelectedFormSound(null);
-            setInputValue(storedInputValue);
-            setStoredInputValue("");
-            inputRef?.current?.focus();
-          }
-        }}
+        onKeyDown={handleKeyDown}
         loop
       >
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-0 shadow-interface outline outline-[.5px] outline-silver`}
+          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-20 shadow-interface outline outline-[.5px] outline-silver`}
         >
           {/* Base layout / dimensions for a page */}
           <div
-            className={`flex absolute`}
+            className={`flex absolute z-10`}
             style={{
               width: `${activePage.dimensions.width}px`,
               height: `${activePage.dimensions.height}px`,
@@ -233,16 +256,17 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden w-full h-full scrollbar-none z-10 rounded-3xl`}
+              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden w-full h-full scrollbar-none rounded-3xl`}
             >
               <ActiveComponent />
             </div>
           </div>
         </motion.div>
         <Nav />
+        {/* Footer */}
         {renderPageContent(activePage)}
       </Command>
-    </motion.div>
+    </div>
   );
 }
 

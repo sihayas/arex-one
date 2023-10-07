@@ -7,6 +7,7 @@ import { useSound } from "@/context/Sound";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import Albums from "./sub/Albums";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import TabBar from "@/components/interface/album/sub/TabBar";
 
 import Songs from "./sub/Songs";
 import { StarOneIcon } from "@/components/icons";
@@ -84,22 +85,11 @@ const Album = () => {
             />
           </motion.div>
           {/* Section Two / Entries */}
-          {!activeTabId ? (
-            <Albums albumId={selectedSound.sound.id} user={session!.user} />
-          ) : (
-            <Songs songId={activeTabId} user={session!.user} />
-          )}
-          <motion.div
-            style={{ opacity: blurOpacity }}
-            className="gradient-blur"
-          >
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </motion.div>
+          <Albums
+            albumId={`${!activeTabId ? selectedSound.sound.id : activeTabId}`}
+            user={session!.user}
+          />
+
           {/* Rating */}
           <motion.div
             style={{ opacity }}
@@ -114,15 +104,21 @@ const Album = () => {
                 <div className="mb-2">
                   <StarOneIcon color={"black"} />
                 </div>
-                <div className="tracking-tighter text-[22px] leading-[75%] w-12">
-                  4.5
-                </div>
+                <div className="text-[22px] leading-[75%] w-12">3.2</div>
                 <div className="tracking-tighter text-xs leading-[75%] w-12 text-black">
                   / 24 444
                 </div>
               </div>
             </div>
           </motion.div>
+
+          {"relationships" in selectedSound.sound && (
+            <TabBar
+              songs={selectedSound.sound.relationships.tracks.data}
+              onActiveTabChange={handleActiveTabChange}
+              albumName={selectedSound.sound.attributes.name}
+            />
+          )}
         </>
       )}
     </div>
@@ -130,3 +126,15 @@ const Album = () => {
 };
 
 export default Album;
+
+// <motion.div
+//     style={{ opacity: blurOpacity }}
+//     className="gradient-blur"
+// >
+//   <div></div>
+//   <div></div>
+//   <div></div>
+//   <div></div>
+//   <div></div>
+//   <div></div>
+// </motion.div>

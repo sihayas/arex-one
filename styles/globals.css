@@ -192,15 +192,6 @@ a {
     direction: rtl;
 }
 
-::-webkit-input-placeholder {
-    font-family: italic;
-}
-:-moz-placeholder {
-    font-style: italic;
-}
-::-moz-placeholder {
-    font-style: italic;
-}
-:-ms-input-placeholder {
-    font-style: italic;
+.text-overflow-ellipsis {
+    text-overflow: ellipsis;
 }

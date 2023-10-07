@@ -41,7 +41,7 @@ const Albums: React.FC<AlbumsProps> = ({ albumId, user }) => {
 
   return (
     // Gap-5 to align with statistics
-    <div className="flex flex-col h-albums w-full items-center p-8 pt-8 gap-9">
+    <div className="flex flex-col h-albums min-w-full items-center p-8 pt-8 gap-9">
       {flattenedReviews?.length > 0 ? (
         flattenedReviews.map((review) => (
           <EntryAlbum key={review.id} review={review} />

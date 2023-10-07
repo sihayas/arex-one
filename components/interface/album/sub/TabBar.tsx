@@ -1,15 +1,19 @@
-import { useRef, useState } from "react";
-import { motion, useScroll } from "framer-motion";
+import { useState } from "react";
 import PropTypes from "prop-types";
+import { TrackData } from "@/lib/global/interfaces";
+import { motion } from "framer-motion";
+import { Command } from "cmdk";
+import React from "react";
 
 interface TabBarProps {
   songs: TrackData[];
+  albumName: string;
   onActiveTabChange: (newActiveTabId: string | null) => void;
 }
 
-export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
+const TabBar = ({ songs, onActiveTabChange, albumName }: TabBarProps) => {
   const [activeTab, setActiveTab] = useState<string | null>(null);
-  const containerRef = useRef(null);
+  const [expand, setExpand] = useState<boolean>(false);
 
   const handleTabChange = (newTabId: string | null) => {
     setActiveTab(newTabId);
@@ -17,46 +21,47 @@ export default function TabBar({ songs, onActiveTabChange }: TabBarProps) {
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col overflow-y-scroll rounded-full max-h-[calc(3*1.5rem)] scrollbar-none bg-white gap-4"
-      style={{ scrollSnapType: "y mandatory" }}
+    <motion.div
+      style={{ overflow: "scroll" }}
+      tabIndex={0}
+      onFocus={() => setExpand((prev) => !prev)}
+      onBlur={() => setExpand((prev) => !prev)}
+      initial={{ height: "40px" }}
+      animate={{ height: expand ? "352px" : "40px" }}
+      transition={{ type: "spring", damping: 50, stiffness: 500 }}
+      className={`flex flex-col absolute right-0 bottom-8 bg-silver rounded w-[128px] scrollbar-none`}
     >
-      {songs.map((track, index) => {
-        const ref = useRef(null);
-        const { scrollYProgress } = useScroll({
-          target: ref,
-          offset: ["center center", "center center"],
-        });
-
-        return (
-          <motion.button
+      <div className="flex flex-col space-y-1">
+        {songs.map((track, index) => (
+          <button
             key={track.id}
-            ref={ref}
-            onClick={() => handleTabChange(track.id)}
+            onClick={() =>
+              handleTabChange(track.id === activeTab ? null : track.id)
+            }
             className={`${
-              activeTab === track.id ? "" : "hover:text-black"
-            } whitespace-nowrap relative text-sm text-gray3 transition leading-none`}
+              activeTab === track.id ? "" : "hover:text-white/60"
+            } relative rounded-full px-3 py-1.5 text-sm font-medium text-black outline-sky-400 transition focus-visible:outline-2`}
             style={{
               WebkitTapHighlightColor: "transparent",
-              scrollSnapAlign: "start",
-              filter: `blur(${(1 - scrollYProgress) * 5}px)`, // 5 is the maximum blur
             }}
           >
             {activeTab === track.id && (
               <motion.span
-                layoutId="bubble"
-                className="absolute inset-0 z-10 mix-blend-difference"
-                transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
+                layoutId="track"
+                className="absolute inset-0 bg-white mix-blend-difference z-10"
+                style={{ borderRadius: 9999 }}
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
             {track.attributes.name}
-          </motion.button>
-        );
-      })}
-    </div>
+          </button>
+        ))}
+      </div>
+    </motion.div>
   );
-}
+};
+
+export default TabBar;
 
 TabBar.propTypes = {
   songs: PropTypes.arrayOf(

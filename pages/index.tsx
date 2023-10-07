@@ -81,7 +81,8 @@ export default function Home() {
         altText={`${session.user.name}'s avatar`}
         width={32}
         height={32}
-        userId={session.user.id}
+        //@ts-ignore
+        user={session.user}
       />
       <DashedLine
         className="absolute translate-x-[4.5rem] translate-y-12"
