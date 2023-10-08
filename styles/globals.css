@@ -194,3 +194,7 @@ a {
 .text-overflow-ellipsis {
     text-overflow: ellipsis;
 }
+
+.custom-grid-cols {
+    grid-template-columns: auto 200px;
+}

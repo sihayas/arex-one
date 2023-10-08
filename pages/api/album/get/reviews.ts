@@ -16,7 +16,7 @@ export default async function handle(
 ) {
   if (req.method === "GET") {
     const soundId = Array.isArray(req.query.soundId)
-      ? req.query.soundId.join(",") // Convert array to string
+      ? req.query.soundId.join(",")
       : req.query.soundId;
 
     const userId =

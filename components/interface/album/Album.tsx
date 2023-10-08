@@ -91,12 +91,6 @@ const Album = () => {
               draggable="false"
               onDragStart={(e) => e.preventDefault()}
             />
-            {/*  Circle with Number Inside */}
-            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-              <div className="flex items-center justify-center w-[96px] h-[96px] rounded-full outline outline-white">
-                <div className="text-4xl font-medium text-white/90">4.2</div>
-              </div>
-            </div>
           </motion.div>
           {/* Section Two / Entries */}
           <RenderEntries
