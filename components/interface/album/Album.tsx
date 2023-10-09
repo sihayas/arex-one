@@ -7,7 +7,7 @@ import { useSound } from "@/context/Sound";
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import RenderEntries from "./sub/RenderEntries";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import TabBar from "@/components/interface/album/sub/TabBar";
+import Filter from "@/components/interface/album/sub/Filter";
 
 import { TrackData } from "@/lib/global/interfaces";
 import { StarOneIcon } from "@/components/icons";
@@ -117,7 +117,7 @@ const Album = () => {
             className="fixed flex bottom-0 left-1/2 transform -translate-x-1/2 w-full p-8 z-10"
           >
             {"relationships" in selectedSound.sound && (
-              <TabBar
+              <Filter
                 songs={selectedSound.sound.relationships.tracks.data}
                 onActiveSongChange={handleActiveSongChange}
                 albumName={selectedSound.sound.attributes.name}
