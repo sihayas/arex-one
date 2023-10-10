@@ -37,13 +37,15 @@ export default async function handle(
     let orderBy: ReviewOrderByWithRelationInput | undefined;
 
     switch (sort) {
-      case "newest":
+      case "newest": // Switch to Popular
         orderBy = { createdAt: "desc" };
         break;
-      case "oldest":
-        orderBy = { createdAt: "asc" };
+      case "positive": // Switch to popular with rating > 2.5
+        orderBy = { rating: "desc" };
         break;
-      // ... other sort cases
+      case "negative": // Switch to popular with rating < 2.5
+        orderBy = { rating: "asc" };
+        break;
       default:
         orderBy = {};
     }
@@ -54,8 +56,8 @@ export default async function handle(
           OR: [{ trackId: soundId }, { albumId: soundId }],
         },
         skip,
-        take: 6,
         orderBy,
+        take: 6,
         include: {
           author: true,
           // Check if liked

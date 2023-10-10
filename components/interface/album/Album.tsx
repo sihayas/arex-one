@@ -13,6 +13,7 @@ import { TrackData } from "@/lib/global/interfaces";
 import { StarOneIcon } from "@/components/icons";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
+import AnimatedCircle from "@/components/global/AnimatedCircle";
 
 const Album = () => {
   // Hooks
@@ -23,7 +24,7 @@ const Album = () => {
 
   const [activeSong, setActiveSong] = useState<TrackData | null>(null);
   const [sortOrder, setSortOrder] = useState<
-    "newest" | "oldest" | "highest" | "lowest" | "most" | "least"
+    "newest" | "positive" | "negative"
   >("newest");
 
   const handleActiveSongChange = (newActiveSong: TrackData | null) => {
@@ -114,13 +115,14 @@ const Album = () => {
           {/* Rating & Sort */}
           <motion.div
             style={{ opacity }}
-            className="fixed flex bottom-0 left-1/2 transform -translate-x-1/2 w-full p-8 z-10"
+            className="fixed flex bottom-0 left-1/2 transform -translate-x-1/2 w-full z-10 p-8"
           >
             {"relationships" in selectedSound.sound && (
               <Filter
+                albumName={selectedSound.sound.attributes.name}
                 songs={selectedSound.sound.relationships.tracks.data}
                 onActiveSongChange={handleActiveSongChange}
-                albumName={selectedSound.sound.attributes.name}
+                onSortOrderChange={handleSortOrderChange}
               />
             )}
           </motion.div>

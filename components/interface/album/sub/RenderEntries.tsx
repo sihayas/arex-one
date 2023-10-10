@@ -5,11 +5,12 @@ import { Session } from "next-auth/core/types";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
+import AnimatedCircle from "@/components/global/AnimatedCircle";
 
 interface RenderEntriesProps {
   soundId: string;
   user: Session["user"];
-  sortOrder: "newest" | "oldest" | "highest" | "lowest" | "most" | "least";
+  sortOrder: "newest" | "positive" | "negative";
 }
 
 const RenderEntries: React.FC<RenderEntriesProps> = ({
@@ -69,8 +70,9 @@ const RenderEntries: React.FC<RenderEntriesProps> = ({
           )}
         </button>
       ) : (
-        <div className="text-xs text-action uppercase tracking-widest font-thin">
+        <div className="text-xs text-action uppercase tracking-widest">
           end of line
+          <AnimatedCircle />
         </div>
       )}
     </div>

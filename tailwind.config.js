@@ -40,7 +40,7 @@ module.exports = {
       gridTemplateColumns: {
         17: "repeat(17, minmax(0, 1fr))",
         feed: `repeat(12, 32px)`,
-        "tab-cols": "auto 8px",
+        "tab-cols": "auto 32px",
       },
       gridColumnGap: {
         feed: "32px",

@@ -42,14 +42,14 @@ const Statline: React.FC<StatlineProps> = ({ average, ratings = [] }) => {
       layoutId="statline"
       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
     >
-      <motion.div className="flex items-center justify-center flex-grow h-[2.5px] w-[293px] my-auto rounded origin-left relative gap-[4px]">
-        <div className="absolute -top-[22px] left-0 leading-[75%] text-[22px] font-thin">
-          {average}
-        </div>
+      <motion.div className="flex items-center justify-center flex-grow h-[2.5px] w-[288px] my-auto rounded origin-left relative gap-[4px]">
+        {/*<div className="absolute -top-[22px] left-0 leading-[75%] text-[22px] font-thin">*/}
+        {/*  {average}*/}
+        {/*</div>*/}
         {/* For each count of ratings, create a line */}
         {ratings.map((count, index) => {
           // Account for the gap and size of circle dividers
-          const width = (count / totalCount) * 293;
+          const width = (count / totalCount) * 288;
           return (
             <StatlineChild
               key={index}
