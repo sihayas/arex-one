@@ -6,7 +6,13 @@ import { useSound } from "@/context/Sound";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
 import RenderEntries from "./sub/RenderEntries";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import Filter from "@/components/interface/album/sub/Filter";
 
 import { TrackData } from "@/lib/global/interfaces";
@@ -33,6 +39,7 @@ const Album = () => {
 
   const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
     setSortOrder(newSortOrder);
+    console.log(newSortOrder);
   };
 
   const { scrollY } = useScroll({
@@ -94,35 +101,39 @@ const Album = () => {
             />
           </motion.div>
           {/* Section Two / Entries */}
-          <RenderEntries
-            soundId={`${!activeSong ? selectedSound.sound.id : activeSong.id}`}
-            user={session!.user}
-            sortOrder={sortOrder}
-          />
+          <AnimatePresence>
+            <RenderEntries
+              soundId={`${
+                !activeSong ? selectedSound.sound.id : activeSong.id
+              }`}
+              user={session!.user}
+              sortOrder={sortOrder}
+            />
+          </AnimatePresence>
 
-          <motion.div
-            style={{ opacity: blurOpacity }}
-            className="gradient-blur"
-          >
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </motion.div>
+          {/*<motion.div*/}
+          {/*  style={{ opacity: blurOpacity }}*/}
+          {/*  className="gradient-blur"*/}
+          {/*>*/}
+          {/*  <div></div>*/}
+          {/*  <div></div>*/}
+          {/*  <div></div>*/}
+          {/*  <div></div>*/}
+          {/*  <div></div>*/}
+          {/*  <div></div>*/}
+          {/*</motion.div>*/}
 
           {/* Rating & Sort */}
           <motion.div
             style={{ opacity }}
-            className="fixed flex bottom-0 left-1/2 transform -translate-x-1/2 w-full z-10 p-8"
+            className="fixed flex bottom-0 left-1/2 transform -translate-x-1/2 w-full z-10 p-8 bg-white/50 backdrop-blur"
           >
             {"relationships" in selectedSound.sound && (
               <Filter
                 albumName={selectedSound.sound.attributes.name}
                 songs={selectedSound.sound.relationships.tracks.data}
                 onActiveSongChange={handleActiveSongChange}
-                onSortOrderChange={handleSortOrderChange}
+                handleSortOrderChange={handleSortOrderChange}
               />
             )}
           </motion.div>

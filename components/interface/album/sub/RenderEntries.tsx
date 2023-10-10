@@ -72,7 +72,6 @@ const RenderEntries: React.FC<RenderEntriesProps> = ({
       ) : (
         <div className="text-xs text-action uppercase tracking-widest">
           end of line
-          <AnimatedCircle />
         </div>
       )}
     </div>

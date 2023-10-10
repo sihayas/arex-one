@@ -10,14 +10,14 @@ type sortOrder = "newest" | "positive" | "negative";
 interface FilterProps {
   songs: TrackData[];
   onActiveSongChange: (newActiveSong: TrackData | null) => void;
-  onSortOrderChange: (newSortOrder: sortOrder) => void;
+  handleSortOrderChange: (newSortOrder: sortOrder) => void;
   albumName: string;
 }
 
 const Bubble = () => (
   <motion.span
     layoutId="bubble"
-    className="bg-gray2 z-10 w-2 h-2 outline outline-4 outline-white rounded-full"
+    className="bg-gray2 z-10 w-2 h-2 outline outline-4 outline-white rounded-full flex"
     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
   />
 );
@@ -38,7 +38,7 @@ const Filter = ({
   songs,
   onActiveSongChange,
   albumName,
-  onSortOrderChange,
+  handleSortOrderChange,
 }: FilterProps) => {
   const [activeSong, setActiveSong] = useState<TrackData | null>(null);
   const [expand, setExpand] = useState<boolean>(false);
@@ -70,19 +70,24 @@ const Filter = ({
       <div className="flex flex-col gap-4 w-full overflow-y-scroll scrollbar-none -scale-y-100">
         {/* Album Button */}
         <Button
+          key="album"
           onClick={() => handleTabChange(null)}
           active={!activeSong}
-          className={"!pt-0"}
         >
           <div className="flex w-full items-center max-w-[376px] gap-8">
             {!activeSong && (
               <Statline ratings={[440, 890, 244, 5000, 5000]} average={2.4} />
             )}
             <motion.div className="min-w-[56px] transition text-end line-clamp-1 font-bold">
-              {!activeSong ? albumName : "TRACKS"}
+              {albumName}
             </motion.div>
           </div>
-          {!activeSong && <AnimatedCircle />}
+          <div className="w-8 h-8 flex items-center justify-center">
+            <div className="absolute">
+              <AnimatedCircle onSortOrderChange={handleSortOrderChange} />
+            </div>
+            {!activeSong && <Bubble />}
+          </div>
         </Button>
 
         {/* Track Buttons */}

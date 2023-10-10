@@ -2,26 +2,50 @@ import { useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { PositiveIcon, NegativeIcon, HighlightsIcon } from "@/components/icons";
 
-const AnimatedCircle = () => {
+type sortOrder = "newest" | "positive" | "negative";
+
+type AnimatedCircleProps = {
+  onSortOrderChange: (newSortOrder: sortOrder) => void;
+};
+
+const AnimatedCircle = ({ onSortOrderChange }: AnimatedCircleProps) => {
   const controls = useAnimation();
-  const [isClicked, setIsClicked] = useState<boolean>(false);
-  const radius = 16 - 2.5 / 2; // Adjust radius to accommodate stroke width
+  const [currentSortOrder, setCurrentSortOrder] = useState<sortOrder>("newest");
+  const radius = 16 - 2.5 / 2;
   const strokeWidth = 1.5;
   const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
-    const targetOffset = isClicked ? circumference : circumference * 0.25;
-    controls.start({ strokeDashoffset: targetOffset });
-  }, [isClicked, controls, circumference]);
+    onSortOrderChange(currentSortOrder);
+  }, [currentSortOrder, onSortOrderChange]);
+
+  const handleIconClick = () => {
+    // Cycle through sort orders on each click
+    setCurrentSortOrder((prev) => {
+      switch (prev) {
+        case "newest":
+          return "positive";
+        case "positive":
+          return "negative";
+        case "negative":
+          return "newest";
+        default:
+          return "newest";
+      }
+    });
+  };
 
   return (
-    <div className="relative h-8 w-8" style={{ transform: "scaleX(-1)" }}>
+    <motion.div
+      onClick={handleIconClick}
+      className="relative h-8 w-8"
+      style={{ transform: "scaleX(-1)" }}
+    >
       <svg
         width="32"
         height="32"
         viewBox="0 0 32 32"
         style={{ cursor: "pointer", transform: "rotate(-90deg)" }}
-        onClick={() => setIsClicked((prev) => !prev)}
         className="relative"
       >
         <motion.circle
@@ -37,16 +61,25 @@ const AnimatedCircle = () => {
           strokeLinecap="round"
         />
       </svg>
-      {/*<div className="absolute top-[6px] left-[2px]">*/}
-      {/*  <NegativeIcon />*/}
-      {/*</div>*/}
-      {/*<div className="absolute top-[2px] left-[2px]">*/}
-      {/*  <PositiveIcon />*/}
-      {/*</div>*/}
-      <div className="absolute top-[2px] left-[2px]">
+      <motion.div
+        className="absolute top-[6px] left-[2px]"
+        animate={{ scale: currentSortOrder === "negative" ? 1 : 0 }}
+      >
+        <NegativeIcon />
+      </motion.div>
+      <motion.div
+        className="absolute top-[2px] left-[2px]"
+        animate={{ scale: currentSortOrder === "positive" ? 1 : 0 }}
+      >
+        <PositiveIcon />
+      </motion.div>
+      <motion.div
+        className="absolute top-0 left-0"
+        animate={{ scale: currentSortOrder === "newest" ? 1 : 0 }}
+      >
         <HighlightsIcon />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

@@ -95,9 +95,9 @@ export const useReviewsQuery = (
       },
       enabled: !!soundId,
       refetchOnWindowFocus: false,
-      onSuccess: (data) => {
-        toast.success("loaded reviews");
-      },
+      // onSuccess: (data) => {
+      //   toast.success("loaded reviews");
+      // },
     },
   );
 

@@ -17,6 +17,7 @@ import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
 import { useSound } from "@/context/Sound";
+import { motion } from "framer-motion";
 
 interface EntryAlbumProps {
   review: ReviewData;
@@ -51,7 +52,12 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   const handleEntryClick = useHandleEntryClick(mergedReview);
 
   return (
-    <div className="flex bg-[#F4F4F4] rounded-[16px] relative w-[416px]">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex bg-[#F4F4F4] rounded-[16px] relative w-[416px]"
+    >
       <UserAvatar
         className="w-10 h-10 outline outline-2 outline-white"
         imageSrc={review.author.image}
@@ -79,7 +85,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
           replyCount={review._count.replies}
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
