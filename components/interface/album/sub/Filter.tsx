@@ -25,9 +25,10 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
 
   const handleTabChange = useCallback(
     (newSong: TrackData | null) => {
-      if (!expand) return;
-      setActiveSong(newSong);
-      onActiveSongChange(newSong);
+      if (expand) {
+        setActiveSong(newSong);
+        onActiveSongChange(newSong);
+      }
     },
     [expand, onActiveSongChange],
   );
@@ -44,38 +45,68 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
       initial={{ height: "36px" }}
       animate={{ height: expand ? "352px" : "36px" }}
       transition={{ type: "spring", damping: 30, stiffness: 400 }}
-      className="flex absolute right-8 bottom-8 scrollbar-none overflow-scroll w-full"
+      className="flex absolute right-8 bottom-8 scrollbar-none overflow-y-auto w-full"
     >
-      <div className="flex flex-col w-full items-end">
-        {/* Track Buttons */}
-        {songs.map((track, index) => (
+      <div className="flex flex-col w-full overflow-y-scroll scrollbar-none -scale-y-100">
+        <div className="flex flex-col">
           <button
-            key={track.id}
-            onClick={() =>
-              handleTabChange(
-                activeSong && track.id === activeSong.id ? null : track,
-              )
-            }
-            className={`relative text-xs transition grid items-center justify-end grid-cols-tab-cols gap-2 p-2 pr-0 ${
-              activeSong && activeSong.id === track.id
-                ? "!text-gray2"
-                : "text-gray3 hover:text-black"
+            key="album"
+            onClick={() => handleTabChange(null)}
+            className={`relative text-xs transition grid items-center justify-end grid-cols-tab-cols gap-2 p-2 pr-0 -scale-y-100 ${
+              !activeSong ? "!text-gray2" : "text-gray3 hover:text-black"
             }`}
             style={{
               WebkitTapHighlightColor: "transparent",
             }}
           >
             <div className="flex w-full items-center max-w-[400px] gap-8">
-              {activeSong && activeSong.id === track.id && (
-                <Statline ratings={[440, 890, 244, 5000, 5000]} />
+              {!activeSong && (
+                <Statline ratings={[440, 890, 244, 5000, 5000]} average={2.4} />
               )}
-              <p className="min-w-[71px] transition text-end line-clamp-1">
-                {track.attributes.name}
-              </p>
+
+              <motion.div
+                className={`min-w-[71px] transition text-end line-clamp-1`}
+              >
+                {!activeSong ? albumName : "TRACKS"}
+              </motion.div>
             </div>
-            {activeSong && activeSong.id === track.id && <Bubble />}
+            {!activeSong && <Bubble />}
           </button>
-        ))}
+          {/* Track Buttons */}
+          {songs.map((track, index) => (
+            <button
+              key={track.id}
+              onClick={() =>
+                handleTabChange(
+                  activeSong && track.id === activeSong.id ? null : track,
+                )
+              }
+              className={`relative text-xs transition grid items-center justify-end grid-cols-tab-cols gap-2 p-2 pr-0 -scale-y-100 ${
+                activeSong && activeSong.id === track.id
+                  ? "!text-gray2"
+                  : "text-gray3 hover:text-black"
+              }`}
+              style={{
+                WebkitTapHighlightColor: "transparent",
+              }}
+            >
+              <div className="flex w-full items-center justify-end max-w-[396px] gap-8">
+                {activeSong && activeSong.id === track.id && (
+                  <Statline
+                    ratings={[440, 890, 244, 5000, 5000]}
+                    average={2.4}
+                  />
+                )}
+                <motion.div
+                  className={`min-w-[71px] transition text-end line-clamp-1`}
+                >
+                  {track.attributes.name}
+                </motion.div>
+              </div>
+              {activeSong && activeSong.id === track.id && <Bubble />}
+            </button>
+          ))}
+        </div>
       </div>
       <Line
         width={"4px"}
@@ -88,23 +119,3 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
 };
 
 export default Filter;
-
-// <button
-//     key="album"
-//     onClick={() => handleTabChange(null)}
-//     className={`relative text-xs transition grid items-center justify-end grid-cols-tab-cols gap-2 p-2 pr-0 font-semibold mb-6 ${
-//         !activeSong ? "!text-gray2" : "text-gray3 hover:text-black"
-//     }`}
-//     style={{
-//       WebkitTapHighlightColor: "transparent",
-//     }}
-// >
-//   <div className="flex w-full items-center">
-//     &nbsp;
-//     {!activeSong && <Statline />}
-//   </div>
-//   <p className="max-w-[138px] text-end line-clamp-2">
-//     {!activeSong ? albumName : "TRACKS"}
-//   </p>
-//   {!activeSong && <Bubble />}
-// </button>

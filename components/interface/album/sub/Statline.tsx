@@ -22,7 +22,7 @@ const StatlineChild: React.FC<StatlineChildProps> = ({
       <motion.div
         whileHover={{ scaleY: 1.5 }}
         style={{ width: `${width}px`, backgroundColor: color }}
-        className={`h-[4px] my-auto outline outline-1 outline-silver ${
+        className={`h-[2.5px] my-auto outline outline-1 outline-silver ${
           index === 0 ? "rounded-l" : ""
         } ${index === 4 ? "rounded-r" : ""}`}
       ></motion.div>
@@ -39,15 +39,17 @@ const Statline: React.FC<StatlineProps> = ({ average, ratings = [] }) => {
 
   return (
     <motion.div
-      className="flex flex-row-reverse gap-2"
       layoutId="statline"
       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
     >
-      <motion.div className="flex items-center justify-center flex-grow h-[4px] w-[301px] my-auto rounded origin-left relative gap-[4px]">
+      <motion.div className="flex items-center justify-center flex-grow h-[2.5px] w-[293px] my-auto rounded origin-left relative gap-[4px]">
+        <div className="absolute -top-[22px] left-0 leading-[75%] text-[22px] font-thin">
+          {average}
+        </div>
         {/* For each count of ratings, create a line */}
         {ratings.map((count, index) => {
           // Account for the gap and size of circle dividers
-          const width = (count / totalCount) * 301;
+          const width = (count / totalCount) * 293;
           return (
             <StatlineChild
               key={index}
