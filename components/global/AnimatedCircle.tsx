@@ -25,8 +25,7 @@ const AnimatedCircle = ({
 
   useEffect(() => {
     controls.start({
-      strokeDashoffset: expanded ? circumference * 0.75 : circumference * 0.25,
-      rotate: expanded ? -90 : 0,
+      strokeDashoffset: expanded ? circumference : circumference * 0.25,
     });
   }, [expanded, controls, circumference]);
 
@@ -46,6 +45,20 @@ const AnimatedCircle = ({
     });
   };
 
+  const iconPositions = {
+    negative: {
+      initial: { top: "6px", left: "2px" },
+      final: { top: "12px", left: "12px" },
+    },
+    positive: {
+      initial: { top: "2px", left: "2px" },
+      final: { top: "12px", left: "12px" },
+    },
+    newest: {
+      initial: { top: "0", left: "0" },
+      final: { top: "12px", left: "12px" },
+    },
+  };
   return (
     <motion.div
       onClick={handleIconClick}

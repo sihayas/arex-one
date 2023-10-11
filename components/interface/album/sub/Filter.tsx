@@ -79,7 +79,7 @@ const Filter = ({
             {!activeSong && (
               <Statline ratings={[440, 890, 244, 5000, 5000]} average={2.4} />
             )}
-            <div className="min-w-[56px] transition text-end line-clamp-1 font-bold">
+            <div className="min-w-[56px] transition text-end line-clamp-1">
               {albumName}
             </div>
           </div>
@@ -120,14 +120,14 @@ const Filter = ({
         ))}
       </div>
       {/* Line */}
-      {/*{expand && (*/}
-      {/*  <Line*/}
-      {/*    width={"1.5px"}*/}
-      {/*    color={"#CCC"}*/}
-      {/*    className="fixed bottom-[3rem] right-[47px] flex flex-grow rounded -z-10"*/}
-      {/*    height={"77%"}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {expand && (
+        <Line
+          width={"1.5px"}
+          color={"#CCC"}
+          className="fixed bottom-4 right-[15.25px] flex flex-grow rounded -z-10"
+          height={"77%"}
+        />
+      )}
     </motion.div>
   );
 };
