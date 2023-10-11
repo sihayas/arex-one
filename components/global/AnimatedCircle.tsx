@@ -19,10 +19,12 @@ const AnimatedCircle = ({
   const strokeWidth = 1.5;
   const circumference = 2 * Math.PI * radius;
 
+  // Update the sort order when the current sort order changes
   useEffect(() => {
     onSortOrderChange(currentSortOrder);
   }, [currentSortOrder, onSortOrderChange]);
 
+  // Update the strokeDashoffset when the expanded state changes
   useEffect(() => {
     controls.start({
       strokeDashoffset: expanded ? circumference : circumference * 0.25,
@@ -45,20 +47,6 @@ const AnimatedCircle = ({
     });
   };
 
-  const iconPositions = {
-    negative: {
-      initial: { top: "6px", left: "2px" },
-      final: { top: "12px", left: "12px" },
-    },
-    positive: {
-      initial: { top: "2px", left: "2px" },
-      final: { top: "12px", left: "12px" },
-    },
-    newest: {
-      initial: { top: "0", left: "0" },
-      final: { top: "12px", left: "12px" },
-    },
-  };
   return (
     <motion.div
       onClick={handleIconClick}

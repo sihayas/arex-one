@@ -4,14 +4,17 @@ import { motion } from "framer-motion";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import Statline from "@/components/interface/album/sub/Statline";
 import AnimatedCircle from "@/components/global/AnimatedCircle";
+import GradientBlur from "@/components/interface/album/sub/GradientBlur";
 
 type sortOrder = "newest" | "positive" | "negative";
 
 interface FilterProps {
+  albumName: string;
   songs: TrackData[];
   onActiveSongChange: (newActiveSong: TrackData | null) => void;
   handleSortOrderChange: (newSortOrder: sortOrder) => void;
-  albumName: string;
+  expand: boolean;
+  setExpand: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Bubble = () => (
@@ -39,9 +42,11 @@ const Filter = ({
   onActiveSongChange,
   albumName,
   handleSortOrderChange,
+  expand,
+  setExpand,
 }: FilterProps) => {
+  // Expand is passed as a prop due to BlurGradient not working outside of Album
   const [activeSong, setActiveSong] = useState<TrackData | null>(null);
-  const [expand, setExpand] = useState<boolean>(false);
 
   const handleTabChange = useCallback(
     (newSong: TrackData | null) => {
@@ -119,12 +124,13 @@ const Filter = ({
           </Button>
         ))}
       </div>
+
       {/* Line */}
       {expand && (
         <Line
           width={"1.5px"}
           color={"#CCC"}
-          className="fixed bottom-4 right-[15.25px] flex flex-grow rounded -z-10"
+          className="fixed bottom-4 right-[15.25px] flex flex-grow rounded z-0"
           height={"77%"}
         />
       )}

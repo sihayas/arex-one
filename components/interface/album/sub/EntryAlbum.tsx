@@ -67,13 +67,13 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         user={review.author}
       />
       <div className="flex flex-col w-full pb-4 pr-4 pl-2 pt-4 gap-[7px]">
-        <p className="text-[#3C3C43]/90 font-medium text-sm leading-[75%]">
+        <p className="text-[#3C3C43]/60 font-medium text-sm leading-[75%]">
           {review.author.name}
         </p>
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/90 leading-normal cursor-pointer`}
+          className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
         >
           {review.content}
         </div>

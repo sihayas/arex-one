@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useSound } from "@/context/Sound";
@@ -16,10 +16,10 @@ import {
 import Filter from "@/components/interface/album/sub/Filter";
 
 import { TrackData } from "@/lib/global/interfaces";
-import { StarOneIcon } from "@/components/icons";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
-import AnimatedCircle from "@/components/global/AnimatedCircle";
+
+import GradientBlur from "@/components/interface/album/sub/GradientBlur";
 
 const Album = () => {
   // Hooks
@@ -28,6 +28,7 @@ const Album = () => {
 
   const { scrollContainerRef } = useInterfaceContext();
 
+  const [expand, setExpand] = useState<boolean>(false);
   const [activeSong, setActiveSong] = useState<TrackData | null>(null);
   const [sortOrder, setSortOrder] = useState<
     "newest" | "positive" | "negative"
@@ -46,14 +47,15 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
+  // Album artwork parallax
   let y = useTransform(scrollY, [0, 24], [0, -416]);
   let springY = useSpring(y, { damping: 80, stiffness: 800 });
 
+  // Album artwork border radius
   const borderRadius = useTransform(scrollY, [0, 120], ["24px", "8px"]);
 
   // Rating footer opacity
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
-  const blurOpacity = useTransform(scrollY, [0, 160], [0, 1]);
 
   // Initializes album and loads full details into selectedSound context
   const { isLoading } = useAlbumQuery();
@@ -70,7 +72,7 @@ const Album = () => {
   }, [selectedSound?.colors]);
 
   return (
-    <div className="w-full h-full">
+    <div id={"interfaceAlbum"} className="w-full h-full">
       {!selectedSound || isLoading ? (
         <JellyComponent
           className={
@@ -87,7 +89,7 @@ const Album = () => {
               boxShadow: boxShadow,
               borderRadius: borderRadius,
             }}
-            className="pointer-events-none overflow-hidden sticky -top-0 z-50"
+            className="pointer-events-none overflow-hidden sticky -top-0 z-50 -mb-72"
           >
             <Image
               className="outline outline-1 outline-silver"
@@ -100,7 +102,8 @@ const Album = () => {
               onDragStart={(e) => e.preventDefault()}
             />
           </motion.div>
-          {/* Section Two / Entries */}
+
+          {/* Entries */}
           <AnimatePresence>
             <RenderEntries
               soundId={`${
@@ -111,22 +114,12 @@ const Album = () => {
             />
           </AnimatePresence>
 
-          {/*<motion.div*/}
-          {/*  style={{ opacity: blurOpacity }}*/}
-          {/*  className="gradient-blur"*/}
-          {/*>*/}
-          {/*  <div></div>*/}
-          {/*  <div></div>*/}
-          {/*  <div></div>*/}
-          {/*  <div></div>*/}
-          {/*  <div></div>*/}
-          {/*  <div></div>*/}
-          {/*</motion.div>*/}
+          <GradientBlur expand={expand} />
 
           {/* Rating & Sort */}
           <motion.div
             style={{ opacity }}
-            className=" w-full z-10 p-8 bg-white/50 backdrop-blur absolute bottom-0"
+            className={`w-full z-10 p-8 absolute bottom-0`}
           >
             {"relationships" in selectedSound.sound && (
               <Filter
@@ -134,6 +127,8 @@ const Album = () => {
                 songs={selectedSound.sound.relationships.tracks.data}
                 onActiveSongChange={handleActiveSongChange}
                 handleSortOrderChange={handleSortOrderChange}
+                expand={expand}
+                setExpand={setExpand}
               />
             )}
           </motion.div>

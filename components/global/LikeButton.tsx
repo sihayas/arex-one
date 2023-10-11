@@ -88,7 +88,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       </motion.div>
       {/* Dot */}
       <div
-        className="absolute bottom-0 right-0 w-4 h-4 border-[2.5px] border-white rounded-full z-30"
+        className="absolute bottom-0 right-0 w-4 h-4 border-[2.5px] border-white rounded-full z-0"
         style={{ backgroundColor: dotColor }}
       />
 
