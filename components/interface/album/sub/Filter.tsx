@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import Statline from "@/components/interface/album/sub/Statline";
 import AnimatedCircle from "@/components/global/AnimatedCircle";
-import GradientBlur from "@/components/interface/album/sub/GradientBlur";
 
 type sortOrder = "newest" | "positive" | "negative";
 
@@ -17,6 +16,13 @@ interface FilterProps {
   setExpand: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface ButtonProps {
+  onClick: () => void;
+  active: boolean | null;
+  children: React.ReactNode;
+  className?: string;
+}
+
 const Bubble = () => (
   <motion.span
     layoutId="bubble"
@@ -25,11 +31,11 @@ const Bubble = () => (
   />
 );
 
-const Button = ({ onClick, active, children, className }: any) => (
+const Button = ({ onClick, active, children, className }: ButtonProps) => (
   <button
     onClick={onClick}
     className={` ${className} relative text-xs transition grid items-center justify-end grid-cols-tab-cols gap-2 will-change-transform ${
-      active ? "!text-gray2" : "text-gray3 hover:text-black"
+      active ? "!text-black" : "text-gray2 hover:text-black"
     }`}
     style={{ WebkitTapHighlightColor: "transparent" }}
   >
