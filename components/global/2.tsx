@@ -6,13 +6,9 @@ type sortOrder = "newest" | "positive" | "negative";
 
 type AnimatedCircleProps = {
   onSortOrderChange: (newSortOrder: sortOrder) => void;
-  expanded: boolean;
 };
 
-const AnimatedCircle = ({
-  onSortOrderChange,
-  expanded,
-}: AnimatedCircleProps) => {
+const AnimatedCircle = ({ onSortOrderChange }: AnimatedCircleProps) => {
   const controls = useAnimation();
   const [currentSortOrder, setCurrentSortOrder] = useState<sortOrder>("newest");
   const radius = 16 - 2.5 / 2;
@@ -22,13 +18,6 @@ const AnimatedCircle = ({
   useEffect(() => {
     onSortOrderChange(currentSortOrder);
   }, [currentSortOrder, onSortOrderChange]);
-
-  useEffect(() => {
-    controls.start({
-      strokeDashoffset: expanded ? circumference * 0.75 : circumference * 0.25,
-      rotate: expanded ? -90 : 0,
-    });
-  }, [expanded, controls, circumference]);
 
   const handleIconClick = () => {
     // Cycle through sort orders on each click

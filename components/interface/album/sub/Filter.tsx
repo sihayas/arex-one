@@ -25,7 +25,7 @@ const Bubble = () => (
 const Button = ({ onClick, active, children, className }: any) => (
   <button
     onClick={onClick}
-    className={` ${className} relative text-xs transition grid items-center justify-end grid-cols-tab-cols gap-2 -scale-y-100 ${
+    className={` ${className} relative text-xs transition grid items-center justify-end grid-cols-tab-cols gap-2 will-change-transform ${
       active ? "!text-gray2" : "text-gray3 hover:text-black"
     }`}
     style={{ WebkitTapHighlightColor: "transparent" }}
@@ -63,29 +63,34 @@ const Filter = ({
       onFocus={toggleExpand}
       onBlur={toggleExpand}
       initial={{ height: "32px" }}
-      animate={{ height: expand ? "352px" : "32px" }}
-      transition={{ type: "spring", damping: 30, stiffness: 400 }}
-      className="flex bottom-0 right-0 scrollbar-none overflow-y-auto"
+      animate={{ height: expand ? "288px" : "32px" }}
+      transition={{ type: "spring", damping: 40, stiffness: 400 }}
+      className="flex scrollbar-none overflow-y-auto will-change-transform w-full"
     >
-      <div className="flex flex-col gap-4 w-full overflow-y-scroll scrollbar-none -scale-y-100">
+      <div className="flex flex-col flex-col-reverse w-full overflow-y-scroll scrollbar-none">
         {/* Album Button */}
         <Button
           key="album"
           onClick={() => handleTabChange(null)}
           active={!activeSong}
         >
+          {/* Line and Name*/}
           <div className="flex w-full items-center max-w-[376px] gap-8">
             {!activeSong && (
               <Statline ratings={[440, 890, 244, 5000, 5000]} average={2.4} />
             )}
-            <motion.div className="min-w-[56px] transition text-end line-clamp-1 font-bold">
+            <div className="min-w-[56px] transition text-end line-clamp-1 font-bold">
               {albumName}
-            </motion.div>
-          </div>
-          <div className="w-8 h-8 flex items-center justify-center">
-            <div className="absolute">
-              <AnimatedCircle onSortOrderChange={handleSortOrderChange} />
             </div>
+          </div>
+          {/* Bubble and Circle */}
+          <div className="w-8 h-8 flex items-center justify-center">
+            <motion.div whileHover={{ scale: 1.05 }} className="absolute">
+              <AnimatedCircle
+                onSortOrderChange={handleSortOrderChange}
+                expanded={expand}
+              />
+            </motion.div>
             {!activeSong && <Bubble />}
           </div>
         </Button>
@@ -97,24 +102,32 @@ const Filter = ({
             onClick={() => handleTabChange(track)}
             active={activeSong && activeSong.id === track.id}
           >
+            {/* Line and Name*/}
             <div className="flex w-full items-center justify-end max-w-[376px] gap-8">
               {activeSong && activeSong.id === track.id && (
                 <Statline ratings={[440, 890, 244, 5000, 5000]} average={2.4} />
               )}
-              <motion.div className="min-w-[56px] transition text-end line-clamp-1">
+              <div className="min-w-[56px] transition text-end line-clamp-1 will-change-transform">
                 {track.attributes.name}
-              </motion.div>
+              </div>
             </div>
-            {activeSong && activeSong.id === track.id && <Bubble />}
+
+            {/* Bubble */}
+            <div className="w-8 h-8 flex items-center justify-center">
+              {activeSong && activeSong.id === track.id && <Bubble />}
+            </div>
           </Button>
         ))}
       </div>
-      {/*<Line*/}
-      {/*  width={"4px"}*/}
-      {/*  color={"#E5E5E5"}*/}
-      {/*  className="sticky top-0 right-[6px] flex flex-grow rounded -z-10"*/}
-      {/*  height={"100%"}*/}
-      {/*/>*/}
+      {/* Line */}
+      {/*{expand && (*/}
+      {/*  <Line*/}
+      {/*    width={"1.5px"}*/}
+      {/*    color={"#CCC"}*/}
+      {/*    className="fixed bottom-[3rem] right-[47px] flex flex-grow rounded -z-10"*/}
+      {/*    height={"77%"}*/}
+      {/*  />*/}
+      {/*)}*/}
     </motion.div>
   );
 };

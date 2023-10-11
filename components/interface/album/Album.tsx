@@ -126,7 +126,7 @@ const Album = () => {
           {/* Rating & Sort */}
           <motion.div
             style={{ opacity }}
-            className="fixed flex bottom-0 left-1/2 transform -translate-x-1/2 w-full z-10 p-8 bg-white/50 backdrop-blur"
+            className=" w-full z-10 p-8 bg-white/50 backdrop-blur absolute bottom-0"
           >
             {"relationships" in selectedSound.sound && (
               <Filter
