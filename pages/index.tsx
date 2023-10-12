@@ -76,7 +76,7 @@ export default function Home() {
       </Head>
 
       <UserAvatar
-        className="fixed translate-x-14 translate-y-12 z-50 shadow-album outline outline-[#FFF] outline-1"
+        className="fixed translate-x-[138px] translate-y-12 z-50 outline outline-[#FFF] outline-1"
         imageSrc={session.user.image}
         altText={`${session.user.name}'s avatar`}
         width={32}
@@ -85,13 +85,13 @@ export default function Home() {
         user={session.user}
       />
       <DashedLine
-        className="absolute translate-x-[4.5rem] translate-y-12"
+        className="absolute translate-x-[153px] translate-y-12"
         height="100vh"
       />
 
       <motion.div
         ref={scrollContainerRef}
-        className="relative flex max-h-screen flex-col gap-10 overflow-scroll pl-12 p-12 pt-32 max-w-screen"
+        className="relative flex max-h-screen flex-col gap-10 overflow-scroll pl-0 p-12 pt-32 max-w-screen"
       >
         {scrollContainerRef && (
           <FeedUser

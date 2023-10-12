@@ -136,8 +136,8 @@ const Filter = ({
         <Line
           width={"1.5px"}
           color={"#CCC"}
-          className="fixed bottom-4 right-[15.25px] flex flex-grow rounded z-0"
-          height={"77%"}
+          className="fixed bottom-4 right-[15.25px] flex flex-grow rounded -z-10"
+          height={"100%"}
         />
       )}
     </motion.div>
