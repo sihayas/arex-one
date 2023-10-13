@@ -33,7 +33,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
       <div className="relative">
         <Artwork album={album} width={320} height={320} />
         <Stars
-          className={`absolute -bottom-3 -left-5 shadow-stars outline outline-silver outline-[.5px] pr-2`}
+          className={`absolute -bottom-8 w-fit left-1/2 -translate-x-1/2  shadow-stars outline outline-silver outline-[.5px] pr-2`}
           rating={review.rating}
           soundName={album.attributes.name}
           artist={album.attributes.artistName}

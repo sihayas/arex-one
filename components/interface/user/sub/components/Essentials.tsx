@@ -17,7 +17,7 @@ const EssentialItem: React.FC<EssentialItemProps> = ({ albumData }) => {
   return (
     <Image
       className="rounded-[8px] shadow-md"
-      src={url || "/images/default.webp"}
+      src={url}
       alt="artwork"
       width={90}
       height={90}

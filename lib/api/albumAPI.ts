@@ -1,7 +1,6 @@
 import axios from "axios";
 import { AlbumData } from "../global/interfaces";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { getAlbumById, getAlbumBySongId } from "../global/musicKit";
 import { useSound } from "@/context/Sound";
 
@@ -17,6 +16,7 @@ async function initializeAlbum(album: AlbumData) {
   const response = await axios.post(`/api/album/post/album`, album);
   return response.data;
 }
+
 // Fetch detailed album data on album page load
 export function useAlbumQuery() {
   const { selectedSound, setSelectedSound } = useSound();
@@ -95,9 +95,6 @@ export const useReviewsQuery = (
       },
       enabled: !!soundId,
       refetchOnWindowFocus: false,
-      // onSuccess: (data) => {
-      //   toast.success("loaded reviews");
-      // },
     },
   );
 
