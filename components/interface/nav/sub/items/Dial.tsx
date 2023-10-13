@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useSpring, animated } from "@react-spring/web";
+import { motion } from "framer-motion";
 import { useInputContext } from "@/context/InputContext";
 
 const ratings = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
@@ -10,16 +10,9 @@ interface DialProps {
 
 const Dial = ({ setRatingValue }: DialProps) => {
   const [ratingIndex, setRatingIndex] = useState(0);
-
   const { inputRef } = useInputContext();
 
-  const props = useSpring({
-    value: ratingIndex,
-    config: { tension: 305, friction: 20 },
-  });
-
   const handleKeyPress = (e: any) => {
-    // Check if the dial itself is focused or if the inputRef is focused and empty
     if (
       (document.activeElement === inputRef.current &&
         inputRef.current?.value === "") ||
@@ -35,7 +28,6 @@ const Dial = ({ setRatingValue }: DialProps) => {
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
-
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [ratingIndex, inputRef]);
 
@@ -54,27 +46,23 @@ const Dial = ({ setRatingValue }: DialProps) => {
       tabIndex={0}
       onKeyDown={handleKeyPress}
     >
-      <animated.div
-        style={{
-          transform: props.value.to(
-            (value) => `translateY(${-(value - 5) * 40}px)`,
-          ),
-        }}
+      <motion.div
+        initial={false}
+        animate={{ y: -(ratingIndex - 5) * 40 }}
+        transition={{ type: "spring", stiffness: 305, damping: 20 }}
       >
         {ratings.map((rating, i) => (
-          <animated.div
+          <motion.div
             className="flex w-full items-center justify-center text-center text-sm font-semibold h-[40px] text-black"
             key={i}
             style={{
-              transform: props.value.to(
-                (value) => `scale(${1 - Math.abs(i - value) * 0.5})`,
-              ),
+              scale: 1 - Math.abs(i - ratingIndex) * 0.5,
             }}
           >
             {rating}
-          </animated.div>
+          </motion.div>
         ))}
-      </animated.div>
+      </motion.div>
     </div>
   );
 };
