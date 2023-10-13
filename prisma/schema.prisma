@@ -71,6 +71,22 @@ model User {
   dateUpdated   DateTime  @updatedAt @map(name: "date_updated")
   accounts      Account[]
   sessions      Session[]
+
+  viewsCount    Int      @default(0) // Track number of views
+}
+
+
+model Favorite {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  album     Album   @relation(fields: [albumId], references: [id])
+  albumId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([albumId])
 }
 
 
@@ -88,22 +104,16 @@ model Follows {
 }
 
 model Album {
-  id            String    @id
+  id            String    @id @default(cuid())
   tracks        Track[]
   name          String
   artist        String
   releaseDate   String
-  averageRating Float?    @default(0)  
+  averageRating Float    @default(0)
   lastUpdated   DateTime  @default(now()) @updatedAt
-  reviews       Review[]
   notes         String?   @db.MediumText
   favorites     Favorite[]
-
-  viewsCount    Int      @default(0) // Track number of views
-  listenedCount Int      @default(0) // Track number of listens
-  ratingsCount  Int      @default(0) // Track number of ratings
-  reviewsCount  Int      @default(0) // Track number of revews
-  lovedCount    Int      @default(0) // Track number of loved reviews
+  reviews       Review[]
 
   @@unique([id])
 }
@@ -111,21 +121,16 @@ model Album {
 model Track {
   id            String    @id @default(cuid())
   name          String
-  duration      Int
   album         Album     @relation(fields: [albumId], references: [id])
   albumId       String
   reviews       Review[]
-
   @@index ([albumId])
 }
+
 
 model Review {
   activities Activity[]
   id        String    @id @default(cuid())
-  album     Album?     @relation(fields: [albumId], references: [id])
-  albumId   String?
-  track     Track?    @relation(fields: [trackId], references: [id])
-  trackId   String?
   permalink String    @unique
   rating    Float
   loved     Boolean   @default(false)
@@ -137,15 +142,20 @@ model Review {
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
 
-  viewsCount    Int      @default(0)
+
+  // Polymorphic relations
+  album      Album?      @relation(fields: [albumId], references: [id])
+  albumId    String?
+
+  track      Track?      @relation(fields: [trackId], references: [id])
+  trackId    String?
+
 
   deletedAt DateTime? @map(name: "deleted_at")
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @updatedAt @map(name: "updated_at")
 
-  @@index([albumId])
   @@index([authorId])
-  @@index([trackId])
 }
 
 // Diary is just review without text, Rating is just a rating score no tags + no listened (obvious), no comments
@@ -196,18 +206,6 @@ model Reply {
   @@index([rootReplyId])
 }
 
-model Favorite {
-  id        String  @id @default(cuid())
-  user     User    @relation(fields: [userId], references: [id])
-  userId   String
-  album     Album   @relation(fields: [albumId], references: [id])
-  albumId   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-  @@index([albumId])
-}
 
 model Activity {
   id          String       @id @default(cuid())

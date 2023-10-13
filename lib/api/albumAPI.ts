@@ -21,39 +21,33 @@ async function initializeAlbum(album: AlbumData) {
 export function useAlbumQuery() {
   const { selectedSound, setSelectedSound } = useSound();
 
-  return useQuery(
-    ["album", selectedSound?.sound.id],
-    async () => {
-      if (selectedSound) {
-        // If selected sound is a song, grab detailed album data to pass to Album page.
-        if (selectedSound.sound.type === "songs") {
-          const detailedAlbum = await getAlbumBySongId(selectedSound.sound.id);
+  return useQuery(["album", selectedSound?.sound.id], async () => {
+    if (selectedSound) {
+      // If selected sound is a song, grab detailed album data to pass to Album page.
+      if (selectedSound.sound.type === "songs") {
+        const detailedAlbum = await getAlbumBySongId(selectedSound.sound.id);
+        setSelectedSound({
+          ...selectedSound,
+          sound: detailedAlbum,
+        });
+        return initializeAlbum(detailedAlbum);
+      }
+      // If selected sound is an album without relationships, grab detailed album data.
+      else if (selectedSound.sound.type === "albums") {
+        const albumData = selectedSound.sound as AlbumData;
+
+        if (!albumData.relationships) {
+          const detailedAlbum = await getAlbumById(albumData.id);
           setSelectedSound({
             ...selectedSound,
             sound: detailedAlbum,
           });
           return initializeAlbum(detailedAlbum);
         }
-        // If selected sound is an album without relationships, grab detailed album data.
-        else if (selectedSound.sound.type === "albums") {
-          const albumData = selectedSound.sound as AlbumData;
-
-          if (!albumData.relationships) {
-            const detailedAlbum = await getAlbumById(albumData.id);
-            setSelectedSound({
-              ...selectedSound,
-              sound: detailedAlbum,
-            });
-            return initializeAlbum(detailedAlbum);
-          }
-        }
       }
-      return Promise.resolve({});
-    },
-    {
-      enabled: !!selectedSound,
-    },
-  );
+    }
+    return Promise.resolve({});
+  });
 }
 
 // Helper function for fetching album reviews
