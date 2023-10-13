@@ -24,19 +24,17 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
   return (
     <div className="flex flex-col w-full mb-8">
       {childReplies && childReplies.length > 0 ? (
-        childReplies.map(
-          (childReply: ReplyData, index: number, isChild: true) => {
-            return (
-              <Reply
-                index={index}
-                key={childReply.id}
-                reply={childReply}
-                level={level}
-                isChild={true}
-              />
-            );
-          },
-        )
+        childReplies.map((childReply: ReplyData, index: number) => {
+          return (
+            <Reply
+              index={index}
+              key={childReply.id}
+              reply={childReply}
+              level={level}
+              isChild={true}
+            />
+          );
+        })
       ) : (
         <div className="text-xs text-[#CCC]"></div>
         // un-chained

@@ -8,6 +8,8 @@ import { Artwork } from "@/components/feed/subcomponents/Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
+import { motion } from "framer-motion";
+import { EntryBlobAlbum } from "@/components/icons";
 
 interface EntryFullProps {
   review: ReviewData;
@@ -17,7 +19,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   const { data: session } = useSession();
   const album = review.appleAlbumData;
 
-  const { liked, handleLikeClick } = useHandleLikeClick(
+  const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
     review.likedByUser,
     review._count.likes,
     "/api/review/post/like",
@@ -27,43 +29,50 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
   );
 
   return (
-    <div className="flex flex-col max-w-[480px]">
-      {/*FeedEntry Content*/}
-      <div className="flex flex-col w-full bg-[#F4F4F4] rounded-[13px] rounded-b-none relative p-4">
-        {/* Artwork */}
-        <Artwork width={448} height={448} album={album} />
-        {/* Rating & Names */}
-        <div className="flex items-center relative gap-2 pt-8">
-          <UserAvatar
-            className="outline outline-2 outline-[#E5E5E6] z-10"
-            imageSrc={review.author.image}
-            altText={`${review.author.name}'s avatar`}
-            width={40}
-            height={40}
-            user={review.author}
-          />
-          <p className="text-[#3C3C43]/60 font-medium text-sm leading-[75%] mt-[5px]">
-            {review.author.name}
-          </p>
-          <Stars
-            className="absolute left-[28px] -translate-y-[22px]"
-            rating={review.rating}
-            soundName={album.attributes.name}
-            artist={album.attributes.artistName}
-          />
-        </div>
-        {/* Content*/}
-        <div
-          className={`break-words line-clamp-6 w-full text-sm text-gray4 -mt-[7px] leading-normal pl-12`}
-        >
-          {review.content}
-        </div>
-        <LikeButton
-          handleLikeClick={handleLikeClick}
-          liked={liked}
-          className="absolute -bottom-2 right-6"
-          replyCount={review._count.replies}
+    <div className="flex flex-col items-center p-8 relative">
+      <div className="relative">
+        <Artwork album={album} width={320} height={320} />
+        <Stars
+          className={`absolute -bottom-3 -left-5 shadow-stars outline outline-silver outline-[.5px] pr-2`}
+          rating={review.rating}
+          soundName={album.attributes.name}
+          artist={album.attributes.artistName}
         />
+      </div>
+
+      {/* Avatar & Name */}
+      <div className="flex items-center gap-2 ml-7 mb-2 mt-8 w-full">
+        <UserAvatar
+          className="w-10 h-10 outline outline-1 outline-silver"
+          imageSrc={review.author.image}
+          altText={`${review.author.name}'s avatar`}
+          width={40}
+          height={40}
+          user={review.author}
+        />
+        <p className="text-gray2 font-medium text-sm leading-[75%]">
+          {review.author.name}
+        </p>
+      </div>
+
+      <EntryBlobAlbum className={"ml-6 w-full"} />
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative px-4 pt-[11px] pb-[10px] gap-2">
+          {/* Content*/}
+          <div
+            className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
+          >
+            {review.content}
+          </div>
+
+          <LikeButton
+            handleLikeClick={handleLikeClick}
+            liked={liked}
+            className="absolute -bottom-2 -right-2"
+            likeCount={likeCount}
+            replyCount={review._count.replies}
+          />
+        </div>
       </div>
     </div>
   );

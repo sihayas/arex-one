@@ -77,9 +77,9 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
         </p>
       </div>
 
-      <EntryBlobAlbum className={" ml-4"} />
+      <EntryBlobAlbum className={"ml-4"} />
       <div className="flex flex-col gap-2">
-        <div className="flex flex-col w-[404px] bg-[#F4F4F4] rounded-[13px] relative p-4 gap-2">
+        <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative p-4 gap-2">
           {/* Content*/}
           <div
             onClick={handleEntryClick}

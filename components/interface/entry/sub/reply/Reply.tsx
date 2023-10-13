@@ -40,15 +40,15 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const borderRadius =
     level % 2 === 0 ? "rounded-bl-[4px]" : "rounded-br-[4px]";
   const reverseStatLine = level % 2 === 0 ? "" : "transform scale-x-[-1]";
-  const maxWidth = isChild ? "max-w-[344px]" : "max-w-[380px]";
-  const width = isChild ? "w-[344px]" : "w-[380px]";
+  const maxWidth = isChild ? "max-w-[336px]" : "max-w-[376px]";
+  const width = isChild ? "w-[336px]" : "w-[376px]";
 
   return (
     <div className={`flex flex-col relative w-full pt-4`}>
       {/* Main Reply */}
-      <div className={`flex gap-1 items-end ${flexDirection}`}>
+      <div className={`flex gap-2 items-end ${flexDirection}`}>
         <Image
-          className="w-[32px] h-[32px] rounded-full outline outline-1 outline-[#E5E5E6]"
+          className="w-8 h-8 rounded-full outline outline-1 outline-[#E5E5E6]"
           src={reply.author.image}
           alt={`${reply.author.name}'s avatar`}
           width={32}
@@ -75,7 +75,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           <div className="flex flex-col justify-center h-full mr-auto w-8">
             <Line
               color={"#e5e5e6"}
-              className={`flex flex-grow ml-auto mr-auto ${
+              className={`flex flex-grow ml-auto mr-auto !w-[1.5px] ${
                 index === 0 && "-mt-3"
               }`}
             />

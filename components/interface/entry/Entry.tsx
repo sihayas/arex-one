@@ -39,9 +39,7 @@ export const Entry = () => {
         <>
           <motion.div
             style={{
-              scale: springScale,
               willChange: "transform",
-              marginTop: "-8px",
             }}
           >
             <EntryFull review={entry} />

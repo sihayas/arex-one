@@ -27,7 +27,7 @@ export const Artwork = ({ album, width = 368, height = 368 }: ArtworkProps) => {
   return (
     <Image
       onClick={handleSoundClick}
-      className="rounded-[7.5px]"
+      className="rounded-[7.5px] outline outline-silver outline-[.5px]"
       src={artworkUrl || "/images/default.webp"}
       alt={`artwork`}
       width={width}
