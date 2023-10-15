@@ -76,9 +76,9 @@ const Filter = ({
       initial={{ height: "32px" }}
       animate={{ height: expand ? "288px" : "32px" }}
       transition={{ type: "spring", damping: 40, stiffness: 400 }}
-      className="flex scrollbar-none overflow-y-auto will-change-transform w-full"
+      className="flex scrollbar-none overflow-y-auto will-change-transform w-full drop-shadow-2xl"
     >
-      <div className="flex flex-col flex-col-reverse w-full overflow-y-scroll scrollbar-none">
+      <div className="flex flex-col-reverse w-full overflow-y-scroll scrollbar-none">
         {/* Album Button */}
         <Button
           key="album"
@@ -96,7 +96,7 @@ const Filter = ({
           </div>
           {/* Bubble and Circle */}
           <div className="w-8 h-8 flex items-center justify-center">
-            <motion.div whileHover={{ scale: 1.05 }} className="absolute">
+            <motion.div className="absolute">
               <AnimatedCircle
                 onSortOrderChange={handleSortOrderChange}
                 expanded={expand}

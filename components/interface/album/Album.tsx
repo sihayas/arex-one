@@ -86,7 +86,7 @@ const Album = () => {
           <motion.div
             style={{
               y: springY,
-              boxShadow: boxShadow,
+              // boxShadow: boxShadow,
               borderRadius: borderRadius,
             }}
             className="pointer-events-none overflow-hidden sticky -top-0 z-50 -mb-72"

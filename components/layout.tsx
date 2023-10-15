@@ -3,12 +3,14 @@ import React, { useEffect, ReactNode, useCallback, useRef } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSession } from "next-auth/react";
 import { useInputContext } from "@/context/InputContext";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isVisible, setIsVisible, pages } = useInterfaceContext();
   const { inputRef } = useInputContext();
   const mainContentRef = useRef<HTMLElement>(null);
-  const { data: session } = useSession();
+
+  const user = useUser();
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -53,7 +55,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {session && pages.length > 0 && (
+      {user && pages.length > 0 && (
         <div
           className={`${
             isVisible ? "pointer-events-auto" : "pointer-events-none"

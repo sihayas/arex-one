@@ -11,9 +11,11 @@ import Search from "./sub/Search";
 import Form from "./sub/Form";
 import { useInputContext } from "@/context/InputContext";
 import { useAnimate } from "framer-motion";
+import { useUser } from "@supabase/auth-helpers-react";
 
 const Nav: React.FC = () => {
-  const { data: session, status } = useSession();
+  const user = useUser();
+
   const { inputValue, setInputValue, expandInput, setExpandInput, inputRef } =
     useInputContext();
   const { selectedFormSound } = useSound();
@@ -54,7 +56,7 @@ const Nav: React.FC = () => {
       { height: height },
       { type: "spring", stiffness: 300, damping: 30 },
     );
-  }, [expandInput, selectedFormSound, inputValue, animate]);
+  }, [expandInput, selectedFormSound, inputValue, animate, scope]);
 
   useEffect(() => {
     // Animate the width
@@ -63,7 +65,7 @@ const Nav: React.FC = () => {
       { width: expandInput ? "400px" : "40px" },
       { type: "spring", stiffness: 400, damping: 40 },
     );
-  }, [expandInput, inputAnimate]);
+  }, [expandInput, inputAnimate, inputScope]);
 
   const onFocus = useCallback(() => {
     setExpandInput(true);
@@ -94,7 +96,7 @@ const Nav: React.FC = () => {
 
   let left;
 
-  if (!session) {
+  if (!user) {
     left = (
       <div className="flex h-8 items-center justify-between rounded-full">
         log in
@@ -102,11 +104,7 @@ const Nav: React.FC = () => {
     );
   }
 
-  if (status === "loading") {
-    left = <p>logging in...</p>;
-  }
-
-  if (session) {
+  if (user) {
     left = (
       // Search
       <div className="flex flex-col">

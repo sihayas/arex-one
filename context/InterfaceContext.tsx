@@ -6,11 +6,10 @@ import React, {
   useRef,
 } from "react";
 import { SelectedSound } from "@/lib/global/interfaces";
-import { useSession } from "next-auth/react";
 import { ReviewData, UserData } from "@/lib/global/interfaces";
 import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "@/lib/api/userAPI";
 import { v4 as uuidv4 } from "uuid";
+import { supabase } from "@/lib/global/supabase";
 
 export type Page = {
   key: string;
@@ -59,30 +58,31 @@ export const useInterfaceContext = (): InterfaceContext => {
 export const InterfaceContextProvider = ({
   children,
 }: InterfaceContextProviderProps) => {
-  const { data: session, status } = useSession();
   const [isVisible, setIsVisible] = useState(false);
-
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  // Page states
   const [pages, setPages] = useState<Page[]>([]);
+  const [user, setUser] = useState(null);
 
-  // Query for user data
-  const {
-    data: user,
-    isLoading,
-    isError,
-  } = useQuery(
-    ["user", session?.user?.id],
-    () => getUserById(session?.user.id || "", session?.user.id || ""),
-    {
-      enabled: !!session?.user.id, // Only run the query if session.user.id is available
-    },
-  );
+  useEffect(() => {
+    async function getUser() {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Error getting user:", error.message);
+      } else {
+        // @ts-ignore
+        setUser({ user: user });
+      }
+    }
+    getUser();
+  }, []);
 
   // Initialize pages
   useEffect(() => {
-    if (session && !pages.length && user) {
+    if (!pages.length && user) {
+      console.log(user);
       setPages([
         {
           key: uuidv4(),
@@ -93,7 +93,7 @@ export const InterfaceContextProvider = ({
         },
       ]);
     }
-  }, [session, pages, user]);
+  }, [pages.length, user]);
 
   const navigateBack = useCallback(() => {
     setPages((prevPages) => {

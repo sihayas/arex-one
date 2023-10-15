@@ -1,24 +1,33 @@
-import { signOut, useSession } from "next-auth/react";
 import Layout from "../components/layout";
 import Head from "next/head";
-import React from "react";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import FeedUser from "@/components/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
+import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { supabase } from "@/lib/global/supabase";
 
 export default function Home() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-  const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
+  const supabaseClient = useSupabaseClient();
+  const [session, setSession] = useState({ session: null });
 
-  if (status === "loading") {
-    return <div>loading </div>; // or some other placeholder
-  }
+  useEffect(() => {
+    async function getSession() {
+      const { data, error } = await supabaseClient.auth.getSession();
+      if (error) {
+        console.error("Error getting session:", error.message);
+      } else {
+        // @ts-ignore
+        setSession({ session: data });
+      }
+    }
+
+    getSession();
+  }, [supabaseClient]);
+
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
   if (!session) {
     return (
@@ -60,9 +69,20 @@ export default function Home() {
           </div>
 
           <div className="col-span-5 col-start-2 self-end text-sm uppercase row-start-9 text-gray2">
-            <Link data-active={isActive("/signup")} href="/api/auth/signin">
-              CONNECT WITH <span className="text-red">APPLE MUSIC</span>...
-            </Link>
+            <button
+              onClick={async () => {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                  provider: "google",
+                });
+                if (error) console.error("Error signing in:", error.message);
+              }}
+            >
+              Sign in with Google
+            </button>
+
+            {/*<button onClick={() => supabaseClient.auth.signOut()}>*/}
+            {/*  Sign out*/}
+            {/*</button>*/}
           </div>
         </div>
       </Layout>
@@ -75,35 +95,35 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <UserAvatar
-        className="fixed translate-x-[138px] translate-y-12 z-50 outline outline-[#FFF] outline-1"
-        imageSrc={session.user.image}
-        altText={`${session.user.name}'s avatar`}
-        width={32}
-        height={32}
-        //@ts-ignore
-        user={session.user}
-      />
+      {/*<UserAvatar*/}
+      {/*  className="fixed translate-x-[138px] translate-y-12 z-50 outline outline-[#FFF] outline-1"*/}
+      {/*  imageSrc={user.image}*/}
+      {/*  altText={`${session.user.name}'s avatar`}*/}
+      {/*  width={32}*/}
+      {/*  height={32}*/}
+      {/*  //@ts-ignore*/}
+      {/*  user={session.user}*/}
+      {/*/>*/}
       <DashedLine
         className="absolute translate-x-[153px] translate-y-12"
         height="100vh"
       />
 
-      <motion.div
-        ref={scrollContainerRef}
-        className="relative flex max-h-screen flex-col gap-10 overflow-scroll pl-0 p-12 pt-32 max-w-screen"
-      >
-        {scrollContainerRef && (
-          <FeedUser
-            userId={session.user.id}
-            scrollContainerRef={scrollContainerRef}
-          />
-        )}
-      </motion.div>
+      {/*<motion.div*/}
+      {/*  ref={scrollContainerRef}*/}
+      {/*  className="relative flex max-h-screen flex-col gap-10 overflow-scroll pl-0 p-12 pt-32 max-w-screen"*/}
+      {/*>*/}
+      {/*  {scrollContainerRef && (*/}
+      {/*    <FeedUser*/}
+      {/*      userId={session.user.id}*/}
+      {/*      scrollContainerRef={scrollContainerRef}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*</motion.div>*/}
 
       <div
         className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"
-        onClick={() => signOut()}
+        onClick={() => supabaseClient.auth.signOut()}
         onMouseOver={(e) => (e.currentTarget.textContent = "DISCONNECT")}
         onMouseOut={(e) => (e.currentTarget.textContent = "CONNECTED")}
       >

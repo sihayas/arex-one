@@ -34,11 +34,11 @@ const getDimensions = (pageName: PageName) => {
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 1024 }, // Placeholder values
+      target: { width: 480, height: 1234 }, // Placeholder values
     },
     entry: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 1024 }, // Placeholder values
+      target: { width: 480, height: 1234 }, // Placeholder values
     },
   };
 
@@ -242,7 +242,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center rounded-3xl bg-white overflow-hidden z-20 shadow-interface outline outline-[.5px] outline-silver`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -255,7 +255,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden w-full h-full scrollbar-none rounded-3xl`}
+              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden w-full h-full scrollbar-none`}
             >
               <ActiveComponent />
             </div>

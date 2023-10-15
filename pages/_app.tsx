@@ -9,13 +9,24 @@ import { SoundDetailsProvider } from "@/context/Sound";
 import { Toaster } from "sonner";
 import { InterfaceContextProvider } from "@/context/InterfaceContext";
 import { InputProvider } from "@/context/InputContext";
+import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = ({
+  Component,
+  pageProps,
+}: AppProps<{
+  initialSession: Session;
+}>) => {
+  const [supabaseClient] = useState(() => createPagesBrowserClient());
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider session={pageProps.session}>
+      <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
+      >
         <InterfaceContextProvider>
           <InputProvider>
             <SoundDetailsProvider>
@@ -27,7 +38,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         </InterfaceContextProvider>
         <Toaster />
         {/* <ReactQueryDevtools /> */}
-      </SessionProvider>
+      </SessionContextProvider>
     </QueryClientProvider>
   );
 };
