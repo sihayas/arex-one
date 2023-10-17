@@ -11,7 +11,7 @@ export default async function handle(
 
   if (req.method === "GET") {
     try {
-      const review = await prisma.review.findUnique({
+      const review = await prisma.record.findUnique({
         where: {
           id: String(id),
         },

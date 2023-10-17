@@ -1,20 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { fetchUserReview, postReview } from "@/lib/api/formAPI";
+import { postEntry } from "@/lib/api/formAPI";
 import { useSound } from "@/context/Sound";
 
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { SendIcon, ArrowIcon } from "@/components/icons";
 import Dial from "./items/Dial";
 import { useInputContext } from "@/context/InputContext";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 const Form = () => {
-  const { data: session } = useSession();
-  const userId = session?.user.id;
+  const { user } = useInterfaceContext();
+
+  const userId = user!.id;
 
   const { selectedFormSound, setSelectedFormSound } = useSound();
 
@@ -24,47 +24,34 @@ const Form = () => {
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);
 
-  // Check if the user has already reviewed the sound
-  const replay = useQuery(
-    ["userReview", selectedFormSound?.sound.id, userId],
-    () =>
-      selectedFormSound && userId
-        ? fetchUserReview(selectedFormSound.sound.id, userId)
-        : null,
-    {
-      enabled: !!selectedFormSound && !!userId,
-    },
-  ).data;
-
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement> | null) => {
       event?.preventDefault();
 
       const gatherSubmissionData = () => {
-        let albumId = undefined;
-        let trackId = undefined;
+        let appleAlbumId = undefined;
+        let appleTrackId = undefined;
 
         if (selectedFormSound?.sound.type === "albums") {
-          albumId = selectedFormSound.sound.id;
+          appleAlbumId = selectedFormSound.sound.id;
         } else if (selectedFormSound?.sound.type === "songs") {
-          trackId = selectedFormSound.sound.id;
+          appleTrackId = selectedFormSound.sound.id;
         }
 
         return {
+          text: inputValue,
           rating: rating,
           loved: loved,
-          content: inputValue,
-          replay: replay,
           userId: userId,
-          albumId: albumId,
-          trackId: trackId,
+          appleAlbumId: appleAlbumId,
+          appleTrackId: appleTrackId,
         };
       };
 
       const submissionData = gatherSubmissionData();
 
       toast.promise(
-        postReview(submissionData).then(() => {
+        postEntry(submissionData).then(() => {
           setSelectedFormSound(null); // Set selectedFormSound to null on success
           setInputValue(""); // Reset input value on success
         }),
@@ -79,7 +66,6 @@ const Form = () => {
       rating,
       loved,
       inputValue,
-      replay,
       userId,
       selectedFormSound,
       setSelectedFormSound,
@@ -111,7 +97,6 @@ const Form = () => {
     rating,
     loved,
     inputValue,
-    replay,
     userId,
     selectedFormSound,
     handleSubmit,

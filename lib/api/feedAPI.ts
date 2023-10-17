@@ -113,7 +113,7 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
 //   const bloomingEntriesDataQuery = useQuery(
 //     ["entryDetails", bloomingEntriesQuery.data || []],
 //     async () => {
-//       const { data } = await axios.post("/api/review/getByIds", {
+//       const { data } = await axios.post("/api/record/entry/getByIds", {
 //         ids: bloomingEntriesQuery.data,
 //       });
 //       return data;

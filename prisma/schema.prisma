@@ -63,6 +63,7 @@ model Follows {
 
 model Album {
   id            String   @id @default(cuid())
+  appleId       String   @unique
   name          String
   artist        String
   releaseDate   String
@@ -76,15 +77,17 @@ model Album {
   views         View[]   @relation("AlbumViews")
 
   @@unique([id])
+  @@index([appleId, id])
 }
 
 model Track {
-  id      String @id @default(cuid())
-  name    String
-  albumId String
+  id           String @id @default(cuid())
+  appleId      String @unique
+  name         String
+  albumId      String
 
-  album   Album  @relation(fields: [albumId], references: [id])
-  record Record[]
+  album        Album  @relation(fields: [albumId], references: [id])
+  record       Record[]
 
   @@index ([albumId])
 }
@@ -96,8 +99,10 @@ model Record {
   updatedAt   DateTime  @updatedAt
   authorId    String
 
+  // Sound type
   albumId     String?
   trackId     String?
+  // Text type
   entryId     String?   @unique
   captionId   String?   @unique
 
@@ -127,7 +132,11 @@ model Entry {
   id         String   @id @default(cuid())
   text       String
   rating     Float
-  record     Record   @relation(fields: [id], references: [entryId])
+  loved      Boolean  @default(false)
+  replay     Boolean  @default(false)
+
+  recordId   String   @unique
+  record     Record   @relation(fields: [recordId], references: [id])
 
   @@index([id])
 }
@@ -137,7 +146,9 @@ model Caption {
   text       String?
   media      String?
   link       String?
-  record     Record   @relation(fields: [id], references: [captionId])
+
+  recordId   String   @unique
+  record     Record   @relation(fields: [recordId], references: [id])
 
   @@index([id])
 }
@@ -192,6 +203,7 @@ model Reply {
 
 model Activity {
   id            String          @id @default(cuid())
+  type          ActivityType
   referenceId   String
   createdAt     DateTime        @default(now()) @map(name: "created_at")
   updatedAt     DateTime        @updatedAt @map(name: "updated_at")
@@ -208,7 +220,7 @@ model Activity {
 }
 
 
-enum ActivityType{
+enum ActivityType {
   RECORD
   LIKE
   FOLLOW

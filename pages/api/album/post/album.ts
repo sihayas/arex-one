@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 import { TrackData } from "@/lib/global/interfaces";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  const album = req.body;
+  const { album, userId } = req.body;
 
   if (
     !album ||
@@ -20,32 +20,37 @@ export default async function handle(
 
   if (req.method === "POST") {
     try {
+      // Create a new view record
+      const newView = await prisma.view.create({
+        data: {
+          viewType: "ALBUM",
+          referenceId: album.id,
+          userId: userId,
+        },
+      });
+
+      // If album exists, add view. Otherwise, create it & add view.
       const existingAlbum = await prisma.album.upsert({
         where: {
-          id: album.id,
+          appleId: album.id,
         },
-        update: {
-          viewsCount: {
-            increment: 1,
-          },
-        },
+
         create: {
-          id: album.id,
+          appleId: album.id,
           name: album.attributes.name,
           releaseDate: album.attributes.releaseDate,
           artist: album.attributes.artistName,
           tracks: {
             create: album.relationships.tracks.data.map((track: TrackData) => ({
-              id: track.id,
-              name: track.attributes.name, // Make sure the attribute exists
-              duration: track.attributes.durationInMillis, // Make sure the attribute exists
+              appleId: track.id,
+              name: track.attributes.name,
             })),
           },
-          viewsCount: 1,
         },
+        update: {},
       });
 
-      res.status(200).json({ album: existingAlbum });
+      res.status(200).json({ album: existingAlbum, view: newView });
     } catch (error) {
       console.error("Error upserting album:", error);
       res.status(500).json({ error: "Error upserting album." });

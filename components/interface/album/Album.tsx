@@ -24,7 +24,6 @@ import GradientBlur from "@/components/interface/album/sub/GradientBlur";
 const Album = () => {
   // Hooks
   const { selectedSound } = useSound();
-  const { data: session } = useSession();
 
   const { scrollContainerRef } = useInterfaceContext();
 
@@ -109,7 +108,6 @@ const Album = () => {
               soundId={`${
                 !activeSong ? selectedSound.sound.id : activeSong.id
               }`}
-              user={session!.user}
               sortOrder={sortOrder}
             />
           </AnimatePresence>

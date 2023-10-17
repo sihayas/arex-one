@@ -10,6 +10,7 @@ import { ReviewData, UserData } from "@/lib/global/interfaces";
 import { useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/lib/global/supabase";
+import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 export type Page = {
   key: string;
@@ -31,6 +32,10 @@ export type InterfaceContext = {
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
   navigateBack: (pageNumber?: number) => void;
   scrollContainerRef: React.MutableRefObject<HTMLDivElement | null>;
+  user: UserData | null;
+  setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
+  session: Session | null;
+  setSession: React.Dispatch<React.SetStateAction<any>>;
 };
 
 // Define the props for the InterfaceProvider component
@@ -61,39 +66,107 @@ export const InterfaceContextProvider = ({
   const [isVisible, setIsVisible] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [pages, setPages] = useState<Page[]>([]);
-  const [user, setUser] = useState(null);
+
+  const [user, setUser] = useState<UserData | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const supabaseClient = useSupabaseClient();
 
   useEffect(() => {
-    async function getUser() {
+    const setData = async () => {
+      // console.log("SET DATA");
       const {
-        data: { user },
+        data: { session },
         error,
-      } = await supabase.auth.getUser();
-      if (error) {
-        console.error("Error getting user:", error.message);
-      } else {
-        // @ts-ignore
-        setUser({ user: user });
-      }
-    }
-    getUser();
+      } = await supabaseClient.auth.getSession();
+      if (error) throw error;
+      setSession(session);
+      // console.log("SESSION", session);
+
+      // const { data: fetchedUser, error: fetchError } = await supabaseClient
+      //   .from("User")
+      //   .select("*")
+      //   .eq("email", session?.user.email)
+      //   .single();
+
+      // console.log("FETCHED USER", fetchedUser);
+
+      // if (fetchError) throw fetchError;
+      // setUser(fetchedUser);
+    };
+
+    const { data: listener } = supabaseClient.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "SIGNED_IN" && session) {
+          setData();
+        } else if (event === "SIGNED_OUT") {
+          setUser(null);
+          setSession(null);
+        }
+      },
+    );
+
+    setData();
+
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
   }, []);
 
-  // Initialize pages
-  useEffect(() => {
-    if (!pages.length && user) {
-      console.log(user);
-      setPages([
-        {
-          key: uuidv4(),
-          name: "user",
-          user: user,
-          dimensions: { width: 352, height: 512 },
-          scrollPosition: 0,
-        },
-      ]);
-    }
-  }, [pages.length, user]);
+  // useEffect(() => {
+  //   (async () => {
+  //     // Get and check for a session
+  //     const { data: sessionData, error: sessionError } =
+  //       await supabase.auth.getSession();
+  //
+  //     if (sessionError) {
+  //       return console.error("Error getting session:", sessionError.message);
+  //     }
+  //     // If session exists, set the session data
+  //     if (sessionData.session) {
+  //       setSession(sessionData);
+  //
+  //       // Get the authenticated user
+  //       const {
+  //         data: { user: authUser },
+  //         error: authError,
+  //       } = await supabase.auth.getUser();
+  //       if (authError) {
+  //         console.error("Error getting auth user:", authError.message);
+  //         return;
+  //       }
+  //
+  //       // If user is authenticated, fetch user profile data from the database
+  //       if (authUser) {
+  //         const { data: fetchedUser, error: fetchError } = await supabase
+  //           .from("User")
+  //           .select("*")
+  //           .eq("email", authUser.email)
+  //           .single();
+  //
+  //         if (fetchError) {
+  //           console.error("Error fetching user data:", fetchError.message);
+  //           return;
+  //         }
+  //
+  //         setUser(fetchedUser);
+  //       }
+  //     }
+  //   })();
+  // }, []);
+
+  // useEffect(() => {
+  //   if (!pages.length && user) {
+  //     setPages([
+  //       {
+  //         key: uuidv4(),
+  //         name: "user",
+  //         user: user,
+  //         dimensions: { width: 352, height: 512 },
+  //         scrollPosition: 0,
+  //       },
+  //     ]);
+  //   }
+  // }, [pages.length, user]);
 
   const navigateBack = useCallback(() => {
     setPages((prevPages) => {
@@ -136,9 +209,50 @@ export const InterfaceContextProvider = ({
         setPages,
         navigateBack,
         scrollContainerRef,
+        user,
+        setUser,
+        session,
+        setSession,
       }}
     >
       {children}
     </InterfaceContext.Provider>
   );
 };
+
+// useEffect(() => {
+//   const { data: authListener } = supabaseClient.auth.onAuthStateChange(
+//       async (event, session) => {
+//         if (event === "SIGNED_IN" && session) {
+//           console.log("SIGNED_IN");
+//
+//           setSession({ session: session });
+//           console.log("SESSION", session);
+//
+//           const authUser = session.user;
+//           console.log(authUser);
+//           // Fetch user profile data from the database
+//           const { data: fetchedUser, error: fetchError } = await supabaseClient
+//               .from("User")
+//               .select("*")
+//               .eq("email", authUser.email)
+//               .single();
+//           {
+//             fetchError &&
+//             console.error("Error fetching user data:", fetchError);
+//           }
+//
+//           setUser(fetchedUser);
+//           console.log("fetchedUser", fetchedUser);
+//         } else if (event === "SIGNED_OUT") {
+//           setUser(null);
+//           setSession(null);
+//         }
+//       },
+//   );
+//
+//   // Cleanup subscription
+//   return () => {
+//     authListener.subscription.unsubscribe();
+//   };
+// }, []);

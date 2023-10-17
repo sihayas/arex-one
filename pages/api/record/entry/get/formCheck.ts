@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 
 // This API route checks if a review exists for a given user and album when first loading the review form
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "GET") {
     const userId = Array.isArray(req.query.userId)
@@ -20,7 +20,7 @@ export default async function handle(
     }
 
     try {
-      const userReview = await prisma.review.findFirst({
+      const userReview = await prisma.record.findFirst({
         where: {
           authorId: userId,
           albumId: albumId,

@@ -1,33 +1,22 @@
 import Layout from "../components/layout";
 import Head from "next/head";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import React from "react";
 import FeedUser from "@/components/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
 import { motion } from "framer-motion";
-import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+// import { supabase } from "@/lib/global/supabase";
+import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { supabase } from "@/lib/global/supabase";
 
 export default function Home() {
-  const supabaseClient = useSupabaseClient();
-  const [session, setSession] = useState({ session: null });
-
-  useEffect(() => {
-    async function getSession() {
-      const { data, error } = await supabaseClient.auth.getSession();
-      if (error) {
-        console.error("Error getting session:", error.message);
-      } else {
-        // @ts-ignore
-        setSession({ session: data });
-      }
-    }
-
-    getSession();
-  }, [supabaseClient]);
-
+  const { user, session } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const supabaseClient = useSupabaseClient();
+
+  console.log(session, "no session");
+  console.log(user, "no user");
 
   if (!session) {
     return (
@@ -71,24 +60,24 @@ export default function Home() {
           <div className="col-span-5 col-start-2 self-end text-sm uppercase row-start-9 text-gray2">
             <button
               onClick={async () => {
-                const { data, error } = await supabase.auth.signInWithOAuth({
-                  provider: "google",
-                });
-                if (error) console.error("Error signing in:", error.message);
+                const { data, error } =
+                  await supabaseClient.auth.signInWithOAuth({
+                    provider: "google",
+                  });
+                {
+                  error ? console.log(error) : console.log(data);
+                }
               }}
             >
               Sign in with Google
             </button>
-
-            {/*<button onClick={() => supabaseClient.auth.signOut()}>*/}
-            {/*  Sign out*/}
-            {/*</button>*/}
           </div>
         </div>
       </Layout>
     );
   }
 
+  // User data is stored in interface context
   return (
     <Layout>
       <Head>
@@ -97,8 +86,8 @@ export default function Home() {
 
       {/*<UserAvatar*/}
       {/*  className="fixed translate-x-[138px] translate-y-12 z-50 outline outline-[#FFF] outline-1"*/}
-      {/*  imageSrc={user.image}*/}
-      {/*  altText={`${session.user.name}'s avatar`}*/}
+      {/*  imageSrc={user?.image}*/}
+      {/*  altText={`${user?.user_metadata.avatar_url}'s avatar`}*/}
       {/*  width={32}*/}
       {/*  height={32}*/}
       {/*  //@ts-ignore*/}
@@ -113,22 +102,25 @@ export default function Home() {
       {/*  ref={scrollContainerRef}*/}
       {/*  className="relative flex max-h-screen flex-col gap-10 overflow-scroll pl-0 p-12 pt-32 max-w-screen"*/}
       {/*>*/}
-      {/*  {scrollContainerRef && (*/}
-      {/*    <FeedUser*/}
-      {/*      userId={session.user.id}*/}
-      {/*      scrollContainerRef={scrollContainerRef}*/}
-      {/*    />*/}
+      {/*  {scrollContainerRef && user && (*/}
+      {/*    <FeedUser userId={user.id} scrollContainerRef={scrollContainerRef} />*/}
       {/*  )}*/}
       {/*</motion.div>*/}
 
-      <div
+      <button
         className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"
-        onClick={() => supabaseClient.auth.signOut()}
+        onClick={async () => {
+          console.log("signing out");
+          const { error } = await supabaseClient.auth.signOut();
+          {
+            error ? console.log(error) : console.log("signed out");
+          }
+        }}
         onMouseOver={(e) => (e.currentTarget.textContent = "DISCONNECT")}
         onMouseOut={(e) => (e.currentTarget.textContent = "CONNECTED")}
       >
         CONNECTED
-      </div>
+      </button>
     </Layout>
   );
 }

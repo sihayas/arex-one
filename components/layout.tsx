@@ -1,9 +1,8 @@
 import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useCallback, useRef } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useSession } from "next-auth/react";
 import { useInputContext } from "@/context/InputContext";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@supabase/auth-helpers-react";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isVisible, setIsVisible, pages } = useInterfaceContext();
@@ -28,9 +27,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     [inputRef, setIsVisible],
   );
 
-  const handleDoubleClick = useCallback(() => {
-    setIsVisible((prevIsVisible) => !prevIsVisible);
-  }, [setIsVisible]);
+  // const handleDoubleClick = useCallback(() => {
+  //   setIsVisible((prevIsVisible) => !prevIsVisible);
+  // }, [setIsVisible]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -39,19 +38,19 @@ export default function Layout({ children }: { children: ReactNode }) {
     };
   }, [handleKeyDown]);
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    const mainContentElement = mainContentRef.current;
-    if (mainContentElement) {
-      mainContentElement.addEventListener("dblclick", handleDoubleClick);
-    }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      if (mainContentElement) {
-        mainContentElement.removeEventListener("dblclick", handleDoubleClick);
-      }
-    };
-  }, [handleKeyDown, handleDoubleClick]);
+  // useEffect(() => {
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   const mainContentElement = mainContentRef.current;
+  //   if (mainContentElement) {
+  //     mainContentElement.addEventListener("dblclick", handleDoubleClick);
+  //   }
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeyDown);
+  //     if (mainContentElement) {
+  //       mainContentElement.removeEventListener("dblclick", handleDoubleClick);
+  //     }
+  //   };
+  // }, [handleKeyDown, handleDoubleClick]);
 
   return (
     <>

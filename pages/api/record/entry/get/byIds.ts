@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "POST") {
     const { ids, userId } = req.body;
 
     try {
-      const reviews = await prisma.review.findMany({
+      const reviews = await prisma.record.findMany({
         where: {
           id: {
             in: ids,

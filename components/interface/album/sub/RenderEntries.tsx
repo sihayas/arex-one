@@ -9,22 +9,22 @@ import AnimatedCircle from "@/components/global/AnimatedCircle";
 
 interface RenderEntriesProps {
   soundId: string;
-  user: Session["user"];
   sortOrder: "newest" | "positive" | "negative";
 }
 
 const RenderEntries: React.FC<RenderEntriesProps> = ({
   soundId,
-  user,
   sortOrder = "newest",
 }) => {
+  const { user } = useInterfaceContext();
+
   // Get entries & flatten
   const {
     data: entries,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useReviewsQuery(soundId, user, sortOrder);
+  } = useReviewsQuery(soundId, user!, sortOrder);
 
   const flattenedEntries = entries?.pages.flat() || [];
 
