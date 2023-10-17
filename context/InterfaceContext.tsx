@@ -80,6 +80,7 @@ export const InterfaceContextProvider = ({
       } = await supabaseClient.auth.getSession();
       if (error) throw error;
       setSession(session);
+      console.log(session?.user);
       // console.log("SESSION", session);
 
       // const { data: fetchedUser, error: fetchError } = await supabaseClient
