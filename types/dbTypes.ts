@@ -1,4 +1,4 @@
-import { AlbumData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
 export interface User {
   id: string;
@@ -84,6 +84,7 @@ export interface Record {
   replies: Reply[];
 
   appleAlbumData: AlbumData;
+  appleTrackData: SongData;
 }
 
 export enum RecordType {

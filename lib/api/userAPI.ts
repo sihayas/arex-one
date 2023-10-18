@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getAlbumsByIds } from "@/lib/global/musicKit";
+import { Favorite } from "@/types/dbTypes";
 
 export const follow = async (followerId: string, followingId: string) => {
   await axios.post(`/api/user/follow`, { followerId, followingId });
@@ -22,7 +23,7 @@ export const getUserDataAndAlbums = async (
   sessionUserId: string,
 ) => {
   const userData = await getUserById(userId, sessionUserId);
-  const albumIds = userData.favorites.map((fav: any) => fav.album.id);
+  const albumIds = userData.favorites.map((fav: Favorite) => fav.album.appleId);
   const albumsData = await getAlbumsByIds(albumIds);
   return { userData, albumsData };
 };

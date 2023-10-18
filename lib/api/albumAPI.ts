@@ -7,14 +7,14 @@ import { useSound } from "@/context/Sound";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 // Helper to update/create albums
-async function initializeAlbum(album: AlbumData, userId: string) {
+const initializeAlbum = async (album: AlbumData, userId: string) => {
   const requestBody = {
-    album,
-    userId,
+      album,
+      userId,
   };
-  const response = await axios.post(`/api/album/post/album`, requestBody);
-  return response.data;
-}
+  const res = await axios.post(`/api/album/post/album`, requestBody);
+  return res.data;
+};
 
 // Fetch detailed album data on album page load
 export function useAlbumQuery() {

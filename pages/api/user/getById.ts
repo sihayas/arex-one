@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
@@ -62,17 +62,17 @@ export default async function handle(
             },
           },
           _count: {
-            select: { reviews: true, followers: true },
+            select: { record: true, followers: true },
           },
         },
       });
 
       // Fetch the uniqueAlbums count
-      const uniqueAlbums = await prisma.review.groupBy({
-        by: ["albumId"],
+      const uniqueAlbums = await prisma.record.groupBy({
+        by: ["albumId", "trackId"],
         where: { authorId: String(id) },
         _count: {
-          albumId: true,
+          albumId: true, trackId: true
         },
       });
 

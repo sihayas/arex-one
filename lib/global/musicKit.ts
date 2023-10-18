@@ -99,6 +99,7 @@ export const getAnyByIds = async (idTypes: Record<string, string[]>) => {
 
   if (!idParams) return [];
 
+
   const response = await axios.get(`${baseURL}?${idParams}`, {
     headers: {
       Authorization: `Bearer ${token}`,

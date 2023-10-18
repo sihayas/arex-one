@@ -42,7 +42,7 @@ const handleAddReply = async ({
     rootReplyId = replyParent.rootReplyId;
   }
 
-  const body = {
+  const requestBody = {
     replyId,
     reviewId,
     rootReplyId,
@@ -51,7 +51,7 @@ const handleAddReply = async ({
   };
 
   try {
-    const res = await axios.post("/api/record/entry/post/reply", body);
+    const res = await axios.post("/api/record/entry/post/reply", requestBody);
     if (res.status === 200) {
       console.log("submitted reply");
     } else {

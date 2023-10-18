@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { SelectedSound } from "@/types/interfaces";
+import { SelectedSound } from "@/types/globalTypes";
 import { Record, User } from "@/types/dbTypes";
 import { useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
@@ -119,7 +119,7 @@ export const InterfaceContextProvider = ({
           key: uuidv4(),
           name: "user",
           user: user,
-          dimensions: { width: 352, height: 512 },
+          dimensions: { width: 576, height: 352 },
           scrollPosition: 0,
         },
       ]);

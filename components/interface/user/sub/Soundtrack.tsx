@@ -2,12 +2,13 @@
 import React, { Fragment, useRef } from "react";
 
 import { useQuery } from "@tanstack/react-query";
-import { getAlbumsByIds } from "@/lib/global/musicKit";
-import { AlbumData } from "@/types/interfaces";
+import { getAlbumsByIds, getAnyByIds } from "@/lib/global/musicKit";
+import { AlbumData, SongData } from "@/types/appleTypes";
 import { getSoundtrack } from "@/lib/api/userAPI";
 
 import Item from "./components/Item";
 import format from "date-fns/format";
+import { Record } from "@/types/dbTypes";
 
 type SoundtrackData = {
   albumId: string;
@@ -28,25 +29,44 @@ const Soundtrack = ({ userId }: { userId: string }) => {
   } = useQuery(["mergedData", userId], async () => {
     // Fetch soundtrack data
     const soundtrackData = await getSoundtrack(userId);
+    console.log("soundtrackData", soundtrackData);
 
-    // Extract albumIds
-    const albumIds = soundtrackData.map((item: SoundtrackData) => item.albumId);
+    // Extract albumIds and trackIds
+    const albumIds = soundtrackData
+      .filter((record: Record): boolean => Boolean(record.album))
+      .map((record: Record): string => record.album!.appleId);
 
-    // Fetch albums by ids
-    const albumData = await getAlbumsByIds(albumIds);
+    const trackIds = soundtrackData
+      .filter((record: Record): boolean => Boolean(record.track))
+      .map((record: Record): string => record.track!.appleId);
 
-    // Create a lookup table for quick access
+    // Fetch albums and tracks by ids
+    const idTypes = { albums: albumIds, songs: trackIds };
+    const anyData = await getAnyByIds(idTypes);
+
+    // Create lookup tables for quick access
     const albumLookup = Object.fromEntries(
-      albumData.map((album: AlbumData) => [album.id, album]),
+      anyData
+        .filter((item: AlbumData | SongData) => item.type === "albums")
+        .map((album: AlbumData) => [album.id, album])
     );
 
-    // Merge soundtrackData and albumData
-    return soundtrackData.map((item: SoundtrackData) => {
+    const trackLookup = Object.fromEntries(
+      anyData
+        .filter((item: AlbumData | SongData) => item.type === "songs")
+        .map((track: SongData) => [track.id, track])
+    );
+
+    // Merge soundtrackData, albumData, and trackData
+    const finalMergedData = soundtrackData.map((item: Record) => {
       return {
         ...item,
-        albumDetails: albumLookup[item.albumId],
+        appleAlbumData: item.album ? albumLookup[item.album.appleId] : null,
+        appleTrackData: item.track ? trackLookup[item.track.appleId] : null,
       };
     });
+    console.log("finalMergedData", finalMergedData);
+    return finalMergedData;
   });
 
   let lastMonth = "";
@@ -60,8 +80,8 @@ const Soundtrack = ({ userId }: { userId: string }) => {
       ) : isError ? (
         <p>An error occurred</p>
       ) : (
-        mergedData.map((item: ExtendedSoundtrackData, index: number) => {
-          const createdAt = new Date(item.createdAt);
+        mergedData.map((record: Record, index: number) => {
+          const createdAt = new Date(record.createdAt);
           const currentMonth = format(createdAt, "MMMM"); // Using date-fns to format
 
           const isNewMonth = lastMonth !== currentMonth;
@@ -71,17 +91,17 @@ const Soundtrack = ({ userId }: { userId: string }) => {
           }
 
           return (
-            <Fragment key={item.albumId}>
+            <Fragment key={record.albumId}>
               {isNewMonth && (
-                <h2 className="px-8 text-xs uppercase font-medium text-gray2 -mb-4">
+                <h2 className="px-8 text-xs uppercase font-medium text-gray3 -mb-4 tracking-widest">
                   {currentMonth}
                 </h2>
               )}
-              <Item
+              {/* <Item
                 rating={item.rating}
                 createdAt={item.createdAt}
                 albumData={item.albumDetails}
-              />
+              /> */}
             </Fragment>
           );
         })

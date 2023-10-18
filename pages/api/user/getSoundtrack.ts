@@ -13,9 +13,9 @@ export default async function getUniqueAlbumsByUserId(
       const pageSize = 9;
       const skip = (Number(page) - 1) * pageSize;
 
-      const uniqueAlbums = await prisma.review.findMany({
+      const uniqueAlbums = await prisma.record.findMany({
         where: { authorId: String(userId) },
-        select: { albumId: true, rating: true, createdAt: true },
+        select: { album: true, track:true, entry: true, createdAt: true },
         orderBy: {
           createdAt: "desc",
         },
