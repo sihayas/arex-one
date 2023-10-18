@@ -1,6 +1,6 @@
 import client from "../global/redis";
 import { prisma } from "../global/prisma";
-import { ReviewData } from "../global/interfaces";
+import { ReviewData } from "../../types/interfaces";
 
 interface PrismaReviewData {
   id: string;
@@ -59,5 +59,5 @@ export async function updateBloomingEntryScores() {
     );
   }
 
-  console.log("FeedEntry blooming scores updated successfully");
+  console.log("RecordEntry blooming scores updated successfully");
 }

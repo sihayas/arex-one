@@ -1,6 +1,6 @@
 import client from "../global/redis";
 import { prisma } from "../global/prisma";
-import { AlbumDBData } from "../global/interfaces";
+import { AlbumDBData } from "../../types/interfaces";
 
 const weights = {
   views: 0.2,
@@ -38,7 +38,7 @@ export async function updateBloomingAlbumScores() {
     await client.zadd("bloomingAlbums", bloomingScore, album.id);
 
     console.log(
-      `Updated album ${album.id} / ${album.name} with new trending score: ${bloomingScore}`
+      `Updated album ${album.id} / ${album.name} with new trending score: ${bloomingScore}`,
     );
   }
 

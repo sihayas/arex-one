@@ -15,7 +15,7 @@ import {
 } from "framer-motion";
 import Filter from "@/components/interface/album/sub/Filter";
 
-import { TrackData } from "@/lib/global/interfaces";
+import { TrackData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
 
@@ -58,17 +58,6 @@ const Album = () => {
 
   // Initializes album and loads full details into selectedSound context
   const { isLoading } = useAlbumQuery();
-
-  const boxShadow = useMemo(() => {
-    if (selectedSound?.colors[0]) {
-      return `0px 3px 6px 0px ${selectedSound.colors[0]}, 0.15),
-        0px 11px 11px 0px ${selectedSound.colors[0]}, 0.13),
-        0px 26px 16px 0px ${selectedSound.colors[0]}, 0.08),
-        0px 46px 18px 0px ${selectedSound.colors[0]}, 0.02),
-        0px 72px 20px 0px ${selectedSound.colors[0]}, 0.00)`;
-    }
-    return undefined;
-  }, [selectedSound?.colors]);
 
   return (
     <div id={"interfaceAlbum"} className="w-full h-full">

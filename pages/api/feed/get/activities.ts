@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { validateQuery } from "@/lib/middleware/validateQuery";
 
 export default async function handle(
   req: NextApiRequest,
@@ -50,10 +49,9 @@ export default async function handle(
           createdAt: "desc",
         },
         where: {
-          // Activities where authorId is in following list of signed-in user
           OR: [
             {
-              review: {
+              record: {
                 authorId: {
                   in: followingIds,
                 },
@@ -62,24 +60,18 @@ export default async function handle(
           ],
         },
         include: {
-          review: {
+          record: {
             select: {
               id: true,
-              content: true,
+              type: true,
               author: true,
-              trackId: true,
-              rating: true,
-              // check if user has liked
-              likes: {
-                select: { id: true },
-                where: { authorId: userId },
-              },
+              album: true,
+              track: true,
               createdAt: true,
-              // To grab album data from Apple API
-              album: {
-                select: {
-                  id: true,
-                },
+              entry: true,
+              caption: true,
+              likes: {
+                where: { authorId: userId },
               },
               _count: {
                 select: { replies: true, likes: true },
@@ -87,6 +79,8 @@ export default async function handle(
             },
           },
           follow: true,
+          like: true,
+          reply: true,
         },
       });
 
@@ -99,12 +93,12 @@ export default async function handle(
 
       // Attach likedByUser property to each activity
       const activitiesWithUserLike = activities.map((activity) => {
-        if (activity.review) {
+        if (activity.record) {
           return {
             ...activity,
-            review: {
-              ...activity.review,
-              likedByUser: activity.review.likes.length > 0,
+            record: {
+              ...activity.record,
+              likedByUser: activity.record.likes.length > 0,
             },
           };
         }

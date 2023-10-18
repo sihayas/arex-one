@@ -1,6 +1,6 @@
 import client from "../global/redis";
 import { prisma } from "../global/prisma";
-import { AlbumDBData } from "../global/interfaces";
+import { AlbumDBData } from "../../types/interfaces";
 
 // Weights for the trending score calculation
 const weights = {
@@ -29,7 +29,7 @@ export async function updateSpotlightAlbumScores() {
     await client.zadd("spotlightAlbums", trendingScore, album.id);
 
     console.log(
-      `Updated album ${album.id} / ${album.name} with new spotlight score: ${trendingScore}`
+      `Updated album ${album.id} / ${album.name} with new spotlight score: ${trendingScore}`,
     );
   }
 

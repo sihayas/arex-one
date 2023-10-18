@@ -1,17 +1,21 @@
-// This fetch function is used by react-query
 import axios from "axios";
-import { getAlbumsByIds } from "../global/musicKit";
-import { ActivityData, AlbumData } from "../global/interfaces";
+import { getAnyByIds } from "../global/musicKit";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { Activity, ActivityType } from "@/types/dbTypes";
+import { AlbumData } from "@/types/appleTypes";
 
 const fetchFeedAndMergeAlbums = async (
   userId: string,
   pageParam: number = 1,
   limit: number = 6,
 ) => {
-  const res = await axios.get(
-    `/api/feed/get/activities?userId=${userId}&page=${pageParam}&limit=${limit}`,
-  );
+  const res = await axios.get(`/api/feed/get/activities`, {
+    params: {
+      userId,
+      page: pageParam,
+      limit,
+    },
+  });
 
   // Check if res.data.data has the correct structure
   if (
@@ -24,24 +28,43 @@ const fetchFeedAndMergeAlbums = async (
 
   const feedData = res.data.data.activities;
 
-  // 2. Extract Album IDs
-  const albumIds = feedData
-    .filter((activity: ActivityData) => activity.type === "Review")
-    .map((activity: ActivityData) => activity.review?.album.id);
+  // 2. Group Records by Type
+  const albumIds: string[] = [];
+  const trackIds: string[] = [];
+  feedData.forEach((activity: Activity) => {
+    if (activity.record && activity.type === ActivityType.RECORD) {
+      if (activity.record.album) {
+        albumIds.push(activity.record.album.appleId);
+      }
+      if (activity.record.track) {
+        trackIds.push(activity.record.track.appleId);
+      }
+    }
+  });
 
   // 3. Fetch Album Details
-  const albums = await getAlbumsByIds(albumIds);
+  const albums = await getAnyByIds({
+    albums: albumIds,
+    songs: trackIds,
+  });
+
+  // Create a map for easy lookup
   const albumMap = new Map<string, AlbumData>(
     albums.map((album: AlbumData) => [album.id, album]),
   );
 
   // 4. Append Album Details
-  feedData.forEach((activity: ActivityData) => {
-    // If activity is a review, append album details from Apple API response
-    if (activity.review) {
-      const albumId = activity.review.album.id;
-      // Grab the relevant album from the albumMap and append it to the activity
-      activity.review.appleAlbumData = <AlbumData>albumMap.get(albumId);
+  feedData.forEach((activity: Activity) => {
+    // If activity is a record, append album details from albumMap
+    if (activity.type === ActivityType.RECORD && activity.record) {
+      const albumId = activity.record.album?.appleId;
+      const trackId = activity.record.track?.appleId;
+      if (albumId) {
+        activity.record.appleAlbumData = <AlbumData>albumMap.get(albumId);
+      } else if (trackId) {
+        // Assuming track ID can be used as a key to fetch album data
+        activity.record.appleAlbumData = <AlbumData>albumMap.get(trackId);
+      }
     }
   });
 

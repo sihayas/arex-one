@@ -5,6 +5,7 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import ReplyInput from "@/components/interface/entry/sub/reply/ReplyInput";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useEffect } from "react";
+import { RecordExtended } from "@/types/globalTypes";
 
 export const Entry = () => {
   const { pages, scrollContainerRef } = useInterfaceContext();
@@ -19,30 +20,30 @@ export const Entry = () => {
 
   const activePage: Page = pages[pages.length - 1];
 
-  const entry = activePage.entry;
+  const record = activePage.record as RecordExtended;
 
   useEffect(() => {
-    if (entry) {
-      setReplyParent(entry);
+    if (record) {
+      setReplyParent(record);
       console.log("set reply parent to review");
     }
-  }, [entry, setReplyParent]);
+  }, [record, setReplyParent]);
 
-  console.log(entry);
+  console.log(record);
 
   // If review album is different from selected album, fetch artwork
   // const { artworkUrl } = useFetchArtworkUrl(review?.albumId, "726", "albumId");
 
   return (
     <div className="w-full h-full relative mb-96">
-      {entry ? (
+      {record ? (
         <>
           <motion.div
             style={{
               willChange: "transform",
             }}
           >
-            <EntryFull review={entry} />
+            <EntryFull record={record} />
           </motion.div>
           <RenderReplies />
           {/*<div className="fixed w-full top-0 p-8">*/}

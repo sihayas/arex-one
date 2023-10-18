@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import { AlbumData } from "@/lib/global/interfaces";
+import { AlbumData } from "@/types/appleTypes";
 
 interface ArtworkProps {
   album: AlbumData;
@@ -15,13 +15,10 @@ export const Artwork = ({ album, width = 368, height = 368 }: ArtworkProps) => {
   const { handleSelectSound } = useHandleSoundClick();
   const ref = React.useRef<HTMLImageElement>(null);
 
-  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "835");
+  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "800");
 
   const handleSoundClick = async () => {
-    const imgElement = ref.current;
-    if (imgElement && album && artworkUrl) {
-      await handleSelectSound(imgElement, album, artworkUrl);
-    }
+    await handleSelectSound(album, artworkUrl);
   };
 
   return (

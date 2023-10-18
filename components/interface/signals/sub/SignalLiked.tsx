@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { getAlbumById } from "@/lib/global/musicKit";
-import { LikeData } from "@/lib/global/interfaces";
+import { LikeData } from "@/types/interfaces";
 
 import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
@@ -23,7 +23,7 @@ const SignalLiked = ({ like, date }: SignalLikedProps) => {
     () => getAlbumById(albumId!),
     {
       enabled: !!albumId,
-    }
+    },
   );
 
   if (!albumId || isLoading) {

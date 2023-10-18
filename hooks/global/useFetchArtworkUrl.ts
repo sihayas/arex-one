@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumById, getAlbumBySongId } from "@/lib/global/musicKit";
-import { AlbumData } from "@/lib/global/interfaces";
+import { AlbumData } from "@/types/interfaces";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 
 interface FetchArtworkResult {
@@ -12,7 +12,7 @@ interface FetchArtworkResult {
 export default function useFetchArtworkUrl(
   id: string | undefined,
   size: string,
-  type: "albumId" | "songId"
+  type: "albumId" | "songId",
 ): FetchArtworkResult {
   // Initialize Query
   const fetchFn = type === "albumId" ? getAlbumById : getAlbumBySongId;

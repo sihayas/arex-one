@@ -1,4 +1,4 @@
-import { UserData } from "@/lib/global/interfaces";
+import { UserData } from "@/types/interfaces";
 import Image from "next/image";
 import { Command } from "cmdk";
 import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";

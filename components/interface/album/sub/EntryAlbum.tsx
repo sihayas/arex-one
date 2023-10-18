@@ -1,7 +1,7 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 
-import { ReviewData } from "@/lib/global/interfaces";
+import { Entry } from "@/types/dbTypes";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
 import {

@@ -1,6 +1,6 @@
 import Reply from "@/components/interface/entry/sub/reply/Reply";
 import { useQuery } from "@tanstack/react-query";
-import { ReplyData } from "@/lib/global/interfaces";
+import { ReplyData } from "@/types/interfaces";
 import { useSession } from "next-auth/react";
 import { fetchReplies } from "@/lib/api/entryAPI";
 import React from "react";

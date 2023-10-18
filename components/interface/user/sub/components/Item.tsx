@@ -1,4 +1,4 @@
-import { AlbumData } from "@/lib/global/interfaces";
+import { AlbumData } from "@/types/interfaces";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import React, { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";

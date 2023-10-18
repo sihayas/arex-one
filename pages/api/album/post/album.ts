@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { TrackData } from "@/lib/global/interfaces";
+import { TrackData } from "@/types/interfaces";
 
 export default async function handle(
   req: NextApiRequest,

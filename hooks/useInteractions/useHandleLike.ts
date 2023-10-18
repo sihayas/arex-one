@@ -7,15 +7,13 @@ const useHandleLikeClick = (
   likeApiUrl: string,
   idKey: string,
   idValue: any,
-  session: any,
+  userId?: string,
 ) => {
   const [liked, setLiked] = useState(initialLikedByUser);
   const [likeCount, setLikeCount] = useState(initialLikes);
 
   const handleLikeClick = async () => {
-    if (!session) return;
-
-    const userId = session.user.id;
+    if (!userId) return;
 
     // Optimistically update state
     const newLikeCount = liked ? likeCount - 1 : likeCount + 1;

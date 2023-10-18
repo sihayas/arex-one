@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { getAlbumById } from "@/lib/global/musicKit";
-import { ReplyData } from "@/lib/global/interfaces";
+import { ReplyData } from "@/types/interfaces";
 
 import { formatDistanceToNow } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
@@ -24,7 +24,7 @@ const SignalReplied = ({ reply, date }: SignalRepliedProps) => {
     () => getAlbumById(albumId!),
     {
       enabled: !!albumId,
-    }
+    },
   );
 
   if (!albumId || isLoading) {

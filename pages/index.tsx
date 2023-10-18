@@ -5,18 +5,13 @@ import FeedUser from "@/components/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
 import { motion } from "framer-motion";
-// import { supabase } from "@/lib/global/supabase";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { supabase } from "@/lib/global/supabase";
 
 export default function Home() {
   const { user, session } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const supabaseClient = useSupabaseClient();
-
-  console.log(session, "no session");
-  console.log(user, "no user");
 
   if (!session) {
     return (
@@ -84,28 +79,28 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      {/*<UserAvatar*/}
-      {/*  className="fixed translate-x-[138px] translate-y-12 z-50 outline outline-[#FFF] outline-1"*/}
-      {/*  imageSrc={user?.image}*/}
-      {/*  altText={`${user?.user_metadata.avatar_url}'s avatar`}*/}
-      {/*  width={32}*/}
-      {/*  height={32}*/}
-      {/*  //@ts-ignore*/}
-      {/*  user={session.user}*/}
-      {/*/>*/}
+      <UserAvatar
+        className="fixed translate-x-[138px] translate-y-12 z-50 outline outline-[#FFF] outline-1"
+        imageSrc={user?.image}
+        altText={`${user?.name}'s avatar`}
+        width={32}
+        height={32}
+        //@ts-ignore
+        user={session.user}
+      />
       <DashedLine
         className="absolute translate-x-[153px] translate-y-12"
         height="100vh"
       />
 
-      {/*<motion.div*/}
-      {/*  ref={scrollContainerRef}*/}
-      {/*  className="relative flex max-h-screen flex-col gap-10 overflow-scroll pl-0 p-12 pt-32 max-w-screen"*/}
-      {/*>*/}
-      {/*  {scrollContainerRef && user && (*/}
-      {/*    <FeedUser userId={user.id} scrollContainerRef={scrollContainerRef} />*/}
-      {/*  )}*/}
-      {/*</motion.div>*/}
+      <motion.div
+        ref={scrollContainerRef}
+        className="relative flex max-h-screen flex-col gap-10 overflow-scroll pl-0 p-12 pt-32 max-w-screen"
+      >
+        {scrollContainerRef && user && (
+          <FeedUser userId={user.id} scrollContainerRef={scrollContainerRef} />
+        )}
+      </motion.div>
 
       <button
         className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"
@@ -116,8 +111,6 @@ export default function Home() {
             error ? console.log(error) : console.log("signed out");
           }
         }}
-        onMouseOver={(e) => (e.currentTarget.textContent = "DISCONNECT")}
-        onMouseOut={(e) => (e.currentTarget.textContent = "CONNECTED")}
       >
         CONNECTED
       </button>

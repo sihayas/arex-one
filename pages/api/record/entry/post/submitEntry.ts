@@ -17,6 +17,7 @@ export default async function handle(
       const type = appleTrackId ? "track" : "album";
       const appleId = appleTrackId || appleAlbumId;
       // Find the album or track with the specified appleId
+      // @ts-ignore
       const item = await prisma[type].findUnique({ where: { appleId } });
 
       if (!item) {
@@ -66,7 +67,7 @@ export default async function handle(
 
     // Finally, create activity
     try {
-      await createEntryRecordActivity(result.newEntry.id);
+      await createEntryRecordActivity(result.newRecord.id);
     } catch (error) {
       console.error("Failed to create activity:", error);
     }

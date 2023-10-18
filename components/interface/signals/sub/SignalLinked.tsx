@@ -1,6 +1,6 @@
 import UserAvatar from "@/components/global/UserAvatar";
 
-import { Follows } from "@/lib/global/interfaces";
+import { Follows } from "@/types/interfaces";
 import { formatDistanceToNow } from "date-fns";
 
 interface SignalInterlinkedProps {

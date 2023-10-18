@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { TrackData } from "@/lib/global/interfaces";
+import { TrackData } from "@/types/interfaces";
 import { motion } from "framer-motion";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import Statline from "@/components/interface/album/sub/Statline";

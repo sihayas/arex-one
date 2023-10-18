@@ -2,16 +2,14 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useSound } from "@/context/Sound";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
-import {
-  AlbumData,
-  ReviewData,
-  SongData,
-  UserData,
-} from "@/lib/global/interfaces";
-import { v4 as uuidv4 } from "uuid";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
-// Handle FeedEntry Click
-export const useHandleEntryClick = (review: ReviewData) => {
+import { v4 as uuidv4 } from "uuid";
+import { getAlbumBySongId } from "@/lib/global/musicKit";
+import { Record, User } from "@/types/dbTypes";
+
+// Handle RecordEntry Click
+export const useHandleEntryClick = (record: Record) => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();
 
@@ -22,22 +20,22 @@ export const useHandleEntryClick = (review: ReviewData) => {
       {
         key: uuidv4(),
         name: "entry",
-        threadcrumbs: [review.id],
+        threadcrumbs: [record.id],
         dimensions: {
           width: 480,
           height: 1024,
         },
         scrollPosition: 0,
-        entry: review,
+        entry: record,
       },
     ]);
-    setThreadcrumbs([review.id]);
+    setThreadcrumbs([record.id]);
     window.history.pushState(null, "");
   };
 };
 
 // Handle User Click
-export const useHandleUserClick = (author: UserData) => {
+export const useHandleUserClick = (author: User) => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
   return () => {
@@ -57,33 +55,28 @@ export const useHandleUserClick = (author: UserData) => {
 
 // Handle Sound Click
 export const useHandleSoundClick = () => {
-  const { getDominantColor } = useDominantColor();
-
   // CMDK context
-  const { setPages, setIsVisible } = useInterfaceContext();
+  const { setPages, setIsVisible, pages } = useInterfaceContext();
   const { setSelectedSound } = useSound();
 
   const handleSelectSound = async (
-    imgElement: HTMLImageElement,
-    sound: AlbumData,
+    sound: AlbumData | SongData,
     artworkUrl: string,
   ) => {
-    const colors = getDominantColor(imgElement);
+    if (sound.type === "songs") {
+      const album = await getAlbumBySongId(sound.id);
+      setSelectedSound({ sound: album, artworkUrl });
+    }
 
-    const selectedSound = {
-      sound: sound,
-      artworkUrl,
-      colors,
-    };
-
-    setSelectedSound(selectedSound);
-
+    if (sound.type === "albums") {
+      setSelectedSound({ sound: sound as AlbumData, artworkUrl });
+    }
     setPages((prevPages) => [
       ...prevPages,
       {
         key: uuidv4(),
         name: "album",
-        sound: selectedSound,
+        sound: sound,
         dimensions: {
           width: 480,
           height: 1234,
@@ -92,6 +85,7 @@ export const useHandleSoundClick = () => {
       },
     ]);
     setIsVisible(true);
+    console.log(pages);
   };
 
   return { handleSelectSound };

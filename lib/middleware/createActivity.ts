@@ -1,9 +1,10 @@
 import { prisma } from "../global/prisma";
+import { ActivityType } from "@/types/dbTypes";
 
 export async function createEntryRecordActivity(recordId: string) {
   return prisma.activity.create({
     data: {
-      type: "RECORD",
+      type: ActivityType.RECORD,
       referenceId: recordId,
     },
   });

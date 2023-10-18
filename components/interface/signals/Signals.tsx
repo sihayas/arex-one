@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 
 import { fetchNotificationsForUser } from "@/lib/api/userAPI";
-import { Notification } from "@/lib/global/interfaces";
+import { Notification } from "@/types/interfaces";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -23,7 +23,7 @@ const Signals = () => {
     () => fetchNotificationsForUser(userId),
     {
       enabled: !!userId,
-    }
+    },
   );
 
   // console.log("notifications", notifications);

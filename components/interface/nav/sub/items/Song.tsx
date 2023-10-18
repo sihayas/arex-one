@@ -2,25 +2,25 @@ import Image from "next/image";
 
 import { Command } from "cmdk";
 
-import { SongData } from "@/lib/global/interfaces";
-import { useHandleSearchClick } from "@/hooks/useInteractions/useHandleSearchClick";
+import { SongData } from "@/types/appleTypes";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import { useSound } from "@/context/Sound";
+import { useInputContext } from "@/context/InputContext";
 
 const Song = ({ song }: { song: SongData }) => {
   const artworkUrl = GenerateArtworkUrl(song.attributes.artwork.url, "800");
-  const { handleSelectSearch } = useHandleSearchClick();
+  const { setSelectedFormSound } = useSound();
+  const { inputValue, setInputValue, setStoredInputValue } = useInputContext();
 
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
       className="w-full p-4 will-change-transform"
-      onSelect={() =>
-        handleSelectSearch(
-          document.getElementById(song.id) as HTMLImageElement,
-          song,
-          artworkUrl,
-        )
-      }
+      onSelect={() => {
+        setStoredInputValue(inputValue);
+        setInputValue("");
+        setSelectedFormSound({ sound: song, artworkUrl });
+      }}
       key={song.id}
     >
       <div className="flex w-full items-center gap-4">

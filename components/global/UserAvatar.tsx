@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 import React from "react";
-import { UserData } from "@/lib/global/interfaces";
+import { User } from "@/types/dbTypes";
 
 interface UserAvatarProps {
   imageSrc: string | undefined;
@@ -10,7 +10,7 @@ interface UserAvatarProps {
   width?: number;
   quality?: number;
   className?: string;
-  user: UserData;
+  user: User;
   style?: React.CSSProperties;
 }
 

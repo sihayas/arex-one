@@ -1,5 +1,6 @@
 import axios from "axios";
-import { AlbumData, UserData } from "../global/interfaces";
+import { AlbumData } from "@/types/appleTypes";
+import { User } from "@/types/dbTypes";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { getAlbumById, getAlbumBySongId } from "../global/musicKit";
 import { useSound } from "@/context/Sound";
@@ -70,7 +71,7 @@ export async function fetchReviews({
 // Main hook for fetching album reviews
 export const useReviewsQuery = (
   soundId: string,
-  user: UserData,
+  user: User,
   sortOrder: string,
 ) => {
   const result = useInfiniteQuery(

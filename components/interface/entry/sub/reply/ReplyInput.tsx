@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import TextareaAutosize from "react-textarea-autosize";
 
-import { ReviewData, ReplyData } from "@/lib/global/interfaces";
+import { ReviewData, ReplyData } from "@/types/interfaces";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import UserAvatar from "@/components/global/UserAvatar";
 

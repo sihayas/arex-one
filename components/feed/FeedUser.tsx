@@ -1,9 +1,10 @@
 import { useFeedQuery } from "@/lib/api/feedAPI";
-import { FeedEntry } from "@/components/feed/subcomponents/FeedEntry";
-import { ActivityData } from "@/lib/global/interfaces";
+import { RecordEntry } from "@/components/feed/subcomponents/RecordEntry";
+import { Activity, ActivityType, RecordType } from "@/types/dbTypes";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
+import { RecordExtended } from "@/types/globalTypes";
 
 const FeedUser = ({
   userId,
@@ -32,15 +33,21 @@ const FeedUser = ({
 
   const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
 
+  console.log(allActivities);
+
   return (
     <>
       {error && "an error has occurred"}
-      {allActivities.map((activity: ActivityData, i) => (
+      {allActivities.map((activity: Activity, i) => (
         <Fragment key={activity.id}>
-          {activity.review ? (
-            <FeedEntry review={activity.review} />
+          {activity.type === ActivityType.RECORD &&
+          activity.record?.type === RecordType.ENTRY ? (
+            <RecordEntry
+              record={activity.record as RecordExtended}
+              associatedType={activity.record.album ? "album" : "track"}
+            />
           ) : (
-            "No review available for this activity."
+            "No entry available for this activity."
           )}
         </Fragment>
       ))}

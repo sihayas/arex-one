@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumsByIds } from "@/lib/global/musicKit";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import { AlbumData } from "@/lib/global/interfaces";
+import { AlbumData } from "@/types/interfaces";
 import { JellyComponent } from "@/components/global/Loading";
 
 type EssentialItemProps = {

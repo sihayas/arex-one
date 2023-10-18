@@ -1,7 +1,5 @@
 import React from "react";
-import { useSession } from "next-auth/react";
 
-import { ReviewData } from "@/lib/global/interfaces";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 
 import { Artwork } from "@/components/feed/subcomponents/Artwork";
@@ -10,22 +8,24 @@ import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
 import { motion } from "framer-motion";
 import { EntryBlobAlbum } from "@/components/icons";
+import { RecordExtended } from "@/types/globalTypes";
+import { useUser } from "@supabase/auth-helpers-react";
 
 interface EntryFullProps {
-  review: ReviewData;
+  record: RecordExtended;
 }
 
-export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
-  const { data: session } = useSession();
-  const album = review.appleAlbumData;
+export const EntryFull: React.FC<EntryFullProps> = ({ record }) => {
+  const user = useUser();
+  const album = record.appleAlbumData;
 
   const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
-    review.likedByUser,
-    review._count.likes,
+    record.likedByUser,
+    record._count.likes,
     "/api/record/entry/post/like",
     "reviewId",
-    review.id,
-    session,
+    record.id,
+    user?.id,
   );
 
   return (
@@ -34,7 +34,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
         <Artwork album={album} width={320} height={320} />
         <Stars
           className={`absolute -bottom-8 w-fit left-1/2 -translate-x-1/2  shadow-stars outline outline-silver outline-[.5px] pr-2`}
-          rating={review.rating}
+          rating={record.entry!.rating}
           soundName={album.attributes.name}
           artist={album.attributes.artistName}
         />
@@ -44,14 +44,14 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
       <div className="flex items-center gap-2 ml-7 mb-2 mt-8 w-full">
         <UserAvatar
           className="w-10 h-10 outline outline-1 outline-silver"
-          imageSrc={review.author.image}
-          altText={`${review.author.name}'s avatar`}
+          imageSrc={record.author.image}
+          altText={`${record.author.username}'s avatar`}
           width={40}
           height={40}
-          user={review.author}
+          user={record.author}
         />
         <p className="text-gray2 font-medium text-sm leading-[75%]">
-          {review.author.name}
+          {record.author.username}
         </p>
       </div>
 
@@ -62,7 +62,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
           <div
             className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
           >
-            {review.content}
+            {record.entry?.text}
           </div>
 
           <LikeButton
@@ -70,7 +70,7 @@ export const EntryFull: React.FC<EntryFullProps> = ({ review }) => {
             liked={liked}
             className="absolute -bottom-2 -right-2"
             likeCount={likeCount}
-            replyCount={review._count.replies}
+            replyCount={record._count.replies}
           />
         </div>
       </div>

@@ -27,9 +27,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     [inputRef, setIsVisible],
   );
 
-  // const handleDoubleClick = useCallback(() => {
-  //   setIsVisible((prevIsVisible) => !prevIsVisible);
-  // }, [setIsVisible]);
+  const handleDoubleClick = useCallback(() => {
+    setIsVisible((prevIsVisible) => !prevIsVisible);
+  }, [setIsVisible]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -38,19 +38,19 @@ export default function Layout({ children }: { children: ReactNode }) {
     };
   }, [handleKeyDown]);
 
-  // useEffect(() => {
-  //   window.addEventListener("keydown", handleKeyDown);
-  //   const mainContentElement = mainContentRef.current;
-  //   if (mainContentElement) {
-  //     mainContentElement.addEventListener("dblclick", handleDoubleClick);
-  //   }
-  //   return () => {
-  //     window.removeEventListener("keydown", handleKeyDown);
-  //     if (mainContentElement) {
-  //       mainContentElement.removeEventListener("dblclick", handleDoubleClick);
-  //     }
-  //   };
-  // }, [handleKeyDown, handleDoubleClick]);
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    const mainContentElement = mainContentRef.current;
+    if (mainContentElement) {
+      mainContentElement.addEventListener("dblclick", handleDoubleClick);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      if (mainContentElement) {
+        mainContentElement.removeEventListener("dblclick", handleDoubleClick);
+      }
+    };
+  }, [handleKeyDown, handleDoubleClick]);
 
   return (
     <>

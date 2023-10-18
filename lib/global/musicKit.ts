@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AlbumData, SongData } from "./interfaces";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
 const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
 const baseURL = "https://api.music.apple.com/v1/catalog/us";
@@ -53,6 +53,7 @@ export const getAlbumById = async (albumId: string) => {
 
 //Search for multiple albums
 export const getAlbumsByIds = async (albumIds: string[]) => {
+  if (albumIds.length === 0) return [];
   const response = await axios.get(
     `${baseURL}/albums?ids=${albumIds.join(",")}`,
     {
@@ -77,6 +78,7 @@ export const getAlbumBySongId = async (songId: string) => {
 // Search for multiple albums by song IDs
 
 export const getAlbumsBySongIds = async (songIds: string[]) => {
+  if (songIds.length === 0) return [];
   const response = await axios.get(
     `${baseURL}/songs?ids=${songIds.join(",")}`,
     {
@@ -85,5 +87,22 @@ export const getAlbumsBySongIds = async (songIds: string[]) => {
       },
     },
   );
+  return response.data.data;
+};
+
+export const getAnyByIds = async (idTypes: Record<string, string[]>) => {
+  const idParams = Object.entries(idTypes)
+    .flatMap(([type, ids]) =>
+      ids.length > 0 ? `ids[${type}]=${ids.join(",")}` : [],
+    )
+    .join("&");
+
+  if (!idParams) return [];
+
+  const response = await axios.get(`${baseURL}?${idParams}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data.data;
 };

@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
-import { ReplyData } from "@/lib/global/interfaces";
+import { ReplyData } from "@/types/interfaces";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import { StatLineIcon } from "@/components/icons";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";

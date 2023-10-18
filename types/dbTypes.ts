@@ -1,12 +1,13 @@
+import { AlbumData } from "@/types/appleTypes";
+
 export interface User {
   id: string;
   email: string;
-  username?: string;
-  name: string;
+  username: string;
   bio?: string;
-  image?: string;
+  image: string;
   emailVerified?: string;
-  password?: string;
+  password_hash?: string;
   dateJoined: Date;
   dateUpdated: Date;
   notifications: Notification[];
@@ -16,42 +17,7 @@ export interface User {
   record: Record[];
   replies: Reply[];
   likes: Like[];
-  accounts: Account[];
-  sessions: Session[];
   views: View[];
-}
-
-export interface Account {
-  id: string;
-  userId: string;
-  type: string;
-  provider: string;
-  providerAccountId: string;
-  refresh_token?: string;
-  access_token?: string;
-  expires_at?: number;
-  token_type?: string;
-  scope?: string;
-  id_token?: string;
-  session_state?: string;
-  oauth_token_secret?: string;
-  oauth_token?: string;
-  user: User;
-}
-
-export interface Session {
-  id: string;
-  sessionToken: string;
-  userId: string;
-  expires: Date;
-  user: User;
-}
-
-export interface VerificationToken {
-  id: number;
-  identifier: string;
-  token: string;
-  expires: Date;
 }
 
 export interface Favorite {
@@ -75,6 +41,7 @@ export interface Follows {
 
 export interface Album {
   id: string;
+  appleId: string;
   name: string;
   artist: string;
   releaseDate: string;
@@ -89,6 +56,7 @@ export interface Album {
 
 export interface Track {
   id: string;
+  appleId: string;
   name: string;
   albumId: string;
   album: Album;
@@ -114,17 +82,21 @@ export interface Record {
   views: View[];
   likes: Like[];
   replies: Reply[];
+
+  appleAlbumData: AlbumData;
 }
 
 export enum RecordType {
-  ENTRY,
-  CAPTION,
+  ENTRY = "ENTRY",
+  CAPTION = "CAPTION",
 }
 
 export interface Entry {
   id: string;
   text: string;
   rating: number;
+  loved: boolean;
+  replay: boolean;
   record: Record;
 }
 
@@ -172,7 +144,7 @@ export interface Reply {
 
 export interface Activity {
   id: string;
-  viewType: ViewType;
+  type: ActivityType;
   referenceId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -184,10 +156,10 @@ export interface Activity {
 }
 
 export enum ActivityType {
-  RECORD,
-  LIKE,
-  FOLLOW,
-  REPLY,
+  RECORD = "RECORD",
+  LIKE = "LIKE",
+  FOLLOW = "FOLLOW",
+  REPLY = "REPLY",
 }
 
 export interface Notification {
@@ -212,7 +184,7 @@ export interface View {
 }
 
 export enum ViewType {
-  RECORD,
-  REPLY,
-  ALBUM,
+  RECORD = "RECORD",
+  REPLY = "REPLY",
+  ALBUM = "ALBUM",
 }

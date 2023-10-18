@@ -17,6 +17,7 @@ import {
   useTransform,
   Variants,
 } from "framer-motion";
+import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
@@ -47,6 +48,7 @@ const getDimensions = (pageName: PageName) => {
 
 export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const { pages, setPages, scrollContainerRef } = useInterfaceContext();
+  const { handleSelectSound } = useHandleSoundClick();
 
   const {
     inputValue,
@@ -54,7 +56,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     storedInputValue,
     inputRef,
     setStoredInputValue,
-    setExpandInput,
   } = useInputContext();
 
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
@@ -202,21 +203,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     // switch to album page from form
     if (e.key === "Enter" && selectedFormSound && inputValue === "") {
       e.preventDefault();
-      setExpandInput(false);
-      setSelectedSound(selectedFormSound);
-      setPages((prevPages) => [
-        ...prevPages,
-        {
-          key: selectedFormSound.sound.id,
-          name: "album",
-          sound: selectedFormSound,
-          dimensions: {
-            width: 480,
-            height: 1024,
-          },
-          scrollPosition: 0,
-        },
-      ]);
+      handleSelectSound(selectedFormSound.sound, selectedFormSound.artworkUrl);
       inputRef?.current?.blur();
       window.history.pushState(null, "");
     }
@@ -242,7 +229,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver shadow-feedArt rounded-3xl`}
         >
           {/* Base layout / dimensions for a page */}
           <div
@@ -270,24 +257,24 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 }
 
 function renderPageContent(page: Page) {
-  const { name, sound, user, entry } = page;
+  const { name, sound, user, record } = page;
 
   let typeLabel, mainContent, subContent;
 
   switch (name.toLowerCase()) {
     case "album":
       typeLabel = "ALBUM";
-      mainContent = sound?.sound.attributes.name || "Unknown Album";
-      subContent = sound?.sound.attributes.artistName || "Unknown Artist";
+      mainContent = sound?.attributes.name || "Unknown Album";
+      subContent = sound?.attributes.artistName || "Unknown Artist";
       break;
     case "user":
       typeLabel = "USER";
-      mainContent = user?.name || "Unknown User";
+      mainContent = user?.username || "Unknown User";
       break;
     case "entry":
       typeLabel = "ENTRY";
-      mainContent = entry?.appleAlbumData.attributes.name;
-      subContent = "by @" + entry?.author.name;
+      mainContent = record?.appleAlbumData.attributes.name;
+      subContent = "by @" + record?.author.username;
       break;
     default:
       typeLabel = "UNKNOWN";

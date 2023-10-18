@@ -1,7 +1,7 @@
 // Renders a list of replies to a review or reply
 import Reply from "./Reply";
 import { useQuery } from "@tanstack/react-query";
-import { ReplyData } from "@/lib/global/interfaces";
+import { ReplyData } from "@/types/interfaces";
 import { useSession } from "next-auth/react";
 import { fetchReplies } from "@/lib/api/entryAPI";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";

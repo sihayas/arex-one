@@ -1,4 +1,4 @@
-import { AlbumData, SongData } from "@/lib/global/interfaces";
+import { AlbumData, SongData } from "@/types/interfaces";
 
 import { Command } from "cmdk";
 

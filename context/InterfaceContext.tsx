@@ -5,8 +5,8 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { SelectedSound } from "@/lib/global/interfaces";
-import { ReviewData, UserData } from "@/lib/global/interfaces";
+import { SelectedSound } from "@/types/interfaces";
+import { Record, User } from "@/types/dbTypes";
 import { useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/lib/global/supabase";
@@ -16,8 +16,8 @@ export type Page = {
   key: string;
   name: string;
   sound?: SelectedSound;
-  user?: UserData;
-  entry?: ReviewData;
+  user?: User;
+  record?: Record;
   scrollPosition: number;
   dimensions: {
     width: number;
@@ -32,8 +32,8 @@ export type InterfaceContext = {
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
   navigateBack: (pageNumber?: number) => void;
   scrollContainerRef: React.MutableRefObject<HTMLDivElement | null>;
-  user: UserData | null;
-  setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   session: Session | null;
   setSession: React.Dispatch<React.SetStateAction<any>>;
 };
@@ -67,34 +67,33 @@ export const InterfaceContextProvider = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [pages, setPages] = useState<Page[]>([]);
 
-  const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const supabaseClient = useSupabaseClient();
 
   useEffect(() => {
+    // Initialize a session and user if they exist on page load
     const setData = async () => {
-      // console.log("SET DATA");
+      // Get a session if it exists
       const {
         data: { session },
         error,
       } = await supabaseClient.auth.getSession();
       if (error) throw error;
       setSession(session);
-      console.log(session?.user);
-      // console.log("SESSION", session);
 
-      // const { data: fetchedUser, error: fetchError } = await supabaseClient
-      //   .from("User")
-      //   .select("*")
-      //   .eq("email", session?.user.email)
-      //   .single();
+      // Get the user profile details from the database
+      const { data: userData, error: fetchError } = await supabaseClient
+        .from("User")
+        .select("*")
+        .eq("email", session?.user.email)
+        .single();
 
-      // console.log("FETCHED USER", fetchedUser);
-
-      // if (fetchError) throw fetchError;
-      // setUser(fetchedUser);
+      if (fetchError) throw fetchError;
+      setUser(userData);
     };
 
+    // Listen for changes to authentication
     const { data: listener } = supabaseClient.auth.onAuthStateChange(
       (event, session) => {
         if (event === "SIGNED_IN" && session) {
@@ -111,63 +110,21 @@ export const InterfaceContextProvider = ({
     return () => {
       listener?.subscription.unsubscribe();
     };
-  }, []);
+  }, [supabaseClient]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     // Get and check for a session
-  //     const { data: sessionData, error: sessionError } =
-  //       await supabase.auth.getSession();
-  //
-  //     if (sessionError) {
-  //       return console.error("Error getting session:", sessionError.message);
-  //     }
-  //     // If session exists, set the session data
-  //     if (sessionData.session) {
-  //       setSession(sessionData);
-  //
-  //       // Get the authenticated user
-  //       const {
-  //         data: { user: authUser },
-  //         error: authError,
-  //       } = await supabase.auth.getUser();
-  //       if (authError) {
-  //         console.error("Error getting auth user:", authError.message);
-  //         return;
-  //       }
-  //
-  //       // If user is authenticated, fetch user profile data from the database
-  //       if (authUser) {
-  //         const { data: fetchedUser, error: fetchError } = await supabase
-  //           .from("User")
-  //           .select("*")
-  //           .eq("email", authUser.email)
-  //           .single();
-  //
-  //         if (fetchError) {
-  //           console.error("Error fetching user data:", fetchError.message);
-  //           return;
-  //         }
-  //
-  //         setUser(fetchedUser);
-  //       }
-  //     }
-  //   })();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!pages.length && user) {
-  //     setPages([
-  //       {
-  //         key: uuidv4(),
-  //         name: "user",
-  //         user: user,
-  //         dimensions: { width: 352, height: 512 },
-  //         scrollPosition: 0,
-  //       },
-  //     ]);
-  //   }
-  // }, [pages.length, user]);
+  useEffect(() => {
+    if (!pages.length && user) {
+      setPages([
+        {
+          key: uuidv4(),
+          name: "user",
+          user: user,
+          dimensions: { width: 352, height: 512 },
+          scrollPosition: 0,
+        },
+      ]);
+    }
+  }, [pages.length, user]);
 
   const navigateBack = useCallback(() => {
     setPages((prevPages) => {

@@ -3,7 +3,7 @@ import React, { Fragment, useRef } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import { getAlbumsByIds } from "@/lib/global/musicKit";
-import { AlbumData } from "@/lib/global/interfaces";
+import { AlbumData } from "@/types/interfaces";
 import { getSoundtrack } from "@/lib/api/userAPI";
 
 import Item from "./components/Item";

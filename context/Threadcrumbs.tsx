@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { ReviewData, ReplyData } from "../lib/global/interfaces";
+import { ReviewData, ReplyData } from "../types/interfaces";
 
 type ThreadcrumbProviderType = {
   children: React.ReactNode;
