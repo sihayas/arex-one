@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { TrackData } from "@/types/interfaces";
+import { SongData } from "@/types/appleTypes";
 
 export default async function handle(
   req: NextApiRequest,
@@ -41,7 +41,7 @@ export default async function handle(
           releaseDate: album.attributes.releaseDate,
           artist: album.attributes.artistName,
           tracks: {
-            create: album.relationships.tracks.data.map((track: TrackData) => ({
+            create: album.relationships.tracks.data.map((track: SongData) => ({
               appleId: track.id,
               name: track.attributes.name,
             })),

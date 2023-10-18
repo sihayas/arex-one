@@ -49,6 +49,16 @@ export interface SongData {
   href: string;
   id: string;
   type: string;
+  relationships: SongRelationships;
+}
+
+export interface SongRelationships{
+  albums: {
+    data: [AlbumData];
+  };
+  artists: {
+    data: [ArtistData];
+  };
 }
 
 export interface SongAttributes {
@@ -90,6 +100,21 @@ export interface TrackData {
     name: string;
     releaseDate: string;
     trackNumber: number;
+    url: string;
+  };
+  href: string;
+  id: string;
+  type: string;
+}
+
+export interface ArtistData {
+  attributes: {
+    editorialNotes: {
+      short: string;
+      standard: string;
+    };
+    genreNames: [string];
+    name: string;
     url: string;
   };
   href: string;

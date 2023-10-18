@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AlbumData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/appleTypes";
 import { User } from "@/types/dbTypes";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { getAlbumById, getAlbumBySongId } from "../global/musicKit";
@@ -23,27 +23,19 @@ export function useAlbumQuery() {
 
   return useQuery(["album", selectedSound?.sound.id], async () => {
     if (selectedSound && user) {
-      // If selected sound is a song, grab detailed album data to pass to Album page.
+      // If selected sound is a song, grab detailed album data & pass to album
       if (selectedSound.sound.type === "songs") {
-        const detailedAlbum = await getAlbumBySongId(selectedSound.sound.id);
+        const song = selectedSound.sound as SongData
+        const detailedAlbum = await getAlbumById(song.relationships.albums.data[0].id);
         setSelectedSound({
           ...selectedSound,
           sound: detailedAlbum,
         });
         return initializeAlbum(detailedAlbum, user.id);
       }
-      // If selected sound is an album without relationships, grab detailed album data.
-      else if (selectedSound.sound.type === "albums" && user) {
+      else if (selectedSound.sound.type === "albums") {
         const albumData = selectedSound.sound as AlbumData;
-
-        if (!albumData.relationships) {
-          const detailedAlbum = await getAlbumById(albumData.id);
-          setSelectedSound({
-            ...selectedSound,
-            sound: detailedAlbum,
-          });
-          return initializeAlbum(detailedAlbum, user.id);
-        }
+        return initializeAlbum(albumData, user.id);
       }
     }
     return Promise.resolve({});

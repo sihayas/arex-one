@@ -57,7 +57,7 @@ const Album = () => {
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
 
   // Initializes album and loads full details into selectedSound context
-  const { isLoading } = useAlbumQuery();
+  const { isLoading, error } = useAlbumQuery();
 
   return (
     <div id={"interfaceAlbum"} className="w-full h-full">

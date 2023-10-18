@@ -20,7 +20,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
   associatedType,
 }) => {
   const user = useUser();
-  const album = record.appleAlbumData;
+  const sound = record.appleAlbumData;
 
   const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
     record.likedByUser,
@@ -32,8 +32,6 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
   );
 
   const handleEntryClick = useHandleEntryClick(record);
-
-  console.log(record);
 
   return (
     <div className="flex">
@@ -62,27 +60,27 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
       <div className="flex flex-col w-[384px] bg-[#F4F4F4] rounded-[13px] relative p-4">
         {associatedType === "album" ? (
           <>
-            <Artwork album={album} />
+            <Artwork sound={sound} />
             <Stars
               className={`absolute top-[335px] -left-[13px] shadow-stars outline outline-silver outline-[.5px] pl-[30px] pr-2 rounded-br-2xl rounded-tr-2xl rounded-bl-lg rounded-tl-lg`}
               rating={record.entry!.rating}
-              soundName={album.attributes.name}
-              artist={album.attributes.artistName}
+              soundName={sound.attributes.name}
+              artist={sound.attributes.artistName}
             />
           </>
         ) : (
           <div className="flex w-full items-center gap-4">
-            <Artwork album={album} width={96} height={96} />
+            <Artwork sound={sound} width={96} height={96} />
             <div className="flex flex-col gap-3">
               <p className="text-xs text-[#3C3C43]/60 leading-[75%] font-medium">
-                {album.attributes.name}
+                {sound.attributes.name}
               </p>
               <div className={"flex items-center gap-2"}>
                 <p className="text-xs text-[#3C3C43]/60 leading-[75%]">
-                  {album.attributes.albumName}
+                  {sound.attributes.albumName}
                 </p>
                 <p className="text-xs text-[#3C3C43]/60 leading-[75%]">
-                  {album.attributes.artistName}
+                  {sound.attributes.artistName}
                 </p>
               </div>
             </div>

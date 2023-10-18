@@ -63,14 +63,9 @@ export const useHandleSoundClick = () => {
     sound: AlbumData | SongData,
     artworkUrl: string,
   ) => {
-    if (sound.type === "songs") {
-      const album = await getAlbumBySongId(sound.id);
-      setSelectedSound({ sound: album, artworkUrl });
-    }
 
-    if (sound.type === "albums") {
-      setSelectedSound({ sound: sound as AlbumData, artworkUrl });
-    }
+
+    setSelectedSound({ sound: sound, artworkUrl });
     setPages((prevPages) => [
       ...prevPages,
       {

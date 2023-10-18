@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 interface SelectedSound {
-  sound: AlbumData;
+  sound: AlbumData | SongData;
   artworkUrl: string;
 }
 

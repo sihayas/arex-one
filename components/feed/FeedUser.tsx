@@ -33,8 +33,6 @@ const FeedUser = ({
 
   const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
 
-  console.log(allActivities);
-
   return (
     <>
       {error && "an error has occurred"}

@@ -67,7 +67,7 @@ export const getAlbumsByIds = async (albumIds: string[]) => {
 
 // Search for an album by song ID
 export const getAlbumBySongId = async (songId: string) => {
-  const response = await axios.get(`${baseURL}/songs${songId}/albums`, {
+  const response = await axios.get(`${baseURL}/songs/${songId}/albums`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
