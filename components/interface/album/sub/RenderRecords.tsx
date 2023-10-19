@@ -1,18 +1,17 @@
 import React from "react";
 import { useReviewsQuery } from "@/lib/api/albumAPI";
-import { EntryAlbum } from "./EntryAlbum";
-import { Session } from "next-auth/core/types";
+import RecordAlbum from "@/components/interface/album/sub/RecordAlbum";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
 import AnimatedCircle from "@/components/global/AnimatedCircle";
 
-interface RenderEntriesProps {
+interface RenderRecordsProps {
   soundId: string;
   sortOrder: "newest" | "positive" | "negative";
 }
 
-const RenderEntries: React.FC<RenderEntriesProps> = ({
+const RenderEntries: React.FC<RenderRecordsProps> = ({
   soundId,
   sortOrder = "newest",
 }) => {
@@ -27,6 +26,8 @@ const RenderEntries: React.FC<RenderEntriesProps> = ({
   } = useReviewsQuery(soundId, user!, sortOrder);
 
   const flattenedEntries = entries?.pages.flat() || [];
+
+  console.log("flattenedEntries", flattenedEntries);
 
   // Initialize infinite scroll
   const { scrollContainerRef } = useInterfaceContext();
@@ -50,7 +51,7 @@ const RenderEntries: React.FC<RenderEntriesProps> = ({
     <div className="flex flex-col h-albums min-w-full items-center p-8 pt-8 gap-9">
       {flattenedEntries?.length > 0 ? (
         flattenedEntries.map((entry) => (
-          <EntryAlbum key={entry.id} review={entry} />
+          <RecordAlbum key={entry.id} record={entry} />
         ))
       ) : (
         <div className="p-2 text-xs uppercase text-gray2">

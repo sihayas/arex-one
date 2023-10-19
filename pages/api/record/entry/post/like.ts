@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
+import { createLikeRecordActivity } from "@/pages/api/middleware/createActivity";
 
 type Data = {
   success: boolean;
@@ -7,37 +8,32 @@ type Data = {
 };
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>,
+  res: NextApiResponse<Data>
 ) {
-  const { reviewId, action, userId } = req.body;
+  const { recordId, action, userId } = req.body;
 
   if (action === "like") {
     // Create a new like
     const newLike = await prisma.like.create({
       data: {
         authorId: userId,
-        reviewId,
+        recordId,
       },
     });
 
     // Fetch the review to get the author's ID
-    const review = await prisma.review.findUnique({
-      where: { id: reviewId },
+    const record = await prisma.record.findUnique({
+      where: { id: recordId },
       select: { authorId: true },
     });
 
     // If the author is not the liker, create an activity and a notification
-    if (review && review.authorId !== userId) {
-      const activity = await prisma.activity.create({
-        data: {
-          type: "like",
-          likeId: newLike.id, // using the ID of the like
-        },
-      });
+    if (record && record.authorId !== userId) {
+      const activity = await createLikeRecordActivity(newLike.id);
 
       await prisma.notification.create({
         data: {
-          recipientId: review.authorId,
+          recipientId: record.authorId,
           activityId: activity.id,
         },
       });
@@ -47,7 +43,7 @@ export default async function handler(
     await prisma.like.deleteMany({
       where: {
         authorId: userId,
-        reviewId,
+        recordId,
       },
     });
   } else {
@@ -56,7 +52,7 @@ export default async function handler(
 
   // Get the updated like count for the review
   const updatedLikes = await prisma.like.count({
-    where: { reviewId },
+    where: { recordId },
   });
 
   res.status(200).json({ success: true, likes: updatedLikes });

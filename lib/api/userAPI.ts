@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAlbumsByIds } from "@/lib/global/musicKit";
+import { fetchSoundsbyType } from "@/lib/global/musicKit";
 import { Favorite } from "@/types/dbTypes";
 
 export const follow = async (followerId: string, followingId: string) => {
@@ -8,7 +8,7 @@ export const follow = async (followerId: string, followingId: string) => {
 
 export const unfollow = async (followerId: string, followingId: string) => {
   await axios.delete(
-    `/api/user/unfollow?followerId=${followerId}&followingId=${followingId}`,
+    `/api/user/unfollow?followerId=${followerId}&followingId=${followingId}`
   );
 };
 
@@ -20,11 +20,11 @@ export const getUserById = async (userId: string, sessionUserId: string) => {
 
 export const getUserDataAndAlbums = async (
   userId: string,
-  sessionUserId: string,
+  sessionUserId: string
 ) => {
   const userData = await getUserById(userId, sessionUserId);
   const albumIds = userData.favorites.map((fav: Favorite) => fav.album.appleId);
-  const albumsData = await getAlbumsByIds(albumIds);
+  const albumsData = await fetchSoundsbyType("albums", albumIds);
   return { userData, albumsData };
 };
 

@@ -1,5 +1,4 @@
 // Get reviews for an album
-
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 
@@ -12,7 +11,7 @@ interface ReviewOrderByWithRelationInput {
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   if (req.method === "GET") {
     const soundId = Array.isArray(req.query.soundId)
@@ -51,14 +50,18 @@ export default async function handle(
     }
 
     try {
-      const reviews = await prisma.review.findMany({
+      const reviews = await prisma.record.findMany({
         where: {
-          OR: [{ trackId: soundId }, { albumId: soundId }],
+          OR: [
+            { track: { appleId: soundId } },
+            { album: { appleId: soundId } },
+          ],
         },
         skip,
         orderBy,
         take: 6,
         include: {
+          entry: true,
           author: true,
           // Check if liked
           likes: {
@@ -74,7 +77,7 @@ export default async function handle(
               author: {
                 select: {
                   image: true,
-                  name: true,
+                  username: true,
                 },
               },
             },
@@ -90,6 +93,21 @@ export default async function handle(
           likedByUser,
         };
       });
+
+      // Less expensive but more queries
+      // const reviewsWithUserLikes = await Promise.all(
+      //   reviews.map(async (review) => {
+      //     const likeCount = await prisma.like.count({
+      //       where: { recordId: review.id, authorId: userId },
+      //     });
+      //     const likedByUser = likeCount > 0;
+
+      //     return {
+      //       ...review,
+      //       likedByUser,
+      //     };
+      //   })
+      // );
 
       res.status(200).json(reviewsWithUserLikes);
     } catch (error) {

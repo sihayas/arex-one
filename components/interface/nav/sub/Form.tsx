@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { toast } from "sonner";
 import { postEntry } from "@/lib/api/formAPI";
-import { useSound } from "@/context/Sound";
+import { useSound } from "@/context/SoundContext";
 
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import { SendIcon, ArrowIcon } from "@/components/icons";
@@ -59,7 +59,7 @@ const Form = () => {
           loading: "sending...",
           success: "sent", // Just a string message
           error: "Error submitting review",
-        },
+        }
       );
     },
     [
@@ -70,7 +70,7 @@ const Form = () => {
       selectedFormSound,
       setSelectedFormSound,
       setInputValue,
-    ],
+    ]
   );
 
   useEffect(() => {
@@ -111,7 +111,7 @@ const Form = () => {
 
   const artworkUrl = GenerateArtworkUrl(
     selectedFormSound.sound.attributes.artwork.url,
-    "800",
+    "800"
   );
 
   const renderAlbumSection = () => (

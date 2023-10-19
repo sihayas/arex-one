@@ -2,10 +2,10 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { useSound } from "@/context/Sound";
+import { useSound } from "@/context/SoundContext";
 
 import { useAlbumQuery } from "@/lib/api/albumAPI";
-import RenderEntries from "./sub/RenderEntries";
+import RenderRecords from "./sub/RenderRecords";
 import {
   AnimatePresence,
   motion,
@@ -56,7 +56,7 @@ const Album = () => {
   // Rating footer opacity
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
 
-  // Initializes album and loads full details into selectedSound context
+  // Initializes album. If the album doesnt have detailed data it gets it.
   const { isLoading, error } = useAlbumQuery();
 
   return (
@@ -93,7 +93,7 @@ const Album = () => {
 
           {/* Entries */}
           <AnimatePresence>
-            <RenderEntries
+            <RenderRecords
               soundId={`${
                 !activeSong ? selectedSound.sound.id : activeSong.id
               }`}
@@ -108,16 +108,17 @@ const Album = () => {
             style={{ opacity }}
             className={`w-full z-10 p-8 absolute bottom-0`}
           >
-            {"relationships" in selectedSound.sound && (
-              <Filter
-                albumName={selectedSound.sound.attributes.name}
-                songs={selectedSound.sound.relationships.tracks.data}
-                onActiveSongChange={handleActiveSongChange}
-                handleSortOrderChange={handleSortOrderChange}
-                expand={expand}
-                setExpand={setExpand}
-              />
-            )}
+            {"relationships" in selectedSound.sound &&
+              "tracks" in selectedSound.sound.relationships && (
+                <Filter
+                  albumName={selectedSound.sound.attributes.name}
+                  songs={selectedSound.sound.relationships.tracks.data}
+                  onActiveSongChange={handleActiveSongChange}
+                  handleSortOrderChange={handleSortOrderChange}
+                  expand={expand}
+                  setExpand={setExpand}
+                />
+              )}
           </motion.div>
         </>
       )}

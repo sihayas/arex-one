@@ -1,11 +1,10 @@
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { useSound } from "@/context/Sound";
+import { useSound } from "@/context/SoundContext";
 import { useDominantColor } from "@/hooks/global/useDominantColor";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { v4 as uuidv4 } from "uuid";
-import { getAlbumBySongId } from "@/lib/global/musicKit";
 import { Record, User } from "@/types/dbTypes";
 
 // Handle RecordEntry Click
@@ -61,10 +60,8 @@ export const useHandleSoundClick = () => {
 
   const handleSelectSound = async (
     sound: AlbumData | SongData,
-    artworkUrl: string,
+    artworkUrl: string
   ) => {
-
-
     setSelectedSound({ sound: sound, artworkUrl });
     setPages((prevPages) => [
       ...prevPages,
@@ -80,7 +77,6 @@ export const useHandleSoundClick = () => {
       },
     ]);
     setIsVisible(true);
-    console.log(pages);
   };
 
   return { handleSelectSound };

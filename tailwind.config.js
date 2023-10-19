@@ -20,6 +20,9 @@ module.exports = {
         stars:
           "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
       },
+      fontFamily: {
+        baskerville: ["Baskerville", "serif"],
+      },
       colors: {
         black: "#333333",
         gray: "#585858",
@@ -80,7 +83,7 @@ module.exports = {
             height: "calc(100% - 64px)",
           },
         },
-        ["responsive", "hover"],
+        ["responsive", "hover"]
       );
     },
     plugin(function ({ addUtilities }) {

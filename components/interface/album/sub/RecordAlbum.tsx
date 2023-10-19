@@ -1,7 +1,7 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 
-import { Entry } from "@/types/dbTypes";
+import { Entry, Record, RecordType } from "@/types/dbTypes";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
 import {
@@ -16,26 +16,24 @@ import {
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
-import { useSound } from "@/context/Sound";
+import { useSound } from "@/context/SoundContext";
 import { motion } from "framer-motion";
 import { EntryBlob, EntryBlobAlbum } from "@/components/icons";
 import { Artwork } from "@/components/feed/subcomponents/Artwork";
+import { RecordExtended } from "@/types/globalTypes";
+import { useUser } from "@supabase/auth-helpers-react";
 
-interface EntryAlbumProps {
-  review: ReviewData;
-}
-
-export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
-  const { data: session } = useSession();
+const RecordAlbum = ({ record }: { record: RecordExtended }) => {
   const { selectedSound } = useSound();
+  const user = useUser();
 
   // Since it's rendered within an album page, assume the selected
   // sound/album is the same as the review
-  let mergedReview: ReviewData = review;
+  let mergedRecord: RecordExtended = record;
 
-  if (selectedSound) {
-    mergedReview = {
-      ...review,
+  if (selectedSound && selectedSound.sound.type === "album") {
+    mergedRecord = {
+      ...record,
       appleAlbumData: {
         ...selectedSound.sound,
       },
@@ -43,15 +41,15 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   }
 
   const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
-    review.likedByUser,
-    review._count.likes,
+    record.likedByUser,
+    record._count.likes,
     "/api/record/entry/post/like",
     "reviewId",
-    review.id,
-    session,
+    record.id,
+    user?.id
   );
 
-  const handleEntryClick = useHandleEntryClick(mergedReview);
+  const handleEntryClick = useHandleEntryClick(mergedRecord);
 
   if (!selectedSound?.sound) {
     return null;
@@ -66,14 +64,14 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
       <div className="flex items-center gap-2 ml-5 mb-1">
         <UserAvatar
           className="w-10 h-10 outline outline-[.5px] outline-silver"
-          imageSrc={review.author.image}
-          altText={`${review.author.name}'s avatar`}
+          imageSrc={record.author.image}
+          altText={`${record.author.username}'s avatar`}
           width={40}
           height={40}
-          user={review.author}
+          user={record.author}
         />
         <p className="text-gray2 font-medium text-sm leading-[75%]">
-          {review.author.name}
+          {record.author.username}
         </p>
       </div>
 
@@ -85,7 +83,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
             onClick={handleEntryClick}
             className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
           >
-            {review.content}
+            {record.entry?.text}
           </div>
 
           <LikeButton
@@ -93,7 +91,7 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
             liked={liked}
             className="absolute -bottom-2 -right-2"
             likeCount={likeCount}
-            replyCount={review._count.replies}
+            replyCount={record._count.replies}
           />
         </div>
       </div>
@@ -101,10 +99,4 @@ export const EntryAlbum: React.FC<EntryAlbumProps> = ({ review }) => {
   );
 };
 
-{
-  /* Rating & Sound Names */
-}
-// <Stars
-//     className={`shadow-stars outline outline-silver outline-[.5px] w-fit`}
-//     rating={review.rating}
-// />
+export default RecordAlbum;

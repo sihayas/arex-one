@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 import Soundtrack from "@/components/interface/user/sub/Soundtrack";
 import { follow, getUserDataAndAlbums, unfollow } from "@/lib/api/userAPI";
-import Essentials from "@/components/interface/user/sub/components/Essentials";
+import Essentials from "@/components/interface/user/sub/Essentials";
 import { format } from "date-fns";
 import { JellyComponent } from "@/components/global/Loading";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -19,6 +19,12 @@ const linkProps = {
   LINK: { text: "LINK", color: "#CCC" },
 };
 
+type FollowState = {
+  followingAtoB: boolean | null;
+  followingBtoA: boolean | null;
+  loadingFollow: boolean;
+};
+
 const User = () => {
   const user = useUser();
   const { pages } = useInterfaceContext();
@@ -26,41 +32,45 @@ const User = () => {
   // User IDs
   const authenticatedUserId = user?.id;
   const pageUser = pages[pages.length - 1].user;
-  const isOwnProfile = authenticatedUserId === pageUser!.id;
 
   // Store following status
-  const [followingAtoB, setFollowingAtoB] = useState<boolean | null>(null);
-  const [followingBtoA, setFollowingBtoA] = useState<boolean | null>(null);
-  const [loadingFollow, setLoadingFollow] = useState<boolean>(false);
+  const [followState, setFollowState] = useState<FollowState>({
+    followingAtoB: null,
+    followingBtoA: null,
+    loadingFollow: false,
+  });
 
   const linkStatus =
-    followingAtoB && followingBtoA
+    followState.followingAtoB && followState.followingBtoA
       ? "INTERLINKED"
-      : followingAtoB
+      : followState.followingAtoB
       ? "LINKED"
-      : followingBtoA
+      : followState.followingBtoA
       ? "INTERLINK"
       : "LINK";
 
   const { text: linkText, color: linkColor } = linkProps[linkStatus];
 
   const [activeTab, setActiveTab] = useState<"profile" | "soundtrack">(
-    "profile",
+    "profile"
   );
 
   // Get comprehensive user data
   const { data, isLoading, isError } = useQuery(
     ["userDataAndAlbums", pageUser ? pageUser.id : undefined],
     () =>
-      pageUser ? getUserDataAndAlbums(pageUser.id, authenticatedUserId!) : null,
+      pageUser ? getUserDataAndAlbums(pageUser.id, authenticatedUserId!) : null
   );
 
   const { userData, albumsData } = data || {};
 
   useEffect(() => {
     if (userData) {
-      setFollowingAtoB(userData.isFollowingAtoB);
-      setFollowingBtoA(userData.isFollowingBtoA);
+      setFollowState((prevState) => ({
+        ...prevState,
+        followingAtoB: userData.isFollowingAtoB,
+        followingBtoA: userData.isFollowingBtoA,
+      }));
     }
   }, [userData]);
 
@@ -77,19 +87,21 @@ const User = () => {
       console.log("User is not signed in or user to follow/unfollow not found");
       return;
     }
-    setLoadingFollow(true);
+    setFollowState((prevState) => ({ ...prevState, loadingFollow: true }));
     try {
-      followingAtoB
+      followState.followingAtoB
         ? await unfollow(authenticatedUserId, pageUser.id)
         : await follow(authenticatedUserId, pageUser.id);
-      setFollowingAtoB(!followingAtoB);
+      setFollowState((prevState) => ({
+        ...prevState,
+        followingAtoB: !prevState.followingAtoB,
+      }));
     } catch (error) {
       console.error("Error following/unfollowing", error);
     } finally {
-      setLoadingFollow(false);
+      setFollowState((prevState) => ({ ...prevState, loadingFollow: false }));
     }
   };
-
 
   return (
     <div className="w-full h-full overflow-hidden flex flex-col">
@@ -115,14 +127,14 @@ const User = () => {
             <div className="w-1/2 h-full flex justify-between">
               <Essentials favorites={albumsData} />
               <div className="flex flex-col items-end gap-7 p-8">
-                  <Image
-                className={`rounded-full outline outline-silver outline-2 -mt-4 -mr-4`}
-                onClick={handleImageClick}
-                src={userData.image}
-                alt={`${userData.name}'s avatar`}
-                width={64}
-                height={64}
-              />
+                <Image
+                  className={`rounded-full outline outline-silver outline-2 -mt-4 -mr-4`}
+                  onClick={handleImageClick}
+                  src={userData.image}
+                  alt={`${userData.name}'s avatar`}
+                  width={64}
+                  height={64}
+                />
                 {/* Since */}
                 <div className="flex flex-col gap-[10px] text-end mt-[48px]">
                   <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
@@ -162,17 +174,14 @@ const User = () => {
                   </div>
                 </div>
               </div>
-
             </div>
 
             {activeTab === "soundtrack" && pageUser ? (
               <Soundtrack userId={pageUser.id} />
             ) : null}
           </motion.div>
-
         </>
       )}
-
     </div>
   );
 };

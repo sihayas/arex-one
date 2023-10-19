@@ -4,7 +4,7 @@ import { SongData } from "@/types/appleTypes";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { album, userId } = req.body;
 

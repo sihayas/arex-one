@@ -4,7 +4,7 @@ import { Command } from "cmdk";
 
 import { AlbumData } from "@/types/appleTypes";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import { useSound } from "@/context/Sound";
+import { useSound } from "@/context/SoundContext";
 import { useInputContext } from "@/context/InputContext";
 
 const Album = ({ album }: { album: AlbumData }) => {

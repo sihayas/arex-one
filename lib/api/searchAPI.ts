@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSound } from "@/context/Sound";
+import { useSound } from "@/context/SoundContext";
+import { useInputContext } from "@/context/InputContext";
 
 const GetSearchResults = (searchQuery: string) => {
+  const { inputValue } = useInputContext();
   const { selectedFormSound } = useSound();
   const { data, isInitialLoading, isFetching, error } = useQuery(
     ["albums", searchQuery],
@@ -10,7 +12,7 @@ const GetSearchResults = (searchQuery: string) => {
         res.json()
       ),
     {
-      enabled: !selectedFormSound, // Query will not run if searchQuery is empty
+      enabled: !selectedFormSound && !!inputValue,
       retry: false,
       refetchOnWindowFocus: false,
     }

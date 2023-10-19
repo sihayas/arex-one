@@ -1,13 +1,42 @@
 import axios from "axios";
-import { getAnyByIds } from "../global/musicKit";
+import { fetchSoundsByTypes } from "../global/musicKit";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData } from "@/types/appleTypes";
 
+// React query hook for fetching feed data
+export const useFeedQuery = (userId: string, limit: number = 6) => {
+  const result = useInfiniteQuery(
+    ["feed", userId],
+    ({ pageParam = 1 }) => {
+      if (!userId) {
+        return Promise.reject(new Error("User ID is undefined"));
+      }
+      return fetchFeedAndMergeAlbums(userId, pageParam, limit);
+    },
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const lastPageData = allPages[allPages.length - 1];
+        return lastPageData.pagination?.nextPage || null;
+      },
+      enabled: !!userId,
+    }
+  );
+
+  return {
+    data: result.data,
+    error: result.error,
+    fetchNextPage: result.fetchNextPage,
+    hasNextPage: result.hasNextPage,
+    isFetchingNextPage: result.isFetchingNextPage,
+  };
+};
+
+// Helper function for fetching feed data with axios
 const fetchFeedAndMergeAlbums = async (
   userId: string,
   pageParam: number = 1,
-  limit: number = 6,
+  limit: number = 6
 ) => {
   const res = await axios.get(`/api/feed/get/activities`, {
     params: {
@@ -43,14 +72,14 @@ const fetchFeedAndMergeAlbums = async (
   });
 
   // 3. Fetch Album Details
-  const albums = await getAnyByIds({
+  const albums = await fetchSoundsByTypes({
     albums: albumIds,
     songs: trackIds,
   });
 
   // Create a map for easy lookup
   const albumMap = new Map<string, AlbumData>(
-    albums.map((album: AlbumData) => [album.id, album]),
+    albums.map((album: AlbumData) => [album.id, album])
   );
 
   // 4. Append Album Details
@@ -71,33 +100,6 @@ const fetchFeedAndMergeAlbums = async (
   return {
     data: feedData, // this is your activities data
     pagination: res.data.data.pagination, // this is your pagination data
-  };
-};
-
-export const useFeedQuery = (userId: string, limit: number = 6) => {
-  const result = useInfiniteQuery(
-    ["feed", userId],
-    ({ pageParam = 1 }) => {
-      if (!userId) {
-        return Promise.reject(new Error("User ID is undefined"));
-      }
-      return fetchFeedAndMergeAlbums(userId, pageParam, limit);
-    },
-    {
-      getNextPageParam: (lastPage, allPages) => {
-        const lastPageData = allPages[allPages.length - 1];
-        return lastPageData.pagination?.nextPage || null;
-      },
-      enabled: !!userId,
-    },
-  );
-
-  return {
-    data: result.data,
-    error: result.error,
-    fetchNextPage: result.fetchNextPage,
-    hasNextPage: result.hasNextPage,
-    isFetchingNextPage: result.isFetchingNextPage,
   };
 };
 

@@ -28,7 +28,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
     "/api/record/entry/post/like",
     "reviewId",
     record.id,
-    user?.id,
+    user?.id
   );
 
   const handleEntryClick = useHandleEntryClick(record);
@@ -77,7 +77,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
               </p>
               <div className={"flex items-center gap-2"}>
                 <p className="text-xs text-[#3C3C43]/60 leading-[75%]">
-                  {sound.attributes.albumName}
+                  {/* {sound.attributes.albumName} */}
                 </p>
                 <p className="text-xs text-[#3C3C43]/60 leading-[75%]">
                   {sound.attributes.artistName}

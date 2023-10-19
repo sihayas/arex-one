@@ -1,0 +1,192 @@
+.
+├── LICENSE
+├── README.md
+├── components
+│   ├── feed
+│   │   ├── FeedUser.tsx
+│   │   └── subcomponents
+│   │       ├── Artwork.tsx
+│   │       └── RecordEntry.tsx
+│   ├── global
+│   │   ├── AnimatedCircle.tsx
+│   │   ├── GenerateArtworkUrl.tsx
+│   │   ├── LikeButton.tsx
+│   │   ├── Loading.tsx
+│   │   ├── Stars.tsx
+│   │   └── UserAvatar.tsx
+│   ├── icons
+│   │   └── index.tsx
+│   ├── interface
+│   │   ├── Interface.tsx
+│   │   ├── album
+│   │   │   ├── Album.tsx
+│   │   │   └── sub
+│   │   │       ├── EntryAlbum.tsx
+│   │   │       ├── Filter.tsx
+│   │   │       ├── GradientBlur.tsx
+│   │   │       ├── RenderEntries.tsx
+│   │   │       └── Statline.tsx
+│   │   ├── entry
+│   │   │   ├── Entry.tsx
+│   │   │   └── sub
+│   │   │       ├── EntryFull.tsx
+│   │   │       ├── icons
+│   │   │       │   ├── DashedLine.tsx
+│   │   │       │   └── Line.tsx
+│   │   │       └── reply
+│   │   │           ├── RenderChildren.tsx
+│   │   │           ├── RenderReplies.tsx
+│   │   │           ├── Reply.tsx
+│   │   │           └── ReplyInput.tsx
+│   │   ├── nav
+│   │   │   ├── Nav.tsx
+│   │   │   └── sub
+│   │   │       ├── Form.tsx
+│   │   │       ├── Search.tsx
+│   │   │       └── items
+│   │   │           ├── Album.tsx
+│   │   │           ├── Dial.tsx
+│   │   │           ├── Song.tsx
+│   │   │           └── User.tsx
+│   │   ├── signals
+│   │   │   ├── Signals.tsx
+│   │   │   └── sub
+│   │   │       ├── SignalInterlinked.tsx
+│   │   │       ├── SignalLiked.tsx
+│   │   │       ├── SignalLinked.tsx
+│   │   │       └── SignalReplied.tsx
+│   │   └── user
+│   │       ├── User.tsx
+│   │       └── sub
+│   │           ├── Soundtrack.tsx
+│   │           └── components
+│   │               ├── Essentials.tsx
+│   │               └── SoundtrackRecord.tsx
+│   └── layout.tsx
+├── context
+│   ├── InputContext.tsx
+│   ├── InterfaceContext.tsx
+│   ├── Sound.tsx
+│   └── Threadcrumbs.tsx
+├── database.types.ts
+├── hooks
+│   ├── global
+│   │   ├── useDominantColor.ts
+│   │   └── useFetchArtworkUrl.ts
+│   └── useInteractions
+│       ├── useHandleLike.ts
+│       └── useHandlePageChange.ts
+├── lib
+│   ├── api
+│   │   ├── albumAPI.ts
+│   │   ├── entryAPI.ts
+│   │   ├── feedAPI.ts
+│   │   ├── formAPI.ts
+│   │   ├── searchAPI.ts
+│   │   └── userAPI.ts
+│   ├── cron
+│   │   ├── updateAlbumRating.ts
+│   │   ├── updateBloomingAlbumScores.ts
+│   │   ├── updateBloomingEntryScores.ts
+│   │   ├── updateSpotlightAlbumScores.ts
+│   │   └── updateSpotlightEntryScores.ts
+│   ├── global
+│   │   ├── musicKit.ts
+│   │   ├── openAI.ts
+│   │   ├── prisma.ts
+│   │   ├── redis.ts
+│   │   └── supabase.ts
+│   └── middleware
+│       ├── createActivity.ts
+│       ├── createNotification.ts
+│       └── validateQuery.ts
+├── middleware.ts
+├── next-env.d.ts
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── pages
+│   ├── _app.tsx
+│   ├── api
+│   │   ├── album
+│   │   │   ├── get
+│   │   │   │   └── reviews.ts
+│   │   │   └── post
+│   │   │       └── album.ts
+│   │   ├── auth
+│   │   │   └── callback.ts
+│   │   ├── cron
+│   │   │   └── post
+│   │   │       ├── albumRating.ts
+│   │   │       ├── bloomingAlbumScores.ts
+│   │   │       ├── bloomingEntryScores.ts
+│   │   │       ├── generateConsensus.ts
+│   │   │       ├── spotlightAlbumScores.ts
+│   │   │       └── spotlightEntryScores.ts
+│   │   ├── feed
+│   │   │   └── get
+│   │   │       └── activities.ts
+│   │   ├── index
+│   │   │   └── get
+│   │   │       ├── bloomingAlbums.ts
+│   │   │       ├── bloomingEntries.ts
+│   │   │       ├── spotlightAlbums.ts
+│   │   │       └── spotlightEntries.ts
+│   │   ├── record
+│   │   │   ├── caption
+│   │   │   └── entry
+│   │   │       ├── get
+│   │   │       │   ├── byId.ts
+│   │   │       │   ├── byIds.ts
+│   │   │       │   └── formCheck.ts
+│   │   │       └── post
+│   │   │           ├── like.ts
+│   │   │           ├── reply.ts
+│   │   │           └── submitEntry.ts
+│   │   ├── reply
+│   │   │   ├── get
+│   │   │   │   ├── replyReplies.ts
+│   │   │   │   └── reviewReplies.ts
+│   │   │   └── post
+│   │   │       └── like.ts
+│   │   ├── search
+│   │   │   └── get
+│   │   │       └── results.ts
+│   │   ├── signup.ts
+│   │   ├── tracking
+│   │   │   └── viewAlbum.ts
+│   │   └── user
+│   │       ├── follow.ts
+│   │       ├── getById.ts
+│   │       ├── getNotifications.ts
+│   │       ├── getSoundtrack.ts
+│   │       └── unfollow.ts
+│   └── index.tsx
+├── postcss.config.js
+├── prisma
+│   └── schema.prisma
+├── project_structure.txt
+├── public
+│   ├── favicon.ico
+│   └── images
+│       └── default_avi.jpg
+├── renameToVercelJsonForCron.txt
+├── styles
+│   ├── cmdk.css
+│   ├── globals.css
+│   ├── gradient.module.css
+│   └── jelly.module.css
+├── supabase
+│   ├── config.toml
+│   ├── functions
+│   └── seed.sql
+├── tailwind.config.js
+├── tsconfig.json
+└── types
+    ├── appleTypes.ts
+    ├── colorthief.d.ts
+    ├── dbTypes.ts
+    ├── globalTypes.ts
+    └── next-auth.d.ts
+
+61 directories, 129 files

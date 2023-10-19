@@ -5,7 +5,7 @@ import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { ThreadcrumbProvider } from "@/context/Threadcrumbs";
-import { SoundDetailsProvider } from "@/context/Sound";
+import { SoundDetailsProvider } from "@/context/SoundContext";
 import { Toaster } from "sonner";
 import { InterfaceContextProvider } from "@/context/InterfaceContext";
 import { InputProvider } from "@/context/InputContext";

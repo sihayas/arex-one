@@ -1,7 +1,6 @@
 export interface AlbumData {
   attributes: AlbumAttributes;
   id: string;
-  notes: string;
   relationships: AlbumRelationships;
   type: string;
 }
@@ -52,7 +51,7 @@ export interface SongData {
   relationships: SongRelationships;
 }
 
-export interface SongRelationships{
+export interface SongRelationships {
   albums: {
     data: [AlbumData];
   };

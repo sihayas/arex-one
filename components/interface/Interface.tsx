@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useSound } from "@/context/Sound";
+import { useSound } from "@/context/SoundContext";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useInputContext } from "@/context/InputContext";
 
@@ -10,13 +10,7 @@ import Album from "@/components/interface/album/Album";
 import Entry from "@/components/interface/entry/Entry";
 import User from "@/components/interface/user/User";
 
-import {
-  motion,
-  useAnimate,
-  useScroll,
-  useTransform,
-  Variants,
-} from "framer-motion";
+import { motion, useAnimate, useScroll, useTransform } from "framer-motion";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
@@ -79,13 +73,13 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.width, target.width],
+    [base.width, target.width]
   );
 
   const newHeight = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.height, target.height],
+    [base.height, target.height]
   );
 
   // Shapeshift on page change.
@@ -104,7 +98,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           type: "spring",
           stiffness: 600,
           damping: 40,
-        },
+        }
       );
 
       // Scale up and dimension shift
@@ -119,7 +113,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           type: "spring",
           stiffness: 400,
           damping: 40,
-        },
+        }
       );
     };
 
@@ -175,7 +169,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             type: "spring",
             stiffness: 500,
             damping: 50,
-          },
+          }
         );
       } else {
         // Animate to hidden state
@@ -191,13 +185,13 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             type: "spring",
             stiffness: 500,
             damping: 50,
-          },
+          }
         );
       }
     };
 
     animateParent();
-  }, [animate, isVisible, scope]);
+  }, [animate, isVisible, scope, animateRoot, rootScope]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // switch to album page from form

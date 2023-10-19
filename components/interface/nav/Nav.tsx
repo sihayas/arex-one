@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { useSound } from "@/context/Sound";
+import { useSound } from "@/context/SoundContext";
 import GetSearchResults from "@/lib/api/searchAPI";
 import { motion } from "framer-motion";
 import { debounce } from "lodash";
@@ -54,7 +54,7 @@ const Nav: React.FC = () => {
     animate(
       scope.current,
       { height: height },
-      { type: "spring", stiffness: 300, damping: 30 },
+      { type: "spring", stiffness: 300, damping: 30 }
     );
   }, [expandInput, selectedFormSound, inputValue, animate, scope]);
 
@@ -63,7 +63,7 @@ const Nav: React.FC = () => {
     inputAnimate(
       inputScope.current,
       { width: expandInput ? "400px" : "40px" },
-      { type: "spring", stiffness: 400, damping: 40 },
+      { type: "spring", stiffness: 400, damping: 40 }
     );
   }, [expandInput, inputAnimate, inputScope]);
 

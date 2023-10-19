@@ -2,19 +2,21 @@
 import React, { Fragment, useRef } from "react";
 
 import { useQuery } from "@tanstack/react-query";
-import { getAlbumsByIds, getAnyByIds } from "@/lib/global/musicKit";
+import { fetchSoundsByTypes } from "@/lib/global/musicKit";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { getSoundtrack } from "@/lib/api/userAPI";
 
-import Item from "./components/Item";
+import SoundtrackRecord from "./components/SoundtrackRecord";
 import format from "date-fns/format";
 import { Record } from "@/types/dbTypes";
+import { JellyComponent } from "@/components/global/Loading";
 
 type SoundtrackData = {
   albumId: string;
   createdAt: string;
   rating: number;
 };
+
 type ExtendedSoundtrackData = SoundtrackData & {
   albumDetails: AlbumData;
 };
@@ -29,7 +31,6 @@ const Soundtrack = ({ userId }: { userId: string }) => {
   } = useQuery(["mergedData", userId], async () => {
     // Fetch soundtrack data
     const soundtrackData = await getSoundtrack(userId);
-    console.log("soundtrackData", soundtrackData);
 
     // Extract albumIds and trackIds
     const albumIds = soundtrackData
@@ -42,7 +43,7 @@ const Soundtrack = ({ userId }: { userId: string }) => {
 
     // Fetch albums and tracks by ids
     const idTypes = { albums: albumIds, songs: trackIds };
-    const anyData = await getAnyByIds(idTypes);
+    const anyData = await fetchSoundsByTypes(idTypes);
 
     // Create lookup tables for quick access
     const albumLookup = Object.fromEntries(
@@ -65,7 +66,6 @@ const Soundtrack = ({ userId }: { userId: string }) => {
         appleTrackData: item.track ? trackLookup[item.track.appleId] : null,
       };
     });
-    console.log("finalMergedData", finalMergedData);
     return finalMergedData;
   });
 
@@ -76,7 +76,13 @@ const Soundtrack = ({ userId }: { userId: string }) => {
       className="flex flex-col w-1/2 overflow-scroll h-full pt-8 gap-4"
     >
       {isLoading ? (
-        <p>Loading...</p>
+        <JellyComponent
+          className={
+            "absolute left-1/2 top-1/2 translate-x-1/2 translate-y-1/2"
+          }
+          key="jelly"
+          isVisible={true}
+        />
       ) : isError ? (
         <p>An error occurred</p>
       ) : (
@@ -97,11 +103,10 @@ const Soundtrack = ({ userId }: { userId: string }) => {
                   {currentMonth}
                 </h2>
               )}
-              {/* <Item
-                rating={item.rating}
-                createdAt={item.createdAt}
-                albumData={item.albumDetails}
-              /> */}
+              <SoundtrackRecord
+                record={record}
+                associatedType={record.album ? "album" : "song"}
+              />
             </Fragment>
           );
         })

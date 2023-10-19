@@ -9,10 +9,9 @@ export const postEntry = async (submissionData: {
   appleTrackId: string | undefined;
 }) => {
   try {
-    console.log("Submitting review:", submissionData);
     const response = await axios.post(
       "/api/record/entry/post/submitEntry",
-      submissionData,
+      submissionData
     );
 
     if (response.status === 201) {
