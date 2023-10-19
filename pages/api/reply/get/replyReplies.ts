@@ -1,7 +1,6 @@
 // Fetch replies to a reply by [replyId]
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { getSession } from "next-auth/react";
 
 const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 
@@ -10,7 +9,6 @@ export default async function handle(
   res: NextApiResponse
 ) {
   const { replyId, pageSize = 10, lastId = null, userId } = req.query;
-  const session = await getSession({ req });
 
   // Input validation
   if (

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { useSession } from "next-auth/react";
 
 import { useSound } from "@/context/SoundContext";
 

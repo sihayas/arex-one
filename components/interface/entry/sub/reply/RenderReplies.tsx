@@ -2,7 +2,6 @@
 import ReplyItem from "./Reply";
 import { useQuery } from "@tanstack/react-query";
 import { Reply } from "@/types/dbTypes";
-import { useSession } from "next-auth/react";
 import { fetchReplies } from "@/lib/apiHandlers/entryAPI";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useUser } from "@supabase/auth-helpers-react";

@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-
 import { useSound } from "@/context/SoundContext";
 import GetSearchResults from "@/lib/apiHandlers/searchAPI";
 import { motion } from "framer-motion";
