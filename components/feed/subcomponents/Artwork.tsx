@@ -9,9 +9,15 @@ interface ArtworkProps {
   sound: AlbumData | SongData;
   width?: number;
   height?: number;
+  className?: string;
 }
 
-export const Artwork = ({ sound, width = 368, height = 368 }: ArtworkProps) => {
+export const Artwork = ({
+  sound,
+  width = 368,
+  height = 368,
+  className,
+}: ArtworkProps) => {
   const { handleSelectSound } = useHandleSoundClick();
   const ref = React.useRef<HTMLImageElement>(null);
 
@@ -21,11 +27,10 @@ export const Artwork = ({ sound, width = 368, height = 368 }: ArtworkProps) => {
     await handleSelectSound(sound, artworkUrl);
   };
 
-
   return (
     <Image
       onClick={handleSoundClick}
-      className="rounded-[7.5px] outline outline-silver outline-[.5px]"
+      className={`rounded-[7.5px] outline outline-silver outline-[.5px] ${className}`}
       src={artworkUrl}
       alt={`artwork`}
       width={width}

@@ -1,9 +1,10 @@
-import Reply from "@/components/interface/entry/sub/reply/Reply";
+import ReplyItem from "@/components/interface/entry/sub/reply/Reply";
 import { useQuery } from "@tanstack/react-query";
-import { ReplyData } from "@/types/interfaces";
+import { Reply } from "@/types/dbTypes";
 import { useSession } from "next-auth/react";
-import { fetchReplies } from "@/lib/api/entryAPI";
+import { fetchReplies } from "@/lib/apiHandlers/entryAPI";
 import React from "react";
+import { useUser } from "@supabase/auth-helpers-react";
 
 type RenderChildrenProps = {
   parentReplyId: string;
@@ -12,21 +13,19 @@ type RenderChildrenProps = {
 
 // RenderReplies component
 function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
-  const { data: session } = useSession();
-
-  const userId = session?.user.id;
+  const user = useUser();
 
   // Fetch reply children
   const { data: childReplies } = useQuery(["replies", parentReplyId], () =>
-    fetchReplies({ replyId: parentReplyId, userId }),
+    fetchReplies({ replyId: parentReplyId, userId: user!.id })
   );
 
   return (
     <div className="flex flex-col w-full mb-8">
       {childReplies && childReplies.length > 0 ? (
-        childReplies.map((childReply: ReplyData, index: number) => {
+        childReplies.map((childReply: Reply, index: number) => {
           return (
-            <Reply
+            <ReplyItem
               index={index}
               key={childReply.id}
               reply={childReply}

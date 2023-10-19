@@ -21,15 +21,14 @@
 │   │   ├── album
 │   │   │   ├── Album.tsx
 │   │   │   └── sub
-│   │   │       ├── EntryAlbum.tsx
 │   │   │       ├── Filter.tsx
 │   │   │       ├── GradientBlur.tsx
-│   │   │       ├── RenderEntries.tsx
+│   │   │       ├── RecordAlbum.tsx
+│   │   │       ├── RenderRecords.tsx
 │   │   │       └── Statline.tsx
 │   │   ├── entry
 │   │   │   ├── Entry.tsx
 │   │   │   └── sub
-│   │   │       ├── EntryFull.tsx
 │   │   │       ├── icons
 │   │   │       │   ├── DashedLine.tsx
 │   │   │       │   └── Line.tsx
@@ -58,21 +57,20 @@
 │   │   └── user
 │   │       ├── User.tsx
 │   │       └── sub
+│   │           ├── Essentials.tsx
 │   │           ├── Soundtrack.tsx
 │   │           └── components
-│   │               ├── Essentials.tsx
 │   │               └── SoundtrackRecord.tsx
 │   └── layout.tsx
 ├── context
 │   ├── InputContext.tsx
 │   ├── InterfaceContext.tsx
-│   ├── Sound.tsx
+│   ├── SoundContext.tsx
 │   └── Threadcrumbs.tsx
 ├── database.types.ts
 ├── hooks
 │   ├── global
-│   │   ├── useDominantColor.ts
-│   │   └── useFetchArtworkUrl.ts
+│   │   └── useDominantColor.ts
 │   └── useInteractions
 │       ├── useHandleLike.ts
 │       └── useHandlePageChange.ts
@@ -90,16 +88,12 @@
 │   │   ├── updateBloomingEntryScores.ts
 │   │   ├── updateSpotlightAlbumScores.ts
 │   │   └── updateSpotlightEntryScores.ts
-│   ├── global
-│   │   ├── musicKit.ts
-│   │   ├── openAI.ts
-│   │   ├── prisma.ts
-│   │   ├── redis.ts
-│   │   └── supabase.ts
-│   └── middleware
-│       ├── createActivity.ts
-│       ├── createNotification.ts
-│       └── validateQuery.ts
+│   └── global
+│       ├── musicKit.ts
+│       ├── openAI.ts
+│       ├── prisma.ts
+│       ├── redis.ts
+│       └── supabase.ts
 ├── middleware.ts
 ├── next-env.d.ts
 ├── next.config.js
@@ -132,6 +126,10 @@
 │   │   │       ├── bloomingEntries.ts
 │   │   │       ├── spotlightAlbums.ts
 │   │   │       └── spotlightEntries.ts
+│   │   ├── middleware
+│   │   │   ├── createActivity.ts
+│   │   │   ├── createNotification.ts
+│   │   │   └── validateQuery.ts
 │   │   ├── record
 │   │   │   ├── caption
 │   │   │   └── entry
@@ -189,4 +187,4 @@
     ├── globalTypes.ts
     └── next-auth.d.ts
 
-61 directories, 129 files
+61 directories, 127 files

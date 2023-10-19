@@ -1,4 +1,4 @@
-import { useFeedQuery } from "@/lib/api/feedAPI";
+import { useFeedQuery } from "@/lib/apiHandlers/feedAPI";
 import { RecordEntry } from "@/components/feed/subcomponents/RecordEntry";
 import { Activity, ActivityType, RecordType } from "@/types/dbTypes";
 import React, { Fragment } from "react";

@@ -1,32 +1,31 @@
 // Renders a list of replies to a review or reply
-import Reply from "./Reply";
+import ReplyItem from "./Reply";
 import { useQuery } from "@tanstack/react-query";
-import { ReplyData } from "@/types/interfaces";
+import { Reply } from "@/types/dbTypes";
 import { useSession } from "next-auth/react";
-import { fetchReplies } from "@/lib/api/entryAPI";
+import { fetchReplies } from "@/lib/apiHandlers/entryAPI";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
+import { useUser } from "@supabase/auth-helpers-react";
 
 // RenderReplies component
 function RenderReplies() {
   const { pages } = useInterfaceContext();
-  const { data: session } = useSession();
+  const user = useUser();
 
   const activePage: Page = pages[pages.length - 1];
-  const reviewId = activePage.entry?.id;
-
-  const userId = session?.user.id;
+  const recordId = activePage.record?.id;
 
   // Fetch review replies
-  const { data: replies } = useQuery(["replies", reviewId], () =>
-    fetchReplies({ reviewId, userId }),
+  const { data: replies } = useQuery(["replies", recordId], () =>
+    fetchReplies({ recordId, userId: user!.id })
   );
 
   return (
     <div className="flex flex-wrap p-8">
       {replies && replies.length > 0 ? (
-        replies.map((reply: ReplyData) => {
+        replies.map((reply: Reply) => {
           return (
-            <Reply key={reply.id} reply={reply} level={0} isChild={false} />
+            <ReplyItem key={reply.id} reply={reply} level={0} isChild={false} />
           );
         })
       ) : (

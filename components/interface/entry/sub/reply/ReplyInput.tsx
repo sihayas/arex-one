@@ -4,20 +4,22 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import TextareaAutosize from "react-textarea-autosize";
 
-import { ReviewData, ReplyData } from "@/types/interfaces";
+import { Record, Reply } from "@/types/dbTypes";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import UserAvatar from "@/components/global/UserAvatar";
+import { useUser } from "@supabase/auth-helpers-react";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 interface ReplyInputProps {
-  replyParent: ReviewData | ReplyData | null;
+  replyParent: Record | Reply | null;
   replyContent: string;
   userId: string | undefined;
-  type: "review" | "reply";
+  type: "record" | "reply";
 }
 
 // Determine if replying to a review or a reply
-const isReview = (data: ReviewData | ReplyData): data is ReviewData => {
-  return (data as ReviewData).albumId !== undefined;
+const isRecord = (data: Record | Reply): data is Record => {
+  return (data as Record).albumId !== undefined;
 };
 
 const handleAddReply = async ({
@@ -28,23 +30,23 @@ const handleAddReply = async ({
 }: ReplyInputProps) => {
   if (!replyParent) return;
 
-  let reviewId = null;
+  let recordId = null;
   let replyId = null;
   let rootReplyId = null;
 
   // If reply input is responding to a review.
-  if (isReview(replyParent) && type === "review") {
-    reviewId = replyParent.id;
-  } else if (!isReview(replyParent) && type === "reply") {
+  if (isRecord(replyParent) && type === "record") {
+    recordId = replyParent.id;
+  } else if (!isRecord(replyParent) && type === "reply") {
     // If reply input is responding to a reply.
-    reviewId = replyParent.reviewId;
+    recordId = replyParent.recordId;
     replyId = replyParent.id;
     rootReplyId = replyParent.rootReplyId;
   }
 
   const requestBody = {
     replyId,
-    reviewId,
+    recordId,
     rootReplyId,
     content: replyContent,
     userId,
@@ -63,8 +65,8 @@ const handleAddReply = async ({
 };
 
 const ReplyInput = () => {
-  const { data: session } = useSession();
-  const userId = session?.user.id;
+  const { user } = useInterfaceContext();
+  const userId = user?.id;
 
   const { replyParent } = useThreadcrumb();
   const [replyContent, setReplyContent] = useState("");
@@ -74,10 +76,10 @@ const ReplyInput = () => {
   };
 
   const handleReplySubmit = () => {
-    let type: "review" | "reply" | null = null;
+    let type: "record" | "reply" | null = null;
     if (replyParent) {
-      if (isReview(replyParent)) {
-        type = "review";
+      if (isRecord(replyParent)) {
+        type = "record";
       } else if (replyParent) {
         type = "reply";
       }
@@ -97,11 +99,11 @@ const ReplyInput = () => {
     <div className="flex items-center gap-2 border border-silver rounded-full z-50 bg-white">
       <UserAvatar
         className=""
-        imageSrc={session?.user.image}
-        altText={`${session?.user.name}'s avatar`}
+        imageSrc={user?.image}
+        altText={`${user?.username}'s avatar`}
         width={32}
         height={32}
-        userId={session!.user.id}
+        user={user!}
       />
       <TextareaAutosize
         className={`text-sm text-black outline-none bg-transparent w-full resize-none`}

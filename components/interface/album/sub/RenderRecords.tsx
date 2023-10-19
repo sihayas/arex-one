@@ -1,5 +1,5 @@
 import React from "react";
-import { useReviewsQuery } from "@/lib/api/albumAPI";
+import { useReviewsQuery } from "@/lib/apiHandlers/albumAPI";
 import RecordAlbum from "@/components/interface/album/sub/RecordAlbum";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";

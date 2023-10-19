@@ -4,7 +4,7 @@ import React, { Fragment, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchSoundsByTypes } from "@/lib/global/musicKit";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import { getSoundtrack } from "@/lib/api/userAPI";
+import { getSoundtrack } from "@/lib/apiHandlers/userAPI";
 
 import SoundtrackRecord from "./components/SoundtrackRecord";
 import format from "date-fns/format";

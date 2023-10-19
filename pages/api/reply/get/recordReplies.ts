@@ -5,9 +5,9 @@ const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-  const { reviewId, pageSize = 10, lastId = null, userId } = req.query;
+  const { recordId, pageSize = 10, lastId = null, userId } = req.query;
 
   // Input validation
   if (
@@ -26,7 +26,7 @@ export default async function handle(
     return;
   }
 
-  if (typeof reviewId !== "string") {
+  if (typeof recordId !== "string") {
     res.status(400).json({ error: "Invalid reviewId. Must be a string." });
     return;
   }
@@ -41,7 +41,7 @@ export default async function handle(
       // Fetch all replies pertaining to the [review] passed in request.
       const replies = await prisma.reply.findMany({
         where: {
-          reviewId: String(reviewId),
+          recordId: String(recordId),
           replyToId: null,
         },
         take: Number(pageSize),
@@ -53,7 +53,7 @@ export default async function handle(
           id: true,
           author: {
             select: {
-              name: true,
+              username: true,
               image: true,
             },
           },
@@ -76,7 +76,7 @@ export default async function handle(
           _count: {
             select: { replies: true, likes: true },
           },
-          reviewId: true,
+          recordId: true,
         },
       });
 
@@ -94,7 +94,7 @@ export default async function handle(
 
         res.status(200).json(repliesWithUserLike);
       } else {
-        console.log("No replies found for review id:", reviewId);
+        console.log("No replies found for review id:", recordId);
         res.status(404).json({ error: "No replies found." });
       }
     } catch (error) {

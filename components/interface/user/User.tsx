@@ -6,7 +6,11 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion } from "framer-motion";
 
 import Soundtrack from "@/components/interface/user/sub/Soundtrack";
-import { follow, getUserDataAndAlbums, unfollow } from "@/lib/api/userAPI";
+import {
+  follow,
+  getUserDataAndAlbums,
+  unfollow,
+} from "@/lib/apiHandlers/userAPI";
 import Essentials from "@/components/interface/user/sub/Essentials";
 import { format } from "date-fns";
 import { JellyComponent } from "@/components/global/Loading";

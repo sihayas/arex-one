@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 
 import { useSound } from "@/context/SoundContext";
 
-import { useAlbumQuery } from "@/lib/api/albumAPI";
+import { useAlbumQuery } from "@/lib/apiHandlers/albumAPI";
 import RenderRecords from "./sub/RenderRecords";
 import {
   AnimatePresence,

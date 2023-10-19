@@ -17,7 +17,12 @@ interface ReplyProps {
   index?: number;
 }
 
-export default function Reply({ reply, level, isChild, index }: ReplyProps) {
+export default function ReplyItem({
+  reply,
+  level,
+  isChild,
+  index,
+}: ReplyProps) {
   const { setReplyParent } = useThreadcrumb();
   const [showChildReplies, setShowChildReplies] =
     React.useState<boolean>(false);

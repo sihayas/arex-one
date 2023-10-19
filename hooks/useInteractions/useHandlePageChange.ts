@@ -25,7 +25,7 @@ export const useHandleEntryClick = (record: Record) => {
           height: 1024,
         },
         scrollPosition: 0,
-        entry: record,
+        record: record,
       },
     ]);
     setThreadcrumbs([record.id]);

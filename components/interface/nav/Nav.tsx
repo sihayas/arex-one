@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useSound } from "@/context/SoundContext";
-import GetSearchResults from "@/lib/api/searchAPI";
+import GetSearchResults from "@/lib/apiHandlers/searchAPI";
 import { motion } from "framer-motion";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
