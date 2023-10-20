@@ -15,7 +15,7 @@ export const fetchReplies = async ({
 
   // Decide URL based on presence of reviewId or replyId
   const url = recordId
-    ? `${baseURL}recordReplies?reviewId=${recordId}&userId=${recordId}`
+    ? `${baseURL}recordReplies?recordId=${recordId}&userId=${recordId}`
     : `${baseURL}replyReplies?replyId=${replyId}&userId=${userId}`;
 
   return axios.get(url).then((res) => res.data);

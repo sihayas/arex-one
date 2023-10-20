@@ -29,11 +29,11 @@ const getDimensions = (pageName: PageName) => {
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 1234 }, // Placeholder values
+      target: { width: 480, height: 1024 }, // Placeholder values
     },
     entry: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 1234 }, // Placeholder values
+      target: { width: 480, height: 1024 }, // Placeholder values
     },
   };
 

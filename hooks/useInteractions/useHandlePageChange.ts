@@ -71,7 +71,7 @@ export const useHandleSoundClick = () => {
         sound: sound,
         dimensions: {
           width: 480,
-          height: 1234,
+          height: 1024,
         },
         scrollPosition: 0,
       },

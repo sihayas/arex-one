@@ -8,60 +8,6 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import UserAvatar from "@/components/global/UserAvatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
-interface ReplyInputProps {
-  replyParent: Record | Reply | null;
-  replyContent: string;
-  userId: string | undefined;
-  type: "record" | "reply";
-}
-
-// Determine if replying to a review or a reply
-const isRecord = (data: Record | Reply): data is Record => {
-  return (data as Record).albumId !== undefined;
-};
-
-const handleAddReply = async ({
-  replyParent,
-  replyContent,
-  userId,
-  type,
-}: ReplyInputProps) => {
-  if (!replyParent) return;
-
-  let recordId = null;
-  let replyId = null;
-  let rootReplyId = null;
-
-  // If reply input is responding to a review.
-  if (isRecord(replyParent) && type === "record") {
-    recordId = replyParent.id;
-  } else if (!isRecord(replyParent) && type === "reply") {
-    // If reply input is responding to a reply.
-    recordId = replyParent.recordId;
-    replyId = replyParent.id;
-    rootReplyId = replyParent.rootReplyId;
-  }
-
-  const requestBody = {
-    replyId,
-    recordId,
-    rootReplyId,
-    content: replyContent,
-    userId,
-  };
-
-  try {
-    const res = await axios.post("/api/record/entry/post/reply", requestBody);
-    if (res.status === 200) {
-      console.log("submitted reply");
-    } else {
-      console.error(`Error adding reply: ${res.status}`);
-    }
-  } catch (error) {
-    console.error("Error adding reply:", error);
-  }
-};
-
 const ReplyInput = () => {
   const { user } = useInterfaceContext();
   const userId = user?.id;
@@ -123,3 +69,58 @@ const ReplyInput = () => {
 };
 
 export default ReplyInput;
+
+// Determine if replying to a review or a reply
+const isRecord = (replyParent: Record | Reply): replyParent is Record => {
+  return (replyParent as Record).appleAlbumData !== undefined;
+};
+
+interface handleAddReplyProps {
+  replyParent: Record | Reply | null;
+  replyContent: string;
+  userId: string | undefined;
+  type: "record" | "reply";
+}
+
+const handleAddReply = async ({
+  replyParent,
+  replyContent,
+  userId,
+  type,
+}: handleAddReplyProps) => {
+  if (!replyParent) return;
+
+  let recordId = null;
+  let replyId = null;
+  let rootReplyId = null;
+
+  // If reply input is responding to a review.
+  if (isRecord(replyParent) && type === "record") {
+    recordId = replyParent.id;
+  } else if (!isRecord(replyParent) && type === "reply") {
+    // If reply input is responding to a reply.
+    recordId = replyParent.recordId;
+    replyId = replyParent.id;
+    rootReplyId = replyParent.rootReplyId;
+  }
+
+  const requestBody = {
+    replyId,
+    recordId,
+    rootReplyId,
+    content: replyContent,
+    userId,
+  };
+
+  try {
+    const res = await axios.post("/api/record/entry/post/reply", requestBody);
+    console.log(res);
+    if (res.status === 200) {
+      console.log("submitted reply");
+    } else {
+      console.error(`Error adding reply: ${res.status}`);
+    }
+  } catch (error) {
+    console.error("Error adding reply:", error);
+  }
+};

@@ -11,6 +11,7 @@ import Stars from "@/components/global/Stars";
 import { EntryBlobAlbum } from "@/components/icons";
 import { useUser } from "@supabase/auth-helpers-react";
 import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
+import ReplyInput from "./sub/reply/ReplyInput";
 
 export const Entry = () => {
   const { pages, scrollContainerRef } = useInterfaceContext();
@@ -30,7 +31,7 @@ export const Entry = () => {
   useEffect(() => {
     if (record) {
       setReplyParent(record);
-      console.log("set reply parent to review");
+      console.log("set reply parent to record");
     }
   }, [record, setReplyParent]);
 
@@ -52,7 +53,7 @@ export const Entry = () => {
           }}
         >
           {/* EntryFull content starts here */}
-          <div className="flex flex-col items-center p-8 relative pb-[50vh] ">
+          <div className="flex flex-col items-center p-8 relative ">
             <div className="relative">
               <Artwork
                 className="!rounded-[16px]"
@@ -70,7 +71,7 @@ export const Entry = () => {
               {/* Avatar & Name */}
               <div className="flex items-center gap-2 w-full -mt-[85px] ml-4 mb-2">
                 <UserAvatar
-                  className="w-10 h-10 outline outline-2 outline-white"
+                  className="outline outline-[1.5px] outline-white "
                   imageSrc={record.author.image}
                   altText={`${record.author.username}'s avatar`}
                   width={40}
@@ -84,10 +85,10 @@ export const Entry = () => {
 
               <EntryBlobAlbum className={"ml-3 w-full"} />
               <div className="flex flex-col gap-2">
-                <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative px-4 pt-[11px] pb-[10px] gap-2 outline outline-4 outline-white">
+                <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative px-4 pt-[11px] pb-[10px] gap-2 shadow-sm">
                   {/* Content*/}
                   <div
-                    className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
+                    className={`break-words w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
                   >
                     {record.entry?.text}
                   </div>
@@ -105,6 +106,7 @@ export const Entry = () => {
           </div>
           {/* EntryFull content ends here */}
           <RenderReplies />
+          <ReplyInput />
         </motion.div>
       ) : null}
     </div>

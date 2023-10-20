@@ -19,6 +19,14 @@ export async function createLikeRecordActivity(likeId: string) {
   });
 }
 
+export async function createReplyRecordActivity(replyId: string) {
+  return prisma.activity.create({
+    data: {
+      type: ActivityType.REPLY,
+      referenceId: replyId,
+    },
+  });
+}
 // export async function createLikeActivity(likeId: string) {
 //   return await prisma.activity.create({
 //     data: {

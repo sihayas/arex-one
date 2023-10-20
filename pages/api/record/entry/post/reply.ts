@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
+import { createReplyRecordActivity } from "@/pages/api/middleware/createActivity";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-  const { reviewId, replyId, content, userId } = req.body;
+  const { recordId, replyId, content, userId } = req.body;
+  console.log(req.body);
   let rootReplyId = req.body.rootReplyId;
 
   if (req.method === "POST") {
@@ -17,8 +19,8 @@ export default async function handle(
       return;
     }
 
-    // Input validation
-    if ((!reviewId && !replyId) || !content) {
+    // Check if the review ID or reply ID and content are present
+    if ((!recordId && !replyId) || !content) {
       res
         .status(400)
         .json({ error: "Review ID or Reply ID and content are required." });
@@ -32,9 +34,9 @@ export default async function handle(
             id: userId,
           },
         },
-        review: {
+        record: {
           connect: {
-            id: reviewId,
+            id: recordId,
           },
         },
         replyTo: replyId
@@ -84,23 +86,18 @@ export default async function handle(
       }
 
       // Find the review to get the author's ID
-      const review = await prisma.review.findUnique({
-        where: { id: reviewId },
+      const record = await prisma.record.findUnique({
+        where: { id: recordId },
         select: { authorId: true },
       });
 
-      if (!review) {
+      if (!record) {
         res.status(404).json({ error: "Review not found." });
         return;
       }
 
       // Create a new activity for the reply
-      const activity = await prisma.activity.create({
-        data: {
-          type: "reply",
-          replyId: createdReply.id,
-        },
-      });
+      const activity = await createReplyRecordActivity(createdReply.id);
 
       // Find all distinct authors in the chain including the root reply
       const authorsInChain = await prisma.reply
@@ -112,7 +109,7 @@ export default async function handle(
         })
         .then((authors) => authors.map((a) => a.authorId));
 
-      authorsInChain.push(review.authorId);
+      authorsInChain.push(record.authorId);
 
       // Create notifications for all unique authors except the one who created the new reply
       // Get unique authors
@@ -127,8 +124,8 @@ export default async function handle(
                 recipientId: authorId,
                 activityId: activity.id,
               },
-            }),
-          ),
+            })
+          )
       );
 
       res.status(200).json(createdReply);
