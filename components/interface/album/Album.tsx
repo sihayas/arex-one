@@ -49,11 +49,11 @@ const Album = () => {
 
   // Album artwork parallax
   let y = useTransform(scrollY, [0, 24], [0, -416]);
-  let springY = useSpring(y, { damping: 80, stiffness: 800 });
+  let springY = useSpring(y, { damping: 20, stiffness: 200 });
 
   // Album artwork border radius
-  const borderRadius = useTransform(scrollY, [0, 120], ["24px", "16px"]);
-  const scale = useTransform(scrollY, [0, 48], [1, 0.867]);
+  const borderRadius = useTransform(scrollY, [0, 180], ["24px", "16px"]);
+  const scale = useTransform(scrollY, [0, 180], [1, 0.867]);
 
   // Rating footer opacity
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
@@ -66,7 +66,6 @@ const Album = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      id={"interfaceAlbum"}
       className="w-full h-full"
     >
       {!selectedSound || isLoading ? (
@@ -88,7 +87,7 @@ const Album = () => {
             className="pointer-events-none overflow-hidden sticky -top-0 z-50 -mb-72"
           >
             <Image
-              className="outline outline-1 outline-silver"
+              className="outline outline-1 outline-silver shadow-shadowKitLow"
               src={selectedSound.artworkUrl || "/public/images/default.png"}
               alt={`${selectedSound.sound.attributes.name} artwork`}
               width={480}
