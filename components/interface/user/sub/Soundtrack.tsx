@@ -1,10 +1,7 @@
 // Fetches user sound history.
 import React, { Fragment, useRef } from "react";
-
-import { useQuery } from "@tanstack/react-query";
-import { fetchSoundsByTypes } from "@/lib/global/musicKit";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import { getSoundtrack } from "@/lib/apiHandlers/userAPI";
+import { useUserSoundtrackQuery } from "@/lib/apiHandlers/userAPI";
 
 import SoundtrackRecord from "./components/SoundtrackRecord";
 import format from "date-fns/format";
@@ -28,46 +25,7 @@ const Soundtrack = ({ userId }: { userId: string }) => {
     data: mergedData,
     isLoading,
     isError,
-  } = useQuery(["mergedData", userId], async () => {
-    // Fetch soundtrack data
-    const soundtrackData = await getSoundtrack(userId);
-
-    // Extract albumIds and trackIds
-    const albumIds = soundtrackData
-      .filter((record: Record): boolean => Boolean(record.album))
-      .map((record: Record): string => record.album!.appleId);
-
-    const trackIds = soundtrackData
-      .filter((record: Record): boolean => Boolean(record.track))
-      .map((record: Record): string => record.track!.appleId);
-
-    // Fetch albums and tracks by ids
-    const idTypes = { albums: albumIds, songs: trackIds };
-    const anyData = await fetchSoundsByTypes(idTypes);
-
-    // Create lookup tables for quick access
-    const albumLookup = Object.fromEntries(
-      anyData
-        .filter((item: AlbumData | SongData) => item.type === "albums")
-        .map((album: AlbumData) => [album.id, album])
-    );
-
-    const trackLookup = Object.fromEntries(
-      anyData
-        .filter((item: AlbumData | SongData) => item.type === "songs")
-        .map((track: SongData) => [track.id, track])
-    );
-
-    // Merge soundtrackData, albumData, and trackData
-    const finalMergedData = soundtrackData.map((item: Record) => {
-      return {
-        ...item,
-        appleAlbumData: item.album ? albumLookup[item.album.appleId] : null,
-        appleTrackData: item.track ? trackLookup[item.track.appleId] : null,
-      };
-    });
-    return finalMergedData;
-  });
+  } = useUserSoundtrackQuery(userId);
 
   let lastMonth = "";
   return (
@@ -88,7 +46,7 @@ const Soundtrack = ({ userId }: { userId: string }) => {
       ) : (
         mergedData.map((record: Record, index: number) => {
           const createdAt = new Date(record.createdAt);
-          const currentMonth = format(createdAt, "MMMM"); // Using date-fns to format
+          const currentMonth = format(createdAt, "MMMM");
 
           const isNewMonth = lastMonth !== currentMonth;
 

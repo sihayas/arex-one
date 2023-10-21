@@ -10,7 +10,13 @@ import Album from "@/components/interface/album/Album";
 import Entry from "@/components/interface/entry/Entry";
 import User from "@/components/interface/user/User";
 
-import { motion, useAnimate, useScroll, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
@@ -238,7 +244,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               ref={scrollContainerRef}
               className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden w-full h-full scrollbar-none`}
             >
-              <ActiveComponent />
+              <AnimatePresence>
+                <ActiveComponent />
+              </AnimatePresence>
             </div>
           </div>
         </motion.div>

@@ -62,7 +62,13 @@ const Album = () => {
   const { isLoading, error } = useAlbumQuery();
 
   return (
-    <div id={"interfaceAlbum"} className="w-full h-full">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      id={"interfaceAlbum"}
+      className="w-full h-full"
+    >
       {!selectedSound || isLoading ? (
         <JellyComponent
           className={
@@ -124,7 +130,7 @@ const Album = () => {
           </motion.div>
         </>
       )}
-    </div>
+    </motion.div>
   );
 };
 

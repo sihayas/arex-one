@@ -51,9 +51,14 @@ export async function fetchReviews({
   userId: string;
   sort: string;
 }) {
-  const response = await axios.get(
-    `/api/album/get/reviews?soundId=${soundId}&page=${pageParam}&sort=${sort}&userId=${userId}`
-  );
+  const response = await axios.get(`/api/album/get/reviews`, {
+    params: {
+      soundId,
+      page: pageParam,
+      sort,
+      userId,
+    },
+  });
   return response.data;
 }
 

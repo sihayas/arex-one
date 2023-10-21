@@ -14,11 +14,16 @@ import { useUser } from "@supabase/auth-helpers-react";
 import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
 import ReplyInput from "./sub/reply/ReplyInput";
 import GradientBlur from "../album/sub/GradientBlur";
+import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
 
 export const Entry = () => {
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
   const { replyParent, setReplyParent } = useThreadcrumb();
+
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+  });
 
   const activePage = pages[pages.length - 1];
   const record = useMemo(
@@ -26,9 +31,6 @@ export const Entry = () => {
     [activePage]
   );
 
-  const { scrollY } = useScroll({
-    container: scrollContainerRef,
-  });
   const opacity = useTransform(scrollY, [0, 120], [0, 1]);
 
   const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
@@ -41,14 +43,22 @@ export const Entry = () => {
   );
   const handleUserClick = useHandleUserClick(record.author);
 
+  const recordId = activePage.record?.id;
+  const {
+    data: replies,
+    isLoading,
+    isError,
+  } = useRepliesQuery(recordId, user!.id);
+
   return (
-    <div className="w-full h-full relative">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="w-full h-full relative"
+    >
       {record && (
-        <motion.div
-          style={{
-            willChange: "transform",
-          }}
-        >
+        <div>
           {/* EntryFull content starts here */}
           <div className="flex flex-col items-center p-8 relative">
             <div className="relative">
@@ -108,13 +118,13 @@ export const Entry = () => {
               </div>
             </div>
           </div>
-          <RenderReplies />
-        </motion.div>
+          <RenderReplies replies={replies} />
+        </div>
       )}
       <motion.div style={{ opacity }}>
         <ReplyInput />
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

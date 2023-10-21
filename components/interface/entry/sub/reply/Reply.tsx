@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import Image from "next/image";
 
 import { useThreadcrumb } from "@/context/Threadcrumbs";
@@ -24,27 +24,25 @@ export default function ReplyItem({
   index,
 }: ReplyProps) {
   const { setReplyParent } = useThreadcrumb();
-  const [showChildReplies, setShowChildReplies] =
-    React.useState<boolean>(false);
+  const [showChildReplies, setShowChildReplies] = useState<boolean>(false);
 
   const replyCount = reply._count ? reply._count.replies : 0;
   const replyChild = reply.replies?.[0];
 
-  const handleReplyParent = (reply: Reply) => {
+  const handleReplyParent = useCallback(() => {
     setReplyParent(reply);
-  };
+  }, [reply, setReplyParent]);
 
-  const handleLoadReplies = () => {
-    // setShowChildReplies((prev) => !prev);
+  const handleLoadReplies = useCallback(() => {
     setShowChildReplies(true);
-  };
+  }, []);
 
   // Styles
-  const flexDirection = level % 2 === 0 ? "flex-row" : "flex-row-reverse";
-  const reverseAlignment = level % 2 === 0 ? "items-start" : "items-end";
-  const borderRadius =
-    level % 2 === 0 ? "rounded-bl-[4px]" : "rounded-br-[4px]";
-  const reverseStatLine = level % 2 === 0 ? "" : "transform scale-x-[-1]";
+  const isEvenLevel = level % 2 === 0;
+  const flexDirection = isEvenLevel ? "flex-row" : "flex-row-reverse";
+  const reverseAlignment = isEvenLevel ? "items-start" : "items-end";
+  const borderRadius = isEvenLevel ? "rounded-bl-[4px]" : "rounded-br-[4px]";
+  const reverseStatLine = isEvenLevel ? "" : "transform scale-x-[-1]";
   const maxWidth = isChild ? "max-w-[336px]" : "max-w-[376px]";
   const width = isChild ? "w-[336px]" : "w-[376px]";
 
@@ -58,12 +56,12 @@ export default function ReplyItem({
           alt={`${reply.author.username}'s avatar`}
           width={32}
           height={32}
-          onClick={() => handleReplyParent(reply)}
+          onClick={handleReplyParent}
         />
 
         {/* Attribution & Content */}
         <div className={`flex flex-col gap-[6px] ${reverseAlignment} ${width}`}>
-          <div className={`font-medium text-sm text-gray2 leading-[75%] px-3`}>
+          <div className={`font-medium text-xs text-gray2 leading-[75%] px-3`}>
             {reply.author.username}
           </div>
           {/* Content  */}

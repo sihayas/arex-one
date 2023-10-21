@@ -1,4 +1,5 @@
 // New function to get root replies for a specific review
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 interface RepliesProps {
@@ -14,9 +15,28 @@ export const fetchReplies = async ({
   const baseURL = "/api/reply/get/";
 
   // Decide URL based on presence of reviewId or replyId
-  const url = recordId
-    ? `${baseURL}recordReplies?recordId=${recordId}&userId=${recordId}`
-    : `${baseURL}replyReplies?replyId=${replyId}&userId=${userId}`;
+  const url = recordId ? `${baseURL}recordReplies` : `${baseURL}replyReplies`;
 
-  return axios.get(url).then((res) => res.data);
+  return axios
+    .get(url, {
+      params: {
+        recordId: recordId ? recordId : undefined,
+        replyId: replyId ? replyId : undefined,
+        userId,
+      },
+    })
+    .then((res) => res.data);
+};
+
+export const useRepliesQuery = (
+  recordId: string | undefined,
+  userId: string
+) => {
+  const { data, isLoading, isError } = useQuery(
+    ["replies", recordId],
+    () => fetchReplies({ recordId, userId }),
+    { enabled: !!recordId }
+  );
+
+  return { data, isLoading, isError };
 };
