@@ -32,8 +32,6 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
     appleAlbumData: selectedSound?.sound as AlbumData,
   });
 
-  console.log(selectedSound?.sound);
-
   if (!selectedSound?.sound) {
     return null;
   }

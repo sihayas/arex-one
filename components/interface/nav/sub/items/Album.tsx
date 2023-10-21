@@ -8,7 +8,7 @@ import { useSound } from "@/context/SoundContext";
 import { useInputContext } from "@/context/InputContext";
 
 const Album = ({ album }: { album: AlbumData }) => {
-  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "800");
+  const artworkUrl = GenerateArtworkUrl(album.attributes.artwork.url, "1200");
   const { setSelectedFormSound } = useSound();
   const { inputValue, setInputValue, setStoredInputValue } = useInputContext();
 

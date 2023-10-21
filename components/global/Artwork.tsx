@@ -21,7 +21,7 @@ export const Artwork = ({
   const { handleSelectSound } = useHandleSoundClick();
   const ref = React.useRef<HTMLImageElement>(null);
 
-  const artworkUrl = GenerateArtworkUrl(sound.attributes.artwork.url, "800");
+  const artworkUrl = GenerateArtworkUrl(sound.attributes.artwork.url, "1200");
 
   const handleSoundClick = async () => {
     await handleSelectSound(sound, artworkUrl);

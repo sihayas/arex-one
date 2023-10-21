@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
-import { ReplyData } from "@/types/interfaces";
+import { Reply } from "@/types/dbTypes";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import { StatLineIcon } from "@/components/icons";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
@@ -11,7 +11,7 @@ import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
 import RenderChildren from "@/components/interface/entry/sub/reply/RenderChildren";
 
 interface ReplyProps {
-  reply: ReplyData;
+  reply: Reply;
   level: number;
   isChild: boolean;
   index?: number;
@@ -30,7 +30,7 @@ export default function ReplyItem({
   const replyCount = reply._count ? reply._count.replies : 0;
   const replyChild = reply.replies?.[0];
 
-  const handleReplyParent = (reply: ReplyData) => {
+  const handleReplyParent = (reply: Reply) => {
     setReplyParent(reply);
   };
 
@@ -55,7 +55,7 @@ export default function ReplyItem({
         <Image
           className="w-8 h-8 rounded-full outline outline-1 outline-[#E5E5E6]"
           src={reply.author.image}
-          alt={`${reply.author.name}'s avatar`}
+          alt={`${reply.author.username}'s avatar`}
           width={32}
           height={32}
           onClick={() => handleReplyParent(reply)}
@@ -64,7 +64,7 @@ export default function ReplyItem({
         {/* Attribution & Content */}
         <div className={`flex flex-col gap-[6px] ${reverseAlignment} ${width}`}>
           <div className={`font-medium text-sm text-gray2 leading-[75%] px-3`}>
-            {reply.author.name}
+            {reply.author.username}
           </div>
           {/* Content  */}
           <div
@@ -119,7 +119,7 @@ export default function ReplyItem({
                       replyChild?.author.image ||
                       "/public/images/default-avatar.png"
                     }
-                    alt={`${reply.author.name}'s avatar`}
+                    alt={`${reply.author.username}'s avatar`}
                     width={16}
                     height={16}
                   />

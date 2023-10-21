@@ -52,7 +52,8 @@ const Album = () => {
   let springY = useSpring(y, { damping: 80, stiffness: 800 });
 
   // Album artwork border radius
-  const borderRadius = useTransform(scrollY, [0, 120], ["24px", "8px"]);
+  const borderRadius = useTransform(scrollY, [0, 120], ["24px", "16px"]);
+  const scale = useTransform(scrollY, [0, 48], [1, 0.867]);
 
   // Rating footer opacity
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
@@ -76,6 +77,7 @@ const Album = () => {
             style={{
               y: springY,
               borderRadius: borderRadius,
+              scale: scale,
             }}
             className="pointer-events-none overflow-hidden sticky -top-0 z-50 -mb-72"
           >

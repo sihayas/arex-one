@@ -3,7 +3,7 @@ import React from "react";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
 
-import { Artwork } from "./Artwork";
+import { Artwork } from "../../global/Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";

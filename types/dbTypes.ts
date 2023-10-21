@@ -141,6 +141,12 @@ export interface Reply {
   rootReplies: Reply[];
   views: View[];
   activities: Activity[];
+
+  _count: {
+    likes: number;
+    replies: number;
+    views: number;
+  };
 }
 
 export interface Activity {

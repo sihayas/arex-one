@@ -1,6 +1,6 @@
 import React from "react";
 import { AlbumData } from "@/types/appleTypes";
-import { Artwork } from "@/components/feed/subcomponents/Artwork";
+import { Artwork } from "@/components/global/Artwork";
 
 interface EssentialsProps {
   favorites: AlbumData[];
