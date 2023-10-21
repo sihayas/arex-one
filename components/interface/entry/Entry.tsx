@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { RecordExtended } from "@/types/globalTypes";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
+import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { Artwork } from "@/components/feed/subcomponents/Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
@@ -14,26 +15,17 @@ import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies"
 import ReplyInput from "./sub/reply/ReplyInput";
 
 export const Entry = () => {
-  const { pages, scrollContainerRef } = useInterfaceContext();
-  const { setReplyParent } = useThreadcrumb();
   const user = useUser();
-
-  const { scrollY } = useScroll({
-    container: scrollContainerRef,
-  });
-
-  const scale = useTransform(scrollY, [0, 12], [0.93, 1]);
-  const springScale = useSpring(scale, { damping: 20, stiffness: 200 });
+  const { pages, scrollContainerRef } = useInterfaceContext();
+  const { replyParent, setReplyParent } = useThreadcrumb();
 
   const activePage = pages[pages.length - 1];
   const record = activePage.record as RecordExtended;
 
-  useEffect(() => {
-    if (record) {
-      setReplyParent(record);
-      console.log("set reply parent to record");
-    }
-  }, [record, setReplyParent]);
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+  });
+  const opacity = useTransform(scrollY, [0, 120], [0, 1]);
 
   const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
     record.likedByUser,
@@ -43,6 +35,7 @@ export const Entry = () => {
     record.id,
     user?.id
   );
+  const handleUserClick = useHandleUserClick(record.author);
 
   return (
     <div className="w-full h-full relative">
@@ -53,7 +46,7 @@ export const Entry = () => {
           }}
         >
           {/* EntryFull content starts here */}
-          <div className="flex flex-col items-center p-8 relative ">
+          <div className="flex flex-col items-center p-8 relative">
             <div className="relative">
               <Artwork
                 className="!rounded-[16px]"
@@ -77,6 +70,13 @@ export const Entry = () => {
                   width={40}
                   height={40}
                   user={record.author}
+                  onClick={(e) => {
+                    if (replyParent !== record) {
+                      setReplyParent(record);
+                    } else {
+                      handleUserClick();
+                    }
+                  }}
                 />
                 <p className="text-white font-medium text-sm leading-[75%]">
                   {record.author.username}
@@ -106,9 +106,11 @@ export const Entry = () => {
           </div>
           {/* EntryFull content ends here */}
           <RenderReplies />
-          <ReplyInput />
         </motion.div>
       ) : null}
+      <motion.div style={{ opacity }}>
+        <ReplyInput />
+      </motion.div>
     </div>
   );
 };

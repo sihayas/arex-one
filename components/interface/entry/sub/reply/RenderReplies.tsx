@@ -20,7 +20,7 @@ function RenderReplies() {
   );
 
   return (
-    <div className="flex flex-wrap p-8">
+    <div className="flex flex-wrap p-8 pb-96">
       {replies && replies.length > 0 ? (
         replies.map((reply: Reply) => {
           return (

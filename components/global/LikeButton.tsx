@@ -4,7 +4,7 @@ import { LoveIcon } from "../icons";
 
 interface LikeButtonProps {
   handleLikeClick: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => Promise<void>;
   liked: boolean;
   className?: string;
@@ -40,10 +40,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   const formatText = (
     count: number | undefined,
     singular: string,
-    plural: string,
+    plural: string
   ) => (
     <>
-      {count === 0 ? "NO" : <span className="text-black">{count}</span>}&nbsp;
+      {count === 0 ? "NO" : <span className="gray2">{count}</span>}&nbsp;
       {count === 1 ? singular : plural}
     </>
   );
@@ -92,7 +92,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
         style={{ backgroundColor: dotColor }}
       />
 
-      <div className="text-xs text-gray2 absolute -bottom-3 right-[8px] leading-[75%]">
+      <div className="text-xs text-gray2 absolute -bottom-3 right-[8px] leading-[75%] font-medium tracking-wider">
         {renderCounts()}
       </div>
     </button>

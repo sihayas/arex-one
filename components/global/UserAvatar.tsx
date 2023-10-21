@@ -4,14 +4,15 @@ import React from "react";
 import { User } from "@/types/dbTypes";
 
 interface UserAvatarProps {
+  user: User;
   imageSrc: string | undefined;
   altText: string;
   height?: number;
   width?: number;
   quality?: number;
   className?: string;
-  user: User;
   style?: React.CSSProperties;
+  onClick?: (event: React.MouseEvent) => void;
 }
 
 const UserAvatar: React.FC<UserAvatarProps> = ({
@@ -23,6 +24,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   quality = 100,
   user,
   style,
+  onClick,
 }) => {
   const handleUserClick = useHandleUserClick(user);
   if (!imageSrc) {
@@ -42,7 +44,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   }
   return (
     <Image
-      onClick={handleUserClick}
+      onClick={onClick ? onClick : handleUserClick}
       className={`rounded-full ${className}`}
       src={imageSrc}
       alt={altText}

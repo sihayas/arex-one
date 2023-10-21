@@ -2,7 +2,6 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-
 :root {
   --size: 1500;
   --cmdk-shadow: 0 16px 70px rgb(0 0 0 / 20%);
@@ -32,8 +31,7 @@ body {
   /* background-color: rgba(237, 237, 237, 0.792); */
 }
 
-input{
-
+input {
 }
 
 a {
@@ -45,11 +43,11 @@ a {
   user-select: none;
   -webkit-font-smoothing: antialiased;
   margin: 0;
-    padding: 0;
+  padding: 0;
 }
 
 .animate-scale-down {
-  animation: scale-down .33s forwards;
+  animation: scale-down 0.33s forwards;
 }
 
 .animate-scale-up {
@@ -84,4 +82,7 @@ a {
   margin: 0;
   padding: 0;
   z-index: 0;
+}
+::placeholder {
+  font-style: italic;
 }

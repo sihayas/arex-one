@@ -3,41 +3,20 @@ import React from "react";
 import { Entry, Record, RecordType } from "@/types/dbTypes";
 import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInMonths,
-  differenceInSeconds,
-  differenceInYears,
-} from "date-fns";
 
 import UserAvatar from "@/components/global/UserAvatar";
 import LikeButton from "@/components/global/LikeButton";
 import Stars from "@/components/global/Stars";
 import { useSound } from "@/context/SoundContext";
 import { motion } from "framer-motion";
-import { EntryBlob, EntryBlobAlbum } from "@/components/icons";
-import { Artwork } from "@/components/feed/subcomponents/Artwork";
+import { EntryBlobAlbum } from "@/components/icons";
 import { RecordExtended } from "@/types/globalTypes";
 import { useUser } from "@supabase/auth-helpers-react";
+import { AlbumData } from "@/types/appleTypes";
 
 const RecordAlbum = ({ record }: { record: RecordExtended }) => {
   const { selectedSound } = useSound();
   const user = useUser();
-
-  // Since it's rendered within an album page, assume the selected
-  // sound/album is the same as the review
-  let mergedRecord: RecordExtended = record;
-
-  if (selectedSound && selectedSound.sound.type === "album") {
-    mergedRecord = {
-      ...record,
-      appleAlbumData: {
-        ...selectedSound.sound,
-      },
-    };
-  }
 
   const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
     record.likedByUser,
@@ -48,7 +27,12 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
     user?.id
   );
 
-  const handleEntryClick = useHandleEntryClick(mergedRecord);
+  const handleEntryClick = useHandleEntryClick({
+    ...record,
+    appleAlbumData: selectedSound?.sound as AlbumData,
+  });
+
+  console.log(selectedSound?.sound);
 
   if (!selectedSound?.sound) {
     return null;

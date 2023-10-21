@@ -12,13 +12,11 @@ module.exports = {
     extend: {
       boxShadow: {
         nav: "0px 0px 20px 0px rgba(0, 0, 0, 0.09)",
-        album:
-          "0px 0px 0px 0px rgba(0, 0, 0, 0.11), 0px 6px 14px 0px rgba(0, 0, 0, 0.11), 0px 26px 26px 0px rgba(0, 0, 0, 0.10), 0px 58px 35px 0px rgba(0, 0, 0, 0.06), 0px 103px 41px 0px rgba(0, 0, 0, 0.02), 0px 161px 45px 0px rgba(0, 0, 0, 0.00)",
-        interface: "0px 1px 16px 0px rgba(0, 0, 0, 0.04)",
-        feedArt:
-          "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
+        interface: "rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;",
         stars:
           "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
+        shadowKitMedium:
+          "0px 4px 8px 0px rgba(0, 0, 0, 0.06), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
       },
       fontFamily: {
         baskerville: ["Baskerville", "serif"],
@@ -36,6 +34,9 @@ module.exports = {
         red: "#FF0000",
         violet: "rgb(75,61,103)",
         nav: "rgba(255, 255, 255, 0.92)",
+      },
+      dropShadow: {
+        interface: "rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;",
       },
       gridRowStart: {
         9: "9",

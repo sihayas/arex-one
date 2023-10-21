@@ -10,7 +10,7 @@ import { Record, User } from "@/types/dbTypes";
 // Handle RecordEntry Click
 export const useHandleEntryClick = (record: Record) => {
   const { setPages, setIsVisible } = useInterfaceContext();
-  const { setThreadcrumbs } = useThreadcrumb();
+  const { setThreadcrumbs, setReplyParent } = useThreadcrumb();
 
   return () => {
     setIsVisible(true);
@@ -29,6 +29,7 @@ export const useHandleEntryClick = (record: Record) => {
       },
     ]);
     setThreadcrumbs([record.id]);
+    setReplyParent(record);
     window.history.pushState(null, "");
   };
 };

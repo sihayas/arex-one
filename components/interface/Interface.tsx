@@ -152,7 +152,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   }, [animate, base.height, base.width, newHeight, newWidth, scope, pages]);
 
   // useAnimate is necessary to visor the root because in-line motion.div
-  // breaks the filter in Album page
+  // breaks the filter in Album page through some weird child effects.
   useEffect(() => {
     const animateParent = async () => {
       if (isVisible) {
@@ -167,8 +167,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           },
           {
             type: "spring",
-            stiffness: 500,
-            damping: 50,
+            stiffness: 800,
+            damping: 120,
           }
         );
       } else {
@@ -223,7 +223,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver shadow-feedArt rounded-3xl`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver drop-shadow-2xl rounded-3xl`}
         >
           {/* Base layout / dimensions for a page */}
           <div

@@ -26,7 +26,10 @@ const Album = () => {
 
   const { scrollContainerRef } = useInterfaceContext();
 
+  // Filter expansion
   const [expand, setExpand] = useState<boolean>(false);
+
+  // Filter state
   const [activeSong, setActiveSong] = useState<TrackData | null>(null);
   const [sortOrder, setSortOrder] = useState<
     "newest" | "positive" | "negative"
@@ -38,7 +41,6 @@ const Album = () => {
 
   const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
     setSortOrder(newSortOrder);
-    console.log(newSortOrder);
   };
 
   const { scrollY } = useScroll({
@@ -73,7 +75,6 @@ const Album = () => {
           <motion.div
             style={{
               y: springY,
-              // boxShadow: boxShadow,
               borderRadius: borderRadius,
             }}
             className="pointer-events-none overflow-hidden sticky -top-0 z-50 -mb-72"
