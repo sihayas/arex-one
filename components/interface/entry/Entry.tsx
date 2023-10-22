@@ -59,61 +59,75 @@ export const Entry = () => {
       {record && (
         <div>
           {/* EntryFull content starts here */}
-          <div className="flex flex-col items-center p-8 pb-0 relative">
+          <div className="flex flex-col items-center pb-0 relative">
             <div className="relative">
               <Artwork
-                className="!rounded-[13px] shadow-shadowKitLow outline outline-1 outline-silver"
+                className="!rounded-3xl !rounded-bl-none !rounded-br-none shadow-shadowKitLow outline outline-1 outline-silver"
                 sound={record.appleAlbumData}
-                width={224}
-                height={224}
+                width={480}
+                height={480}
               />
-              <Stars
-                className={`absolute top-[184px] w-fit -left-8 shadow-stars outline outline-silver outline-[.5px] pr-2 pl-8 rounded-br-2xl rounded-tr-2xl`}
-                rating={record.entry!.rating}
-                soundName={record.appleAlbumData.attributes.name}
-                artist={record.appleAlbumData.attributes.artistName}
-              />
+            </div>
 
-              {/* Avatar & Name */}
-              <div className="flex items-center justify-end gap-2 w-full mb-2 -mt-4 pr-4">
-                <p className="text-gray4 font-medium text-sm leading-[75%]">
-                  {record.author.username}
-                </p>
-                <UserAvatar
-                  className="outline outline-2 outline-silver "
-                  imageSrc={record.author.image}
-                  altText={`${record.author.username}'s avatar`}
-                  width={40}
-                  height={40}
-                  user={record.author}
+            <Stars
+              className={`w-fit shadow-stars outline outline-silver outline-[.5px] pr-2 pl-8 rounded-br-2xl rounded-tr-2xl mr-auto -mt-[128px] z-10`}
+              rating={record.entry!.rating}
+              soundName={record.appleAlbumData.attributes.name}
+              artist={record.appleAlbumData.attributes.artistName}
+            />
+
+            {/* Avatar & Name */}
+            <div className="flex items-center gap-2 w-full z-10 drop-shadow px-12 py-2">
+              <UserAvatar
+                className="outline outline-2 outline-white "
+                imageSrc={record.author.image}
+                altText={`${record.author.username}'s avatar`}
+                width={40}
+                height={40}
+                user={record.author}
+              />
+              <p className="text-white font-medium text-sm leading-[75%]">
+                {record.author.username}
+              </p>
+            </div>
+
+            <EntryBlobAlbum className={"pl-[44px] w-full z-10"} />
+            <motion.div
+              whileHover={{ color: "rgba(0,0,0,1)" }}
+              onClick={() => setReplyParent(record)}
+              className="flex flex-col gap-2"
+            >
+              <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative px-4 pt-[11px] pb-[10px] gap-2 outline-silver outline outline-2">
+                {/* Content*/}
+                <div
+                  className={`break-words w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
+                >
+                  {record.entry?.text}
+                </div>
+
+                <LikeButton
+                  handleLikeClick={handleLikeClick}
+                  liked={liked}
+                  className="absolute -bottom-2 -right-2"
+                  likeCount={likeCount}
+                  replyCount={record._count.replies}
                 />
               </div>
-
-              {/* <EntryBlobAlbum className={"ml-3 w-full"} /> */}
-              <motion.div
-                whileHover={{ color: "rgba(0,0,0,1)" }}
-                onClick={() => setReplyParent(record)}
-                className="flex flex-col gap-2 pt-1"
-              >
-                <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative px-4 pt-[11px] pb-[10px] gap-2 outline-silver outline outline-2">
-                  {/* Content*/}
-                  <div
-                    className={`break-words w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
-                  >
-                    {record.entry?.text}
-                  </div>
-
-                  <LikeButton
-                    handleLikeClick={handleLikeClick}
-                    liked={liked}
-                    className="absolute -bottom-2 -right-2"
-                    likeCount={likeCount}
-                    replyCount={record._count.replies}
-                  />
-                </div>
-              </motion.div>
-            </div>
+            </motion.div>
           </div>
+          <div className="pt-8">
+            <svg width="100%" height="2">
+              <line
+                x1="0"
+                y1="0"
+                x2="100%"
+                y2="0"
+                style={{ stroke: "rgba(0,0,0,.05)", strokeWidth: "2px" }}
+                strokeDasharray="2, 2"
+              />
+            </svg>
+          </div>
+
           <RenderReplies replies={replies} />
         </div>
       )}

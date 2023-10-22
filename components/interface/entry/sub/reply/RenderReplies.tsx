@@ -8,7 +8,7 @@ type RenderRepliesProps = {
 
 function RenderReplies({ replies }: RenderRepliesProps) {
   return (
-    <div className="flex flex-wrap p-8 pb-96">
+    <div className="flex flex-wrap p-8 pt-0 pb-96">
       {replies && replies.length > 0 ? (
         <LayoutGroup>
           {replies.map((reply: Reply, index: number) => (
