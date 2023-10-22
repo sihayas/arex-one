@@ -13,13 +13,12 @@ import { EntryBlobAlbum } from "@/components/icons";
 import { useUser } from "@supabase/auth-helpers-react";
 import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
 import ReplyInput from "./sub/reply/ReplyInput";
-import GradientBlur from "../album/sub/GradientBlur";
 import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
 
 export const Entry = () => {
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
-  const { replyParent, setReplyParent } = useThreadcrumb();
+  const { setReplyParent } = useThreadcrumb();
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -76,7 +75,7 @@ export const Entry = () => {
               />
 
               {/* Avatar & Name */}
-              <div className="flex items-center justify-end gap-2 w-full mb-2 -mt-10 pr-4">
+              <div className="flex items-center justify-end gap-2 w-full mb-2 -mt-4 pr-4">
                 <p className="text-gray4 font-medium text-sm leading-[75%]">
                   {record.author.username}
                 </p>

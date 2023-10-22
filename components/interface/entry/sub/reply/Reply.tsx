@@ -120,7 +120,7 @@ export default function ReplyItem({
               scale: replyParent === reply ? 1.01 : 1,
             }}
             transition={{ duration: 0.24 }}
-            className={`${maxWidth} ${borderRadius} w-fit text-sm rounded-[20px] break-all bg-[#F4F4F4] px-3 py-[7px] leading-normal cursor-pointer`}
+            className={`${maxWidth} ${borderRadius} w-fit text-sm rounded-[20px] break-words bg-[#F4F4F4] px-3 py-[7px] leading-normal cursor-pointer`}
           >
             {reply.content}
           </motion.div>
@@ -150,7 +150,7 @@ export default function ReplyItem({
               className={`absolute flex flex-col cursor-pointer h-full w-8 pt-1 items-center`}
             >
               <motion.div
-                whileHover={{ scale: 1.25, backgroundColor: "#FF0000" }}
+                whileHover={{ scale: 1.25, backgroundColor: "rgb(255,94,0)" }}
                 onClick={() => {
                   setShowChildReplies(false);
                 }}
