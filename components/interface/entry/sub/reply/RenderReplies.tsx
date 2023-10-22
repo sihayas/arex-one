@@ -1,3 +1,4 @@
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import ReplyItem from "./Reply";
 import { Reply } from "@/types/dbTypes";
 
@@ -9,14 +10,19 @@ function RenderReplies({ replies }: RenderRepliesProps) {
   return (
     <div className="flex flex-wrap p-8 pb-96">
       {replies && replies.length > 0 ? (
-        replies.map((reply: Reply) => {
-          return (
-            <ReplyItem key={reply.id} reply={reply} level={0} isChild={false} />
-          );
-        })
+        <LayoutGroup>
+          {replies.map((reply: Reply, index: number) => (
+            <ReplyItem
+              key={reply.id}
+              reply={reply}
+              level={0}
+              isChild={false}
+              index={index}
+            />
+          ))}
+        </LayoutGroup>
       ) : (
         <div className="text-xs text-[#CCC]"></div>
-        // un-chained
       )}
     </div>
   );

@@ -87,18 +87,15 @@ export const Entry = () => {
                   width={40}
                   height={40}
                   user={record.author}
-                  onClick={(e) => {
-                    if (replyParent !== record) {
-                      setReplyParent(record);
-                    } else {
-                      handleUserClick();
-                    }
-                  }}
                 />
               </div>
 
               {/* <EntryBlobAlbum className={"ml-3 w-full"} /> */}
-              <div className="flex flex-col gap-2 pt-1">
+              <motion.div
+                whileHover={{ color: "rgba(0,0,0,1)" }}
+                onClick={() => setReplyParent(record)}
+                className="flex flex-col gap-2 pt-1"
+              >
                 <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative px-4 pt-[11px] pb-[10px] gap-2 outline-silver outline outline-2">
                   {/* Content*/}
                   <div
@@ -115,7 +112,7 @@ export const Entry = () => {
                     replyCount={record._count.replies}
                   />
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
           <RenderReplies replies={replies} />

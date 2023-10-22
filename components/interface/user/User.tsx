@@ -28,8 +28,6 @@ const User = () => {
   );
   const handleTabClick = (tab: "profile" | "soundtrack") => setActiveTab(tab);
 
-  // components/interface/user/User.tsx
-
   const {
     data,
     isLoading,
@@ -63,7 +61,6 @@ const User = () => {
           className={
             "absolute left-1/2 top-1/2 translate-x-1/2 translate-y-1/2"
           }
-          key="jelly"
           isVisible={true}
         />
       ) : isError ? (
@@ -79,19 +76,19 @@ const User = () => {
             <Essentials favorites={albumsData} />
             <div className="flex flex-col items-end gap-7 p-8">
               <Image
-                className={`rounded-full outline outline-silver outline-2 -mt-4 -mr-4`}
+                className={`rounded-full outline outline-silver outline-2`}
                 onClick={() => handleTabClick("profile")}
                 src={userData.image}
                 alt={`${userData.name}'s avatar`}
                 width={64}
                 height={64}
               />
-              <div className="flex flex-col gap-[10px] text-end mt-[48px]">
+              <div className="flex flex-col gap-[10px] text-end mt-24">
                 <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
                   EVER SINCE
                 </div>
                 <div className="text-black text-sm leading-none">
-                  {format(new Date(userData.dateJoined), "MM.dd.yy")}
+                  {format(new Date(userData.dateJoined), "MMMM dd")}
                 </div>
               </div>
               <div className="flex flex-col gap-[10px] text-end">
@@ -103,21 +100,6 @@ const User = () => {
                 </div>
                 <div className="text-black text-sm leading-none">
                   {userData.uniqueAlbums.length}
-                </div>
-              </div>
-              <div className="flex flex-col gap-[10px] text-end">
-                <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
-                  LINKS
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-black rounded-full" />
-                  <div className="text-black font-medium text-sm leading-none">
-                    {userData._count.followers}
-                  </div>
-                  <div className="w-2 h-2 bg-[#FFEA00] rounded-full ml-2" />
-                  <div className="text-[#FFEA00] font-medium text-sm leading-none">
-                    {userData._count.followers}
-                  </div>
                 </div>
               </div>
             </div>
@@ -137,3 +119,21 @@ const User = () => {
 };
 
 export default User;
+
+{
+  /* <div className="flex flex-col gap-[10px] text-end">
+                <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
+                  LINKS
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-black rounded-full" />
+                  <div className="text-black font-medium text-sm leading-none">
+                    {userData._count.followers}
+                  </div>
+                  <div className="w-2 h-2 bg-[#FFEA00] rounded-full ml-2" />
+                  <div className="text-[#FFEA00] font-medium text-sm leading-none">
+                    {userData._count.followers}
+                  </div>
+                </div>
+              </div> */
+}

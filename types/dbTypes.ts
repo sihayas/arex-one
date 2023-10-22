@@ -147,6 +147,7 @@ export interface Reply {
     replies: number;
     views: number;
   };
+  likedByUser: boolean;
 }
 
 export interface Activity {

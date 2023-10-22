@@ -4,6 +4,7 @@ import { Reply } from "@/types/dbTypes";
 import { fetchReplies } from "@/lib/apiHandlers/entryAPI";
 import React from "react";
 import { useUser } from "@supabase/auth-helpers-react";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 
 type RenderChildrenProps = {
   parentReplyId: string;
@@ -20,7 +21,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
   );
 
   return (
-    <div className="flex flex-col w-full mb-8">
+    <motion.div layout="position" className="flex flex-col w-full mb-8">
       {childReplies && childReplies.length > 0 ? (
         childReplies.map((childReply: Reply, index: number) => {
           return (
@@ -37,7 +38,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
         <div className="text-xs text-[#CCC]"></div>
         // un-chained
       )}
-    </div>
+    </motion.div>
   );
 }
 

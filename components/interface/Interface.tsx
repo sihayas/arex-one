@@ -229,7 +229,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver drop-shadow-2xl rounded-3xl`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver shadow-2xl rounded-3xl`}
         >
           {/* Base layout / dimensions for a page */}
           <div
