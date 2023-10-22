@@ -1,5 +1,5 @@
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import ReplyItem from "./Reply";
+import ReplyItem from "./ReplyItem";
 import { Reply } from "@/types/dbTypes";
 
 type RenderRepliesProps = {

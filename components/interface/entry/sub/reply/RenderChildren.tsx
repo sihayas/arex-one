@@ -1,4 +1,4 @@
-import ReplyItem from "@/components/interface/entry/sub/reply/Reply";
+import ReplyItem from "@/components/interface/entry/sub/reply/ReplyItem";
 import { useQuery } from "@tanstack/react-query";
 import { Reply } from "@/types/dbTypes";
 import { fetchReplies } from "@/lib/apiHandlers/entryAPI";

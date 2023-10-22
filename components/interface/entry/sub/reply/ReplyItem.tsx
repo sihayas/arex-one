@@ -61,6 +61,8 @@ export default function ReplyItem({
   const maxWidth = isChild ? "max-w-[336px]" : "max-w-[376px]";
   const width = isChild ? "w-[336px]" : "w-[376px]";
 
+  console.log(reply.author);
+
   // Layout prop is what dictates animating the container to expand/contract when replies are loaded or unloaded. The parent/root is in Renderreplies.tsx
   return (
     <motion.div

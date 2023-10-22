@@ -51,12 +51,7 @@ export default async function handle(
         },
         select: {
           id: true,
-          author: {
-            select: {
-              username: true,
-              image: true,
-            },
-          },
+          author: true,
           likes: {
             select: { id: true },
             where: { authorId: userId },
