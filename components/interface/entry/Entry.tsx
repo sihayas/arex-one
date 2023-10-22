@@ -60,7 +60,7 @@ export const Entry = () => {
       {record && (
         <div>
           {/* EntryFull content starts here */}
-          <div className="flex flex-col items-center p-8 relative">
+          <div className="flex flex-col items-center p-8 pb-0 relative">
             <div className="relative">
               <Artwork
                 className="!rounded-[13px] shadow-shadowKitLow outline outline-1 outline-silver"

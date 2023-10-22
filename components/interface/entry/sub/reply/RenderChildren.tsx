@@ -20,6 +20,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
     fetchReplies({ replyId: parentReplyId, userId: user!.id })
   );
 
+  // The layout prop preserves the LayoutGroup functionality of animating the container to expand/contract when replies are loaded or unloaded.
   return (
     <motion.div layout="position" className="flex flex-col w-full mb-8">
       {childReplies && childReplies.length > 0 ? (

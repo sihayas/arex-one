@@ -35,7 +35,7 @@ export const useRepliesQuery = (
   const { data, isLoading, isError } = useQuery(
     ["replies", recordId],
     () => fetchReplies({ recordId, userId }),
-    { enabled: !!recordId }
+    { enabled: !!recordId, refetchOnWindowFocus: false }
   );
 
   return { data, isLoading, isError };
