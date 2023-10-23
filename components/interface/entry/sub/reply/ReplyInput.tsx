@@ -116,7 +116,7 @@ const ReplyInput = () => {
             value={replyContent}
             onChange={handleReplyChange}
             maxRows={4}
-            placeholder="+++"
+            placeholder=""
           />
 
           <motion.div layout="position" className={`flex items-center gap-2`}>
@@ -164,7 +164,7 @@ const ReplyInput = () => {
         </motion.div>
       </motion.div>
     );
-  }, [replyContent, isFocused, replyParent, user]);
+  }, [replyContent, isFocused, replyParent, user, handleReplySubmit]);
 
   return renderReplyInput;
 };

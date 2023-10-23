@@ -78,7 +78,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
 
   return (
     <button
-      className={`${className} group `}
+      className={`${className}`}
       onClick={(event) => {
         handleLikeClick(event);
         event.stopPropagation();
@@ -113,11 +113,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({
         className="absolute bottom-0 right-0 w-2 h-2 rounded-full z-0 outline outline-4 outline-white "
         style={{ backgroundColor: dotColor }}
       />
-      {!isReply && (
-        <div className="text-xs text-gray2 absolute -bottom-3 right-[8px] leading-[75%] flex">
-          {renderCounts()}
-        </div>
-      )}
+      <div
+        className={`text-xs text-gray2 absolute -bottom-3 right-[8px] leading-[75%] flex`}
+      >
+        {renderCounts()}
+      </div>
     </button>
   );
 };

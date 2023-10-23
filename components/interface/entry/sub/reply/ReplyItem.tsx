@@ -5,7 +5,7 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { Reply } from "@/types/dbTypes";
 import Line from "@/components/interface/entry/sub/icons/Line";
-import { CrossIcon, StatLineIcon } from "@/components/icons";
+import { StatLineIcon } from "@/components/icons";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
 
 import RenderChildren from "@/components/interface/entry/sub/reply/RenderChildren";
@@ -34,7 +34,6 @@ export default function ReplyItem({
   const [showChildReplies, setShowChildReplies] = useState<boolean>(false);
 
   const replyCount = reply._count ? reply._count.replies : 0;
-  const replyChild = reply.replies?.[0];
 
   const handleReplyParent = useCallback(() => {
     setReplyParent(reply);
@@ -109,25 +108,28 @@ export default function ReplyItem({
           <div className={`font-medium text-xs text-gray2 leading-[75%] px-3`}>
             {reply.author.username}
           </div>
-          {/* Content  */}
-          <motion.div
-            whileHover={{ color: "rgba(0,0,0,1)" }}
-            onClick={handleReplyParent}
-            animate={{
-              color:
-                replyParent === reply
-                  ? "rgba(60, 60, 67, 0.9)"
-                  : "rgba(60, 60, 67, 0.6)",
-              scale: replyParent === reply ? 1.01 : 1,
-            }}
-            transition={{ duration: 0.24 }}
-            className={`${maxWidth} ${borderRadius} w-fit text-sm rounded-[20px] break-words bg-[#F4F4F4] px-3 py-[7px] leading-normal cursor-pointer relative`}
-          >
-            {reply.content}
+
+          <div className="relative bg-[#F4F4F4] px-3 py-[7px] w-fit rounded-[20px] overflow-visible">
+            {/* Content  */}
+            <motion.div
+              whileHover={{ color: "rgba(0,0,0,1)" }}
+              onClick={handleReplyParent}
+              animate={{
+                color:
+                  replyParent === reply
+                    ? "rgba(60, 60, 67, 0.9)"
+                    : "rgba(60, 60, 67, 0.6)",
+                scale: replyParent === reply ? 1.01 : 1,
+              }}
+              transition={{ duration: 0.24 }}
+              className={`${maxWidth} ${borderRadius} text-sm  break-words leading-normal cursor-pointer`}
+            >
+              {reply.content}
+            </motion.div>
             <LikeButton
               handleLikeClick={handleLikeClick}
               liked={liked}
-              className={`absolute -bottom-1 ${
+              className={`absolute -bottom-1 z-20 ${
                 isEvenLevel ? "-right-1" : "left-1"
               } `}
               likeCount={likeCount}
@@ -135,7 +137,7 @@ export default function ReplyItem({
               isReply={true}
               isEvenLevel={isEvenLevel}
             />
-          </motion.div>
+          </div>
         </div>
 
         {/* Fill Parent Dashed Line */}
@@ -177,29 +179,24 @@ export default function ReplyItem({
             // Show curved stat-line if replies exist
             <div
               onClick={handleLoadReplies}
-              className={`flex items-end w-fit cursor-pointer group ${flexDirection}`}
+              className={`flex items-end w-fit cursor-pointer group gap-1 ${flexDirection}`}
             >
               <StatLineIcon color={"#CCC"} className={`${reverseStatLine}`} />
-              <Image
-                className="outline outline-2 rounded-full group-hover:scale-125 transition"
-                src={
-                  replyChild?.author.image ||
-                  "/public/images/default-avatar.png"
-                }
-                alt={`${reply.author.username}'s avatar`}
-                width={16}
-                height={16}
-              />
-              <div className="flex items-center">
-                <div className={`pl-2 text-xs text-gray2 leading-[16px]`}>
-                  {replyCount}
-                </div>
-                <CrossIcon />
-                {replyCount === 0 ? null : (
-                  <div className={`text-xs text-gray2 leading-[16px]`}>
-                    {replyCount} {replyCount === 1 ? "Heart" : "Hearts"}
-                  </div>
-                )}
+              {reply.replies?.map((childReply, index) => (
+                <Image
+                  key={index}
+                  className="outline outline-4 outline-white rounded-full group-hover:scale-110 group-hover:outline-none transition-all"
+                  src={
+                    childReply.author.image ||
+                    "/public/images/default-avatar.png"
+                  }
+                  alt={`${childReply.author.username}'s avatar`}
+                  width={16}
+                  height={16}
+                />
+              ))}
+              <div className={`pl-2 text-xs text-gray2 leading-[16px]`}>
+                {replyCount}
               </div>
             </div>
           )}

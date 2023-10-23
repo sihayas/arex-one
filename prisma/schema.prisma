@@ -19,6 +19,12 @@ model User {
   password_hash String?
   dateJoined    DateTime         @default(now()) @map(name: "date_joined")
   dateUpdated   DateTime         @updatedAt @map(name: "date_updated")
+  lastLogin     DateTime?        @map(name: "last_login")
+  lastActive    DateTime?        @map(name: "last_active")
+
+  isBanned      Boolean          @default(false) @map(name: "is_banned")
+  isDeleted     Boolean          @default(false) @map(name: "is_deleted")
+  isSuspended   Boolean          @default(false) @map(name: "is_suspended")
 
   // Relations
   notifications Notification[]
@@ -29,6 +35,26 @@ model User {
   replies       Reply[]
   likes         Like[]
   views         View[]
+  settings      Settings? 
+}
+
+model Settings {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  email               Boolean  @default(true)
+  push                Boolean  @default(true)
+
+
+  isPrivate             Boolean  @default(false) @map(name: "is_private")
+  isMinus               Boolean  @default(false) @map(name: "is_premium")
+  followerNotifications Boolean  @default(true) @map(name: "follower_notification")
+  replyNotifications    Boolean  @default(true) @map(name: "reply_notification")
+  likeNotifications     Boolean  @default(true) @map(name: "like_notification")
+
+
+  createdAt           DateTime @default(now()) @map(name: "created_at")
+  updatedAt           DateTime @updatedAt @map(name: "updated_at")
+  user                User     @relation(fields: [userId], references: [id])
 }
 
 model Favorite {
@@ -222,7 +248,8 @@ model Activity {
 enum ActivityType {
   RECORD
   LIKE
-  FOLLOW
+  FOLLOWED
+  FOLLOWED_BACK
   REPLY
 }
 

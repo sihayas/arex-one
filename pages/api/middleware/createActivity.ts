@@ -27,11 +27,23 @@ export async function createReplyRecordActivity(replyId: string) {
     },
   });
 }
-// export async function createLikeActivity(likeId: string) {
-//   return await prisma.activity.create({
-//     data: {
-//       type: "Like",
-//       likeId,
-//     },
-//   });
-// }
+
+export async function createFollowActivity(
+  followId: string,
+  followType: ActivityType.FOLLOWED | ActivityType.FOLLOWED_BACK
+) {
+  return prisma.activity.create({
+    data: {
+      type: followType,
+      referenceId: followId,
+    },
+  });
+}
+
+export async function deleteActivity(activityId: string) {
+  return prisma.activity.delete({
+    where: {
+      id: activityId,
+    },
+  });
+}

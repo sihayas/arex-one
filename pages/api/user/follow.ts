@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/global/prisma";
+import { createFollowActivity } from "../middleware/createActivity";
+import { ActivityType } from "@/types/dbTypes";
 
 export default async function handle(
   req: NextApiRequest,
@@ -27,14 +29,11 @@ export default async function handle(
       });
 
       // Determine the notification type
-      const notificationType = existingFollow ? "followed_back" : "followed";
+      const followType = existingFollow
+        ? ActivityType.FOLLOWED_BACK
+        : ActivityType.FOLLOWED;
 
-      const activity = await prisma.activity.create({
-        data: {
-          type: notificationType,
-          followId: follow.id,
-        },
-      });
+      const activity = await createFollowActivity(follow.id, followType);
 
       // Create the notification
       await prisma.notification.create({

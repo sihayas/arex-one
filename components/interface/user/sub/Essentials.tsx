@@ -17,7 +17,7 @@ const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {
   }, [favorites]);
 
   return (
-    <div className="flex flex-col gap-4 relative overflow-scroll h-full p-8 scrollbar-none w-3/5">
+    <div className="flex flex-col gap-4 relative overflow-scroll h-full scrollbar-none w-full mt-auto">
       {favorites.map((albumData, i) => (
         <div
           key={albumData.id}
@@ -26,6 +26,7 @@ const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {
             opacity: i === index ? 1 : 0,
             transform: i === index ? "scale(1)" : "scale(0.95)",
             transition: "opacity 0.5s, transform 0.5s",
+            bottom: "32px",
           }}
         >
           <Artwork
@@ -36,6 +37,9 @@ const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {
           />
         </div>
       ))}
+      <div className="text-xs text-gray3 font-medium mt-auto ml-auto mr-auto uppercase leading-[75%] tracking-widest">
+        essentials
+      </div>
     </div>
   );
 };

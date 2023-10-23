@@ -53,7 +53,7 @@ export const useInterfaceContext = (): InterfaceContext => {
   const context = useContext(InterfaceContext);
   if (!context) {
     throw new Error(
-      "useInterfaceContext must be used within" + " InterfaceProvider",
+      "useInterfaceContext must be used within" + " InterfaceProvider"
     );
   }
   return context;
@@ -102,7 +102,7 @@ export const InterfaceContextProvider = ({
           setUser(null);
           setSession(null);
         }
-      },
+      }
     );
 
     setData();
@@ -119,7 +119,7 @@ export const InterfaceContextProvider = ({
           key: uuidv4(),
           name: "user",
           user: user,
-          dimensions: { width: 576, height: 352 },
+          dimensions: { width: 352, height: 576 },
           scrollPosition: 0,
         },
       ]);

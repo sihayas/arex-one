@@ -30,8 +30,8 @@ type PageName = "album" | "user" | "entry";
 const getDimensions = (pageName: PageName) => {
   const dimensions = {
     user: {
-      base: { width: 576, height: 352 },
-      target: { width: 576, height: 352 }, // Placeholder values
+      base: { width: 352, height: 576 },
+      target: { width: 352, height: 576 }, // Placeholder values
     },
     album: {
       base: { width: 480, height: 480 },

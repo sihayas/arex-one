@@ -8,6 +8,7 @@ import Essentials from "@/components/interface/user/sub/Essentials";
 import { format } from "date-fns";
 import { JellyComponent } from "@/components/global/Loading";
 import { useUser } from "@supabase/auth-helpers-react";
+import { SettingsIcon } from "@/components/icons";
 
 const linkProps = {
   INTERLINKED: { text: "INTERLINKED", color: "#00FF00" },
@@ -22,6 +23,7 @@ const User = () => {
 
   const { pages } = useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
+  const isOwnProfile = authenticatedUserId === pageUser?.id;
 
   const [activeTab, setActiveTab] = useState<"profile" | "soundtrack">(
     "profile"
@@ -35,7 +37,7 @@ const User = () => {
     followState,
     handleFollow,
     handleUnfollow,
-  } = useUserDataAndAlbumsQuery(pageUser!.id, authenticatedUserId!);
+  } = useUserDataAndAlbumsQuery(pageUser?.id, authenticatedUserId);
   const { userData, albumsData } = data || {};
 
   const linkStatus =
@@ -68,50 +70,65 @@ const User = () => {
       ) : (
         <motion.div
           initial={{ x: 0 }}
-          animate={{ x: activeTab === "soundtrack" ? "-576px" : "0px" }}
+          animate={{ x: activeTab === "soundtrack" ? "-352px" : "0px" }}
           transition={{ type: "spring", stiffness: 880, damping: 80 }}
           className="w-[200%] h-full flex"
         >
-          <div className="w-1/2 h-full flex justify-between">
+          <div className="w-1/2 h-full flex flex-col p-8">
+            {/* Stat 1 */}
+            <div className="flex flex-col gap-[10px]">
+              <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
+                RX SINCE
+              </div>
+              <div className="text-black text-sm leading-none">
+                {format(new Date(userData.dateJoined), "MMMM dd")}
+              </div>
+            </div>
+            {/* Stat 2 */}
+            <div className="flex flex-col gap-[10px] mt-8">
+              <div
+                onClick={() => handleTabClick("soundtrack")}
+                className="text-xs text-gray3 leading-none font-medium tracking-widest cursor-pointer"
+              >
+                UNIQUE SOUNDS
+              </div>
+              <div className="text-black text-sm leading-none">
+                {userData.uniqueAlbums.length}
+              </div>
+            </div>
             <Essentials favorites={albumsData} />
-            <div className="flex flex-col items-end gap-7 p-8">
+            <div className="flex items-center fixed top-4 right-4 gap-2">
+              {isOwnProfile ? (
+                <SettingsIcon />
+              ) : (
+                // Follow button
+                <button
+                  onClick={
+                    followState.followingAtoB ? handleUnfollow : handleFollow
+                  }
+                  className="flex items-center gap-2 text-xs"
+                  style={{ color: linkColor }}
+                >
+                  {linkText}
+                  <div
+                    className="w-2 h-2 rounded-full animate-ping"
+                    style={{ backgroundColor: linkColor }}
+                  />
+                </button>
+              )}
               <Image
-                className={`rounded-full outline outline-silver outline-2`}
+                className={`rounded-full outline outline-silver outline-[1.5px]`}
                 onClick={() => handleTabClick("profile")}
                 src={userData.image}
                 alt={`${userData.name}'s avatar`}
                 width={64}
                 height={64}
               />
-              <div className="flex flex-col gap-[10px] text-end mt-24">
-                <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
-                  EVER SINCE
-                </div>
-                <div className="text-black text-sm leading-none">
-                  {format(new Date(userData.dateJoined), "MMMM dd")}
-                </div>
-              </div>
-              <div className="flex flex-col gap-[10px] text-end">
-                <div
-                  onClick={() => handleTabClick("soundtrack")}
-                  className="text-xs text-gray3 leading-none font-medium tracking-widest cursor-pointer"
-                >
-                  UNIQUE SOUNDS
-                </div>
-                <div className="text-black text-sm leading-none">
-                  {userData.uniqueAlbums.length}
-                </div>
-              </div>
             </div>
           </div>
           {activeTab === "soundtrack" && pageUser && (
             <Soundtrack userId={pageUser.id} />
           )}
-          {/* <button
-            onClick={followState.followingAtoB ? handleUnfollow : handleFollow}
-          >
-            {followState.followingAtoB ? "Unfollow" : "Follow"}
-          </button> */}
         </motion.div>
       )}
     </motion.div>
@@ -119,21 +136,3 @@ const User = () => {
 };
 
 export default User;
-
-{
-  /* <div className="flex flex-col gap-[10px] text-end">
-                <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
-                  LINKS
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-black rounded-full" />
-                  <div className="text-black font-medium text-sm leading-none">
-                    {userData._count.followers}
-                  </div>
-                  <div className="w-2 h-2 bg-[#FFEA00] rounded-full ml-2" />
-                  <div className="text-[#FFEA00] font-medium text-sm leading-none">
-                    {userData._count.followers}
-                  </div>
-                </div>
-              </div> */
-}

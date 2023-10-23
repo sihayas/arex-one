@@ -18,8 +18,8 @@ export const getUserById = async (userId: string, sessionUserId: string) => {
 };
 
 export const useUserDataAndAlbumsQuery = (
-  userId: string,
-  sessionUserId: string
+  userId: string | undefined,
+  sessionUserId: string | undefined
 ) => {
   // Follow state
   const [followState, setFollowState] = useState<{
@@ -82,22 +82,19 @@ export const useUserDataAndAlbumsQuery = (
 };
 
 // Soundtrack (sound history) handlers
-export const getSoundtrack = async (userId: string) => {
-  const url = `/api/user/getSoundtrack`;
-  const response = await axios.get(url, {
-    params: {
-      userId,
-    },
-  });
-  return response.data;
-};
-
 export const useUserSoundtrackQuery = (userId: string) => {
   const { data, isLoading, isError } = useQuery(
     ["mergedData", userId],
     async () => {
       // Fetch soundtrack data
-      const soundtrackData = await getSoundtrack(userId);
+      const url = `/api/user/getSoundtrack`;
+      const response = await axios.get(url, {
+        params: {
+          userId,
+        },
+      });
+
+      const soundtrackData = response.data;
 
       // Extract albumIds and trackIds
       const albumIds = soundtrackData
@@ -155,23 +152,18 @@ export const fetchNotificationsForUser = async (userId: string) => {
 };
 
 // Following handlers
-export const follow = async (followerId: string, followingId: string) => {
-  await axios.post(`/api/user/follow`, { followerId, followingId });
-};
-
 export const followUser = async (followerId: string, followingId: string) => {
-  await follow(followerId, followingId);
+  await axios.post(`/api/user/follow`, { followerId, followingId });
   return { followingAtoB: true };
 };
 
 // Unfollowing handlers
-export const unfollow = async (followerId: string, followingId: string) => {
-  await axios.delete(
-    `/api/user/unfollow?followerId=${followerId}&followingId=${followingId}`
-  );
-};
-
 export const unfollowUser = async (followerId: string, followingId: string) => {
-  await unfollow(followerId, followingId);
+  await axios.delete(`/api/user/unfollow`, {
+    params: {
+      followerId,
+      followingId,
+    },
+  });
   return { followingAtoB: false };
 };

@@ -65,7 +65,7 @@ export default async function handle(
                 },
               },
             },
-            take: 1,
+            take: 3,
           },
           content: true,
           _count: {

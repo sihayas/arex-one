@@ -166,7 +166,8 @@ export interface Activity {
 export enum ActivityType {
   RECORD = "RECORD",
   LIKE = "LIKE",
-  FOLLOW = "FOLLOW",
+  FOLLOWED_BACK = "FOLLOWED_BACK",
+  FOLLOWED = "FOLLOWED",
   REPLY = "REPLY",
 }
 
