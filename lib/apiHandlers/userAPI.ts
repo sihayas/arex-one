@@ -5,18 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
-// User data handlers
-export const getUserById = async (userId: string, sessionUserId: string) => {
-  const url = `/api/user/getById`;
-  const response = await axios.get(url, {
-    params: {
-      id: userId,
-      sessionUserId,
-    },
-  });
-  return response.data;
-};
-
+// Get user data, handle follow/unfollow, and fetch favorites
 export const useUserDataAndAlbumsQuery = (
   userId: string | undefined,
   sessionUserId: string | undefined
@@ -32,22 +21,33 @@ export const useUserDataAndAlbumsQuery = (
     loadingFollow: false,
   });
 
-  const handleFollow = async () => {
+  const handleFollowUnfollow = async (action: "follow" | "unfollow") => {
     if (!sessionUserId || !userId) return;
-    const newState = await followUser(sessionUserId, userId);
-    setFollowState((prevState) => ({
-      ...prevState,
-      ...newState,
-    }));
-  };
 
-  const handleUnfollow = async () => {
-    if (!sessionUserId || !userId) return;
-    const newState = await unfollowUser(sessionUserId, userId);
+    // Optimistically update the state
     setFollowState((prevState) => ({
       ...prevState,
-      ...newState,
+      followingAtoB: action === "follow",
     }));
+
+    try {
+      const newState =
+        action === "follow"
+          ? await followUser(sessionUserId, userId)
+          : await unfollowUser(sessionUserId, userId);
+
+      // Update the state with the actual result
+      setFollowState((prevState) => ({
+        ...prevState,
+        ...newState,
+      }));
+    } catch (error) {
+      // Revert the state in case of error
+      setFollowState((prevState) => ({
+        ...prevState,
+        followingAtoB: action === "unfollow",
+      }));
+    }
   };
 
   // Fetch user data and albums
@@ -55,7 +55,15 @@ export const useUserDataAndAlbumsQuery = (
     ["userDataAndAlbums", userId],
     async () => {
       if (!userId || !sessionUserId) return null;
-      const userData = await getUserById(userId, sessionUserId);
+      // Axios request for user data
+      const url = `/api/user/getById`;
+      const response = await axios.get(url, {
+        params: {
+          id: userId,
+          sessionUserId,
+        },
+      });
+      const userData = response.data;
       const albumIds = userData.favorites.map(
         (fav: Favorite) => fav.album.appleId
       );
@@ -76,8 +84,7 @@ export const useUserDataAndAlbumsQuery = (
     isLoading,
     isError,
     followState,
-    handleFollow,
-    handleUnfollow,
+    handleFollowUnfollow,
   };
 };
 
@@ -86,7 +93,7 @@ export const useUserSoundtrackQuery = (userId: string) => {
   const { data, isLoading, isError } = useQuery(
     ["mergedData", userId],
     async () => {
-      // Fetch soundtrack data
+      // Axios request for soundtrack data
       const url = `/api/user/getSoundtrack`;
       const response = await axios.get(url, {
         params: {

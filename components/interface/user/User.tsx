@@ -30,14 +30,8 @@ const User = () => {
   );
   const handleTabClick = (tab: "profile" | "soundtrack") => setActiveTab(tab);
 
-  const {
-    data,
-    isLoading,
-    isError,
-    followState,
-    handleFollow,
-    handleUnfollow,
-  } = useUserDataAndAlbumsQuery(pageUser?.id, authenticatedUserId);
+  const { data, isLoading, isError, followState, handleFollowUnfollow } =
+    useUserDataAndAlbumsQuery(pageUser?.id, authenticatedUserId);
   const { userData, albumsData } = data || {};
 
   const linkStatus =
@@ -103,8 +97,10 @@ const User = () => {
               ) : (
                 // Follow button
                 <button
-                  onClick={
-                    followState.followingAtoB ? handleUnfollow : handleFollow
+                  onClick={() =>
+                    followState.followingAtoB
+                      ? handleFollowUnfollow("unfollow")
+                      : handleFollowUnfollow("follow")
                   }
                   className="flex items-center gap-2 text-xs"
                   style={{ color: linkColor }}
