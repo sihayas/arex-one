@@ -4,7 +4,6 @@ import { createLikeRecordActivity } from "@/pages/api/middleware/createActivity"
 
 type Data = {
   success: boolean;
-  likes: number;
 };
 export default async function handler(
   req: NextApiRequest,
@@ -47,7 +46,7 @@ export default async function handler(
       },
     });
   } else {
-    return res.status(400).json({ success: false, likes: 0 });
+    return res.status(400).json({ success: false });
   }
 
   // Get the updated like count for the review
@@ -55,5 +54,5 @@ export default async function handler(
     where: { recordId },
   });
 
-  res.status(200).json({ success: true, likes: updatedLikes });
+  res.status(200).json({ success: true });
 }

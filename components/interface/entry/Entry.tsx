@@ -14,6 +14,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
 import ReplyInput from "./sub/reply/ReplyInput";
 import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
+import GradientBlur from "../album/sub/GradientBlur";
 
 export const Entry = () => {
   const user = useUser();
@@ -36,10 +37,11 @@ export const Entry = () => {
     record.likedByUser,
     record._count.likes,
     "/api/record/entry/post/like",
-    "reviewId",
+    "recordId",
     record.id,
     user?.id
   );
+
   const handleUserClick = useHandleUserClick(record.author);
 
   const recordId = activePage.record?.id;
@@ -70,14 +72,14 @@ export const Entry = () => {
             </div>
 
             <Stars
-              className={`w-fit shadow-stars outline outline-silver outline-[.5px] pr-2 pl-8 rounded-br-2xl rounded-tr-2xl mr-auto -mt-[128px] z-10`}
+              className={`w-fit shadow-stars outline outline-silver outline-[.5px] pr-2 pl-8 rounded-br-2xl rounded-tr-2xl mr-auto -mt-[132px] z-10`}
               rating={record.entry!.rating}
               soundName={record.appleAlbumData.attributes.name}
               artist={record.appleAlbumData.attributes.artistName}
             />
 
             {/* Avatar & Name */}
-            <div className="flex items-center gap-2 w-full z-10 drop-shadow px-12 py-2">
+            <div className="flex items-center gap-2 w-full z-10 drop-shadow px-12 pb-2 pt-4">
               <UserAvatar
                 className="outline outline-2 outline-white "
                 imageSrc={record.author.image}
@@ -97,7 +99,7 @@ export const Entry = () => {
               onClick={() => setReplyParent(record)}
               className="flex flex-col gap-2"
             >
-              <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative px-4 pt-[11px] pb-[10px] gap-2 outline-silver outline outline-2">
+              <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative px-4 pt-[11px] pb-[10px] gap-2 shadow-shadowKitHigh outline outline-[.5px] outline-silver">
                 {/* Content*/}
                 <div
                   className={`break-words w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}

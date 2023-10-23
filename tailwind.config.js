@@ -19,6 +19,8 @@ module.exports = {
           "0px 4px 8px 0px rgba(0, 0, 0, 0.06), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
         shadowKitLow:
           "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",
+        shadowKitHigh:
+          "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
       },
       fontFamily: {
         baskerville: ["Baskerville", "serif"],

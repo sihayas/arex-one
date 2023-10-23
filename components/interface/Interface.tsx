@@ -102,7 +102,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         },
         {
           type: "spring",
-          stiffness: 600,
+          stiffness: 800,
           damping: 40,
         }
       );

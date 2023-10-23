@@ -5,7 +5,7 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { Reply } from "@/types/dbTypes";
 import Line from "@/components/interface/entry/sub/icons/Line";
-import { StatLineIcon } from "@/components/icons";
+import { CrossIcon, StatLineIcon } from "@/components/icons";
 import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
 
 import RenderChildren from "@/components/interface/entry/sub/reply/RenderChildren";
@@ -14,6 +14,7 @@ import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
 import { useUser } from "@supabase/auth-helpers-react";
 import UserAvatar from "@/components/global/UserAvatar";
 import { v4 as uuidv4 } from "uuid";
+import LikeButton from "@/components/global/LikeButton";
 
 interface ReplyProps {
   reply: Reply;
@@ -60,8 +61,6 @@ export default function ReplyItem({
   const reverseStatLine = isEvenLevel ? "" : "transform scale-x-[-1]";
   const maxWidth = isChild ? "max-w-[336px]" : "max-w-[376px]";
   const width = isChild ? "w-[336px]" : "w-[376px]";
-
-  console.log(reply.author);
 
   // Layout prop is what dictates animating the container to expand/contract when replies are loaded or unloaded. The parent/root is in Renderreplies.tsx
   return (
@@ -122,9 +121,20 @@ export default function ReplyItem({
               scale: replyParent === reply ? 1.01 : 1,
             }}
             transition={{ duration: 0.24 }}
-            className={`${maxWidth} ${borderRadius} w-fit text-sm rounded-[20px] break-words bg-[#F4F4F4] px-3 py-[7px] leading-normal cursor-pointer`}
+            className={`${maxWidth} ${borderRadius} w-fit text-sm rounded-[20px] break-words bg-[#F4F4F4] px-3 py-[7px] leading-normal cursor-pointer relative`}
           >
             {reply.content}
+            <LikeButton
+              handleLikeClick={handleLikeClick}
+              liked={liked}
+              className={`absolute -bottom-1 ${
+                isEvenLevel ? "-right-1" : "left-1"
+              } `}
+              likeCount={likeCount}
+              replyCount={reply._count.replies}
+              isReply={true}
+              isEvenLevel={isEvenLevel}
+            />
           </motion.div>
         </div>
 
@@ -180,10 +190,16 @@ export default function ReplyItem({
                 width={16}
                 height={16}
               />
-              <div
-                className={`px-2 text-xs text-gray2 leading-[16px] font-bold`}
-              >
-                {replyCount}
+              <div className="flex items-center">
+                <div className={`pl-2 text-xs text-gray2 leading-[16px]`}>
+                  {replyCount}
+                </div>
+                <CrossIcon />
+                {replyCount === 0 ? null : (
+                  <div className={`text-xs text-gray2 leading-[16px]`}>
+                    {replyCount} {replyCount === 1 ? "Heart" : "Hearts"}
+                  </div>
+                )}
               </div>
             </div>
           )}

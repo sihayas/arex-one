@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { LoveIcon } from "../icons";
+import { CrossIcon, LoveIcon } from "../icons";
 
 interface LikeButtonProps {
   handleLikeClick: (
@@ -10,6 +10,8 @@ interface LikeButtonProps {
   className?: string;
   likeCount?: number;
   replyCount?: number;
+  isReply?: boolean;
+  isEvenLevel?: boolean;
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({
@@ -18,6 +20,8 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   className,
   likeCount,
   replyCount,
+  isReply = false,
+  isEvenLevel = true,
 }) => {
   const [color, setColor] = useState(liked ? "#000" : "#FFF");
   const [dotColor, setDotColor] = useState(liked ? "#000" : "#CCC");
@@ -41,32 +45,40 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     count: number | undefined,
     singular: string,
     plural: string
-  ) => (
-    <>
-      {count === 0 ? "NO" : <span className="gray2">{count}</span>}&nbsp;
-      {count === 1 ? singular : plural}
-    </>
-  );
+  ) => {
+    if (count === 0) {
+      return null;
+    }
+    return (
+      <>
+        <span className="gray2">{count}</span>&nbsp;
+        {count === 1 ? singular : plural}
+      </>
+    );
+  };
 
   const renderCounts = () => {
-    if (likeCount && replyCount) {
+    if (isReply) {
+      return formatText(likeCount, "Heart", "Hearts");
+    } else if (likeCount && replyCount) {
       return (
         <>
-          {formatText(likeCount, "HEART", "HEARTS")}&nbsp;:&nbsp;
-          {formatText(replyCount, "CHAIN", "CHAINS")}
+          {formatText(replyCount, "Chain", "Chains")}
+          <CrossIcon />
+          {formatText(likeCount, "Heart", "Hearts")}
         </>
       );
     } else if (likeCount) {
-      return formatText(likeCount, "HEART", "HEARTS");
+      return formatText(likeCount, "Heart", "Hearts");
     } else if (replyCount) {
-      return formatText(replyCount, "CHAIN", "CHAINS");
+      return formatText(replyCount, "Chain", "Chains");
     }
     return null;
   };
 
   return (
     <button
-      className={`${className} group`}
+      className={`${className} group `}
       onClick={(event) => {
         handleLikeClick(event);
         event.stopPropagation();
@@ -76,25 +88,36 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     >
       {/* Icon / Button */}
       <motion.div
-        className="absolute bottom-0 right-0 bg-[#E5E5E6] outline outline-4 outline-white p-2 flex items-center rounded-full origin-bottom-right"
+        className={`absolute bg-[#E5E5E6] outline outline-4 outline-white p-2 flex items-center rounded-full  ${
+          isEvenLevel
+            ? "origin-bottom-right bottom-0 right-0"
+            : "origin-bottom-left bottom-0 -left-1"
+        }`}
         animate={controls}
-        initial={{ scale: 0.5714, x: 0, y: 0, opacity: 0 }}
+        initial={{ scale: 0.2856, x: 0, y: 0, opacity: 0 }}
         variants={{
-          hover: { scale: 1, x: "-10px", y: "-10px", opacity: 1 },
-          initial: { scale: 0.5714, x: 0, y: 0, opacity: 1 },
+          hover: {
+            scale: 1,
+            x: isEvenLevel ? "-8px" : "0px",
+            y: isEvenLevel ? "-8px" : "-8px",
+            opacity: 1,
+          },
+          initial: { scale: 0.2856, x: 0, y: 0, opacity: 1 },
         }}
+        transition={{ type: "tween", ease: "anticipate", duration: 0.5 }}
       >
         <LoveIcon color={color} />
       </motion.div>
       {/* Dot */}
       <div
-        className="absolute bottom-0 right-0 w-4 h-4 border-[2.5px] border-white rounded-full z-0"
+        className="absolute bottom-0 right-0 w-2 h-2 rounded-full z-0 outline outline-4 outline-white "
         style={{ backgroundColor: dotColor }}
       />
-
-      <div className="text-xs text-gray2 absolute -bottom-3 right-[8px] leading-[75%] font-medium tracking-wider">
-        {renderCounts()}
-      </div>
+      {!isReply && (
+        <div className="text-xs text-gray2 absolute -bottom-3 right-[8px] leading-[75%] flex">
+          {renderCounts()}
+        </div>
+      )}
     </button>
   );
 };
