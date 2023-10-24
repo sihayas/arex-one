@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../lib/global/prisma";
+import { prisma } from "../../../../lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
@@ -23,18 +23,18 @@ export default async function handle(
                 include: {
                   author: {
                     select: {
-                      name: true,
+                      username: true,
                       image: true,
                     },
                   },
-                  review: {
+                  record: {
                     include: {
                       album: true,
                     },
                   },
                   reply: {
                     include: {
-                      review: {
+                      record: {
                         include: {
                           album: true,
                         },
@@ -48,18 +48,18 @@ export default async function handle(
                 include: {
                   author: {
                     select: {
-                      name: true,
+                      username: true,
                       image: true,
                     },
                   },
-                  review: {
+                  record: {
                     include: {
                       album: true,
                     },
                   },
                   replyTo: {
                     include: {
-                      review: {
+                      record: {
                         include: {
                           album: true,
                         },
@@ -73,7 +73,7 @@ export default async function handle(
                 include: {
                   follower: {
                     select: {
-                      name: true,
+                      username: true,
                       image: true,
                     },
                   },

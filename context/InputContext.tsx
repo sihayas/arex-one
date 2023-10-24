@@ -14,11 +14,13 @@ export type InputContextType = {
   setInputValue: Dispatch<SetStateAction<string>>;
   storedInputValue: string;
   setStoredInputValue: Dispatch<SetStateAction<string>>;
+  isSettingsOpen: boolean;
+  setIsSettingsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 // Create the context, initialized as undefined
 export const InputContext = React.createContext<InputContextType | undefined>(
-  undefined,
+  undefined
 );
 
 // Export a custom hook to consume the context
@@ -39,6 +41,7 @@ type InputProviderProps = {
 export const InputProvider = ({ children }: InputProviderProps) => {
   // Input states
   const [expandInput, setExpandInput] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -54,6 +57,8 @@ export const InputProvider = ({ children }: InputProviderProps) => {
         setInputValue,
         storedInputValue,
         setStoredInputValue,
+        isSettingsOpen,
+        setIsSettingsOpen,
       }}
     >
       {children}

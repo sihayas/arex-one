@@ -11,7 +11,7 @@ export interface User {
   dateJoined: Date;
   dateUpdated: Date;
   notifications: Notification[];
-  favorites: Favorite[];
+  essentials: Essential[];
   following: Follows[];
   followers: Follows[];
   record: Record[];
@@ -20,7 +20,7 @@ export interface User {
   views: View[];
 }
 
-export interface Favorite {
+export interface Essential {
   id: string;
   userId: string;
   albumId: string;
@@ -28,6 +28,7 @@ export interface Favorite {
   updatedAt: Date;
   user: User;
   album: Album;
+  appleAlbumData: AlbumData;
 }
 
 export interface Follows {
@@ -49,7 +50,7 @@ export interface Album {
   lastUpdated: Date;
   notes?: string;
   tracks: Track[];
-  favorites: Favorite[];
+  essentials: Essential[];
   record: Record[];
   views: View[];
 }

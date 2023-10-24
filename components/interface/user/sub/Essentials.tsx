@@ -3,24 +3,32 @@ import { AlbumData } from "@/types/appleTypes";
 import { Artwork } from "@/components/global/Artwork";
 
 interface EssentialsProps {
-  favorites: AlbumData[];
+  essentials: {
+    album: AlbumData;
+    albumId: string;
+    appleAlbumData: any;
+    createdAt: string;
+    id: string;
+    updatedAt: string;
+    userId: string;
+  }[];
 }
 
-const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {
+const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setIndex((current) => (current + 1) % favorites.length);
+      setIndex((current) => (current + 1) % essentials.length);
     }, 1000);
     return () => clearInterval(timer);
-  }, [favorites]);
+  }, [essentials]);
 
   return (
     <div className="flex flex-col gap-4 relative overflow-scroll h-full scrollbar-none w-full mt-auto">
-      {favorites.map((albumData, i) => (
+      {essentials.map((essential, i) => (
         <div
-          key={albumData.id}
+          key={essential.id}
           style={{
             position: "absolute",
             opacity: i === index ? 1 : 0,
@@ -31,7 +39,7 @@ const Essentials: React.FC<EssentialsProps> = ({ favorites }) => {
         >
           <Artwork
             className="!rounded-[13px] shadow-shadowKitLow"
-            sound={albumData}
+            sound={essential.appleAlbumData}
             width={288}
             height={288}
           />

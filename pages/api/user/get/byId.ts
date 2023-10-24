@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { id } = req.query;
 
@@ -56,7 +56,7 @@ export default async function handle(
           //     },
           //   },
           // },
-          favorites: {
+          essentials: {
             include: {
               album: true,
             },
@@ -72,7 +72,8 @@ export default async function handle(
         by: ["albumId", "trackId"],
         where: { authorId: String(id) },
         _count: {
-          albumId: true, trackId: true
+          albumId: true,
+          trackId: true,
         },
       });
 

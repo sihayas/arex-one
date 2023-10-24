@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Soundtrack from "@/components/interface/user/sub/Soundtrack";
 import { useUserDataAndAlbumsQuery } from "@/lib/apiHandlers/userAPI";
 import Essentials from "@/components/interface/user/sub/Essentials";
+import Settings from "@/components/interface/user/sub/Settings";
 import { format } from "date-fns";
 import { JellyComponent } from "@/components/global/Loading";
 import { useUser } from "@supabase/auth-helpers-react";
 import { SettingsIcon } from "@/components/icons";
+import FollowButton from "./sub/components/LinkButton";
 
 const linkProps = {
   INTERLINKED: { text: "INTERLINKED", color: "#00FF00" },
@@ -32,7 +34,7 @@ const User = () => {
 
   const { data, isLoading, isError, followState, handleFollowUnfollow } =
     useUserDataAndAlbumsQuery(pageUser?.id, authenticatedUserId);
-  const { userData, albumsData } = data || {};
+  const { userData, essentials } = data || {};
 
   const linkStatus =
     followState?.followingAtoB && followState?.followingBtoA
@@ -45,6 +47,13 @@ const User = () => {
 
   const { text: linkText, color: linkColor } = linkProps[linkStatus];
 
+  const [subSection, setSubSection] = useState<"essentials" | "settings">(
+    "essentials"
+  );
+  const handleSubSectionClick = (section: "essentials" | "settings") =>
+    setSubSection(section === subSection ? "essentials" : section);
+
+  console.log(essentials);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -69,6 +78,28 @@ const User = () => {
           className="w-[200%] h-full flex"
         >
           <div className="w-1/2 h-full flex flex-col p-8">
+            <div className="flex items-center fixed top-4 right-4 gap-2">
+              {isOwnProfile ? (
+                <SettingsIcon
+                  onClick={() => handleSubSectionClick("settings")}
+                />
+              ) : (
+                <FollowButton
+                  followState={followState}
+                  handleFollowUnfollow={handleFollowUnfollow}
+                  linkColor={linkColor}
+                  linkText={linkText}
+                />
+              )}
+              <Image
+                className={`rounded-full outline outline-silver outline-[1.5px]`}
+                onClick={() => handleTabClick("profile")}
+                src={userData.image}
+                alt={`${userData.name}'s avatar`}
+                width={64}
+                height={64}
+              />
+            </div>
             {/* Stat 1 */}
             <div className="flex flex-col gap-[10px]">
               <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
@@ -90,37 +121,19 @@ const User = () => {
                 {userData.uniqueAlbums.length}
               </div>
             </div>
-            <Essentials favorites={albumsData} />
-            <div className="flex items-center fixed top-4 right-4 gap-2">
-              {isOwnProfile ? (
-                <SettingsIcon />
+            {/* Subsection (Favorites or Settings) */}
+            <AnimatePresence>
+              {subSection === "essentials" ? (
+                <Essentials essentials={essentials} />
+              ) : isOwnProfile && authenticatedUserId ? (
+                <Settings
+                  userId={authenticatedUserId}
+                  essentials={essentials}
+                />
               ) : (
-                // Follow button
-                <button
-                  onClick={() =>
-                    followState.followingAtoB
-                      ? handleFollowUnfollow("unfollow")
-                      : handleFollowUnfollow("follow")
-                  }
-                  className="flex items-center gap-2 text-xs"
-                  style={{ color: linkColor }}
-                >
-                  {linkText}
-                  <div
-                    className="w-2 h-2 rounded-full animate-ping"
-                    style={{ backgroundColor: linkColor }}
-                  />
-                </button>
+                <Essentials essentials={essentials} />
               )}
-              <Image
-                className={`rounded-full outline outline-silver outline-[1.5px]`}
-                onClick={() => handleTabClick("profile")}
-                src={userData.image}
-                alt={`${userData.name}'s avatar`}
-                width={64}
-                height={64}
-              />
-            </div>
+            </AnimatePresence>
           </div>
           {activeTab === "soundtrack" && pageUser && (
             <Soundtrack userId={pageUser.id} />

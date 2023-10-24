@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../lib/global/prisma";
-import { createFollowActivity } from "../middleware/createActivity";
+import { prisma } from "../../../../lib/global/prisma";
+import { createFollowActivity } from "../../middleware/createActivity";
 import { ActivityType } from "@/types/dbTypes";
 
 export default async function handle(

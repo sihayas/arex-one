@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../lib/global/prisma";
-import { deleteActivity } from "../middleware/createActivity";
+import { prisma } from "../../../../lib/global/prisma";
+import { deleteActivity } from "../../middleware/createActivity";
 import { ActivityType } from "@prisma/client";
 
 export default async function handle(

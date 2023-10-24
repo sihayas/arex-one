@@ -28,7 +28,7 @@ model User {
 
   // Relations
   notifications Notification[]
-  favorites     Favorite[]
+  essentials     Essential[]
   following     Follows[]        @relation("following")
   followers     Follows[]        @relation("follower")
   record        Record[]
@@ -57,7 +57,7 @@ model Settings {
   user                User     @relation(fields: [userId], references: [id])
 }
 
-model Favorite {
+model Essential {
   id        String   @id @default(cuid())
   userId    String
   albumId   String
@@ -97,7 +97,7 @@ model Album {
   notes         String?  
 
   tracks        Track[]
-  favorites     Favorite[]
+  essentials     Essential[]
   record        Record[]
   views         View[]   @relation("AlbumViews")
 

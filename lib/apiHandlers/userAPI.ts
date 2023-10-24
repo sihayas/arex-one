@@ -1,6 +1,6 @@
 import axios from "axios";
 import { fetchSoundsByTypes, fetchSoundsbyType } from "@/lib/global/musicKit";
-import { Favorite, Record } from "@/types/dbTypes";
+import { Essential, Record } from "@/types/dbTypes";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
@@ -56,7 +56,7 @@ export const useUserDataAndAlbumsQuery = (
     async () => {
       if (!userId || !sessionUserId) return null;
       // Axios request for user data
-      const url = `/api/user/getById`;
+      const url = `/api/user/get/byId`;
       const response = await axios.get(url, {
         params: {
           id: userId,
@@ -64,10 +64,15 @@ export const useUserDataAndAlbumsQuery = (
         },
       });
       const userData = response.data;
-      const albumIds = userData.favorites.map(
-        (fav: Favorite) => fav.album.appleId
+      const albumIds = userData.essentials.map(
+        (essential: Essential) => essential.album.appleId
       );
       const albumsData = await fetchSoundsbyType("albums", albumIds);
+
+      // Attach album data to each favorite
+      userData.essentials.forEach((essential: Essential, index: number) => {
+        essential.appleAlbumData = albumsData[index];
+      });
 
       setFollowState((prevState) => ({
         ...prevState,
@@ -75,7 +80,9 @@ export const useUserDataAndAlbumsQuery = (
         followingBtoA: userData.isFollowingBtoA,
       }));
 
-      return { userData, albumsData };
+      console.log("userData", userData);
+
+      return { userData, essentials: userData.essentials };
     }
   );
 
@@ -88,13 +95,30 @@ export const useUserDataAndAlbumsQuery = (
   };
 };
 
+export const useUserSettingsQuery = (userId: string) => {
+  const { data, isLoading, isError } = useQuery(
+    ["userSettings", userId],
+    async () => {
+      const url = `/api/user/get/settingsById`;
+      const response = await axios.get(url, {
+        params: {
+          userId,
+        },
+      });
+      return response.data;
+    }
+  );
+
+  return { data, isLoading, isError };
+};
+
 // Soundtrack (sound history) handlers
 export const useUserSoundtrackQuery = (userId: string) => {
   const { data, isLoading, isError } = useQuery(
     ["mergedData", userId],
     async () => {
       // Axios request for soundtrack data
-      const url = `/api/user/getSoundtrack`;
+      const url = `/api/user/get/soundtrackById`;
       const response = await axios.get(url, {
         params: {
           userId,
@@ -144,6 +168,23 @@ export const useUserSoundtrackQuery = (userId: string) => {
   return { data, isLoading, isError };
 };
 
+// Following handlers
+export const followUser = async (followerId: string, followingId: string) => {
+  await axios.post(`/api/user/post/follow`, { followerId, followingId });
+  return { followingAtoB: true };
+};
+
+// Unfollowing handlers
+export const unfollowUser = async (followerId: string, followingId: string) => {
+  await axios.delete(`/api/user/post/unfollow`, {
+    params: {
+      followerId,
+      followingId,
+    },
+  });
+  return { followingAtoB: false };
+};
+
 // Notifications handlers
 export const fetchNotificationsForUser = async (userId: string) => {
   if (!userId) {
@@ -156,21 +197,4 @@ export const fetchNotificationsForUser = async (userId: string) => {
     },
   });
   return response.data;
-};
-
-// Following handlers
-export const followUser = async (followerId: string, followingId: string) => {
-  await axios.post(`/api/user/follow`, { followerId, followingId });
-  return { followingAtoB: true };
-};
-
-// Unfollowing handlers
-export const unfollowUser = async (followerId: string, followingId: string) => {
-  await axios.delete(`/api/user/unfollow`, {
-    params: {
-      followerId,
-      followingId,
-    },
-  });
-  return { followingAtoB: false };
 };
