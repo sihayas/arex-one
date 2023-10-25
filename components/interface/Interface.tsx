@@ -58,6 +58,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     storedInputValue,
     inputRef,
     setStoredInputValue,
+    expandInput,
   } = useInputContext();
 
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
@@ -92,9 +93,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     [base.height, target.height]
   );
 
+  // Responsible for making root visible/invisible
   // useAnimate is necessary to visor the root because in-line motion.div
   // breaks the filter in Album page through some weird child effects.
-  // Responsible for making window visible/invisible
   useEffect(() => {
     const animateParent = async () => {
       const animationConfig = {
@@ -113,8 +114,31 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     animateParent();
   }, [isVisible, animateRoot, rootScope]);
 
+  // Responsible for controlling shadow of root
+  useEffect(() => {
+    const animateParent = async () => {
+      const animationConfig = {
+        scale: isVisible && expandInput ? 0.97 : 1,
+        boxShadow: isVisible
+          ? expandInput
+            ? "2px 4px 10px 0px rgba(0, 0, 0, 0.04), 7px 16px 17px 0px rgba(0, 0, 0, 0.04), 15px 36px 23px 0px rgba(0, 0, 0, 0.02), 27px 64px 28px 0px rgba(0, 0, 0, 0.01), 42px 100px 30px 0px rgba(0, 0, 0, 0.00);"
+            : "9px 20px 49px 0px rgba(0, 0, 0, 0.04), 35px 82px 89px 0px rgba(0, 0, 0, 0.04), 78px 184px 120px 0px rgba(0, 0, 0, 0.02), 139px 327px 142px 0px rgba(0, 0, 0, 0.01), 216px 511px 155px 0px rgba(0, 0, 0, 0.00)"
+          : "none",
+      };
+      const transitionConfig = {
+        type: "spring" as const,
+        stiffness: isVisible ? 800 : 500,
+        damping: isVisible ? 120 : 50,
+        scale: { type: "spring", stiffness: 140, damping: 16 },
+      };
+      await animateRoot(rootScope.current, animationConfig, transitionConfig);
+    };
+    animateParent();
+  }, [isVisible, animateRoot, rootScope, expandInput]);
+
   // Responsible for shapeshifting the window
   useEffect(() => {
+    // Bounce and shift dimensions on page change
     const sequence = async () => {
       // Scale down
       await animate(
@@ -133,6 +157,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         { type: "spring", stiffness: 400, damping: 40 }
       );
     };
+
     sequence();
 
     // Animate dimensions on page ~scroll~, listens for changes via unsub
@@ -142,8 +167,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         { [dimension]: newDimension.get() },
         {
           type: "spring",
-          stiffness: 100,
-          damping: dimension === "width" ? 50 : 10,
+          stiffness: 500,
+          damping: dimension === "width" ? 50 : 60,
+          mass: 2,
+          velocity: 10,
+          restSpeed: 0.5,
+          restDelta: 0.5,
         }
       );
     };
@@ -180,7 +209,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   };
 
   return (
-    <div ref={rootScope} className={`cmdk z-10 `}>
+    <div ref={rootScope} className={`cmdk z-10 rounded-[32px]`}>
       {/* CMD-K Inner  */}
       <Command
         className={`cmdk-inner flex rounded-3xl`}
@@ -191,7 +220,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver shadow-2xl rounded-[32px]`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver rounded-[32px]`}
         >
           {/* Base layout / dimensions for a page */}
           <div
