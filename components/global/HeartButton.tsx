@@ -110,7 +110,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
       </motion.div>
       {/* Dot */}
       <div
-        className="absolute bottom-0 right-0 w-2 h-2 rounded-full z-0 outline outline-4 outline-white "
+        className="absolute bottom-0 right-0 w-2 h-2 rounded-full z-0"
         style={{ backgroundColor: dotColor }}
       />
       <div
