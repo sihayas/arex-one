@@ -7,39 +7,18 @@ interface EssentialsProps {
 }
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((current) => (current + 1) % essentials.length);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [essentials]);
-
   return (
-    <div className="flex flex-col gap-4 relative overflow-scroll h-full scrollbar-none w-full mt-auto">
+    <div className="flex gap-x-8 gap-y-8 h-fit w-full flex-wrap items-center justify-center">
       {essentials.map((essential, i) => (
-        <div
-          key={essential.id}
-          style={{
-            position: "absolute",
-            opacity: i === index ? 1 : 0,
-            transform: i === index ? "scale(1)" : "scale(0.95)",
-            transition: "opacity 0.5s, transform 0.5s",
-            bottom: "32px",
-          }}
-        >
+        <div className={`w-fit h-fit`} key={essential.id}>
           <Artwork
-            className="!rounded-[13px] shadow-shadowKitLow"
+            className="!rounded-[8px] shadow-shadowKitLow"
             sound={essential.appleAlbumData}
-            width={288}
-            height={288}
+            width={128}
+            height={128}
           />
         </div>
       ))}
-      <div className="text-xs text-gray3 font-medium mt-auto ml-auto mr-auto uppercase leading-[75%] tracking-widest">
-        essentials
-      </div>
     </div>
   );
 };

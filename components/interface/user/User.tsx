@@ -65,7 +65,7 @@ const User = () => {
   const handleSubSectionClick = (section: "essentials" | "settings") =>
     setSubSection(section === subSection ? "essentials" : section);
 
-  // Render User component
+  console.log(userData);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -93,7 +93,7 @@ const User = () => {
           className="w-[200%] h-full flex"
         >
           <div className="w-1/2 h-full flex flex-col p-8 items-end">
-            {/* Subsection (Favorites or Settings) */}
+            {/* Essentials */}
             <AnimatePresence>
               {subSection === "essentials" ? (
                 // Show essentials if subsection is essentials
@@ -109,8 +109,17 @@ const User = () => {
                 <Essentials essentials={essentials} />
               )}
             </AnimatePresence>
+            <h1 className="text-xs text-gray3 font-medium tracking-widest uppercase mt-4 ml-auto mr-auto leading-[75%]">
+              essentials
+            </h1>
+
+            {/* Biography */}
+            <div className="text-sm text-gray2 mt-[51px] w-full text-start">
+              {userData.bio || ""}
+            </div>
+
             {/* Stat 2 */}
-            <div className="flex flex-col gap-[10px] text-end">
+            <div className="flex flex-col gap-[10px] text-end mt-auto">
               <div className="text-black text-sm leading-none">
                 {userData.uniqueAlbums.length}
               </div>
