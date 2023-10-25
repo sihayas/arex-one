@@ -16,6 +16,8 @@ import {
   useAnimate,
   useScroll,
   useTransform,
+  motionValue,
+  MotionValue,
 } from "framer-motion";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 
@@ -47,7 +49,7 @@ const getDimensions = (pageName: PageName) => {
 };
 
 export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
-  const { pages, setPages, scrollContainerRef } = useInterfaceContext();
+  const { pages, scrollContainerRef } = useInterfaceContext();
   const { handleSelectSound } = useHandleSoundClick();
 
   const {
@@ -70,10 +72,13 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const { base, target } = getDimensions(activePageName);
 
   // Scroll tracker
-  const { scrollY } = useScroll({
-    container: scrollContainerRef,
-  });
+  const { scrollY } = useScroll({ container: scrollContainerRef });
   const maxScroll = 64;
+
+  //Window scope
+  const [scope, animate] = useAnimate();
+  // Root scope
+  const [rootScope, animateRoot] = useAnimate();
 
   // Shift width and height of shape-shifter/window while scrolling
   const newWidth = useTransform(
@@ -81,32 +86,42 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     [0, maxScroll],
     [base.width, target.width]
   );
-
   const newHeight = useTransform(
     scrollY,
     [0, maxScroll],
     [base.height, target.height]
   );
 
-  // Shapeshift on page change.
-  const [scope, animate] = useAnimate();
-  const [rootScope, animateRoot] = useAnimate();
+  // useAnimate is necessary to visor the root because in-line motion.div
+  // breaks the filter in Album page through some weird child effects.
+  // Responsible for making window visible/invisible
+  useEffect(() => {
+    const animateParent = async () => {
+      const animationConfig = {
+        x: "-50%",
+        y: "-50%",
+        scale: isVisible ? 1 : 0.97,
+        opacity: isVisible ? 1 : 0,
+      };
+      const transitionConfig = {
+        type: "spring" as const,
+        stiffness: isVisible ? 800 : 500,
+        damping: isVisible ? 120 : 50,
+      };
+      await animateRoot(rootScope.current, animationConfig, transitionConfig);
+    };
+    animateParent();
+  }, [isVisible, animateRoot, rootScope]);
 
+  // Responsible for shapeshifting the window
   useEffect(() => {
     const sequence = async () => {
       // Scale down
       await animate(
         scope.current,
-        {
-          scale: 0.95,
-        },
-        {
-          type: "spring",
-          stiffness: 800,
-          damping: 40,
-        }
+        { scale: 0.95 },
+        { type: "spring", stiffness: 800, damping: 40 }
       );
-
       // Scale up and dimension shift
       await animate(
         scope.current,
@@ -115,89 +130,36 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           width: `${base.width}px`,
           height: `${base.height}px`,
         },
+        { type: "spring", stiffness: 400, damping: 40 }
+      );
+    };
+    sequence();
+
+    // Animate dimensions on page ~scroll~, listens for changes via unsub
+    const shiftDimension = (dimension: string, newDimension: MotionValue) => {
+      animate(
+        scope.current,
+        { [dimension]: newDimension.get() },
         {
           type: "spring",
-          stiffness: 400,
-          damping: 40,
+          stiffness: 100,
+          damping: dimension === "width" ? 50 : 10,
         }
       );
     };
 
-    sequence();
-    // Animate dimensions on page ~scroll~, listens for changes via unsub
-    const shiftWidth = () => {
-      animate(scope.current, {
-        width: newWidth.get(),
-        transition: {
-          type: "spring",
-          stiffness: 100,
-          damping: 50,
-        },
-      });
-    };
-
-    // Animate dimensions on page ~scroll~, listens for changes via unsub method below
-    const shiftHeight = () => {
-      animate(scope.current, {
-        height: newHeight.get(),
-        transition: {
-          type: "spring",
-          stiffness: 100,
-          damping: 10,
-        },
-      });
-    };
-
-    const unsubWidth = newWidth.on("change", shiftWidth);
-    const unsubHeight = newHeight.on("change", shiftHeight);
+    const unsubWidth = newWidth.on("change", () =>
+      shiftDimension("width", newWidth)
+    );
+    const unsubHeight = newHeight.on("change", () =>
+      shiftDimension("height", newHeight)
+    );
 
     return () => {
       unsubHeight();
       unsubWidth();
     };
   }, [animate, base.height, base.width, newHeight, newWidth, scope, pages]);
-
-  // useAnimate is necessary to visor the root because in-line motion.div
-  // breaks the filter in Album page through some weird child effects.
-  useEffect(() => {
-    const animateParent = async () => {
-      if (isVisible) {
-        // Animate to visible state
-        await animateRoot(
-          rootScope.current,
-          {
-            x: "-50%",
-            y: "-50%",
-            scale: 1,
-            opacity: 1,
-          },
-          {
-            type: "spring",
-            stiffness: 800,
-            damping: 120,
-          }
-        );
-      } else {
-        // Animate to hidden state
-        await animateRoot(
-          rootScope.current,
-          {
-            x: "-50%",
-            y: "-50%",
-            scale: 0.97,
-            opacity: 0,
-          },
-          {
-            type: "spring",
-            stiffness: 500,
-            damping: 50,
-          }
-        );
-      }
-    };
-
-    animateParent();
-  }, [animate, isVisible, scope, animateRoot, rootScope]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // switch to album page from form
@@ -229,7 +191,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver shadow-2xl rounded-3xl`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver shadow-2xl rounded-[32px]`}
         >
           {/* Base layout / dimensions for a page */}
           <div
