@@ -92,52 +92,7 @@ const User = () => {
           transition={{ type: "spring", stiffness: 880, damping: 80 }}
           className="w-[200%] h-full flex"
         >
-          <div className="w-1/2 h-full flex flex-col p-8">
-            <div className="flex items-center fixed top-4 right-4 gap-2">
-              {isOwnProfile ? (
-                // Show settings icon if it's own profile
-                <SettingsIcon
-                  onClick={() => handleSubSectionClick("settings")}
-                />
-              ) : (
-                // Show follow button if it's not own profile
-                <FollowButton
-                  followState={followState}
-                  handleFollowUnfollow={handleFollowUnfollow}
-                  linkColor={linkColor}
-                  linkText={linkText}
-                />
-              )}
-              <Image
-                className={`rounded-full outline outline-silver outline-[1.5px]`}
-                onClick={() => handleTabClick("profile")}
-                src={userData.image}
-                alt={`${userData.name}'s avatar`}
-                width={64}
-                height={64}
-              />
-            </div>
-            {/* Stat 1 */}
-            <div className="flex flex-col gap-[10px]">
-              <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
-                RX SINCE
-              </div>
-              <div className="text-black text-sm leading-none">
-                {format(new Date(userData.dateJoined), "MMMM dd")}
-              </div>
-            </div>
-            {/* Stat 2 */}
-            <div className="flex flex-col gap-[10px] mt-8">
-              <div
-                onClick={() => handleTabClick("soundtrack")}
-                className="text-xs text-gray3 leading-none font-medium tracking-widest cursor-pointer"
-              >
-                UNIQUE SOUNDS
-              </div>
-              <div className="text-black text-sm leading-none">
-                {userData.uniqueAlbums.length}
-              </div>
-            </div>
+          <div className="w-1/2 h-full flex flex-col p-8 items-end">
             {/* Subsection (Favorites or Settings) */}
             <AnimatePresence>
               {subSection === "essentials" ? (
@@ -154,6 +109,53 @@ const User = () => {
                 <Essentials essentials={essentials} />
               )}
             </AnimatePresence>
+            {/* Stat 2 */}
+            <div className="flex flex-col gap-[10px] text-end">
+              <div className="text-black text-sm leading-none">
+                {userData.uniqueAlbums.length}
+              </div>
+              <div
+                onClick={() => handleTabClick("soundtrack")}
+                className="text-xs text-gray3 leading-none font-medium tracking-widest cursor-pointer"
+              >
+                UNIQUE SOUNDS
+              </div>
+            </div>
+            {/* Stat 1 */}
+            <div className="flex flex-col gap-[10px] text-end mt-8 ">
+              <div className="text-black text-sm leading-none">
+                {format(new Date(userData.dateJoined), "MMMM dd")}
+              </div>
+              <div className="text-xs text-gray3 leading-none font-medium tracking-widest">
+                RX SINCE
+              </div>
+            </div>
+
+            {/* Avatar */}
+            <div className="flex items-center fixed bottom-4 left-4 gap-2">
+              <Image
+                className={`rounded-full outline outline-silver outline-[1.5px]`}
+                onClick={() => handleTabClick("profile")}
+                src={userData.image}
+                alt={`${userData.name}'s avatar`}
+                width={64}
+                height={64}
+              />
+              {isOwnProfile ? (
+                // Show settings icon if it's own profile
+                <SettingsIcon
+                  onClick={() => handleSubSectionClick("settings")}
+                />
+              ) : (
+                // Show follow button if it's not own profile
+                <FollowButton
+                  followState={followState}
+                  handleFollowUnfollow={handleFollowUnfollow}
+                  linkColor={linkColor}
+                  linkText={linkText}
+                />
+              )}
+            </div>
           </div>
           {activeTab === "soundtrack" && pageUser && (
             // Show soundtrack if active tab is soundtrack
