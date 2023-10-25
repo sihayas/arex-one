@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { AlbumData } from "@/types/appleTypes";
 import { Artwork } from "@/components/global/Artwork";
+import { Essential } from "@/types/dbTypes";
 
 interface EssentialsProps {
-  essentials: {
-    album: AlbumData;
-    albumId: string;
-    appleAlbumData: any;
-    createdAt: string;
-    id: string;
-    updatedAt: string;
-    userId: string;
-  }[];
+  essentials: Essential[];
 }
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {

@@ -14,9 +14,15 @@ import { useUser } from "@supabase/auth-helpers-react";
 const Nav: React.FC = () => {
   const user = useUser();
 
-  const { inputValue, setInputValue, expandInput, setExpandInput, inputRef } =
-    useInputContext();
-  const { selectedFormSound } = useSound();
+  const {
+    inputValue,
+    setInputValue,
+    expandInput,
+    setExpandInput,
+    inputRef,
+    isChangingEssential,
+  } = useInputContext();
+  const { selectedFormSound, prevEssentialId } = useSound();
 
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSetSearchQuery = debounce(setSearchQuery, 350);
@@ -146,11 +152,13 @@ const Nav: React.FC = () => {
             <TextareaAutosize
               id="entryText"
               className={`w-full bg-transparent text-xs outline-none resize-none text-black`}
-              placeholder={`${
+              placeholder={
                 selectedFormSound && expandInput
                   ? "Type & Enter: Post, Enter: View, Backspace: Cancel."
+                  : isChangingEssential && prevEssentialId
+                  ? "Type to change essential..."
                   : "RX"
-              }`}
+              }
               value={expandInput ? inputValue : ""}
               onChange={(e) => handleNavTextChange(e.target.value)}
               onBlur={onBlur}

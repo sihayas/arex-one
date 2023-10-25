@@ -80,8 +80,6 @@ export const useUserDataAndAlbumsQuery = (
         followingBtoA: userData.isFollowingBtoA,
       }));
 
-      console.log("userData", userData);
-
       return { userData, essentials: userData.essentials };
     }
   );
@@ -95,6 +93,7 @@ export const useUserDataAndAlbumsQuery = (
   };
 };
 
+// Get user settings
 export const useUserSettingsQuery = (userId: string) => {
   const { data, isLoading, isError } = useQuery(
     ["userSettings", userId],
@@ -197,4 +196,21 @@ export const fetchNotificationsForUser = async (userId: string) => {
     },
   });
   return response.data;
+};
+
+// Edit essential handler
+export const changeEssential = async (
+  userId: string,
+  prevEssentialId: string | null,
+  appleId: string,
+  rank: number
+) => {
+  const url = `/api/user/post/changeEssential`;
+  const response = await axios.post(url, {
+    userId,
+    prevEssentialId,
+    appleId,
+    rank,
+  });
+  return response; // return the entire response object
 };

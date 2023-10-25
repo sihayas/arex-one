@@ -14,8 +14,8 @@ export type InputContextType = {
   setInputValue: Dispatch<SetStateAction<string>>;
   storedInputValue: string;
   setStoredInputValue: Dispatch<SetStateAction<string>>;
-  isSettingsOpen: boolean;
-  setIsSettingsOpen: Dispatch<SetStateAction<boolean>>;
+  isChangingEssential: boolean;
+  setIsChangingEssential: Dispatch<SetStateAction<boolean>>;
 };
 
 // Create the context, initialized as undefined
@@ -41,10 +41,11 @@ type InputProviderProps = {
 export const InputProvider = ({ children }: InputProviderProps) => {
   // Input states
   const [expandInput, setExpandInput] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const [isChangingEssential, setIsChangingEssential] = useState(false);
 
   // Render the provider with the context value
   return (
@@ -57,8 +58,8 @@ export const InputProvider = ({ children }: InputProviderProps) => {
         setInputValue,
         storedInputValue,
         setStoredInputValue,
-        isSettingsOpen,
-        setIsSettingsOpen,
+        isChangingEssential,
+        setIsChangingEssential,
       }}
     >
       {children}

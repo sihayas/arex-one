@@ -12,6 +12,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { SettingsIcon } from "@/components/icons";
 import FollowButton from "./sub/components/LinkButton";
 
+// Define link properties for different states
 const linkProps = {
   INTERLINKED: { text: "INTERLINKED", color: "#00FF00" },
   LINKED: { text: "LINKED", color: "#000" },
@@ -19,23 +20,31 @@ const linkProps = {
   LINK: { text: "LINK", color: "#CCC" },
 };
 
+// User component
 const User = () => {
+  // Get current user
   const user = useUser();
   const authenticatedUserId = user?.id;
 
+  // Get page user
   const { pages } = useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
+  // Check if the profile belongs to the authenticated user
   const isOwnProfile = authenticatedUserId === pageUser?.id;
 
+  // State for active tab
   const [activeTab, setActiveTab] = useState<"profile" | "soundtrack">(
     "profile"
   );
+  // Function to handle tab click
   const handleTabClick = (tab: "profile" | "soundtrack") => setActiveTab(tab);
 
+  // Fetch user data and albums
   const { data, isLoading, isError, followState, handleFollowUnfollow } =
     useUserDataAndAlbumsQuery(pageUser?.id, authenticatedUserId);
   const { userData, essentials } = data || {};
 
+  // Determine link status based on follow state
   const linkStatus =
     followState?.followingAtoB && followState?.followingBtoA
       ? "INTERLINKED"
@@ -45,15 +54,18 @@ const User = () => {
       ? "INTERLINK"
       : "LINK";
 
+  // Get link text and color based on link status
   const { text: linkText, color: linkColor } = linkProps[linkStatus];
 
+  // State for subsection
   const [subSection, setSubSection] = useState<"essentials" | "settings">(
     "essentials"
   );
+  // Function to handle subsection click
   const handleSubSectionClick = (section: "essentials" | "settings") =>
     setSubSection(section === subSection ? "essentials" : section);
 
-  console.log(essentials);
+  // Render User component
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -62,6 +74,7 @@ const User = () => {
       className="w-full h-full overflow-hidden flex flex-col"
     >
       {isLoading ? (
+        // Show loading component if data is loading
         <JellyComponent
           className={
             "absolute left-1/2 top-1/2 translate-x-1/2 translate-y-1/2"
@@ -69,8 +82,10 @@ const User = () => {
           isVisible={true}
         />
       ) : isError ? (
+        // Show error message if there is an error
         <div>Error</div>
       ) : (
+        // Render user profile and soundtrack
         <motion.div
           initial={{ x: 0 }}
           animate={{ x: activeTab === "soundtrack" ? "-352px" : "0px" }}
@@ -80,10 +95,12 @@ const User = () => {
           <div className="w-1/2 h-full flex flex-col p-8">
             <div className="flex items-center fixed top-4 right-4 gap-2">
               {isOwnProfile ? (
+                // Show settings icon if it's own profile
                 <SettingsIcon
                   onClick={() => handleSubSectionClick("settings")}
                 />
               ) : (
+                // Show follow button if it's not own profile
                 <FollowButton
                   followState={followState}
                   handleFollowUnfollow={handleFollowUnfollow}
@@ -124,18 +141,22 @@ const User = () => {
             {/* Subsection (Favorites or Settings) */}
             <AnimatePresence>
               {subSection === "essentials" ? (
+                // Show essentials if subsection is essentials
                 <Essentials essentials={essentials} />
               ) : isOwnProfile && authenticatedUserId ? (
+                // Show settings if subsection is settings and it's own profile
                 <Settings
                   userId={authenticatedUserId}
                   essentials={essentials}
                 />
               ) : (
+                // Show essentials by default
                 <Essentials essentials={essentials} />
               )}
             </AnimatePresence>
           </div>
           {activeTab === "soundtrack" && pageUser && (
+            // Show soundtrack if active tab is soundtrack
             <Soundtrack userId={pageUser.id} />
           )}
         </motion.div>
@@ -144,4 +165,5 @@ const User = () => {
   );
 };
 
+// Export User component
 export default User;

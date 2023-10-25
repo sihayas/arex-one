@@ -1,9 +1,9 @@
-import { UserData } from "@/types/interfaces";
+import { User } from "@/types/dbTypes";
 import Image from "next/image";
 import { Command } from "cmdk";
 import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 
-const User = ({ user }: { user: UserData }) => {
+const User = ({ user }: { user: User }) => {
   const handleUserClick = useHandleUserClick(user);
   return (
     <Command.Item
@@ -17,13 +17,15 @@ const User = ({ user }: { user: UserData }) => {
           id={user.id}
           className="rounded-full shadow-index"
           src={user.image || "/images/placeholder.png"}
-          alt={`${user.name}'s avi`}
+          alt={`${user.username}'s avi`}
           width={36}
           height={36}
           draggable="false"
         />
 
-        <div className="flex text-sm font-medium text-black">{user.name}</div>
+        <div className="flex text-sm font-medium text-black">
+          {user.username}
+        </div>
       </div>
     </Command.Item>
   );

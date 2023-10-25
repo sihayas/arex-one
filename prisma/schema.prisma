@@ -61,6 +61,7 @@ model Essential {
   id        String   @id @default(cuid())
   userId    String
   albumId   String
+  rank      Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

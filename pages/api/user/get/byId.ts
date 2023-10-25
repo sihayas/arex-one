@@ -43,6 +43,17 @@ export default async function handle(
           id: String(id),
         },
         include: {
+          essentials: {
+            include: {
+              album: true,
+            },
+            orderBy: {
+              rank: "asc",
+            },
+          },
+          _count: {
+            select: { record: true, followers: true },
+          },
           // reviews: {
           //   select: {
           //     id: true,
@@ -56,14 +67,6 @@ export default async function handle(
           //     },
           //   },
           // },
-          essentials: {
-            include: {
-              album: true,
-            },
-          },
-          _count: {
-            select: { record: true, followers: true },
-          },
         },
       });
 

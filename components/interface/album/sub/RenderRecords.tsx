@@ -27,8 +27,6 @@ const RenderEntries: React.FC<RenderRecordsProps> = ({
 
   const flattenedEntries = entries?.pages.flat() || [];
 
-  console.log("flattenedEntries", flattenedEntries);
-
   // Initialize infinite scroll
   const { scrollContainerRef } = useInterfaceContext();
 

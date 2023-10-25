@@ -1,10 +1,9 @@
-import { AlbumData, SongData } from "@/types/interfaces";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { Command } from "cmdk";
 
-import Song from "./items/Song";
 import User from "./items/User";
-import Album from "./items/Album";
+import Sound from "./items/Sound";
 
 interface SearchProps {
   searchData: any;
@@ -42,9 +41,8 @@ const Search = ({
       {allData.map((item, index) => {
         switch (item.type) {
           case "albums":
-            return <Album key={index} album={item} />;
           case "songs":
-            return <Song key={index} song={item} />;
+            return <Sound key={index} sound={item} />;
           case "users":
             return <User key={index} user={item} />;
           default:

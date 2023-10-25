@@ -21,6 +21,10 @@ export type SoundContextType = {
   setSelectedFormSound: React.Dispatch<
     React.SetStateAction<SelectedFormSound | null>
   >;
+  rank: number;
+  setRank: React.Dispatch<React.SetStateAction<number>>;
+  prevEssentialId: string;
+  setPrevEssentialId: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type SoundContextProviderProps = {
@@ -28,7 +32,7 @@ type SoundContextProviderProps = {
 };
 
 export const SoundContext = React.createContext<SoundContextType | undefined>(
-  undefined,
+  undefined
 );
 
 // Export the hook
@@ -44,11 +48,14 @@ export const SoundDetailsProvider = ({
   children,
 }: SoundContextProviderProps) => {
   const [selectedSound, setSelectedSound] = useState<SelectedSound | null>(
-    null,
+    null
   );
 
   const [selectedFormSound, setSelectedFormSound] =
     useState<SelectedFormSound | null>(null);
+
+  const [prevEssentialId, setPrevEssentialId] = useState("");
+  const [rank, setRank] = useState(0);
 
   return (
     <SoundContext.Provider
@@ -57,6 +64,10 @@ export const SoundDetailsProvider = ({
         setSelectedSound,
         selectedFormSound,
         setSelectedFormSound,
+        prevEssentialId,
+        setPrevEssentialId,
+        rank,
+        setRank,
       }}
     >
       {children}
