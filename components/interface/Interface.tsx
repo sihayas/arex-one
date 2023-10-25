@@ -101,24 +101,26 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       const animationConfig = {
         x: "-50%",
         y: "-50%",
-        scale: isVisible ? 1 : 0.97,
+        scale: isVisible ? (expandInput ? 0.97 : 1) : 0.93,
         opacity: isVisible ? 1 : 0,
       };
       const transitionConfig = {
         type: "spring" as const,
         stiffness: isVisible ? 800 : 500,
         damping: isVisible ? 120 : 50,
+        scale: expandInput
+          ? { stiffness: 180, damping: 12 }
+          : { stiffness: 240, damping: 12 },
       };
       await animateRoot(rootScope.current, animationConfig, transitionConfig);
     };
     animateParent();
-  }, [isVisible, animateRoot, rootScope]);
+  }, [isVisible, animateRoot, rootScope, expandInput]);
 
   // Responsible for controlling shadow of root
   useEffect(() => {
     const animateParent = async () => {
       const animationConfig = {
-        scale: isVisible && expandInput ? 0.97 : 1,
         boxShadow: isVisible
           ? expandInput
             ? "2px 4px 10px 0px rgba(0, 0, 0, 0.04), 7px 16px 17px 0px rgba(0, 0, 0, 0.04), 15px 36px 23px 0px rgba(0, 0, 0, 0.02), 27px 64px 28px 0px rgba(0, 0, 0, 0.01), 42px 100px 30px 0px rgba(0, 0, 0, 0.00)"
@@ -129,7 +131,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         type: "spring" as const,
         stiffness: isVisible ? 800 : 500,
         damping: isVisible ? 120 : 50,
-        scale: { type: "spring", stiffness: 140, damping: 16 },
       };
       await animateRoot(rootScope.current, animationConfig, transitionConfig);
     };

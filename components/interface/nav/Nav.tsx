@@ -9,10 +9,12 @@ import Search from "./sub/Search";
 import Form from "./sub/Form";
 import { useInputContext } from "@/context/InputContext";
 import { useAnimate } from "framer-motion";
-import { useUser } from "@supabase/auth-helpers-react";
+import UserAvatar from "@/components/global/UserAvatar";
+import { useInterfaceContext } from "@/context/InterfaceContext";
+import { SignalsIcon, IndexIcon } from "@/components/icons";
 
 const Nav: React.FC = () => {
-  const user = useUser();
+  const { user } = useInterfaceContext();
 
   const {
     inputValue,
@@ -66,8 +68,8 @@ const Nav: React.FC = () => {
     // Animate the width
     inputAnimate(
       inputScope.current,
-      { width: expandInput ? "400px" : "40px" },
-      { type: "spring", stiffness: 400, damping: 40 }
+      { width: expandInput ? "372px" : "40px" },
+      { type: "spring", stiffness: 240, damping: 24 }
     );
   }, [expandInput, inputAnimate, inputScope]);
 
@@ -99,23 +101,27 @@ const Nav: React.FC = () => {
   };
 
   let left;
+  let middle;
+  let right;
 
-  if (!user) {
-    left = (
-      <div className="flex h-8 items-center justify-between rounded-full">
-        log in
-      </div>
-    );
-  }
+  // if (!user) {
+  //   left = (
+  //     <div className="flex h-8 items-center justify-between rounded-full">
+  //       log in
+  //     </div>
+  //   );
+  // }
 
   if (user) {
     left = (
       // Search
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-hidden rounded-3xl">
         {/* Input Container */}
         <div
           ref={inputScope}
-          className="absolute flex flex-col justify-end backdrop-blur-xl -bottom-0 -right-0 rounded-3xl outline outline-[.5px] outline-silver bg-nav"
+          className={`flex flex-col justify-end backdrop-blur-xl outline outline-[.5px] outline-silver overflow-hidden ${
+            expandInput && "bg-nav"
+          }`}
         >
           {/* Form / Search Results / Top */}
           <div
@@ -147,18 +153,12 @@ const Nav: React.FC = () => {
             className={`${
               //Make space for the dial
               selectedFormSound && expandInput ? "ml-10" : ""
-            } transition-all p-3 flex items-center`}
+            } p-3 flex items-center`}
           >
             <TextareaAutosize
               id="entryText"
               className={`w-full bg-transparent text-xs outline-none resize-none text-black`}
-              placeholder={
-                selectedFormSound && expandInput
-                  ? "Type & Enter: Post, Enter: View, Backspace: Cancel."
-                  : isChangingEssential && prevEssentialId
-                  ? "Type to change essential..."
-                  : "RX"
-              }
+              placeholder={`RX`}
               value={expandInput ? inputValue : ""}
               onChange={(e) => handleNavTextChange(e.target.value)}
               onBlur={onBlur}
@@ -171,22 +171,33 @@ const Nav: React.FC = () => {
         </div>
       </div>
     );
+    middle = (
+      <UserAvatar
+        className="w-8- h-8 mb-2 outline outline-[.5px] outline-silver"
+        imageSrc={user.image}
+        altText={`${user.username}'s avatar`}
+        width={32}
+        height={32}
+        user={user}
+      />
+    );
   }
 
   // Define the initial and animate values for framer-motion
-  const initialPosition = { x: 20, y: 20 };
+  const initialPosition = { x: "-50%", y: 20 };
   const centerPosition = {
-    x: 20,
+    x: "-50%",
     y: 20,
   };
 
   return (
     <motion.div
-      className="fixed z-50 flex flex-col bottom-0 right-0"
+      className="fixed z-50 flex items-end -bottom-8 left-1/2 -translate-x-1/2"
       initial={initialPosition}
       animate={expandInput ? centerPosition : initialPosition}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
+      {middle}
       {left}
     </motion.div>
   );
