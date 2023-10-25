@@ -6,11 +6,11 @@ import { Essential, Settings } from "@/types/dbTypes";
 import { useEffect, useState } from "react";
 import { useSound } from "@/context/SoundContext";
 
-// Interface for SettingsProps
 interface SettingsProps {
   userId: string;
   essentials: Essential[];
 }
+
 interface QueryResult {
   data: Settings | null;
   isLoading: boolean;
@@ -34,6 +34,7 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
   } = useInputContext();
   const { setPrevEssentialId, setRank } = useSound();
 
+  // Function to handle edit click
   const handleEditClick = (prevEssentialId: string, rank: number) => {
     setExpandInput(true);
     setIsChangingEssential(true);
@@ -42,6 +43,7 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
     inputRef.current?.focus();
   };
 
+  // Function to handle toggle setting
   const handleToggleSetting = async (settingKey: SettingKey) => {
     if (!localSettings) return;
     const updatedSettings = {
@@ -57,6 +59,7 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
     }
   };
 
+  // Effect to handle blur
   useEffect(() => {
     const handleBlur = () => {
       if (isChangingEssential) {
@@ -76,14 +79,17 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
     setRank,
   ]);
 
+  // Effect to set local settings
   useEffect(() => {
     if (data) {
       setLocalSettings(data);
     }
   }, [data]);
 
+  // Return null if no data
   if (!data) return null;
-  console.log(data);
+
+  // Return Settings component
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -164,5 +170,5 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
   );
 };
 
-// Export Settings component
+// Exporting Settings component
 export default Settings;
