@@ -18,8 +18,8 @@ export default async function handle(
         include: {
           activity: {
             include: {
-              // If liked, include the author info & subsequent liked review/reply data
-              like: {
+              // If hearted, include the author info & subsequent hearted review/reply data
+              heart: {
                 include: {
                   author: {
                     select: {

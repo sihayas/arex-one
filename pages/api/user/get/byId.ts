@@ -61,7 +61,7 @@ export default async function handle(
           //     author: true,
           //     album: true,
           //     rating: true,
-          //     likes: {
+          //     hearts: {
           //       select: { id: true },
           //       where: { authorId: sessionUserId },
           //     },
@@ -81,7 +81,7 @@ export default async function handle(
       });
 
       if (user) {
-        const userWithLikesAndFollowStatus = {
+        const userWithHeartsAndFollowStatus = {
           ...user,
           isFollowingAtoB,
           isFollowingBtoA,
@@ -91,7 +91,7 @@ export default async function handle(
           uniqueAlbums: uniqueAlbums, // adding the new count here
         };
 
-        res.status(200).json(userWithLikesAndFollowStatus);
+        res.status(200).json(userWithHeartsAndFollowStatus);
       }
     } catch (error) {
       console.error("Error fetching user:", error);

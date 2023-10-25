@@ -5,7 +5,7 @@ interface PrismaReviewData {
   id: string;
   _count: {
     replies: number;
-    likes: number;
+    hearts: number;
   };
   viewsCount: number;
 }
@@ -13,7 +13,7 @@ interface PrismaReviewData {
 // Weights for the trending score calculation
 const weights = {
   views: 0.4,
-  likes: 0.3,
+  hearts: 0.3,
   replies: 0.3,
 };
 
@@ -21,7 +21,7 @@ const weights = {
 function calculateSpotlightScore(entry: PrismaReviewData) {
   return (
     entry.viewsCount * weights.views +
-    entry._count.likes * weights.likes +
+    entry._count.hearts * weights.hearts +
     entry._count.replies * weights.replies
   );
 }
@@ -31,7 +31,7 @@ export async function updateSpotlightEntryScores() {
     select: {
       id: true,
       _count: {
-        select: { replies: true, likes: true },
+        select: { replies: true, hearts: true },
       },
       viewsCount: true,
     },
@@ -46,8 +46,8 @@ export async function updateSpotlightEntryScores() {
 
     console.log(
       `Updated entry ${JSON.stringify(
-        entry,
-      )} / with new spotlight score: ${trendingScore}`,
+        entry
+      )} / with new spotlight score: ${trendingScore}`
     );
   }
 

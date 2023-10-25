@@ -65,7 +65,7 @@ export async function fetchReviews({
 // Fetch detailed album data on album page if necessary and mark as viewed.
 export function useAlbumQuery() {
   const { selectedSound, setSelectedSound } = useSound();
-  const { user, pages, setPages } = useInterfaceContext();
+  const { user } = useInterfaceContext();
 
   return useQuery(["album", selectedSound?.sound.id], async () => {
     if (

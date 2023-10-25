@@ -6,7 +6,7 @@ interface PrismaReviewData {
   id: string;
   _count: {
     replies: number;
-    likes: number;
+    hearts: number;
   };
   viewsCount: number;
   updatedAt: Date;
@@ -15,7 +15,7 @@ interface PrismaReviewData {
 // Weights for the trending score calculation
 const weights = {
   views: 0.3,
-  likes: 0.2,
+  hearts: 0.2,
   replies: 0.2,
   recency: 0.3, // <-- Add this
 };
@@ -31,7 +31,7 @@ function calculateBloomingScore(entry: PrismaReviewData) {
 
   return (
     entry.viewsCount * weights.views +
-    entry._count.likes * weights.likes +
+    entry._count.hearts * weights.hearts +
     entry._count.replies * weights.replies +
     recencyScore * weights.recency
   );
@@ -42,7 +42,7 @@ export async function updateBloomingEntryScores() {
     select: {
       id: true,
       _count: {
-        select: { replies: true, likes: true },
+        select: { replies: true, hearts: true },
       },
       viewsCount: true,
       updatedAt: true,
@@ -55,7 +55,7 @@ export async function updateBloomingEntryScores() {
     await client.zadd("bloomingEntries", bloomingScore, entry.id);
 
     console.log(
-      `Updated entry ${entry.id} /  with new trending score: ${bloomingScore}`,
+      `Updated entry ${entry.id} /  with new trending score: ${bloomingScore}`
     );
   }
 

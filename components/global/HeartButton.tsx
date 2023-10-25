@@ -2,43 +2,43 @@ import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { CrossIcon, LoveIcon } from "../icons";
 
-interface LikeButtonProps {
-  handleLikeClick: (
+interface HeartButtonProps {
+  handleHeartClick: (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => Promise<void>;
-  liked: boolean;
+  hearted: boolean;
   className?: string;
-  likeCount?: number;
+  heartCount?: number;
   replyCount?: number;
   isReply?: boolean;
   isEvenLevel?: boolean;
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({
-  handleLikeClick,
-  liked,
+const HeartButton: React.FC<HeartButtonProps> = ({
+  handleHeartClick,
+  hearted,
   className,
-  likeCount,
+  heartCount,
   replyCount,
   isReply = false,
   isEvenLevel = true,
 }) => {
-  const [color, setColor] = useState(liked ? "#000" : "#FFF");
-  const [dotColor, setDotColor] = useState(liked ? "#000" : "#CCC");
+  const [color, setColor] = useState(hearted ? "#000" : "#FFF");
+  const [dotColor, setDotColor] = useState(hearted ? "#000" : "#CCC");
   const controls = useAnimation();
 
   useEffect(() => {
-    setColor(liked ? "#000" : "#FFF");
-  }, [liked]);
+    setColor(hearted ? "#000" : "#FFF");
+  }, [hearted]);
 
   const handleMouseEnter = () => {
     controls.start("hover");
-    setDotColor(liked ? "#CCC" : "#000");
+    setDotColor(hearted ? "#CCC" : "#000");
   };
 
   const handleMouseLeave = () => {
     controls.start("initial");
-    setDotColor(liked ? "#000" : "#CCC");
+    setDotColor(hearted ? "#000" : "#CCC");
   };
 
   const formatText = (
@@ -59,17 +59,17 @@ const LikeButton: React.FC<LikeButtonProps> = ({
 
   const renderCounts = () => {
     if (isReply) {
-      return formatText(likeCount, "Heart", "Hearts");
-    } else if (likeCount && replyCount) {
+      return formatText(heartCount, "Heart", "Hearts");
+    } else if (heartCount && replyCount) {
       return (
         <>
           {formatText(replyCount, "Chain", "Chains")}
           <CrossIcon />
-          {formatText(likeCount, "Heart", "Hearts")}
+          {formatText(heartCount, "Heart", "Hearts")}
         </>
       );
-    } else if (likeCount) {
-      return formatText(likeCount, "Heart", "Hearts");
+    } else if (heartCount) {
+      return formatText(heartCount, "Heart", "Hearts");
     } else if (replyCount) {
       return formatText(replyCount, "Chain", "Chains");
     }
@@ -80,7 +80,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     <button
       className={`${className}`}
       onClick={(event) => {
-        handleLikeClick(event);
+        handleHeartClick(event);
         event.stopPropagation();
       }}
       onMouseEnter={handleMouseEnter}
@@ -122,4 +122,4 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   );
 };
 
-export default LikeButton;
+export default HeartButton;

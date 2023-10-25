@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   if (req.method === "POST") {
     const { ids, userId } = req.body;
@@ -30,28 +30,28 @@ export default async function handle(
               artist: true,
             },
           },
-          // Check if liked
-          likes: {
+          // Check if hearted
+          hearts: {
             select: { id: true },
             where: { authorId: userId },
           },
           _count: {
-            select: { replies: true, likes: true },
+            select: { replies: true, hearts: true },
           },
         },
       });
 
       if (reviews) {
-        const reviewsWithUserLikes = reviews.map((review) => {
-          const likedByUser = review.likes.length > 0;
+        const reviewsWithUserhearts = reviews.map((review) => {
+          const heartedByUser = review.hearts.length > 0;
 
           return {
             ...review,
-            likedByUser,
+            heartedByUser,
           };
         });
 
-        res.status(200).json(reviewsWithUserLikes);
+        res.status(200).json(reviewsWithUserhearts);
       } else {
         console.log("Reviews not found for ids:", ids);
         res.status(404).json({ error: "Reviews not found." });

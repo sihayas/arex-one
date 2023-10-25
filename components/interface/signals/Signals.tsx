@@ -5,7 +5,7 @@
 
 // import { useQuery } from "@tanstack/react-query";
 
-// import SignalLiked from "./sub/SignalLiked";
+// import SignalHeartd from "./sub/SignalHeartd";
 // import SignalReplied from "./sub/SignalReplied";
 // import SignalInterlinked from "./sub/SignalInterlinked";
 // import SignalLinked from "./sub/SignalLinked";
@@ -35,11 +35,11 @@
 //       ) : (
 //         notifications.map((notification: Notification) => {
 //           switch (notification.activity.type) {
-//             case "like":
+//             case "heart":
 //               return (
 //                 <>
-//                   <SignalLiked
-//                     like={notification.activity.like!}
+//                   <SignalHeartd
+//                     heart={notification.activity.heart!}
 //                     date={notification.activity.createdAt}
 //                   />
 //                 </>

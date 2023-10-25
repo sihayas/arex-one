@@ -214,3 +214,19 @@ export const changeEssential = async (
   });
   return response; // return the entire response object
 };
+
+// Toggle settings handler
+export const toggleSetting = async (
+  userId: string,
+  settingKey:
+    | "followerNotifications"
+    | "replyNotifications"
+    | "heartNotifications"
+) => {
+  const url = `/api/user/post/toggleSetting`;
+  const response = await axios.post(url, {
+    userId,
+    settingKey,
+  });
+  return response; // return the entire response object
+};

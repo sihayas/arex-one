@@ -63,13 +63,13 @@ export default async function handle(
         include: {
           entry: true,
           author: true,
-          // Check if liked
-          likes: {
+          // Check if hearted
+          hearts: {
             select: { id: true },
             where: { authorId: userId },
           },
           _count: {
-            select: { replies: true, likes: true },
+            select: { replies: true, hearts: true },
           },
           replies: {
             take: 3,
@@ -85,31 +85,31 @@ export default async function handle(
         },
       });
 
-      const reviewsWithUserLikes = reviews.map((review) => {
-        const likedByUser = review.likes.length > 0;
+      const reviewsWithUserhearts = reviews.map((review) => {
+        const heartedByUser = review.hearts.length > 0;
 
         return {
           ...review,
-          likedByUser,
+          heartedByUser,
         };
       });
 
       // Less expensive but more queries
-      // const reviewsWithUserLikes = await Promise.all(
+      // const reviewsWithUserhearts = await Promise.all(
       //   reviews.map(async (review) => {
-      //     const likeCount = await prisma.like.count({
+      //     const heartCount = await prisma.heart.count({
       //       where: { recordId: review.id, authorId: userId },
       //     });
-      //     const likedByUser = likeCount > 0;
+      //     const heartedByUser = heartCount > 0;
 
       //     return {
       //       ...review,
-      //       likedByUser,
+      //       heartedByUser,
       //     };
       //   })
       // );
 
-      res.status(200).json(reviewsWithUserLikes);
+      res.status(200).json(reviewsWithUserhearts);
     } catch (error) {
       console.error("Error fetching reviews:", error);
       res.status(500).json({ error: "Error fetching reviews." });

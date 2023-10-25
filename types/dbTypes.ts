@@ -16,8 +16,24 @@ export interface User {
   followers: Follows[];
   record: Record[];
   replies: Reply[];
-  likes: Like[];
+  hearts: Heart[];
   views: View[];
+  settings: Settings;
+}
+
+export interface Settings {
+  id: string;
+  userId: string;
+  email: boolean;
+  push: boolean;
+  isPrivate: boolean;
+  isMinus: boolean;
+  followerNotifications: boolean;
+  replyNotifications: boolean;
+  heartNotifications: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  user: User;
 }
 
 export interface Essential {
@@ -81,7 +97,7 @@ export interface Record {
   track?: Track;
   activities: Activity[];
   views: View[];
-  likes: Like[];
+  hearts: Heart[];
   replies: Reply[];
 
   appleAlbumData: AlbumData;
@@ -110,7 +126,7 @@ export interface Caption {
   record: Record;
 }
 
-export interface Like {
+export interface Heart {
   id: string;
   authorId: string;
   recordId?: string;
@@ -137,18 +153,18 @@ export interface Reply {
   replyTo?: Reply;
   record: Record;
   author: User;
-  likes: Like[];
+  hearts: Heart[];
   replies: Reply[];
   rootReplies: Reply[];
   views: View[];
   activities: Activity[];
 
   _count: {
-    likes: number;
+    hearts: number;
     replies: number;
     views: number;
   };
-  likedByUser: boolean;
+  heartedByUser: boolean;
 }
 
 export interface Activity {
@@ -158,7 +174,7 @@ export interface Activity {
   createdAt: Date;
   updatedAt: Date;
   record?: Record;
-  like?: Like;
+  heart?: Heart;
   follow?: Follows;
   reply?: Reply;
   notifications: Notification[];
@@ -166,7 +182,7 @@ export interface Activity {
 
 export enum ActivityType {
   RECORD = "RECORD",
-  LIKE = "LIKE",
+  HEART = "HEART",
   FOLLOWED_BACK = "FOLLOWED_BACK",
   FOLLOWED = "FOLLOWED",
   REPLY = "REPLY",

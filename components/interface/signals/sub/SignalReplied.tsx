@@ -24,7 +24,7 @@ const SignalReplied = ({ reply, date }: SignalRepliedProps) => {
     () => getAlbumById(albumId!),
     {
       enabled: !!albumId,
-    },
+    }
   );
 
   if (!albumId || isLoading) {
@@ -70,7 +70,7 @@ const SignalReplied = ({ reply, date }: SignalRepliedProps) => {
         </div>
       )}
 
-      {/* likers */}
+      {/* heartrs */}
       <UserAvatar
         className={`!border-2 border-white shadow-md`}
         imageSrc={reply.author.image}

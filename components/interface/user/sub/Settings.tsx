@@ -1,47 +1,63 @@
 import { Artwork } from "@/components/global/Artwork";
 import { useInputContext } from "@/context/InputContext";
-import { useUserSettingsQuery } from "@/lib/apiHandlers/userAPI";
+import { useUserSettingsQuery, toggleSetting } from "@/lib/apiHandlers/userAPI";
 import { motion } from "framer-motion";
-import { Essential } from "@/types/dbTypes";
-import { useEffect } from "react";
+import { Essential, Settings } from "@/types/dbTypes";
+import { useEffect, useState } from "react";
 import { useSound } from "@/context/SoundContext";
+
 // Interface for SettingsProps
 interface SettingsProps {
   userId: string;
   essentials: Essential[];
 }
+interface QueryResult {
+  data: Settings | null;
+  isLoading: boolean;
+  isError: boolean;
+}
+
+export type SettingKey =
+  | "followerNotifications"
+  | "heartNotifications"
+  | "replyNotifications";
 
 const Settings = ({ userId, essentials }: SettingsProps) => {
-  // Fetch user settings
-  const { data, isLoading, isError } = useUserSettingsQuery(userId);
-  // Use input context
+  const { data, isLoading, isError }: QueryResult =
+    useUserSettingsQuery(userId);
+  const [localSettings, setLocalSettings] = useState<Settings | null>(null);
   const {
     setExpandInput,
     inputRef,
     isChangingEssential,
     setIsChangingEssential,
   } = useInputContext();
-  // Use sound context
   const { setPrevEssentialId, setRank } = useSound();
 
-  // Function to handle edit click
   const handleEditClick = (prevEssentialId: string, rank: number) => {
     setExpandInput(true);
     setIsChangingEssential(true);
     setPrevEssentialId(prevEssentialId);
     setRank(rank);
-    // Focus on input
-    if (inputRef.current) {
-      inputRef.current.focus();
+    inputRef.current?.focus();
+  };
+
+  const handleToggleSetting = async (settingKey: SettingKey) => {
+    if (!localSettings) return;
+    const updatedSettings = {
+      ...localSettings,
+      [settingKey]: !localSettings[settingKey],
+    };
+    setLocalSettings(updatedSettings);
+    try {
+      await toggleSetting(userId, settingKey);
+    } catch (error) {
+      console.error("Error toggling setting:", error);
+      setLocalSettings(localSettings);
     }
   };
 
-  console.log(essentials);
-
-  // Disable edit mode when clicking outside of the input
   useEffect(() => {
-    const currentInputRef = inputRef.current;
-    // Function to handle blur event
     const handleBlur = () => {
       if (isChangingEssential) {
         setIsChangingEssential(false);
@@ -49,18 +65,9 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
         setRank(0);
       }
     };
-
-    // Add blur event listener
-    if (currentInputRef) {
-      currentInputRef.addEventListener("blur", handleBlur);
-    }
-
-    // Remove blur event listener on unmount
-    return () => {
-      if (currentInputRef) {
-        currentInputRef.removeEventListener("blur", handleBlur);
-      }
-    };
+    const currentInputRef = inputRef.current;
+    currentInputRef?.addEventListener("blur", handleBlur);
+    return () => currentInputRef?.removeEventListener("blur", handleBlur);
   }, [
     inputRef,
     isChangingEssential,
@@ -69,13 +76,20 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
     setRank,
   ]);
 
-  // Render settings component
+  useEffect(() => {
+    if (data) {
+      setLocalSettings(data);
+    }
+  }, [data]);
+
+  if (!data) return null;
+  console.log(data);
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full pt-8 flex flex-col"
+      className="w-full h-full pt-4 flex flex-col"
     >
       <svg width="100%" height="2">
         <line
@@ -87,7 +101,8 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
         />
       </svg>
 
-      <div className="text-xs text-gray3 font-medium tracking-widest leading-[75%] pt-8 mb-4">
+      {/* Essentials */}
+      <div className="text-xs text-gray3 font-medium tracking-widest leading-[75%] pt-4 mb-4">
         ESSENTIALS
       </div>
       <div className="flex flex-col gap-4">
@@ -115,6 +130,34 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
               edit
             </button>
           </div>
+        ))}
+      </div>
+
+      {/* Signals */}
+      <div className="text-xs text-gray3 font-medium tracking-widest leading-[75%] pt-8 mb-4">
+        SIGNALS
+      </div>
+      {/* Toggle Settings */}
+      <div className="flex items-center gap-4">
+        {[
+          { key: "heartNotifications", label: "Hearts" },
+          { key: "replyNotifications", label: "Replies" },
+          { key: "followerNotifications", label: "Links" },
+        ].map(({ key, label }) => (
+          <button
+            key={key}
+            className="py-[6px] px-2 bg-[#F4F4F4] outline outline-silver outline-[.5px] rounded-full flex items-center gap-2 leading-[75%] cursor-pointer text-gray4 text-xs"
+            onClick={() => handleToggleSetting(key as SettingKey)}
+          >
+            <div
+              className={
+                localSettings && localSettings[key as SettingKey]
+                  ? "bg-[#21FF00] rounded-full w-2 h-2"
+                  : "bg-[#CCC] rounded-full w-2 h-2"
+              }
+            />
+            {label}
+          </button>
         ))}
       </div>
     </motion.div>

@@ -1,11 +1,11 @@
 import React from "react";
 
-import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
+import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 import { Artwork } from "../../global/Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
-import LikeButton from "@/components/global/LikeButton";
+import HeartButton from "@/components/global/HeartButton";
 import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { RecordExtended } from "@/types/globalTypes";
@@ -22,11 +22,11 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
   const user = useUser();
   const sound = record.appleAlbumData;
 
-  const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
-    record.likedByUser,
-    record._count.likes,
-    "/api/record/entry/post/like",
-    "reviewId",
+  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+    record.heartedByUser,
+    record._count.hearts,
+    "/api/record/entry/post/heart",
+    "recordId",
     record.id,
     user?.id
   );
@@ -100,11 +100,11 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
           {record.entry?.text}
         </div>
 
-        <LikeButton
-          handleLikeClick={handleLikeClick}
-          liked={liked}
+        <HeartButton
+          handleHeartClick={handleHeartClick}
+          hearted={hearted}
           className="absolute -bottom-2 -right-2"
-          likeCount={likeCount}
+          heartCount={heartCount}
           replyCount={record._count.replies}
         />
       </div>

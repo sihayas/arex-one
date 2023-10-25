@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { createLikeRecordActivity } from "@/pages/api/middleware/createActivity";
+import { createHeartRecordActivity } from "@/pages/api/middleware/createActivity";
 
 type Data = {
   success: boolean;
@@ -11,9 +11,9 @@ export default async function handler(
 ) {
   const { recordId, action, userId } = req.body;
 
-  if (action === "like") {
-    // Create a new like
-    const newLike = await prisma.like.create({
+  if (action === "heart") {
+    // Create a new heart
+    const newHeart = await prisma.heart.create({
       data: {
         authorId: userId,
         recordId,
@@ -26,9 +26,9 @@ export default async function handler(
       select: { authorId: true },
     });
 
-    // If the author is not the liker, create an activity and a notification
+    // If the author is not the heartr, create an activity and a notification
     if (record && record.authorId !== userId) {
-      const activity = await createLikeRecordActivity(newLike.id);
+      const activity = await createHeartRecordActivity(newHeart.id);
 
       await prisma.notification.create({
         data: {
@@ -37,9 +37,9 @@ export default async function handler(
         },
       });
     }
-  } else if (action === "unlike") {
-    // Remove the existing like
-    await prisma.like.deleteMany({
+  } else if (action === "unheart") {
+    // Remove the existing heart
+    await prisma.heart.deleteMany({
       where: {
         authorId: userId,
         recordId,
@@ -49,8 +49,8 @@ export default async function handler(
     return res.status(400).json({ success: false });
   }
 
-  // Get the updated like count for the review
-  const updatedLikes = await prisma.like.count({
+  // Get the updated heart count for the review
+  const updatedhearts = await prisma.heart.count({
     where: { recordId },
   });
 

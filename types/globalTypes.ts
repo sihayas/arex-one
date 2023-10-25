@@ -4,8 +4,8 @@ import { Record } from "@/types/dbTypes";
 export interface RecordExtended extends Record {
   appleAlbumData: AlbumData;
   _count: {
-    likes: number;
+    hearts: number;
     replies: number;
   };
-  likedByUser: boolean;
+  heartedByUser: boolean;
 }

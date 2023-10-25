@@ -10,11 +10,11 @@ import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
 
 import RenderChildren from "@/components/interface/entry/sub/reply/RenderChildren";
 import { motion } from "framer-motion";
-import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
+import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { useUser } from "@supabase/auth-helpers-react";
 import UserAvatar from "@/components/global/UserAvatar";
 import { v4 as uuidv4 } from "uuid";
-import LikeButton from "@/components/global/LikeButton";
+import HeartButton from "@/components/global/HeartButton";
 
 interface ReplyProps {
   reply: Reply;
@@ -43,10 +43,10 @@ export default function ReplyItem({
     setShowChildReplies(true);
   }, []);
 
-  const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
-    reply.likedByUser,
-    reply._count.likes,
-    "/api/reply/post/like",
+  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+    reply.heartedByUser,
+    reply._count.hearts,
+    "/api/reply/post/heart",
     "replyId",
     reply.id,
     user?.id
@@ -126,13 +126,13 @@ export default function ReplyItem({
             >
               {reply.content}
             </motion.div>
-            <LikeButton
-              handleLikeClick={handleLikeClick}
-              liked={liked}
+            <HeartButton
+              handleHeartClick={handleHeartClick}
+              hearted={hearted}
               className={`absolute -bottom-1 z-20 ${
                 isEvenLevel ? "-right-1" : "left-1"
               } `}
-              likeCount={likeCount}
+              heartCount={heartCount}
               replyCount={reply._count.replies}
               isReply={true}
               isEvenLevel={isEvenLevel}

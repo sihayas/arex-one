@@ -3,11 +3,11 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { RecordExtended } from "@/types/globalTypes";
-import useHandleLikeClick from "@/hooks/useInteractions/useHandleLike";
+import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { Artwork } from "@/components/global/Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
-import LikeButton from "@/components/global/LikeButton";
+import HeartButton from "@/components/global/HeartButton";
 import Stars from "@/components/global/Stars";
 import { EntryBlobAlbum } from "@/components/icons";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -33,10 +33,10 @@ export const Entry = () => {
 
   const opacity = useTransform(scrollY, [0, 120], [0, 1]);
 
-  const { liked, handleLikeClick, likeCount } = useHandleLikeClick(
-    record.likedByUser,
-    record._count.likes,
-    "/api/record/entry/post/like",
+  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+    record.heartedByUser,
+    record._count.hearts,
+    "/api/record/entry/post/heart",
     "recordId",
     record.id,
     user?.id
@@ -107,11 +107,11 @@ export const Entry = () => {
                   {record.entry?.text}
                 </div>
 
-                <LikeButton
-                  handleLikeClick={handleLikeClick}
-                  liked={liked}
+                <HeartButton
+                  handleHeartClick={handleHeartClick}
+                  hearted={hearted}
                   className="absolute -bottom-2 -right-2"
-                  likeCount={likeCount}
+                  heartCount={heartCount}
                   replyCount={record._count.replies}
                 />
               </div>

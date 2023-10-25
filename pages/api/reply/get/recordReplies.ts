@@ -52,7 +52,7 @@ export default async function handle(
         select: {
           id: true,
           author: true,
-          likes: {
+          hearts: {
             select: { id: true },
             where: { authorId: userId },
           },
@@ -69,7 +69,7 @@ export default async function handle(
           },
           content: true,
           _count: {
-            select: { replies: true, likes: true },
+            select: { replies: true, hearts: true },
           },
           recordId: true,
         },
@@ -77,17 +77,17 @@ export default async function handle(
 
       if (replies) {
         const promises = replies.map(async (reply: any) => {
-          const likedByUser = reply.likes.length > 0;
+          const heartedByUser = reply.hearts.length > 0;
 
           return {
             ...reply,
-            likedByUser,
+            heartedByUser,
           };
         });
 
-        const repliesWithUserLike = await Promise.all(promises);
+        const repliesWithUserHeart = await Promise.all(promises);
 
-        res.status(200).json(repliesWithUserLike);
+        res.status(200).json(repliesWithUserHeart);
       } else {
         console.log("No replies found for review id:", recordId);
         res.status(404).json({ error: "No replies found." });

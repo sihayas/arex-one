@@ -28,12 +28,12 @@ model User {
 
   // Relations
   notifications Notification[]
-  essentials     Essential[]
+  essentials    Essential[]
   following     Follows[]        @relation("following")
   followers     Follows[]        @relation("follower")
   record        Record[]
   replies       Reply[]
-  likes         Like[]
+  hearts        Heart[]
   views         View[]
   settings      Settings? 
 }
@@ -49,7 +49,7 @@ model Settings {
   isMinus               Boolean  @default(false) @map(name: "is_premium")
   followerNotifications Boolean  @default(true) @map(name: "follower_notification")
   replyNotifications    Boolean  @default(true) @map(name: "reply_notification")
-  likeNotifications     Boolean  @default(true) @map(name: "like_notification")
+  heartNotifications     Boolean  @default(true) @map(name: "heart_notifications")
 
 
   createdAt           DateTime @default(now()) @map(name: "created_at")
@@ -141,7 +141,7 @@ model Record {
 
   activities  Activity[]  @relation("ActivityRecord")
   views       View[]      @relation("RecordViews")
-  likes       Like[]
+  hearts       Heart[]
   replies     Reply[]
 
   @@index([authorId])
@@ -179,7 +179,7 @@ model Caption {
   @@index([id])
 }
 
-model Like {
+model Heart {
   id         String      @id @default(cuid())
   authorId   String
   recordId   String?
@@ -190,7 +190,7 @@ model Like {
   author     User        @relation(fields: [authorId], references: [id])
   record     Record?     @relation(fields: [recordId], references: [id])
   reply      Reply?      @relation(fields: [replyId], references: [id])
-  activities Activity[]  @relation("ActivityLike")
+  activities Activity[]  @relation("ActivityHeart")
 
   @@index([authorId])
   @@index([recordId])
@@ -214,7 +214,7 @@ model Reply {
   replyTo     Reply?      @relation("ReplyToReply", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   record      Record      @relation(fields: [recordId], references: [id])
   author      User        @relation(fields: [authorId], references: [id])
-  likes       Like[]
+  hearts       Heart[]
   replies     Reply[]     @relation("ReplyToReply")
   rootReplies Reply[]     @relation("ReplyToRoot")
   views       View[]      @relation("ReplyViews")
@@ -236,7 +236,7 @@ model Activity {
 
   // Polymorphic relations
   record        Record?         @relation("ActivityRecord", fields:  [referenceId], references: [id], map: "ActivityToRecord_fkey")
-  like          Like?           @relation("ActivityLike",    fields: [referenceId], references: [id], map: "ActivityToLike_fkey")
+  heart          Heart?           @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "ActivityToHeart_fkey")
   follow        Follows?        @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "ActivityToFollow_fkey")
   reply         Reply?          @relation("ActivityReply",   fields: [referenceId], references: [id], map: "ActivityToReply_fkey")
 
@@ -248,7 +248,7 @@ model Activity {
 
 enum ActivityType {
   RECORD
-  LIKE
+  HEART
   FOLLOWED
   FOLLOWED_BACK
   REPLY

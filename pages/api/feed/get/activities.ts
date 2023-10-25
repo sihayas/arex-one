@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   if (req.method === "GET") {
     const userId =
@@ -70,16 +70,16 @@ export default async function handle(
               createdAt: true,
               entry: true,
               caption: true,
-              likes: {
+              hearts: {
                 where: { authorId: userId },
               },
               _count: {
-                select: { replies: true, likes: true },
+                select: { replies: true, hearts: true },
               },
             },
           },
           follow: true,
-          like: true,
+          heart: true,
           reply: true,
         },
       });
@@ -91,14 +91,14 @@ export default async function handle(
         activities.pop(); // remove the extra item if there are more pages
       }
 
-      // Attach likedByUser property to each activity
-      const activitiesWithUserLike = activities.map((activity) => {
+      // Attach heartedByUser property to each activity
+      const activitiesWithUserHeart = activities.map((activity) => {
         if (activity.record) {
           return {
             ...activity,
             record: {
               ...activity.record,
-              likedByUser: activity.record.likes.length > 0,
+              heartedByUser: activity.record.hearts.length > 0,
             },
           };
         }
@@ -107,7 +107,7 @@ export default async function handle(
 
       res.status(200).json({
         data: {
-          activities: activitiesWithUserLike,
+          activities: activitiesWithUserHeart,
           pagination: {
             nextPage: hasMorePages ? page + 1 : null,
           },
