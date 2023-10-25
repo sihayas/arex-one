@@ -121,7 +121,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         scale: isVisible && expandInput ? 0.97 : 1,
         boxShadow: isVisible
           ? expandInput
-            ? "2px 4px 10px 0px rgba(0, 0, 0, 0.04), 7px 16px 17px 0px rgba(0, 0, 0, 0.04), 15px 36px 23px 0px rgba(0, 0, 0, 0.02), 27px 64px 28px 0px rgba(0, 0, 0, 0.01), 42px 100px 30px 0px rgba(0, 0, 0, 0.00);"
+            ? "2px 4px 10px 0px rgba(0, 0, 0, 0.04), 7px 16px 17px 0px rgba(0, 0, 0, 0.04), 15px 36px 23px 0px rgba(0, 0, 0, 0.02), 27px 64px 28px 0px rgba(0, 0, 0, 0.01), 42px 100px 30px 0px rgba(0, 0, 0, 0.00)"
             : "9px 20px 49px 0px rgba(0, 0, 0, 0.04), 35px 82px 89px 0px rgba(0, 0, 0, 0.04), 78px 184px 120px 0px rgba(0, 0, 0, 0.02), 139px 327px 142px 0px rgba(0, 0, 0, 0.01), 216px 511px 155px 0px rgba(0, 0, 0, 0.00)"
           : "none",
       };

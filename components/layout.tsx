@@ -24,7 +24,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         }
       }
     },
-    [inputRef, setIsVisible],
+    [inputRef, setIsVisible]
   );
 
   const handleDoubleClick = useCallback(() => {
