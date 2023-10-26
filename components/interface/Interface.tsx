@@ -137,6 +137,27 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     animateParent();
   }, [isVisible, animate, scope, expandInput]);
 
+  useEffect(() => {
+    const adjustHeight = async () => {
+      const newHeight = expandInput ? 64 : base.height;
+      await animate(
+        scope.current,
+        { height: `${newHeight}px` },
+        {
+          type: "spring",
+          stiffness: 500,
+          damping: 60,
+          mass: 2,
+          velocity: 10,
+          restSpeed: 0.5,
+          restDelta: 0.5,
+        }
+      );
+    };
+
+    adjustHeight();
+  }, [animate, base.height, scope, expandInput]);
+
   // Responsible for shapeshifting the window & bouncing
   useEffect(() => {
     // Bounce and shift dimensions on page change

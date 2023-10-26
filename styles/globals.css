@@ -30,10 +30,9 @@ body {
   overflow: hidden;
   /* background-color: rgba(237, 237, 237, 0.792); */
 }
-
-input {
+textarea {
+  caret-color: black;
 }
-
 a {
   text-decoration: none;
 }
@@ -76,4 +75,5 @@ a {
 
 input {
   caret-color: black;
+  -webkit-text-fill-color: black;
 }

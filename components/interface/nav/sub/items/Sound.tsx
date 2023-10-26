@@ -73,7 +73,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       <div className="flex w-full items-center gap-4">
         <Image
           id={sound.id}
-          className="rounded-lg shadow-index"
+          className="rounded-lg shadow-shadowKitLow"
           src={artworkUrl}
           alt={`${sound.attributes.name} artwork`}
           width={36}

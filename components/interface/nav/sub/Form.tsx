@@ -10,6 +10,7 @@ import { SendIcon, ArrowIcon } from "@/components/icons";
 import Dial from "./items/Dial";
 import { useInputContext } from "@/context/InputContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import { motion } from "framer-motion";
 
 const Form = () => {
   const { user } = useInterfaceContext();
@@ -115,10 +116,10 @@ const Form = () => {
   );
 
   const renderAlbumSection = () => (
-    <div className="flex w-full flex-col gap-4 p-4">
+    <div className="flex w-full flex-col gap-2 p-4">
       <Image
         id={selectedFormSound.sound.id}
-        className="rounded-lg shadow-feedArt"
+        className="rounded-xl shadow-shadowKitHigh outline outline-silver outline-1"
         src={artworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={464}
@@ -129,11 +130,11 @@ const Form = () => {
       />
 
       {/* Center / Names */}
-      <div className="flex flex-col gap-[9px] text-sm text-black w-full">
-        <div className="line-clamp-1 text-xs leading-none">
+      <div className="flex flex-col gap-[9px] text-sm text-black w-full text-end">
+        <div className="line-clamp-1 text-xs leading-none text-gray2">
           {selectedFormSound.sound.attributes.artistName}
         </div>
-        <div className="line-clamp-1 leading-none">
+        <div className="line-clamp-1 leading-none font-medium">
           {selectedFormSound.sound.attributes.name}
         </div>
       </div>
@@ -144,7 +145,7 @@ const Form = () => {
     <div className="relative flex w-full items-center gap-4 p-4 py-4">
       <Image
         id={selectedFormSound.sound.id}
-        className="rounded-[6px] shadow-index"
+        className="rounded-lg shadow-shadowKitLow outline outline-silver outline-1"
         src={artworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={80}
@@ -165,48 +166,24 @@ const Form = () => {
             {/* <div className="">{selectedFormSound.sound.attributes.albumName}</div> */}
           </div>
         </div>
-        {inputValue || rating > 0 ? (
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
-                enter / send
-              </div>
-              <SendIcon color={"#999"} width={16} height={16} />
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
-                ⌘ enter / send love
-              </div>
-              <SendIcon color={"#999"} width={16} height={16} />
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center justify-self-end">
-            <div className="w-fit rounded border px-1 text-xs font-semibold text-gray1 border-silver">
-              enter
-            </div>
-            <ArrowIcon
-              className={"rotate-180"}
-              color={"#999"}
-              width={16}
-              height={16}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
 
   return (
-    <form
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ type: "spring", stiffness: 350, damping: 60 }}
       className="h-full overflow-hidden"
-      ref={formRef}
-      onSubmit={handleSubmit}
     >
-      {selectedFormSound.sound.type === "albums" && renderAlbumSection()}
-      {selectedFormSound.sound.type === "songs" && renderSongSection()}
-      {expandInput && <Dial setRatingValue={handleRatingChange} />}
-    </form>
+      <form ref={formRef} onSubmit={handleSubmit}>
+        {selectedFormSound.sound.type === "albums" && renderAlbumSection()}
+        {selectedFormSound.sound.type === "songs" && renderSongSection()}
+        {expandInput && <Dial setRatingValue={handleRatingChange} />}
+      </form>
+    </motion.div>
   );
 };
 

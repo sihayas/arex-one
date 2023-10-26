@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSound } from "@/context/SoundContext";
 import GetSearchResults from "@/lib/apiHandlers/searchAPI";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -43,7 +43,7 @@ const Nav: React.FC = () => {
           selectedFormSound.sound.type === "songs"
             ? "120px"
             : selectedFormSound.sound.type === "albums"
-            ? "392px"
+            ? "359px"
             : "0px";
       } else {
         height = inputValue ? "480px" : "0px";
@@ -62,7 +62,7 @@ const Nav: React.FC = () => {
   useEffect(() => {
     inputAnimate(
       inputScope.current,
-      { width: expandInput ? "358px" : "40px" },
+      { width: expandInput ? "316px" : "40px" },
       { type: "spring", stiffness: 240, damping: 24 }
     );
   }, [expandInput, inputAnimate, inputScope]);
@@ -98,14 +98,6 @@ const Nav: React.FC = () => {
   let middle;
   let right;
 
-  // if (!user) {
-  //   left = (
-  //     <div className="flex h-8 items-center justify-between rounded-full">
-  //       log in
-  //     </div>
-  //   );
-  // }
-
   if (user) {
     left = (
       <div className={`p-3`}>
@@ -115,36 +107,8 @@ const Nav: React.FC = () => {
     right = (
       <motion.div
         ref={inputScope}
-        className={`flex flex-col justify-end overflow-hidden rounded-3xl ${
-          expandInput &&
-          "outline-1 outline-silver outline bg-nav backdrop-blur-3xl"
-        }`}
+        className={`flex flex-col justify-end overflow-hidden rounded-3xl`}
       >
-        {/* Form / Search Results / Top */}
-        <div
-          ref={scope}
-          className={`flex flex-col relative w-full ${
-            selectedFormSound
-              ? "overflow-visible"
-              : "overflow-scroll" + " scrollbar-none"
-          }`}
-        >
-          {/* If no selected form sound render search results */}
-          {selectedFormSound && expandInput ? (
-            <Form />
-          ) : (
-            !selectedFormSound &&
-            inputValue && (
-              <Search
-                searchData={data}
-                isInitialLoading={isInitialLoading}
-                isFetching={isFetching}
-                error={error}
-              />
-            )
-          )}
-        </div>
-
         {/* Input */}
         <div
           className={`${
@@ -152,13 +116,13 @@ const Nav: React.FC = () => {
             selectedFormSound && expandInput ? "ml-10" : ""
           } p-3 flex items-center relative`}
         >
-          <div className="absolute left-3 top-0 flex items-center h-full pointer-events-none -z-10 text-xs text-gray3">
+          <div className="absolute left-3 top-0 flex items-center h-full pointer-events-none -z-10 text-xs text-gray3 font-bold">
             {!expandInput ? (
               <IndexIcon />
             ) : !inputValue && !selectedFormSound ? (
               "Explore RX..."
             ) : selectedFormSound && !inputValue ? (
-              "Arrows to dial; Type for entry; Enter to view."
+              "Arrow & type to create, Enter to view."
             ) : null}
           </div>
 
@@ -174,17 +138,47 @@ const Nav: React.FC = () => {
             minRows={1}
           />
         </div>
+
+        {/* Form / Search Results / Top */}
+        <div
+          ref={scope}
+          className={`flex flex-col relative w-full ${
+            selectedFormSound
+              ? "overflow-visible"
+              : "overflow-scroll" + " scrollbar-none"
+          }`}
+          style={{ transformOrigin: "top" }}
+        >
+          <AnimatePresence>
+            {/* If no selected form sound render search results */}
+            {selectedFormSound && expandInput ? (
+              <Form />
+            ) : (
+              !selectedFormSound &&
+              inputValue && (
+                <Search
+                  searchData={data}
+                  isInitialLoading={isInitialLoading}
+                  isFetching={isFetching}
+                  error={error}
+                />
+              )
+            )}
+          </AnimatePresence>
+        </div>
       </motion.div>
     );
     middle = (
-      <UserAvatar
-        className="w-8- h-8 outline outline-4 outline-gray3"
-        imageSrc={user.image}
-        altText={`${user.username}'s avatar`}
-        width={32}
-        height={32}
-        user={user}
-      />
+      <div className={`w-10 h-10 flex items-center justify-center`}>
+        <UserAvatar
+          className="outline outline-4 outline-gray3"
+          imageSrc={user.image}
+          altText={`${user.username}'s avatar`}
+          width={32}
+          height={32}
+          user={user}
+        />
+      </div>
     );
   }
 
@@ -197,7 +191,7 @@ const Nav: React.FC = () => {
 
   return (
     <motion.div
-      className="fixed z-50 flex items-center -bottom-8 left-1/2 -translate-x-1/2 gap-2"
+      className="fixed z-50 flex items-start -bottom-8 left-1/2 -translate-x-1/2 gap-2 max-h-10"
       initial={initialPosition}
       animate={expandInput ? centerPosition : initialPosition}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}

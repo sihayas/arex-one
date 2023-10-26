@@ -4,7 +4,7 @@ import { prisma } from "@/lib/global/prisma"; // Make sure to import Prisma
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { query } = req.query;
 
@@ -20,19 +20,16 @@ export default async function handler(
   const appleResponse = await searchAlbums(keyword);
 
   // // Fetch users related to the search query from our own database
-  // const usersResponse = await prisma.user.findMany({
-  //   where: {
-  //     OR: [
-  //       { username: { contains: keyword } },
-  //       { name: { contains: keyword } },
-  //     ],
-  //   },
-  // });
+  const usersResponse = await prisma.user.findMany({
+    where: {
+      OR: [{ username: { contains: keyword } }],
+    },
+  });
 
   // Combine Apple's data and users from our own database
   const combinedResponse = {
     appleData: appleResponse,
-    // users: usersResponse,
+    users: usersResponse,
   };
 
   res.json(combinedResponse);

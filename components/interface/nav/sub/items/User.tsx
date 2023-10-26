@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Command } from "cmdk";
 import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 
-const User = ({ user }: { user: User }) => {
+const UserItem = ({ user }: { user: User }) => {
   const handleUserClick = useHandleUserClick(user);
   return (
     <Command.Item
@@ -15,7 +15,7 @@ const User = ({ user }: { user: User }) => {
       <div className="flex w-full items-center gap-4">
         <Image
           id={user.id}
-          className="rounded-full shadow-index"
+          className="rounded-full shadow-shadowKitLow"
           src={user.image || "/images/placeholder.png"}
           alt={`${user.username}'s avi`}
           width={36}
@@ -30,4 +30,4 @@ const User = ({ user }: { user: User }) => {
     </Command.Item>
   );
 };
-export default User;
+export default UserItem;

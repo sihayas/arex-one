@@ -29,8 +29,11 @@
 }
 
 .cmdk [cmdk-item][aria-selected="true"] {
-  background: rgba(0, 0, 0, 0.046);
-  /* transform: scale(1.02); */
+  /* background: rgba(0, 0, 0, 0.046); */
+}
+
+.cmdk [cmdk-item]:not([aria-selected="true"]):not(:active) {
+  opacity: 0.65; /* Adjust this value to your liking */
 }
 
 .cmdk [cmdk-item][aria-disabled="true"] {
