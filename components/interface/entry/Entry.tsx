@@ -81,7 +81,6 @@ export const Entry = () => {
             {/* Avatar & Name */}
             <div className="flex items-center gap-2 w-full z-10 drop-shadow px-12 pb-2 pt-4">
               <UserAvatar
-                className="outline outline-2 outline-white "
                 imageSrc={record.author.image}
                 altText={`${record.author.username}'s avatar`}
                 width={40}

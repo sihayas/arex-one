@@ -16,15 +16,9 @@ import { SignalsIcon, IndexIcon } from "@/components/icons";
 const Nav: React.FC = () => {
   const { user } = useInterfaceContext();
 
-  const {
-    inputValue,
-    setInputValue,
-    expandInput,
-    setExpandInput,
-    inputRef,
-    isChangingEssential,
-  } = useInputContext();
-  const { selectedFormSound, prevEssentialId } = useSound();
+  const { inputValue, setInputValue, expandInput, setExpandInput, inputRef } =
+    useInputContext();
+  const { selectedFormSound } = useSound();
 
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSetSearchQuery = debounce(setSearchQuery, 350);
@@ -49,7 +43,7 @@ const Nav: React.FC = () => {
           selectedFormSound.sound.type === "songs"
             ? "120px"
             : selectedFormSound.sound.type === "albums"
-            ? "451px"
+            ? "392px"
             : "0px";
       } else {
         height = inputValue ? "480px" : "0px";
@@ -64,11 +58,11 @@ const Nav: React.FC = () => {
     );
   }, [expandInput, selectedFormSound, inputValue, animate, scope]);
 
+  // Animate the width
   useEffect(() => {
-    // Animate the width
     inputAnimate(
       inputScope.current,
-      { width: expandInput ? "372px" : "40px" },
+      { width: expandInput ? "358px" : "40px" },
       { type: "spring", stiffness: 240, damping: 24 }
     );
   }, [expandInput, inputAnimate, inputScope]);
@@ -114,66 +108,77 @@ const Nav: React.FC = () => {
 
   if (user) {
     left = (
-      // Search
-      <div className="flex flex-col overflow-hidden rounded-3xl">
-        {/* Input Container */}
+      <div className={`p-3`}>
+        <SignalsIcon />
+      </div>
+    );
+    right = (
+      <motion.div
+        ref={inputScope}
+        className={`flex flex-col justify-end overflow-hidden rounded-3xl ${
+          expandInput &&
+          "outline-1 outline-silver outline bg-nav backdrop-blur-3xl"
+        }`}
+      >
+        {/* Form / Search Results / Top */}
         <div
-          ref={inputScope}
-          className={`flex flex-col justify-end backdrop-blur-xl outline outline-[.5px] outline-silver overflow-hidden ${
-            expandInput && "bg-nav"
+          ref={scope}
+          className={`flex flex-col relative w-full ${
+            selectedFormSound
+              ? "overflow-visible"
+              : "overflow-scroll" + " scrollbar-none"
           }`}
         >
-          {/* Form / Search Results / Top */}
-          <div
-            ref={scope}
-            className={`flex flex-col relative ${
-              selectedFormSound
-                ? "overflow-visible"
-                : "overflow-scroll" + " scrollbar-none"
-            }`}
-          >
-            {/* If no selected form sound render search results */}
-            {selectedFormSound && expandInput ? (
-              <Form />
-            ) : (
-              !selectedFormSound &&
-              inputValue && (
-                <Search
-                  searchData={data}
-                  isInitialLoading={isInitialLoading}
-                  isFetching={isFetching}
-                  error={error}
-                />
-              )
-            )}
+          {/* If no selected form sound render search results */}
+          {selectedFormSound && expandInput ? (
+            <Form />
+          ) : (
+            !selectedFormSound &&
+            inputValue && (
+              <Search
+                searchData={data}
+                isInitialLoading={isInitialLoading}
+                isFetching={isFetching}
+                error={error}
+              />
+            )
+          )}
+        </div>
+
+        {/* Input */}
+        <div
+          className={`${
+            //Make space for the dial
+            selectedFormSound && expandInput ? "ml-10" : ""
+          } p-3 flex items-center relative`}
+        >
+          <div className="absolute left-3 top-0 flex items-center h-full pointer-events-none -z-10 text-xs text-gray3">
+            {!expandInput ? (
+              <IndexIcon />
+            ) : !inputValue && !selectedFormSound ? (
+              "Explore RX..."
+            ) : selectedFormSound && !inputValue ? (
+              "Arrows to dial; Type for entry; Enter to view."
+            ) : null}
           </div>
 
-          {/* Input */}
-          <div
-            className={`${
-              //Make space for the dial
-              selectedFormSound && expandInput ? "ml-10" : ""
-            } p-3 flex items-center`}
-          >
-            <TextareaAutosize
-              id="entryText"
-              className={`w-full bg-transparent text-xs outline-none resize-none text-black`}
-              placeholder={`RX`}
-              value={expandInput ? inputValue : ""}
-              onChange={(e) => handleNavTextChange(e.target.value)}
-              onBlur={onBlur}
-              onFocus={onFocus}
-              ref={inputRef}
-              onKeyDown={handleKeyDown}
-              minRows={1}
-            />
-          </div>
+          <TextareaAutosize
+            id="entryText"
+            className={`w-full bg-transparent text-xs outline-none resize-none text-black`}
+            value={expandInput ? inputValue : ""}
+            onChange={(e) => handleNavTextChange(e.target.value)}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            ref={inputRef}
+            onKeyDown={handleKeyDown}
+            minRows={1}
+          />
         </div>
-      </div>
+      </motion.div>
     );
     middle = (
       <UserAvatar
-        className="w-8- h-8 mb-2 outline outline-[.5px] outline-silver"
+        className="w-8- h-8 outline outline-4 outline-gray3"
         imageSrc={user.image}
         altText={`${user.username}'s avatar`}
         width={32}
@@ -192,13 +197,14 @@ const Nav: React.FC = () => {
 
   return (
     <motion.div
-      className="fixed z-50 flex items-end -bottom-8 left-1/2 -translate-x-1/2"
+      className="fixed z-50 flex items-center -bottom-8 left-1/2 -translate-x-1/2 gap-2"
       initial={initialPosition}
       animate={expandInput ? centerPosition : initialPosition}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      {middle}
       {left}
+      {middle}
+      {right}
     </motion.div>
   );
 };

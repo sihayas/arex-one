@@ -51,8 +51,8 @@ const Album = () => {
   let y = useTransform(scrollY, [0, 24], [0, -416]);
   let springY = useSpring(y, { damping: 20, stiffness: 200 });
 
-  // Album artwork border radius
-  const borderRadius = useTransform(scrollY, [0, 180], ["24px", "16px"]);
+  // Album artwork border radius, same as scrollMax in @Interface
+  const borderRadius = useTransform(scrollY, [0, 64], ["32px", "16px"]);
   const scale = useTransform(scrollY, [0, 180], [1, 0.867]);
 
   // Rating footer opacity

@@ -26,9 +26,10 @@ export const searchAlbums = async (keyword: string) => {
     },
   });
 
+  // Limit to 12 results
   const songs = response.data.results.songs.data
     .filter((song: SongData) => !isUnwanted(song.attributes.albumName)) // Check if the song title contains unwanted keywords
-    .slice(0, 5); // Limit to 8 results
+    .slice(0, 8);
 
   const albums = response.data.results.albums.data
     .filter(
@@ -36,7 +37,7 @@ export const searchAlbums = async (keyword: string) => {
         !album.attributes.isSingle && // Check if the album is not a single
         !isUnwanted(album.attributes.name) // Check if the album title contains unwanted keywords
     )
-    .slice(0, 3);
+    .slice(0, 4);
 
   return { filteredSongs: songs, filteredAlbums: albums };
 };

@@ -73,3 +73,7 @@ a {
     filter: opacity(1);
   }
 }
+
+input {
+  caret-color: black;
+}

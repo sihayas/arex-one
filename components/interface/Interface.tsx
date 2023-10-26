@@ -16,10 +16,12 @@ import {
   useAnimate,
   useScroll,
   useTransform,
-  motionValue,
   MotionValue,
 } from "framer-motion";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { createPortal } from "react-dom";
+
+const MotionNav = motion(Nav);
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
@@ -93,16 +95,34 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     [base.height, target.height]
   );
 
-  // Responsible for making root visible/invisible
-  // useAnimate is necessary to visor the root because in-line motion.div
-  // breaks the filter in Album page through some weird child effects.
+  // Makes root visible/invisible, useAnimate dont use inline
   useEffect(() => {
     const animateParent = async () => {
       const animationConfig = {
         x: "-50%",
         y: "-50%",
-        scale: isVisible ? (expandInput ? 0.97 : 1) : 0.93,
         opacity: isVisible ? 1 : 0,
+      };
+      const transitionConfig = {
+        type: "spring" as const,
+        stiffness: isVisible ? 800 : 500,
+        damping: isVisible ? 120 : 50,
+      };
+      await animateRoot(rootScope.current, animationConfig, transitionConfig);
+    };
+    animateParent();
+  }, [isVisible, animateRoot, rootScope, expandInput]);
+
+  // Animates window shadows
+  useEffect(() => {
+    const animateParent = async () => {
+      const animationConfig = {
+        boxShadow: isVisible
+          ? expandInput
+            ? "2px 4px 10px 0px rgba(0, 0, 0, 0.04), 7px 16px 17px 0px rgba(0, 0, 0, 0.04), 15px 36px 23px 0px rgba(0, 0, 0, 0.02), 27px 64px 28px 0px rgba(0, 0, 0, 0.01), 42px 100px 30px 0px rgba(0, 0, 0, 0.00)"
+            : "9px 20px 49px 0px rgba(0, 0, 0, 0.04), 35px 82px 89px 0px rgba(0, 0, 0, 0.04), 78px 184px 120px 0px rgba(0, 0, 0, 0.02), 139px 327px 142px 0px rgba(0, 0, 0, 0.01), 216px 511px 155px 0px rgba(0, 0, 0, 0.00)"
+          : "none",
+        scale: isVisible ? (expandInput ? 0.944 : 1) : 0.9,
       };
       const transitionConfig = {
         type: "spring" as const,
@@ -112,32 +132,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           ? { stiffness: 180, damping: 12 }
           : { stiffness: 240, damping: 12 },
       };
-      await animateRoot(rootScope.current, animationConfig, transitionConfig);
+      await animate(scope.current, animationConfig, transitionConfig);
     };
     animateParent();
-  }, [isVisible, animateRoot, rootScope, expandInput]);
+  }, [isVisible, animate, scope, expandInput]);
 
-  // Responsible for controlling shadow of root
-  useEffect(() => {
-    const animateParent = async () => {
-      const animationConfig = {
-        boxShadow: isVisible
-          ? expandInput
-            ? "2px 4px 10px 0px rgba(0, 0, 0, 0.04), 7px 16px 17px 0px rgba(0, 0, 0, 0.04), 15px 36px 23px 0px rgba(0, 0, 0, 0.02), 27px 64px 28px 0px rgba(0, 0, 0, 0.01), 42px 100px 30px 0px rgba(0, 0, 0, 0.00)"
-            : "9px 20px 49px 0px rgba(0, 0, 0, 0.04), 35px 82px 89px 0px rgba(0, 0, 0, 0.04), 78px 184px 120px 0px rgba(0, 0, 0, 0.02), 139px 327px 142px 0px rgba(0, 0, 0, 0.01), 216px 511px 155px 0px rgba(0, 0, 0, 0.00)"
-          : "none",
-      };
-      const transitionConfig = {
-        type: "spring" as const,
-        stiffness: isVisible ? 800 : 500,
-        damping: isVisible ? 120 : 50,
-      };
-      await animateRoot(rootScope.current, animationConfig, transitionConfig);
-    };
-    animateParent();
-  }, [isVisible, animateRoot, rootScope, expandInput]);
-
-  // Responsible for shapeshifting the window
+  // Responsible for shapeshifting the window & bouncing
   useEffect(() => {
     // Bounce and shift dimensions on page change
     const sequence = async () => {

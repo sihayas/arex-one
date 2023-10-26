@@ -30,7 +30,7 @@
 
 .cmdk [cmdk-item][aria-selected="true"] {
   background: rgba(0, 0, 0, 0.046);
-  transform: scale(1.02);
+  /* transform: scale(1.02); */
 }
 
 .cmdk [cmdk-item][aria-disabled="true"] {
