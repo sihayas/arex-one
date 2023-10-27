@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSound } from "@/context/SoundContext";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
-import { useInputContext } from "@/context/InputContext";
+import { useNavContext } from "@/context/NavContext";
 
 import { Command } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
@@ -61,7 +61,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     inputRef,
     setStoredInputValue,
     expandInput,
-  } = useInputContext();
+    expandSignals,
+  } = useNavContext();
 
   const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
     useSound();
@@ -118,7 +119,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     const animateParent = async () => {
       const animationConfig = {
         boxShadow: isVisible
-          ? expandInput
+          ? expandInput || expandSignals
             ? "2px 4px 10px 0px rgba(0, 0, 0, 0.04), 7px 16px 17px 0px rgba(0, 0, 0, 0.04), 15px 36px 23px 0px rgba(0, 0, 0, 0.02), 27px 64px 28px 0px rgba(0, 0, 0, 0.01), 42px 100px 30px 0px rgba(0, 0, 0, 0.00)"
             : "9px 20px 49px 0px rgba(0, 0, 0, 0.04), 35px 82px 89px 0px rgba(0, 0, 0, 0.04), 78px 184px 120px 0px rgba(0, 0, 0, 0.02), 139px 327px 142px 0px rgba(0, 0, 0, 0.01), 216px 511px 155px 0px rgba(0, 0, 0, 0.00)"
           : "none",
@@ -135,11 +136,11 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       await animate(scope.current, animationConfig, transitionConfig);
     };
     animateParent();
-  }, [isVisible, animate, scope, expandInput]);
+  }, [isVisible, animate, scope, expandInput, expandSignals]);
 
   useEffect(() => {
     const adjustHeight = async () => {
-      const newHeight = expandInput ? 64 : base.height;
+      const newHeight = expandInput || expandSignals ? 64 : base.height;
       await animate(
         scope.current,
         { height: `${newHeight}px` },
@@ -156,7 +157,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     };
 
     adjustHeight();
-  }, [animate, base.height, scope, expandInput]);
+  }, [animate, base.height, scope, expandInput, expandSignals]);
 
   // Responsible for shapeshifting the window & bouncing
   useEffect(() => {

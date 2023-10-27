@@ -1,12 +1,12 @@
 import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useCallback, useRef } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useInputContext } from "@/context/InputContext";
+import { useNavContext } from "@/context/NavContext";
 import { useUser } from "@supabase/auth-helpers-react";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isVisible, setIsVisible, pages } = useInterfaceContext();
-  const { inputRef } = useInputContext();
+  const { inputRef } = useNavContext();
   const mainContentRef = useRef<HTMLElement>(null);
 
   const user = useUser();

@@ -156,23 +156,6 @@ export function ArrowIcon({ ...props }) {
   );
 }
 
-export function SendIcon({ ...props }) {
-  return (
-    <svg
-      className={props.className}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 16 16"
-      {...props}
-    >
-      <path
-        fill={props.color}
-        d="M14.9 8.9 1.5 14.4a.7.7 0 0 1-.7 0 .8.8 0 0 1-.3-.7v-3.5a.8.8 0 0 1 .6-.7L8.4 8a.1.1 0 0 0 0-.2L1 6.5a.8.8 0 0 1-.6-.7V2.2a.7.7 0 0 1 .7-.7h.3L15 7.2A1 1 0 0 1 15 9Z"
-      />
-    </svg>
-  );
-}
-
 export function EntryBlob({ ...props }) {
   return (
     <svg
@@ -339,6 +322,7 @@ export function SignalsIcon({ ...props }) {
       width={16}
       height={16}
       fill="none"
+      className={props.className}
       {...props}
     >
       <path

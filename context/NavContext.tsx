@@ -6,9 +6,11 @@ import React, {
   SetStateAction,
 } from "react";
 
-export type InputContextType = {
+export type NavContextType = {
   expandInput: boolean;
   setExpandInput: Dispatch<SetStateAction<boolean>>;
+  expandSignals: boolean;
+  setExpandSignals: Dispatch<SetStateAction<boolean>>;
   inputRef: React.MutableRefObject<HTMLTextAreaElement | null>;
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
@@ -19,40 +21,44 @@ export type InputContextType = {
 };
 
 // Create the context, initialized as undefined
-export const InputContext = React.createContext<InputContextType | undefined>(
+export const NavContext = React.createContext<NavContextType | undefined>(
   undefined
 );
 
 // Export a custom hook to consume the context
-export const useInputContext = (): InputContextType => {
-  const context = useContext(InputContext);
+export const useNavContext = (): NavContextType => {
+  const context = useContext(NavContext);
   if (!context) {
-    throw new Error("useInputContext must be used within InputProvider");
+    throw new Error("useNavContext must be used within InputProvider");
   }
   return context;
 };
 
 // Define the props for the InputProvider component
-type InputProviderProps = {
+type NavProviderProps = {
   children: React.ReactNode;
 };
 
 // Define the provider for the context
-export const InputProvider = ({ children }: InputProviderProps) => {
+export const NavProvider = ({ children }: NavProviderProps) => {
   // Input states
   const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
+  const [expandSignals, setExpandSignals] = useState(false);
+
   const [isChangingEssential, setIsChangingEssential] = useState(false);
 
   // Render the provider with the context value
   return (
-    <InputContext.Provider
+    <NavContext.Provider
       value={{
         expandInput,
         setExpandInput,
+        expandSignals,
+        setExpandSignals,
         inputRef,
         inputValue,
         setInputValue,
@@ -63,6 +69,6 @@ export const InputProvider = ({ children }: InputProviderProps) => {
       }}
     >
       {children}
-    </InputContext.Provider>
+    </NavContext.Provider>
   );
 };

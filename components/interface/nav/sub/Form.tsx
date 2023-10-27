@@ -6,9 +6,8 @@ import { postEntry } from "@/lib/apiHandlers/formAPI";
 import { useSound } from "@/context/SoundContext";
 
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
-import { SendIcon, ArrowIcon } from "@/components/icons";
 import Dial from "./items/Dial";
-import { useInputContext } from "@/context/InputContext";
+import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion } from "framer-motion";
 
@@ -19,8 +18,7 @@ const Form = () => {
 
   const { selectedFormSound, setSelectedFormSound } = useSound();
 
-  const { inputRef, inputValue, setInputValue, expandInput } =
-    useInputContext();
+  const { inputRef, inputValue, setInputValue, expandInput } = useNavContext();
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);
@@ -130,11 +128,11 @@ const Form = () => {
       />
 
       {/* Center / Names */}
-      <div className="flex flex-col gap-[9px] text-sm text-black w-full text-end">
-        <div className="line-clamp-1 text-xs leading-none text-gray2">
+      <div className="flex flex-col text-sm text-black w-full text-end">
+        <div className="line-clamp-1 text-xs text-gray2">
           {selectedFormSound.sound.attributes.artistName}
         </div>
-        <div className="line-clamp-1 leading-none font-medium">
+        <div className="line-clamp-1 font-medium">
           {selectedFormSound.sound.attributes.name}
         </div>
       </div>
@@ -181,7 +179,7 @@ const Form = () => {
       <form ref={formRef} onSubmit={handleSubmit}>
         {selectedFormSound.sound.type === "albums" && renderAlbumSection()}
         {selectedFormSound.sound.type === "songs" && renderSongSection()}
-        {expandInput && <Dial setRatingValue={handleRatingChange} />}
+        <Dial setRatingValue={handleRatingChange} />
       </form>
     </motion.div>
   );

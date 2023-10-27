@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { useInputContext } from "@/context/InputContext";
+import { useNavContext } from "@/context/NavContext";
 
-const ratings = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
+const ratings = Array.from({ length: 11 }, (_, i) => i * 0.5);
 
 interface DialProps {
   setRatingValue: (rating: number) => void;
@@ -10,32 +10,36 @@ interface DialProps {
 
 const Dial = ({ setRatingValue }: DialProps) => {
   const [ratingIndex, setRatingIndex] = useState(0);
-  const { inputRef } = useInputContext();
+  const { inputRef } = useNavContext();
+  const dialRef = useRef<HTMLDivElement>(null);
 
-  const handleKeyPress = (e: any) => {
-    if (
-      (document.activeElement === inputRef.current &&
-        inputRef.current?.value === "") ||
-      document.activeElement === dialRef.current
-    ) {
-      if (e.key === "ArrowUp" && ratingIndex < ratings.length - 1) {
-        setRatingIndex((prev) => prev + 1);
-      } else if (e.key === "ArrowDown" && ratingIndex > 0) {
-        setRatingIndex((prev) => prev - 1);
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent) => {
+      const activeElement = document.activeElement;
+      const isInputEmpty = inputRef.current?.value === "";
+
+      if (
+        (activeElement === inputRef.current && isInputEmpty) ||
+        activeElement === dialRef.current
+      ) {
+        if (e.key === "ArrowUp" && ratingIndex < ratings.length - 1) {
+          setRatingIndex((prev) => prev + 1);
+        } else if (e.key === "ArrowDown" && ratingIndex > 0) {
+          setRatingIndex((prev) => prev - 1);
+        }
       }
-    }
-  };
+    },
+    [ratingIndex, inputRef]
+  );
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [ratingIndex, inputRef]);
+    window.addEventListener("keydown", handleKeyPress as any);
+    return () => window.removeEventListener("keydown", handleKeyPress as any);
+  }, [ratingIndex, inputRef, handleKeyPress]);
 
   useEffect(() => {
     setRatingValue(ratings[ratingIndex]);
   }, [ratingIndex, setRatingValue]);
-
-  const dialRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
@@ -44,7 +48,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
         inputRef.current?.value === "" ? "shadow-rating" : ""
       } focus:shadow-rating transition-all absolute -top-[37px] left-[3px]`}
       tabIndex={0}
-      onKeyDown={handleKeyPress}
+      onKeyDown={handleKeyPress as any}
     >
       <motion.div
         initial={false}

@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSound } from "@/context/SoundContext";
-import { useInputContext } from "@/context/InputContext";
+import { useNavContext } from "@/context/NavContext";
 
 const GetSearchResults = (searchQuery: string) => {
-  const { inputValue } = useInputContext();
+  const { inputValue } = useNavContext();
   const { selectedFormSound } = useSound();
   const { data, isInitialLoading, isFetching, error } = useQuery(
     ["albums", searchQuery],

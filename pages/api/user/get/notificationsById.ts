@@ -30,6 +30,7 @@ export default async function handle(
                   record: {
                     include: {
                       album: true,
+                      track: true,
                     },
                   },
                   reply: {
@@ -37,6 +38,7 @@ export default async function handle(
                       record: {
                         include: {
                           album: true,
+                          track: true,
                         },
                       },
                     },
@@ -55,6 +57,7 @@ export default async function handle(
                   record: {
                     include: {
                       album: true,
+                      track: true,
                     },
                   },
                   replyTo: {
@@ -62,6 +65,7 @@ export default async function handle(
                       record: {
                         include: {
                           album: true,
+                          track: true,
                         },
                       },
                     },

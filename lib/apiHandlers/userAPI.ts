@@ -185,17 +185,23 @@ export const unfollowUser = async (followerId: string, followingId: string) => {
 };
 
 // Notifications handlers
-export const fetchNotificationsForUser = async (userId: string) => {
-  if (!userId) {
-    throw new Error("user id is required");
-  }
-  const url = `/api/user/getNotifications`;
-  const response = await axios.get(url, {
-    params: {
-      userId,
+export const useNotificationsQuery = (userId: string | undefined) => {
+  const { data, isLoading, isError } = useQuery(
+    ["notifications", userId],
+    async () => {
+      const url = `/api/user/get/notificationsById`;
+      const response = await axios.get(url, {
+        params: {
+          userId,
+        },
+      });
+      return response.data;
     },
-  });
-  return response.data;
+    {
+      enabled: !!userId,
+    }
+  );
+  return { data, isLoading, isError };
 };
 
 // Edit essential handler

@@ -7,7 +7,8 @@ import TextareaAutosize from "react-textarea-autosize";
 
 import Search from "./sub/Search";
 import Form from "./sub/Form";
-import { useInputContext } from "@/context/InputContext";
+import Signals from "./sub/Signals";
+import { useNavContext } from "@/context/NavContext";
 import { useAnimate } from "framer-motion";
 import UserAvatar from "@/components/global/UserAvatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
@@ -16,26 +17,42 @@ import { SignalsIcon, IndexIcon } from "@/components/icons";
 const Nav: React.FC = () => {
   const { user } = useInterfaceContext();
 
-  const { inputValue, setInputValue, expandInput, setExpandInput, inputRef } =
-    useInputContext();
+  const {
+    inputValue,
+    setInputValue,
+    expandInput,
+    setExpandInput,
+    inputRef,
+    expandSignals,
+    setExpandSignals,
+  } = useNavContext();
   const { selectedFormSound } = useSound();
 
+  // Debounce the search query
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSetSearchQuery = debounce(setSearchQuery, 350);
-
-  const handleNavTextChange = (value: string) => {
+  const debouncedSetSearchQuery = debounce(setSearchQuery, 500);
+  const handleInputTextChange = (value: string) => {
     setInputValue(value);
     debouncedSetSearchQuery(value);
   };
 
+  // Get search results
   const { data, isInitialLoading, isFetching, error } =
     GetSearchResults(searchQuery);
 
-  const [scope, animate] = useAnimate();
+  // RIGHT: Animate the width of the parent div of the input (right side)
   const [inputScope, inputAnimate] = useAnimate();
-
   useEffect(() => {
-    // Define the height based on the conditions
+    inputAnimate(
+      inputScope.current,
+      { width: expandInput ? "316px" : "40px" },
+      { type: "spring", stiffness: 240, damping: 24 }
+    );
+  }, [expandInput, inputAnimate, inputScope]);
+
+  // RIGHT: Animate the height of the Form/Results below the input
+  const [scope, animate] = useAnimate();
+  useEffect(() => {
     let height = "0px";
     if (expandInput) {
       if (selectedFormSound) {
@@ -58,14 +75,15 @@ const Nav: React.FC = () => {
     );
   }, [expandInput, selectedFormSound, inputValue, animate, scope]);
 
-  // Animate the width
+  // LEFT: Animate the width of the Signals icon
+  const [signalsScope, signalsAnimate] = useAnimate();
   useEffect(() => {
-    inputAnimate(
-      inputScope.current,
-      { width: expandInput ? "316px" : "40px" },
+    signalsAnimate(
+      signalsScope.current,
+      { width: expandSignals ? "316px" : "40px" },
       { type: "spring", stiffness: 240, damping: 24 }
     );
-  }, [expandInput, inputAnimate, inputScope]);
+  }, [expandSignals, signalsAnimate, signalsScope]);
 
   const onFocus = useCallback(() => {
     setExpandInput(true);
@@ -75,7 +93,7 @@ const Nav: React.FC = () => {
     setExpandInput(false);
   }, [setExpandInput]);
 
-  // New line creation
+  // Enable new line on enter if Form is active
   const handleKeyDown = (e: any) => {
     if (
       e.key === "Enter" &&
@@ -90,7 +108,7 @@ const Nav: React.FC = () => {
         value.substring(0, cursorPosition) +
         "\n" +
         value.substring(cursorPosition);
-      handleNavTextChange(newValue); // Update the input value with the new line
+      handleInputTextChange(newValue); // Update the input value with the new line
     }
   };
 
@@ -100,10 +118,38 @@ const Nav: React.FC = () => {
 
   if (user) {
     left = (
-      <div className={`p-3`}>
-        <SignalsIcon />
+      <div
+        onClick={() => setExpandSignals(!expandSignals)}
+        onBlur={() => setExpandSignals(false)}
+        ref={signalsScope}
+        className={`cursor-pointer flex flex-col items-center`}
+      >
+        {/* Heading/Icon */}
+        <div className="p-3 flex items-center w-full">
+          <div
+            className={`w-full h-[1.5px] bg-gray3 rounded-full transition-all`}
+          />
+          <SignalsIcon className={"min-w-[16px] min-h-[16px]"} />
+        </div>
+        <Signals />
       </div>
     );
+
+    // User profile
+    middle = (
+      <div className={`w-10 h-10 flex items-center justify-center`}>
+        <UserAvatar
+          className="outline outline-4 outline-gray3"
+          imageSrc={user.image}
+          altText={`${user.username}'s avatar`}
+          width={32}
+          height={32}
+          user={user}
+        />
+      </div>
+    );
+
+    // Form & Search
     right = (
       <motion.div
         ref={inputScope}
@@ -112,10 +158,11 @@ const Nav: React.FC = () => {
         {/* Input */}
         <div
           className={`${
-            //Make space for the dial
+            // Push input to the right to make space for the dial
             selectedFormSound && expandInput ? "ml-10" : ""
           } p-3 flex items-center relative`}
         >
+          {/* Input and placeholder text */}
           <div className="absolute left-3 top-0 flex items-center h-full pointer-events-none -z-10 text-xs text-gray3 font-bold">
             {!expandInput ? (
               <IndexIcon />
@@ -130,7 +177,7 @@ const Nav: React.FC = () => {
             id="entryText"
             className={`w-full bg-transparent text-xs outline-none resize-none text-black`}
             value={expandInput ? inputValue : ""}
-            onChange={(e) => handleNavTextChange(e.target.value)}
+            onChange={(e) => handleInputTextChange(e.target.value)}
             onBlur={onBlur}
             onFocus={onFocus}
             ref={inputRef}
@@ -139,7 +186,7 @@ const Nav: React.FC = () => {
           />
         </div>
 
-        {/* Form / Search Results / Top */}
+        {/* Form / Search Results / Bottom */}
         <div
           ref={scope}
           className={`flex flex-col relative w-full ${
@@ -167,18 +214,6 @@ const Nav: React.FC = () => {
           </AnimatePresence>
         </div>
       </motion.div>
-    );
-    middle = (
-      <div className={`w-10 h-10 flex items-center justify-center`}>
-        <UserAvatar
-          className="outline outline-4 outline-gray3"
-          imageSrc={user.image}
-          altText={`${user.username}'s avatar`}
-          width={32}
-          height={32}
-          user={user}
-        />
-      </div>
     );
   }
 

@@ -4,7 +4,7 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 // Importing context hooks
 import { useSound } from "@/context/SoundContext";
-import { useInputContext } from "@/context/InputContext";
+import { useNavContext } from "@/context/NavContext";
 // Importing function to change essential
 import { changeEssential } from "@/lib/apiHandlers/userAPI";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -27,7 +27,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
     setInputValue,
     setStoredInputValue,
     isChangingEssential,
-  } = useInputContext();
+  } = useNavContext();
 
   // Determine sound type
   const soundType = sound.type === "albums" ? "ALBUM" : "SONG";

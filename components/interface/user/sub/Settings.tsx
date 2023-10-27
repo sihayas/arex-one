@@ -1,5 +1,5 @@
 import { Artwork } from "@/components/global/Artwork";
-import { useInputContext } from "@/context/InputContext";
+import { useNavContext } from "@/context/NavContext";
 import { useUserSettingsQuery, toggleSetting } from "@/lib/apiHandlers/userAPI";
 import { motion } from "framer-motion";
 import { Essential, Settings } from "@/types/dbTypes";
@@ -31,7 +31,7 @@ const Settings = ({ userId, essentials }: SettingsProps) => {
     inputRef,
     isChangingEssential,
     setIsChangingEssential,
-  } = useInputContext();
+  } = useNavContext();
   const { setPrevEssentialId, setRank } = useSound();
 
   // Function to handle edit click
