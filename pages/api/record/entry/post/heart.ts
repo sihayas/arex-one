@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { createHeartRecordActivity } from "@/pages/api/middleware/createActivity";
+import { createHeartActivity } from "@/pages/api/middleware/createActivity";
 
 type Data = {
   success: boolean;
@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { recordId, action, userId } = req.body;
+  const { recordId, action, userId, authorId } = req.body;
 
   if (action === "heart") {
     // Create a new heart
@@ -19,20 +19,13 @@ export default async function handler(
         recordId,
       },
     });
-
-    // Fetch the review to get the author's ID
-    const record = await prisma.record.findUnique({
-      where: { id: recordId },
-      select: { authorId: true },
-    });
-
     // If the author is not the heartr, create an activity and a notification
-    if (record && record.authorId !== userId) {
-      const activity = await createHeartRecordActivity(newHeart.id);
+    if (authorId !== userId) {
+      const activity = await createHeartActivity(newHeart.id);
 
       await prisma.notification.create({
         data: {
-          recipientId: record.authorId,
+          recipientId: authorId,
           activityId: activity.id,
         },
       });

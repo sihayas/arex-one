@@ -7,6 +7,7 @@ const useHandleHeartClick = (
   heartApiUrl: string,
   idKey: string,
   idValue: any,
+  authorId: string,
   userId?: string
 ) => {
   const [hearted, setHeart] = useState(initialHeartByUser);
@@ -26,6 +27,7 @@ const useHandleHeartClick = (
         [idKey]: idValue,
         userId,
         action,
+        authorId,
       });
 
       if (!response.data.success) {

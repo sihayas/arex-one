@@ -10,10 +10,10 @@ export async function createEntryRecordActivity(recordId: string) {
   });
 }
 
-export async function createHeartRecordActivity(heartId: string) {
+export async function createHeartActivity(heartId: string) {
   return prisma.activity.create({
     data: {
-      type: ActivityType.LIKE,
+      type: ActivityType.HEART,
       referenceId: heartId,
     },
   });

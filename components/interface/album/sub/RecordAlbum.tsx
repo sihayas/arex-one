@@ -24,6 +24,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
     "/api/record/entry/post/heart",
     "reviewId",
     record.id,
+    record.author.id,
     user?.id
   );
 

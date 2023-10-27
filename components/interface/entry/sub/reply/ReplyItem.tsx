@@ -49,6 +49,7 @@ export default function ReplyItem({
     "/api/reply/post/heart",
     "replyId",
     reply.id,
+    reply.author.id,
     user?.id
   );
 

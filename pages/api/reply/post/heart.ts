@@ -1,17 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../lib/global/prisma";
 import { ActivityType } from "@/types/dbTypes";
+import { createHeartActivity } from "@/pages/api/middleware/createActivity";
 
 type Data = {
   success: boolean;
-  hearts: number;
 };
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { replyId, action, userId } = req.body;
+  const { replyId, action, userId, authorId } = req.body;
 
   if (action === "heart") {
     // Create a new heart
@@ -21,25 +21,13 @@ export default async function handler(
         replyId,
       },
     });
-
-    // Fetch the reply to get the author's ID
-    const reply = await prisma.reply.findUnique({
-      where: { id: replyId },
-      select: { authorId: true },
-    });
-
     // If the author is not the hearter, create an activity and a notification
-    if (reply && reply.authorId !== userId) {
-      const activity = await prisma.activity.create({
-        data: {
-          type: ActivityType.HEART,
-          id: newHeart.id, // using the ID of the heart
-        },
-      });
+    if (authorId !== userId) {
+      const activity = await createHeartActivity(newHeart.id);
 
       await prisma.notification.create({
         data: {
-          recipientId: reply.authorId,
+          recipientId: authorId,
           activityId: activity.id,
         },
       });
@@ -53,13 +41,7 @@ export default async function handler(
       },
     });
   } else {
-    return res.status(400).json({ success: false, hearts: 0 });
+    return res.status(400).json({ success: false });
   }
-
-  // Get the updated heart count for the reply
-  const updatedHearts = await prisma.heart.count({
-    where: { replyId },
-  });
-
-  res.status(200).json({ success: true, hearts: updatedHearts });
+  res.status(200).json({ success: true });
 }

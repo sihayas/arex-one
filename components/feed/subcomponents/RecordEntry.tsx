@@ -28,6 +28,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
     "/api/record/entry/post/heart",
     "recordId",
     record.id,
+    record.author.id,
     user?.id
   );
 
