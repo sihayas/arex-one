@@ -23,10 +23,10 @@ const useHandleHeartClick = (
 
     try {
       const action = hearted ? "unheart" : "heart";
-      const response = await axios.post(heartApiUrl, {
+      const apiUrl = `${heartApiUrl}/${action}`;
+      const response = await axios.post(apiUrl, {
         [idKey]: idValue,
         userId,
-        action,
         authorId,
       });
 

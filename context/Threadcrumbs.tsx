@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { ReviewData, ReplyData } from "../types/interfaces";
+import { Record, Reply } from "@/types/dbTypes";
 
 type ThreadcrumbProviderType = {
   children: React.ReactNode;
@@ -12,16 +12,16 @@ export type ThreadcrumbContextType = {
   removeLastThreadcrumb: () => void;
   resetThreadcrumbs: () => void;
   removeUpToId: (id: string) => void;
-  replyParent: ReviewData | ReplyData | null;
-  setReplyParent: React.Dispatch<
-    React.SetStateAction<ReviewData | ReplyData | null>
-  >;
+  replyParent: Record | Reply | null;
+  setReplyParent: React.Dispatch<React.SetStateAction<Record | Reply | null>>;
+  record: Record | null;
+  setRecord: React.Dispatch<React.SetStateAction<Record | null>>;
   setThreadcrumbs: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 // Create the context with a default empty object
 export const ThreadcrumbContext = createContext<ThreadcrumbContextType | null>(
-  null,
+  null
 );
 
 // Create a hook to use the context
@@ -36,9 +36,8 @@ export const useThreadcrumb = () => {
 // Create a provider component
 export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
   const [threadcrumbs, setThreadcrumbs] = useState<string[]>([]);
-  const [replyParent, setReplyParent] = useState<ReviewData | ReplyData | null>(
-    null,
-  );
+  const [replyParent, setReplyParent] = useState<Record | Reply | null>(null);
+  const [record, setRecord] = useState<Record | null>(null);
 
   const addToThreadcrumbs = (id: string) => {
     const newThreadcrumbs = [...threadcrumbs, id];
@@ -74,6 +73,8 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
         resetThreadcrumbs,
         replyParent,
         setReplyParent,
+        record,
+        setRecord,
         setThreadcrumbs,
       }}
     >

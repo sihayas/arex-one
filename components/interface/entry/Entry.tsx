@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
@@ -14,12 +14,11 @@ import { useUser } from "@supabase/auth-helpers-react";
 import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
 import ReplyInput from "./sub/reply/ReplyInput";
 import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
-import GradientBlur from "../album/sub/GradientBlur";
 
 export const Entry = () => {
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
-  const { setReplyParent } = useThreadcrumb();
+  const { setReplyParent, setRecord } = useThreadcrumb();
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -39,17 +38,21 @@ export const Entry = () => {
     "/api/record/entry/post/heart",
     "recordId",
     record.id,
+    record.author.id,
     user?.id
   );
 
-  const handleUserClick = useHandleUserClick(record.author);
+  useEffect(() => {
+    if (record) {
+      setRecord(record);
+    }
+  }, [record, setRecord]);
 
-  const recordId = activePage.record?.id;
   const {
     data: replies,
     isLoading,
     isError,
-  } = useRepliesQuery(recordId, user!.id);
+  } = useRepliesQuery(activePage.record?.id, user!.id);
 
   return (
     <motion.div

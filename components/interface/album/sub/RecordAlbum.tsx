@@ -21,8 +21,8 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     record.heartedByUser,
     record._count.hearts,
-    "/api/record/entry/post/heart",
-    "reviewId",
+    "/api/record/entry/post/",
+    "recordId",
     record.id,
     record.author.id,
     user?.id

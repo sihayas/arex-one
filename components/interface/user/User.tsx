@@ -146,8 +146,8 @@ const User = () => {
                 onClick={() => handleTabClick("profile")}
                 src={userData.image}
                 alt={`${userData.name}'s avatar`}
-                width={64}
-                height={64}
+                width={160}
+                height={160}
               />
               {isOwnProfile ? (
                 // Show settings icon if it's own profile

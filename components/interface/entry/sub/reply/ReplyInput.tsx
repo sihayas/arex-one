@@ -11,7 +11,7 @@ const MotionTextareaAutosize = motion(TextareaAutosize);
 
 const ReplyInput = () => {
   const { user } = useInterfaceContext();
-  const { replyParent } = useThreadcrumb();
+  const { replyParent, record } = useThreadcrumb();
   const [replyContent, setReplyContent] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -21,6 +21,7 @@ const ReplyInput = () => {
 
   const handleAddReply = useCallback(
     async (
+      recordAuthorId: string,
       replyParent: Record | Reply,
       replyContent: string,
       userId: string,
@@ -32,6 +33,7 @@ const ReplyInput = () => {
       const isRecordType = isRecord(replyParent) && type === "record";
 
       const requestBody = {
+        recordAuthorId,
         replyId: isReply ? replyParent.id : null,
         recordId: isRecordType
           ? replyParent.id
@@ -59,9 +61,15 @@ const ReplyInput = () => {
   );
 
   const handleReplySubmit = () => {
-    if (!replyParent || !replyContent || !user?.id) return;
+    if (!replyParent || !replyContent || !user?.id || !record) return;
     const type = isRecord(replyParent) ? "record" : "reply";
-    handleAddReply(replyParent, replyContent, user?.id, type);
+    handleAddReply(
+      record?.author.id,
+      replyParent,
+      replyContent,
+      user?.id,
+      type
+    );
   };
 
   const renderReplyInput = useMemo(() => {

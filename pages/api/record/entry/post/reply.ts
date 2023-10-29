@@ -6,8 +6,7 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { recordId, replyId, content, userId } = req.body;
-  console.log(req.body);
+  const { recordAuthorId, recordId, replyId, content, userId } = req.body;
   let rootReplyId = req.body.rootReplyId;
 
   if (req.method === "POST") {
@@ -85,17 +84,6 @@ export default async function handle(
         });
       }
 
-      // Find the review to get the author's ID
-      const record = await prisma.record.findUnique({
-        where: { id: recordId },
-        select: { authorId: true },
-      });
-
-      if (!record) {
-        res.status(404).json({ error: "Review not found." });
-        return;
-      }
-
       // Create a new activity for the reply
       const activity = await createReplyRecordActivity(createdReply.id);
 
@@ -109,10 +97,10 @@ export default async function handle(
         })
         .then((authors) => authors.map((a) => a.authorId));
 
-      authorsInChain.push(record.authorId);
+      // Add the record author to the list of authors in the chain
+      authorsInChain.push(recordAuthorId);
 
       // Create notifications for all unique authors except the one who created the new reply
-      // Get unique authors
       const uniqueAuthors = Array.from(new Set(authorsInChain));
 
       await Promise.all(

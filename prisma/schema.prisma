@@ -214,7 +214,7 @@ model Reply {
   replyTo     Reply?      @relation("ReplyToReply", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   record      Record      @relation(fields: [recordId], references: [id])
   author      User        @relation(fields: [authorId], references: [id])
-  hearts       Heart[]
+  hearts      Heart[]
   replies     Reply[]     @relation("ReplyToReply")
   rootReplies Reply[]     @relation("ReplyToRoot")
   views       View[]      @relation("ReplyViews")

@@ -20,22 +20,6 @@ const App = ({
   const [supabaseClient] = useState(() => createPagesBrowserClient());
   const [queryClient] = useState(() => new QueryClient());
 
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/serviceWorker.js", { scope: "/" })
-        .then((registration) => {
-          console.log(
-            "Service worker registered successfully. Scope:",
-            registration.scope
-          );
-        })
-        .catch((error) => {
-          console.error("Service worker registration failed:", error);
-        });
-    }
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <SessionContextProvider
