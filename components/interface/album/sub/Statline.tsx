@@ -22,9 +22,9 @@ const StatlineChild: React.FC<StatlineChildProps> = ({
       <motion.div
         whileHover={{ scaleY: 1.5 }}
         style={{ width: `${width}px`, backgroundColor: color }}
-        className={`h-1 my-auto outline outline-1 outline-silver ${
-          index === 0 ? "rounded-l" : ""
-        } ${index === 4 ? "rounded-r" : ""}`}
+        className={`h-1 my-auto ${index === 0 ? "rounded-l" : ""} ${
+          index === 4 ? "rounded-r" : ""
+        }`}
       ></motion.div>
     </>
   );

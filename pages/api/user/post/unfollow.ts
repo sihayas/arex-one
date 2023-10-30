@@ -43,11 +43,32 @@ export default async function handle(
 
     await Promise.all(
       activitiesToDelete.map(async (activity) => {
-        await prisma.notification.deleteMany({
+        let existingNotification = await prisma.notification.findFirst({
           where: {
             activityId: activity.id,
           },
         });
+
+        // If a notification is found, update or delete it based on the user count
+        if (existingNotification) {
+          if (existingNotification.users.length > 1) {
+            await prisma.notification.update({
+              where: { id: existingNotification.id },
+              data: {
+                users: {
+                  set: existingNotification.users.filter(
+                    (user) => user !== String(followerId)
+                  ),
+                },
+              },
+            });
+          } else {
+            await prisma.notification.delete({
+              where: { id: existingNotification.id },
+            });
+          }
+        }
+
         await deleteActivity(activity.id);
       })
     );

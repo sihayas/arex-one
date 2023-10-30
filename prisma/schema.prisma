@@ -284,6 +284,7 @@ model Notification {
   recipientId String
   activity    Activity @relation(fields: [activityId], references: [id])
   activityId  String
+  // To aggregate notifications
   users       String[]
 
   @@index([recipientId])

@@ -38,22 +38,29 @@ export default async function handler(
   // Create a new activity for the heart
   const activity = await createHeartActivity(newHeart.id);
 
-  // Check if there is an existing notification for the activity
+  // Look for an existing notification, considering the time since the last activity
   let existingNotification = await prisma.notification.findFirst({
     where: {
-      activity: { type: ActivityType.HEART, heart: { recordId } },
-      recipientId: authorId,
+      AND: [
+        { activity: { type: ActivityType.HEART, heart: { recordId } } },
+        { recipientId: authorId },
+        {
+          activity: {
+            updatedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+          },
+        },
+      ],
     },
     include: { activity: { include: { heart: true } } },
   });
 
-  // If there is an existing notification, update it
+  // If there is an existing notification within the time frame, update it
   if (existingNotification) {
     await prisma.notification.update({
       where: { id: existingNotification.id },
       data: { users: { push: userId } },
     });
-    // If there is no existing notification, create a new one
+    // If there is no existing notification or it's outside the time frame, create a new one
   } else {
     await prisma.notification.create({
       data: { recipientId: authorId, activityId: activity.id, users: [userId] },

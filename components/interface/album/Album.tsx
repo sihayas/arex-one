@@ -48,14 +48,17 @@ const Album = () => {
   });
 
   // Album artwork parallax
-  let y = useTransform(scrollY, [0, 24], [0, -416]);
+  let y = useTransform(scrollY, [0, 24], [0, -160]);
   let springY = useSpring(y, { damping: 20, stiffness: 200 });
 
-  // Album artwork border radius, same as scrollMax in @Interface
-  const borderRadius = useTransform(scrollY, [0, 64], ["32px", "16px"]);
-  const scale = useTransform(scrollY, [0, 180], [1, 0.867]);
+  let x = useTransform(scrollY, [0, 24], [0, 160]);
+  let springX = useSpring(x, { damping: 40, stiffness: 400 });
+
+  let scale = useTransform(scrollY, [0, 24], [1, 0.2]);
+  let scaleSpring = useSpring(scale, { damping: 40, stiffness: 400 });
 
   // Rating footer opacity
+  const borderRadius = useTransform(scrollY, [0, 24], ["32px", "40px"]);
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
 
   // Initializes album. If the album doesnt have detailed data it gets it.
@@ -80,14 +83,15 @@ const Album = () => {
         <>
           <motion.div
             style={{
+              x: springX,
               y: springY,
               borderRadius: borderRadius,
-              scale: scale,
+              scale: scaleSpring,
             }}
-            className="pointer-events-none overflow-hidden sticky -top-0 z-50 -mb-72"
+            className="pointer-events-none overflow-hidden sticky top-0 z-50 -mb-72 shadow-shadowKitHigh"
           >
             <Image
-              className="outline outline-1 outline-silver shadow-shadowKitHigh"
+              className="outline outline-1 outline-silver"
               src={selectedSound.artworkUrl || "/public/images/default.png"}
               alt={`${selectedSound.sound.attributes.name} artwork`}
               width={480}

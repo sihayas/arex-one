@@ -2,6 +2,71 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createReplyRecordActivity } from "@/pages/api/middleware/createActivity";
 
+// Function to notify all users in the reply chain
+async function notifyReplyChain(
+  replyId: string,
+  userId: string,
+  activityId: string
+) {
+  // Set to keep track of already notified users to avoid duplicate notifications
+  const notifiedUsers = new Set();
+
+  // Fetch the reply using the replyId
+  let currentReply = await prisma.reply.findUnique({
+    where: { id: replyId },
+    select: { authorId: true, replyToId: true },
+  });
+
+  // Traverse up the reply chain to notify users
+  while (currentReply) {
+    const { authorId, replyToId } = currentReply;
+    // Only notify the user if they haven't been notified and they aren't the one who made the reply
+    if (!notifiedUsers.has(authorId) && authorId !== userId) {
+      // Add the user to the notified users set
+      notifiedUsers.add(authorId);
+
+      // Fetch an existing notification for the reply within the last 24 hours
+      let existingNotification = await prisma.notification.findFirst({
+        where: {
+          AND: [
+            { activity: { type: ActivityType.REPLY, reply: { id: replyId } } },
+            { recipientId: authorId },
+            {
+              activity: {
+                updatedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+              },
+            },
+          ],
+        },
+        include: { activity: { include: { reply: true } } },
+      });
+
+      // If the recepient already has a notification for the reply within the last 24 hours, update it
+      if (existingNotification) {
+        await prisma.notification.update({
+          where: { id: existingNotification.id },
+          data: { users: { push: userId } },
+        });
+      } else {
+        await prisma.notification.create({
+          data: {
+            recipientId: authorId,
+            activityId,
+          },
+        });
+      }
+    }
+
+    // Move up the reply chain for the next iteration
+    currentReply = replyToId
+      ? await prisma.reply.findUnique({
+          where: { id: replyToId },
+          select: { authorId: true, replyToId: true },
+        })
+      : null;
+  }
+}
+
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
@@ -9,6 +74,7 @@ export default async function handle(
   const { recordAuthorId, recordId, replyId, content, userId } = req.body;
   let rootReplyId = req.body.rootReplyId;
 
+  // Check if the request method is POST
   if (req.method === "POST") {
     // Check if the user is signed in
     if (!userId) {
@@ -27,6 +93,7 @@ export default async function handle(
     }
 
     try {
+      // Prepare the new reply data
       let newReply = {
         author: {
           connect: {
@@ -87,41 +154,17 @@ export default async function handle(
       // Create a new activity for the reply
       const activity = await createReplyRecordActivity(createdReply.id);
 
-      // Find all distinct authors in the chain including the root reply
-      const authorsInChain = await prisma.reply
-        .findMany({
-          where: {
-            OR: [{ id: rootReplyId }, { rootReplyId }],
-          },
-          select: { authorId: true },
-        })
-        .then((authors) => authors.map((a) => a.authorId));
+      // Start notifying the reply chain from the created reply
+      await notifyReplyChain(createdReply.id, userId, activity.id);
 
-      // Add the record author to the list of authors in the chain
-      authorsInChain.push(recordAuthorId);
-
-      // Create notifications for all unique authors except the one who created the new reply
-      const uniqueAuthors = Array.from(new Set(authorsInChain));
-
-      await Promise.all(
-        uniqueAuthors
-          .filter((author) => author !== userId)
-          .map((authorId) =>
-            prisma.notification.create({
-              data: {
-                recipientId: authorId,
-                activityId: activity.id,
-              },
-            })
-          )
-      );
-
+      // Send the created reply back in the response
       res.status(200).json(createdReply);
     } catch (error) {
       console.error("Error adding reply:", error);
       res.status(500).json({ error: "Error adding reply." });
     }
   } else {
+    // If the request method is not POST, return an error
     res.status(405).json({ error: "Method not allowed." });
   }
 }

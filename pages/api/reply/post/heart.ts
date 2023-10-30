@@ -26,10 +26,8 @@ async function notifyReplyChain(
   const notifiedUsers = new Set(); // Keep a record of notified users
 
   while (currentReply) {
-    // Extract the parent of the current reply and its author
     const { authorId, replyToId } = currentReply;
 
-    // Skip & change currentReply if this author has already been notified
     if (notifiedUsers.has(authorId)) {
       currentReply = replyToId
         ? await prisma.reply.findUnique({
@@ -40,22 +38,26 @@ async function notifyReplyChain(
       continue;
     }
 
-    // Check if the author has heart notifications enabled
     const userSettings = await prisma.settings.findUnique({
       where: { userId: authorId },
     });
 
     if (userSettings?.heartNotifications) {
-      // Check if a notification where the activity is a heart towards the reply already exists
       let existingNotification = await prisma.notification.findFirst({
         where: {
-          activity: { type: ActivityType.HEART, heart: { replyId } },
-          recipientId: authorId,
+          AND: [
+            { activity: { type: ActivityType.HEART, heart: { replyId } } },
+            { recipientId: authorId },
+            {
+              activity: {
+                updatedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+              },
+            }, // 24 hours
+          ],
         },
         include: { activity: { include: { heart: true } } },
       });
 
-      // If it exists, update the users array in the notification
       if (existingNotification) {
         await prisma.notification.update({
           where: { id: existingNotification.id },
@@ -70,11 +72,9 @@ async function notifyReplyChain(
           },
         });
       }
-      // Mark this user as notified
       notifiedUsers.add(authorId);
     }
 
-    // Move up the reply chain
     currentReply = replyToId
       ? await prisma.reply.findUnique({
           where: { id: replyToId },
