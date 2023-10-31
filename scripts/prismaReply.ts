@@ -8,8 +8,8 @@ async function replyChain() {
     "clo9niaj40000x0wxbqv7eaz8",
     "clo9niamr0002x0wxovs4ou1h",
     "clo9pqf580000x0nj0zlk0wul",
-  ]; // replace with actual user IDs
-  const recordId = "clnzqay3601xpczjgp83jj4uu";
+  ];
+  const recordId = "clodcje5z000qczoc3vdnfohy";
   const authorId = "5cab3874-5c32-4554-b004-4a3ff919c539";
   let rootReplyId = null;
   let lastReplyId = null;
@@ -25,30 +25,19 @@ async function replyChain() {
         },
       })) as any;
 
-      // If it's the first reply, update its rootReplyId to its own id
       if (i === 0) {
         await prisma.reply.update({
-          where: {
-            id: newReply.id,
-          },
-          data: {
-            rootReplyId: newReply.id,
-          },
+          where: { id: newReply.id },
+          data: { rootReplyId: newReply.id },
         });
         rootReplyId = newReply.id;
       } else {
-        // If it's not the first reply, set its rootReplyId to the rootReplyId
         await prisma.reply.update({
-          where: {
-            id: newReply.id,
-          },
-          data: {
-            rootReplyId: rootReplyId,
-          },
+          where: { id: newReply.id },
+          data: { rootReplyId: rootReplyId },
         });
       }
 
-      // Create an activity for the new reply
       const activity = await prisma.activity.create({
         data: {
           type: ActivityType.REPLY,
@@ -56,17 +45,16 @@ async function replyChain() {
         },
       });
 
-      // Create a notification for the author of the replied-to post
-      if (lastReplyId) {
-        await prisma.notification.create({
-          data: {
-            recipientId: lastReplyId,
-            activityId: activity.id,
-          },
-        });
-      }
+      const aggregationKey = `REPLY|${newReply.id}|${authorId}`;
 
-      // Update lastReplyId for the next iteration
+      await prisma.notification.create({
+        data: {
+          recipientId: authorId,
+          activityId: activity.id,
+          aggregation_Key: aggregationKey,
+        },
+      });
+
       lastReplyId = newReply.id;
     }
   } catch (error) {
