@@ -214,6 +214,7 @@ model Reply {
   replyTo     Reply?      @relation("ReplyToReply", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   record      Record      @relation(fields: [recordId], references: [id])
   author      User        @relation(fields: [authorId], references: [id])
+  
   hearts      Heart[]
   replies     Reply[]     @relation("ReplyToReply")
   rootReplies Reply[]     @relation("ReplyToRoot")
@@ -226,33 +227,6 @@ model Reply {
   @@index([rootReplyId])
 }
 
-
-model Activity {
-  id            String          @id @default(cuid())
-  type          ActivityType
-  referenceId   String
-  createdAt     DateTime        @default(now()) @map(name: "created_at")
-  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
-
-  // Polymorphic relations
-  record        Record?         @relation("ActivityRecord", fields:  [referenceId], references: [id], map: "ActivityToRecord_fkey")
-  heart          Heart?           @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "ActivityToHeart_fkey")
-  follow        Follows?        @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "ActivityToFollow_fkey")
-  reply         Reply?          @relation("ActivityReply",   fields: [referenceId], references: [id], map: "ActivityToReply_fkey")
-
-  notifications Notification[]
-
-  @@index([referenceId])
-}
-
-
-enum ActivityType {
-  RECORD
-  HEART
-  FOLLOWED
-  FOLLOWED_BACK
-  REPLY
-}
 
 
 model View {
@@ -277,15 +251,43 @@ enum ViewType {
   ALBUM
 }
 
+
+model Activity {
+  id            String          @id @default(cuid())
+  type          ActivityType
+  referenceId   String
+  createdAt     DateTime        @default(now()) @map(name: "created_at")
+  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
+
+  // Polymorphic relations
+  record        Record?         @relation("ActivityRecord", fields:  [referenceId], references: [id], map: "ActivityToRecord_fkey")
+  heart          Heart?         @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "ActivityToHeart_fkey")
+  follow        Follows?        @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "ActivityToFollow_fkey")
+  reply         Reply?          @relation("ActivityReply",   fields: [referenceId], references: [id], map: "ActivityToReply_fkey")
+
+  notifications Notification[]
+
+  @@index([referenceId])
+}
+
+
+enum ActivityType {
+  RECORD
+  HEART
+  FOLLOWED
+  FOLLOWED_BACK
+  REPLY
+}
+
+
 model Notification {
-  id          String   @id @default(cuid())
-  read        Boolean  @default(false)
-  recipient   User     @relation(fields: [recipientId], references: [id])
-  recipientId String
-  activity    Activity @relation(fields: [activityId], references: [id])
-  activityId  String
-  // To aggregate notifications
-  users       String[]
+  id              String   @id @default(cuid())
+  recipient       User     @relation(fields: [recipientId], references: [id])
+  recipientId     String
+  activity        Activity @relation(fields: [activityId], references: [id])
+  activityId      String
+  
+  aggregation_Key String?
 
   @@index([recipientId])
   @@index([activityId])

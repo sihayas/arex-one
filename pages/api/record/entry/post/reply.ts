@@ -8,56 +8,30 @@ async function notifyReplyChain(
   userId: string,
   activityId: string
 ) {
-  // Set to keep track of already notified users to avoid duplicate notifications
   const notifiedUsers = new Set();
 
-  // Fetch the reply using the replyId
   let currentReply = await prisma.reply.findUnique({
     where: { id: replyId },
     select: { authorId: true, replyToId: true },
   });
 
-  // Traverse up the reply chain to notify users
   while (currentReply) {
     const { authorId, replyToId } = currentReply;
-    // Only notify the user if they haven't been notified and they aren't the one who made the reply
+
     if (!notifiedUsers.has(authorId) && authorId !== userId) {
-      // Add the user to the notified users set
       notifiedUsers.add(authorId);
 
-      // Fetch an existing notification for the reply within the last 24 hours
-      let existingNotification = await prisma.notification.findFirst({
-        where: {
-          AND: [
-            { activity: { type: ActivityType.REPLY, reply: { id: replyId } } },
-            { recipientId: authorId },
-            {
-              activity: {
-                updatedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-              },
-            },
-          ],
-        },
-        include: { activity: { include: { reply: true } } },
-      });
+      const aggregationKey = `REPLY|${replyId}|${authorId}`;
 
-      // If the recepient already has a notification for the reply within the last 24 hours, update it
-      if (existingNotification) {
-        await prisma.notification.update({
-          where: { id: existingNotification.id },
-          data: { users: { push: userId } },
-        });
-      } else {
-        await prisma.notification.create({
-          data: {
-            recipientId: authorId,
-            activityId,
-          },
-        });
-      }
+      await prisma.notification.create({
+        data: {
+          recipientId: authorId,
+          activityId: activityId,
+          aggregation_Key: aggregationKey,
+        },
+      });
     }
 
-    // Move up the reply chain for the next iteration
     currentReply = replyToId
       ? await prisma.reply.findUnique({
           where: { id: replyToId },
@@ -66,7 +40,6 @@ async function notifyReplyChain(
       : null;
   }
 }
-
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
@@ -154,7 +127,18 @@ export default async function handle(
       // Create a new activity for the reply
       const activity = await createReplyRecordActivity(createdReply.id);
 
-      // Start notifying the reply chain from the created reply
+      // Notify the record author
+      const aggregationKey = `REPLY|${createdReply.id}|${recordAuthorId}`;
+
+      await prisma.notification.create({
+        data: {
+          recipientId: recordAuthorId,
+          activityId: activity.id,
+          aggregation_Key: aggregationKey,
+        },
+      });
+
+      // Notify the reply chain starting from the created reply
       await notifyReplyChain(createdReply.id, userId, activity.id);
 
       // Send the created reply back in the response

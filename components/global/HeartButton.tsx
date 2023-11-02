@@ -4,7 +4,7 @@ import { CrossIcon, LoveIcon } from "../icons";
 
 interface HeartButtonProps {
   handleHeartClick: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => Promise<void>;
   hearted: boolean;
   className?: string;
@@ -44,7 +44,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   const formatText = (
     count: number | undefined,
     singular: string,
-    plural: string
+    plural: string,
   ) => {
     if (count === 0) {
       return null;
@@ -88,7 +88,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
     >
       {/* Icon / Button */}
       <motion.div
-        className={`absolute bg-[#E5E5E6] outline outline-4 outline-white p-2 flex items-center rounded-full  ${
+        className={`absolute bg-[#E5E5E6] p-2 flex items-center rounded-full border-[.5px] border-silver  ${
           isEvenLevel
             ? "origin-bottom-right bottom-0 right-0"
             : "origin-bottom-left bottom-0 -left-1"
@@ -101,6 +101,8 @@ const HeartButton: React.FC<HeartButtonProps> = ({
             x: isEvenLevel ? "-8px" : "0px",
             y: isEvenLevel ? "-8px" : "-8px",
             opacity: 1,
+            boxShadow:
+              "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",
           },
           initial: { scale: 0.2856, x: 0, y: 0, opacity: 1 },
         }}
@@ -110,7 +112,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
       </motion.div>
       {/* Dot */}
       <div
-        className="absolute bottom-0 right-0 w-2 h-2 rounded-full z-0"
+        className="absolute bottom-0 right-0 w-2 h-2 rounded-full z-0 outline outline-white outline-4"
         style={{ backgroundColor: dotColor }}
       />
       <div

@@ -14,8 +14,8 @@ interface ArtworkProps {
 
 export const Artwork = ({
   sound,
-  width = 368,
-  height = 368,
+  width = 352,
+  height = 352,
   className,
 }: ArtworkProps) => {
   const { handleSelectSound } = useHandleSoundClick();
@@ -30,7 +30,7 @@ export const Artwork = ({
   return (
     <Image
       onClick={handleSoundClick}
-      className={`rounded-[7.5px] outline outline-silver outline-[.5px] ${className}`}
+      className={`${className}`}
       src={artworkUrl}
       alt={`artwork`}
       width={width}

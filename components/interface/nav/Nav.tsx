@@ -46,7 +46,7 @@ const Nav: React.FC = () => {
     inputAnimate(
       inputScope.current,
       { width: expandInput ? "316px" : "40px" },
-      { type: "spring", stiffness: 240, damping: 24 }
+      { type: "spring", stiffness: 240, damping: 24 },
     );
   }, [expandInput, inputAnimate, inputScope]);
 
@@ -71,7 +71,7 @@ const Nav: React.FC = () => {
     animate(
       scope.current,
       { height: height },
-      { type: "spring", stiffness: 300, damping: 30 }
+      { type: "spring", stiffness: 300, damping: 30 },
     );
   }, [expandInput, selectedFormSound, inputValue, animate, scope]);
 
@@ -81,7 +81,7 @@ const Nav: React.FC = () => {
     signalsAnimate(
       signalsScope.current,
       { width: expandSignals ? "316px" : "40px" },
-      { type: "spring", stiffness: 240, damping: 24 }
+      { type: "spring", stiffness: 240, damping: 24 },
     );
   }, [expandSignals, signalsAnimate, signalsScope]);
 
@@ -125,13 +125,13 @@ const Nav: React.FC = () => {
         className={`cursor-pointer flex flex-col items-center`}
       >
         {/* Heading/Icon */}
-        <div className="p-3 flex items-center w-full">
+        <div className="p-3 flex items-center w-full ">
           <div
-            className={`w-full h-[1.5px] bg-gray3 rounded-full transition-all`}
+            className={`w-full h-[1.5px] bg-gray3 rounded-full transition-all mb-[1px] -mr-1`}
           />
           <SignalsIcon className={"min-w-[16px] min-h-[16px]"} />
         </div>
-        <Signals />
+        {expandSignals && <Signals />}
       </div>
     );
 

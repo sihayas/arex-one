@@ -51,7 +51,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       }
     };
   }, [handleKeyDown, handleDoubleClick]);
-  console.log(user);
+
   return (
     <>
       {user && pages.length > 0 && (

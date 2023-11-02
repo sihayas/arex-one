@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { ActivityType } from "@/types/dbTypes";
 import { createHeartActivity } from "@/pages/api/middleware/createActivity";
 
 type Data = {
@@ -23,58 +22,30 @@ async function notifyReplyChain(
     select: { authorId: true, replyToId: true },
   });
 
-  const notifiedUsers = new Set(); // Keep a record of notified users
-
   while (currentReply) {
+    // Extract the author ID and replyTo ID from the current reply
     const { authorId, replyToId } = currentReply;
 
-    if (notifiedUsers.has(authorId)) {
-      currentReply = replyToId
-        ? await prisma.reply.findUnique({
-            where: { id: replyToId },
-            select: { authorId: true, replyToId: true },
-          })
-        : null;
-      continue;
-    }
-
-    const userSettings = await prisma.settings.findUnique({
-      where: { userId: authorId },
-    });
-
-    if (userSettings?.heartNotifications) {
-      let existingNotification = await prisma.notification.findFirst({
-        where: {
-          AND: [
-            { activity: { type: ActivityType.HEART, heart: { replyId } } },
-            { recipientId: authorId },
-            {
-              activity: {
-                updatedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-              },
-            }, // 24 hours
-          ],
-        },
-        include: { activity: { include: { heart: true } } },
+    // If the user has not been notified yet and the author is not the user
+    if (authorId !== userId) {
+      const userSettings = await prisma.settings.findUnique({
+        where: { userId: authorId },
       });
 
-      if (existingNotification) {
-        await prisma.notification.update({
-          where: { id: existingNotification.id },
-          data: { users: { push: userId } },
-        });
-      } else {
+      if (userSettings?.heartNotifications) {
+        const aggregationKey = `HEART|${replyId}|${authorId}`;
+
         await prisma.notification.create({
           data: {
             recipientId: authorId,
             activityId,
-            users: [userId],
+            aggregation_Key: aggregationKey,
           },
         });
       }
-      notifiedUsers.add(authorId);
     }
 
+    // Set the current reply to the parent if there is one
     currentReply = replyToId
       ? await prisma.reply.findUnique({
           where: { id: replyToId },

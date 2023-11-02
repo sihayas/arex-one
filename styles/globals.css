@@ -77,3 +77,8 @@ input {
   caret-color: black;
   -webkit-text-fill-color: black;
 }
+
+.clip-squircle {
+  clip-path: path("M 16,0 H 336 a 16,16 0 0 1 16,16 V 336 a 16,16 0 0 1 -16,16 H 16 a 16,16 0 0 1 -16,-16 V 16 a 16,16 0 0 1 16,-16 Z");
+}
+

@@ -1,9 +1,10 @@
 import axios from "axios";
 import { fetchSoundsByTypes, fetchSoundsbyType } from "@/lib/global/musicKit";
-import { Essential, Record } from "@/types/dbTypes";
+import { Essential, Record, Notification } from "@/types/dbTypes";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
+import { extendedNotification } from "@/components/interface/nav/sub/Signals";
 
 // Get user data, handle follow/unfollow, and fetch favorites
 export const useUserDataAndAlbumsQuery = (
@@ -186,7 +187,11 @@ export const unfollowUser = async (followerId: string, followingId: string) => {
 
 // Notifications handlers
 export const useNotificationsQuery = (userId: string | undefined) => {
-  const { data, isLoading, isError } = useQuery(
+  const {
+    data: notifications,
+    isLoading,
+    isError,
+  } = useQuery(
     ["notifications", userId],
     async () => {
       const url = `/api/user/get/notificationsById`;
@@ -195,13 +200,57 @@ export const useNotificationsQuery = (userId: string | undefined) => {
           userId,
         },
       });
+
+      // If notifications exist, attach sound data to each notification
+      if (response.data) {
+        // Initialize appleIds and fetchedMapping
+        let appleIds: { songs: string[]; albums: string[] } = {
+          songs: [],
+          albums: [],
+        };
+        const fetchedMapping: { [key: string]: AlbumData | SongData } = {};
+
+        // Loop through notifications to populate appleIds
+        response.data.forEach((notif: extendedNotification) => {
+          if (notif.soundAppleId) {
+            const { id, type } = notif.soundAppleId;
+            appleIds[type === "song" ? "songs" : "albums"].push(id);
+          }
+        });
+
+        // Fetch sounds by types and enhance notifications with fetched data
+        const fetchedSounds = await fetchSoundsByTypes(appleIds);
+        // Populate fetchedMapping with fetched data
+        fetchedSounds.forEach(
+          (item: AlbumData | SongData) => (fetchedMapping[item.id] = item)
+        );
+
+        // Merge notifications with fetched data
+        const mergedNotifications = response.data.map(
+          (notif: extendedNotification) => {
+            if (notif.soundAppleId) {
+              const { id } = notif.soundAppleId;
+              // If id exists, add fetched data to notification
+              if (id) {
+                notif.fetchedSound = fetchedMapping[id];
+              }
+            }
+            return notif;
+          }
+        );
+
+        // Return the enhanced notifications
+        return mergedNotifications;
+      }
+
       return response.data;
     },
     {
       enabled: !!userId,
     }
   );
-  return { data, isLoading, isError };
+
+  return { data: notifications, isLoading, isError };
 };
 
 // Edit essential handler

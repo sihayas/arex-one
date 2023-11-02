@@ -10,6 +10,8 @@ import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { RecordExtended } from "@/types/globalTypes";
 
+import { EntryBlob } from "@/components/icons";
+
 interface RecordEntryProps {
   record: RecordExtended;
   associatedType: "album" | "track";
@@ -29,8 +31,10 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
     "recordId",
     record.id,
     record.author.id,
-    user?.id
+    user?.id,
   );
+
+  const isAlbumEntry = associatedType === "album";
 
   const handleEntryClick = useHandleEntryClick(record);
 
@@ -38,65 +42,69 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
     <div className="flex">
       <p
         className={`text-gray2 font-medium text-sm leading-[75%] mr-2 text-end min-w-[126px] ${
-          associatedType === "album"
-            ? "translate-y-[384px]"
-            : "translate-y-[128px]"
+          isAlbumEntry ? "translate-y-[350px]" : "translate-y-[224px]"
         }`}
       >
         {record.author.username}
       </p>
-      <UserAvatar
-        className={`w-10 h-10 outline outline-[.5px] outline-silver mr-2 ${
-          associatedType === "album"
-            ? "translate-y-[369px]"
-            : "translate-y-[113px]"
-        }`}
-        imageSrc={record.author.image}
-        altText={`${record.author.username}'s avatar`}
-        width={40}
-        height={40}
-        user={record.author}
-      />
-      {/*<EntryBlob className={`translate-y-[339.5px]`} />*/}
-      <div className="flex flex-col w-[384px] bg-[#F4F4F4] rounded-[13px] relative p-4">
-        {associatedType === "album" ? (
-          <>
-            <Artwork sound={sound} />
-            <Stars
-              className={`absolute top-[335px] -left-[13px] shadow-stars outline outline-silver outline-[.5px] pl-[30px] pr-2 rounded-br-2xl rounded-tr-2xl rounded-bl-lg rounded-tl-lg`}
-              rating={record.entry!.rating}
-              soundName={sound.attributes.name}
-              artist={sound.attributes.artistName}
-            />
-          </>
-        ) : (
-          <div className="flex w-full items-center gap-4">
-            <Artwork sound={sound} width={96} height={96} />
-            <div className="flex flex-col gap-3">
-              <p className="text-xs text-[#3C3C43]/60 leading-[75%] font-medium">
-                {sound.attributes.name}
-              </p>
-              <div className={"flex items-center gap-2"}>
-                <p className="text-xs text-[#3C3C43]/60 leading-[75%]">
-                  {/* {sound.attributes.albumName} */}
-                </p>
-                <p className="text-xs text-[#3C3C43]/60 leading-[75%]">
-                  {sound.attributes.artistName}
-                </p>
-              </div>
-            </div>
+      {/* Username and Rating */}
+      <div
+        className={`flex relative w-10 h-10 mr-2 z-10 drop-shadow-sm ${
+          isAlbumEntry ? "translate-y-[336px]" : "translate-y-[210px]"
+        } `}
+      >
+        <UserAvatar
+          className={`w-10 h-10 border border-gray3`}
+          imageSrc={record.author.image}
+          altText={`${record.author.username}'s avatar`}
+          width={40}
+          height={40}
+          user={record.author}
+        />
+        <Stars
+          className={`bg-[#F4F4F4] absolute -top-[24px] left-[40px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 pr-2`}
+          rating={record.entry!.rating}
+          soundName={sound.attributes.name}
+          artist={sound.attributes.artistName}
+        />
+        <div
+          className={`bg-[#F4F4F4] w-1 h-1 absolute top-1 left-[44px] rounded-full`}
+        />
+        <div
+          className={`bg-[#F4F4F4] w-2 h-2 absolute -top-1 left-[48px] rounded-full`}
+        />
+      </div>
 
-            <Stars
-              className={`absolute top-[80px] -left-[13px] shadow-stars outline outline-silver outline-[.5px] pl-[30px] rounded-br-2xl rounded-tr-2xl rounded-bl-lg rounded-tl-lg`}
-              rating={record.entry!.rating}
-            />
-          </div>
-        )}
+      <div
+        className={`flex flex-col w-[352px] bg-[#F4F4F4] rounded-[16px] relative transition-all duration-300 ease-entryPreview will-change-transform ${
+          isAlbumEntry ? "w-[352px]" : "w-[224px]"
+        } `}
+      >
+        <div className="relative">
+          <Artwork
+            className="rounded-t-[16px]"
+            sound={sound}
+            width={isAlbumEntry ? 352 : 224}
+            height={isAlbumEntry ? 352 : 224}
+          />
+
+          <div
+            style={{
+              content: "",
+              position: "absolute",
+              top: "50%",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "linear-gradient(transparent 50%, #F4F4F4 95%)",
+            }}
+          ></div>
+        </div>
 
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer mt-[11px]`}
+          className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer -mt-[5px] px-4 mb-[10px] will-change-transform`}
         >
           {record.entry?.text}
         </div>
@@ -104,7 +112,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
         <HeartButton
           handleHeartClick={handleHeartClick}
           hearted={hearted}
-          className="absolute -bottom-2 -right-2"
+          className="absolute -bottom-0 -right-0"
           heartCount={heartCount}
           replyCount={record._count.replies}
         />

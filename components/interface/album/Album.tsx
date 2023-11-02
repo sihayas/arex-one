@@ -49,13 +49,13 @@ const Album = () => {
 
   // Album artwork parallax
   let y = useTransform(scrollY, [0, 24], [0, -160]);
-  let springY = useSpring(y, { damping: 20, stiffness: 200 });
+  let springY = useSpring(y, { damping: 30, stiffness: 400, mass: 1 });
 
   let x = useTransform(scrollY, [0, 24], [0, 160]);
-  let springX = useSpring(x, { damping: 40, stiffness: 400 });
+  let springX = useSpring(x, { damping: 40, stiffness: 400, mass: 1 });
 
   let scale = useTransform(scrollY, [0, 24], [1, 0.2]);
-  let scaleSpring = useSpring(scale, { damping: 40, stiffness: 400 });
+  let scaleSpring = useSpring(scale, { damping: 40, stiffness: 400, mass: 1 });
 
   // Rating footer opacity
   const borderRadius = useTransform(scrollY, [0, 24], ["32px", "40px"]);

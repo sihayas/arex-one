@@ -19,9 +19,6 @@ import {
   MotionValue,
 } from "framer-motion";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
-import { createPortal } from "react-dom";
-
-const MotionNav = motion(Nav);
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
@@ -88,12 +85,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.width, target.width]
+    [base.width, target.width],
   );
   const newHeight = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.height, target.height]
+    [base.height, target.height],
   );
 
   // Makes root visible/invisible, useAnimate dont use inline
@@ -120,8 +117,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       const animationConfig = {
         boxShadow: isVisible
           ? expandInput || expandSignals
-            ? "2px 4px 10px 0px rgba(0, 0, 0, 0.04), 7px 16px 17px 0px rgba(0, 0, 0, 0.04), 15px 36px 23px 0px rgba(0, 0, 0, 0.02), 27px 64px 28px 0px rgba(0, 0, 0, 0.01), 42px 100px 30px 0px rgba(0, 0, 0, 0.00)"
-            : "9px 20px 49px 0px rgba(0, 0, 0, 0.04), 35px 82px 89px 0px rgba(0, 0, 0, 0.04), 78px 184px 120px 0px rgba(0, 0, 0, 0.02), 139px 327px 142px 0px rgba(0, 0, 0, 0.01), 216px 511px 155px 0px rgba(0, 0, 0, 0.00)"
+            ? "none"
+            : "none"
           : "none",
         scale: isVisible ? (expandInput ? 0.944 : 1) : 0.9,
       };
@@ -152,7 +149,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           velocity: 10,
           restSpeed: 0.5,
           restDelta: 0.5,
-        }
+        },
       );
     };
 
@@ -167,7 +164,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       await animate(
         scope.current,
         { scale: 0.95 },
-        { type: "spring", stiffness: 800, damping: 40 }
+        { type: "spring", stiffness: 800, damping: 40 },
       );
       // Scale up and dimension shift
       await animate(
@@ -177,7 +174,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           width: `${base.width}px`,
           height: `${base.height}px`,
         },
-        { type: "spring", stiffness: 400, damping: 40 }
+        { type: "spring", stiffness: 400, damping: 40 },
       );
     };
 
@@ -196,15 +193,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           velocity: 10,
           restSpeed: 0.5,
           restDelta: 0.5,
-        }
+        },
       );
     };
 
     const unsubWidth = newWidth.on("change", () =>
-      shiftDimension("width", newWidth)
+      shiftDimension("width", newWidth),
     );
     const unsubHeight = newHeight.on("change", () =>
-      shiftDimension("height", newHeight)
+      shiftDimension("height", newHeight),
     );
 
     return () => {
@@ -243,7 +240,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver rounded-[32px]`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver rounded-[32px] shadow-shadowKitHigh`}
         >
           {/* Base layout / dimensions for a page */}
           <div

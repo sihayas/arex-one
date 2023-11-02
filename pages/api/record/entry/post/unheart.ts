@@ -13,17 +13,14 @@ export default async function handler(
 ) {
   const { recordId, userId, authorId } = req.body;
 
-  // Prevent users from unhearting their own records
   if (authorId === userId) {
     return res.status(400).json({ success: false });
   }
 
-  // Find the existing heart
   const existingHeart = await prisma.heart.findFirst({
     where: { authorId: userId, recordId },
   });
 
-  // If no heart found, return an error
   if (!existingHeart) {
     return res.status(400).json({
       success: false,
@@ -31,12 +28,10 @@ export default async function handler(
     });
   }
 
-  // Find the associated activity
   const existingActivity = await prisma.activity.findFirst({
     where: { type: ActivityType.HEART, referenceId: existingHeart.id },
   });
 
-  // If no activity found, return an error
   if (!existingActivity) {
     return res.status(400).json({
       success: false,
@@ -44,39 +39,25 @@ export default async function handler(
     });
   }
 
-  // Find the existing notification
-  let existingNotification = await prisma.notification.findFirst({
+  // Delete notification first
+  const aggregationKey = `HEART|${recordId}|${authorId}`;
+  await prisma.notification.deleteMany({
     where: {
-      activity: { type: ActivityType.HEART, heart: { recordId } },
+      aggregation_Key: aggregationKey,
       recipientId: authorId,
+      activityId: existingActivity.id,
     },
-    include: { activity: { include: { heart: true } } },
   });
 
-  // If a notification is found, update or delete it based on the user count
-  if (existingNotification) {
-    if (existingNotification.users.length > 1) {
-      await prisma.notification.update({
-        where: { id: existingNotification.id },
-        data: {
-          users: {
-            set: existingNotification.users.filter((user) => user !== userId),
-          },
-        },
-      });
-    } else {
-      await prisma.notification.delete({
-        where: { id: existingNotification.id },
-      });
-    }
-  }
+  // Delete activity second
+  await prisma.activity.delete({
+    where: { id: existingActivity.id },
+  });
 
-  // Delete the activity
-  await prisma.activity.delete({ where: { id: existingActivity.id } });
+  // Delete heart last
+  await prisma.heart.delete({
+    where: { id: existingHeart.id },
+  });
 
-  // Delete the heart
-  await prisma.heart.delete({ where: { id: existingHeart.id } });
-
-  // Return a success response
   res.status(200).json({ success: true });
 }
