@@ -1,99 +1,99 @@
-import { prisma } from "../global/prisma";
-import client from "../global/redis";
-
-interface ReviewData {
-  id: string;
-  rating: number;
-}
-
-// Calculate the average rating from an array of reviews
-function calculateAverageRating(reviews: ReviewData[]) {
-  const average =
-    reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
-  return parseFloat(average.toFixed(1));
-}
-
-// Get albums updated within the last few hours
-async function getRecentlyUpdatedAlbums(hours: number) {
-  const currentDate = new Date();
-  const lastRunDate = new Date();
-  // Runs every 2 hours, so we subtract 2 hours from the current date
-  lastRunDate.setHours(currentDate.getHours() - hours);
-
-  return prisma.album.findMany({
-    where: {
-      lastUpdated: {
-        gte: lastRunDate,
-      },
-    },
-  });
-}
-
-export async function updateAlbumRatings() {
-  // We assume that this function is run every couple of hours
-  const albums = await getRecentlyUpdatedAlbums(2);
-
-  // Loop over each album and calculate the average rating
-  for (const album of albums) {
-    const reviews: ReviewData[] = await prisma.review.findMany({
-      where: {
-        albumId: album.id,
-      },
-      select: {
-        id: true,
-        rating: true,
-      },
-    });
-
-    // Skip albums with no reviews or no reviews since last ratingsCount
-    if (reviews.length === 0 || reviews.length === album.ratingsCount) continue;
-
-    // Calculate average rating and update the album
-    const averageRating = calculateAverageRating(reviews);
-    await prisma.album.update({
-      where: { id: album.id },
-      data: { averageRating, ratingsCount: reviews.length },
-    });
-
-    console.log(
-      `Updated album ${album.id} with new average rating: ${averageRating}`
-    );
-
-    // Save the average rating to the Redis cache
-    await client.set(`album:${album.id}:averageRating`, averageRating);
-  }
-
-  console.log("Album ratings updated successfully");
-}
-
-// In case you reset the database, you can use this function to repopulate
-export async function repopulateAllAlbumRatings() {
-  // Fetch all albums regardless of lastUpdated date
-  const albums = await prisma.album.findMany();
-
-  // Loop over each album and calculate the average rating
-  for (const album of albums) {
-    const reviews = await prisma.review.findMany({
-      where: { albumId: album.id },
-    });
-
-    // Skip albums with no reviews
-    if (reviews.length === 0) continue;
-
-    // Calculate average rating and update the album
-    const averageRating = calculateAverageRating(reviews);
-    await prisma.album.update({
-      where: { id: album.id },
-      data: { averageRating, ratingsCount: reviews.length },
-    });
-
-    console.log(
-      `Updated album ${album.id} with new average rating: ${averageRating}`
-    );
-
-    // Save the average rating to the Redis cache
-    await client.set(`album:${album.id}:averageRating`, averageRating);
-  }
-
-  console.log("Album ratings updated successfully");
-}
+// import { prisma } from "../global/prisma";
+// import client from "../global/redis";
+//
+// interface ReviewData {
+//   id: string;
+//   rating: number;
+// }
+//
+// // Calculate the average rating from an array of reviews
+// function calculateAverageRating(reviews: ReviewData[]) {
+//   const average =
+//     reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+//   return parseFloat(average.toFixed(1));
+// }
+//
+// // Get albums updated within the last few hours
+// async function getRecentlyUpdatedAlbums(hours: number) {
+//   const currentDate = new Date();
+//   const lastRunDate = new Date();
+//   // Runs every 2 hours, so we subtract 2 hours from the current date
+//   lastRunDate.setHours(currentDate.getHours() - hours);
+//
+//   return prisma.album.findMany({
+//     where: {
+//       lastUpdated: {
+//         gte: lastRunDate,
+//       },
+//     },
+//   });
+// }
+//
+// export async function updateAlbumRatings() {
+//   // We assume that this function is run every couple of hours
+//   const albums = await getRecentlyUpdatedAlbums(2);
+//
+//   // Loop over each album and calculate the average rating
+//   for (const album of albums) {
+//     const reviews: ReviewData[] = await prisma.record.findMany({
+//       where: {
+//         albumId: album.id,
+//       },
+//       select: {
+//         id: true,
+//         entry: true,
+//       },
+//     });
+//
+//     // Skip albums with no reviews or no reviews since last ratingsCount
+//     if (reviews.length === 0 || reviews.length === album.ratingsCount) continue;
+//
+//     // Calculate average rating and update the album
+//     const averageRating = calculateAverageRating(reviews);
+//     await prisma.album.update({
+//       where: { id: album.id },
+//       data: { averageRating },
+//     });
+//
+//     console.log(
+//       `Updated album ${album.id} with new average rating: ${averageRating}`,
+//     );
+//
+//     // Save the average rating to the Redis cache
+//     await client.set(`album:${album.id}:averageRating`, averageRating);
+//   }
+//
+//   console.log("Album ratings updated successfully");
+// }
+//
+// // In case you reset the database, you can use this function to repopulate
+// export async function repopulateAllAlbumRatings() {
+//   // Fetch all albums regardless of lastUpdated date
+//   const albums = await prisma.album.findMany();
+//
+//   // Loop over each album and calculate the average rating
+//   for (const album of albums) {
+//     const reviews = await prisma.record.findMany({
+//       where: { albumId: album.id },
+//     });
+//
+//     // Skip albums with no reviews
+//     if (reviews.length === 0) continue;
+//
+//     // Calculate average rating and update the album
+//     const averageRating = calculateAverageRating(reviews);
+//     await prisma.album.update({
+//       where: { id: album.id },
+//       data: { averageRating, ratingsCount: reviews.length },
+//     });
+//
+//     console.log(
+//       `Updated album ${album.id} with new average rating: ${averageRating}`,
+//     );
+//
+//     // Save the average rating to the Redis cache
+//     await client.set(`album:${album.id}:averageRating`, averageRating);
+//   }
+//
+//   console.log("Album ratings updated successfully");
+// }

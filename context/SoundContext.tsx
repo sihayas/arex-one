@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
-interface SelectedSound {
+export interface SelectedSound {
   sound: AlbumData | SongData;
   artworkUrl: string;
 }
@@ -32,7 +32,7 @@ type SoundContextProviderProps = {
 };
 
 export const SoundContext = React.createContext<SoundContextType | undefined>(
-  undefined
+  undefined,
 );
 
 // Export the hook
@@ -48,7 +48,7 @@ export const SoundDetailsProvider = ({
   children,
 }: SoundContextProviderProps) => {
   const [selectedSound, setSelectedSound] = useState<SelectedSound | null>(
-    null
+    null,
   );
 
   const [selectedFormSound, setSelectedFormSound] =

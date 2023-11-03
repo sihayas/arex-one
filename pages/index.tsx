@@ -86,7 +86,7 @@ export default function Home() {
 
       <motion.div
         ref={scrollContainerRef}
-        className="relative flex flex-col gap-10 overflow-scroll pl-0 p-12 pb-0 pt-32 max-w-screen max-h-[125vh] origin-left"
+        className={`relative flex flex-col gap-10 overflow-scroll pl-0 p-12 pb-0 pt-32 max-w-screen max-h-[125vh] origin-left scrollbar-none`}
       >
         {scrollContainerRef && user && (
           <FeedUser userId={user.id} scrollContainerRef={scrollContainerRef} />

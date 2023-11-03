@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { TrackData } from "@/types/interfaces";
+import { SongData } from "@/types/appleTypes";
 import { motion } from "framer-motion";
 import Line from "@/components/interface/entry/sub/icons/Line";
 import Statline from "@/components/interface/album/sub/Statline";
@@ -9,8 +9,8 @@ type sortOrder = "newest" | "positive" | "negative";
 
 interface FilterProps {
   albumName: string;
-  songs: TrackData[];
-  onActiveSongChange: (newActiveSong: TrackData | null) => void;
+  songs: SongData[];
+  onActiveSongChange: (newActiveSong: SongData | null) => void;
   handleSortOrderChange: (newSortOrder: sortOrder) => void;
   expand: boolean;
   setExpand: React.Dispatch<React.SetStateAction<boolean>>;
@@ -52,10 +52,10 @@ const Filter = ({
   setExpand,
 }: FilterProps) => {
   // Expand is passed as a prop due to BlurGradient not working outside of Album
-  const [activeSong, setActiveSong] = useState<TrackData | null>(null);
+  const [activeSong, setActiveSong] = useState<SongData | null>(null);
 
   const handleTabChange = useCallback(
-    (newSong: TrackData | null) => {
+    (newSong: SongData | null) => {
       if (expand) {
         setActiveSong(newSong);
         onActiveSongChange(newSong);

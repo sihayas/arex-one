@@ -25,7 +25,7 @@ const ReplyInput = () => {
       replyParent: Record | Reply,
       replyContent: string,
       userId: string,
-      type: string
+      type: string,
     ) => {
       if (!replyParent) return;
 
@@ -48,7 +48,7 @@ const ReplyInput = () => {
       try {
         const res = await axios.post(
           "/api/record/entry/post/reply",
-          requestBody
+          requestBody,
         );
         if (res.status !== 200) {
           console.error(`Error adding reply: ${res.status}`);
@@ -57,7 +57,7 @@ const ReplyInput = () => {
         console.error("Error adding reply:", error);
       }
     },
-    []
+    [],
   );
 
   const handleReplySubmit = () => {
@@ -68,7 +68,7 @@ const ReplyInput = () => {
       replyParent,
       replyContent,
       user?.id,
-      type
+      type,
     );
   };
 
@@ -179,6 +179,8 @@ const ReplyInput = () => {
 
 export default ReplyInput;
 
-const isRecord = (replyParent: Record | Reply): replyParent is Record => {
+const isRecord = (
+  replyParent: Record | Reply | null,
+): replyParent is Record => {
   return (replyParent as Record).appleAlbumData !== undefined;
 };

@@ -39,7 +39,7 @@ export interface AlbumAttributes {
 
 export interface AlbumRelationships {
   tracks: {
-    data: [TrackData];
+    data: [SongData];
   };
 }
 

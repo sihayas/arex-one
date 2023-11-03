@@ -46,7 +46,7 @@ const RenderEntries: React.FC<RenderRecordsProps> = ({
 
   return (
     // Gap-5 to align with statistics
-    <div className="flex flex-col h-albums min-w-full items-center p-8 pt-8 gap-9">
+    <div className="flex flex-col h-albums min-w-full items-center p-8 pt-[96px] gap-9">
       {flattenedEntries?.length > 0 ? (
         flattenedEntries.map((entry) => (
           <RecordAlbum key={entry.id} record={entry} />
@@ -69,8 +69,22 @@ const RenderEntries: React.FC<RenderRecordsProps> = ({
           )}
         </button>
       ) : (
-        <div className="text-xs text-action uppercase tracking-widest">
-          end of line
+        <div className="flex justify-center items-center">
+          <svg width="100%" height="2">
+            <defs>
+              <pattern
+                id="dots"
+                x="0"
+                y="0"
+                width="10"
+                height="2"
+                patternUnits="userSpaceOnUse"
+              >
+                <circle cx="1" cy="1" r="1" fill="rgb(255,94,0)" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="2" fill="url(#dots)" />
+          </svg>
         </div>
       )}
     </div>

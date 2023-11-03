@@ -41,7 +41,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
   return (
     <div className="flex">
       <p
-        className={`text-gray2 font-medium text-sm leading-[75%] mr-2 text-end min-w-[126px] ${
+        className={`text-gray4 font-medium text-xs leading-[75%] mr-2 text-end min-w-[126px] ${
           isAlbumEntry ? "translate-y-[350px]" : "translate-y-[224px]"
         }`}
       >

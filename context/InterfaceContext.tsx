@@ -5,17 +5,17 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { SelectedSound } from "@/types/globalTypes";
+import { SelectedSound } from "@/context/SoundContext";
 import { Record, User } from "@/types/dbTypes";
 import { useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
-import { supabase } from "@/lib/global/supabase";
 import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
 export type Page = {
   key: string;
   name: string;
-  sound?: SelectedSound;
+  sound?: AlbumData | SongData;
   user?: User;
   record?: Record;
   scrollPosition: number;
@@ -53,7 +53,7 @@ export const useInterfaceContext = (): InterfaceContext => {
   const context = useContext(InterfaceContext);
   if (!context) {
     throw new Error(
-      "useInterfaceContext must be used within" + " InterfaceProvider"
+      "useInterfaceContext must be used within" + " InterfaceProvider",
     );
   }
   return context;
@@ -102,7 +102,7 @@ export const InterfaceContextProvider = ({
           setUser(null);
           setSession(null);
         }
-      }
+      },
     );
 
     setData();

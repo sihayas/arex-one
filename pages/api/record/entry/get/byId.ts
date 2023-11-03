@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { id } = req.query;
   const userId =
@@ -19,7 +19,7 @@ export default async function handle(
           author: {
             select: {
               id: true,
-              name: true,
+              username: true,
               image: true,
             },
           },
@@ -52,7 +52,7 @@ export default async function handle(
               author: {
                 select: {
                   image: true,
-                  name: true,
+                  username: true,
                 },
               },
             },

@@ -98,7 +98,7 @@ model Album {
   notes         String?  
 
   tracks        Track[]
-  essentials     Essential[]
+  essentials    Essential[]
   record        Record[]
   views         View[]   @relation("AlbumViews")
 

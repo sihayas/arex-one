@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Entry, Record, RecordType } from "@/types/dbTypes";
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
 
@@ -9,7 +8,6 @@ import HeartButton from "@/components/global/HeartButton";
 import Stars from "@/components/global/Stars";
 import { useSound } from "@/context/SoundContext";
 import { motion } from "framer-motion";
-import { EntryBlobAlbum } from "@/components/icons";
 import { RecordExtended } from "@/types/globalTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData } from "@/types/appleTypes";
@@ -25,7 +23,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
     "recordId",
     record.id,
     record.author.id,
-    user?.id
+    user?.id,
   );
 
   const handleEntryClick = useHandleEntryClick({
@@ -41,42 +39,51 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col"
+      className="flex bg-[#F4F4F4] rounded-3xl p-4 w-full gap-4 relative"
     >
-      <div className="flex items-center gap-2 ml-5 mb-1">
+      {/* Author Avatar / Left Side*/}
+      <div className={`relative min-w-10 min-h-10 drop-shadow-sm`}>
         <UserAvatar
-          className="w-10 h-10 outline outline-[.5px] outline-silver"
+          className="border border-gray3"
           imageSrc={record.author.image}
           altText={`${record.author.username}'s avatar`}
           width={40}
           height={40}
           user={record.author}
         />
-        <p className="text-gray2 font-medium text-sm leading-[75%]">
+        <Stars
+          className={`bg-[#F4F4F4]/80 absolute -top-[24px] left-[40px] rounded-full backdrop-blur-xl p-[6px] w-max z-10`}
+          rating={record.entry!.rating}
+        />
+        <div
+          className={`bg-[#F4F4F4]/80 w-1 h-1 absolute top-1 left-[44px] rounded-full`}
+        />
+        <div
+          className={`bg-[#F4F4F4]/80 w-2 h-2 absolute -top-1 left-[48px] rounded-full`}
+        />
+      </div>
+
+      {/* Right Side / Name & Content */}
+      <div className="flex flex-col gap-[7px] w-full mt-[10px]">
+        <p className="text-gray5 font-semibold text-sm leading-[75%]">
           {record.author.username}
         </p>
-      </div>
-
-      <EntryBlobAlbum className={"ml-4"} />
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative p-4 gap-2">
-          {/* Content*/}
-          <div
-            onClick={handleEntryClick}
-            className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
-          >
-            {record.entry?.text}
-          </div>
-
-          <HeartButton
-            handleHeartClick={handleHeartClick}
-            hearted={hearted}
-            className="absolute -bottom-2 -right-2"
-            heartCount={heartCount}
-            replyCount={record._count.replies}
-          />
+        {/* Content*/}
+        <div
+          onClick={handleEntryClick}
+          className={`break-words line-clamp-4 w-full text-sm text-gray5 leading-normal cursor-pointer`}
+        >
+          {record.entry?.text}
         </div>
       </div>
+
+      <HeartButton
+        handleHeartClick={handleHeartClick}
+        hearted={hearted}
+        className="absolute bottom-0 right-0"
+        heartCount={heartCount}
+        replyCount={record._count.replies}
+      />
     </motion.div>
   );
 };

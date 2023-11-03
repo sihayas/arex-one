@@ -92,7 +92,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     [base.height, target.height],
   );
 
-  // Makes root visible/invisible, useAnimate dont use inline
+  // Animate ROOT opacity.
   useEffect(() => {
     const animateParent = async () => {
       const animationConfig = {
@@ -102,7 +102,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       };
       const transitionConfig = {
         type: "spring" as const,
-        stiffness: isVisible ? 800 : 500,
+        stiffness: isVisible ? 1200 : 800,
         damping: isVisible ? 120 : 50,
       };
       await animateRoot(rootScope.current, animationConfig, transitionConfig);
