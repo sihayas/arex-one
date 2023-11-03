@@ -62,21 +62,21 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
           user={record.author}
         />
         <Stars
-          className={`bg-[#F4F4F4] absolute -top-[24px] left-[40px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 pr-2`}
+          className={`bg-[#F4F4F4]/80 absolute -top-[24px] left-[40px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 pr-2`}
           rating={record.entry!.rating}
           soundName={sound.attributes.name}
           artist={sound.attributes.artistName}
         />
         <div
-          className={`bg-[#F4F4F4] w-1 h-1 absolute top-1 left-[44px] rounded-full`}
+          className={`bg-[#F4F4F4]/80 w-1 h-1 absolute top-1 left-[44px] rounded-full`}
         />
         <div
-          className={`bg-[#F4F4F4] w-2 h-2 absolute -top-1 left-[48px] rounded-full`}
+          className={`bg-[#F4F4F4]/80 w-2 h-2 absolute -top-1 left-[48px] rounded-full`}
         />
       </div>
 
       <div
-        className={`flex flex-col w-[352px] bg-[#F4F4F4] rounded-[16px] relative transition-all duration-300 ease-entryPreview will-change-transform ${
+        className={`flex flex-col bg-[#F4F4F4] rounded-[16px] relative transition-all duration-300 ease-entryPreview will-change-transform ${
           isAlbumEntry ? "w-[352px]" : "w-[224px]"
         } `}
       >

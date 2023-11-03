@@ -36,11 +36,11 @@ const getDimensions = (pageName: PageName) => {
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 1024 }, // Placeholder values
+      target: { width: 480, height: 832 }, // Placeholder values
     },
     entry: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 1024 }, // Placeholder values
+      target: { width: 480, height: 832 }, // Placeholder values
     },
   };
 
@@ -61,8 +61,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     expandSignals,
   } = useNavContext();
 
-  const { setSelectedSound, selectedFormSound, setSelectedFormSound } =
-    useSound();
+  const { selectedFormSound, setSelectedFormSound } = useSound();
 
   // Page Tracker
   const activePage: Page = pages[pages.length - 1];
@@ -111,30 +110,25 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
-  // Animates window shadows
+  // Animates window presence
   useEffect(() => {
     const animateParent = async () => {
       const animationConfig = {
-        boxShadow: isVisible
-          ? expandInput || expandSignals
-            ? "none"
-            : "none"
-          : "none",
-        scale: isVisible ? (expandInput ? 0.944 : 1) : 0.9,
+        scale: isVisible ? 1 : 0.9,
       };
       const transitionConfig = {
         type: "spring" as const,
-        stiffness: isVisible ? 800 : 500,
-        damping: isVisible ? 120 : 50,
-        scale: expandInput
-          ? { stiffness: 180, damping: 12 }
-          : { stiffness: 240, damping: 12 },
+        mass: 0.75,
+        stiffness: 180,
+        damping: 22,
       };
+
       await animate(scope.current, animationConfig, transitionConfig);
     };
     animateParent();
   }, [isVisible, animate, scope, expandInput, expandSignals]);
 
+  // Shrink when Nav is expanded
   useEffect(() => {
     const adjustHeight = async () => {
       const newHeight = expandInput || expandSignals ? 64 : base.height;
@@ -156,7 +150,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     adjustHeight();
   }, [animate, base.height, scope, expandInput, expandSignals]);
 
-  // Responsible for shapeshifting the window & bouncing
+  // Responsible for shape-shifting the window on scroll & bouncing
   useEffect(() => {
     // Bounce and shift dimensions on page change
     const sequence = async () => {
@@ -240,7 +234,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver rounded-[32px] shadow-shadowKitHigh`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver rounded-[32px] shadow-interface`}
         >
           {/* Base layout / dimensions for a page */}
           <div

@@ -12,7 +12,8 @@ module.exports = {
     extend: {
       boxShadow: {
         nav: "0px 0px 20px 0px rgba(0, 0, 0, 0.09)",
-        interface: "rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;",
+        interface:
+          "0px 16px 36px 0px rgba(0, 0, 0, 0.03), 0px 66px 66px 0px rgba(0, 0, 0, 0.02), 0px 148px 89px 0px rgba(0, 0, 0, 0.01), 0px 263px 105px 0px rgba(0, 0, 0, 0.00), 0px 411px 115px 0px rgba(0, 0, 0, 0.00)",
         stars:
           "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
         shadowKitMedium:
@@ -89,7 +90,7 @@ module.exports = {
             height: "calc(100% - 64px)",
           },
         },
-        ["responsive", "hover"]
+        ["responsive", "hover"],
       );
     },
     plugin(function ({ addUtilities }) {

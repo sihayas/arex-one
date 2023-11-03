@@ -45,40 +45,7 @@ a {
   padding: 0;
 }
 
-.animate-scale-down {
-  animation: scale-down 0.33s forwards;
-}
-
-.animate-scale-up {
-  animation: scale-up 0.44s forwards;
-}
-
-/* Scales down main content/feed */
-@keyframes scale-down {
-  0% {
-    filter: opacity(1);
-  }
-  100% {
-    filter: opacity(0);
-  }
-}
-
-/* Scales up / focuses main content/feed */
-@keyframes scale-up {
-  0% {
-    filter: opacity(0);
-  }
-  100% {
-    filter: opacity(1);
-  }
-}
-
 input {
   caret-color: black;
   -webkit-text-fill-color: black;
 }
-
-.clip-squircle {
-  clip-path: path("M 16,0 H 336 a 16,16 0 0 1 16,16 V 336 a 16,16 0 0 1 -16,16 H 16 a 16,16 0 0 1 -16,-16 V 16 a 16,16 0 0 1 16,-16 Z");
-}
-

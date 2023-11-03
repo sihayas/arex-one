@@ -22,7 +22,7 @@ export const useHandleEntryClick = (record: Record) => {
         threadcrumbs: [record.id],
         dimensions: {
           width: 480,
-          height: 1024,
+          height: 832,
         },
         scrollPosition: 0,
         record: record,
@@ -61,7 +61,7 @@ export const useHandleSoundClick = () => {
 
   const handleSelectSound = async (
     sound: AlbumData | SongData,
-    artworkUrl: string
+    artworkUrl: string,
   ) => {
     setSelectedSound({ sound: sound, artworkUrl });
     setPages((prevPages) => [
@@ -72,7 +72,7 @@ export const useHandleSoundClick = () => {
         sound: sound,
         dimensions: {
           width: 480,
-          height: 1024,
+          height: 832,
         },
         scrollPosition: 0,
       },

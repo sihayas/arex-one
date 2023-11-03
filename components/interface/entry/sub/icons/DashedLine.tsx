@@ -1,30 +1,39 @@
 import React from "react";
 
-interface DashedLineProps {
-  height?: string;
+interface DottedLineProps {
   width?: string;
   color?: string;
   className?: string;
-  dashArray?: string; // new prop to control the dash pattern
+  dotSize?: string;
+  spaceBetween?: string;
 }
 
-const DashedLine: React.FC<DashedLineProps> = ({
-  height = "fit",
-  width = "1.5px",
+const DottedLine: React.FC<DottedLineProps> = ({
+  width = "2px",
   color = "rgba(0, 0, 0, 0.1)",
   className = "",
-  dashArray = "5, 5",
+  dotSize = "2",
+  spaceBetween = "8",
 }) => {
+  const dotPattern = `${dotSize}, ${spaceBetween}`;
   return (
-    <div
-      style={{
-        height: height,
-        borderLeft: `${width} dashed ${color}`, // using border to create dashed effect
-        boxSizing: "border-box", // to ensure border is within the element dimensions
-      }}
+    <svg
       className={className}
-    />
+      style={{ width: "1.5px", height: "100%" }}
+      preserveAspectRatio="none"
+    >
+      <line
+        x1="50%"
+        y1="0"
+        x2="50%"
+        y2="100%"
+        stroke={color}
+        strokeWidth={width}
+        strokeDasharray={dotPattern}
+        strokeLinecap="round"
+      />
+    </svg>
   );
 };
 
-export default DashedLine;
+export default DottedLine;

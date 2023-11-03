@@ -9,7 +9,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 export default function Home() {
-  const { user, session } = useInterfaceContext();
+  const { user, session, isVisible, setIsVisible } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const supabaseClient = useSupabaseClient();
 
@@ -74,7 +74,7 @@ export default function Home() {
       </Head>
 
       <UserAvatar
-        className="fixed translate-x-[138px] translate-y-12 z-50 outline outline-[#FFF] outline-1"
+        className="fixed translate-x-[138px] translate-y-12 z-50 outline outline-[#FFF] outline-4 outline-1"
         imageSrc={user?.image}
         altText={`${user?.username}'s avatar`}
         width={32}
@@ -82,14 +82,11 @@ export default function Home() {
         //@ts-ignore
         user={session.user}
       />
-      <DashedLine
-        className="absolute translate-x-[153px] translate-y-12"
-        height="100vh"
-      />
+      <DashedLine className="absolute translate-x-[153px] translate-y-12" />
 
       <motion.div
         ref={scrollContainerRef}
-        className="relative flex max-h-screen flex-col gap-10 overflow-scroll pl-0 p-12 pt-32 max-w-screen"
+        className="relative flex flex-col gap-10 overflow-scroll pl-0 p-12 pb-0 pt-32 max-w-screen max-h-[125vh] origin-left"
       >
         {scrollContainerRef && user && (
           <FeedUser userId={user.id} scrollContainerRef={scrollContainerRef} />
