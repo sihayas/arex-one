@@ -1,37 +1,53 @@
-import React, { useEffect, useMemo } from "react";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import {
+  Page,
+  PageName,
+  useInterfaceContext,
+} from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { RecordExtended } from "@/types/globalTypes";
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
-import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { Artwork } from "@/components/global/Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
 import HeartButton from "@/components/global/HeartButton";
 import Stars from "@/components/global/Stars";
-import { EntryBlobAlbum } from "@/components/icons";
 import { useUser } from "@supabase/auth-helpers-react";
 import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
 import ReplyInput from "./sub/reply/ReplyInput";
 import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
+import { createPortal } from "react-dom";
+import { GetDimensions } from "@/components/interface/Interface";
 
 export const Entry = () => {
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
   const { setReplyParent, setRecord } = useThreadcrumb();
 
+  // Entry content measurements
+  const entryRef = useRef<HTMLDivElement>(null);
+
+  // Set the max height of the entry content based on window target
+  const activePage: Page = pages[pages.length - 1];
+  const { target } = GetDimensions(activePage.name as PageName);
+  const entryContentMax = target.height * 0.5;
+
+  // Scroll animations
   const { scrollY } = useScroll({
     container: scrollContainerRef,
   });
+  const replyInputOpacity = useTransform(scrollY, [0, 64], [0, 1]);
+  const scrollIndicatorOpacity = useTransform(scrollY, [0, 64], [1, 0]);
 
-  const activePage = pages[pages.length - 1];
+  // React portal for entry content
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
+
   const record = useMemo(
     () => activePage.record as RecordExtended,
-    [activePage]
+    [activePage],
   );
 
-  const opacity = useTransform(scrollY, [0, 120], [0, 1]);
-
+  // Heart button
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     record.heartedByUser,
     record._count.hearts,
@@ -39,20 +55,30 @@ export const Entry = () => {
     "recordId",
     record.id,
     record.author.id,
-    user?.id
+    user?.id,
   );
 
+  // Set record in threadcrumbs
   useEffect(() => {
     if (record) {
       setRecord(record);
     }
   }, [record, setRecord]);
 
+  // Set height to adapt to content for GetDimensions in Interface.tsx
+  useLayoutEffect(() => {
+    if (entryRef.current) {
+      activePage.dimensions.height = entryRef.current.offsetHeight + 5;
+    }
+  }, [activePage.dimensions]);
+
   const {
     data: replies,
     isLoading,
     isError,
   } = useRepliesQuery(activePage.record?.id, user!.id);
+
+  if (!record) return null;
 
   return (
     <motion.div
@@ -61,81 +87,89 @@ export const Entry = () => {
       exit={{ opacity: 0 }}
       className="w-full h-full relative"
     >
-      {record && (
-        <div>
-          {/* EntryFull content starts here */}
-          <div className="flex flex-col items-center pb-0 relative">
-            <div className="relative">
-              <Artwork
-                className="!rounded-3xl !rounded-bl-none !rounded-br-none shadow-shadowKitLow outline outline-1 outline-silver"
-                sound={record.appleAlbumData}
-                width={480}
-                height={480}
-              />
-            </div>
+      {/* EntryFull content starts here */}
+      <div className="flex flex-col items-centerrelative">
+        {/* Artwork */}
+        <div className="relative pb-[100vh]">
+          <Artwork
+            className="!rounded-3xl !rounded-bl-none !rounded-br-none"
+            sound={record.appleAlbumData}
+            width={480}
+            height={480}
+          />
+          <div
+            style={{
+              content: "",
+              position: "absolute",
+              top: "50%",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: "linear-gradient(transparent 50%, #FFFFFF 95%)",
+            }}
+          ></div>
+        </div>
 
-            <Stars
-              className={`w-fit shadow-stars outline outline-silver outline-[.5px] pr-2 pl-8 rounded-br-2xl rounded-tr-2xl mr-auto -mt-[132px] z-10`}
-              rating={record.entry!.rating}
-              soundName={record.appleAlbumData.attributes.name}
-              artist={record.appleAlbumData.attributes.artistName}
-            />
-
-            {/* Avatar & Name */}
-            <div className="flex items-center gap-2 w-full z-10 drop-shadow px-12 pb-2 pt-4">
+        {/* Portal Entry Content */}
+        {createPortal(
+          <motion.div
+            ref={entryRef}
+            whileHover={{ color: "rgba(0,0,0,1)" }}
+            onClick={() => setReplyParent(record)}
+            style={{ maxHeight: entryContentMax }}
+            className={`absolute top-[396px] flex bg-[#F4F4F4] rounded-3xl w-[464px] gap-4 z-50 shadow-shadowKitHigh`}
+          >
+            {/* Author Avatar / Left Side*/}
+            <div
+              className={`relative min-w-[40px] min-h-[40px] drop-shadow-sm ml-4 mt-4 flex flex-col`}
+            >
               <UserAvatar
+                className="border border-gray3 min-w-[40px] min-h-[40px]"
                 imageSrc={record.author.image}
                 altText={`${record.author.username}'s avatar`}
                 width={40}
                 height={40}
                 user={record.author}
               />
-              <p className="text-white font-medium text-sm leading-[75%]">
-                {record.author.username}
-              </p>
+              <Stars
+                className={`bg-[#F4F4F4]/80 absolute -top-[24px] left-[40px] rounded-full backdrop-blur-xl p-[6px] w-max z-10`}
+                rating={record.entry!.rating}
+              />
+              <div
+                className={`bg-[#F4F4F4]/80 w-1 h-1 absolute top-1 left-[44px] rounded-full`}
+              />
+              <div
+                className={`bg-[#F4F4F4]/80 w-2 h-2 absolute -top-1 left-[48px] rounded-full`}
+              />
             </div>
 
-            <EntryBlobAlbum className={"pl-[44px] w-full z-10"} />
-            <motion.div
-              whileHover={{ color: "rgba(0,0,0,1)" }}
-              onClick={() => setReplyParent(record)}
-              className="flex flex-col gap-2"
-            >
-              <div className="flex flex-col w-[416px] bg-[#F4F4F4] rounded-[13px] relative px-4 pt-[11px] pb-[10px] gap-2 shadow-shadowKitHigh outline outline-[.5px] outline-silver">
-                {/* Content*/}
-                <div
-                  className={`break-words w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer`}
-                >
-                  {record.entry?.text}
-                </div>
-
-                <HeartButton
-                  handleHeartClick={handleHeartClick}
-                  hearted={hearted}
-                  className="absolute -bottom-2 -right-2"
-                  heartCount={heartCount}
-                  replyCount={record._count.replies}
-                />
+            {/* Right Side / Name & Content */}
+            <div className="flex flex-col gap-[5px] w-full pt-6 pr-4 pb-[10px] overflow-scroll scrollbar-none">
+              <p className="text-gray5 font-semibold text-xs leading-[1]">
+                {record.author.username}
+              </p>
+              {/* Content*/}
+              <div
+                className={`break-words w-full text-sm text-gray5 leading-normal cursor-pointer`}
+              >
+                {record.entry?.text}
               </div>
-            </motion.div>
-          </div>
-          <div className="pt-8">
-            <svg width="100%" height="2">
-              <line
-                x1="0"
-                y1="0"
-                x2="100%"
-                y2="0"
-                style={{ stroke: "rgba(0,0,0,.05)", strokeWidth: "2px" }}
-                strokeDasharray="2, 2"
-              />
-            </svg>
-          </div>
+            </div>
 
-          <RenderReplies replies={replies} />
-        </div>
-      )}
-      <motion.div style={{ opacity }}>
+            <HeartButton
+              handleHeartClick={handleHeartClick}
+              hearted={hearted}
+              className="absolute bottom-0 right-0"
+              heartCount={heartCount}
+              replyCount={record._count.replies}
+            />
+          </motion.div>,
+          cmdk,
+        )}
+      </div>
+
+      <RenderReplies replies={replies} />
+      <motion.div style={{ opacity: replyInputOpacity }}>
         <ReplyInput />
       </motion.div>
     </motion.div>

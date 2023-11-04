@@ -8,7 +8,7 @@ interface EssentialsProps {
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   return (
-    <div className="flex gap-x-8 gap-y-8 h-fit w-full flex-wrap items-center justify-center">
+    <div className="flex gap-x-8 gap-y-8 h-fit w-full flex-wrap items-center justify-center overflow-hidden">
       {essentials.map((essential, i) => (
         <div className={`w-fit h-fit`} key={essential.id}>
           <Artwork

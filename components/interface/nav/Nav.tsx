@@ -218,15 +218,15 @@ const Nav: React.FC = () => {
   }
 
   // Define the initial and animate values for framer-motion
-  const initialPosition = { x: "-50%", y: 20 };
+  const initialPosition = { x: "-50%", y: 0 };
   const centerPosition = {
     x: "-50%",
-    y: 20,
+    y: 0,
   };
 
   return (
     <motion.div
-      className="fixed z-50 flex items-start -bottom-8 left-1/2 -translate-x-1/2 gap-2 max-h-10"
+      className="fixed z-50 flex items-start -bottom-[56px] left-1/2 -translate-x-1/2 gap-2 max-h-10"
       initial={initialPosition}
       animate={expandInput ? centerPosition : initialPosition}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}

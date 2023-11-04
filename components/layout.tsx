@@ -3,18 +3,12 @@ import React, { useEffect, ReactNode, useCallback, useRef } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 import { useUser } from "@supabase/auth-helpers-react";
-import { motion, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isVisible, setIsVisible, pages } = useInterfaceContext();
   const { inputRef } = useNavContext();
   const mainContentRef = useRef<HTMLElement>(null);
-
-  const { scrollY } = useScroll({
-    container: mainContentRef,
-  });
-
-  console.log(scrollY);
 
   const user = useUser();
 
@@ -79,6 +73,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           filter: isVisible
             ? "brightness(85%) blur(16px)"
             : "brightness(100%) blur(0px)",
+          opacity: isVisible ? 0.15 : 1,
         }}
         transition={{
           filter: {

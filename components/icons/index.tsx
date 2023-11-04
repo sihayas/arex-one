@@ -176,26 +176,6 @@ export function EntryBlob({ ...props }) {
   );
 }
 
-export function EntryBlobAlbum({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={47}
-      height={13}
-      fill="none"
-      {...props}
-      className={props.className}
-    >
-      <path
-        fill="#F4F4F4"
-        fillRule="evenodd"
-        d="M0 12.997c1.712 0 3.424.008 5.137-.01 1.639-.018 3.473-.044 5.069-.645 1.722-.65 2.863-1.787 4.01-3.124.827-.962 2.45-3.015 3.24-4.006.647-.812 1.913-2.418 2.605-3.195C20.93 1.039 22.006 0 23.5 0c1.494 0 2.569 1.039 3.438 2.016.692.776 1.958 2.383 2.605 3.195.79.991 2.412 3.044 3.24 4.006 1.149 1.337 2.288 2.474 4.01 3.124 1.596.6 3.43.627 5.069.645 1.712.018 3.425.01 5.137.01"
-        clipRule="evenodd"
-      />
-    </svg>
-  );
-}
-
 export function StatLineIcon({ ...props }) {
   return (
     <svg

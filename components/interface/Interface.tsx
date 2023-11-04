@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSound } from "@/context/SoundContext";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
@@ -19,28 +19,38 @@ import {
   MotionValue,
 } from "framer-motion";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { PageName } from "@/context/InterfaceContext";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
   entry: Entry,
   user: User,
 };
+// Calculate & set base dimensions and target dimensions for the window per page
+export const GetDimensions = (pageName: PageName) => {
+  const { pages } = useInterfaceContext();
+  const viewportHeight = window.innerHeight;
+  const activePage = pages[pages.length - 1];
+  const [baseHeight, setBaseHeight] = useState(432);
 
-type PageName = "album" | "user" | "entry";
+  useEffect(() => {
+    if (activePage.name === "entry") {
+      setBaseHeight(activePage.dimensions.height + 432);
+    }
+  }, [pages, activePage.name, activePage.dimensions.height]);
 
-const getDimensions = (pageName: PageName) => {
   const dimensions = {
     user: {
       base: { width: 352, height: 576 },
-      target: { width: 352, height: 576 }, // Placeholder values
+      target: { width: 352, height: 576 },
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: 832 }, // Placeholder values
+      target: { width: 480, height: viewportHeight - 2 * 72 },
     },
     entry: {
-      base: { width: 480, height: 480 },
-      target: { width: 480, height: 832 }, // Placeholder values
+      base: { width: 432, height: baseHeight },
+      target: { width: 432, height: viewportHeight - 2 * 72 },
     },
   };
 
@@ -69,11 +79,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const ActiveComponent = componentMap[activePageName];
 
   // Dimensions
-  const { base, target } = getDimensions(activePageName);
-
-  // Scroll tracker
-  const { scrollY } = useScroll({ container: scrollContainerRef });
-  const maxScroll = 64;
+  const { base, target } = GetDimensions(activePageName);
 
   //Window scope
   const [scope, animate] = useAnimate();
@@ -81,6 +87,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const [rootScope, animateRoot] = useAnimate();
 
   // Shift width and height of shape-shifter/window while scrolling
+  const { scrollY } = useScroll({ container: scrollContainerRef });
+  const maxScroll = 64;
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
@@ -110,7 +118,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
-  // Animates window presence
+  // Animates WINDOW scale presence
   useEffect(() => {
     const animateParent = async () => {
       const animationConfig = {
@@ -128,7 +136,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     animateParent();
   }, [isVisible, animate, scope, expandInput, expandSignals]);
 
-  // Shrink when Nav is expanded
+  // Animate WINDOW to shrink when nav is expanded
   useEffect(() => {
     const adjustHeight = async () => {
       const newHeight = expandInput || expandSignals ? 64 : base.height;
@@ -150,7 +158,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     adjustHeight();
   }, [animate, base.height, scope, expandInput, expandSignals]);
 
-  // Responsible for shape-shifting the window on scroll & bouncing
+  // Responsible for shape-shifting the WINDOW on scroll/page change & bouncing
   useEffect(() => {
     // Bounce and shift dimensions on page change
     const sequence = async () => {
@@ -182,7 +190,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {
           type: "spring",
           stiffness: 500,
-          damping: dimension === "width" ? 50 : 60,
+          damping: 60,
           mass: 2,
           velocity: 10,
           restSpeed: 0.5,
@@ -223,7 +231,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   };
 
   return (
-    <div ref={rootScope} className={`cmdk z-10 rounded-[32px]`}>
+    <div ref={rootScope} id={`cmdk`} className={`cmdk z-10 rounded-[32px]`}>
       {/* CMD-K Inner  */}
       <Command
         className={`cmdk-inner flex rounded-3xl`}
@@ -234,14 +242,18 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
+          style={{
+            maxHeight: `${target.height}px`,
+            maxWidth: `${target.width}px`,
+          }}
           className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver rounded-[32px] shadow-interface`}
         >
-          {/* Base layout / dimensions for a page */}
+          {/* Base layout / Static dimensions for a page */}
           <div
             className={`flex absolute z-10`}
             style={{
-              width: `${activePage.dimensions.width}px`,
-              height: `${activePage.dimensions.height}px`,
+              width: `${target.width}px`,
+              height: `${target.height}px`,
             }}
           >
             {/* Container for items within a page. */}
@@ -289,10 +301,14 @@ function renderPageContent(page: Page) {
   }
 
   return (
-    <div className="flex items-center justify-center w-full p-8 pt-4 fixed -top-12 uppercase">
-      <div className="text-xs text-gray3 font-medium pr-4">{typeLabel}</div>
-      <div className="text-xs text-black font-semibold pr-2">{mainContent}</div>
-      <div className="text-xs text-black">{subContent}</div>
+    <div className="flex items-center justify-center w-full fixed -top-[28px] uppercase">
+      <div className="text-xs text-gray3 font-medium pr-4 leading-[1]">
+        {typeLabel}
+      </div>
+      <div className="text-xs text-black font-semibold pr-2 leading-[1]">
+        {mainContent}
+      </div>
+      <div className="text-xs text-black leading-[1]">{subContent}</div>
     </div>
   );
 }

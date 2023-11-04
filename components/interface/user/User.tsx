@@ -34,7 +34,7 @@ const User = () => {
 
   // State for active tab
   const [activeTab, setActiveTab] = useState<"profile" | "soundtrack">(
-    "profile"
+    "profile",
   );
   // Function to handle tab click
   const handleTabClick = (tab: "profile" | "soundtrack") => setActiveTab(tab);
@@ -59,7 +59,7 @@ const User = () => {
 
   // State for subsection
   const [subSection, setSubSection] = useState<"essentials" | "settings">(
-    "essentials"
+    "essentials",
   );
   // Function to handle subsection click
   const handleSubSectionClick = (section: "essentials" | "settings") =>
@@ -141,14 +141,14 @@ const User = () => {
 
             {/* Avatar */}
             <div className="flex items-center fixed bottom-4 left-4 gap-2">
-              <Image
-                className={`rounded-full outline outline-silver outline-[1.5px]`}
-                onClick={() => handleTabClick("profile")}
-                src={userData.image}
-                alt={`${userData.name}'s avatar`}
-                width={160}
-                height={160}
-              />
+              {/*<Image*/}
+              {/*  className={`rounded-full outline outline-silver outline-[1.5px]`}*/}
+              {/*  onClick={() => handleTabClick("profile")}*/}
+              {/*  src={userData.image}*/}
+              {/*  alt={`${userData.name}'s avatar`}*/}
+              {/*  width={160}*/}
+              {/*  height={160}*/}
+              {/*/>*/}
               {isOwnProfile ? (
                 // Show settings icon if it's own profile
                 <SettingsIcon

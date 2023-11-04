@@ -1,7 +1,6 @@
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useSound } from "@/context/SoundContext";
-import { useDominantColor } from "@/hooks/global/useDominantColor";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { v4 as uuidv4 } from "uuid";
@@ -21,7 +20,7 @@ export const useHandleEntryClick = (record: Record) => {
         name: "entry",
         threadcrumbs: [record.id],
         dimensions: {
-          width: 480,
+          width: 432,
           height: 832,
         },
         scrollPosition: 0,
@@ -56,7 +55,7 @@ export const useHandleUserClick = (author: User) => {
 // Handle Sound Click
 export const useHandleSoundClick = () => {
   // CMDK context
-  const { setPages, setIsVisible, pages } = useInterfaceContext();
+  const { setPages, setIsVisible } = useInterfaceContext();
   const { setSelectedSound } = useSound();
 
   const handleSelectSound = async (

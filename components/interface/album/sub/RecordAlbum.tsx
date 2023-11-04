@@ -65,7 +65,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
 
       {/* Right Side / Name & Content */}
       <div className="flex flex-col gap-[7px] w-full mt-[10px]">
-        <p className="text-gray5 font-semibold text-sm leading-[75%]">
+        <p className="text-gray5 font-semibold text-xs leading-[75%]">
           {record.author.username}
         </p>
         {/* Content*/}

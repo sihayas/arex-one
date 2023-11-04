@@ -25,6 +25,8 @@ export type Page = {
   };
 };
 
+export type PageName = "album" | "user" | "entry";
+
 export type InterfaceContext = {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -63,14 +65,21 @@ export const useInterfaceContext = (): InterfaceContext => {
 export const InterfaceContextProvider = ({
   children,
 }: InterfaceContextProviderProps) => {
+  // Control the visibility of the window
   const [isVisible, setIsVisible] = useState(false);
+
+  // Create a ref scrolling within the window
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Initialize the pages array
   const [pages, setPages] = useState<Page[]>([]);
 
+  // Prepare the user and session states
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const supabaseClient = useSupabaseClient();
 
+  // Initialize the session and user on page load
   useEffect(() => {
     // Initialize a session and user if they exist on page load
     const setData = async () => {
@@ -112,6 +121,7 @@ export const InterfaceContextProvider = ({
     };
   }, [supabaseClient]);
 
+  // Initialize the user page upon session and user initialization
   useEffect(() => {
     if (!pages.length && user) {
       setPages([
@@ -126,6 +136,7 @@ export const InterfaceContextProvider = ({
     }
   }, [pages.length, user]);
 
+  // Function to navigate back in the history
   const navigateBack = useCallback(() => {
     setPages((prevPages) => {
       if (prevPages.length <= 1) {
@@ -142,7 +153,7 @@ export const InterfaceContextProvider = ({
     });
   }, []);
 
-  // Function to handle the web browser back button
+  // Function to store pages in web browser history
   useEffect(() => {
     const handlePopState = () => {
       if (pages.length > 1) {
