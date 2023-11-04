@@ -240,7 +240,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     <div ref={rootScope} id={`cmdk`} className={`cmdk z-10 rounded-[32px]`}>
       {/* CMD-K Inner  */}
       <Command
-        className={`cmdk-inner flex rounded-3xl`}
+        className={`cmdk-inner flex rounded-[32px]`}
         shouldFilter={false}
         onKeyDown={handleKeyDown}
         loop
@@ -252,7 +252,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             maxHeight: `${target.height}px`,
             maxWidth: `${target.width}px`,
           }}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver rounded-[32px] shadow-interface`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver rounded-[32px] shadow-interface relative`}
         >
           {/* Base layout / Static dimensions for a page */}
           <div
@@ -265,7 +265,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden w-full h-full scrollbar-none rounded-[32px]`}
+              className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-[32px]`}
             >
               <AnimatePresence>
                 <ActiveComponent />

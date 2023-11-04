@@ -58,10 +58,10 @@ const Album = () => {
   let scaleSpring = useSpring(scale, { damping: 40, stiffness: 400, mass: 1 });
 
   // Rating footer opacity
-  const borderRadius = useTransform(scrollY, [0, 24], ["32px", "40px"]);
+  const borderRadius = useTransform(scrollY, [0, 24], ["32px", "64px"]);
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
 
-  // Initializes album. If the album doesnt have detailed data it gets it.
+  // Initializes album. If the album doesn't have detailed data it gets it.
   const { isLoading, error } = useAlbumQuery();
 
   return (
@@ -112,7 +112,7 @@ const Album = () => {
             />
           </AnimatePresence>
 
-          <GradientBlur expand={expand} />
+          {/*<GradientBlur expand={expand} />*/}
 
           {/* Rating & Sort */}
           <motion.div

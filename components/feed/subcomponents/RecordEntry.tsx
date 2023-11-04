@@ -104,7 +104,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
         {/* Content*/}
         <div
           onClick={handleEntryClick}
-          className={`break-words line-clamp-4 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer -mt-[5px] px-4 mb-[10px] will-change-transform`}
+          className={`break-words line-clamp-6 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer -mt-[5px] px-4 mb-[10px] will-change-transform`}
         >
           {record.entry?.text}
         </div>

@@ -120,18 +120,8 @@ export const Entry = () => {
             width={480}
             height={480}
           />
-          <div
-            style={{
-              content: "",
-              position: "absolute",
-              top: "50%",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: "linear-gradient(transparent 50%, #FFFFFF 95%)",
-            }}
-          ></div>
         </div>
+
         {createPortal(
           <motion.div
             ref={scope}
@@ -197,10 +187,10 @@ export const Entry = () => {
           cmdk,
         )}
       </div>
-      {/*<RenderReplies replies={replies} />*/}
-      {/*<motion.div style={{ opacity: replyInputOpacity }}>*/}
-      {/*  <ReplyInput />*/}
-      {/*</motion.div>*/}
+      {replies && replies.length > 0 && <RenderReplies replies={replies} />}
+      <motion.div style={{ opacity: replyInputOpacity }}>
+        <ReplyInput />
+      </motion.div>
     </motion.div>
   );
 };
