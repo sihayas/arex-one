@@ -27,17 +27,25 @@ import { RecordExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
 
 export const Entry = () => {
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
   const { setReplyParent, setRecord } = useThreadcrumb();
 
-  // Set max height for the entry content
+  // Set max height for the entry content based on the target height set in GetDimensions
   const activePage: Page = pages[pages.length - 1];
   const { target } = GetDimensions(activePage.name as PageName);
   const entryContentMax = target.height * 0.4;
 
   // Hook for entry content animation
   const [scope, animate] = useAnimate();
+
+  // Upon mount, store the height of the entry content into dimensions so
+  // GetDimensions can use it to calculate the base height for this  page
+  useLayoutEffect(() => {
+    if (scope.current)
+      activePage.dimensions.height = scope.current.offsetHeight + 5;
+  }, [activePage.dimensions, scope]);
 
   // Scroll tracker hook
   const { scrollY } = useScroll({ container: scrollContainerRef });
@@ -46,7 +54,7 @@ export const Entry = () => {
   const replyInputOpacity = useTransform(scrollY, [0, 64], [0, 1]);
   const scrollIndicatorOpacity = useTransform(scrollY, [0, 64], [1, 0]);
 
-  // Height helper
+  // Animate entry height from whatever it is to 72px
   const newHeight = useTransform(
     scrollY,
     [0, 64],
@@ -58,7 +66,7 @@ export const Entry = () => {
   const springScale = useSpring(newScale, { stiffness: 160, damping: 20 });
 
   // Animate Y
-  const y = useTransform(scrollY, [0, 64], [396, 32]);
+  const y = useTransform(scrollY, [0, 64], [396, 10]);
   const springY = useSpring(y, { stiffness: 160, damping: 20 });
 
   useEffect(() => {
@@ -74,13 +82,6 @@ export const Entry = () => {
     );
     return () => unsubHeight();
   }, [animate, newHeight, scope]);
-
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
-
-  useLayoutEffect(() => {
-    if (scope.current)
-      activePage.dimensions.height = scope.current.offsetHeight + 5;
-  }, [activePage.dimensions, scope]);
 
   const { data: replies } = useRepliesQuery(activePage.record?.id, user!.id);
 
@@ -112,7 +113,7 @@ export const Entry = () => {
       className="w-full h-full relative"
     >
       <div className="flex flex-col items-center relative">
-        <div className="relative pb-[100vh]">
+        <div className="relative">
           <Artwork
             className="!rounded-3xl !rounded-bl-none !rounded-br-none"
             sound={record.appleAlbumData}
@@ -144,6 +145,7 @@ export const Entry = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            key={record.id}
             className={`absolute top-0 flex bg-[#F4F4F4] rounded-3xl w-[464px] gap-4 z-50 shadow-shadowKitHigh`}
           >
             <div
@@ -195,10 +197,10 @@ export const Entry = () => {
           cmdk,
         )}
       </div>
-      <RenderReplies replies={replies} />
-      <motion.div style={{ opacity: replyInputOpacity }}>
-        <ReplyInput />
-      </motion.div>
+      {/*<RenderReplies replies={replies} />*/}
+      {/*<motion.div style={{ opacity: replyInputOpacity }}>*/}
+      {/*  <ReplyInput />*/}
+      {/*</motion.div>*/}
     </motion.div>
   );
 };

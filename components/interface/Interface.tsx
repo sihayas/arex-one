@@ -265,7 +265,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             {/* Container for items within a page. */}
             <div
               ref={scrollContainerRef}
-              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden w-full h-full scrollbar-none`}
+              className={`flex flex-col items-center overflow-y-scroll overflow-x-hidden w-full h-full scrollbar-none rounded-[32px]`}
             >
               <AnimatePresence>
                 <ActiveComponent />
