@@ -1,53 +1,94 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+// Importing all necessary libraries and components
+import React, { useEffect, useLayoutEffect, useMemo } from "react";
 import {
   Page,
   PageName,
   useInterfaceContext,
 } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { RecordExtended } from "@/types/globalTypes";
+import { useUser } from "@supabase/auth-helpers-react";
+import {
+  motion,
+  useAnimate,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { Artwork } from "@/components/global/Artwork";
-import UserAvatar from "@/components/global/UserAvatar";
 import HeartButton from "@/components/global/HeartButton";
 import Stars from "@/components/global/Stars";
-import { useUser } from "@supabase/auth-helpers-react";
+import UserAvatar from "@/components/global/UserAvatar";
 import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
-import ReplyInput from "./sub/reply/ReplyInput";
+import ReplyInput from "@/components/interface/entry/sub/reply/ReplyInput";
 import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
-import { createPortal } from "react-dom";
 import { GetDimensions } from "@/components/interface/Interface";
+import { RecordExtended } from "@/types/globalTypes";
+import { createPortal } from "react-dom";
 
 export const Entry = () => {
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
   const { setReplyParent, setRecord } = useThreadcrumb();
 
-  // Entry content measurements
-  const entryRef = useRef<HTMLDivElement>(null);
-
-  // Set the max height of the entry content based on window target
+  // Set max height for the entry content
   const activePage: Page = pages[pages.length - 1];
   const { target } = GetDimensions(activePage.name as PageName);
-  const entryContentMax = target.height * 0.5;
+  const entryContentMax = target.height * 0.4;
 
-  // Scroll animations
-  const { scrollY } = useScroll({
-    container: scrollContainerRef,
-  });
+  // Hook for entry content animation
+  const [scope, animate] = useAnimate();
+
+  // Scroll tracker hook
+  const { scrollY } = useScroll({ container: scrollContainerRef });
+
+  // Animate opacity
   const replyInputOpacity = useTransform(scrollY, [0, 64], [0, 1]);
   const scrollIndicatorOpacity = useTransform(scrollY, [0, 64], [1, 0]);
 
-  // React portal for entry content
+  // Height helper
+  const newHeight = useTransform(
+    scrollY,
+    [0, 64],
+    [scope.current?.offsetHeight, 72],
+  );
+
+  // Animate scale
+  const newScale = useTransform(scrollY, [0, 64], [1, 0.861]);
+  const springScale = useSpring(newScale, { stiffness: 160, damping: 20 });
+
+  // Animate Y
+  const y = useTransform(scrollY, [0, 64], [396, 32]);
+  const springY = useSpring(y, { stiffness: 160, damping: 20 });
+
+  useEffect(() => {
+    const shiftDimension = (dimension: string, newDimension: any) => {
+      animate(
+        scope.current,
+        { [dimension]: newDimension.get() },
+        { type: "spring", stiffness: 160, damping: 20 },
+      );
+    };
+    const unsubHeight = newHeight.on("change", () =>
+      shiftDimension("height", newHeight),
+    );
+    return () => unsubHeight();
+  }, [animate, newHeight, scope]);
+
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
+
+  useLayoutEffect(() => {
+    if (scope.current)
+      activePage.dimensions.height = scope.current.offsetHeight + 5;
+  }, [activePage.dimensions, scope]);
+
+  const { data: replies } = useRepliesQuery(activePage.record?.id, user!.id);
 
   const record = useMemo(
     () => activePage.record as RecordExtended,
     [activePage],
   );
 
-  // Heart button
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     record.heartedByUser,
     record._count.hearts,
@@ -58,26 +99,9 @@ export const Entry = () => {
     user?.id,
   );
 
-  // Set record in threadcrumbs
   useEffect(() => {
-    if (record) {
-      setRecord(record);
-    }
+    if (record) setRecord(record);
   }, [record, setRecord]);
-
-  // Set height to adapt to content for GetDimensions in Interface.tsx
-  useLayoutEffect(() => {
-    if (entryRef.current) {
-      activePage.dimensions.height = entryRef.current.offsetHeight + 5;
-    }
-  }, [activePage.dimensions]);
-
-  const {
-    data: replies,
-    isLoading,
-    isError,
-  } = useRepliesQuery(activePage.record?.id, user!.id);
-
   if (!record) return null;
 
   return (
@@ -87,9 +111,7 @@ export const Entry = () => {
       exit={{ opacity: 0 }}
       className="w-full h-full relative"
     >
-      {/* EntryFull content starts here */}
-      <div className="flex flex-col items-centerrelative">
-        {/* Artwork */}
+      <div className="flex flex-col items-center relative">
         <div className="relative pb-[100vh]">
           <Artwork
             className="!rounded-3xl !rounded-bl-none !rounded-br-none"
@@ -109,17 +131,21 @@ export const Entry = () => {
             }}
           ></div>
         </div>
-
-        {/* Portal Entry Content */}
         {createPortal(
           <motion.div
-            ref={entryRef}
+            ref={scope}
             whileHover={{ color: "rgba(0,0,0,1)" }}
             onClick={() => setReplyParent(record)}
-            style={{ maxHeight: entryContentMax }}
-            className={`absolute top-[396px] flex bg-[#F4F4F4] rounded-3xl w-[464px] gap-4 z-50 shadow-shadowKitHigh`}
+            style={{
+              maxHeight: entryContentMax,
+              scale: springScale,
+              y: springY,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`absolute top-0 flex bg-[#F4F4F4] rounded-3xl w-[464px] gap-4 z-50 shadow-shadowKitHigh`}
           >
-            {/* Author Avatar / Left Side*/}
             <div
               className={`relative min-w-[40px] min-h-[40px] drop-shadow-sm ml-4 mt-4 flex flex-col`}
             >
@@ -142,32 +168,33 @@ export const Entry = () => {
                 className={`bg-[#F4F4F4]/80 w-2 h-2 absolute -top-1 left-[48px] rounded-full`}
               />
             </div>
-
-            {/* Right Side / Name & Content */}
             <div className="flex flex-col gap-[5px] w-full pt-6 pr-4 pb-[10px] overflow-scroll scrollbar-none">
               <p className="text-gray5 font-semibold text-xs leading-[1]">
                 {record.author.username}
               </p>
-              {/* Content*/}
               <div
                 className={`break-words w-full text-sm text-gray5 leading-normal cursor-pointer`}
               >
                 {record.entry?.text}
               </div>
             </div>
-
-            <HeartButton
-              handleHeartClick={handleHeartClick}
-              hearted={hearted}
-              className="absolute bottom-0 right-0"
-              heartCount={heartCount}
-              replyCount={record._count.replies}
-            />
+            {/*<HeartButton*/}
+            {/*  handleHeartClick={handleHeartClick}*/}
+            {/*  hearted={hearted}*/}
+            {/*  className="absolute bottom-0 right-0"*/}
+            {/*  heartCount={heartCount}*/}
+            {/*  replyCount={record._count.replies}*/}
+            {/*/>*/}
+            <motion.div
+              style={{ opacity: scrollIndicatorOpacity }}
+              className={`absolute -bottom-[25px] text-xs font-medium text-gray3 left-1/2 -translate-x-1/2 leading-[1]`}
+            >
+              SCROLL HERE TO SHOW CHAINS
+            </motion.div>
           </motion.div>,
           cmdk,
         )}
       </div>
-
       <RenderReplies replies={replies} />
       <motion.div style={{ opacity: replyInputOpacity }}>
         <ReplyInput />

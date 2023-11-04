@@ -70,14 +70,13 @@ export default function Layout({ children }: { children: ReactNode }) {
         className={`origin-top-left`}
         animate={{
           scale: isVisible ? 0.88 : 1,
-          filter: isVisible
-            ? "brightness(85%) blur(16px)"
-            : "brightness(100%) blur(0px)",
-          opacity: isVisible ? 0.15 : 1,
+          filter: isVisible ? "blur(80px)" : "blur(0px)",
+          // opacity: isVisible ? 0.15 : 1,
         }}
         transition={{
           filter: {
-            duration: isVisible ? 0.25 : 0.3,
+            duration: isVisible ? 0.5 : 0.3,
+            delay: isVisible ? 0.4 : 0,
           },
           scale: {
             type: "spring",

@@ -39,26 +39,26 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
   const handleEntryClick = useHandleEntryClick(record);
 
   return (
-    <div className="flex">
+    <div className="flex w-fit">
       <p
         className={`text-gray4 font-medium text-xs leading-[75%] mr-2 text-end min-w-[126px] ${
-          isAlbumEntry ? "translate-y-[350px]" : "translate-y-[224px]"
+          isAlbumEntry ? "translate-y-[352px]" : "translate-y-[224px]"
         }`}
       >
         {record.author.username}
       </p>
       {/* Username and Rating */}
       <div
-        className={`flex relative w-10 h-10 mr-2 z-10 drop-shadow-sm ${
-          isAlbumEntry ? "translate-y-[336px]" : "translate-y-[210px]"
+        className={`flex relative w-12 h-12 -mr-1 z-10 drop-shadow-sm ${
+          isAlbumEntry ? "translate-y-[338px]" : "translate-y-[210px]"
         } `}
       >
         <UserAvatar
-          className={`w-10 h-10 border border-gray3`}
+          className={`w-12 h-12 border border-gray3 outline outline-white outline-4`}
           imageSrc={record.author.image}
           altText={`${record.author.username}'s avatar`}
-          width={40}
-          height={40}
+          width={64}
+          height={64}
           user={record.author}
         />
         <Stars

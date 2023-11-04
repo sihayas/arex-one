@@ -26,13 +26,19 @@ const componentMap: Record<PageName, React.ComponentType<any>> = {
   entry: Entry,
   user: User,
 };
+
 // Calculate & set base dimensions and target dimensions for the window per page
 export const GetDimensions = (pageName: PageName) => {
-  const { pages } = useInterfaceContext();
+  // Initialize base height for window at its longest
   const viewportHeight = window.innerHeight;
+  const { pages } = useInterfaceContext();
   const activePage = pages[pages.length - 1];
+
+  // Initialize base height for entry page
   const [baseHeight, setBaseHeight] = useState(432);
 
+  // When switching to entry page, use calculated->stored height from
+  // useLayoutEffect to set base height for entry page.
   useEffect(() => {
     if (activePage.name === "entry") {
       setBaseHeight(activePage.dimensions.height + 432);
@@ -246,7 +252,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             maxHeight: `${target.height}px`,
             maxWidth: `${target.width}px`,
           }}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-[.5px] outline-silver rounded-[32px] shadow-interface`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver rounded-[32px] shadow-interface`}
         >
           {/* Base layout / Static dimensions for a page */}
           <div
