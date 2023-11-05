@@ -25,6 +25,7 @@ import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
 import { GetDimensions } from "@/components/interface/Interface";
 import { RecordExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
+import GradientBlur from "@/components/interface/album/sub/GradientBlur";
 
 export const Entry = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
@@ -187,7 +188,14 @@ export const Entry = () => {
           cmdk,
         )}
       </div>
-      {replies && replies.length > 0 && <RenderReplies replies={replies} />}
+      {replies && replies.length > 0 && (
+        <div
+          style={{ height: target.height }}
+          className={`flex flex-wrap p-8 pt-[88px] overflow-hidden`}
+        >
+          <RenderReplies replies={replies} />
+        </div>
+      )}
       <motion.div style={{ opacity: replyInputOpacity }}>
         <ReplyInput />
       </motion.div>

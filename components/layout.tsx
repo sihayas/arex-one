@@ -75,14 +75,14 @@ export default function Layout({ children }: { children: ReactNode }) {
         }}
         transition={{
           filter: {
-            duration: isVisible ? 0.5 : 0.3,
-            delay: isVisible ? 0.4 : 0,
+            duration: isVisible ? 0.7 : 0.3,
+            delay: isVisible ? 0.5 : 0,
           },
           scale: {
             type: "spring",
             mass: 0.75,
             stiffness: 180,
-            damping: 22,
+            damping: 14,
           },
         }}
       >
