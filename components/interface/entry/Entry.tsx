@@ -191,7 +191,7 @@ export const Entry = () => {
       {replies && replies.length > 0 && (
         <div
           style={{ height: target.height }}
-          className={`flex flex-wrap p-8 pt-[88px] overflow-hidden`}
+          className={`flex flex-wrap p-8 pt-[88px] overflow-scroll`}
         >
           <RenderReplies replies={replies} />
         </div>

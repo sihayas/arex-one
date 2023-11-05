@@ -30,7 +30,7 @@ export const Artwork = ({
   return (
     <Image
       onClick={handleSoundClick}
-      className={`${className}`}
+      className={`${className} cursor-pointer`}
       src={artworkUrl}
       alt={`artwork`}
       width={width}

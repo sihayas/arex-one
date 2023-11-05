@@ -39,74 +39,71 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
   const handleEntryClick = useHandleEntryClick(record);
 
   return (
-    <div className="flex w-fit">
-      <p
-        className={`text-gray4 font-medium text-xs leading-[75%] mr-2 text-end min-w-[126px] ${
-          isAlbumEntry ? "translate-y-[352px]" : "translate-y-[224px]"
-        }`}
-      >
-        {record.author.username}
-      </p>
+    <div className="flex w-fit gap-2">
       {/* Username and Rating */}
-      <div
-        className={`flex relative w-12 h-12 -mr-1 z-10 drop-shadow-sm ${
-          isAlbumEntry ? "translate-y-[338px]" : "translate-y-[210px]"
-        } `}
-      >
-        <UserAvatar
-          className={`w-12 h-12 border border-gray3 outline outline-white outline-4`}
-          imageSrc={record.author.image}
-          altText={`${record.author.username}'s avatar`}
-          width={64}
-          height={64}
-          user={record.author}
-        />
-        <Stars
-          className={`bg-[#F4F4F4]/80 absolute -top-[24px] left-[40px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 pr-2`}
-          rating={record.entry!.rating}
-          soundName={sound.attributes.name}
-          artist={sound.attributes.artistName}
-        />
-        <div
-          className={`bg-[#F4F4F4]/80 w-1 h-1 absolute top-1 left-[44px] rounded-full`}
-        />
-        <div
-          className={`bg-[#F4F4F4]/80 w-2 h-2 absolute -top-1 left-[48px] rounded-full`}
-        />
+      <div className={`flex items-center relative z-10 h-fit`}>
+        <p
+          className={`text-gray4 font-medium text-xs leading-[75%] mr-2 text-end w-[126px]`}
+        >
+          {record.author.username}
+        </p>
+        <div className={`relative w-[42px] h-[42px] drop-shadow-sm`}>
+          <UserAvatar
+            className={`h-[42px] border border-gray3`}
+            imageSrc={record.author.image}
+            altText={`${record.author.username}'s avatar`}
+            width={42}
+            height={42}
+            user={record.author}
+          />
+          <Stars
+            className={`bg-[#F4F4F4] absolute -top-[32px] left-[42px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 pr-2 text-[#808084] `}
+            rating={record.entry!.rating}
+            soundName={sound.attributes.name}
+            artist={sound.attributes.artistName}
+          />
+          <div
+            className={`bg-[#F4F4F4] w-1 h-1 absolute -top-1 left-[46px] rounded-full`}
+          />
+          <div
+            className={`bg-[#F4F4F4] w-2 h-2 absolute -top-3 left-[50px] rounded-full`}
+          />
+        </div>
       </div>
 
       <div
-        className={`flex flex-col bg-[#F4F4F4] rounded-[16px] relative transition-all duration-300 ease-entryPreview will-change-transform ${
+        className={`flex flex-col bg-[#F4F4F4] rounded-[16px] relative transition-all duration-300 ease-entryPreview will-change-transform pt-[11px] ${
           isAlbumEntry ? "w-[352px]" : "w-[224px]"
         } `}
       >
-        <div className="relative">
+        {/* Content*/}
+        <div
+          onClick={handleEntryClick}
+          className={`break-words line-clamp-6 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer px-4 will-change-transform`}
+        >
+          {record.entry?.text}
+        </div>
+
+        <div className="relative mt-[10px]">
+          <div
+            style={{
+              pointerEvents: "none",
+              content: "",
+              position: "absolute",
+              bottom: "50%",
+              left: 0,
+              right: 0,
+              top: 0,
+              background:
+                "linear-gradient(rgb(244, 244, 244), transparent 50%)",
+            }}
+          ></div>
           <Artwork
-            className="rounded-t-[16px]"
+            className="rounded-b-[16px]"
             sound={sound}
             width={isAlbumEntry ? 352 : 224}
             height={isAlbumEntry ? 352 : 224}
           />
-
-          <div
-            style={{
-              content: "",
-              position: "absolute",
-              top: "50%",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: "linear-gradient(transparent 50%, #F4F4F4 95%)",
-            }}
-          ></div>
-        </div>
-
-        {/* Content*/}
-        <div
-          onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-[#3C3C43]/60 leading-normal cursor-pointer -mt-[5px] px-4 mb-[10px] will-change-transform`}
-        >
-          {record.entry?.text}
         </div>
 
         <HeartButton

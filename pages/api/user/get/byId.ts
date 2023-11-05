@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { id } = req.query;
 
@@ -54,19 +54,18 @@ export default async function handle(
           _count: {
             select: { record: true, followers: true },
           },
-          // reviews: {
-          //   select: {
-          //     id: true,
-          //     content: true,
-          //     author: true,
-          //     album: true,
-          //     rating: true,
-          //     hearts: {
-          //       select: { id: true },
-          //       where: { authorId: sessionUserId },
-          //     },
-          //   },
-          // },
+          followers: {
+            take: 3,
+            select: {
+              follower: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true,
+                },
+              },
+            },
+          },
         },
       });
 

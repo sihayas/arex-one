@@ -47,8 +47,8 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 352, height: 576 },
-      target: { width: 352, height: 576 },
+      base: { width: 640, height: 384 },
+      target: { width: 640, height: 384 },
     },
     album: {
       base: { width: 480, height: 480 },
@@ -84,10 +84,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const activePageName: PageName = activePage.name as PageName;
   const ActiveComponent = componentMap[activePageName];
 
-  // Dimensions
+  // Get dimensions for active page to use with hooks
   const { base, target } = GetDimensions(activePageName);
 
-  //Window scope
+  // Window scope
   const [scope, animate] = useAnimate();
   // Root scope
   const [rootScope, animateRoot] = useAnimate();
@@ -174,7 +174,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         { scale: 0.95 },
         { type: "spring", stiffness: 800, damping: 40 },
       );
-      // Scale up and dimension shift
+
       await animate(
         scope.current,
         {
@@ -248,10 +248,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
           ref={scope}
-          style={{
-            maxHeight: `${target.height}px`,
-            maxWidth: `${target.width}px`,
-          }}
           className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver rounded-[32px] shadow-interface relative`}
         >
           {/* Base layout / Static dimensions for a page */}
