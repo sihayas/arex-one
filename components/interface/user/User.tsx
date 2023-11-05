@@ -8,7 +8,7 @@ import Essentials from "@/components/interface/user/sub/Essentials";
 import Settings from "@/components/interface/user/sub/Settings";
 import { JellyComponent } from "@/components/global/Loading";
 import { useUser } from "@supabase/auth-helpers-react";
-import { SettingsIcon } from "@/components/icons";
+import { ArrowCircleIcon, SettingsIcon } from "@/components/icons";
 import FollowButton from "./sub/components/LinkButton";
 
 // Define link properties for different states
@@ -89,7 +89,7 @@ const User = () => {
             {/* Name & Avatar */}
             <div className={`flex justify-between items-center`}>
               {/* Username */}
-              <div className="text-[22px] tracking-tighter font-bold leading-none">
+              <div className="text-[22px] tracking-tighter font-bold leading-none text-gray4">
                 @{userData.username}
               </div>
               {isOwnProfile ? (
@@ -139,6 +139,7 @@ const User = () => {
                   </div>
                   {/* Followers Images */}
                   <div className="flex -space-x-4">
+                    {/*@ts-ignore/*/}
                     {userData.followers.map(({ follower }) => (
                       <Image
                         key={follower.id}
@@ -157,7 +158,18 @@ const User = () => {
             <AnimatePresence>
               {subSection === "essentials" ? (
                 // Show essentials if subsection is essentials
-                <Essentials essentials={essentials} />
+                <div className="flex gap-x-4 h-fit w-full items-center mt-auto">
+                  <Essentials essentials={essentials} />
+                  <div
+                    onClick={() => handleTabClick("soundtrack")}
+                    className={`flex items-center gap-2`}
+                  >
+                    <ArrowCircleIcon color={`#999`} />
+                    <div className={`text-xs text-gray2 uppercase`}>
+                      soundtrack
+                    </div>
+                  </div>
+                </div>
               ) : isOwnProfile && authenticatedUserId ? (
                 // Show settings if subsection is settings and its own profile
                 <Settings

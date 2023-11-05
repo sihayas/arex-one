@@ -60,7 +60,6 @@ export default async function handle(
               follower: {
                 select: {
                   id: true,
-                  username: true,
                   image: true,
                 },
               },
