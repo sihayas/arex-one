@@ -51,5 +51,5 @@
 //     );
 //   }
 //
-//   console.log("RecordEntry spotlight scores updated successfully");
+//   console.log("FeedEntry spotlight scores updated successfully");
 // }

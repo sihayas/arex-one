@@ -18,7 +18,7 @@ const Form = () => {
 
   const { selectedFormSound, setSelectedFormSound } = useSound();
 
-  const { inputRef, inputValue, setInputValue, expandInput } = useNavContext();
+  const { inputRef, inputValue, setInputValue } = useNavContext();
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);
@@ -58,7 +58,7 @@ const Form = () => {
           loading: "sending...",
           success: "sent", // Just a string message
           error: "Error submitting review",
-        }
+        },
       );
     },
     [
@@ -69,7 +69,7 @@ const Form = () => {
       selectedFormSound,
       setSelectedFormSound,
       setInputValue,
-    ]
+    ],
   );
 
   useEffect(() => {
@@ -110,7 +110,7 @@ const Form = () => {
 
   const artworkUrl = GenerateArtworkUrl(
     selectedFormSound.sound.attributes.artwork.url,
-    "800"
+    "800",
   );
 
   const renderAlbumSection = () => (
@@ -153,15 +153,11 @@ const Form = () => {
       />
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-col text-sm text-black">
-          <div className="font-semibold">
+          <div className="font-semibold line-clamp-1">
             {selectedFormSound.sound.attributes.name}
           </div>
-          <div className="flex gap-1">
-            <div className="">
-              {selectedFormSound.sound.attributes.artistName}
-            </div>
-            <div>&ndash;</div>
-            {/* <div className="">{selectedFormSound.sound.attributes.albumName}</div> */}
+          <div className="line-clamp-1">
+            {selectedFormSound.sound.attributes.artistName}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useFeedQuery } from "@/lib/apiHandlers/feedAPI";
-import { RecordEntry } from "@/components/feed/subcomponents/RecordEntry";
+import { FeedEntry } from "@/components/feed/subcomponents/FeedEntry";
 import { Activity, ActivityType, RecordType } from "@/types/dbTypes";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
@@ -38,17 +38,17 @@ const FeedUser = ({
       {error && "an error has occurred"}
       {allActivities.map((activity: Activity, i) => (
         <Fragment key={activity.id}>
-          {activity.type === ActivityType.RECORD &&
-          activity.record?.type === RecordType.ENTRY ? (
-            <RecordEntry
+          {activity.record ? (
+            <FeedEntry
               record={activity.record as RecordExtended}
-              associatedType={activity.record.album ? "album" : "track"}
+              associatedType={activity.record?.album ? "album" : "track"}
             />
           ) : (
             "No entry available for this activity."
           )}
         </Fragment>
       ))}
+      {/* Pagination */}
       {hasNextPage ? (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           {isFetchingNextPage ? (

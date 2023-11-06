@@ -59,5 +59,5 @@
 //     );
 //   }
 //
-//   console.log("RecordEntry blooming scores updated successfully");
+//   console.log("FeedEntry blooming scores updated successfully");
 // }

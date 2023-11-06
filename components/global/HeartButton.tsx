@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { CrossIcon, LoveIcon } from "../icons";
+import { LoveIcon } from "../icons";
 
 interface HeartButtonProps {
   handleHeartClick: (
@@ -64,7 +64,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
       return (
         <>
           {formatText(replyCount, "Chain", "Chains")}
-          <CrossIcon />
+          &middot;
           {formatText(heartCount, "Heart", "Hearts")}
         </>
       );

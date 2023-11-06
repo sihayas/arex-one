@@ -10,14 +10,12 @@ import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { RecordExtended } from "@/types/globalTypes";
 
-import { EntryBlob } from "@/components/icons";
-
-interface RecordEntryProps {
+interface FeedCaptionProps {
   record: RecordExtended;
   associatedType: "album" | "track";
 }
 
-export const RecordEntry: React.FC<RecordEntryProps> = ({
+export const FeedCaption: React.FC<FeedCaptionProps> = ({
   record,
   associatedType,
 }) => {
@@ -57,8 +55,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
             user={record.author}
           />
           <Stars
-            className={`bg-[#F4F4F4] absolute -top-[32px] left-[42px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 pr-2 text-[#808084] `}
-            rating={record.entry!.rating}
+            className={`bg-[#F4F4F4] absolute -top-[32px] left-[42px] rounded-full backdrop-blur-xl py-[6px] w-max z-10 px-2 text-[#808084] `}
             soundName={sound.attributes.name}
             artist={sound.attributes.artistName}
           />
@@ -72,7 +69,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
       </div>
 
       <div
-        className={`flex flex-col bg-[#F4F4F4] rounded-[16px] relative transition-all duration-300 ease-entryPreview will-change-transform pt-[11px] ${
+        className={`flex flex-col bg-[#F4F4F4] rounded-[16px] relative transition-all duration-300 ease-entryPreview will-change-transform pt-[11px] shadow-shadowKitLow ${
           isAlbumEntry ? "w-[352px]" : "w-[224px]"
         } `}
       >
@@ -84,7 +81,7 @@ export const RecordEntry: React.FC<RecordEntryProps> = ({
           {record.entry?.text}
         </div>
 
-        <div className="relative mt-[10px]">
+        <div className="relative">
           <div
             style={{
               pointerEvents: "none",

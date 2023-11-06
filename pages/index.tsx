@@ -74,7 +74,7 @@ export default function Home() {
       </Head>
 
       <UserAvatar
-        className="fixed translate-x-[139px] translate-y-12 z-50 outline outline-[#FFF] outline-8 outline-1"
+        className="fixed translate-x-[175px] translate-y-12 z-50"
         imageSrc={user?.image}
         altText={`${user?.username}'s avatar`}
         width={32}
@@ -82,11 +82,11 @@ export default function Home() {
         //@ts-ignore
         user={session.user}
       />
-      <DashedLine className="absolute translate-x-[154px] translate-y-12" />
+      <DashedLine className="absolute translate-x-[190px] translate-y-12" />
 
       <motion.div
         ref={scrollContainerRef}
-        className={`relative flex flex-col gap-14 overflow-scroll pl-0 p-12 pb-0 pt-32 max-w-screen max-h-[125vh] origin-left scrollbar-none`}
+        className={`relative flex flex-col gap-[50px] overflow-scroll pl-0 p-12 pb-0 pt-32 max-w-screen max-h-[125vh] origin-left scrollbar-none`}
       >
         {scrollContainerRef && user && (
           <FeedUser userId={user.id} scrollContainerRef={scrollContainerRef} />

@@ -4,17 +4,19 @@ import {
   StarThreeIcon,
   StarFourIcon,
   AsteriskIcon,
+  CaptionIcon,
 } from "../icons";
 import React from "react";
 import { Artwork } from "./Artwork";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 interface StarsProps {
-  rating: number;
+  rating?: number;
   className?: string;
   soundName?: string;
   artist?: string;
   sound?: AlbumData | SongData;
+  isCaption?: boolean;
 }
 
 const Stars: React.FC<StarsProps> = ({
@@ -23,6 +25,7 @@ const Stars: React.FC<StarsProps> = ({
   soundName,
   artist,
   sound,
+  isCaption,
 }) => {
   const getStarIcon = (rating: number) => {
     switch (Math.floor(rating)) {
@@ -44,7 +47,8 @@ const Stars: React.FC<StarsProps> = ({
       {sound && (
         <Artwork className="rounded" sound={sound} width={24} height={24} />
       )}
-      <div>{getStarIcon(rating)}</div>
+      {rating && getStarIcon(rating)}
+      {isCaption && <CaptionIcon />}
       {soundName && (
         <div className={`flex gap-1 text-xs`}>
           <div className="font-medium leading-[75%]">{soundName}</div>

@@ -21,13 +21,13 @@ const linkProps = {
 
 // User component
 const User = () => {
-  // Get current user
   const user = useUser();
   const authenticatedUserId = user?.id;
 
   // Get page user
   const { pages } = useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
+
   // Check if the profile belongs to the authenticated user
   const isOwnProfile = authenticatedUserId === pageUser?.id;
 
