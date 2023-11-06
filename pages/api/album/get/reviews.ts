@@ -11,7 +11,7 @@ interface ReviewOrderByWithRelationInput {
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method === "GET") {
     const soundId = Array.isArray(req.query.soundId)
@@ -52,6 +52,7 @@ export default async function handle(
     try {
       const reviews = await prisma.record.findMany({
         where: {
+          type: "ENTRY",
           OR: [
             { track: { appleId: soundId } },
             { album: { appleId: soundId } },

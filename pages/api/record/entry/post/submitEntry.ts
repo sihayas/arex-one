@@ -28,11 +28,11 @@ export default async function handle(
         return;
       }
 
-      // Check if the user has already submitted an entry
+      // Check if the user has already submitted an record
       const existingEntry = await prisma.record.findFirst({
         where: {
           authorId: userId,
-          type: "ENTRY", // This line ensures we are checking for an entry
+          type: "ENTRY", // This line ensures we are checking for an record
           OR: [
             { albumId: type === "album" ? item.id : undefined },
             { trackId: type === "track" ? item.id : undefined },
@@ -43,7 +43,7 @@ export default async function handle(
 
       const replay = !!existingEntry;
 
-      // Create a new record and entry
+      // Create a new record and record
       const newRecord = await prisma.record.create({
         data: {
           type: "ENTRY",
@@ -67,7 +67,7 @@ export default async function handle(
     });
 
     if (!result) {
-      return res.status(500).json({ error: "Failed to create record.entry" });
+      return res.status(500).json({ error: "Failed to create record.record" });
     }
 
     // Finally, create activity

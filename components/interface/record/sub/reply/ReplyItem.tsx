@@ -4,11 +4,11 @@ import Image from "next/image";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { Reply } from "@/types/dbTypes";
-import Line from "@/components/interface/entry/sub/icons/Line";
+import Line from "@/components/interface/record/sub/icons/Line";
 import { StatLineIcon } from "@/components/icons";
-import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
+import DashedLine from "@/components/interface/record/sub/icons/DashedLine";
 
-import RenderChildren from "@/components/interface/entry/sub/reply/RenderChildren";
+import RenderChildren from "@/components/interface/record/sub/reply/RenderChildren";
 import { motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -50,7 +50,7 @@ export default function ReplyItem({
     "replyId",
     reply.id,
     reply.author.id,
-    user?.id
+    user?.id,
   );
 
   // Styles

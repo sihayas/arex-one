@@ -1,7 +1,7 @@
 import React from "react";
 
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
-import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { useHandleRecordClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 import UserAvatar from "@/components/global/UserAvatar";
 import HeartButton from "@/components/global/HeartButton";
@@ -19,14 +19,14 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     record.heartedByUser,
     record._count.hearts,
-    "/api/record/entry/post/",
+    "/api/record/record/post/",
     "recordId",
     record.id,
     record.author.id,
     user?.id,
   );
 
-  const handleEntryClick = useHandleEntryClick({
+  const handleEntryClick = useHandleRecordClick({
     ...record,
     appleAlbumData: selectedSound?.sound as AlbumData,
   });
@@ -47,8 +47,8 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
           className="border border-gray3"
           imageSrc={record.author.image}
           altText={`${record.author.username}'s avatar`}
-          width={40}
-          height={40}
+          width={42}
+          height={42}
           user={record.author}
         />
         <Stars

@@ -11,7 +11,7 @@ const SignalHeart = ({ notification }: SignalHeartProps) => {
   const { users, fetchedSound, activity } = notification;
   const isAggregated = users.length > 1;
 
-  // Determine if the heart activity is towards a reply or an entry
+  // Determine if the heart activity is towards a reply or an record
   const isReplyHeart = activity.heart?.reply ? true : false;
 
   // Get the rating from the record associated with the heart activity

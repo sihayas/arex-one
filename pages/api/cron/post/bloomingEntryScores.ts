@@ -7,12 +7,12 @@
 //       await updateBloomingEntryScores();
 //       res
 //         .status(200)
-//         .json({ message: "Successfully updated entry blooming scores." });
+//         .json({ message: "Successfully updated record blooming scores." });
 //     } catch (error) {
 //       console.error(error);
 //       res
 //         .status(500)
-//         .json({ message: "Failed to update entry blooming scores." });
+//         .json({ message: "Failed to update record blooming scores." });
 //     }
 //   } else {
 //     res.status(405).json({ message: "Method not allowed." });

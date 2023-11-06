@@ -19,29 +19,29 @@ import { Artwork } from "@/components/global/Artwork";
 import HeartButton from "@/components/global/HeartButton";
 import Stars from "@/components/global/Stars";
 import UserAvatar from "@/components/global/UserAvatar";
-import RenderReplies from "@/components/interface/entry/sub/reply/RenderReplies";
-import ReplyInput from "@/components/interface/entry/sub/reply/ReplyInput";
+import RenderReplies from "@/components/interface/record/sub/reply/RenderReplies";
+import ReplyInput from "@/components/interface/record/sub/reply/ReplyInput";
 import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
 import { GetDimensions } from "@/components/interface/Interface";
 import { RecordExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
 import GradientBlur from "@/components/interface/album/sub/GradientBlur";
 
-export const Entry = () => {
+export const Record = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
   const { setReplyParent, setRecord } = useThreadcrumb();
 
-  // Set max height for the entry content based on the target height set in GetDimensions
+  // Set max height for the record content based on the target height set in GetDimensions
   const activePage: Page = pages[pages.length - 1];
   const { target } = GetDimensions(activePage.name as PageName);
   const entryContentMax = target.height * 0.4;
 
-  // Hook for entry content animation
+  // Hook for record content animation
   const [scope, animate] = useAnimate();
 
-  // Upon mount, store the height of the entry content into dimensions so
+  // Upon mount, store the height of the record content into dimensions so
   // GetDimensions can use it to calculate the base height for this  page
   useLayoutEffect(() => {
     if (scope.current)
@@ -55,7 +55,7 @@ export const Entry = () => {
   const replyInputOpacity = useTransform(scrollY, [0, 64], [0, 1]);
   const scrollIndicatorOpacity = useTransform(scrollY, [0, 64], [1, 0]);
 
-  // Animate entry height from whatever it is to 72px
+  // Animate record height from whatever it is to 72px
   const newHeight = useTransform(
     scrollY,
     [0, 64],
@@ -91,10 +91,12 @@ export const Entry = () => {
     [activePage],
   );
 
+  const isCaption = record.caption ? true : false;
+
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     record.heartedByUser,
     record._count.hearts,
-    "/api/record/entry/post/heart",
+    "/api/record/record/post/heart",
     "recordId",
     record.id,
     record.author.id,
@@ -114,14 +116,12 @@ export const Entry = () => {
       className="w-full h-full relative"
     >
       <div className="flex flex-col items-center relative">
-        <div className="relative">
-          <Artwork
-            className="!rounded-3xl !rounded-bl-none !rounded-br-none"
-            sound={record.appleAlbumData}
-            width={480}
-            height={480}
-          />
-        </div>
+        <Artwork
+          className="!rounded-3xl !rounded-bl-none !rounded-br-none"
+          sound={record.appleAlbumData}
+          width={480}
+          height={480}
+        />
 
         {createPortal(
           <motion.div
@@ -151,14 +151,17 @@ export const Entry = () => {
                 user={record.author}
               />
               <Stars
-                className={`bg-[#F4F4F4]/80 absolute -top-[24px] left-[40px] rounded-full backdrop-blur-xl p-[6px] w-max z-10`}
-                rating={record.entry!.rating}
+                className={`bg-[#F4F4F4]/80 absolute -top-[28px] left-[36px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 text-gray5`}
+                rating={record.entry?.rating}
+                soundName={record.appleAlbumData.attributes.name}
+                artist={record.appleAlbumData.attributes.artistName}
+                isCaption={isCaption}
               />
               <div
-                className={`bg-[#F4F4F4]/80 w-1 h-1 absolute top-1 left-[44px] rounded-full`}
+                className={`bg-[#F4F4F4]/80 w-1 h-1 absolute top-0 left-[40px] rounded-full`}
               />
               <div
-                className={`bg-[#F4F4F4]/80 w-2 h-2 absolute -top-1 left-[48px] rounded-full`}
+                className={`bg-[#F4F4F4]/80 w-2 h-2 absolute -top-2 left-[44px] rounded-full`}
               />
             </div>
             <div className="flex flex-col gap-[5px] w-full pt-6 pr-4 pb-[10px] overflow-scroll scrollbar-none">
@@ -168,7 +171,7 @@ export const Entry = () => {
               <div
                 className={`break-words w-full text-sm text-gray5 leading-normal cursor-pointer`}
               >
-                {record.entry?.text}
+                {record.entry?.text || record.caption?.text}
               </div>
             </div>
             {/*<HeartButton*/}
@@ -203,4 +206,4 @@ export const Entry = () => {
   );
 };
 
-export default Entry;
+export default Record;

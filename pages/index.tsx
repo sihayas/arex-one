@@ -3,10 +3,11 @@ import Head from "next/head";
 import React from "react";
 import FeedUser from "@/components/feed/FeedUser";
 import UserAvatar from "@/components/global/UserAvatar";
-import DashedLine from "@/components/interface/entry/sub/icons/DashedLine";
+import DashedLine from "@/components/interface/record/sub/icons/DashedLine";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import Statline from "@/components/interface/album/sub/Statline";
 
 export default function Home() {
   const { user, session, isVisible, setIsVisible } = useInterfaceContext();
@@ -72,6 +73,7 @@ export default function Home() {
       <Head>
         <title>rx</title>
       </Head>
+      <Statline ratings={[440, 890, 244, 5000, 5000]} />
 
       <UserAvatar
         className="fixed translate-x-[175px] translate-y-12 z-50"

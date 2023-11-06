@@ -1,5 +1,5 @@
 import { useFeedQuery } from "@/lib/apiHandlers/feedAPI";
-import { FeedEntry } from "@/components/feed/subcomponents/FeedEntry";
+import { FeedRecord } from "@/components/feed/subcomponents/FeedRecord";
 import { Activity, ActivityType, RecordType } from "@/types/dbTypes";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
@@ -39,12 +39,12 @@ const FeedUser = ({
       {allActivities.map((activity: Activity, i) => (
         <Fragment key={activity.id}>
           {activity.record ? (
-            <FeedEntry
+            <FeedRecord
               record={activity.record as RecordExtended}
               associatedType={activity.record?.album ? "album" : "track"}
             />
           ) : (
-            "No entry available for this activity."
+            "No record available for this activity."
           )}
         </Fragment>
       ))}

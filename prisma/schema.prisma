@@ -154,7 +154,7 @@ enum RecordType {
   CAPTION
 }
 
-model Entry {
+model Record {
   id         String   @id @default(cuid())
   text       String
   rating     Float

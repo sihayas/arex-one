@@ -1,67 +1,76 @@
-import { motion } from "framer-motion";
 import React from "react";
+import { motion } from "framer-motion";
 
-type StatlineProps = {
-  average?: number;
-  ratings?: number[];
-};
+const CircleStatline = ({ ratings = [] }) => {
+  const strokeWidth = 10;
+  const radius = 60;
+  const viewBoxSize = radius * 2 + strokeWidth;
+  const circumference = 2 * Math.PI * radius;
+  const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
+  const colors = ["#FF073A", "#680030", "#E4FC53", "#31FE6A", "#2D51FF"];
 
-type StatlineChildProps = {
-  width: number;
-  color: string;
-  index: number;
-};
+  // Define the total gap you want in pixels, which will be distributed across all the gaps
+  const totalGapWidth = ratings.length * 14; // Example for 5px per gap
 
-const StatlineChild: React.FC<StatlineChildProps> = ({
-  width,
-  color,
-  index,
-}) => {
+  // Subtract the total gaps length from the circumference to get the usable length for ratings
+  const usableCircumference = circumference - totalGapWidth;
+
+  // Calculate the stroke-dasharray value for each segment
+  const calculateStrokeDashArray = (rating) => {
+    const length = (rating / totalRatings) * usableCircumference;
+    return `${length} ${circumference - length}`;
+  };
+
+  // Calculate the cumulative length up to a certain index
+  const calculateCumulativeLength = (index) => {
+    return ratings
+      .slice(0, index)
+      .reduce(
+        (acc, rating) => acc + (rating / totalRatings) * usableCircumference,
+        0,
+      );
+  };
+
+  // Calculate the stroke-dashoffset for each segment
+  const calculateSegmentOffset = (index) => {
+    const gapWidth = index * (totalGapWidth / ratings.length);
+    const offset = calculateCumulativeLength(index) + gapWidth;
+    return -offset;
+  };
+
   return (
-    <>
-      <motion.div
-        whileHover={{ scaleY: 1.5 }}
-        style={{ width: `${width}px`, backgroundColor: color }}
-        className={`h-1 my-auto ${index === 0 ? "rounded-l" : ""} ${
-          index === 4 ? "rounded-r" : ""
-        }`}
-      ></motion.div>
-    </>
-  );
-};
-
-const Statline: React.FC<StatlineProps> = ({ average, ratings = [] }) => {
-  // Calculate the total count of ratings
-  const totalCount = ratings.reduce((sum, count) => sum + count, 0);
-
-  // Define the colors for each rating range
-  const colors = ["#FF073A", "#FF6F00", "#FFFC40", "#21FF00", "#712EFF"];
-
-  return (
-    <motion.div
-      layoutId="statline"
-      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+    <svg
+      width={viewBoxSize}
+      height={viewBoxSize}
+      viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
     >
-      <motion.div className="flex items-center justify-center flex-grow h-[2.5px] w-[288px] my-auto rounded origin-left relative gap-[4px]">
-        {/*<div className="absolute -top-[22px] left-0 leading-[75%] text-[22px] font-thin">*/}
-        {/*  {average}*/}
-        {/*</div>*/}
-        {/* For each count of ratings, create a line */}
-        {ratings.map((count, index) => {
-          // Account for the gap and size of circle dividers
-          const width = (count / totalCount) * 288;
-          return (
-            <StatlineChild
-              key={index}
-              width={width}
-              color={colors[index]}
-              index={index}
-            />
-          );
-        })}
-      </motion.div>
-    </motion.div>
+      {ratings.map((rating, index) => {
+        const strokeDasharray = calculateStrokeDashArray(rating);
+        const strokeDashoffset = calculateSegmentOffset(index);
+        return (
+          <motion.circle
+            key={index}
+            cx={viewBoxSize / 2}
+            cy={viewBoxSize / 2}
+            r={radius}
+            fill="none"
+            stroke={colors[index % colors.length]}
+            strokeWidth={strokeWidth}
+            strokeDasharray={strokeDasharray}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            initial={false}
+            animate={{ rotate: 90 }}
+            transition={{ duration: 0.5 }}
+            style={{
+              rotate: -90,
+              transformOrigin: "center center",
+            }}
+          />
+        );
+      })}
+    </svg>
   );
 };
 
-export default Statline;
+export default CircleStatline;

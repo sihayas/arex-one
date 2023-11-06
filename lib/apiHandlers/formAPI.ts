@@ -12,7 +12,7 @@ export const postEntry = async (submissionData: {
   const endpoint =
     submissionData.rating === 0
       ? "/api/record/caption/post/submitCaption"
-      : "/api/record/entry/post/submitEntry";
+      : "/api/record/record/post/submitEntry";
 
   try {
     const response = await axios.post(endpoint, submissionData);

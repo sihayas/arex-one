@@ -25,7 +25,7 @@ export type Page = {
   };
 };
 
-export type PageName = "album" | "user" | "entry";
+export type PageName = "album" | "user" | "record";
 
 export type InterfaceContext = {
   isVisible: boolean;

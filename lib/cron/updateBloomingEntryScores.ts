@@ -20,9 +20,9 @@
 //   recency: 0.3, // <-- Add this
 // };
 //
-// function calculateBloomingScore(entry: PrismaReviewData) {
+// function calculateBloomingScore(record: PrismaReviewData) {
 //   const currentTime = new Date();
-//   const lastInteractionTime = new Date(entry.updatedAt);
+//   const lastInteractionTime = new Date(record.updatedAt);
 //   const diffInMilliseconds =
 //     currentTime.getTime() - lastInteractionTime.getTime();
 //   const diffInHours = diffInMilliseconds / 1000 / 60 / 60;
@@ -30,9 +30,9 @@
 //   const recencyScore = 1 / (diffInHours + 1); // calculate recency score
 //
 //   return (
-//     entry.viewsCount * weights.views +
-//     entry._count.hearts * weights.hearts +
-//     entry._count.replies * weights.replies +
+//     record.viewsCount * weights.views +
+//     record._count.hearts * weights.hearts +
+//     record._count.replies * weights.replies +
 //     recencyScore * weights.recency
 //   );
 // }
@@ -49,15 +49,15 @@
 //     },
 //   });
 //
-//   for (const entry of entries) {
-//     const bloomingScore = calculateBloomingScore(entry);
+//   for (const record of entries) {
+//     const bloomingScore = calculateBloomingScore(record);
 //
-//     await client.zadd("bloomingEntries", bloomingScore, entry.id);
+//     await client.zadd("bloomingEntries", bloomingScore, record.id);
 //
 //     console.log(
-//       `Updated entry ${entry.id} /  with new trending score: ${bloomingScore}`
+//       `Updated record ${record.id} /  with new trending score: ${bloomingScore}`
 //     );
 //   }
 //
-//   console.log("FeedEntry blooming scores updated successfully");
+//   console.log("FeedRecord blooming scores updated successfully");
 // }

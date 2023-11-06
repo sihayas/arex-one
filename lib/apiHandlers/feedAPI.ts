@@ -20,7 +20,7 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
         return lastPageData.pagination?.nextPage || null;
       },
       enabled: !!userId,
-    }
+    },
   );
 
   return {
@@ -36,7 +36,7 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
 const fetchFeedAndMergeAlbums = async (
   userId: string,
   pageParam: number = 1,
-  limit: number = 6
+  limit: number = 6,
 ) => {
   const res = await axios.get(`/api/feed/get/activities`, {
     params: {
@@ -79,7 +79,7 @@ const fetchFeedAndMergeAlbums = async (
 
   // Create a map for easy lookup
   const albumMap = new Map<string, AlbumData>(
-    albums.map((album: AlbumData) => [album.id, album])
+    albums.map((album: AlbumData) => [album.id, album]),
   );
 
   // 4. Append Album Details
@@ -138,7 +138,7 @@ const fetchFeedAndMergeAlbums = async (
 //   const bloomingEntriesDataQuery = useQuery(
 //     ["entryDetails", bloomingEntriesQuery.data || []],
 //     async () => {
-//       const { data } = await axios.post("/api/record/entry/getByIds", {
+//       const { data } = await axios.post("/api/record/record/getByIds", {
 //         ids: bloomingEntriesQuery.data,
 //       });
 //       return data;

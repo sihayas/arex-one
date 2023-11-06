@@ -18,11 +18,11 @@
 // };
 //
 // // Function to calculate the trending score
-// function calculateSpotlightScore(entry: PrismaReviewData) {
+// function calculateSpotlightScore(record: PrismaReviewData) {
 //   return (
-//     entry.viewsCount * weights.views +
-//     entry._count.hearts * weights.hearts +
-//     entry._count.replies * weights.replies
+//     record.viewsCount * weights.views +
+//     record._count.hearts * weights.hearts +
+//     record._count.replies * weights.replies
 //   );
 // }
 //
@@ -37,19 +37,19 @@
 //     },
 //   });
 //
-//   // Loop over each entry and calculate the trending score
-//   for (const entry of entries) {
-//     const trendingScore = calculateSpotlightScore(entry);
+//   // Loop over each record and calculate the trending score
+//   for (const record of entries) {
+//     const trendingScore = calculateSpotlightScore(record);
 //
-//     // Update the entry with the new trending score in Redis
-//     await client.zadd("spotlightEntries", trendingScore, entry.id);
+//     // Update the record with the new trending score in Redis
+//     await client.zadd("spotlightEntries", trendingScore, record.id);
 //
 //     console.log(
-//       `Updated entry ${JSON.stringify(
-//         entry
+//       `Updated record ${JSON.stringify(
+//         record
 //       )} / with new spotlight score: ${trendingScore}`
 //     );
 //   }
 //
-//   console.log("FeedEntry spotlight scores updated successfully");
+//   console.log("FeedRecord spotlight scores updated successfully");
 // }

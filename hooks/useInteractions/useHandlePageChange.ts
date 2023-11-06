@@ -6,8 +6,8 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Record, User } from "@/types/dbTypes";
 
-// Handle FeedEntry Click
-export const useHandleEntryClick = (record: Record) => {
+// Handle FeedRecord Click
+export const useHandleRecordClick = (record: Record) => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs, setReplyParent } = useThreadcrumb();
 
@@ -17,7 +17,7 @@ export const useHandleEntryClick = (record: Record) => {
       ...prevPages,
       {
         key: uuidv4(),
-        name: "entry",
+        name: "record",
         threadcrumbs: [record.id],
         dimensions: {
           width: 432,

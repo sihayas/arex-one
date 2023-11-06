@@ -82,7 +82,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             type: "spring",
             mass: 0.75,
             stiffness: 180,
-            damping: 14,
+            damping: 22,
           },
         }}
       >

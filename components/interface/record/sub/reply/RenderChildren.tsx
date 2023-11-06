@@ -1,4 +1,4 @@
-import ReplyItem from "@/components/interface/entry/sub/reply/ReplyItem";
+import ReplyItem from "@/components/interface/record/sub/reply/ReplyItem";
 import { useQuery } from "@tanstack/react-query";
 import { Reply } from "@/types/dbTypes";
 import { fetchReplies } from "@/lib/apiHandlers/entryAPI";
@@ -17,7 +17,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
 
   // Fetch reply children
   const { data: childReplies } = useQuery(["replies", parentReplyId], () =>
-    fetchReplies({ replyId: parentReplyId, userId: user!.id })
+    fetchReplies({ replyId: parentReplyId, userId: user!.id }),
   );
 
   // The layout prop preserves the LayoutGroup functionality of animating the container to expand/contract when replies are loaded or unloaded.

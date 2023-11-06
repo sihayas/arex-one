@@ -41,7 +41,7 @@
 //       },
 //       select: {
 //         id: true,
-//         entry: true,
+//         record: true,
 //       },
 //     });
 //

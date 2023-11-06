@@ -7,7 +7,7 @@ import { Command } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
 
 import Album from "@/components/interface/album/Album";
-import Entry from "@/components/interface/entry/Entry";
+import Record from "@/components/interface/record/Record";
 import User from "@/components/interface/user/User";
 
 import {
@@ -23,7 +23,7 @@ import { PageName } from "@/context/InterfaceContext";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
-  entry: Entry,
+  record: Record,
   user: User,
 };
 
@@ -34,13 +34,13 @@ export const GetDimensions = (pageName: PageName) => {
   const { pages } = useInterfaceContext();
   const activePage = pages[pages.length - 1];
 
-  // Initialize base height for entry page
+  // Initialize base height for record page
   const [baseHeight, setBaseHeight] = useState(432);
 
-  // When switching to entry page, use calculated->stored height from
-  // useLayoutEffect to set base height for entry page.
+  // When switching to record page, use calculated->stored height from
+  // useLayoutEffect to set base height for record page.
   useEffect(() => {
-    if (activePage.name === "entry") {
+    if (activePage.name === "record") {
       setBaseHeight(activePage.dimensions.height + 432);
     }
   }, [pages, activePage.name, activePage.dimensions.height]);
@@ -54,7 +54,7 @@ export const GetDimensions = (pageName: PageName) => {
       base: { width: 480, height: 480 },
       target: { width: 480, height: viewportHeight - 2 * 72 },
     },
-    entry: {
+    record: {
       base: { width: 432, height: baseHeight },
       target: { width: 432, height: viewportHeight - 2 * 72 },
     },
@@ -292,8 +292,8 @@ function renderPageContent(page: Page) {
       typeLabel = "USER";
       mainContent = user?.username || "Unknown User";
       break;
-    case "entry":
-      typeLabel = "ENTRY";
+    case "record":
+      typeLabel = "RECORD";
       mainContent = record?.appleAlbumData.attributes.name;
       subContent = "by @" + record?.author.username;
       break;

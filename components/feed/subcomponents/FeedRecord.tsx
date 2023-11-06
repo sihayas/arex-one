@@ -1,7 +1,7 @@
 import React from "react";
 
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
-import { useHandleEntryClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { useHandleRecordClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 import { Artwork } from "../../global/Artwork";
 import UserAvatar from "@/components/global/UserAvatar";
@@ -10,12 +10,12 @@ import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { RecordExtended } from "@/types/globalTypes";
 
-interface FeedEntryProps {
+interface FeedRecordProps {
   record: RecordExtended;
   associatedType: "album" | "track";
 }
 
-export const FeedEntry: React.FC<FeedEntryProps> = ({
+export const FeedRecord: React.FC<FeedRecordProps> = ({
   record,
   associatedType,
 }) => {
@@ -25,7 +25,7 @@ export const FeedEntry: React.FC<FeedEntryProps> = ({
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     record.heartedByUser,
     record._count.hearts,
-    "/api/record/entry/post/",
+    "/api/record/record/post/",
     "recordId",
     record.id,
     record.author.id,
@@ -35,7 +35,7 @@ export const FeedEntry: React.FC<FeedEntryProps> = ({
   const isAlbumEntry = associatedType === "album";
   const isCaption = record.caption ? true : false;
 
-  const handleEntryClick = useHandleEntryClick(record);
+  const handleEntryClick = useHandleRecordClick(record);
 
   return (
     <div className="flex flex-col w-fit relative">
@@ -106,7 +106,7 @@ export const FeedEntry: React.FC<FeedEntryProps> = ({
       </div>
 
       <Artwork
-        className="rounded-[16px] shadow-shadowKitLow ml-[224px]"
+        className="rounded-[16px] shadow-shadowKitLow ml-[224px] -mt-1"
         sound={sound}
         width={320}
         height={320}

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { SongData } from "@/types/appleTypes";
 import { motion } from "framer-motion";
-import Line from "@/components/interface/entry/sub/icons/Line";
+import Line from "@/components/interface/record/sub/icons/Line";
 import Statline from "@/components/interface/album/sub/Statline";
 import AnimatedCircle from "@/components/global/AnimatedCircle";
 
