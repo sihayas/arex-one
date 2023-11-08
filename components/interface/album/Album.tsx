@@ -51,25 +51,23 @@ const Album = () => {
   const springConfig = { damping: 40, stiffness: 400, mass: 1 };
 
   // Album artwork scale
-  let y = useSpring(useTransform(scrollY, [0, 24], [0, -50]), springConfig);
-  let x = useSpring(useTransform(scrollY, [0, 24], [0, -50]), springConfig);
-  let scale = useSpring(
-    useTransform(scrollY, [0, 24], [1, 0.075]),
-    springConfig,
-  );
+  let y = useSpring(useTransform(scrollY, [0, 64], [0, -24]), springConfig);
+  let x = useSpring(useTransform(scrollY, [0, 64], [0, -24]), springConfig);
+  let scale = useSpring(useTransform(scrollY, [0, 64], [1, 0]), springConfig);
 
   const dialX = useSpring(
-    useTransform(scrollY, [0, 24], [-160, -8]),
+    useTransform(scrollY, [0, 64], [-160, -8]),
     springConfig,
   );
   const dialY = useSpring(
-    useTransform(scrollY, [0, 24], [-160, -8]),
+    useTransform(scrollY, [0, 64], [-160, -8]),
     springConfig,
   );
   const dialScale = useSpring(
-    useTransform(scrollY, [0, 24], [1, 0.75]),
+    useTransform(scrollY, [0, 64], [1, 0.75]),
     springConfig,
   );
+  const dialTextColor = useTransform(scrollY, [0, 128], ["#FFF", "#333"]);
 
   // Rating footer opacity
   const borderRadius = useSpring(useTransform(scrollY, [0, 24], [32, 240]), {
@@ -129,8 +127,7 @@ const Album = () => {
 
           {/* Rating & Sort */}
           <motion.div
-            style={{ opacity }}
-            className={`w-full z-10 p-8 absolute bottom-0`}
+            className={`w-[calc(100%-128px)] z-10 p-8 pb-0 pt-0 absolute bottom-0`}
           >
             {"relationships" in selectedSound.sound &&
               "tracks" in selectedSound.sound.relationships && (
@@ -146,17 +143,18 @@ const Album = () => {
           </motion.div>
 
           <motion.div
-            className={`fixed z-50 drop-shadow-lg pointer-events-none right-0 bottom-0 flex items-center justify-center`}
+            className={`fixed z-50 pointer-events-none right-0 bottom-0 flex items-center justify-center drop-shadow-sm`}
             style={{
               x: dialX,
               y: dialY,
               scale: dialScale,
               transformOrigin: "bottom right",
+              color: dialTextColor,
             }}
           >
             <Statline ratings={[4, 8900, 244, 5000, 5000]} average={2.4} />
             <div
-              className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville text-white`}
+              className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville text-inherit`}
             >
               4.2
             </div>

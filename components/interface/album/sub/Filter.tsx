@@ -23,18 +23,10 @@ interface ButtonProps {
   className?: string;
 }
 
-const Bubble = () => (
-  <motion.span
-    layoutId="bubble"
-    className="bg-gray2 z-10 w-2 h-2 outline outline-4 outline-white rounded-full flex"
-    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-  />
-);
-
 const Button = ({ onClick, active, children, className }: ButtonProps) => (
   <button
     onClick={onClick}
-    className={` ${className} relative text-xs transition grid items-center justify-end grid-cols-tab-cols gap-2 will-change-transform ${
+    className={` ${className} relative transition flex items-center will-change-transform ${
       active ? "!text-black" : "text-gray2 hover:text-black"
     }`}
     style={{ WebkitTapHighlightColor: "transparent" }}
@@ -46,8 +38,6 @@ const Button = ({ onClick, active, children, className }: ButtonProps) => (
 const Filter = ({
   songs,
   onActiveSongChange,
-  albumName,
-  handleSortOrderChange,
   expand,
   setExpand,
 }: FilterProps) => {
@@ -73,12 +63,12 @@ const Filter = ({
       tabIndex={0}
       onFocus={toggleExpand}
       onBlur={toggleExpand}
-      initial={{ height: "32px" }}
-      animate={{ height: expand ? "288px" : "32px" }}
+      initial={{ height: "14" }}
+      animate={{ height: expand ? "288px" : "14px" }}
       transition={{ type: "spring", damping: 40, stiffness: 400 }}
-      className="flex scrollbar-none overflow-y-auto will-change-transform w-full drop-shadow-2xl"
+      className="flex scrollbar-none overflow-y-auto will-change-transform w-full"
     >
-      <div className="flex flex-col-reverse w-full overflow-y-scroll scrollbar-none">
+      <div className="flex flex-col gap-4 w-full overflow-y-scroll scrollbar-none">
         {/* Track Buttons */}
         {songs.map((track, index) => (
           <Button
@@ -86,28 +76,13 @@ const Filter = ({
             onClick={() => handleTabChange(track)}
             active={activeSong && activeSong.id === track.id}
           >
-            {/* Line and Name*/}
-            <div className="min-w-[56px] transition text-end line-clamp-1 will-change-transform">
+            {/* Line and Name */}
+            <div className="w-full  text-end transition line-clamp-1 will-change-transform text-sm font-semibold leading-[14px]">
               {track.attributes.name}
-            </div>
-
-            {/* Bubble */}
-            <div className="w-8 h-8 flex items-center justify-center">
-              {activeSong && activeSong.id === track.id && <Bubble />}
             </div>
           </Button>
         ))}
       </div>
-
-      {/* Line */}
-      {expand && (
-        <Line
-          width={"1.5px"}
-          color={"#CCC"}
-          className="fixed bottom-4 right-[15.25px] flex flex-grow rounded -z-10"
-          height={"100%"}
-        />
-      )}
     </motion.div>
   );
 };

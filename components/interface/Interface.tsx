@@ -303,7 +303,7 @@ function renderPageContent(page: Page) {
   }
 
   return (
-    <div className="flex items-center justify-center w-full fixed -top-[28px] uppercase">
+    <div className="flex items-center justify-center w-full fixed -top-[28px] uppercase font-mono">
       <div className="text-xs text-gray3 font-medium pr-4 leading-[1]">
         {typeLabel}
       </div>

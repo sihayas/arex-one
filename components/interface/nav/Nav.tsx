@@ -139,7 +139,7 @@ const Nav: React.FC = () => {
     middle = (
       <div className={`w-10 h-10 flex items-center justify-center`}>
         <UserAvatar
-          className="outline outline-4 outline-gray3"
+          className="border border-gray3"
           imageSrc={user.image}
           altText={`${user.username}'s avatar`}
           width={32}
