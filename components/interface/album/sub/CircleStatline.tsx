@@ -3,21 +3,22 @@ import { motion } from "framer-motion";
 
 const CircleStatline = ({ ratings = [] }) => {
   const strokeWidth = 8;
-  const dotRadius = 3;
-  const radius = 60;
+  const dotRadius = 1.5;
+  const radius = 76;
 
   const circumference = 2 * Math.PI * radius;
-  const viewBoxSize = radius * 2 + strokeWidth + dotRadius * 2;
+  const viewBoxSize = radius * 2 + strokeWidth; // for big dot add dotR * 2
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
-  const colors = ["#FF073A", "#680030", "#E4FC53", "#31FE6A", "#2D51FF"];
+  const colors = ["#CCC", "#FF3319", "#FFFF00", "#A6FF47", "#2619D1"];
 
-  // Account for excess stroke created by the linecap rounding (4 per side)
+  // Account for excess stroke created by the linecap rounding
   const excessStroke = 40;
 
-  //  +40 to align by shaving excess. + 40 (8px * 5gaps) for the gaps
-  //  themselves.
-  const gap = 8;
+  // Change this to adjust spacing between segments
+  const gap = 16;
+  const incrementFactor = (gap / 4) * 4 + 8; // Increment by 4 relative to
+  // base gap of 8
   const totalGap = ratings.length * gap;
   const createGapSpace = excessStroke + totalGap;
   const usableCircumference = circumference - createGapSpace;
@@ -26,41 +27,35 @@ const CircleStatline = ({ ratings = [] }) => {
     return (rating / totalRatings) * usableCircumference;
   };
 
-  // Using the length, calculate the dash array for each segment
   const calculateStrokeDashArray = (rating: number) => {
     const length = calculateStrokeLength(rating);
     return `${length} ${circumference - length}`;
   };
 
-  // Helper for calculating the offset for a segment at a given index
   const calculateCumulativeLength = (index: number) => {
     return ratings
       .slice(0, index)
       .reduce((acc, rating) => acc + calculateStrokeLength(rating), 0);
   };
 
-  // Moves the start of the segment to the end of the previous segment
+  // Takes the length of all segments up to the index
   const calculateSegmentOffset = (index: number) => {
-    // 16 and not 8 because of excess
-    const gapWidth = index * 16;
-    const offset = calculateCumulativeLength(index) + gapWidth;
+    const totalGapWidth = index * incrementFactor;
+    const offset = calculateCumulativeLength(index) + totalGapWidth;
     return -offset;
   };
 
   const calculateDotOffset = (index: number) => {
-    const gapWidth = index * 16;
-    // Add half the gap width to center the dot
-    const offset = calculateCumulativeLength(index) + gapWidth + 8;
+    const totalGapWidth = index * incrementFactor;
+    const halfGapWidth = incrementFactor / 2;
+    const offset =
+      calculateCumulativeLength(index) + totalGapWidth + halfGapWidth;
     return offset;
   };
 
-  // Calculate the position for the dot at the end of each segment
   const calculateDotPosition = (length: number, offset: number) => {
-    // Angle for the dot
     const angle = ((length + offset) / circumference) * 360;
-    // Convert angle to radians
     const angleRad = (Math.PI / 180) * angle;
-    // Calculate x and y based on angle
     const x = Math.cos(angleRad) * radius + viewBoxSize / 2;
     const y = Math.sin(angleRad) * radius + viewBoxSize / 2;
     return { x, y };
@@ -88,16 +83,31 @@ const CircleStatline = ({ ratings = [] }) => {
               fill="none"
               stroke={colors[index % colors.length]}
               strokeWidth={strokeWidth}
-              strokeDasharray={strokeDasharray}
-              strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
+              initial={{
+                strokeDasharray: "0 1",
+                strokeDashoffset: 0,
+              }}
+              animate={{
+                strokeDasharray: strokeDasharray,
+                strokeDashoffset: strokeDashoffset,
+              }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
             />
-            {/* Dot at the end of the segment */}
-            <circle
+            <motion.circle
               cx={dotPosition.x}
               cy={dotPosition.y}
               r={dotRadius}
               fill={`#999`}
+              initial={{
+                cx: viewBoxSize / 2,
+                cy: viewBoxSize / 2,
+              }}
+              animate={{
+                cx: dotPosition.x,
+                cy: dotPosition.y,
+              }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
             />
           </Fragment>
         );

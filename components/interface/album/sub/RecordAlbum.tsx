@@ -39,7 +39,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex bg-[#F4F4F4] rounded-3xl p-4 w-full gap-4 relative"
+      className="flex bg-[#F4F4F4] rounded-3xl p-4 pb-0 w-full gap-4 relative"
     >
       {/* Author Avatar / Left Side*/}
       <div className={`relative min-w-10 min-h-10 drop-shadow-sm`}>
@@ -64,7 +64,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
       </div>
 
       {/* Right Side / Name & Content */}
-      <div className="flex flex-col gap-[7px] w-full mt-[10px]">
+      <div className="flex flex-col gap-[7px] w-full mt-[10px] mb-[11px]">
         <p className="text-gray5 font-semibold text-xs leading-[75%]">
           {record.author.username}
         </p>

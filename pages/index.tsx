@@ -73,9 +73,6 @@ export default function Home() {
       <Head>
         <title>rx</title>
       </Head>
-      <div className={`translate-x-12 translate-y-12`}>
-        <CircleStatline ratings={[80, 890, 244, 500, 5000]} />
-      </div>
 
       <UserAvatar
         className="fixed translate-x-[175px] translate-y-12 z-50"

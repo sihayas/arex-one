@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { useSound } from "@/context/SoundContext";
 
@@ -19,11 +19,11 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
 
 import GradientBlur from "@/components/interface/album/sub/GradientBlur";
+import Statline from "@/components/interface/album/sub/CircleStatline";
 
 const Album = () => {
   // Hooks
   const { selectedSound } = useSound();
-
   const { scrollContainerRef } = useInterfaceContext();
 
   // Filter expansion
@@ -47,18 +47,35 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  // Album artwork parallax
-  let y = useTransform(scrollY, [0, 24], [0, -160]);
-  let springY = useSpring(y, { damping: 30, stiffness: 400, mass: 1 });
+  // Define the spring configuration just once
+  const springConfig = { damping: 40, stiffness: 400, mass: 1 };
 
-  let x = useTransform(scrollY, [0, 24], [0, 160]);
-  let springX = useSpring(x, { damping: 40, stiffness: 400, mass: 1 });
+  // Album artwork scale
+  let y = useSpring(useTransform(scrollY, [0, 24], [0, -50]), springConfig);
+  let x = useSpring(useTransform(scrollY, [0, 24], [0, -50]), springConfig);
+  let scale = useSpring(
+    useTransform(scrollY, [0, 24], [1, 0.075]),
+    springConfig,
+  );
 
-  let scale = useTransform(scrollY, [0, 24], [1, 0.2]);
-  let scaleSpring = useSpring(scale, { damping: 40, stiffness: 400, mass: 1 });
+  const dialX = useSpring(
+    useTransform(scrollY, [0, 24], [-160, -8]),
+    springConfig,
+  );
+  const dialY = useSpring(
+    useTransform(scrollY, [0, 24], [-160, -8]),
+    springConfig,
+  );
+  const dialScale = useSpring(
+    useTransform(scrollY, [0, 24], [1, 0.75]),
+    springConfig,
+  );
 
   // Rating footer opacity
-  const borderRadius = useTransform(scrollY, [0, 24], ["32px", "64px"]);
+  const borderRadius = useSpring(useTransform(scrollY, [0, 24], [32, 240]), {
+    damping: 36,
+    stiffness: 400,
+  });
   const opacity = useTransform(scrollY, [0, 160], [0, 1]);
 
   // Initializes album. If the album doesn't have detailed data it gets it.
@@ -72,26 +89,20 @@ const Album = () => {
       className="w-full h-full"
     >
       {!selectedSound || isLoading ? (
-        <JellyComponent
-          className={
-            "absolute left-1/2 top-1/2 translate-x-1/2 translate-y-1/2"
-          }
-          key="jelly"
-          isVisible={true}
-        />
+        <JellyComponent className={``} isVisible={true} />
       ) : (
         <>
           <motion.div
             style={{
-              x: springX,
-              y: springY,
-              borderRadius: borderRadius,
-              scale: scaleSpring,
+              x,
+              y,
+              borderRadius,
+              scale,
+              transformOrigin: "bottom right",
             }}
-            className="pointer-events-none overflow-hidden sticky top-0 z-50 -mb-72 shadow-shadowKitHigh"
+            className="pointer-events-none overflow-hidden fixed z-20 shadow-shadowKitHigh bottom-0 right-0 border border-gray3"
           >
             <Image
-              className="outline outline-1 outline-silver"
               src={selectedSound.artworkUrl || "/public/images/default.png"}
               alt={`${selectedSound.sound.attributes.name} artwork`}
               width={480}
@@ -101,6 +112,8 @@ const Album = () => {
               onDragStart={(e) => e.preventDefault()}
             />
           </motion.div>
+          {/* Empty 480 px ghost div to take up space */}
+          <div className="w-full h-[480px]">&nbsp;</div>
 
           {/* Entries */}
           <AnimatePresence>
@@ -130,6 +143,23 @@ const Album = () => {
                   setExpand={setExpand}
                 />
               )}
+          </motion.div>
+
+          <motion.div
+            className={`fixed z-50 drop-shadow-lg pointer-events-none right-0 bottom-0 flex items-center justify-center`}
+            style={{
+              x: dialX,
+              y: dialY,
+              scale: dialScale,
+              transformOrigin: "bottom right",
+            }}
+          >
+            <Statline ratings={[4, 8900, 244, 5000, 5000]} average={2.4} />
+            <div
+              className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville text-white`}
+            >
+              4.2
+            </div>
           </motion.div>
         </>
       )}

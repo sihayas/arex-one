@@ -79,33 +79,6 @@ const Filter = ({
       className="flex scrollbar-none overflow-y-auto will-change-transform w-full drop-shadow-2xl"
     >
       <div className="flex flex-col-reverse w-full overflow-y-scroll scrollbar-none">
-        {/* Album Button */}
-        <Button
-          key="album"
-          onClick={() => handleTabChange(null)}
-          active={!activeSong}
-        >
-          {/* Line and Name*/}
-          <div className="flex w-full items-center max-w-[376px] gap-8">
-            {!activeSong && (
-              <Statline ratings={[440, 890, 244, 5000, 5000]} average={2.4} />
-            )}
-            <div className="min-w-[56px] transition text-end line-clamp-1">
-              {albumName}
-            </div>
-          </div>
-          {/* Bubble and Circle */}
-          <div className="w-8 h-8 flex items-center justify-center">
-            <motion.div className="absolute">
-              <AnimatedCircle
-                onSortOrderChange={handleSortOrderChange}
-                expanded={expand}
-              />
-            </motion.div>
-            {!activeSong && <Bubble />}
-          </div>
-        </Button>
-
         {/* Track Buttons */}
         {songs.map((track, index) => (
           <Button
@@ -114,13 +87,8 @@ const Filter = ({
             active={activeSong && activeSong.id === track.id}
           >
             {/* Line and Name*/}
-            <div className="flex w-full items-center justify-end max-w-[376px] gap-8">
-              {activeSong && activeSong.id === track.id && (
-                <Statline ratings={[440, 890, 244, 5000, 5000]} average={2.4} />
-              )}
-              <div className="min-w-[56px] transition text-end line-clamp-1 will-change-transform">
-                {track.attributes.name}
-              </div>
+            <div className="min-w-[56px] transition text-end line-clamp-1 will-change-transform">
+              {track.attributes.name}
             </div>
 
             {/* Bubble */}
