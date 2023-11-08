@@ -1,9 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { SongData } from "@/types/appleTypes";
-import { motion } from "framer-motion";
-import Line from "@/components/interface/record/sub/icons/Line";
-import Statline from "@/components/interface/album/sub/CircleStatline";
-import AnimatedCircle from "@/components/global/AnimatedCircle";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 type sortOrder = "newest" | "positive" | "negative";
 
@@ -12,78 +9,100 @@ interface FilterProps {
   songs: SongData[];
   onActiveSongChange: (newActiveSong: SongData | null) => void;
   handleSortOrderChange: (newSortOrder: sortOrder) => void;
-  expand: boolean;
-  setExpand: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface ButtonProps {
   onClick: () => void;
   active: boolean | null;
   children: React.ReactNode;
-  className?: string;
+  scrollContainerRef: React.RefObject<HTMLElement>;
 }
 
-const Button = ({ onClick, active, children, className }: ButtonProps) => (
-  <button
-    onClick={onClick}
-    className={` ${className} relative transition flex items-center will-change-transform ${
-      active ? "!text-black" : "text-gray2 hover:text-black"
-    }`}
-    style={{ WebkitTapHighlightColor: "transparent" }}
-  >
-    {children}
-  </button>
-);
-
-const Filter = ({
-  songs,
-  onActiveSongChange,
-  expand,
-  setExpand,
-}: FilterProps) => {
-  // Expand is passed as a prop due to BlurGradient not working outside of Album
+const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
   const [activeSong, setActiveSong] = useState<SongData | null>(null);
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
   const handleTabChange = useCallback(
     (newSong: SongData | null) => {
-      if (expand) {
-        setActiveSong(newSong);
-        onActiveSongChange(newSong);
-      }
+      setActiveSong(newSong);
+      onActiveSongChange(newSong);
     },
-    [expand, onActiveSongChange],
+    [onActiveSongChange],
   );
-
-  const toggleExpand = useCallback(() => {
-    setExpand((prev) => !prev);
-  }, []);
 
   return (
     <motion.div
+      ref={scrollContainerRef}
       tabIndex={0}
-      onFocus={toggleExpand}
-      onBlur={toggleExpand}
-      initial={{ height: "14" }}
-      animate={{ height: expand ? "288px" : "14px" }}
-      transition={{ type: "spring", damping: 40, stiffness: 400 }}
-      className="flex scrollbar-none overflow-y-auto will-change-transform w-full"
+      className="flex flex-col gap-2 scrollbar-none overflow-y-auto will-change-transform w-full h-[136px] pt-[60px] pb-[60px]"
     >
-      <div className="flex flex-col gap-4 w-full overflow-y-scroll scrollbar-none">
-        {/* Track Buttons */}
-        {songs.map((track, index) => (
-          <Button
-            key={track.id}
-            onClick={() => handleTabChange(track)}
-            active={activeSong && activeSong.id === track.id}
-          >
-            {/* Line and Name */}
-            <div className="w-full  text-end transition line-clamp-1 will-change-transform text-sm font-semibold leading-[14px]">
-              {track.attributes.name}
-            </div>
-          </Button>
-        ))}
-      </div>
+      {/* Album Button */}
+      <Button
+        key="album"
+        onClick={() => handleTabChange(null)}
+        active={!activeSong}
+        scrollContainerRef={scrollContainerRef}
+      >
+        <div className="w-full  text-end transition line-clamp-1 will-change-transform text-xs">
+          {albumName}
+        </div>
+      </Button>
+      {/* Track Buttons */}
+      {songs.map((track, index) => (
+        <Button
+          key={track.id}
+          onClick={() => handleTabChange(track)}
+          active={activeSong && activeSong.id === track.id}
+          scrollContainerRef={scrollContainerRef}
+        >
+          {/* Name */}
+          <div className="w-full text-end transition line-clamp-1 will-change-transform text-xs">
+            {track.attributes.name}
+          </div>
+        </Button>
+      ))}
     </motion.div>
+  );
+};
+
+const Button = ({
+  onClick,
+  active,
+  children,
+  scrollContainerRef,
+}: ButtonProps) => {
+  const ref = React.useRef<HTMLButtonElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    container: scrollContainerRef,
+    target: ref,
+    offset: ["center end", "center start"], // Track the element from end-start
+  });
+
+  // Range of scroll progress (0 at end, 0.5 at center, 1 at start)
+  const scrollRange = [0, 0.5, 1];
+  // Map the range of scroll progress to
+  const opacityValues = [0, 1, 0];
+  const scaleValues = [0.8, 1, 0.8];
+  const opacity = useTransform(scrollYProgress, scrollRange, opacityValues);
+  const scale = useTransform(scrollYProgress, scrollRange, scaleValues);
+
+  return (
+    <motion.button
+      ref={ref}
+      onClick={onClick}
+      className={`${
+        active ? "!text-black" : "text-gray2" + " hover:text-action"
+      }`}
+      style={{
+        WebkitTapHighlightColor: "transparent",
+        opacity,
+        scale,
+        transformOrigin: "right center",
+      }}
+    >
+      {children}
+    </motion.button>
   );
 };
 

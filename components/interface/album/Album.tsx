@@ -26,9 +26,6 @@ const Album = () => {
   const { selectedSound } = useSound();
   const { scrollContainerRef } = useInterfaceContext();
 
-  // Filter expansion
-  const [expand, setExpand] = useState<boolean>(false);
-
   // Filter state
   const [activeSong, setActiveSong] = useState<TrackData | null>(null);
   const [sortOrder, setSortOrder] = useState<
@@ -123,11 +120,9 @@ const Album = () => {
             />
           </AnimatePresence>
 
-          {/*<GradientBlur expand={expand} />*/}
-
           {/* Rating & Sort */}
           <motion.div
-            className={`w-[calc(100%-128px)] z-10 p-8 pb-0 pt-0 absolute bottom-0`}
+            className={`w-[calc(100%-128px)] z-10 p-8 py-0 pr-4 absolute bottom-0`}
           >
             {"relationships" in selectedSound.sound &&
               "tracks" in selectedSound.sound.relationships && (
@@ -136,8 +131,6 @@ const Album = () => {
                   songs={selectedSound.sound.relationships.tracks.data}
                   onActiveSongChange={handleActiveSongChange}
                   handleSortOrderChange={handleSortOrderChange}
-                  expand={expand}
-                  setExpand={setExpand}
                 />
               )}
           </motion.div>
