@@ -64,8 +64,6 @@ const User = () => {
   const handleSubSectionClick = (section: "essentials" | "settings") =>
     setSubSection(section === subSection ? "essentials" : section);
 
-  console.log("USER DATA", userData);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}

@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { motion } from "framer-motion";
 
-const CircleStatline = ({ ratings = [] }) => {
+const RatingDial = ({ ratings = [] }) => {
   const strokeWidth = 8;
   const dotRadius = 1.5;
   const radius = 76;
@@ -16,7 +16,7 @@ const CircleStatline = ({ ratings = [] }) => {
   const excessStroke = 40;
 
   // Change this to adjust spacing between segments
-  const gap = 16;
+  const gap = strokeWidth * 2;
   const incrementFactor = (gap / 4) * 4 + 8; // Increment by 4 relative to
   // base gap of 8
   const totalGap = ratings.length * gap;
@@ -116,4 +116,4 @@ const CircleStatline = ({ ratings = [] }) => {
   );
 };
 
-export default CircleStatline;
+export default RatingDial;

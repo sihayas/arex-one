@@ -18,8 +18,8 @@ import { TrackData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
 
-import GradientBlur from "@/components/interface/album/sub/GradientBlur";
-import Statline from "@/components/interface/album/sub/CircleStatline";
+import Statline from "@/components/interface/album/sub/RatingDial";
+import AnimatedCircle from "@/components/global/AnimatedCircle";
 
 const Album = () => {
   // Hooks
@@ -48,9 +48,18 @@ const Album = () => {
   const springConfig = { damping: 40, stiffness: 400, mass: 1 };
 
   // Album artwork scale
-  let y = useSpring(useTransform(scrollY, [0, 64], [0, -24]), springConfig);
-  let x = useSpring(useTransform(scrollY, [0, 64], [0, -24]), springConfig);
-  let scale = useSpring(useTransform(scrollY, [0, 64], [1, 0]), springConfig);
+  let albumX = useSpring(
+    useTransform(scrollY, [0, 64], [0, -24]),
+    springConfig,
+  );
+  let albumY = useSpring(
+    useTransform(scrollY, [0, 64], [0, -24]),
+    springConfig,
+  );
+  let albumScale = useSpring(
+    useTransform(scrollY, [0, 64], [1, 0.1]),
+    springConfig,
+  );
 
   const dialX = useSpring(
     useTransform(scrollY, [0, 64], [-160, -8]),
@@ -61,20 +70,18 @@ const Album = () => {
     springConfig,
   );
   const dialScale = useSpring(
-    useTransform(scrollY, [0, 64], [1, 0.75]),
+    useTransform(scrollY, [0, 64], [1, 0.5]),
     springConfig,
   );
-  const dialTextColor = useTransform(scrollY, [0, 128], ["#FFF", "#333"]);
 
   // Rating footer opacity
   const borderRadius = useSpring(useTransform(scrollY, [0, 24], [32, 240]), {
     damping: 36,
     stiffness: 400,
   });
-  const opacity = useTransform(scrollY, [0, 160], [0, 1]);
 
   // Initializes album. If the album doesn't have detailed data it gets it.
-  const { isLoading, error } = useAlbumQuery();
+  const { isLoading } = useAlbumQuery();
 
   return (
     <motion.div
@@ -89,13 +96,13 @@ const Album = () => {
         <>
           <motion.div
             style={{
-              x,
-              y,
+              x: albumX,
+              y: albumY,
               borderRadius,
-              scale,
+              scale: albumScale,
               transformOrigin: "bottom right",
             }}
-            className="pointer-events-none overflow-hidden fixed z-20 shadow-shadowKitHigh bottom-0 right-0 border border-gray3"
+            className="pointer-events-none overflow-hidden fixed z-20 bottom-0 right-0"
           >
             <Image
               src={selectedSound.artworkUrl || "/public/images/default.png"}
@@ -120,9 +127,9 @@ const Album = () => {
             />
           </AnimatePresence>
 
-          {/* Rating & Sort */}
+          {/* Sort/Filter */}
           <motion.div
-            className={`w-[calc(100%-128px)] z-10 p-8 py-0 pr-4 absolute bottom-0`}
+            className={`w-[calc(100%-88px)] z-10 p-8 py-0 pr-8 absolute bottom-0`}
           >
             {"relationships" in selectedSound.sound &&
               "tracks" in selectedSound.sound.relationships && (
@@ -130,26 +137,29 @@ const Album = () => {
                   albumName={selectedSound.sound.attributes.name}
                   songs={selectedSound.sound.relationships.tracks.data}
                   onActiveSongChange={handleActiveSongChange}
-                  handleSortOrderChange={handleSortOrderChange}
                 />
               )}
+            <div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">
+              <AnimatedCircle onSortOrderChange={handleSortOrderChange} />
+            </div>
           </motion.div>
 
+          {/* Rating */}
           <motion.div
-            className={`fixed z-50 pointer-events-none right-0 bottom-0 flex items-center justify-center drop-shadow-sm`}
+            className={`fixed z-50 pointer-events-none right-0 bottom-0 flex items-center justify-center text-white`}
             style={{
               x: dialX,
               y: dialY,
               scale: dialScale,
               transformOrigin: "bottom right",
-              color: dialTextColor,
             }}
           >
-            <Statline ratings={[4, 8900, 244, 5000, 5000]} average={2.4} />
+            <Statline ratings={[4, 8900, 2445, 5000, 500]} average={2.4} />
             <div
+              id={`rating`}
               className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville text-inherit`}
             >
-              4.2
+              3.7
             </div>
           </motion.div>
         </>

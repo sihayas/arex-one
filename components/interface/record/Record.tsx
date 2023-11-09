@@ -151,17 +151,17 @@ export const Record = () => {
                 user={record.author}
               />
               <Stars
-                className={`bg-[#F4F4F4]/80 absolute -top-[28px] left-[36px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 text-gray5`}
+                className={`bg-[#E5E5E5] absolute -top-[28px] left-[36px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 text-gray5`}
                 rating={record.entry?.rating}
                 soundName={record.appleAlbumData.attributes.name}
                 artist={record.appleAlbumData.attributes.artistName}
                 isCaption={isCaption}
               />
               <div
-                className={`bg-[#F4F4F4]/80 w-1 h-1 absolute top-0 left-[40px] rounded-full`}
+                className={`bg-[#E5E5E5] w-1 h-1 absolute top-0 left-[40px] rounded-full`}
               />
               <div
-                className={`bg-[#F4F4F4]/80 w-2 h-2 absolute -top-2 left-[44px] rounded-full`}
+                className={`bg-[#E5E5E5] w-2 h-2 absolute -top-2 left-[44px] rounded-full`}
               />
             </div>
             <div className="flex flex-col gap-[5px] w-full pt-6 pr-4 pb-[10px] overflow-scroll scrollbar-none">

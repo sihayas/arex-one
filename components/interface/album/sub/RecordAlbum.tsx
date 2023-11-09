@@ -42,7 +42,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
       className="flex bg-[#F4F4F4] rounded-3xl p-4 pb-0 w-full gap-4 relative"
     >
       {/* Author Avatar / Left Side*/}
-      <div className={`relative min-w-10 min-h-10 drop-shadow-sm`}>
+      <div className={`relative min-w-[42px] min-h-[42px] drop-shadow-sm`}>
         <UserAvatar
           className="border border-gray3"
           imageSrc={record.author.image}
@@ -52,14 +52,14 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
           user={record.author}
         />
         <Stars
-          className={`bg-[#F4F4F4]/80 absolute -top-[24px] left-[40px] rounded-full backdrop-blur-xl p-[6px] w-max z-10`}
+          className={`bg-[#E5E5E5] absolute -top-[28px] left-[34px] rounded-full backdrop-blur-xl p-[6px] w-max z-10`}
           rating={record.entry!.rating}
         />
         <div
-          className={`bg-[#F4F4F4]/80 w-1 h-1 absolute top-1 left-[44px] rounded-full`}
+          className={`bg-[#E5E5E5] w-1 h-1 absolute top-0 left-[38px] rounded-full`}
         />
         <div
-          className={`bg-[#F4F4F4]/80 w-2 h-2 absolute -top-1 left-[48px] rounded-full`}
+          className={`bg-[#E5E5E5] w-2 h-2 absolute -top-2 left-[42px] rounded-full`}
         />
       </div>
 

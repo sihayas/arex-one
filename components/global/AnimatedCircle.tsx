@@ -6,13 +6,9 @@ type sortOrder = "newest" | "positive" | "negative";
 
 type AnimatedCircleProps = {
   onSortOrderChange: (newSortOrder: sortOrder) => void;
-  expanded: boolean;
 };
 
-const AnimatedCircle = ({
-  onSortOrderChange,
-  expanded,
-}: AnimatedCircleProps) => {
+const AnimatedCircle = ({ onSortOrderChange }: AnimatedCircleProps) => {
   const controls = useAnimation();
   const [currentSortOrder, setCurrentSortOrder] = useState<sortOrder>("newest");
   const radius = 16 - 2.5 / 2;
@@ -23,13 +19,6 @@ const AnimatedCircle = ({
   useEffect(() => {
     onSortOrderChange(currentSortOrder);
   }, [currentSortOrder, onSortOrderChange]);
-
-  // Update the strokeDashoffset when the expanded state changes
-  useEffect(() => {
-    controls.start({
-      strokeDashoffset: expanded ? circumference : circumference * 0.25,
-    });
-  }, [expanded, controls, circumference]);
 
   const handleIconClick = () => {
     // Cycle through sort orders on each click
@@ -50,46 +39,34 @@ const AnimatedCircle = ({
   return (
     <motion.div
       onClick={handleIconClick}
-      className="relative h-8 w-8"
-      style={{ transform: "scaleX(-1)" }}
+      className="p-2 cursor-pointer origin-center"
     >
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        style={{ cursor: "pointer", transform: "rotate(-90deg)" }}
-        className="relative"
-      >
-        <motion.circle
-          initial={{ strokeDashoffset: circumference * 0.25 }}
-          animate={controls}
-          cx="16" // Center the circle at 16, 16
-          cy="16"
-          r={radius}
-          stroke="#CCC"
-          strokeWidth={strokeWidth}
-          fill="transparent"
-          strokeDasharray={circumference}
-          strokeLinecap="round"
-        />
-      </svg>
       <motion.div
-        className="absolute top-[6px] left-[2px]"
-        animate={{ scale: currentSortOrder === "negative" ? 1 : 0 }}
+        className="absolute"
+        animate={{
+          scale: currentSortOrder === "negative" ? 1 : 0,
+          opacity: currentSortOrder === "negative" ? 1 : 0,
+        }}
       >
-        <NegativeIcon />
+        <NegativeIcon color={"#000"} />
       </motion.div>
       <motion.div
-        className="absolute top-[2px] left-[2px]"
-        animate={{ scale: currentSortOrder === "positive" ? 1 : 0 }}
+        className="absolute "
+        animate={{
+          scale: currentSortOrder === "positive" ? 1 : 0,
+          opacity: currentSortOrder === "positive" ? 1 : 0,
+        }}
       >
-        <PositiveIcon />
+        <PositiveIcon color={"#000"} />
       </motion.div>
       <motion.div
-        className="absolute top-0 left-0"
-        animate={{ scale: currentSortOrder === "newest" ? 1 : 0 }}
+        className="absolute"
+        animate={{
+          scale: currentSortOrder === "newest" ? 1 : 0,
+          opacity: currentSortOrder === "newest" ? 1 : 0,
+        }}
       >
-        <HighlightsIcon />
+        <HighlightsIcon color={"#000"} />
       </motion.div>
     </motion.div>
   );

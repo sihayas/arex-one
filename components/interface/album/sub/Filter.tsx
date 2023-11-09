@@ -2,13 +2,10 @@ import React, { useState, useCallback } from "react";
 import { SongData } from "@/types/appleTypes";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-type sortOrder = "newest" | "positive" | "negative";
-
 interface FilterProps {
   albumName: string;
   songs: SongData[];
   onActiveSongChange: (newActiveSong: SongData | null) => void;
-  handleSortOrderChange: (newSortOrder: sortOrder) => void;
 }
 
 interface ButtonProps {
@@ -34,7 +31,7 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
     <motion.div
       ref={scrollContainerRef}
       tabIndex={0}
-      className="flex flex-col gap-2 scrollbar-none overflow-y-auto will-change-transform w-full h-[136px] pt-[60px] pb-[60px]"
+      className="flex flex-col gap-2 scrollbar-none overflow-y-auto will-change-transform w-full h-[88px] pt-[36px] pb-[36px] snap-mandatory snap-y"
     >
       {/* Album Button */}
       <Button
@@ -43,7 +40,7 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
         active={!activeSong}
         scrollContainerRef={scrollContainerRef}
       >
-        <div className="w-full  text-end transition line-clamp-1 will-change-transform text-xs">
+        <div className="w-[calculate(100%-32px)] text-end transition line-clamp-1 will-change-transform text-xs font-medium">
           {albumName}
         </div>
       </Button>
@@ -83,21 +80,21 @@ const Button = ({
   const scrollRange = [0, 0.5, 1];
   // Map the range of scroll progress to
   const opacityValues = [0, 1, 0];
-  const scaleValues = [0.8, 1, 0.8];
+  // const scaleValues = [0.8, 1, 0.8];
   const opacity = useTransform(scrollYProgress, scrollRange, opacityValues);
-  const scale = useTransform(scrollYProgress, scrollRange, scaleValues);
+  // const scale = useTransform(scrollYProgress, scrollRange, scaleValues);
 
   return (
     <motion.button
       ref={ref}
       onClick={onClick}
-      className={`${
-        active ? "!text-black" : "text-gray2" + " hover:text-action"
+      className={`snap-center ${
+        active ? "!text-black" : "text-gray2" + " hover:text-gray3"
       }`}
       style={{
         WebkitTapHighlightColor: "transparent",
         opacity,
-        scale,
+        // scale,
         transformOrigin: "right center",
       }}
     >

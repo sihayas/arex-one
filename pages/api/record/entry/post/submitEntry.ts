@@ -16,7 +16,6 @@ export default async function handle(
     const result = await prisma.$transaction(async (prisma) => {
       // Determine sound type and record type
       const type = appleTrackId ? "track" : "album";
-      const isCaption = rating === 0;
 
       // Verify the album or track with the specified appleId exists
       const appleId = appleTrackId || appleAlbumId;
@@ -32,7 +31,7 @@ export default async function handle(
       const existingEntry = await prisma.record.findFirst({
         where: {
           authorId: userId,
-          type: "ENTRY", // This line ensures we are checking for an record
+          type: "ENTRY",
           OR: [
             { albumId: type === "album" ? item.id : undefined },
             { trackId: type === "track" ? item.id : undefined },

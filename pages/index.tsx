@@ -7,7 +7,7 @@ import DashedLine from "@/components/interface/record/sub/icons/DashedLine";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import CircleStatline from "@/components/interface/album/sub/CircleStatline";
+import RatingDial from "@/components/interface/album/sub/RatingDial";
 
 export default function Home() {
   const { user, session } = useInterfaceContext();
