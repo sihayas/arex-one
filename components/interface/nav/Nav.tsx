@@ -142,8 +142,8 @@ const Nav: React.FC = () => {
           className="border border-gray3"
           imageSrc={user.image}
           altText={`${user.username}'s avatar`}
-          width={32}
-          height={32}
+          width={40}
+          height={40}
           user={user}
         />
       </div>

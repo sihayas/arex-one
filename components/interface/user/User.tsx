@@ -8,8 +8,16 @@ import Essentials from "@/components/interface/user/sub/Essentials";
 import Settings from "@/components/interface/user/sub/Settings";
 import { JellyComponent } from "@/components/global/Loading";
 import { useUser } from "@supabase/auth-helpers-react";
-import { ArrowCircleIcon, SettingsIcon } from "@/components/icons";
+import {
+  RecordsButton,
+  LinkButton,
+  SettingsIcon,
+  ArchiveButton,
+} from "@/components/icons";
 import FollowButton from "./sub/components/LinkButton";
+import { createPortal } from "react-dom";
+import UserAvatar from "@/components/global/UserAvatar";
+import Stars from "@/components/global/Stars";
 
 // Define link properties for different states
 const linkProps = {
@@ -21,6 +29,8 @@ const linkProps = {
 
 // User component
 const User = () => {
+  const cmdk = document.getElementById("cmdk-inner") as HTMLDivElement;
+
   const user = useUser();
   const authenticatedUserId = user?.id;
 
@@ -69,123 +79,53 @@ const User = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full overflow-hidden flex flex-col"
+      className="min-w-full min-h-full p-8"
     >
       {isLoading ? (
         <JellyComponent className={``} isVisible={true} />
       ) : isError ? (
         <div>Error</div>
       ) : (
-        // Render user profile and soundtrack
-        <motion.div
-          initial={{ x: 0 }}
-          animate={{ x: activeTab === "soundtrack" ? "-640px" : "0px" }}
-          transition={{ type: "spring", stiffness: 880, damping: 80 }}
-          className="w-[200%] h-full flex"
-        >
-          <div className="w-1/2 h-full flex flex-col p-8">
-            {/* Name & Avatar */}
-            <div className={`flex justify-between items-center`}>
-              {/* Username */}
-              <div className="text-[22px] tracking-tighter font-bold leading-none text-gray4">
-                @{userData.username}
+        <>
+          <Image
+            className={`rounded-full min-w-[288px] min-h-[288px] shadow-shadowKitMedium`}
+            src={userData.image}
+            alt={`${userData.name}'s avatar`}
+            width={288}
+            height={288}
+          />
+          {createPortal(
+            <div className={`flex flex-col gap-8`}>
+              {/* Essentials */}
+              <div className="flex w-max items-center rounded-xl">
+                <Essentials essentials={essentials} />
               </div>
-              {isOwnProfile ? (
-                <SettingsIcon
-                  className={`ml-auto mr-4`}
-                  onClick={() => handleSubSectionClick("settings")}
-                />
-              ) : (
-                <FollowButton
-                  followState={followState}
-                  handleFollowUnfollow={handleFollowUnfollow}
-                  linkColor={linkColor}
-                  linkText={linkText}
-                />
-              )}
-              <Image
-                className={`rounded-full border border-gray3 w-[128px] h-[128px]`}
-                onClick={() => handleTabClick("profile")}
-                src={userData.image}
-                alt={`${userData.name}'s avatar`}
-                width={128}
-                height={128}
-              />
-            </div>
 
-            {/* Statistics */}
-            <div className={`flex gap-8 items-center`}>
-              <div className="flex flex-col gap-[10px]">
-                <div
-                  onClick={() => handleTabClick("soundtrack")}
-                  className="text-xs text-gray2 leading-none cursor-pointer"
-                >
-                  SOUNDS
-                </div>
-                <div className="text-black text-sm leading-none">
-                  {userData.uniqueAlbums.length}
-                </div>
-              </div>
-              {/* Stat 1 */}
-              <div className="flex flex-col gap-[10px]">
-                <div className="text-xs text-gray2 leading-none cursor-pointer">
-                  LINKS
+              {/*  Interactions */}
+
+              <div className={`flex flex-col gap-4`}>
+                <div className={`flex items-center gap-2`}>
+                  <LinkButton color={"#CCC"} />
+                  <FollowButton
+                    followState={followState}
+                    handleFollowUnfollow={handleFollowUnfollow}
+                    linkColor={linkColor}
+                    linkText={linkText}
+                  />
                 </div>
                 <div className={`flex items-center gap-2`}>
-                  <div className="text-black text-sm leading-none">
-                    {userData._count.followers}
-                  </div>
-                  {/* Followers Images */}
-                  <div className="flex -space-x-4">
-                    {/*@ts-ignore/*/}
-                    {userData.followers.map(({ follower }) => (
-                      <Image
-                        key={follower.id}
-                        className="rounded-full w-[16px] h-[16px]" // Adjust
-                        src={follower.image}
-                        alt={`${follower.username}'s avatar`}
-                        width={16}
-                        height={16}
-                      />
-                    ))}
-                  </div>
+                  <RecordsButton color={"#CCC"} />
+                  <div className={`uppercase text-xs text-gray3`}>RECORDS</div>
+                </div>
+                <div className={`flex items-center gap-2`}>
+                  <ArchiveButton color={"#CCC"} />
+                  <div className={`uppercase text-xs text-gray3`}>ARCHIVE</div>
                 </div>
               </div>
-            </div>
-
-            <AnimatePresence>
-              {subSection === "essentials" ? (
-                // Show essentials if subsection is essentials
-                <div className="flex gap-x-4 h-fit w-full items-center mt-auto">
-                  <Essentials essentials={essentials} />
-                  <div
-                    onClick={() => handleTabClick("soundtrack")}
-                    className={`flex items-center gap-2`}
-                  >
-                    <ArrowCircleIcon color={`#999`} />
-                    <div className={`text-xs text-gray2 uppercase`}>
-                      soundtrack
-                    </div>
-                  </div>
-                </div>
-              ) : isOwnProfile && authenticatedUserId ? (
-                // Show settings if subsection is settings and its own profile
-                <Settings
-                  userId={authenticatedUserId}
-                  essentials={essentials}
-                />
-              ) : (
-                // Show essentials by default
-                <Essentials essentials={essentials} />
-              )}
-            </AnimatePresence>
-
-            <div className="flex items-center fixed bottom-4 left-4 gap-2"></div>
-          </div>
-          {activeTab === "soundtrack" && pageUser && (
-            <Soundtrack userId={pageUser.id} />
+            </div>,
+            cmdk,
           )}
-        </motion.div>
+        </>
       )}
     </motion.div>
   );
@@ -195,5 +135,123 @@ const User = () => {
 export default User;
 
 {
-  /* Essentials */
+  /* Statistics */
 }
+// <div className={`flex gap-8 items-center`}>
+//   <div className="flex flex-col gap-[10px]">
+//     <div
+//         onClick={() => handleTabClick("soundtrack")}
+//         className="text-xs text-gray2 leading-none cursor-pointer"
+//     >
+//       SOUNDS
+//     </div>
+//     <div className="text-black text-sm leading-none">
+//       {userData.uniqueAlbums.length}
+//     </div>
+//   </div>
+//   {/* Stat 1 */}
+//   <div className="flex flex-col gap-[10px]">
+//     <div className="text-xs text-gray2 leading-none cursor-pointer">
+//       LINKS
+//     </div>
+//     <div className={`flex items-center gap-2`}>
+//       <div className="text-black text-sm leading-none">
+//         {userData._count.followers}
+//       </div>
+//       {/* Followers Images */}
+//       <div className="flex -space-x-4">
+//         {/*@ts-ignore/*/}
+//         {userData.followers.map(({ follower }) => (
+//             <Image
+//                 key={follower.id}
+//                 className="rounded-full w-[16px] h-[16px]" // Adjust
+//                 src={follower.image}
+//                 alt={`${follower.username}'s avatar`}
+//                 width={16}
+//                 height={16}
+//             />
+//         ))}
+//       </div>
+//     </div>
+//   </div>
+// </div>
+{
+  /*{isOwnProfile ? (*/
+}
+{
+  /*  <SettingsIcon*/
+}
+{
+  /*    className={`ml-auto mr-4`}*/
+}
+{
+  /*    onClick={() => handleSubSectionClick("settings")}*/
+}
+{
+  /*  />*/
+}
+{
+  /*) : (*/
+}
+
+{
+  /*)}*/
+}
+//
+// <div
+//     onClick={() => handleTabClick("soundtrack")}
+//     className={`flex items-center gap-2`}
+// ></div>
+
+//
+// <motion.div>
+//   {/* Profile Card */}
+//   <div className="w-1/2 h-full flex flex-col p-8">
+//     {/* Name & Avatar */}
+//     <div className={`flex flex-col items-center gap-[22px]`}>
+//       <Image
+//           className={`rounded-full w-[128px] h-[128px] shadow-shadowKitMedium`}
+//           src={userData.image}
+//           alt={`${userData.name}'s avatar`}
+//           width={128}
+//           height={128}
+//       />
+//       <div className="text-sm tracking-tighter font-bold leading-none text-gray4">
+//         {userData.username}
+//       </div>
+//     </div>
+//
+//     <div className={`flex flex-col text-sm items-end mt-[21px] gap-2`}>
+//       <div className={`flex items-center gap-1`}>
+//         <div className={`text-gray2`}>{userData._count.record}</div>
+//         <div className={`text-gray2`}>&middot;</div>
+//         <div className={`text-gray2 uppercase mr-1`}>RECORDS</div>
+//         <RecordsIcon className={"opacity-20"} />
+//       </div>
+//       <div className={`flex items-center gap-1`}>
+//         <div className={`text-gray2 uppercase mr-1`}>LINK</div>
+//         <LinkIcon className={"opacity-20"} />
+//       </div>
+//     </div>
+//
+//     <AnimatePresence>
+//       {subSection === "essentials" ? (
+
+//       ) : isOwnProfile && authenticatedUserId ? (
+//           // Show settings if subsection is settings and its own profile
+//           <Settings
+//               userId={authenticatedUserId}
+//               essentials={essentials}
+//           />
+//       ) : (
+//           // Show essentials by default
+//           <Essentials essentials={essentials} />
+//       )}
+//     </AnimatePresence>
+//
+//     <div className="flex items-center fixed bottom-4 left-4 gap-2"></div>
+//   </div>
+//   {activeTab === "soundtrack" && pageUser && (
+//       <Soundtrack userId={pageUser.id} />
+//   )}
+// </motion.div>

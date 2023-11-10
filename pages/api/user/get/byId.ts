@@ -68,10 +68,10 @@ export default async function handle(
         },
       });
 
-      // Fetch the uniqueAlbums count
+      // Fetch the uniqueAlbums entry count
       const uniqueAlbums = await prisma.record.groupBy({
         by: ["albumId", "trackId"],
-        where: { authorId: String(id) },
+        where: { authorId: String(id), type: "ENTRY" },
         _count: {
           albumId: true,
           trackId: true,
@@ -84,9 +84,9 @@ export default async function handle(
           isFollowingAtoB,
           isFollowingBtoA,
           _count: {
-            ...user._count, // existing counts for reviews and followers
+            ...user._count,
           },
-          uniqueAlbums: uniqueAlbums, // adding the new count here
+          uniqueAlbums: uniqueAlbums,
         };
 
         res.status(200).json(userWithHeartsAndFollowStatus);

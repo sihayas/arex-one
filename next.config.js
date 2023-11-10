@@ -11,6 +11,9 @@ const nextConfig = {
       "is4-ssl.mzstatic.com",
       "is5-ssl.mzstatic.com",
       "lh3.googleusercontent.com",
+      "64.media.tumblr.com",
+      "media.tenor.com",
+      "wallpapers-clan.com",
     ],
   },
 };

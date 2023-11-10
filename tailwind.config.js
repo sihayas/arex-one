@@ -13,7 +13,7 @@ module.exports = {
       boxShadow: {
         nav: "0px 0px 20px 0px rgba(0, 0, 0, 0.09)",
         interface:
-          "0px 16px 36px 0px rgba(0, 0, 0, 0.03), 0px 66px 66px 0px rgba(0, 0, 0, 0.02), 0px 148px 89px 0px rgba(0, 0, 0, 0.01), 0px 263px 105px 0px rgba(0, 0, 0, 0.00), 0px 411px 115px 0px rgba(0, 0, 0, 0.00)",
+          "4px 7px 18px 0px rgba(0, 0, 0, 0.04), 15px 28px 32px 0px rgba(0, 0, 0, 0.04), 35px 63px 43px 0px rgba(0, 0, 0, 0.02), 61px 113px 51px 0px rgba(0, 0, 0, 0.01), 96px 176px 56px 0px rgba(0, 0, 0, 0.00)",
         stars:
           "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
         shadowKitMedium:
@@ -42,9 +42,6 @@ module.exports = {
         red: "#FF0000",
         violet: "rgb(75,61,103)",
         nav: "rgba(255, 255, 255, 0.92)",
-      },
-      dropShadow: {
-        interface: "rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;",
       },
       gridRowStart: {
         9: "9",

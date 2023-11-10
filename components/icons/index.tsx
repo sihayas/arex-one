@@ -273,27 +273,6 @@ export function IndexIcon({ ...props }) {
   );
 }
 
-export function ArrowCircleIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={16}
-      height={16}
-      fill="none"
-      {...props}
-    >
-      <path
-        fill={props.color}
-        d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16Zm0-1.5a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13Z"
-      />
-      <path
-        fill={props.color}
-        d="M9.081 8.868c.083-.078.067-.117-.047-.117-1.46 0-2.929 0-4.408-.002-.072 0-.172-.043-.3-.13-.67-.458-.273-1.363.508-1.366a1193.3 1193.3 0 0 1 4.226-.002c.092 0 .105-.032.039-.096-.287-.275-.994-.853-1.078-1.243-.097-.45.21-.878.674-.896.244-.009.476.096.696.314.684.676 1.364 1.356 2.04 2.042.427.434.43.827.012 1.245-.716.716-1.438 1.427-2.164 2.13-.349.34-.693.36-1.033.065-.767-.668.403-1.535.835-1.944Z"
-      />
-    </svg>
-  );
-}
-
 export function CaptionIcon({ ...props }) {
   return (
     <svg
@@ -308,6 +287,95 @@ export function CaptionIcon({ ...props }) {
         fillRule="evenodd"
         d="M10.053 3.67c.673-.218 1.45-.214 2.084.112 1.466.753 2.1 2.694 1.51 4.75-.265.923-.73 1.82-1.716 2.723-.985.904-2.352 1.438-2.987 1.438a.406.406 0 0 1-.411-.4c0-.221.188-.4.411-.4.725 0 1.372-.394 2.139-.975.586-.445 1.045-1.013 1.298-1.508.486-.948.502-2.283-.282-2.638a1.923 1.923 0 0 1-1.457.65c-1.28 0-2.034-1.029-2.002-1.961.031-.891.597-1.526 1.413-1.79Zm-6.4 0c.673-.218 1.45-.214 2.084.112 1.466.753 2.1 2.694 1.51 4.75-.265.923-.73 1.82-1.716 2.723-.985.904-2.352 1.438-2.987 1.438a.406.406 0 0 1-.411-.4c0-.221.188-.4.411-.4.725 0 1.372-.394 2.139-.975.587-.445 1.045-1.013 1.298-1.508.485-.948.502-2.283-.282-2.638a1.923 1.923 0 0 1-1.457.65c-1.28 0-2.034-1.029-2.002-1.961.031-.891.597-1.526 1.413-1.79Z"
         clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+export function RecordsButton({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      fill="none"
+      {...props}
+    >
+      <g fill={props.color} clipPath="url(#a)">
+        <path d="M12 5.5A6.5 6.5 0 1 1 5.5 12 6.512 6.512 0 0 1 12 5.5Zm0 12A5.5 5.5 0 1 0 6.5 12a5.506 5.506 0 0 0 5.5 5.5Z" />
+        <path d="M12 16.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z" />
+      </g>
+      <rect
+        width={23}
+        height={23}
+        x={23.5}
+        y={23.5}
+        stroke={props.color}
+        rx={11.5}
+        transform="rotate(180 23.5 23.5)"
+      />
+    </svg>
+  );
+}
+
+export function LinkButton({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      fill="none"
+      {...props}
+    >
+      <g fill={props.color} clipPath="url(#a)">
+        <path d="M10.001 17.33a5.333 5.333 0 1 0 0-10.666 5.333 5.333 0 0 0 0 10.667Z" />
+        <path d="M15.332 6.844v1.393a3.994 3.994 0 0 1 0 7.533v1.394a5.33 5.33 0 0 0 4-5.16 5.33 5.33 0 0 0-4-5.16Z" />
+      </g>
+      <rect
+        width={23}
+        height={23}
+        x={0.5}
+        y={-0.5}
+        stroke={props.color}
+        rx={11.5}
+        transform="matrix(1 0 0 -1 0 23)"
+      />
+    </svg>
+  );
+}
+
+export function ArchiveButton({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      fill="none"
+      {...props}
+    >
+      <path
+        stroke={props.color}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="m14.668 14.576 2.167 1.593V7.836l-2.167 1.593"
+      />
+      <path
+        fill={props.color}
+        stroke={props.color}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="m7.168 12.003 5.667-4.167v8.333l-5.667-4.166Z"
+      />
+      <rect
+        width={23}
+        height={23}
+        x={23.5}
+        y={23.5}
+        stroke={props.color}
+        rx={11.5}
+        transform="rotate(180 23.5 23.5)"
       />
     </svg>
   );

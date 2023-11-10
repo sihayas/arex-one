@@ -25,7 +25,6 @@ import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
 import { GetDimensions } from "@/components/interface/Interface";
 import { RecordExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
-import GradientBlur from "@/components/interface/album/sub/GradientBlur";
 
 export const Record = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;

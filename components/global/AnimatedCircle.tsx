@@ -9,11 +9,7 @@ type AnimatedCircleProps = {
 };
 
 const AnimatedCircle = ({ onSortOrderChange }: AnimatedCircleProps) => {
-  const controls = useAnimation();
   const [currentSortOrder, setCurrentSortOrder] = useState<sortOrder>("newest");
-  const radius = 16 - 2.5 / 2;
-  const strokeWidth = 1.5;
-  const circumference = 2 * Math.PI * radius;
 
   // Update the sort order when the current sort order changes
   useEffect(() => {

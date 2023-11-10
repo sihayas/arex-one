@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import "styles/cmdk.css";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ThreadcrumbProvider } from "@/context/Threadcrumbs";
 import { SoundDetailsProvider } from "@/context/SoundContext";
 import { Toaster } from "sonner";

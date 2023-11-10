@@ -22,18 +22,10 @@ const FollowButton: React.FC<FollowButtonProps> = ({
           ? handleFollowUnfollow("unfollow")
           : handleFollowUnfollow("follow")
       }
-      className="flex items-center gap-1 text-xs relative font-mono ml-auto mr-4"
+      className="flex items-center gap-1 text-xs relative"
       style={{ color: linkColor }}
     >
       {linkText}
-      <div
-        className="w-2 h-2 rounded-full animate-ping"
-        style={{ backgroundColor: linkColor }}
-      ></div>
-      <div
-        className="w-2 h-2 rounded-full absolute right-0"
-        style={{ backgroundColor: linkColor }}
-      />
     </button>
   );
 };

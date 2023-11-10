@@ -47,12 +47,12 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 640, height: 384 },
-      target: { width: 640, height: 384 },
+      base: { width: 352, height: 352 },
+      target: { width: 352, height: 352 },
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: viewportHeight - 2 * 72 },
+      target: { width: 480, height: viewportHeight - 2 * 24 },
     },
     record: {
       base: { width: 432, height: baseHeight },
@@ -181,6 +181,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           scale: [0.95, 1],
           width: `${base.width}px`,
           height: `${base.height}px`,
+          borderRadius: `${activePage.name === "user" ? "176px" : "32px"}`,
         },
         { type: "spring", stiffness: 400, damping: 40 },
       );
@@ -237,18 +238,24 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   };
 
   return (
-    <div ref={rootScope} id={`cmdk`} className={`cmdk z-10 rounded-[32px]`}>
+    <motion.div
+      ref={rootScope}
+      id={`cmdk`}
+      className={`cmdk z-10 rounded-[32px]`}
+    >
       {/* CMD-K Inner  */}
       <Command
-        className={`cmdk-inner flex rounded-[32px]`}
+        id={`cmdk-inner`}
+        className={`cmdk-inner flex rounded-[32px] gap-8 items-center`}
         shouldFilter={false}
         onKeyDown={handleKeyDown}
         loop
       >
         {/* Shape-shift / Window, lies atop the rendered content */}
         <motion.div
+          id={`cmdk-window`}
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver rounded-[32px] shadow-interface relative`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver shadow-interface relative flex-shrink-0`}
         >
           {/* Base layout / Static dimensions for a page */}
           <div
@@ -268,12 +275,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               </AnimatePresence>
             </div>
           </div>
+          {/* Footer */}
+          {renderPageContent(activePage)}
         </motion.div>
         <Nav />
-        {/* Footer */}
-        {renderPageContent(activePage)}
       </Command>
-    </div>
+    </motion.div>
   );
 }
 
@@ -303,14 +310,10 @@ function renderPageContent(page: Page) {
   }
 
   return (
-    <div className="flex items-center justify-center w-full fixed -top-[28px] uppercase font-mono">
-      <div className="text-xs text-gray3 font-medium pr-4 leading-[1]">
-        {typeLabel}
-      </div>
-      <div className="text-xs text-black font-semibold pr-2 leading-[1]">
-        {mainContent}
-      </div>
-      <div className="text-xs text-black leading-[1]">{subContent}</div>
+    <div className="flex items-center justify-center w-full fixed -top-4 uppercase font-mono">
+      <div className="text-xs text-gray2 pr-4 leading-[8px%]">{typeLabel}</div>
+      <div className="text-xs text-gray4 pr-2 leading-[8px]">{mainContent}</div>
+      <div className="text-xs text-gray5 leading-[8px]">{subContent}</div>
     </div>
   );
 }
