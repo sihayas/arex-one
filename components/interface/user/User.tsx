@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import Soundtrack from "@/components/interface/user/sub/Soundtrack";
 import { useUserDataAndAlbumsQuery } from "@/lib/apiHandlers/userAPI";
 import Essentials from "@/components/interface/user/sub/Essentials";
@@ -26,18 +32,32 @@ const linkProps = {
   INTERLINK: { text: "INTERLINK", color: "#FFEA00" },
   LINK: { text: "LINK", color: "#CCC" },
 };
+const springConfig = { damping: 40, stiffness: 400, mass: 1 };
 
 // User component
 const User = () => {
-  const cmdk = document.getElementById("cmdk-inner") as HTMLDivElement;
-
   const user = useUser();
   const authenticatedUserId = user?.id;
 
   // Get page user
-  const { pages } = useInterfaceContext();
+  const { pages, scrollContainerRef } = useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
 
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+  });
+
+  const scale = useSpring(
+    useTransform(scrollY, [0, 24], [1, 0.1667]),
+    springConfig,
+  );
+
+  const x = useSpring(useTransform(scrollY, [0, 24], [0, -26]), springConfig);
+  const y = useSpring(useTransform(scrollY, [0, 24], [0, 26]), springConfig);
+  const opacity = useSpring(
+    useTransform(scrollY, [0, 24], [0, 1]),
+    springConfig,
+  );
   // Check if the profile belongs to the authenticated user
   const isOwnProfile = authenticatedUserId === pageUser?.id;
 
@@ -79,7 +99,7 @@ const User = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-w-full min-h-full p-8"
+      className="w-full h-full p-8 pt-0 mt-[216px]"
     >
       {isLoading ? (
         <JellyComponent className={``} isVisible={true} />
@@ -87,44 +107,53 @@ const User = () => {
         <div>Error</div>
       ) : (
         <>
-          <Image
-            className={`rounded-full min-w-[288px] min-h-[288px] shadow-shadowKitMedium`}
-            src={userData.image}
-            alt={`${userData.name}'s avatar`}
-            width={288}
-            height={288}
-          />
-          {createPortal(
-            <div className={`flex flex-col gap-8`}>
-              {/* Essentials */}
-              <div className="flex w-max items-center rounded-xl">
-                <Essentials essentials={essentials} />
-              </div>
+          <motion.div
+            style={{ scale, x, y }}
+            className={`fixed top-0 right-0 pointer-events-none origin-top-right flex w-full h-full items-center justify-center`}
+          >
+            <Image
+              className={`rounded-full shadow-shadowKitMedium`}
+              src={userData.image}
+              alt={`${userData.name}'s avatar`}
+              width={384}
+              height={384}
+            />
+          </motion.div>
+          <motion.div
+            className={`text-[22px] leading-[22px] font-bold text-gray4 fixed top-[53px] right-[112px] tracking-tighter`}
+          >
+            {userData.username}
+          </motion.div>
 
-              {/*  Interactions */}
-
-              <div className={`flex flex-col gap-4`}>
-                <div className={`flex items-center gap-2`}>
-                  <LinkButton color={"#CCC"} />
-                  <FollowButton
-                    followState={followState}
-                    handleFollowUnfollow={handleFollowUnfollow}
-                    linkColor={linkColor}
-                    linkText={linkText}
-                  />
-                </div>
-                <div className={`flex items-center gap-2`}>
-                  <RecordsButton color={"#CCC"} />
-                  <div className={`uppercase text-xs text-gray3`}>RECORDS</div>
-                </div>
-                <div className={`flex items-center gap-2`}>
-                  <ArchiveButton color={"#CCC"} />
-                  <div className={`uppercase text-xs text-gray3`}>ARCHIVE</div>
-                </div>
+          <motion.div
+            style={{ opacity }}
+            className={`flex flex-col gap-8 h-full`}
+          >
+            {/*  Interactions */}
+            <div className={`flex flex-col gap-4`}>
+              <div className={`flex items-center gap-2`}>
+                <LinkButton color={"#CCC"} />
+                <FollowButton
+                  followState={followState}
+                  handleFollowUnfollow={handleFollowUnfollow}
+                  linkColor={linkColor}
+                  linkText={linkText}
+                />
               </div>
-            </div>,
-            cmdk,
-          )}
+              <div className={`flex items-center gap-2`}>
+                <RecordsButton color={"#CCC"} />
+                <div className={`uppercase text-xs text-gray3`}>RECORDS</div>
+              </div>
+              <div className={`flex items-center gap-2`}>
+                <ArchiveButton color={"#CCC"} />
+                <div className={`uppercase text-xs text-gray3`}>ARCHIVE</div>
+              </div>
+            </div>
+            {/* Essentials */}
+            <div className="flex w-max items-center rounded-xl">
+              <Essentials essentials={essentials} />
+            </div>
+          </motion.div>
         </>
       )}
     </motion.div>

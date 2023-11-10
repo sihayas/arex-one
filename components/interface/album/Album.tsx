@@ -21,6 +21,8 @@ import { JellyComponent } from "@/components/global/Loading";
 import Statline from "@/components/interface/album/sub/RatingDial";
 import AnimatedCircle from "@/components/global/AnimatedCircle";
 
+const springConfig = { damping: 40, stiffness: 400, mass: 1 };
+
 const Album = () => {
   // Hooks
   const { selectedSound } = useSound();
@@ -44,20 +46,17 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  // Define the spring configuration just once
-  const springConfig = { damping: 40, stiffness: 400, mass: 1 };
-
   // Album artwork scale
   let albumX = useSpring(
-    useTransform(scrollY, [0, 64], [0, -24]),
+    useTransform(scrollY, [0, 64], [0, -48]),
     springConfig,
   );
   let albumY = useSpring(
-    useTransform(scrollY, [0, 64], [0, -24]),
+    useTransform(scrollY, [0, 64], [0, -48]),
     springConfig,
   );
   let albumScale = useSpring(
-    useTransform(scrollY, [0, 64], [1, 0.1]),
+    useTransform(scrollY, [0, 64], [1, 0]),
     springConfig,
   );
 
@@ -73,6 +72,7 @@ const Album = () => {
     useTransform(scrollY, [0, 64], [1, 0.5]),
     springConfig,
   );
+  const textColor = useTransform(scrollY, [0, 64], ["#FFF", "#333"]);
 
   // Rating footer opacity
   const borderRadius = useSpring(useTransform(scrollY, [0, 24], [32, 240]), {
@@ -146,7 +146,7 @@ const Album = () => {
 
           {/* Rating */}
           <motion.div
-            className={`fixed z-50 pointer-events-none right-0 bottom-0 flex items-center justify-center text-white`}
+            className={`fixed z-50 pointer-events-none right-0 bottom-0 flex items-center justify-center`}
             style={{
               x: dialX,
               y: dialY,
@@ -155,12 +155,13 @@ const Album = () => {
             }}
           >
             <Statline ratings={[4, 8900, 2445, 5000, 500]} average={2.4} />
-            <div
+            <motion.div
               id={`rating`}
-              className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville text-inherit`}
+              className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville`}
+              style={{ color: textColor }}
             >
               3.7
-            </div>
+            </motion.div>
           </motion.div>
         </>
       )}

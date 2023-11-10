@@ -12,8 +12,8 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
       {essentials.map((essential, i) => (
         <div className={`w-fit h-fit`} key={essential.id}>
           <Artwork
-            className={`${i === 0 ? "rounded-l-xl" : ""} ${
-              i === 2 ? "rounded-r-xl" : ""
+            className={`${i === 0 ? "rounded-l-2xl" : ""} ${
+              i === 2 ? "rounded-r-2xl" : ""
             }`}
             sound={essential.appleAlbumData}
             width={128}

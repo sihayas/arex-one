@@ -10,7 +10,8 @@ const RatingDial = ({ ratings = [] }) => {
   const viewBoxSize = radius * 2 + strokeWidth; // for big dot add dotR * 2
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
-  const colors = ["#CCC", "#FF3319", "#FFFF00", "#A6FF47", "#2619D1"];
+  const colors = ["#CCC", "#999", "#777", "#333", "#000"];
+  // const colors = ["#CCC", "#FF3319", "#FFFF00", "#A6FF47", "#2619D1"];
 
   // Account for excess stroke created by the linecap rounding
   const excessStroke = 40;

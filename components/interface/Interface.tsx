@@ -47,8 +47,8 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 352, height: 352 },
-      target: { width: 352, height: 352 },
+      base: { width: 448, height: 448 },
+      target: { width: 448, height: 448 },
     },
     album: {
       base: { width: 480, height: 480 },
@@ -105,6 +105,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     [0, maxScroll],
     [base.height, target.height],
   );
+  // Only for user page
+  const newBorderRadius = useTransform(scrollY, [0, maxScroll], [224, 32]);
 
   // Animate ROOT opacity.
   useEffect(() => {
@@ -124,7 +126,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
-  // Animates WINDOW scale presence
+  // Animates WINDOW presence
   useEffect(() => {
     const animateParent = async () => {
       const animationConfig = {
@@ -164,7 +166,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     adjustHeight();
   }, [animate, base.height, scope, expandInput, expandSignals]);
 
-  // Responsible for shape-shifting the WINDOW on scroll/page change & bouncing
+  // Animate shape-shifting the WINDOW on scroll & page change & bounce
   useEffect(() => {
     // Bounce and shift dimensions on page change
     const sequence = async () => {
@@ -175,18 +177,17 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         { type: "spring", stiffness: 800, damping: 40 },
       );
 
+      // Bounce up and shift
       await animate(
         scope.current,
         {
           scale: [0.95, 1],
           width: `${base.width}px`,
           height: `${base.height}px`,
-          borderRadius: `${activePage.name === "user" ? "176px" : "32px"}`,
         },
         { type: "spring", stiffness: 400, damping: 40 },
       );
     };
-
     sequence();
 
     // Animate dimensions on page ~scroll~, listens for changes via unsub
@@ -213,11 +214,28 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       shiftDimension("height", newHeight),
     );
 
+    const unsubBorderRadius = newBorderRadius.on("change", () => {
+      if (activePageName === "user") {
+        shiftDimension("borderRadius", newBorderRadius);
+      }
+    });
+
     return () => {
       unsubHeight();
       unsubWidth();
+      unsubBorderRadius();
     };
-  }, [animate, base.height, base.width, newHeight, newWidth, scope, pages]);
+  }, [
+    animate,
+    base.height,
+    base.width,
+    newHeight,
+    newWidth,
+    newBorderRadius,
+    scope,
+    pages,
+    activePageName,
+  ]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // switch to album page from form
@@ -255,7 +273,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         <motion.div
           id={`cmdk-window`}
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver shadow-interface relative flex-shrink-0`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver shadow-interface relative flex-shrink-0 rounded-[32px]`}
         >
           {/* Base layout / Static dimensions for a page */}
           <div
