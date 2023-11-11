@@ -47,8 +47,8 @@ model Settings {
 
   isPrivate             Boolean  @default(false) @map(name: "is_private")
   isMinus               Boolean  @default(false) @map(name: "is_premium")
-  followerNotifications Boolean  @default(true) @map(name: "follower_notification")
-  replyNotifications    Boolean  @default(true) @map(name: "reply_notification")
+  followerNotifications Boolean  @default(true) @map(name: "follower_notifications")
+  replyNotifications    Boolean  @default(true) @map(name: "reply_notifications")
   heartNotifications     Boolean  @default(true) @map(name: "heart_notifications")
 
 
