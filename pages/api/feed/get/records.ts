@@ -9,6 +9,11 @@ export default async function handle(
     const userId =
       typeof req.query.userId === "string" ? req.query.userId : undefined;
 
+    const authUserId =
+      typeof req.query.authUserId === "string"
+        ? req.query.authUserId
+        : undefined;
+
     // Validation
     if (!userId) {
       return res.status(400).json({ error: "User ID is required." });
@@ -28,20 +33,7 @@ export default async function handle(
     const skip = (page - 1) * limit;
 
     try {
-      // Fetch all the users the current user is following
-      const following = await prisma.follows.findMany({
-        where: {
-          followerId: userId,
-        },
-      });
-
-      // Extract the IDs of the followed users
-      const followingIds = following.map((f) => f.followingId);
-
-      // Include the user's own ID to fetch their reviews as well
-      followingIds.push(userId);
-
-      // Fetch all activities related to the followed users
+      // Fetch all activity records for the user profile
       const activities = await prisma.activity.findMany({
         skip,
         take: limit + 1,
@@ -49,15 +41,9 @@ export default async function handle(
           createdAt: "desc",
         },
         where: {
-          OR: [
-            {
-              record: {
-                authorId: {
-                  in: followingIds,
-                },
-              },
-            },
-          ],
+          record: {
+            authorId: userId,
+          },
         },
         include: {
           record: {
@@ -71,7 +57,7 @@ export default async function handle(
               entry: true,
               caption: true,
               hearts: {
-                where: { authorId: userId },
+                where: { authorId: authUserId },
               },
               _count: {
                 select: { replies: true, hearts: true },
@@ -84,7 +70,7 @@ export default async function handle(
         },
       });
 
-      // Pagination logic, check if there are more pages by conirming theres
+      // Pagination logic, check if there are more pages by confirming there's
       // more than the limit
       const hasMorePages = activities.length > limit;
       if (hasMorePages) {

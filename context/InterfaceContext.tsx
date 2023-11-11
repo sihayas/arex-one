@@ -38,6 +38,10 @@ export type InterfaceContext = {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   session: Session | null;
   setSession: React.Dispatch<React.SetStateAction<any>>;
+  activeFeedUser: User | null;
+  setActiveFeedUser: React.Dispatch<React.SetStateAction<User | null>>;
+  feedUserHistory: User[];
+  setFeedUserHistory: React.Dispatch<React.SetStateAction<User[]>>;
 };
 
 // Define the props for the InterfaceProvider component
@@ -68,11 +72,15 @@ export const InterfaceContextProvider = ({
   // Control the visibility of the window
   const [isVisible, setIsVisible] = useState(false);
 
-  // Create a ref scrolling within the window
+  // Create a ref for animations scrolling within the window
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize the pages array
   const [pages, setPages] = useState<Page[]>([]);
+
+  // Initialize the feed user history stack
+  const [activeFeedUser, setActiveFeedUser] = useState<User | null>(null);
+  const [feedUserHistory, setFeedUserHistory] = useState<User[]>([]);
 
   // Prepare the user and session states
   const [user, setUser] = useState<User | null>(null);
@@ -133,6 +141,7 @@ export const InterfaceContextProvider = ({
           scrollPosition: 0,
         },
       ]);
+      setActiveFeedUser(user);
     }
   }, [pages.length, user]);
 
@@ -182,6 +191,10 @@ export const InterfaceContextProvider = ({
         setUser,
         session,
         setSession,
+        activeFeedUser,
+        setActiveFeedUser,
+        feedUserHistory,
+        setFeedUserHistory,
       }}
     >
       {children}

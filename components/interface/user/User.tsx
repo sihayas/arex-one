@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import {
-  AnimatePresence,
-  motion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Soundtrack from "@/components/interface/user/sub/Soundtrack";
 import { useUserDataAndAlbumsQuery } from "@/lib/apiHandlers/userAPI";
 import Essentials from "@/components/interface/user/sub/Essentials";
@@ -21,9 +15,7 @@ import {
   ArchiveButton,
 } from "@/components/icons";
 import FollowButton from "./sub/components/LinkButton";
-import { createPortal } from "react-dom";
-import UserAvatar from "@/components/global/UserAvatar";
-import Stars from "@/components/global/Stars";
+import { User } from "@/types/dbTypes";
 
 // Define link properties for different states
 const linkProps = {
@@ -40,7 +32,14 @@ const User = () => {
   const authenticatedUserId = user?.id;
 
   // Get page user
-  const { pages, scrollContainerRef } = useInterfaceContext();
+  const {
+    pages,
+    scrollContainerRef,
+    feedUserHistory,
+    setFeedUserHistory,
+    setActiveFeedUser,
+    setIsVisible,
+  } = useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
 
   const { scrollY } = useScroll({
@@ -61,13 +60,6 @@ const User = () => {
   // Check if the profile belongs to the authenticated user
   const isOwnProfile = authenticatedUserId === pageUser?.id;
 
-  // State for active tab
-  const [activeTab, setActiveTab] = useState<"profile" | "soundtrack">(
-    "profile",
-  );
-  // Function to handle tab click
-  const handleTabClick = (tab: "profile" | "soundtrack") => setActiveTab(tab);
-
   // Fetch user data and albums
   const { data, isLoading, isError, followState, handleFollowUnfollow } =
     useUserDataAndAlbumsQuery(pageUser?.id, authenticatedUserId);
@@ -86,13 +78,29 @@ const User = () => {
   // Get link text and color based on link status
   const { text: linkText, color: linkColor } = linkProps[linkStatus];
 
-  // State for subsection
+  // State for settings
   const [subSection, setSubSection] = useState<"essentials" | "settings">(
     "essentials",
   );
-  // Function to handle subsection click
+
+  // Function to handle settings click
   const handleSubSectionClick = (section: "essentials" | "settings") =>
     setSubSection(section === subSection ? "essentials" : section);
+
+  const handleSetFeedUser = (user: User) => {
+    // Remove the user if they are already in the feed user history
+    const newHistory = feedUserHistory.filter((u) => u.id !== user.id);
+
+    // Add the user to the front of the feed user history
+    newHistory.unshift(user);
+
+    // Update the feed user history
+    setFeedUserHistory(newHistory);
+
+    // Set the active feed user
+    setActiveFeedUser(user);
+    setIsVisible(false);
+  };
 
   return (
     <motion.div
@@ -132,15 +140,27 @@ const User = () => {
             {/*  Interactions */}
             <div className={`flex flex-col gap-4`}>
               <div className={`flex items-center gap-2`}>
-                <LinkButton color={"#CCC"} />
-                <FollowButton
-                  followState={followState}
-                  handleFollowUnfollow={handleFollowUnfollow}
-                  linkColor={linkColor}
-                  linkText={linkText}
-                />
+                {isOwnProfile ? (
+                  <SettingsIcon
+                    className={``}
+                    onClick={() => handleSubSectionClick("settings")}
+                  />
+                ) : (
+                  <>
+                    <LinkButton color={"#CCC"} />
+                    <FollowButton
+                      followState={followState}
+                      handleFollowUnfollow={handleFollowUnfollow}
+                      linkColor={linkColor}
+                      linkText={linkText}
+                    />
+                  </>
+                )}
               </div>
-              <div className={`flex items-center gap-2`}>
+              <div
+                onClick={() => handleSetFeedUser(userData)}
+                className={`flex items-center gap-2 cursor-pointer`}
+              >
                 <RecordsButton color={"#CCC"} />
                 <div className={`uppercase text-xs text-gray3`}>RECORDS</div>
               </div>

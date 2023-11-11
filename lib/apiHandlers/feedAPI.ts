@@ -3,16 +3,28 @@ import { fetchSoundsByTypes } from "../global/musicKit";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData } from "@/types/appleTypes";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 // React query hook for fetching feed data
 export const useFeedQuery = (userId: string, limit: number = 6) => {
+  const { user } = useInterfaceContext();
+
+  // Check if grabbing profile records or user feed
+  const isProfile = user?.id !== userId;
+
   const result = useInfiniteQuery(
     ["feed", userId],
     ({ pageParam = 1 }) => {
       if (!userId) {
         return Promise.reject(new Error("User ID is undefined"));
       }
-      return fetchFeedAndMergeAlbums(userId, pageParam, limit);
+      return fetchFeedAndMergeAlbums(
+        userId,
+        pageParam,
+        limit,
+        isProfile,
+        user?.id,
+      );
     },
     {
       getNextPageParam: (lastPage, allPages) => {
@@ -32,19 +44,24 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
   };
 };
 
-// Helper function for fetching feed data with axios
+// Helper function for fetching feed data or profile records with axios
 const fetchFeedAndMergeAlbums = async (
   userId: string,
   pageParam: number = 1,
   limit: number = 6,
+  isProfile: boolean = false,
+  authUserId?: string,
 ) => {
-  const res = await axios.get(`/api/feed/get/activities`, {
-    params: {
-      userId,
-      page: pageParam,
-      limit,
-    },
-  });
+  const url = isProfile ? `/api/feed/get/records` : `/api/feed/get/activities`;
+
+  const params = {
+    userId,
+    page: pageParam,
+    limit,
+    ...(isProfile && authUserId && { authUserId }),
+  };
+
+  const res = await axios.get(url, { params });
 
   // Check if res.data.data has the correct structure
   if (

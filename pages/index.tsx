@@ -7,14 +7,33 @@ import DashedLine from "@/components/interface/record/sub/icons/DashedLine";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import RatingDial from "@/components/interface/album/sub/RatingDial";
+import { User } from "@/types/dbTypes";
 
 export default function Home() {
-  const { user, session } = useInterfaceContext();
+  const {
+    activeFeedUser,
+    feedUserHistory,
+    setActiveFeedUser,
+    setFeedUserHistory,
+    user,
+  } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const supabaseClient = useSupabaseClient();
+  const isProfile = activeFeedUser?.id !== user?.id;
 
-  if (!session) {
+  const handleAvatarClick = (clickedUser: User) => {
+    // Move the clicked user to the front of the array
+    const reorderedHistory = feedUserHistory.filter(
+      (u) => u.id !== clickedUser.id,
+    );
+    reorderedHistory.unshift(clickedUser);
+
+    // Update the feedUserHistory and setActiveFeedUser
+    setFeedUserHistory(reorderedHistory);
+    setActiveFeedUser(clickedUser);
+  };
+
+  if (!activeFeedUser) {
     return (
       <Layout>
         <Head>
@@ -74,23 +93,91 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <UserAvatar
-        className="fixed translate-x-[175px] translate-y-8 z-50"
-        imageSrc={user?.image}
-        altText={`${user?.username}'s avatar`}
-        width={32}
-        height={32}
-        //@ts-ignore
-        user={session.user}
-      />
+      <div
+        className={`flex items-center gap-2 fixed w-full translate-y-8 z-50`}
+      >
+        <motion.div
+          layout
+          initial={{ y: 0 }}
+          animate={activeFeedUser.id !== user?.id ? { x: 40 } : {}}
+          transition={{ type: "spring", stiffness: 100, damping: 12 }}
+          className={`flex items-center justify-end w-[167px] gap-1`}
+        >
+          {feedUserHistory
+            .slice()
+            .reverse()
+            .map((historyUser, index) => (
+              <motion.div
+                key={historyUser.id}
+                layout
+                layoutId={historyUser.id}
+                animate={{
+                  scale:
+                    activeFeedUser.id === user?.id
+                      ? 0.75
+                      : activeFeedUser.id === historyUser.id
+                      ? 1
+                      : 0.75,
+                }}
+                transition={{ type: "spring", stiffness: 100, damping: 14 }}
+              >
+                <UserAvatar
+                  className=""
+                  imageSrc={historyUser.image}
+                  altText={`${historyUser.username}'s avatar`}
+                  width={32}
+                  height={32}
+                  user={historyUser}
+                  onClick={() => handleAvatarClick(historyUser)}
+                />
+              </motion.div>
+            ))}
+        </motion.div>
+
+        {/*  Authenticated User */}
+        <div className={`flex items-center gap-2`}>
+          {/*  Shift the auth user up to make space for another */}
+          <motion.div
+            initial={{ y: 0 }}
+            animate={activeFeedUser.id !== user?.id ? { y: -46 } : {}}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            onClick={() => setActiveFeedUser(user)}
+            className={`cursor-pointer`}
+          >
+            <UserAvatar
+              imageSrc={user?.image}
+              altText={`${user?.username}'s avatar`}
+              width={32}
+              height={32}
+              user={activeFeedUser}
+              onClick={() => setActiveFeedUser(user)}
+            />
+          </motion.div>
+
+          {/* Active Feed Username */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            className={`text-gray3 text-xs font-medium uppercase`}
+          >
+            {activeFeedUser.username}&apos;s {isProfile ? "records" : "stream"}
+          </motion.div>
+        </div>
+      </div>
+
       <DashedLine className="absolute translate-x-[190px] translate-y-8" />
 
+      {/* Show Auth Feed or Profile Records */}
       <motion.div
         ref={scrollContainerRef}
-        className={`relative flex flex-col gap-[50px] overflow-scroll pl-0 p-12 pb-0 pt-20 max-w-screen max-h-[125vh] origin-left scrollbar-none`}
+        className={`relative flex flex-col gap-[50px] overflow-scroll pl-0 p-12 pb-0 pt-28 max-w-screen max-h-[125vh] scrollbar-none`}
       >
-        {scrollContainerRef && user && (
-          <FeedUser userId={user.id} scrollContainerRef={scrollContainerRef} />
+        {scrollContainerRef && activeFeedUser && (
+          <FeedUser
+            userId={activeFeedUser.id}
+            scrollContainerRef={scrollContainerRef}
+          />
         )}
       </motion.div>
 

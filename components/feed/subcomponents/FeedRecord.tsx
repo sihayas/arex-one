@@ -9,6 +9,7 @@ import HeartButton from "@/components/global/HeartButton";
 import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { RecordExtended } from "@/types/globalTypes";
+import { motion } from "framer-motion";
 
 interface FeedRecordProps {
   record: RecordExtended;
@@ -38,7 +39,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
   const handleEntryClick = useHandleRecordClick(record);
 
   return (
-    <div className="flex flex-col w-fit relative">
+    <motion.div className="flex flex-col w-fit relative">
       {/* Top Section */}
       <div className={`flex items-end w-[608px]`}>
         {/* Username and Avatar*/}
@@ -83,7 +84,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
           {/* Content */}
           <div
             onClick={handleEntryClick}
-            className={`break-words line-clamp-4 w-full text-sm text-gray5 leading-normal cursor-pointer z-10`}
+            className={`break-words line-clamp-6 w-full text-sm text-gray5 leading-normal cursor-pointer z-10`}
           >
             {record.entry?.text || record.caption?.text}
           </div>
@@ -111,6 +112,6 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
         width={320}
         height={320}
       />
-    </div>
+    </motion.div>
   );
 };
