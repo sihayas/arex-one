@@ -6,8 +6,15 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import UserAvatar from "@/components/global/UserAvatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion } from "framer-motion";
+import { Triangle } from "@/components/icons";
 
 const MotionTextareaAutosize = motion(TextareaAutosize);
+
+const isRecord = (
+  replyParent: Record | Reply | null,
+): replyParent is Record => {
+  return (replyParent as Record).appleAlbumData !== undefined;
+};
 
 const ReplyInput = () => {
   const { user } = useInterfaceContext();
@@ -74,15 +81,10 @@ const ReplyInput = () => {
 
   const renderReplyInput = useMemo(() => {
     return (
-      <motion.div
-        layout
-        transition={{ type: "spring", bounce: 0 }}
-        className={`w-full p-8 fixed bottom-0 right-0 flex ${
-          isFocused ? "justify-center" : "justify-end"
-        }`}
-      >
+      <motion.div className={`w-full p-8 fixed bottom-0 right-0 flex`}>
+        {/* Gray Container */}
         <motion.div
-          layout
+          className={`rounded-[28px] z-50 flex items-center gap-4 pr-1 pl-3 shadow-shadowKitMedium outline outline-silver outline-1 bg-[#F4F4F2]`}
           animate={{
             width:
               isFocused || replyContent
@@ -97,27 +99,19 @@ const ReplyInput = () => {
             stiffness: 140,
             mass: 0.35,
           }}
-          className="rounded-[28px] z-50 flex items-center gap-4 pr-1 pl-3 shadow-shadowKitMedium outline outline-silver outline-[.5px] bg-[#F4F4F2]"
         >
+          {/* Submit Button*/}
           <button
             type="submit"
             onClick={handleReplySubmit}
             disabled={!replyContent}
             className={` ${replyContent ? "" : "hidden"}`}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="10"
-              height="10"
-              viewBox="0 0 10 10"
-              fill="none"
-            >
-              <path d="M5 0L10 10L0 10L5 0Z" fill="#CCC" />
-            </svg>
+            <Triangle />
           </button>
 
+          {/* Text Input */}
           <MotionTextareaAutosize
-            layout="position"
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             className={`text-sm text-gray2 outline-none bg-transparent resize-none py-2 w-full`}
@@ -127,10 +121,10 @@ const ReplyInput = () => {
             placeholder=""
           />
 
-          <motion.div layout="position" className={`flex items-center gap-2`}>
+          {/* Avatar and Reply Avatar */}
+          <motion.div className={`flex items-center gap-2`}>
             {replyParent && !isRecord(replyParent) && (
               <motion.div
-                layout
                 initial={{ opacity: 0, scale: 0.5, x: 50, y: 0 }}
                 animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
                 transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -148,7 +142,6 @@ const ReplyInput = () => {
 
             {replyParent && !isRecord(replyParent) && (
               <motion.div
-                layout="position"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 style={{
@@ -178,9 +171,3 @@ const ReplyInput = () => {
 };
 
 export default ReplyInput;
-
-const isRecord = (
-  replyParent: Record | Reply | null,
-): replyParent is Record => {
-  return (replyParent as Record).appleAlbumData !== undefined;
-};

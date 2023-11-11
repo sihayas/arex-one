@@ -1,3 +1,5 @@
+import React from "react";
+
 export function LoveIcon({ ...props }) {
   return (
     <svg
@@ -377,6 +379,20 @@ export function ArchiveButton({ ...props }) {
         rx={11.5}
         transform="rotate(180 23.5 23.5)"
       />
+    </svg>
+  );
+}
+
+export function Triangle({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+    >
+      <path d="M5 0L10 10L0 10L5 0Z" fill="#CCC" />
     </svg>
   );
 }

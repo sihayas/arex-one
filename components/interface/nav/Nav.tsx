@@ -118,6 +118,20 @@ const Nav: React.FC = () => {
 
   if (user) {
     left = (
+      <div className={`w-8 h-8 flex items-center justify-center`}>
+        <UserAvatar
+          className=" shadow-shadowKitLow"
+          imageSrc={user.image}
+          altText={`${user.username}'s avatar`}
+          width={32}
+          height={32}
+          user={user}
+        />
+      </div>
+    );
+
+    // User profile
+    middle = (
       <div
         onClick={() => setExpandSignals(!expandSignals)}
         onBlur={() => setExpandSignals(false)}
@@ -125,27 +139,13 @@ const Nav: React.FC = () => {
         className={`cursor-pointer flex flex-col items-center`}
       >
         {/* Heading/Icon */}
-        <div className="p-3 flex items-center w-full ">
+        <div className="p-2 flex items-center w-full ">
           <div
             className={`w-full h-[1.5px] bg-gray3 rounded-full transition-all mb-[1px] -mr-1`}
           />
           <SignalsIcon className={"min-w-[16px] min-h-[16px]"} />
         </div>
         {expandSignals && <Signals />}
-      </div>
-    );
-
-    // User profile
-    middle = (
-      <div className={`w-10 h-10 flex items-center justify-center`}>
-        <UserAvatar
-          className="border border-gray3"
-          imageSrc={user.image}
-          altText={`${user.username}'s avatar`}
-          width={40}
-          height={40}
-          user={user}
-        />
       </div>
     );
 
@@ -160,7 +160,7 @@ const Nav: React.FC = () => {
           className={`${
             // Push input to the right to make space for the dial
             selectedFormSound && expandInput ? "ml-10" : ""
-          } p-3 flex items-center relative`}
+          } p-2 flex items-center relative`}
         >
           {/* Input and placeholder text */}
           <div className="absolute left-3 top-0 flex items-center h-full pointer-events-none -z-10 text-xs text-gray3 font-bold">
@@ -218,15 +218,15 @@ const Nav: React.FC = () => {
   }
 
   // Define the initial and animate values for framer-motion
-  const initialPosition = { x: "-50%", y: 0 };
+  const initialPosition = { x: 0, y: 0 };
   const centerPosition = {
-    x: "-50%",
+    x: 0,
     y: 0,
   };
 
   return (
     <motion.div
-      className="fixed z-50 flex items-start -bottom-[56px] left-1/2 -translate-x-1/2 gap-2 max-h-10"
+      className="fixed z-50 flex items-start bottom-4 left-4 gap-2 max-h-8"
       initial={initialPosition}
       animate={expandInput ? centerPosition : initialPosition}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}

@@ -22,7 +22,7 @@ function RenderReplies({ replies }: RenderRepliesProps) {
           ))}
         </LayoutGroup>
       ) : (
-        <div className="text-xs text-[#CCC]"></div>
+        <div className="text-xs text-[#CCC]">seems quiet</div>
       )}
     </>
   );

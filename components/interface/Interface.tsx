@@ -51,11 +51,11 @@ export const GetDimensions = (pageName: PageName) => {
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: viewportHeight - 2 * 72 },
+      target: { width: 480, height: viewportHeight - 2 * 16 },
     },
     record: {
       base: { width: 432, height: baseHeight },
-      target: { width: 432, height: viewportHeight - 2 * 72 },
+      target: { width: 432, height: viewportHeight - 2 * 16 },
     },
   };
 
@@ -295,7 +295,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           {/* Footer */}
         </motion.div>
         <Nav />
-        {renderPageContent(activePage)}
+        {/*{renderPageContent(activePage)}*/}
       </Command>
     </motion.div>
   );

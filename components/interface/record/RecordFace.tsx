@@ -51,22 +51,22 @@ export const RecordFace = () => {
   const { scrollY } = useScroll({ container: scrollContainerRef });
 
   // Animate opacity
-  const replyInputOpacity = useTransform(scrollY, [0, 64], [0, 1]);
-  const scrollIndicatorOpacity = useTransform(scrollY, [0, 64], [1, 0]);
+  const replyInputOpacity = useTransform(scrollY, [0, 24], [0, 1]);
+  const scrollIndicatorOpacity = useTransform(scrollY, [0, 24], [1, 0]);
 
   // Animate record height from whatever it is to 72px
   const newHeight = useTransform(
     scrollY,
-    [0, 64],
+    [0, 24],
     [scope.current?.offsetHeight, 72],
   );
 
   // Animate scale
-  const newScale = useTransform(scrollY, [0, 64], [1, 0.861]);
+  const newScale = useTransform(scrollY, [0, 24], [1, 0.861]);
   const springScale = useSpring(newScale, { stiffness: 160, damping: 20 });
 
   // Animate Y
-  const y = useTransform(scrollY, [0, 64], [396, 10]);
+  const y = useTransform(scrollY, [0, 24], [396, 10]);
   const springY = useSpring(y, { stiffness: 160, damping: 20 });
 
   useEffect(() => {
@@ -136,7 +136,7 @@ export const RecordFace = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             key={record.id}
-            className={`absolute top-0 flex bg-[#F4F4F4] rounded-3xl w-[464px] gap-4 z-50 shadow-shadowKitHigh`}
+            className={`absolute top-0 flex bg-[#F4F4F4] rounded-[36px] w-[464px] gap-4 z-50 shadow-shadowKitHigh`}
           >
             <div
               className={`relative min-w-[40px] min-h-[40px] drop-shadow-sm ml-4 mt-4 flex flex-col`}
@@ -164,7 +164,7 @@ export const RecordFace = () => {
               />
             </div>
             <div className="flex flex-col gap-[5px] w-full pt-6 pr-4 pb-[10px] overflow-scroll scrollbar-none">
-              <p className="text-gray5 font-semibold text-xs leading-[1]">
+              <p className="text-gray5 font-semibold text-sm leading-[1]">
                 {record.author.username}
               </p>
               <div
@@ -190,14 +190,12 @@ export const RecordFace = () => {
           cmdk,
         )}
       </div>
-      {replies && replies.length > 0 && (
-        <div
-          style={{ height: target.height }}
-          className={`flex flex-wrap p-8 pt-[88px] overflow-scroll`}
-        >
-          <RenderReplies replies={replies} />
-        </div>
-      )}
+      <div
+        style={{ height: target.height }}
+        className={`flex flex-wrap p-8 pt-[88px] overflow-scroll`}
+      >
+        <RenderReplies replies={replies} />
+      </div>
       <motion.div style={{ opacity: replyInputOpacity }}>
         <ReplyInput />
       </motion.div>

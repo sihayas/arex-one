@@ -61,11 +61,11 @@ const Album = () => {
   );
 
   const dialX = useSpring(
-    useTransform(scrollY, [0, 24], [-160, -8]),
+    useTransform(scrollY, [0, 24], [-160, -32]),
     springConfig,
   );
   const dialY = useSpring(
-    useTransform(scrollY, [0, 24], [-160, -8]),
+    useTransform(scrollY, [0, 24], [-160, -32]),
     springConfig,
   );
   const dialScale = useSpring(
@@ -139,9 +139,9 @@ const Album = () => {
                   onActiveSongChange={handleActiveSongChange}
                 />
               )}
-            <div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">
-              <AnimatedCircle onSortOrderChange={handleSortOrderChange} />
-            </div>
+            {/*<div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">*/}
+            {/*  <AnimatedCircle onSortOrderChange={handleSortOrderChange} />*/}
+            {/*</div>*/}
           </motion.div>
 
           {/* Rating */}
