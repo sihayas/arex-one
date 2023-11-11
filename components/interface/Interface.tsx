@@ -327,7 +327,7 @@ function renderPageContent(page: Page) {
   }
 
   return (
-    <div className="flex items-center justify-center w-full fixed -top-8 uppercase font-mono">
+    <div className="flex items-center justify-center w-full fixed -top-6 uppercase font-mono">
       <div className="text-xs text-gray2 pr-4 leading-[8px%]">{typeLabel}</div>
       <div className="text-xs text-gray4 pr-2 leading-[8px]">{mainContent}</div>
       <div className="text-xs text-gray5 leading-[8px]">{subContent}</div>

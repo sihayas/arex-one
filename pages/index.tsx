@@ -97,7 +97,7 @@ export default function Home() {
 
       {activeFeedUser && (
         <div
-          className={`flex items-center gap-2 fixed w-full translate-y-8 z-50`}
+          className={`flex items-center gap-2 fixed w-full translate-y-8 -z-20`}
         >
           <motion.div
             layout
@@ -162,10 +162,11 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
-              className={`text-gray3 text-xs font-medium uppercase`}
+              className={`text-gray2 text-xs font-medium uppercase`}
             >
-              {activeFeedUser.username}&apos;s{" "}
-              {isProfile ? "records" : "stream"}
+              {isProfile
+                ? `${activeFeedUser.username}&apos; profile`
+                : "What's" + " the" + " anthem of your personal utopia?"}
             </motion.div>
           </div>
         </div>
