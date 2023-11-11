@@ -26,7 +26,7 @@ const componentMap: Record<PageName, React.ComponentType<any>> = {
   record: RecordFace,
   user: User,
 };
-// Calculate & set base dimensions and target dimensions for the window per page
+// Calculate & set base dimensions and target dimensions for the window per pag
 export const GetDimensions = (pageName: PageName) => {
   // Initialize base height for window at its longest
   const viewportHeight = window.innerHeight;
@@ -97,12 +97,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.width, target.width]
+    [base.width, target.width],
   );
   const newHeight = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.height, target.height]
+    [base.height, target.height],
   );
   // Only for user page
   const newBorderRadius = useTransform(scrollY, [0, maxScroll], [224, 32]);
@@ -158,7 +158,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           velocity: 10,
           restSpeed: 0.5,
           restDelta: 0.5,
-        }
+        },
       );
     };
 
@@ -173,7 +173,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       await animate(
         scope.current,
         { scale: 0.95 },
-        { type: "spring", stiffness: 800, damping: 40 }
+        { type: "spring", stiffness: 800, damping: 40 },
       );
 
       // Bounce up and shift
@@ -184,7 +184,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           width: `${base.width}px`,
           height: `${base.height}px`,
         },
-        { type: "spring", stiffness: 400, damping: 40 }
+        { type: "spring", stiffness: 400, damping: 40 },
       );
     };
     sequence();
@@ -202,15 +202,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           velocity: 10,
           restSpeed: 0.5,
           restDelta: 0.5,
-        }
+        },
       );
     };
 
     const unsubWidth = newWidth.on("change", () =>
-      shiftDimension("width", newWidth)
+      shiftDimension("width", newWidth),
     );
     const unsubHeight = newHeight.on("change", () =>
-      shiftDimension("height", newHeight)
+      shiftDimension("height", newHeight),
     );
 
     const unsubBorderRadius = newBorderRadius.on("change", () => {
