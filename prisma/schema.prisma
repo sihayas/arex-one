@@ -118,7 +118,7 @@ model Track {
   @@index ([albumId])
 }
 
-model RecordFace {
+model Record {
   id          String    @id @default(cuid())
   type        RecordType
   createdAt   DateTime  @default(now())
@@ -154,7 +154,7 @@ enum RecordType {
   CAPTION
 }
 
-model Record {
+model Entry {
   id         String   @id @default(cuid())
   text       String
   rating     Float
