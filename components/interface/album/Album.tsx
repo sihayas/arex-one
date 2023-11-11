@@ -48,31 +48,31 @@ const Album = () => {
 
   // Album artwork scale
   let albumX = useSpring(
-    useTransform(scrollY, [0, 64], [0, -48]),
+    useTransform(scrollY, [0, 24], [0, -48]),
     springConfig,
   );
   let albumY = useSpring(
-    useTransform(scrollY, [0, 64], [0, -48]),
+    useTransform(scrollY, [0, 24], [0, -48]),
     springConfig,
   );
   let albumScale = useSpring(
-    useTransform(scrollY, [0, 64], [1, 0]),
+    useTransform(scrollY, [0, 24], [1, 0]),
     springConfig,
   );
 
   const dialX = useSpring(
-    useTransform(scrollY, [0, 64], [-160, -8]),
+    useTransform(scrollY, [0, 24], [-160, -8]),
     springConfig,
   );
   const dialY = useSpring(
-    useTransform(scrollY, [0, 64], [-160, -8]),
+    useTransform(scrollY, [0, 24], [-160, -8]),
     springConfig,
   );
   const dialScale = useSpring(
-    useTransform(scrollY, [0, 64], [1, 0.5]),
+    useTransform(scrollY, [0, 24], [1, 0.5]),
     springConfig,
   );
-  const textColor = useTransform(scrollY, [0, 64], ["#FFF", "#333"]);
+  const textColor = useTransform(scrollY, [0, 24], ["#FFF", "#333"]);
 
   // Rating footer opacity
   const borderRadius = useSpring(useTransform(scrollY, [0, 24], [32, 240]), {
@@ -115,7 +115,7 @@ const Album = () => {
             />
           </motion.div>
           {/* Empty 480 px ghost div to take up space */}
-          <div className="w-full h-[480px]">&nbsp;</div>
+          <div className="w-full h-[24px]">&nbsp;</div>
 
           {/* Entries */}
           <AnimatePresence>

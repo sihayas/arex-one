@@ -107,7 +107,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
       </div>
 
       <Artwork
-        className="rounded-[16px] shadow-shadowKitLow ml-[224px] -mt-1"
+        className="rounded-[16px] ml-[224px] -mt-1 outline outline-silver outline-1"
         sound={sound}
         width={320}
         height={320}
