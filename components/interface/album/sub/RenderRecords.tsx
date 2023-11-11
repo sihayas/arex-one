@@ -46,7 +46,7 @@ const RenderEntries: React.FC<RenderRecordsProps> = ({
 
   return (
     // Gap-5 to align with statistics
-    <div className="flex flex-col h-full w-full items-center p-8 gap-9">
+    <div className="flex flex-col h-full w-full items-center p-8 pt-12 gap-9">
       {flattenedEntries?.length > 0 ? (
         flattenedEntries.map((entry) => (
           <RecordAlbum key={entry.id} record={entry} />

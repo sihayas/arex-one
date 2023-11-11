@@ -129,7 +129,7 @@ const Album = () => {
 
           {/* Sort/Filter */}
           <motion.div
-            className={`w-[calc(100%-88px)] z-10 p-8 py-0 pr-8 absolute bottom-0`}
+            className={`w-[calc(100%-88px)] z-10 p-8  py-0 pr-8 absolute bottom-0`}
           >
             {"relationships" in selectedSound.sound &&
               "tracks" in selectedSound.sound.relationships && (

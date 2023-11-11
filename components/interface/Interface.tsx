@@ -51,7 +51,7 @@ export const GetDimensions = (pageName: PageName) => {
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: viewportHeight - 2 * 24 },
+      target: { width: 480, height: viewportHeight - 2 * 72 },
     },
     record: {
       base: { width: 432, height: baseHeight },
@@ -93,7 +93,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Shift width and height of shape-shifter/window while scrolling
   const { scrollY } = useScroll({ container: scrollContainerRef });
-  const maxScroll = 64;
+  const maxScroll = 24;
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
@@ -293,9 +293,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             </div>
           </div>
           {/* Footer */}
-          {renderPageContent(activePage)}
         </motion.div>
         <Nav />
+        {renderPageContent(activePage)}
       </Command>
     </motion.div>
   );
@@ -327,7 +327,7 @@ function renderPageContent(page: Page) {
   }
 
   return (
-    <div className="flex items-center justify-center w-full fixed -top-4 uppercase font-mono">
+    <div className="flex items-center justify-center w-full fixed -top-8 uppercase font-mono">
       <div className="text-xs text-gray2 pr-4 leading-[8px%]">{typeLabel}</div>
       <div className="text-xs text-gray4 pr-2 leading-[8px]">{mainContent}</div>
       <div className="text-xs text-gray5 leading-[8px]">{subContent}</div>
