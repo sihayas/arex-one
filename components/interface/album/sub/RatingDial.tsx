@@ -1,7 +1,11 @@
 import React, { Fragment } from "react";
 import { motion } from "framer-motion";
 
-const RatingDial = ({ ratings = [] }) => {
+type RatingDialProps = {
+  ratings: number[];
+};
+
+const RatingDial: React.FC<RatingDialProps> = ({ ratings }) => {
   const strokeWidth = 8;
   const dotRadius = 1.5;
   const radius = 76;

@@ -118,7 +118,7 @@ model Track {
   @@index ([albumId])
 }
 
-model Record {
+model RecordFace {
   id          String    @id @default(cuid())
   type        RecordType
   createdAt   DateTime  @default(now())

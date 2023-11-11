@@ -26,7 +26,7 @@ import { GetDimensions } from "@/components/interface/Interface";
 import { RecordExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
 
-export const Record = () => {
+export const RecordFace = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
@@ -205,4 +205,4 @@ export const Record = () => {
   );
 };
 
-export default Record;
+export default RecordFace;

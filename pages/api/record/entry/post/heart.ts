@@ -9,7 +9,7 @@ type Data = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data>,
 ) {
   const { recordId, userId, authorId } = req.body;
 
@@ -30,7 +30,7 @@ export default async function handler(
   if (existingHeart) {
     return res
       .status(400)
-      .json({ success: false, message: "Record already hearted by user" });
+      .json({ success: false, message: "RecordFace already hearted by user" });
   }
 
   // Create a new heart for the record

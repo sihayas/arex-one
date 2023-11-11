@@ -7,7 +7,7 @@ import { Command } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
 
 import Album from "@/components/interface/album/Album";
-import Record from "@/components/interface/record/Record";
+import RecordFace from "@/components/interface/record/RecordFace";
 import User from "@/components/interface/user/User";
 
 import {
@@ -21,9 +21,9 @@ import {
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { PageName } from "@/context/InterfaceContext";
 
-const componentMap: Record<PageName, React.ComponentType<any>> = {
+const componentMap: RecordFace<PageName, React.ComponentType<any>> = {
   album: Album,
-  record: Record,
+  record: RecordFace,
   user: User,
 };
 

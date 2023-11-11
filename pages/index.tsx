@@ -9,6 +9,8 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { User } from "@/types/dbTypes";
 
+const springConfig = { type: "spring", damping: 14, stiffness: 100 };
+
 export default function Home() {
   const {
     activeFeedUser,
@@ -100,7 +102,7 @@ export default function Home() {
           layout
           initial={{ y: 0 }}
           animate={activeFeedUser.id !== user?.id ? { x: 40 } : {}}
-          transition={{ type: "spring", stiffness: 100, damping: 12 }}
+          transition={springConfig}
           className={`flex items-center justify-end w-[167px] gap-1`}
         >
           {feedUserHistory
@@ -119,7 +121,7 @@ export default function Home() {
                       ? 1
                       : 0.75,
                 }}
-                transition={{ type: "spring", stiffness: 100, damping: 14 }}
+                transition={springConfig}
               >
                 <UserAvatar
                   className=""

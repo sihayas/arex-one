@@ -154,7 +154,7 @@ const Album = () => {
               transformOrigin: "bottom right",
             }}
           >
-            <Statline ratings={[4, 8900, 2445, 5000, 500]} average={2.4} />
+            <Statline ratings={[4, 8900, 2445, 5000, 500]} />
             <motion.div
               id={`rating`}
               className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville`}
