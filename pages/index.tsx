@@ -45,30 +45,30 @@ export default function Home() {
           <div className="col-start-1 row-start-1 text-sm font-medium text-black">
             AREX [alpha]
           </div>
-          <div className="col-span-5 col-start-2 row-start-1 flex flex-col justify-between text-xs">
-            <div className="tracking-widest text-black">
-              A NETWORK FOR THE LOVE OF
-              <span className="font-medium tracking-normal"> SOUND*</span>
-            </div>
-            <div className="text-gray2 tracking-widest italic font-baskerville text-sm">
-              HEARING BRINGS US INTO THE LIVING WORLD, SIGHT MOVES US TOWARDS
-              ATROPHY & DEATH.
-            </div>
-          </div>
+          {/*<div className="col-span-5 col-start-2 row-start-1 flex flex-col justify-between text-xs">*/}
+          {/*  <div className="tracking-widest text-black">*/}
+          {/*    A NETWORK FOR THE LOVE OF*/}
+          {/*    <span className="font-medium tracking-normal"> SOUND*</span>*/}
+          {/*  </div>*/}
+          {/*  <div className="text-gray2 tracking-widest italic font-baskerville text-sm">*/}
+          {/*    HEARING BRINGS US INTO THE LIVING WORLD, SIGHT MOVES US TOWARDS*/}
+          {/*    ATROPHY & DEATH.*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
-          <div className="col-span-5 col-start-3 row-start-3 self-end uppercase text-gray2 text-xs tracking-widest">
-            MORE THAN JUST A FEED
-          </div>
+          {/*<div className="col-span-5 col-start-3 row-start-3 self-end uppercase text-gray2 text-xs tracking-widest">*/}
+          {/*  MORE THAN JUST A FEED*/}
+          {/*</div>*/}
 
-          <div className="col-span-4 col-start-3 row-span-1 row-start-5 items-end text-xs tracking-widest uppercase text-gray2">
-            <span className="text-black">AREX</span> exists for those few and
-            far between, to revel in the shared love for the invisible waves
-            that bind us.
-            {/* <span className="text-black">AREX</span> exists for ...., to ... that
-          bind us. */}
-          </div>
+          {/*<div className="col-span-4 col-start-3 row-span-1 row-start-5 items-end text-xs tracking-widest uppercase text-gray2">*/}
+          {/*  <span className="text-black">AREX</span> exists for those few and*/}
+          {/*  far between, to revel in the shared love for the invisible waves*/}
+          {/*  that bind us.*/}
+          {/*  /!* <span className="text-black">AREX</span> exists for ...., to ... that*/}
+          {/*bind us. *!/*/}
+          {/*</div>*/}
 
-          <div className="col-span-5 col-start-2 self-end uppercase row-start-9 text-xs tracking-widest bg-red text-white shadow-album leading-[75%] p-2 rounded font-medium">
+          <div className="col-span-5 col-start-2 self-end uppercase row-start-9 text-xs tracking-widest text-red shadow-album leading-[75%] p-2 rounded font-medium">
             <button
               onClick={async () => {
                 const { data, error } =
@@ -80,7 +80,7 @@ export default function Home() {
                 }
               }}
             >
-              CONNECT WITH APPLE MUSIC
+              CONNECT WITH GOOGLE
             </button>
           </div>
         </div>

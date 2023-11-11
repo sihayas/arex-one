@@ -26,7 +26,7 @@ const componentMap: Record<PageName, React.ComponentType<any>> = {
   record: RecordFace,
   user: User,
 };
-// Calculate & set base dimensions and target dimensions for the window per pag
+// Calculate & set base dimensions and target dimensions for the window per page
 export const GetDimensions = (pageName: PageName) => {
   // Initialize base height for window at its longest
   const viewportHeight = window.innerHeight;
