@@ -35,7 +35,7 @@ export default function Home() {
     setActiveFeedUser(clickedUser);
   };
 
-  if (!activeFeedUser) {
+  if (!user) {
     return (
       <Layout>
         <Head>
@@ -95,78 +95,81 @@ export default function Home() {
         <title>rx</title>
       </Head>
 
-      <div
-        className={`flex items-center gap-2 fixed w-full translate-y-8 z-50`}
-      >
-        <motion.div
-          layout
-          initial={{ y: 0 }}
-          animate={activeFeedUser.id !== user?.id ? { x: 40 } : {}}
-          transition={springConfig}
-          className={`flex items-center justify-end w-[167px] gap-1`}
+      {activeFeedUser && (
+        <div
+          className={`flex items-center gap-2 fixed w-full translate-y-8 z-50`}
         >
-          {feedUserHistory
-            .slice()
-            .reverse()
-            .map((historyUser, index) => (
-              <motion.div
-                key={historyUser.id}
-                layout
-                layoutId={historyUser.id}
-                animate={{
-                  scale:
-                    activeFeedUser.id === user?.id
-                      ? 0.75
-                      : activeFeedUser.id === historyUser.id
-                      ? 1
-                      : 0.75,
-                }}
-                transition={springConfig}
-              >
-                <UserAvatar
-                  className=""
-                  imageSrc={historyUser.image}
-                  altText={`${historyUser.username}'s avatar`}
-                  width={32}
-                  height={32}
-                  user={historyUser}
-                  onClick={() => handleAvatarClick(historyUser)}
-                />
-              </motion.div>
-            ))}
-        </motion.div>
-
-        {/*  Authenticated User */}
-        <div className={`flex items-center gap-2`}>
-          {/*  Shift the auth user up to make space for another */}
           <motion.div
+            layout
             initial={{ y: 0 }}
-            animate={activeFeedUser.id !== user?.id ? { y: -46 } : {}}
-            transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            onClick={() => setActiveFeedUser(user)}
-            className={`cursor-pointer`}
+            animate={activeFeedUser.id !== user?.id ? { x: 40 } : {}}
+            transition={springConfig}
+            className={`flex items-center justify-end w-[167px] gap-1`}
           >
-            <UserAvatar
-              imageSrc={user?.image}
-              altText={`${user?.username}'s avatar`}
-              width={32}
-              height={32}
-              user={activeFeedUser}
-              onClick={() => setActiveFeedUser(user)}
-            />
+            {feedUserHistory
+              .slice()
+              .reverse()
+              .map((historyUser, index) => (
+                <motion.div
+                  key={historyUser.id}
+                  layout
+                  layoutId={historyUser.id}
+                  animate={{
+                    scale:
+                      activeFeedUser.id === user?.id
+                        ? 0.75
+                        : activeFeedUser.id === historyUser.id
+                        ? 1
+                        : 0.75,
+                  }}
+                  transition={springConfig}
+                >
+                  <UserAvatar
+                    className=""
+                    imageSrc={historyUser.image}
+                    altText={`${historyUser.username}'s avatar`}
+                    width={32}
+                    height={32}
+                    user={historyUser}
+                    onClick={() => handleAvatarClick(historyUser)}
+                  />
+                </motion.div>
+              ))}
           </motion.div>
 
-          {/* Active Feed Username */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            className={`text-gray3 text-xs font-medium uppercase`}
-          >
-            {activeFeedUser.username}&apos;s {isProfile ? "records" : "stream"}
-          </motion.div>
+          {/* Authenticated User */}
+          <div className={`flex items-center gap-2`}>
+            {/* Shift the auth user up to make space for another */}
+            <motion.div
+              initial={{ y: 0 }}
+              animate={activeFeedUser?.id !== user?.id ? { y: -46 } : {}}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+              onClick={() => setActiveFeedUser(user)}
+              className={`cursor-pointer`}
+            >
+              <UserAvatar
+                imageSrc={user?.image}
+                altText={`${user?.username}'s avatar`}
+                width={32}
+                height={32}
+                user={activeFeedUser}
+                onClick={() => setActiveFeedUser(user)}
+              />
+            </motion.div>
+
+            {/* Active Feed Username */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              className={`text-gray3 text-xs font-medium uppercase`}
+            >
+              {activeFeedUser.username}&apos;s{" "}
+              {isProfile ? "records" : "stream"}
+            </motion.div>
+          </div>
         </div>
-      </div>
+      )}
 
       <DashedLine className="absolute translate-x-[190px] translate-y-8" />
 
