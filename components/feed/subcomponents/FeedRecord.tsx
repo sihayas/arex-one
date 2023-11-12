@@ -26,7 +26,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     record.heartedByUser,
     record._count.hearts,
-    "/api/record/record/post/",
+    "/api/record/entry/post/",
     "recordId",
     record.id,
     record.author.id,
@@ -68,7 +68,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
 
         {/* Rating, content & bubbles */}
         <div
-          className={`bg-[#F4F4F4] rounded-[16px] relative px-2 py-[4px] max-w-[384px] w-fit mb-3 ml-3 shadow-sm`}
+          className={`bg-[#F4F4F4] rounded-[16px] relative px-2 py-[4px] max-w-[384px] w-fit mb-3 ml-3`}
         >
           <div
             className={`-z-10 bg-white rounded-[16px] w-[86px] h-[40px] absolute -top-[1px] -left-[1px]`}
@@ -96,13 +96,13 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
           <div
             className={`bg-[#F4F4F4] w-1 h-1 absolute -bottom-1 -left-1 rounded-full`}
           />
-          {/*<HeartButton*/}
-          {/*  handleHeartClick={handleHeartClick}*/}
-          {/*  hearted={hearted}*/}
-          {/*  className="absolute -bottom-0 -right-0"*/}
-          {/*  heartCount={heartCount}*/}
-          {/*  replyCount={record._count.replies}*/}
-          {/*/>*/}
+          <HeartButton
+            handleHeartClick={handleHeartClick}
+            hearted={hearted}
+            className="absolute -bottom-1 -right-1"
+            heartCount={heartCount}
+            replyCount={record._count.replies}
+          />
         </div>
       </div>
 

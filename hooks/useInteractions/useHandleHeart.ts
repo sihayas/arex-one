@@ -3,15 +3,15 @@ import axios from "axios";
 
 const useHandleHeartClick = (
   initialHeartByUser: boolean,
-  initialhearts: number,
+  initialHearts: number,
   heartApiUrl: string,
   idKey: string,
   idValue: any,
   authorId: string,
-  userId?: string
+  userId?: string,
 ) => {
   const [hearted, setHeart] = useState(initialHeartByUser);
-  const [heartCount, setHeartCount] = useState(initialhearts);
+  const [heartCount, setHeartCount] = useState(initialHearts);
 
   const handleHeartClick = async () => {
     if (!userId) return;
@@ -29,6 +29,8 @@ const useHandleHeartClick = (
         userId,
         authorId,
       });
+
+      console.log("response", response);
 
       if (!response.data.success) {
         // Revert state on failure

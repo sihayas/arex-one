@@ -114,7 +114,7 @@ const Form = () => {
   );
 
   const renderAlbumSection = () => (
-    <div className="flex w-full flex-col gap-2 p-4">
+    <div className="flex w-full flex-col gap-2 p-4 pl-[42px] pt-2">
       <Image
         id={selectedFormSound.sound.id}
         className="rounded-xl shadow-shadowKitHigh outline outline-silver outline-1"
@@ -170,7 +170,6 @@ const Form = () => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ type: "spring", stiffness: 350, damping: 60 }}
-      className="h-full overflow-hidden"
     >
       <form ref={formRef} onSubmit={handleSubmit}>
         {selectedFormSound.sound.type === "albums" && renderAlbumSection()}

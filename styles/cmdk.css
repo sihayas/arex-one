@@ -51,9 +51,6 @@
   overscroll-behavior: contain;
   scroll-padding-block-end: 40px;
   border-radius: 32px;
-  min-height: 300px;
-  max-height: 500px;
-  transition: height 100ms ease;
 }
 
 .cmdk [cmdk-group-heading] {

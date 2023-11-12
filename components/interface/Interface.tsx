@@ -51,11 +51,11 @@ export const GetDimensions = (pageName: PageName) => {
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: viewportHeight - 2 * 16 },
+      target: { width: 480, height: viewportHeight - 2 * 44 },
     },
     record: {
       base: { width: 432, height: baseHeight },
-      target: { width: 432, height: viewportHeight - 2 * 16 },
+      target: { width: 432, height: viewportHeight - 2 * 44 },
     },
   };
 
