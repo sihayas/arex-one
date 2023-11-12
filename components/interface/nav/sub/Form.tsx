@@ -9,7 +9,6 @@ import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import Dial from "./items/Dial";
 import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { motion } from "framer-motion";
 
 const Form = () => {
   const { user } = useInterfaceContext();
@@ -113,70 +112,46 @@ const Form = () => {
     "800",
   );
 
+  // Album styles
   const renderAlbumSection = () => (
-    <div className="flex w-full flex-col gap-2 p-4 pl-[42px] pt-2">
+    <div className="flex w-full gap-2 p-4 pt-2">
+      <div className="text-sm mt-auto ml-auto mb-2 text-gray4">
+        {selectedFormSound.sound.attributes.name}
+      </div>
       <Image
         id={selectedFormSound.sound.id}
-        className="rounded-xl shadow-shadowKitHigh outline outline-silver outline-1"
+        className="rounded-2xl shadow-shadowKitLow outline outline-silver outline-1"
         src={artworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
-        width={464}
-        height={464}
-        quality={100}
-        draggable="false"
-        priority={true}
+        width={160}
+        height={160}
       />
-
-      {/* Center / Names */}
-      <div className="flex flex-col text-sm text-black w-full text-end">
-        <div className="line-clamp-1 text-xs text-gray2">
-          {selectedFormSound.sound.attributes.artistName}
-        </div>
-        <div className="line-clamp-1 font-medium">
-          {selectedFormSound.sound.attributes.name}
-        </div>
-      </div>
     </div>
   );
 
+  // Song styles
   const renderSongSection = () => (
-    <div className="relative flex w-full items-center gap-4 p-4 py-4">
+    <div className="flex w-full relative items-center gap-4 p-4 py-4">
       <Image
         id={selectedFormSound.sound.id}
         className="rounded-lg shadow-shadowKitLow outline outline-silver outline-1"
         src={artworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
-        width={80}
-        height={80}
+        width={160}
+        height={160}
         quality={100}
-        draggable="false"
       />
-      <div className="flex w-full items-center justify-between">
-        <div className="flex flex-col text-sm text-black">
-          <div className="font-semibold line-clamp-1">
-            {selectedFormSound.sound.attributes.name}
-          </div>
-          <div className="line-clamp-1">
-            {selectedFormSound.sound.attributes.artistName}
-          </div>
-        </div>
-      </div>
     </div>
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ type: "spring", stiffness: 350, damping: 60 }}
-    >
+    <div className={`h-full`}>
       <form ref={formRef} onSubmit={handleSubmit}>
         {selectedFormSound.sound.type === "albums" && renderAlbumSection()}
         {selectedFormSound.sound.type === "songs" && renderSongSection()}
         <Dial setRatingValue={handleRatingChange} />
       </form>
-    </motion.div>
+    </div>
   );
 };
 

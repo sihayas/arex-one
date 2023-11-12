@@ -44,8 +44,8 @@ const Dial = ({ setRatingValue }: DialProps) => {
   return (
     <div
       ref={dialRef}
-      className={`w-7 h-7 rounded-full border border-black border-1.5 flex justify-center items-center overflow-hidden focus:outline-none absolute -top-8 left-1 ${
-        inputRef.current?.value ? "opacity-75" : "opacity-100"
+      className={`w-7 h-7 flex justify-center items-center overflow-hidden rounded-full shadow-shadowKitLow focus:outline-none absolute -top-8 left-1 transition-opacity opacity-100 ${
+        inputRef.current?.value && "!opacity-50"
       }`}
       tabIndex={0}
       onKeyDown={handleKeyPress as any}
@@ -56,7 +56,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
       >
         {ratings.map((rating, i) => (
           <motion.div
-            className="flex w-full items-center justify-center text-center h-[40px] text-black font-baskerville"
+            className="flex w-full items-center justify-center text-center h-[40px] text-gray4 font-bold text-xs"
             key={i}
             style={{
               scale: 1 - Math.abs(i - ratingIndex) * 0.5,

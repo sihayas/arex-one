@@ -19,7 +19,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
 
 import Statline from "@/components/interface/album/sub/RatingDial";
-import AnimatedCircle from "@/components/global/AnimatedCircle";
+import SortChange from "@/components/global/SortChange";
 
 const springConfig = { damping: 40, stiffness: 400, mass: 1 };
 
@@ -140,7 +140,7 @@ const Album = () => {
                 />
               )}
             {/*<div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">*/}
-            {/*  <AnimatedCircle onSortOrderChange={handleSortOrderChange} />*/}
+            {/*  <SortChange onSortOrderChange={handleSortOrderChange} />*/}
             {/*</div>*/}
           </motion.div>
 

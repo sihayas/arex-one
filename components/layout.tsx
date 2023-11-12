@@ -3,12 +3,13 @@ import React, { useEffect, ReactNode, useCallback, useRef } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 import { useUser } from "@supabase/auth-helpers-react";
-import { motion } from "framer-motion";
+import { motion, useAnimate } from "framer-motion";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isVisible, setIsVisible, pages } = useInterfaceContext();
   const { inputRef } = useNavContext();
   const mainContentRef = useRef<HTMLElement>(null);
+  const [scope, animate] = useAnimate();
 
   const user = useUser();
 
@@ -27,6 +28,30 @@ export default function Layout({ children }: { children: ReactNode }) {
     },
     [inputRef, setIsVisible],
   );
+
+  // Modify this to animate the main content
+  useEffect(() => {
+    const animateMainContent = async () => {
+      const animationConfig = {
+        scale: isVisible ? 0.88 : 1,
+        filter: isVisible ? "blur(80px)" : "blur(0px)",
+      };
+      const transitionConfig = {
+        filter: {
+          duration: isVisible ? 0.7 : 0.3,
+          delay: isVisible ? 0.5 : 0,
+        },
+        scale: {
+          type: "spring" as const,
+          mass: 0.75,
+          stiffness: 180,
+          damping: 22,
+        },
+      };
+      await animate(scope.current, animationConfig, transitionConfig);
+    };
+    animateMainContent();
+  }, [isVisible, animate, scope]);
 
   const handleDoubleClick = useCallback(() => {
     setIsVisible((prevIsVisible) => !prevIsVisible);
@@ -64,30 +89,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Interface isVisible={isVisible} />
         </div>
       )}
-      <motion.main
-        ref={mainContentRef}
-        id="main-content"
-        className={`origin-top-left`}
-        animate={{
-          scale: isVisible ? 0.88 : 1,
-          filter: isVisible ? "blur(80px)" : "blur(0px)",
-          // opacity: isVisible ? 0 : 1,
-        }}
-        transition={{
-          filter: {
-            duration: isVisible ? 0.7 : 0.3,
-            delay: isVisible ? 0.5 : 0,
-          },
-          scale: {
-            type: "spring",
-            mass: 0.75,
-            stiffness: 180,
-            damping: 22,
-          },
-        }}
-      >
+      <main ref={scope} id="main-content" className={`origin-top-left`}>
         {children}
-      </motion.main>
+      </main>
     </>
   );
 }

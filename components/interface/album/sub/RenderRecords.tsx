@@ -4,7 +4,6 @@ import RecordAlbum from "@/components/interface/album/sub/RecordAlbum";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
-import AnimatedCircle from "@/components/global/AnimatedCircle";
 
 interface RenderRecordsProps {
   soundId: string;

@@ -35,6 +35,7 @@ export const GetDimensions = (pageName: PageName) => {
 
   // Initialize base height for record page
   const [baseHeight, setBaseHeight] = useState(432);
+  const maxHeight = viewportHeight - 2 * 44;
 
   // When switching to record page, use calculated->stored height from
   // useLayoutEffect to set base height for record page.
@@ -51,11 +52,11 @@ export const GetDimensions = (pageName: PageName) => {
     },
     album: {
       base: { width: 480, height: 480 },
-      target: { width: 480, height: viewportHeight - 2 * 44 },
+      target: { width: 480, height: maxHeight },
     },
     record: {
       base: { width: 432, height: baseHeight },
-      target: { width: 432, height: viewportHeight - 2 * 44 },
+      target: { width: 432, height: maxHeight },
     },
   };
 
@@ -104,8 +105,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     [0, maxScroll],
     [base.height, target.height],
   );
-  // Only for user page
-  const newBorderRadius = useTransform(scrollY, [0, maxScroll], [224, 32]);
 
   // Animate ROOT opacity.
   useEffect(() => {
@@ -213,16 +212,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       shiftDimension("height", newHeight),
     );
 
-    const unsubBorderRadius = newBorderRadius.on("change", () => {
-      if (activePageName === "user") {
-        shiftDimension("borderRadius", newBorderRadius);
-      }
-    });
-
     return () => {
       unsubHeight();
       unsubWidth();
-      unsubBorderRadius();
     };
   }, [
     animate,
@@ -230,7 +222,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     base.width,
     newHeight,
     newWidth,
-    newBorderRadius,
     scope,
     pages,
     activePageName,

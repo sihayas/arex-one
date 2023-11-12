@@ -4,11 +4,11 @@ import { PositiveIcon, NegativeIcon, HighlightsIcon } from "@/components/icons";
 
 type sortOrder = "newest" | "positive" | "negative";
 
-type AnimatedCircleProps = {
+type SortChangeProps = {
   onSortOrderChange: (newSortOrder: sortOrder) => void;
 };
 
-const AnimatedCircle = ({ onSortOrderChange }: AnimatedCircleProps) => {
+const SortChange = ({ onSortOrderChange }: SortChangeProps) => {
   const [currentSortOrder, setCurrentSortOrder] = useState<sortOrder>("newest");
 
   // Update the sort order when the current sort order changes
@@ -68,4 +68,4 @@ const AnimatedCircle = ({ onSortOrderChange }: AnimatedCircleProps) => {
   );
 };
 
-export default AnimatedCircle;
+export default SortChange;

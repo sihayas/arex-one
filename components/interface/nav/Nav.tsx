@@ -14,8 +14,15 @@ import UserAvatar from "@/components/global/UserAvatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { IndexIcon } from "@/components/icons";
 
-const Nav: React.FC = () => {
+const Nav = () => {
+  let left;
+  let middle;
+  let right;
+
   const { user } = useInterfaceContext();
+  const viewportHeight = window.innerHeight;
+  const maxHeight = viewportHeight - 2 * 44;
+  const portalHeight = maxHeight / 2 - 64;
 
   const {
     inputValue,
@@ -30,7 +37,7 @@ const Nav: React.FC = () => {
 
   // Debounce the search query
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSetSearchQuery = debounce(setSearchQuery, 500);
+  const debouncedSetSearchQuery = debounce(setSearchQuery, 250);
   const handleInputTextChange = (value: string) => {
     setInputValue(value);
     debouncedSetSearchQuery(value);
@@ -39,51 +46,6 @@ const Nav: React.FC = () => {
   // Get search results
   const { data, isInitialLoading, isFetching, error } =
     GetSearchResults(searchQuery);
-
-  // RIGHT: Animate the width of the parent div of the input (right side)
-  const [inputScope, inputAnimate] = useAnimate();
-  useEffect(() => {
-    inputAnimate(
-      inputScope.current,
-      { width: expandInput ? "384px" : "40px" },
-      { type: "spring", stiffness: 240, damping: 24 },
-    );
-  }, [expandInput, inputAnimate, inputScope]);
-
-  // Animate the height of the Form/Results below the input
-  const [scope, animate] = useAnimate();
-  useEffect(() => {
-    let height = "0px";
-    if (expandInput) {
-      if (selectedFormSound) {
-        height =
-          selectedFormSound.sound.type === "songs"
-            ? "120px"
-            : selectedFormSound.sound.type === "albums"
-            ? "394px"
-            : "0px";
-      } else {
-        height = inputValue ? "480px" : "0px";
-      }
-    }
-
-    // Animate the height
-    animate(
-      scope.current,
-      { height: height },
-      { type: "spring", stiffness: 300, damping: 30 },
-    );
-  }, [expandInput, selectedFormSound, inputValue, animate, scope]);
-
-  // Animate the width of the Signals icon
-  const [signalsScope, signalsAnimate] = useAnimate();
-  useEffect(() => {
-    signalsAnimate(
-      signalsScope.current,
-      { width: expandSignals ? "316px" : "40px" },
-      { type: "spring", stiffness: 240, damping: 24 },
-    );
-  }, [expandSignals, signalsAnimate, signalsScope]);
 
   const onFocus = useCallback(() => {
     setExpandInput(true);
@@ -94,27 +56,23 @@ const Nav: React.FC = () => {
   }, [setExpandInput]);
 
   // Enable new line on enter if Form is active
-  const handleKeyDown = (e: any) => {
-    if (
-      e.key === "Enter" &&
-      expandInput &&
-      selectedFormSound &&
-      inputRef.current?.value !== ""
-    ) {
-      e.preventDefault(); // Prevent the default behavior
-      const cursorPosition = e.target.selectionStart;
-      const value = e.target.value;
-      const newValue =
-        value.substring(0, cursorPosition) +
-        "\n" +
-        value.substring(cursorPosition);
-      handleInputTextChange(newValue); // Update the input value with the new line
-    }
-  };
-
-  let left;
-  let middle;
-  let right;
+  // const handleKeyDown = (e: any) => {
+  //   if (
+  //     e.key === "Enter" &&
+  //     expandInput &&
+  //     selectedFormSound &&
+  //     inputRef.current?.value !== ""
+  //   ) {
+  //     e.preventDefault(); // Prevent the default behavior
+  //     const cursorPosition = e.target.selectionStart;
+  //     const value = e.target.value;
+  //     const newValue =
+  //       value.substring(0, cursorPosition) +
+  //       "\n" +
+  //       value.substring(cursorPosition);
+  //     handleInputTextChange(newValue); // Update the input value with the new line
+  //   }
+  // };
 
   if (user) {
     left = (
@@ -128,12 +86,9 @@ const Nav: React.FC = () => {
       />
     );
 
-    // Search/Form/Input
+    // Input & Search Results/Form
     middle = (
-      <motion.div
-        ref={inputScope}
-        className={`flex flex-col justify-end overflow-hidden`}
-      >
+      <div className={`flex flex-col justify-end overflow-hidden w-[440px]`}>
         {/* Input */}
         <div
           className={`p-2 flex items-center relative ${
@@ -160,80 +115,67 @@ const Nav: React.FC = () => {
             onBlur={onBlur}
             onFocus={onFocus}
             ref={inputRef}
-            onKeyDown={handleKeyDown}
+            // onKeyDown={handleKeyDown}
             minRows={1}
+            maxRows={6}
           />
         </div>
 
         {/* Form / Search Results / Bottom */}
         <div
-          ref={scope}
           className={`flex flex-col relative w-full ${
             selectedFormSound
               ? "overflow-visible"
-              : "overflow-scroll" + " scrollbar-none"
+              : "overflow-scroll scrollbar-none"
           }`}
-          style={{ transformOrigin: "top" }}
+          style={{ height: portalHeight, opacity: expandInput ? 1 : 0 }}
         >
-          <AnimatePresence>
-            {/* If no selected form sound render search results */}
-            {selectedFormSound && expandInput ? (
-              <Form />
-            ) : (
-              !selectedFormSound &&
-              inputValue && (
-                <Search
-                  searchData={data}
-                  isInitialLoading={isInitialLoading}
-                  isFetching={isFetching}
-                  error={error}
-                />
-              )
-            )}
-          </AnimatePresence>
+          {/* If no selected form sound render search results */}
+          {selectedFormSound && expandInput ? (
+            <Form />
+          ) : (
+            !selectedFormSound &&
+            inputValue && (
+              <Search
+                searchData={data}
+                isInitialLoading={isInitialLoading}
+                isFetching={isFetching}
+                error={error}
+              />
+            )
+          )}
         </div>
-      </motion.div>
+      </div>
     );
 
     // Form & Search
     right = (
-      <div
-        onClick={() => setExpandSignals(!expandSignals)}
-        onBlur={() => setExpandSignals(false)}
-        ref={signalsScope}
-        className={`cursor-pointer flex flex-col items-center`}
-      >
-        <div
-          className={
-            "w-2 h-2 bg-action absolute left-0 top-0" +
-            " rounded-full" +
-            " outline outline-white"
-          }
-        />
-
-        {expandSignals && <Signals />}
-      </div>
+      // <div
+      //   onClick={() => setExpandSignals(!expandSignals)}
+      //   onBlur={() => setExpandSignals(false)}
+      //   ref={signalsScope}
+      //   className={`cursor-pointer flex flex-col items-center`}
+      // >
+      //   <div
+      //     className={
+      //       "w-2 h-2 bg-action absolute left-0 top-0" +
+      //       " rounded-full" +
+      //       " outline outline-white"
+      //     }
+      //   />
+      //
+      //   {expandSignals && <Signals />}
+      // </div>
+      <></>
     );
   }
 
-  // Define the initial and animate values for framer-motion
-  const initialPosition = { x: 0, y: 0 };
-  const centerPosition = {
-    x: 0,
-    y: 0,
-  };
-
   return (
-    <motion.div
-      className="fixed z-50 flex items-start -bottom-9 -left-9 max-h-9"
-      initial={initialPosition}
-      animate={expandInput ? centerPosition : initialPosition}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-    >
+    <div className="fixed z-50 flex items-start -bottom-10 -left-10 max-h-9">
       {left}
       {middle}
       {right}
-    </motion.div>
+    </div>
   );
 };
 
