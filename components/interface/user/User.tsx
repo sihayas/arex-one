@@ -46,17 +46,6 @@ const User = () => {
     container: scrollContainerRef,
   });
 
-  const scale = useSpring(
-    useTransform(scrollY, [0, 24], [1, 0.1667]),
-    springConfig,
-  );
-
-  const x = useSpring(useTransform(scrollY, [0, 24], [0, -26]), springConfig);
-  const y = useSpring(useTransform(scrollY, [0, 24], [0, 26]), springConfig);
-  const opacity = useSpring(
-    useTransform(scrollY, [0, 24], [0, 1]),
-    springConfig,
-  );
   // Check if the profile belongs to the authenticated user
   const isOwnProfile = authenticatedUserId === pageUser?.id;
 
@@ -107,7 +96,7 @@ const User = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full p-8 pt-0 mt-[216px]"
+      className="w-full h-full flex justify-between px-8"
     >
       {isLoading ? (
         <JellyComponent className={``} isVisible={true} />
@@ -115,65 +104,69 @@ const User = () => {
         <div>Error</div>
       ) : (
         <>
-          <motion.div
-            style={{ scale, x, y }}
-            className={`fixed top-0 right-0 pointer-events-none origin-top-right flex w-full h-full items-center justify-center`}
-          >
-            <Image
-              className={`rounded-full shadow-shadowKitMedium`}
-              src={userData.image}
-              alt={`${userData.name}'s avatar`}
-              width={384}
-              height={384}
-            />
-          </motion.div>
-          <motion.div
-            className={`text-[22px] leading-[22px] font-bold text-gray4 fixed top-[53px] right-[112px] tracking-tighter`}
-          >
-            {userData.username}
-          </motion.div>
+          {/* Left Side */}
+          <div className={`flex flex-col py-8`}>
+            {/* Avatar and Link */}
+            <div className={`flex items-center gap-4`}>
+              <Image
+                className={`rounded-full`}
+                src={userData.image}
+                alt={`${userData.name}'s avatar`}
+                width={64}
+                height={64}
+              />
 
-          <motion.div
-            style={{ opacity }}
-            className={`flex flex-col gap-8 h-full`}
-          >
-            {/*  Interactions */}
-            <div className={`flex flex-col gap-4`}>
-              <div className={`flex items-center gap-2`}>
-                {isOwnProfile ? (
-                  <SettingsIcon
-                    className={``}
-                    onClick={() => handleSubSectionClick("settings")}
-                  />
-                ) : (
-                  <>
-                    <LinkButton color={"#CCC"} />
-                    <FollowButton
-                      followState={followState}
-                      handleFollowUnfollow={handleFollowUnfollow}
-                      linkColor={linkColor}
-                      linkText={linkText}
-                    />
-                  </>
-                )}
-              </div>
+              <FollowButton
+                followState={followState}
+                handleFollowUnfollow={handleFollowUnfollow}
+                linkColor={linkColor}
+                linkText={linkText}
+              />
+            </div>
+
+            {/* Name and Bio */}
+            <div className={`flex flex-col gap-[6px] mt-3`}>
               <div
-                onClick={() => handleSetFeedUser(userData)}
-                className={`flex items-center gap-2 cursor-pointer`}
+                className={`text-sm font-semibold text-gray4 leading-[10px]`}
               >
-                <RecordsButton color={"#CCC"} />
-                <div className={`uppercase text-xs text-gray3`}>RECORDS</div>
+                {userData.username}
               </div>
-              <div className={`flex items-center gap-2`}>
-                <ArchiveButton color={"#CCC"} />
-                <div className={`uppercase text-xs text-gray3`}>ARCHIVE</div>
+              <div className={`text-xs text-gray2 w-[160px] h-[84px]`}>
+                {userData.bio}
               </div>
             </div>
-            {/* Essentials */}
-            <div className="flex w-max items-center rounded-xl">
-              <Essentials essentials={essentials} />
+
+            {/*  Sounds Count */}
+            <div className={`flex flex-col gap-[12px] mt-[201px]`}>
+              <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
+              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
+                {userData.uniqueAlbums.length}
+              </div>
             </div>
-          </motion.div>
+
+            {/*  Records Count */}
+            <div className={`flex flex-col gap-[12px] mt-[55px]`}>
+              <div className="text-xs text-gray3 leading-[9px]">RECORDS</div>
+              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
+                {userData._count.record}
+              </div>
+            </div>
+
+            {/* Logo and Date */}
+            <div className={`flex items-center mt-auto text-gray3`}>
+              <div className="text-[19px] leading-[13px] text-black font-serif">
+                RX
+              </div>
+              <div className={`mx-1`}>&middot;</div>
+              <div className="text-xs text-gray3 font-bold leading-[9px]">
+                MONTH 1
+              </div>
+            </div>
+            {/*  */}
+          </div>
+
+          {/* Right */}
+          <Essentials essentials={essentials} />
         </>
       )}
     </motion.div>
@@ -182,6 +175,185 @@ const User = () => {
 
 // Export User component
 export default User;
+
+{
+  /* Statistics */
+}
+{
+  /* Sounds */
+}
+
+{
+  /* Followers / Links */
+}
+{
+  /*<div className="flex flex-col gap-[10px]">*/
+}
+{
+  /*  <div className="text-xs text-gray3 leading-none cursor-pointer">*/
+}
+{
+  /*    LINKS*/
+}
+{
+  /*  </div>*/
+}
+{
+  /*  <div className={`flex items-center gap-2 ml-8`}>*/
+}
+{
+  /*    <div className="text-black text-sm leading-none">*/
+}
+{
+  /*      {userData._count.followers}*/
+}
+{
+  /*    </div>*/
+}
+{
+  /*    /!* Followers Images *!/*/
+}
+{
+  /*    <div className="flex -space-x-4">*/
+}
+{
+  /*      /!*@ts-ignore/*!/*/
+}
+{
+  /*      {userData.followers.map(({ follower }) => (*/
+}
+{
+  /*          <Image*/
+}
+{
+  /*              key={follower.id}*/
+}
+{
+  /*              className="rounded-full w-[16px] h-[16px]" // Adjust*/
+}
+{
+  /*              src={follower.image}*/
+}
+{
+  /*              alt={`${follower.username}'s avatar`}*/
+}
+{
+  /*              width={16}*/
+}
+{
+  /*              height={16}*/
+}
+{
+  /*          />*/
+}
+{
+  /*      ))}*/
+}
+{
+  /*    </div>*/
+}
+{
+  /*  </div>*/
+}
+{
+  /*</div>*/
+}
+{
+  /*  Interactions */
+}
+{
+  /*<div className={`flex flex-col gap-4`}>*/
+}
+{
+  /*  <div className={`flex items-center gap-2`}>*/
+}
+{
+  /*    {isOwnProfile ? (*/
+}
+{
+  /*        <SettingsIcon*/
+}
+{
+  /*            className={``}*/
+}
+{
+  /*            onClick={() => handleSubSectionClick("settings")}*/
+}
+{
+  /*        />*/
+}
+{
+  /*    ) : (*/
+}
+{
+  /*        <>*/
+}
+{
+  /*          <LinkButton color={"#CCC"} />*/
+}
+{
+  /*          <FollowButton*/
+}
+{
+  /*              followState={followState}*/
+}
+{
+  /*              handleFollowUnfollow={handleFollowUnfollow}*/
+}
+{
+  /*              linkColor={linkColor}*/
+}
+{
+  /*              linkText={linkText}*/
+}
+{
+  /*          />*/
+}
+{
+  /*        </>*/
+}
+{
+  /*    )}*/
+}
+{
+  /*  </div>*/
+}
+{
+  /*  <div*/
+}
+{
+  /*      onClick={() => handleSetFeedUser(userData)}*/
+}
+{
+  /*      className={`flex items-center gap-2 cursor-pointer`}*/
+}
+{
+  /*  >*/
+}
+{
+  /*    <RecordsButton color={"#CCC"} />*/
+}
+{
+  /*    <div className={`uppercase text-xs text-gray3`}>RECORDS</div>*/
+}
+{
+  /*  </div>*/
+}
+{
+  /*  <div className={`flex items-center gap-2`}>*/
+}
+{
+  /*    <ArchiveButton color={"#CCC"} />*/
+}
+{
+  /*    <div className={`uppercase text-xs text-gray3`}>ARCHIVE</div>*/
+}
+{
+  /*  </div>*/
+}
+{
+  /*</div>*/
+}
 
 {
   /* Statistics */
@@ -199,30 +371,7 @@ export default User;
 //     </div>
 //   </div>
 //   {/* Stat 1 */}
-//   <div className="flex flex-col gap-[10px]">
-//     <div className="text-xs text-gray2 leading-none cursor-pointer">
-//       LINKS
-//     </div>
-//     <div className={`flex items-center gap-2`}>
-//       <div className="text-black text-sm leading-none">
-//         {userData._count.followers}
-//       </div>
-//       {/* Followers Images */}
-//       <div className="flex -space-x-4">
-//         {/*@ts-ignore/*/}
-//         {userData.followers.map(({ follower }) => (
-//             <Image
-//                 key={follower.id}
-//                 className="rounded-full w-[16px] h-[16px]" // Adjust
-//                 src={follower.image}
-//                 alt={`${follower.username}'s avatar`}
-//                 width={16}
-//                 height={16}
-//             />
-//         ))}
-//       </div>
-//     </div>
-//   </div>
+//
 // </div>
 {
   /*{isOwnProfile ? (*/

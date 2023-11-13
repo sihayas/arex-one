@@ -27,6 +27,7 @@ module.exports = {
       },
       fontFamily: {
         baskerville: ["Baskerville", "serif"],
+        serif: ["Times New Roman", "serif"],
       },
       colors: {
         black: "#333333",

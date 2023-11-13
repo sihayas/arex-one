@@ -1,5 +1,6 @@
 // FollowButton.tsx
 import React from "react";
+import { LinkButton } from "@/components/icons";
 
 // FollowButton.tsx
 interface FollowButtonProps {
@@ -22,10 +23,16 @@ const FollowButton: React.FC<FollowButtonProps> = ({
           ? handleFollowUnfollow("unfollow")
           : handleFollowUnfollow("follow")
       }
-      className="flex items-center gap-1 text-xs relative"
+      className="p-2 outline outline-silver outline-1 rounded-full flex flex-col relative group"
       style={{ color: linkColor }}
     >
-      {linkText}
+      <LinkButton color={linkColor} />
+      <div
+        style={{ color: linkColor }}
+        className={`absolute left-1/2 -translate-x-1/2 text-[10px] -top-[15px] leading-[7px] opacity-0 group-hover:opacity-100`}
+      >
+        {linkText}
+      </div>
     </button>
   );
 };

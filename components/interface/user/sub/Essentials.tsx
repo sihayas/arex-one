@@ -8,20 +8,27 @@ interface EssentialsProps {
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   return (
-    <>
+    <div
+      className={`flex flex-col px-2 pb-12 bg-[#E4E4E4] items-center rounded-b-2xl shadow-shadowKitLow h-fit`}
+    >
       {essentials.map((essential, i) => (
-        <div className={`w-fit h-fit`} key={essential.id}>
-          <Artwork
-            className={`${i === 0 ? "rounded-l-2xl" : ""} ${
-              i === 2 ? "rounded-r-2xl" : ""
-            }`}
-            sound={essential.appleAlbumData}
-            width={128}
-            height={128}
-          />
+        <div
+          className={`w-fit h-fit overflow-hidden ${
+            i === 2 && "rounded-b-2xl"
+          }`}
+          key={essential.id}
+        >
+          <Artwork sound={essential.appleAlbumData} width={176} height={176} />
         </div>
       ))}
-    </>
+      <div className={`relative`}>
+        <p
+          className={`absolute leading-[9px] text-xs text-gray5 uppercase left-1/2 -translate-x-1/2 top-4`}
+        >
+          essentials
+        </p>
+      </div>
+    </div>
   );
 };
 

@@ -323,23 +323,18 @@ export function LinkButton({ ...props }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={24}
-      height={24}
+      width={16}
+      height={16}
       fill="none"
       {...props}
     >
-      <g fill={props.color} clipPath="url(#a)">
-        <path d="M10.001 17.33a5.333 5.333 0 1 0 0-10.666 5.333 5.333 0 0 0 0 10.667Z" />
-        <path d="M15.332 6.844v1.393a3.994 3.994 0 0 1 0 7.533v1.394a5.33 5.33 0 0 0 4-5.16 5.33 5.33 0 0 0-4-5.16Z" />
-      </g>
-      <rect
-        width={23}
-        height={23}
-        x={0.5}
-        y={-0.5}
-        stroke={props.color}
-        rx={11.5}
-        transform="matrix(1 0 0 -1 0 23)"
+      <path
+        fill={props.color}
+        d="M6.001 13.33a5.333 5.333 0 1 0 0-10.666 5.333 5.333 0 0 0 0 10.667Z"
+      />
+      <path
+        fill={props.color}
+        d="M11.332 2.844v1.393a3.994 3.994 0 0 1 0 7.533v1.394a5.33 5.33 0 0 0 4-5.16 5.33 5.33 0 0 0-4-5.16Z"
       />
     </svg>
   );
