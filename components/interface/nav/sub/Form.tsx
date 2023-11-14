@@ -120,7 +120,7 @@ const Form = () => {
       </div>
       <Image
         id={selectedFormSound.sound.id}
-        className="rounded-2xl shadow-shadowKitLow outline outline-silver outline-1"
+        className="rounded-2xl shadow-shadowKitHigh outline outline-silver outline-1"
         src={artworkUrl}
         alt={`${selectedFormSound.sound.attributes.name} artwork`}
         width={160}

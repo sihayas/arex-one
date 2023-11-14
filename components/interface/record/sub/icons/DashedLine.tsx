@@ -19,7 +19,7 @@ const DottedLine: React.FC<DottedLineProps> = ({
   return (
     <svg
       className={className}
-      style={{ width: "1.5px", height: "100%" }}
+      style={{ width: "2px", height: "100%" }}
       preserveAspectRatio="none"
     >
       <line

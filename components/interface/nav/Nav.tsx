@@ -56,23 +56,23 @@ const Nav = () => {
   }, [setExpandInput]);
 
   // Enable new line on enter if Form is active
-  // const handleKeyDown = (e: any) => {
-  //   if (
-  //     e.key === "Enter" &&
-  //     expandInput &&
-  //     selectedFormSound &&
-  //     inputRef.current?.value !== ""
-  //   ) {
-  //     e.preventDefault(); // Prevent the default behavior
-  //     const cursorPosition = e.target.selectionStart;
-  //     const value = e.target.value;
-  //     const newValue =
-  //       value.substring(0, cursorPosition) +
-  //       "\n" +
-  //       value.substring(cursorPosition);
-  //     handleInputTextChange(newValue); // Update the input value with the new line
-  //   }
-  // };
+  const handleKeyDown = (e: any) => {
+    if (
+      e.key === "Enter" &&
+      expandInput &&
+      selectedFormSound &&
+      inputRef.current?.value !== ""
+    ) {
+      e.preventDefault(); // Prevent the default behavior
+      const cursorPosition = e.target.selectionStart;
+      const value = e.target.value;
+      const newValue =
+        value.substring(0, cursorPosition) +
+        "\n" +
+        value.substring(cursorPosition);
+      handleInputTextChange(newValue); // Update the input value with the new line
+    }
+  };
 
   if (user) {
     left = (
@@ -115,7 +115,7 @@ const Nav = () => {
             onBlur={onBlur}
             onFocus={onFocus}
             ref={inputRef}
-            // onKeyDown={handleKeyDown}
+            onKeyDown={handleKeyDown}
             minRows={1}
             maxRows={6}
           />

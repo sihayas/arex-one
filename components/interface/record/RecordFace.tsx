@@ -1,5 +1,5 @@
 // Importing all necessary libraries and components
-import React, { useEffect, useLayoutEffect, useMemo } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import {
   Page,
   PageName,
@@ -16,7 +16,6 @@ import {
 } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { Artwork } from "@/components/global/Artwork";
-import HeartButton from "@/components/global/HeartButton";
 import Stars from "@/components/global/Stars";
 import UserAvatar from "@/components/global/UserAvatar";
 import RenderReplies from "@/components/interface/record/sub/reply/RenderReplies";
@@ -31,6 +30,7 @@ export const RecordFace = () => {
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
   const { setReplyParent, setRecord } = useThreadcrumb();
+  const height = useRef(0);
 
   // Set max height for the record content based on the target height set in GetDimensions
   const activePage: Page = pages[pages.length - 1];
@@ -41,10 +41,11 @@ export const RecordFace = () => {
   const [scope, animate] = useAnimate();
 
   // Upon mount, store the height of the record content into dimensions so
-  // GetDimensions can use it to calculate the base height for this  page
+  // GetDimensions can use it to calculate the base height for this specific
+  // Record as the Record page can vary depending on the length of the entry
   useLayoutEffect(() => {
-    if (scope.current)
-      activePage.dimensions.height = scope.current.offsetHeight + 5;
+    if (scope.current) height.current = scope.current.offsetHeight;
+    activePage.dimensions.height = scope.current.offsetHeight + 5;
   }, [activePage.dimensions, scope]);
 
   // Scroll tracker hook
@@ -55,11 +56,7 @@ export const RecordFace = () => {
   const scrollIndicatorOpacity = useTransform(scrollY, [0, 24], [1, 0]);
 
   // Animate record height from whatever it is to 72px
-  const newHeight = useTransform(
-    scrollY,
-    [0, 24],
-    [scope.current?.offsetHeight, 72],
-  );
+  const newHeight = useTransform(scrollY, [0, 24], [height.current, 72]);
 
   // Animate scale
   const newScale = useTransform(scrollY, [0, 24], [1, 0.861]);
@@ -70,16 +67,14 @@ export const RecordFace = () => {
   const springY = useSpring(y, { stiffness: 160, damping: 20 });
 
   useEffect(() => {
-    const shiftDimension = (dimension: string, newDimension: any) => {
+    const shiftDimension = () => {
       animate(
         scope.current,
-        { [dimension]: newDimension.get() },
+        { height: newHeight.get() },
         { type: "spring", stiffness: 160, damping: 20 },
       );
     };
-    const unsubHeight = newHeight.on("change", () =>
-      shiftDimension("height", newHeight),
-    );
+    const unsubHeight = newHeight.on("change", () => shiftDimension());
     return () => unsubHeight();
   }, [animate, newHeight, scope]);
 
@@ -136,7 +131,7 @@ export const RecordFace = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             key={record.id}
-            className={`absolute top-0 flex bg-[#F4F4F4] rounded-[36px] w-[464px] gap-4 z-50 shadow-shadowKitHigh`}
+            className={`absolute top-0 flex bg-[#F4F4F4] rounded-[24px] w-[464px] gap-4 z-50 shadow-shadowKitHigh`}
           >
             <div
               className={`relative min-w-[40px] min-h-[40px] drop-shadow-sm ml-4 mt-4 flex flex-col`}
@@ -150,7 +145,7 @@ export const RecordFace = () => {
                 user={record.author}
               />
               <Stars
-                className={`bg-[#E5E5E5] absolute -top-[28px] left-[36px] rounded-full backdrop-blur-xl p-[6px] w-max z-10 text-gray5`}
+                className={`bg-[#E5E5E5] absolute -top-[28px] left-[36px] p-[6px] rounded-full backdrop-blur-xl w-max z-10 text-gray5 max-h-[24px]`}
                 rating={record.entry?.rating}
                 soundName={record.appleAlbumData.attributes.name}
                 artist={record.appleAlbumData.attributes.artistName}
@@ -184,18 +179,18 @@ export const RecordFace = () => {
               style={{ opacity: scrollIndicatorOpacity }}
               className={`absolute -bottom-[25px] text-xs font-medium text-gray3 left-1/2 -translate-x-1/2 leading-[1]`}
             >
-              SCROLL HERE TO SHOW CHAINS
+              SCROLL TO SHOW CHAINS
             </motion.div>
           </motion.div>,
           cmdk,
         )}
       </div>
-      <div
-        style={{ height: target.height }}
+      <motion.div
+        style={{ height: target.height, opacity: replyInputOpacity }}
         className={`flex flex-wrap p-8 pt-[88px] overflow-scroll`}
       >
         <RenderReplies replies={replies} />
-      </div>
+      </motion.div>
       <motion.div style={{ opacity: replyInputOpacity }}>
         <ReplyInput />
       </motion.div>

@@ -5,6 +5,7 @@ import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange"
 
 const UserItem = ({ user }: { user: User }) => {
   const handleUserClick = useHandleUserClick(user);
+
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}

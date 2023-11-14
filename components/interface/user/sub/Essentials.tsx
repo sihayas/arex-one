@@ -1,6 +1,7 @@
 import React from "react";
 import { Artwork } from "@/components/global/Artwork";
 import { Essential } from "@/types/dbTypes";
+import { motion } from "framer-motion";
 
 interface EssentialsProps {
   essentials: Essential[];
@@ -8,8 +9,8 @@ interface EssentialsProps {
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   return (
-    <div
-      className={`flex flex-col px-2 pb-12 bg-[#E4E4E4] items-center rounded-b-2xl shadow-shadowKitLow h-fit`}
+    <motion.div
+      className={`flex flex-col px-2 pb-8 bg-[#E4E4E4] items-center rounded-b-2xl shadow-shadowKitMedium h-fit`}
     >
       {essentials.map((essential, i) => (
         <div
@@ -21,14 +22,14 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
           <Artwork sound={essential.appleAlbumData} width={176} height={176} />
         </div>
       ))}
-      <div className={`relative`}>
-        <p
-          className={`absolute leading-[9px] text-xs text-gray5 uppercase left-1/2 -translate-x-1/2 top-4`}
-        >
-          essentials
-        </p>
-      </div>
-    </div>
+      {/*<div className={`relative`}>*/}
+      {/*  <p*/}
+      {/*    className={`absolute leading-[9px] text-xs text-gray5 uppercase left-1/2 -translate-x-1/2 top-3`}*/}
+      {/*  >*/}
+      {/*    essentials*/}
+      {/*  </p>*/}
+      {/*</div>*/}
+    </motion.div>
   );
 };
 

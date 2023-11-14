@@ -16,8 +16,10 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
   const user = useUser();
 
   // Fetch reply children
-  const { data: childReplies } = useQuery(["replies", parentReplyId], () =>
-    fetchReplies({ replyId: parentReplyId, userId: user!.id }),
+  const { data: childReplies } = useQuery(
+    ["replies", parentReplyId],
+    () => fetchReplies({ replyId: parentReplyId, userId: user!.id }),
+    { refetchOnWindowFocus: false },
   );
 
   // The layout prop preserves the LayoutGroup functionality of animating the container to expand/contract when replies are loaded or unloaded.

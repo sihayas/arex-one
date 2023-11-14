@@ -35,10 +35,11 @@ export const GetDimensions = (pageName: PageName) => {
 
   // Initialize base height for record page
   const [baseHeight, setBaseHeight] = useState(432);
-  const maxHeight = viewportHeight - 2 * 44;
+  const maxHeight = viewportHeight - 2 * 56; // * by 40 for base
 
   // When switching to record page, use calculated->stored height from
-  // useLayoutEffect to set base height for record page.
+  // useLayoutEffect in Record to set the base height for record page. We
+  // are adding the foundation height of the record + height of entry content
   useEffect(() => {
     if (activePage.name === "record") {
       setBaseHeight(activePage.dimensions.height + 432);

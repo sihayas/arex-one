@@ -9,7 +9,7 @@ import { extendedNotification } from "@/components/interface/nav/sub/Signals";
 // Get user data, handle follow/unfollow, and fetch favorites
 export const useUserDataAndAlbumsQuery = (
   userId: string | undefined,
-  sessionUserId: string | undefined
+  sessionUserId: string | undefined,
 ) => {
   // Follow state
   const [followState, setFollowState] = useState<{
@@ -66,7 +66,7 @@ export const useUserDataAndAlbumsQuery = (
       });
       const userData = response.data;
       const albumIds = userData.essentials.map(
-        (essential: Essential) => essential.album.appleId
+        (essential: Essential) => essential.album.appleId,
       );
       const albumsData = await fetchSoundsbyType("albums", albumIds);
 
@@ -82,7 +82,7 @@ export const useUserDataAndAlbumsQuery = (
       }));
 
       return { userData, essentials: userData.essentials };
-    }
+    },
   );
 
   return {
@@ -106,7 +106,7 @@ export const useUserSettingsQuery = (userId: string) => {
         },
       });
       return response.data;
-    }
+    },
   );
 
   return { data, isLoading, isError };
@@ -144,13 +144,13 @@ export const useUserSoundtrackQuery = (userId: string) => {
       const albumLookup = Object.fromEntries(
         anyData
           .filter((item: AlbumData | SongData) => item.type === "albums")
-          .map((album: AlbumData) => [album.id, album])
+          .map((album: AlbumData) => [album.id, album]),
       );
 
       const trackLookup = Object.fromEntries(
         anyData
           .filter((item: AlbumData | SongData) => item.type === "songs")
-          .map((track: SongData) => [track.id, track])
+          .map((track: SongData) => [track.id, track]),
       );
 
       // Merge soundtrackData, albumData, and trackData
@@ -162,7 +162,7 @@ export const useUserSoundtrackQuery = (userId: string) => {
         };
       });
       return finalMergedData;
-    }
+    },
   );
 
   return { data, isLoading, isError };
@@ -222,7 +222,7 @@ export const useNotificationsQuery = (userId: string | undefined) => {
         const fetchedSounds = await fetchSoundsByTypes(appleIds);
         // Populate fetchedMapping with fetched data
         fetchedSounds.forEach(
-          (item: AlbumData | SongData) => (fetchedMapping[item.id] = item)
+          (item: AlbumData | SongData) => (fetchedMapping[item.id] = item),
         );
 
         // Merge notifications with fetched data
@@ -236,7 +236,7 @@ export const useNotificationsQuery = (userId: string | undefined) => {
               }
             }
             return notif;
-          }
+          },
         );
 
         // Return the enhanced notifications
@@ -247,7 +247,7 @@ export const useNotificationsQuery = (userId: string | undefined) => {
     },
     {
       enabled: !!userId,
-    }
+    },
   );
 
   return { data: notifications, isLoading, isError };
@@ -258,7 +258,7 @@ export const changeEssential = async (
   userId: string,
   prevEssentialId: string | null,
   appleId: string,
-  rank: number
+  rank: number,
 ) => {
   const url = `/api/user/post/changeEssential`;
   const response = await axios.post(url, {
@@ -276,12 +276,22 @@ export const toggleSetting = async (
   settingKey:
     | "followerNotifications"
     | "replyNotifications"
-    | "heartNotifications"
+    | "heartNotifications",
 ) => {
   const url = `/api/user/post/toggleSetting`;
   const response = await axios.post(url, {
     userId,
     settingKey,
+  });
+  return response; // return the entire response object
+};
+
+// Change bio handler
+export const changeBio = async (userId: string, bio: string) => {
+  const url = `/api/user/post/changeBio`;
+  const response = await axios.post(url, {
+    userId,
+    bio,
   });
   return response; // return the entire response object
 };

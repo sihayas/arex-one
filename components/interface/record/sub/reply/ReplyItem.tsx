@@ -57,7 +57,9 @@ export default function ReplyItem({
   const isEvenLevel = level % 2 === 0;
   const flexDirection = isEvenLevel ? "flex-row" : "flex-row-reverse";
   const reverseAlignment = isEvenLevel ? "items-start" : "items-end";
-  const borderRadius = isEvenLevel ? "rounded-bl-[4px]" : "rounded-br-[4px]";
+  const bubblePosition = isEvenLevel
+    ? "-bottom-1 -left-1"
+    : "-bottom-1 -right-1 transform scale-x-[-1]";
   const reverseStatLine = isEvenLevel ? "" : "transform scale-x-[-1]";
   const maxWidth = isChild ? "max-w-[336px]" : "max-w-[376px]";
   const width = isChild ? "w-[336px]" : "w-[376px]";
@@ -96,7 +98,7 @@ export default function ReplyItem({
       {/* Main Reply */}
       <div className={`flex gap-2 items-end ${flexDirection}`}>
         <UserAvatar
-          className="w-8 h-8 rounded-full outline outline-1 outline-[#E5E5E6]"
+          className="w-8 h-8 rounded-full border border-gray3"
           imageSrc={reply.author.image}
           altText={`${reply.author.username}'s avatar`}
           width={32}
@@ -106,11 +108,13 @@ export default function ReplyItem({
 
         {/* Attribution & Content */}
         <div className={`flex flex-col gap-[6px] ${reverseAlignment} ${width}`}>
-          <div className={`font-medium text-xs text-gray2 leading-[75%] px-3`}>
+          <div className={`font-medium text-xs text-gray2 leading-[9px] px-3`}>
             {reply.author.username}
           </div>
 
-          <div className="relative bg-[#F4F4F4] px-3 py-[7px] w-fit rounded-[20px] overflow-visible">
+          <div
+            className={`relative bg-[#F4F4F4] px-[10px] pt-[6px] pb-[7px] w-fit rounded-[18px] overflow-visible mb-2`}
+          >
             {/* Content  */}
             <motion.div
               whileHover={{ color: "rgba(0,0,0,1)" }}
@@ -123,7 +127,7 @@ export default function ReplyItem({
                 scale: replyParent === reply ? 1.01 : 1,
               }}
               transition={{ duration: 0.24 }}
-              className={`${maxWidth} ${borderRadius} text-sm  break-words leading-normal cursor-pointer`}
+              className={`${maxWidth} text-sm break-words cursor-pointer`}
             >
               {reply.content}
             </motion.div>
@@ -131,22 +135,32 @@ export default function ReplyItem({
               handleHeartClick={handleHeartClick}
               hearted={hearted}
               className={`absolute -bottom-1 z-20 ${
-                isEvenLevel ? "-right-1" : "left-1"
-              } `}
+                isEvenLevel ? "-right-1" : "-left-1 transform scale-x-[-1]"
+              }`}
               heartCount={heartCount}
               replyCount={reply._count.replies}
               isReply={true}
               isEvenLevel={isEvenLevel}
             />
+
+            {/* Bubbles */}
+            <div className={`w-3 h-3 absolute ${bubblePosition}`}>
+              <div
+                className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
+              />
+              <div
+                className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Fill Parent Dashed Line */}
+        {/* Fill Line */}
         {isChild && (
-          <motion.div className="flex flex-col justify-center h-full mr-auto w-8">
+          <motion.div className="flex flex-col justify-center h-full mr-auto min-w-[32px]">
             <Line
               color={"#e5e5e6"}
-              className={`flex flex-grow ml-auto mr-auto !w-[1.5px] ${
+              className={`flex flex-grow ml-auto mr-auto !w-[2px] rounded ${
                 index === 0 && "-mt-3"
               }`}
             />
@@ -159,7 +173,8 @@ export default function ReplyItem({
         <div
           className={`min-h-[16px] flex flex-col relative w-full ${reverseAlignment}`}
         >
-          {/* Create left side trace / baseline of children fetched or Button to load children / Collapse children */}
+          {/* Create chain baseline for children fetched / Button to expand
+           & collapse */}
           {showChildReplies ? (
             <div
               className={`absolute flex flex-col cursor-pointer h-full w-8 pt-1 items-center`}
@@ -169,7 +184,7 @@ export default function ReplyItem({
                 onClick={() => {
                   setShowChildReplies(false);
                 }}
-                className="w-2 h-2 rounded-full bg-[#e5e5e6] cursor-pointer z-30"
+                className="min-w-[8px] min-h-[8px] rounded-full bg-[#e5e5e6] cursor-pointer z-30"
               />
               <DashedLine
                 className={"flex flex-grow ml-auto mr-auto mb-8"}
@@ -186,7 +201,9 @@ export default function ReplyItem({
               {reply.replies?.map((childReply, index) => (
                 <Image
                   key={index}
-                  className="outline outline-4 outline-white rounded-full group-hover:scale-110 group-hover:outline-none transition-all"
+                  className={`outline outline-2 outline-white rounded-full transition-all ${
+                    index !== 0 && "-ml-2"
+                  }`}
                   src={
                     childReply.author.image ||
                     "/public/images/default-avatar.png"

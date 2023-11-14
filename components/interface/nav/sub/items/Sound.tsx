@@ -47,7 +47,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
         user.id,
         prevEssentialId,
         appleId,
-        rank
+        rank,
       );
       // If response is successful, reset values
       if (response.status === 200) {
@@ -56,7 +56,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
         setRank(0);
       }
     } else {
-      // If not changing essential, store input value and set selected sound
+      // If not changing essential, store input value and prepare form
       setStoredInputValue(inputValue);
       setInputValue("");
       setSelectedFormSound({ sound, artworkUrl });

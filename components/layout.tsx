@@ -3,7 +3,7 @@ import React, { useEffect, ReactNode, useCallback, useRef } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 import { useUser } from "@supabase/auth-helpers-react";
-import { motion, useAnimate } from "framer-motion";
+import { useAnimate } from "framer-motion";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isVisible, setIsVisible, pages } = useInterfaceContext();
@@ -34,7 +34,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     const animateMainContent = async () => {
       const animationConfig = {
         scale: isVisible ? 0.88 : 1,
-        filter: isVisible ? "blur(80px)" : "blur(0px)",
+        opacity: isVisible ? 0 : 1,
       };
       const transitionConfig = {
         filter: {

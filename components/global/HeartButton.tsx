@@ -40,7 +40,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   isEvenLevel = true,
 }) => {
   const [iconColor, setIconColor] = useState(hearted ? "#FF3319" : "#CCC");
-  const [curveColor, setCurveColor] = useState(hearted ? "#FF3319" : "#CCC");
+  const [curveColor, setCurveColor] = useState(hearted ? "#FF3319" : "#E5E5E5");
   const controls = useAnimation();
 
   useEffect(() => {
@@ -50,14 +50,14 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   // Change curve color
   const handleMouseEnter = () => {
     controls.start("hover");
-    setCurveColor(hearted ? "#CCC" : "#CCC");
+    setCurveColor(hearted ? "#E5E5E5" : "#E5E5E5");
     setIconColor(hearted ? "#FF3319" : "#CCC");
   };
 
   // Change curve color
   const handleMouseLeave = () => {
     controls.start("initial");
-    setCurveColor(hearted ? "#FF3319" : "#CCC");
+    setCurveColor(hearted ? "#FF3319" : "#E5E5E5");
     setIconColor(hearted ? "#FF3319" : "#CCC");
   };
 
@@ -73,23 +73,19 @@ const HeartButton: React.FC<HeartButtonProps> = ({
     >
       {/* Icon / Button */}
       <motion.div
-        className={`absolute bg-white/80 backdrop-blur p-2 flex items-center rounded-full border-[.5px] border-silver  ${
-          isEvenLevel
-            ? "origin-bottom-right bottom-0 right-0"
-            : "origin-bottom-left bottom-0 -left-1"
-        }`}
+        className={`absolute bg-white/80 backdrop-blur p-2 flex items-center rounded-full border-1 border-silver origin-bottom-right bottom-0 right-0`}
         animate={controls}
         initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
         variants={{
           hover: {
             scale: 1,
             opacity: 1,
-            x: isEvenLevel ? -4 : 0,
-            y: isEvenLevel ? -4 : -8,
+            x: -6.5,
+            y: -6.5,
           },
           initial: { scale: 0, x: -4, y: -4, opacity: 0 },
         }}
-        transition={{ type: "tween", ease: "anticipate", duration: 0.5 }}
+        transition={{ type: "tween", ease: "anticipate", duration: 0.45 }}
       >
         <LoveIcon color={iconColor} />
       </motion.div>

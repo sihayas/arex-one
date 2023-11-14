@@ -55,7 +55,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
 
       {/* Rating, content & bubbles */}
       <div
-        className={`bg-[#F4F4F4] rounded-[16px] relative px-2 py-[4px] max-w-[384px] w-fit mb-3 ml-3`}
+        className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[384px] w-fit mb-3 ml-3`}
       >
         <div
           className={`-z-10 bg-white rounded-[16px] w-[86px] h-[40px] absolute -top-[1px] -left-[1px]`}
