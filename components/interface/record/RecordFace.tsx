@@ -187,7 +187,7 @@ export const RecordFace = () => {
       </div>
       <motion.div
         style={{ height: target.height, opacity: replyInputOpacity }}
-        className={`flex flex-wrap p-8 pt-[88px] overflow-scroll`}
+        className={`flex flex-col gap-4 p-8 pt-[88px] overflow-scroll`}
       >
         <RenderReplies replies={replies} />
       </motion.div>

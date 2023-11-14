@@ -84,7 +84,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
           {/* Content */}
           <div
             onClick={handleEntryClick}
-            className={`break-words line-clamp-6 w-full text-sm text-gray5 leading-normal cursor-pointer z-10`}
+            className={`break-words line-clamp-6 w-full text-sm text-gray5 cursor-pointer z-10`}
           >
             {record.entry?.text || record.caption?.text}
           </div>

@@ -93,7 +93,7 @@ export default function ReplyItem({
         originX: !isEvenLevel ? 1 : 0,
         willChange: "opacity, scale, transform",
       }}
-      className={`flex flex-col relative w-full pt-4`}
+      className={`flex flex-col relative w-full pt-4 h-fit`}
     >
       {/* Main Reply */}
       <div className={`flex gap-2 items-end ${flexDirection}`}>
