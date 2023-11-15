@@ -11,13 +11,12 @@ import { ChainIcon, AddIcon } from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
 import UserAvatar from "@/components/global/UserAvatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
-import { IndexIcon } from "@/components/icons";
-import { AlbumData } from "@/types/appleTypes";
 import Image from "next/image";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { Record, Reply } from "@/types/dbTypes";
-import axios from "axios";
 import { addReply } from "@/lib/apiHandlers/recordAPI";
+import { toast } from "sonner";
+import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 const isRecord = (
   replyParent: Record | Reply | null,
@@ -34,9 +33,17 @@ const Nav = () => {
   const { replyParent, record, setReplyParent } = useThreadcrumb();
 
   const { user, pages } = useInterfaceContext();
-  const { inputValue, setInputValue, expandInput, setExpandInput, inputRef } =
-    useNavContext();
+  const {
+    inputValue,
+    setInputValue,
+    expandInput,
+    setExpandInput,
+    inputRef,
+    storedInputValue,
+    setStoredInputValue,
+  } = useNavContext();
   const { selectedFormSound, setSelectedFormSound, selectedSound } = useSound();
+  const { handleSelectSound } = useHandleSoundClick();
 
   // Determine current page
   const activePage: Page = pages[pages.length - 1];
@@ -45,8 +52,22 @@ const Nav = () => {
 
   const handleReplySubmit = () => {
     if (!replyParent || !inputValue || !user?.id || !record) return;
+
     const type = isRecord(replyParent) ? "record" : "reply";
-    addReply(record?.author.id, replyParent, inputValue, user?.id, type);
+
+    // Wrap the addReply call in toast.promise
+    toast.promise(
+      addReply(record?.author.id, replyParent, inputValue, user?.id, type).then(
+        () => {
+          setInputValue("");
+        },
+      ),
+      {
+        loading: "Sending reply...",
+        success: "Reply sent successfully!",
+        error: "Error submitting reply",
+      },
+    );
   };
 
   // Debounce the search query
@@ -95,8 +116,9 @@ const Nav = () => {
     }
   }, [inputRef]);
 
-  // Enable new line on enter if Form or Reply is active
+  // Key bindings for input
   const handleKeyDown = (e: any) => {
+    // New line if Form is expanded or ReplyParent is selected
     if (
       e.key === "Enter" &&
       expandInput &&
@@ -110,7 +132,36 @@ const Nav = () => {
         value.substring(0, cursorPosition) +
         "\n" +
         value.substring(cursorPosition);
-      handleInputTextChange(newValue); // Update the input value with the new line
+      handleInputTextChange(newValue);
+    }
+    //Submit reply with cmd/ctrl + enter
+    else if (
+      e.key === "Enter" &&
+      (e.metaKey || e.ctrlKey) &&
+      inputRef.current === document.activeElement &&
+      replyParent
+    ) {
+      handleReplySubmit();
+    }
+    // Switch to album page from form
+    else if (e.key === "Enter" && selectedFormSound && inputValue === "") {
+      e.preventDefault();
+      handleSelectSound(selectedFormSound.sound, selectedFormSound.artworkUrl);
+      inputRef?.current?.blur();
+      window.history.pushState(null, "");
+    }
+    // Wipe selectedFormSound and replyParent if backspace is pressed and input is empty
+    if (
+      e.key === "Backspace" &&
+      inputValue === "" &&
+      (selectedFormSound || replyParent)
+    ) {
+      e.preventDefault();
+      setSelectedFormSound(null);
+      setReplyParent(null);
+      setInputValue(storedInputValue);
+      setStoredInputValue("");
+      inputRef?.current?.focus();
     }
   };
 
@@ -143,7 +194,7 @@ const Nav = () => {
           className={`bg-[#F4F4F4] flex flex-col items-center absolute bottom-1 left-0 rounded-[18px]`}
         >
           {/* Expanded Area */}
-          {expandInput && (selectedFormSound || inputValue) && (
+          {expandInput && !replyParent && (selectedFormSound || inputValue) && (
             <div
               className={`flex flex-col relative w-full p-3 pb-[6px] overflow-scroll`}
               style={{ height: 448 }}

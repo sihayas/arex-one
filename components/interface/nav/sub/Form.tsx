@@ -110,23 +110,9 @@ const Form = () => {
     />
   );
 
-  // Song styles
-  const renderSongSection = () => (
-    <Image
-      id={selectedFormSound.sound.id}
-      className="rounded-lg shadow-shadowKitLow outline outline-silver outline-1"
-      src={artworkUrl}
-      alt={`${selectedFormSound.sound.attributes.name} artwork`}
-      width={114}
-      height={114}
-      quality={100}
-    />
-  );
-
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={`flex`}>
-      {selectedFormSound.sound.type === "albums" && renderAlbumSection()}
-      {selectedFormSound.sound.type === "songs" && renderSongSection()}
+      {renderAlbumSection()}
       <Dial setRatingValue={handleRatingChange} />
     </form>
   );

@@ -225,29 +225,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     activePageName,
   ]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Switch to album page from form
-    if (e.key === "Enter" && selectedFormSound && inputValue === "") {
-      e.preventDefault();
-      handleSelectSound(selectedFormSound.sound, selectedFormSound.artworkUrl);
-      inputRef?.current?.blur();
-      window.history.pushState(null, "");
-    }
-    // Wipe selectedFormSound and replyParent if backspace is pressed and input is empty
-    if (
-      e.key === "Backspace" &&
-      inputValue === "" &&
-      (selectedFormSound || replyParent)
-    ) {
-      e.preventDefault();
-      setSelectedFormSound(null);
-      setReplyParent(null);
-      setInputValue(storedInputValue);
-      setStoredInputValue("");
-      inputRef?.current?.focus();
-    }
-  };
-
   return (
     <motion.div
       ref={rootScope}
@@ -259,7 +236,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         id={`cmdk-inner`}
         className={`cmdk-inner flex rounded-[32px] gap-8 items-center`}
         shouldFilter={false}
-        onKeyDown={handleKeyDown}
+        // onKeyDown={handleKeyDown}
         loop
       >
         {/* Shape-shift / Window, lies atop the rendered content */}
