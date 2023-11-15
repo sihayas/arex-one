@@ -6,8 +6,7 @@ import TextareaAutosize from "react-textarea-autosize";
 
 import Search from "./sub/Search";
 import Form from "./sub/Form";
-import Signals from "./sub/Signals";
-import { ChainIcon, AddIcon } from "@/components/icons";
+import { ChainIcon } from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
 import UserAvatar from "@/components/global/UserAvatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";

@@ -35,6 +35,7 @@ export const useHandleRecordClick = (record: Record) => {
 
 // Handle User Click
 export const useHandleUserClick = (author: User) => {
+  const { setReplyParent } = useThreadcrumb();
   const { setPages, setIsVisible } = useInterfaceContext();
 
   return () => {
@@ -49,6 +50,7 @@ export const useHandleUserClick = (author: User) => {
       },
     ]);
     setIsVisible(true);
+    setReplyParent(null);
   };
 };
 
@@ -57,6 +59,7 @@ export const useHandleSoundClick = () => {
   // CMDK context
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setSelectedSound } = useSound();
+  const { setReplyParent } = useThreadcrumb();
 
   const handleSelectSound = async (
     sound: AlbumData | SongData,
@@ -77,6 +80,7 @@ export const useHandleSoundClick = () => {
       },
     ]);
     setIsVisible(true);
+    setReplyParent(null);
   };
 
   return { handleSelectSound };

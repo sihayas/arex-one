@@ -139,9 +139,9 @@ const Album = () => {
                   onActiveSongChange={handleActiveSongChange}
                 />
               )}
-            <div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">
-              <SortChange onSortOrderChange={handleSortOrderChange} />
-            </div>
+            {/*<div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">*/}
+            {/*  <SortChange onSortOrderChange={handleSortOrderChange} />*/}
+            {/*</div>*/}
           </motion.div>
 
           {/* Rating */}
