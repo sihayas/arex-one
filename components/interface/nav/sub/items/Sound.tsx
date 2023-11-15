@@ -67,17 +67,17 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full p-4 will-change-transform"
+      className="w-full pb-8 will-change-transform"
       onSelect={() => onSelect(sound.id)}
     >
       <div className="flex w-full items-center gap-4">
         <Image
           id={sound.id}
-          className="rounded-lg shadow-shadowKitLow"
+          className="rounded-xl shadow-shadowKitLow"
           src={artworkUrl}
           alt={`${sound.attributes.name} artwork`}
-          width={36}
-          height={36}
+          width={48}
+          height={48}
           draggable="false"
         />
 

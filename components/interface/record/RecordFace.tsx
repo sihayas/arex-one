@@ -20,7 +20,7 @@ import Stars from "@/components/global/Stars";
 import UserAvatar from "@/components/global/UserAvatar";
 import RenderReplies from "@/components/interface/record/sub/reply/RenderReplies";
 import ReplyInput from "@/components/interface/record/sub/reply/ReplyInput";
-import { useRepliesQuery } from "@/lib/apiHandlers/entryAPI";
+import { useRepliesQuery } from "@/lib/apiHandlers/recordAPI";
 import { GetDimensions } from "@/components/interface/Interface";
 import { RecordExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
@@ -131,7 +131,7 @@ export const RecordFace = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             key={record.id}
-            className={`absolute top-0 flex bg-[#F4F4F4] rounded-[24px] w-[464px] gap-4 z-50 shadow-shadowKitHigh`}
+            className={`absolute top-0 flex bg-[#F4F4F4] rounded-[24px] w-[464px] gap-4 z-20 shadow-shadowKitHigh`}
           >
             <div
               className={`relative min-w-[40px] min-h-[40px] drop-shadow-sm ml-4 mt-4 flex flex-col`}
@@ -190,9 +190,6 @@ export const RecordFace = () => {
         className={`flex flex-col gap-4 p-8 pt-[88px] overflow-scroll`}
       >
         <RenderReplies replies={replies} />
-      </motion.div>
-      <motion.div style={{ opacity: replyInputOpacity }}>
-        <ReplyInput />
       </motion.div>
     </motion.div>
   );

@@ -71,6 +71,7 @@ const Form = () => {
     ],
   );
 
+  // CMD+Enter to Submit. Focus on input if letter is pressed.
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
@@ -85,21 +86,11 @@ const Form = () => {
         inputRef.current?.focus(); // Focus on the input if it is
       }
     };
-
     document.addEventListener("keydown", handleKeyDown);
-
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [
-    rating,
-    loved,
-    inputValue,
-    userId,
-    selectedFormSound,
-    handleSubmit,
-    inputRef,
-  ]);
+  }, [handleSubmit, inputRef]);
 
   if (!selectedFormSound) return;
 
@@ -107,51 +98,37 @@ const Form = () => {
     setRating(rating);
   };
 
-  const artworkUrl = GenerateArtworkUrl(
-    selectedFormSound.sound.attributes.artwork.url,
-    "800",
-  );
-
   // Album styles
   const renderAlbumSection = () => (
-    <div className="flex w-full gap-2 p-4 pt-2">
-      <div className="text-sm mt-auto ml-auto mb-2 text-gray4">
-        {selectedFormSound.sound.attributes.name}
-      </div>
-      <Image
-        id={selectedFormSound.sound.id}
-        className="rounded-2xl shadow-shadowKitHigh outline outline-silver outline-1"
-        src={artworkUrl}
-        alt={`${selectedFormSound.sound.attributes.name} artwork`}
-        width={160}
-        height={160}
-      />
-    </div>
+    <Image
+      id={selectedFormSound.sound.id}
+      className="rounded-2xl shadow-shadowKitHigh outline outline-silver outline-1"
+      src={selectedFormSound.artworkUrl}
+      alt={`${selectedFormSound.sound.attributes.name} artwork`}
+      width={114}
+      height={114}
+    />
   );
 
   // Song styles
   const renderSongSection = () => (
-    <div className="flex w-full relative items-center gap-4 p-4 py-4">
-      <Image
-        id={selectedFormSound.sound.id}
-        className="rounded-lg shadow-shadowKitLow outline outline-silver outline-1"
-        src={artworkUrl}
-        alt={`${selectedFormSound.sound.attributes.name} artwork`}
-        width={160}
-        height={160}
-        quality={100}
-      />
-    </div>
+    <Image
+      id={selectedFormSound.sound.id}
+      className="rounded-lg shadow-shadowKitLow outline outline-silver outline-1"
+      src={artworkUrl}
+      alt={`${selectedFormSound.sound.attributes.name} artwork`}
+      width={114}
+      height={114}
+      quality={100}
+    />
   );
 
   return (
-    <div className={`h-full`}>
-      <form ref={formRef} onSubmit={handleSubmit}>
-        {selectedFormSound.sound.type === "albums" && renderAlbumSection()}
-        {selectedFormSound.sound.type === "songs" && renderSongSection()}
-        <Dial setRatingValue={handleRatingChange} />
-      </form>
-    </div>
+    <form ref={formRef} onSubmit={handleSubmit} className={`flex`}>
+      {selectedFormSound.sound.type === "albums" && renderAlbumSection()}
+      {selectedFormSound.sound.type === "songs" && renderSongSection()}
+      <Dial setRatingValue={handleRatingChange} />
+    </form>
   );
 };
 

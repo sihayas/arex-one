@@ -44,7 +44,7 @@ const Dial = ({ setRatingValue }: DialProps) => {
   return (
     <div
       ref={dialRef}
-      className={`w-7 h-7 flex justify-center items-center overflow-hidden rounded-full shadow-shadowKitLow focus:outline-none absolute -top-8 left-1 transition-opacity opacity-100 ${
+      className={`w-7 h-7 flex justify-center items-center overflow-hidden rounded-full shadow-shadowKitLow focus:outline-none transition-opacity opacity-100 ${
         inputRef.current?.value && "!opacity-50"
       }`}
       tabIndex={0}

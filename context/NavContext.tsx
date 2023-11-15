@@ -4,6 +4,7 @@ import React, {
   useRef,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 
 export type NavContextType = {
@@ -22,7 +23,7 @@ export type NavContextType = {
 
 // Create the context, initialized as undefined
 export const NavContext = React.createContext<NavContextType | undefined>(
-  undefined
+  undefined,
 );
 
 // Export a custom hook to consume the context
@@ -50,6 +51,13 @@ export const NavProvider = ({ children }: NavProviderProps) => {
   const [expandSignals, setExpandSignals] = useState(false);
 
   const [isChangingEssential, setIsChangingEssential] = useState(false);
+
+  useEffect(() => {
+    // Whenever expandInput changes and is true, focus the input
+    if (expandInput && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [expandInput]);
 
   // Render the provider with the context value
   return (

@@ -20,6 +20,7 @@ import {
 } from "framer-motion";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { PageName } from "@/context/InterfaceContext";
+import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
@@ -65,9 +66,8 @@ export const GetDimensions = (pageName: PageName) => {
 };
 
 export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
-  const { pages, scrollContainerRef } = useInterfaceContext();
   const { handleSelectSound } = useHandleSoundClick();
-
+  const { pages, scrollContainerRef } = useInterfaceContext();
   const {
     inputValue,
     setInputValue,
@@ -77,20 +77,20 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     expandInput,
     expandSignals,
   } = useNavContext();
-
   const { selectedFormSound, setSelectedFormSound } = useSound();
+  const { replyParent, setReplyParent } = useThreadcrumb();
 
   // Page Tracker
   const activePage: Page = pages[pages.length - 1];
   const activePageName: PageName = activePage.name as PageName;
   const ActiveComponent = componentMap[activePageName];
 
-  // Get dimensions for active page to use with hooks
+  // Dimensions for pages
   const { base, target } = GetDimensions(activePageName);
 
-  // Window scope
+  // Window ref
   const [scope, animate] = useAnimate();
-  // Root scope
+  // Root ref
   const [rootScope, animateRoot] = useAnimate();
 
   // Shift width and height of shape-shifter/window while scrolling
@@ -145,25 +145,22 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Animate WINDOW to shrink when nav is expanded
   useEffect(() => {
-    const adjustHeight = async () => {
-      const newHeight = expandInput || expandSignals ? 64 : base.height;
-      await animate(
-        scope.current,
-        { height: `${newHeight}px` },
-        {
-          type: "spring",
-          stiffness: 500,
-          damping: 60,
-          mass: 2,
-          velocity: 10,
-          restSpeed: 0.5,
-          restDelta: 0.5,
-        },
-      );
+    const adjustBoxShadow = async () => {
+      // Define the initial and final box shadow values
+      const initialBoxShadow =
+        "4px 7px 18px 0px rgba(0, 0, 0, 0.04), 15px 28px 32px 0px rgba(0, 0, 0, 0.04), 35px 63px 43px 0px rgba(0, 0, 0, 0.02), 61px 113px 51px 0px rgba(0, 0, 0, 0.01), 96px 176px 56px 0px rgba(0, 0, 0, 0.00)";
+      const finalBoxShadow =
+        "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)";
+
+      // Animate the box shadow
+      await animate(scope.current, {
+        boxShadow:
+          expandInput || expandSignals ? finalBoxShadow : initialBoxShadow,
+      });
     };
 
-    adjustHeight();
-  }, [animate, base.height, scope, expandInput, expandSignals]);
+    adjustBoxShadow();
+  }, [animate, scope, expandInput, expandSignals]);
 
   // Animate shape-shifting the WINDOW on scroll & page change & bounce
   useEffect(() => {
@@ -229,17 +226,22 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   ]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // switch to album page from form
+    // Switch to album page from form
     if (e.key === "Enter" && selectedFormSound && inputValue === "") {
       e.preventDefault();
       handleSelectSound(selectedFormSound.sound, selectedFormSound.artworkUrl);
       inputRef?.current?.blur();
       window.history.pushState(null, "");
     }
-    // go back from form to search results
-    if (e.key === "Backspace" && selectedFormSound && inputValue === "") {
+    // Wipe selectedFormSound and replyParent if backspace is pressed and input is empty
+    if (
+      e.key === "Backspace" &&
+      inputValue === "" &&
+      (selectedFormSound || replyParent)
+    ) {
       e.preventDefault();
       setSelectedFormSound(null);
+      setReplyParent(null);
       setInputValue(storedInputValue);
       setStoredInputValue("");
       inputRef?.current?.focus();
@@ -264,7 +266,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         <motion.div
           id={`cmdk-window`}
           ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver shadow-interface relative flex-shrink-0 rounded-[32px]`}
+          className={`flex items-start justify-center bg-white overflow-hidden z-20 outline outline-1 outline-silver relative flex-shrink-0 rounded-[32px]`}
         >
           {/* Base layout / Static dimensions for a page */}
           <div

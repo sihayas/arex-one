@@ -1,7 +1,7 @@
 import ReplyItem from "@/components/interface/record/sub/reply/ReplyItem";
 import { useQuery } from "@tanstack/react-query";
 import { Reply } from "@/types/dbTypes";
-import { fetchReplies } from "@/lib/apiHandlers/entryAPI";
+import { fetchReplies } from "@/lib/apiHandlers/recordAPI";
 import React from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
