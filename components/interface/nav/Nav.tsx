@@ -16,7 +16,7 @@ import { Record, Reply } from "@/types/dbTypes";
 import { addReply } from "@/lib/apiHandlers/recordAPI";
 import { toast } from "sonner";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const isRecord = (
   replyParent: Record | Reply | null,
@@ -75,7 +75,7 @@ const Nav = () => {
       width: 0,
     },
     expanded: {
-      width: 376,
+      width: 354,
     },
   };
 
@@ -88,7 +88,7 @@ const Nav = () => {
         ? activeAction === "none" && inputValue
           ? 481
           : activeAction === "form"
-          ? 255
+          ? 222
           : activeAction === "reply"
           ? 36
           : 33
@@ -219,16 +219,15 @@ const Nav = () => {
     middle = (
       <div className={`flex flex-col rounded-[18px] w-full relative`}>
         {/* Input Outer */}
-        <motion.div
-          variants={heightVariants}
-          animate={expandInput ? "expanded" : "collapsed"}
-          className={`bg-[#F4F4F4] flex flex-col items-center absolute bottom-1 left-0 rounded-[18px]`}
+        <div
+          className={`bg-[#F4F4F4] flex flex-col items-end absolute bottom-1 left-0 rounded-[18px] shadow-shadowKitLow outline outline-silver outline-1`}
         >
           {/* Top / Form / Search Results */}
           {expandInput && !replyParent && (selectedFormSound || inputValue) && (
-            <div
+            <motion.div
               className={`flex flex-col relative w-full p-3 pb-[6px] overflow-scroll scrollbar-none`}
-              style={{ height: 448 }}
+              variants={heightVariants}
+              animate={expandInput ? "expanded" : "collapsed"}
             >
               {/* If no selected form sound render search results */}
               {selectedFormSound && expandInput ? (
@@ -244,45 +243,49 @@ const Nav = () => {
                   />
                 )
               )}
-            </div>
+            </motion.div>
           )}
 
-          {/* Input & Context */}
+          {/* Input & Icons */}
           <div
             onClick={handleNavClick}
             className={`px-3 pt-[6px] pb-[7px] flex items-center w-full relative`}
           >
-            {/* Page Aware Context Icon */}
-            {activeAction === "none" && (!expandInput || !inputValue) && (
-              <button
-                onClick={handleNavClick}
-                className="w-[18px] h-[18px] relative"
-                aria-label="Description of what the button does"
-              >
-                {activePage.record ? (
-                  <>
-                    <ChainIcon />
+            {/* Context Icons */}
+            <AnimatePresence>
+              {activeAction === "none" && (!expandInput || !inputValue) && (
+                <motion.button
+                  exit={{ scale: 0, width: 0 }}
+                  initial={{ scale: 0, width: 0 }}
+                  animate={{ scale: 1, width: 22 }}
+                  onClick={handleNavClick}
+                  className="h-[18px] relative"
+                >
+                  {activePage.record ? (
+                    <>
+                      <ChainIcon />
+                      <Image
+                        className="absolute top-0 left-0 rounded-full border border-gray6"
+                        src={activePage.record.author.image}
+                        alt="artwork"
+                        width={16}
+                        height={16}
+                      />
+                    </>
+                  ) : activePage.sound ? (
                     <Image
-                      className="absolute top-0 left-0 rounded-full border border-gray6"
-                      src={activePage.record.author.image}
+                      className="rounded-[6px] border border-gray3"
+                      src={activePage.sound.artworkUrl}
                       alt="artwork"
-                      width={16}
-                      height={16}
+                      width={18}
+                      height={18}
                     />
-                  </>
-                ) : activePage.sound ? (
-                  <Image
-                    className="rounded-[6px] border border-gray3"
-                    src={activePage.sound.artworkUrl}
-                    alt="artwork"
-                    width={18}
-                    height={18}
-                  />
-                ) : null}
-              </button>
-            )}
+                  ) : null}
+                </motion.button>
+              )}
+            </AnimatePresence>
 
-            {/* Active Action is Form Icon */}
+            {/* Active Form Icon */}
             {activeAction !== "none" &&
               activeAction === "form" &&
               selectedFormSound &&
@@ -305,13 +308,11 @@ const Nav = () => {
             <motion.div
               variants={widthVariants}
               animate={expandInput ? "expanded" : "collapsed"}
-              className={`flex items-center`}
+              className={`flex items-center relative`}
             >
               <TextareaAutosize
                 id="entryText"
-                className={`bg-transparent text-sm outline-none resize-none text-gray5 w-full ${
-                  expandInput ? "pl-1" : "w-0"
-                }`}
+                className={`bg-transparent text-sm outline-none resize-none text-gray5 w-full`}
                 value={expandInput ? inputValue : ""}
                 onChange={(e) => handleInputTextChange(e.target.value)}
                 onBlur={onBlur}
@@ -324,36 +325,46 @@ const Nav = () => {
               />
 
               {/* Placeholder text */}
-              {expandInput && (
-                <div className="absolute left-9 top-0 flex items-center h-full pointer-events-none text-xs text-gray5">
-                  {!inputValue && !selectedFormSound
-                    ? "Explore RX..."
-                    : selectedFormSound && !inputValue
-                    ? "Arrow & type to create, Enter to view."
+              {expandInput && !inputValue && (
+                <div className="absolute left-0 top-0 flex items-center h-full pointer-events-none text-xs text-gray5">
+                  {activeAction === "none"
+                    ? activePage.sound
+                      ? "Press enter to create record, type to explore"
+                      : activePage.record
+                      ? "Press enter to reply, type to explore"
+                      : "Type to explore"
+                    : activeAction === "form"
+                    ? "Use arrow keys to dial in a rating, Backspace to cancel"
+                    : activeAction === "reply"
+                    ? "Creating chain"
                     : null}
                 </div>
               )}
             </motion.div>
 
-            {/* Active Action is Reply Icon */}
-            {activeAction !== "none" &&
-              activeAction === "reply" &&
-              replyParent && (
-                <button
-                  onClick={handleNavClick}
-                  className="w-[18px] h-[18px] relative"
-                  aria-label="Reply with selected parent"
-                >
-                  <ChainIcon />
-                  <Image
-                    className="absolute top-0 left-0 rounded-full border border-gray6"
-                    src={replyParent.author.image}
-                    alt="artwork"
-                    width={16}
-                    height={16}
-                  />
-                </button>
-              )}
+            <AnimatePresence>
+              {activeAction !== "none" &&
+                activeAction === "reply" &&
+                replyParent && (
+                  <motion.button
+                    exit={{ scale: 0, width: 0 }}
+                    initial={{ scale: 0, width: 0 }}
+                    animate={{ scale: 1, width: 18 }}
+                    onClick={handleNavClick}
+                    className="w-[18px] h-[18px] relative"
+                    aria-label="Reply with selected parent"
+                  >
+                    <ChainIcon />
+                    <Image
+                      className="absolute top-0 left-0 rounded-full border border-gray6"
+                      src={replyParent.author.image}
+                      alt="artwork"
+                      width={16}
+                      height={16}
+                    />
+                  </motion.button>
+                )}
+            </AnimatePresence>
           </div>
 
           {/* Bubbles */}
@@ -366,13 +377,13 @@ const Nav = () => {
             />
           </div>
           {/*  */}
-        </motion.div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="fixed z-50 flex items-start gap-1 -bottom-6 -left-6 max-h-9">
+    <div className="absolute z-50 flex items-start gap-1 -bottom-6 -left-6 max-h-9">
       {left}
       {middle}
       {right}
@@ -380,77 +391,4 @@ const Nav = () => {
   );
 };
 
-<div></div>;
 export default Nav;
-{
-  /* Form / Search Results / Bottom */
-}
-// {
-//   /*<div*/
-// }
-// {
-//   /*  className={`flex flex-col relative w-full ${*/
-// }
-// {
-//   /*    selectedFormSound*/
-// }
-// {
-//   /*      ? "overflow-visible"*/
-// }
-// {
-//   /*      : "overflow-scroll scrollbar-none"*/
-// }
-// {
-//   /*  }`}*/
-// }
-// {
-//   /*  style={{ height: portalHeight, opacity: expandInput ? 1 : 0 }}*/
-// }
-// {
-//   /*>*/
-// }
-// {
-//   /*  /!* If no selected form sound render search results *!/*/
-// }
-// {
-//   /*  {selectedFormSound && expandInput ? (*/
-// }
-// {
-//   /*    <Form />*/
-// }
-// {
-//   /*  ) : (*/
-// }
-// {
-//   /*    !selectedFormSound &&*/
-// }
-// {
-//   /*    inputValue && (*/
-// }
-// {
-//   /*      <Search*/
-// }
-// {
-//   /*        searchData={data}*/
-// }
-// {
-//   /*        isInitialLoading={isInitialLoading}*/
-// }
-// {
-//   /*        isFetching={isFetching}*/
-// }
-// {
-//   /*        error={error}*/
-// }
-// {
-//   /*      />*/
-// }
-// {
-//   /*    )*/
-// }
-// {
-//   /*  )}*/
-// }
-// {
-//   /*</div>*/
-// }

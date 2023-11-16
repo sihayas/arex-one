@@ -95,14 +95,16 @@ const Album = () => {
       ) : (
         <>
           <motion.div
-            style={{
-              x: albumX,
-              y: albumY,
-              borderRadius,
-              scale: albumScale,
-              transformOrigin: "bottom right",
-            }}
-            className="pointer-events-none overflow-hidden fixed z-20 bottom-0 right-0"
+            style={
+              {
+                // x: albumX,
+                // y: albumY,
+                // borderRadius,
+                // scale: albumScale,
+                // transformOrigin: "bottom right",
+              }
+            }
+            className="pointer-events-none overflow-hidden"
           >
             <Image
               src={selectedSound.artworkUrl || "/public/images/default.png"}
@@ -118,14 +120,10 @@ const Album = () => {
           <div className="w-full h-[24px]">&nbsp;</div>
 
           {/* Entries */}
-          <AnimatePresence>
-            <RenderRecords
-              soundId={`${
-                !activeSong ? selectedSound.sound.id : activeSong.id
-              }`}
-              sortOrder={sortOrder}
-            />
-          </AnimatePresence>
+          <RenderRecords
+            soundId={`${!activeSong ? selectedSound.sound.id : activeSong.id}`}
+            sortOrder={sortOrder}
+          />
 
           {/* Sort/Filter */}
           <motion.div
