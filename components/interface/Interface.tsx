@@ -144,8 +144,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       await animate(
         scope.current,
         {
-          boxShadow:
-            expandInput || expandSignals ? finalBoxShadow : initialBoxShadow,
+          boxShadow: expandInput ? finalBoxShadow : initialBoxShadow,
           scale: expandInput ? 0.86 : 1,
         },
         {
@@ -166,15 +165,15 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       // Scale down
       await animate(
         scope.current,
-        { scale: 0.9 },
-        { type: "spring", stiffness: 400, damping: 40 },
+        { scale: 0.95 },
+        { type: "spring", stiffness: 800, damping: 40 },
       );
 
       // Bounce up and shift
       await animate(
         scope.current,
         {
-          scale: [0.9, 1],
+          scale: [0.95, 1],
           width: `${base.width}px`,
           height: `${base.height}px`,
         },
