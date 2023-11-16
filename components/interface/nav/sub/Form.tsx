@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { postEntry } from "@/lib/apiHandlers/formAPI";
 import { useSound } from "@/context/SoundContext";
 
-import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 import Dial from "./items/Dial";
 import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";

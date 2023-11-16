@@ -31,7 +31,7 @@ body {
   /* background-color: rgba(237, 237, 237, 0.792); */
 }
 textarea {
-  caret-color: black;
+  caret-color: #999;
 }
 a {
   text-decoration: none;
@@ -46,7 +46,7 @@ a {
 }
 
 input {
-  caret-color: black;
+  caret-color: #999;
   -webkit-text-fill-color: black;
 }
 

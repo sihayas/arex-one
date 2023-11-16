@@ -16,6 +16,7 @@ import { Record, Reply } from "@/types/dbTypes";
 import { addReply } from "@/lib/apiHandlers/recordAPI";
 import { toast } from "sonner";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { motion } from "framer-motion";
 
 const isRecord = (
   replyParent: Record | Reply | null,
@@ -30,7 +31,6 @@ const Nav = () => {
 
   // For record page/reply
   const { replyParent, record, setReplyParent } = useThreadcrumb();
-
   const { user, pages } = useInterfaceContext();
   const {
     inputValue,
@@ -40,14 +40,14 @@ const Nav = () => {
     inputRef,
     storedInputValue,
     setStoredInputValue,
+    activeAction,
+    setActiveAction,
   } = useNavContext();
-  const { selectedFormSound, setSelectedFormSound, selectedSound } = useSound();
+  const { selectedFormSound, setSelectedFormSound } = useSound();
   const { handleSelectSound } = useHandleSoundClick();
 
   // Determine current page
   const activePage: Page = pages[pages.length - 1];
-  const isRecordPage = activePage.record;
-  const isSoundPage = activePage.sound;
 
   const handleReplySubmit = () => {
     if (!replyParent || !inputValue || !user?.id || !record) return;
@@ -88,32 +88,12 @@ const Nav = () => {
   // Reset the nav context to its appropriate state relative to active page
   const onBlur = useCallback(() => {
     setExpandInput(false);
-    // Show sound icon again
-    if (isSoundPage && !selectedFormSound) {
-      setSelectedFormSound(selectedSound);
-    }
-    // Show reply parent icon again
-    else if (isRecordPage && !replyParent) {
-      setReplyParent(record);
-    }
-  }, [
-    setExpandInput,
-    selectedFormSound,
-    selectedSound,
-    setSelectedFormSound,
-    isSoundPage,
-    isRecordPage,
-    record,
-    replyParent,
-    setReplyParent,
-  ]);
+  }, [setExpandInput]);
 
   // Focus input on click
   const handleNavClick = useCallback(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [inputRef]);
+    setExpandInput(true);
+  }, [setExpandInput]);
 
   // Key bindings for input
   const handleKeyDown = (e: any) => {
@@ -148,12 +128,11 @@ const Nav = () => {
       handleSelectSound(selectedFormSound.sound, selectedFormSound.artworkUrl);
       inputRef?.current?.blur();
       window.history.pushState(null, "");
-    }
-    // Wipe selectedFormSound and replyParent if backspace is pressed and input is empty
-    if (
+    } else if (
+      // Wipe selectedFormSound and replyParent
       e.key === "Backspace" &&
       inputValue === "" &&
-      (selectedFormSound || replyParent)
+      activeAction !== "none"
     ) {
       e.preventDefault();
       setSelectedFormSound(null);
@@ -162,16 +141,40 @@ const Nav = () => {
       setStoredInputValue("");
       inputRef?.current?.focus();
     }
+    // Prepare form if on sound page
+    else if (
+      e.key === "Enter" &&
+      activePage.sound &&
+      activeAction === "none" &&
+      !inputValue
+    ) {
+      e.preventDefault();
+      const sound = activePage.sound.sound;
+      const artworkUrl = activePage.sound.artworkUrl;
+      setSelectedFormSound({ sound, artworkUrl });
+    }
+    // Prepare reply parent
+    else if (
+      e.key === "Enter" &&
+      activePage.record &&
+      activeAction === "none" &&
+      !inputValue
+    ) {
+      e.preventDefault();
+      setReplyParent(activePage.record);
+    }
   };
 
+  // Determine the action indicator (takes precedence over page indicator)
   useEffect(() => {
-    // Prepare the Form if user is viewing a sound
-    if (isSoundPage) {
-      setSelectedFormSound(selectedSound);
-    } else if (isRecordPage) {
-      setSelectedFormSound(null);
+    if (selectedFormSound) {
+      setActiveAction("form");
+    } else if (replyParent) {
+      setActiveAction("reply");
+    } else {
+      setActiveAction("none");
     }
-  }, []);
+  }, [selectedFormSound, setActiveAction, replyParent]);
 
   if (user) {
     left = (
@@ -189,13 +192,13 @@ const Nav = () => {
     middle = (
       <div className={`flex flex-col rounded-[18px] w-[416px] relative`}>
         {/* Input Outer */}
-        <div
+        <motion.div
           className={`bg-[#F4F4F4] flex flex-col items-center absolute bottom-1 left-0 rounded-[18px]`}
         >
           {/* Expanded Area */}
           {expandInput && !replyParent && (selectedFormSound || inputValue) && (
             <div
-              className={`flex flex-col relative w-full p-3 pb-[6px] overflow-scroll`}
+              className={`flex flex-col relative w-full p-3 pb-[6px] overflow-scroll scrollbar-none`}
               style={{ height: 448 }}
             >
               {/* If no selected form sound render search results */}
@@ -215,30 +218,66 @@ const Nav = () => {
             </div>
           )}
 
-          {/* Input */}
-          <div className={`px-3 pt-[6px] pb-[7px] flex items-center w-full`}>
-            {/* Sound Icon */}
-            {!expandInput && isSoundPage && (
-              <button onClick={handleNavClick} className={`w-5 h-5`}>
-                {/* Sound */}
-                {activePage.sound && selectedFormSound && (
+          {/* Input & Context */}
+          <div
+            onClick={handleNavClick}
+            className={`px-3 pt-[6px] pb-[7px] flex items-center w-full`}
+          >
+            {/* Page Aware Context Icon */}
+            {activeAction === "none" && (!expandInput || !inputValue) && (
+              <button
+                onClick={handleNavClick}
+                className="w-[18px] h-[18px] relative"
+                aria-label="Description of what the button does"
+              >
+                {activePage.record ? (
+                  <>
+                    <ChainIcon />
+                    <Image
+                      className="absolute top-0 left-0 rounded-full border border-gray6"
+                      src={activePage.record.author.image}
+                      alt="artwork"
+                      width={16}
+                      height={16}
+                    />
+                  </>
+                ) : activePage.sound ? (
                   <Image
-                    className={`rounded-[6px] border border-gray3`}
-                    src={selectedFormSound.artworkUrl}
-                    alt={`artwork`}
-                    width={20}
-                    height={20}
+                    className="rounded-[6px] border border-gray3"
+                    src={activePage.sound.artworkUrl}
+                    alt="artwork"
+                    width={18}
+                    height={18}
                   />
-                )}
+                ) : null}
               </button>
             )}
+
+            {/* Active Action is Form Icon */}
+            {activeAction !== "none" &&
+              activeAction === "form" &&
+              selectedFormSound &&
+              !expandInput && (
+                <button onClick={handleNavClick} className="w-[18px] h-[18px]">
+                  {/* Sound */}
+                  {selectedFormSound.sound && (
+                    <Image
+                      className="rounded-[6px] border border-gray3"
+                      src={selectedFormSound.artworkUrl}
+                      alt="artwork"
+                      width={18}
+                      height={18}
+                    />
+                  )}
+                </button>
+              )}
 
             {/* TextArea */}
             <div className={`relative flex items-center`}>
               <TextareaAutosize
                 id="entryText"
                 className={`bg-transparent text-sm outline-none resize-none text-gray5 ${
-                  expandInput ? "w-[336px]" : "w-0"
+                  expandInput ? "pl-1 w-[336px]" : "w-0"
                 }`}
                 value={expandInput ? inputValue : ""}
                 onChange={(e) => handleInputTextChange(e.target.value)}
@@ -253,7 +292,7 @@ const Nav = () => {
 
               {/* Placeholder text */}
               {expandInput && (
-                <div className="absolute left-0 top-0 flex items-center h-full pointer-events-none text-sm text-gray5 font-medium">
+                <div className="absolute left-1 top-0 flex items-center h-full pointer-events-none text-xs text-gray5 font-medium">
                   {!inputValue && !selectedFormSound
                     ? "Explore RX..."
                     : selectedFormSound && !inputValue
@@ -263,25 +302,25 @@ const Nav = () => {
               )}
             </div>
 
-            {/*Record / Reply Icon */}
-            {isRecordPage && replyParent && (
-              <button
-                onClick={handleNavClick}
-                className="w-5 h-5 relative"
-                aria-label="Description of what the button does"
-              >
-                <ChainIcon />
-                {activePage.record && (
+            {/* Active Action is Reply Icon */}
+            {activeAction !== "none" &&
+              activeAction === "reply" &&
+              replyParent && (
+                <button
+                  onClick={handleNavClick}
+                  className="w-[18px] h-[18px] relative"
+                  aria-label="Reply with selected parent"
+                >
+                  <ChainIcon />
                   <Image
                     className="absolute top-0 left-0 rounded-full border border-gray6"
-                    src={activePage.record.author.image}
+                    src={replyParent.author.image}
                     alt="artwork"
-                    width={18}
-                    height={18}
+                    width={16}
+                    height={16}
                   />
-                )}
-              </button>
-            )}
+                </button>
+              )}
           </div>
 
           {/* Bubbles */}
@@ -294,34 +333,13 @@ const Nav = () => {
             />
           </div>
           {/*  */}
-        </div>
+        </motion.div>
       </div>
-    );
-
-    // Form & Search
-    right = (
-      // <div
-      //   onClick={() => setExpandSignals(!expandSignals)}
-      //   onBlur={() => setExpandSignals(false)}
-      //   ref={signalsScope}
-      //   className={`cursor-pointer flex flex-col items-center`}
-      // >
-      //   <div
-      //     className={
-      //       "w-2 h-2 bg-action absolute left-0 top-0" +
-      //       " rounded-full" +
-      //       " outline outline-white"
-      //     }
-      //   />
-      //
-      //   {expandSignals && <Signals />}
-      // </div>
-      <></>
     );
   }
 
   return (
-    <div className="fixed z-50 flex items-start gap-1 -bottom-6 -left-6 max-h-9">
+    <div className="absolute z-50 flex items-start gap-1 -bottom-6 -left-6 max-h-9">
       {left}
       {middle}
       {right}

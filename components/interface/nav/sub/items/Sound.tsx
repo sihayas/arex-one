@@ -5,6 +5,7 @@ import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
 // Importing context hooks
 import { useSound } from "@/context/SoundContext";
 import { useNavContext } from "@/context/NavContext";
+import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 // Importing function to change essential
 import { changeEssential } from "@/lib/apiHandlers/userAPI";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -12,28 +13,21 @@ import { useUser } from "@supabase/auth-helpers-react";
 // Component to handle sound
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const user = useUser();
-  // Generate artwork URL
   const artworkUrl = GenerateArtworkUrl(sound.attributes.artwork.url, "1200");
-  // Destructuring necessary values from context
-  const {
-    setSelectedFormSound,
-    prevEssentialId,
-    setPrevEssentialId,
-    rank,
-    setRank,
-  } = useSound();
+  const { handleSelectSound } = useHandleSoundClick();
+  const { prevEssentialId, setPrevEssentialId, rank, setRank } = useSound();
   const {
     inputValue,
     setInputValue,
     setStoredInputValue,
     isChangingEssential,
+    setExpandInput,
   } = useNavContext();
 
   // Determine sound type
   const soundType = sound.type === "albums" ? "ALBUM" : "SONG";
   const artistName = sound.type === "songs" ? sound.attributes.artistName : "";
 
-  // Function to handle selection
   const onSelect = async (appleId: string) => {
     // If essential is being changed and user exists
     if (
@@ -57,9 +51,10 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       }
     } else {
       // If not changing essential, store input value and prepare form
+      await handleSelectSound(sound, artworkUrl);
+      setExpandInput(false);
       setStoredInputValue(inputValue);
       setInputValue("");
-      setSelectedFormSound({ sound, artworkUrl });
     }
   };
 

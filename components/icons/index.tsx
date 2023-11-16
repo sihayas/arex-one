@@ -424,31 +424,31 @@ export function ChainIcon({ ...props }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={20}
-      height={20}
+      width={18}
+      height={18}
       fill="none"
       {...props}
     >
       <rect
-        width={17.838}
-        height={17.838}
+        width={16.054}
+        height={16.054}
         fill="#C4C4C7"
-        rx={8.919}
-        transform="matrix(-1 0 0 1 17.838 0)"
+        rx={8.027}
+        transform="matrix(-1 0 0 1 16.054 0)"
       />
       <circle
-        cx={1.081}
-        cy={1.081}
-        r={1.081}
+        cx={0.973}
+        cy={0.973}
+        r={0.973}
         fill="#C4C4C7"
-        transform="matrix(-1 0 0 1 20 17.838)"
+        transform="matrix(-1 0 0 1 18 16.054)"
       />
       <circle
-        cx={2.162}
-        cy={2.162}
-        r={2.162}
+        cx={1.946}
+        cy={1.946}
+        r={1.946}
         fill="#C4C4C7"
-        transform="matrix(-1 0 0 1 17.838 13.514)"
+        transform="matrix(-1 0 0 1 16.054 12.162)"
       />
     </svg>
   );

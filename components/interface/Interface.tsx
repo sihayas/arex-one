@@ -17,6 +17,7 @@ import {
   useScroll,
   useTransform,
   MotionValue,
+  LayoutGroup,
 } from "framer-motion";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { PageName } from "@/context/InterfaceContext";
@@ -36,7 +37,7 @@ export const GetDimensions = (pageName: PageName) => {
 
   // Initialize base height for record page
   const [baseHeight, setBaseHeight] = useState(432);
-  const maxHeight = viewportHeight - 2 * 56; // * by 40 for base
+  const maxHeight = viewportHeight - 2 * 32; // * by 40 for base
 
   // When switching to record page, use calculated->stored height from
   // useLayoutEffect in Record to set the base height for record page. We
@@ -66,19 +67,8 @@ export const GetDimensions = (pageName: PageName) => {
 };
 
 export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
-  const { handleSelectSound } = useHandleSoundClick();
   const { pages, scrollContainerRef } = useInterfaceContext();
-  const {
-    inputValue,
-    setInputValue,
-    storedInputValue,
-    inputRef,
-    setStoredInputValue,
-    expandInput,
-    expandSignals,
-  } = useNavContext();
-  const { selectedFormSound, setSelectedFormSound } = useSound();
-  const { replyParent, setReplyParent } = useThreadcrumb();
+  const { expandInput, expandSignals } = useNavContext();
 
   // Page Tracker
   const activePage: Page = pages[pages.length - 1];
@@ -269,39 +259,5 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         {/*{renderPageContent(activePage)}*/}
       </Command>
     </motion.div>
-  );
-}
-
-function renderPageContent(page: Page) {
-  const { name, sound, user, record } = page;
-
-  let typeLabel, mainContent, subContent;
-
-  switch (name.toLowerCase()) {
-    case "album":
-      typeLabel = "ALBUM";
-      mainContent = sound?.attributes.name || "Unknown Album";
-      subContent = sound?.attributes.artistName || "Unknown Artist";
-      break;
-    case "user":
-      typeLabel = "USER";
-      mainContent = user?.username || "Unknown User";
-      break;
-    case "record":
-      typeLabel = "RECORD";
-      mainContent = record?.appleAlbumData.attributes.name;
-      subContent = "by @" + record?.author.username;
-      break;
-    default:
-      typeLabel = "UNKNOWN";
-      mainContent = "Unknown Content";
-  }
-
-  return (
-    <div className="flex items-center justify-center w-full fixed -top-6 uppercase font-mono">
-      <div className="text-xs text-gray2 pr-4 leading-[8px%]">{typeLabel}</div>
-      <div className="text-xs text-gray4 pr-2 leading-[8px]">{mainContent}</div>
-      <div className="text-xs text-gray5 leading-[8px]">{subContent}</div>
-    </div>
   );
 }

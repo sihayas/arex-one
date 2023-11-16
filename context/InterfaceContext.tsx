@@ -15,7 +15,7 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 export type Page = {
   key: string;
   name: string;
-  sound?: AlbumData | SongData;
+  sound?: SelectedSound;
   user?: User;
   record?: Record;
   scrollPosition: number;

@@ -19,7 +19,6 @@ import { Artwork } from "@/components/global/Artwork";
 import Stars from "@/components/global/Stars";
 import UserAvatar from "@/components/global/UserAvatar";
 import RenderReplies from "@/components/interface/record/sub/reply/RenderReplies";
-import ReplyInput from "@/components/interface/record/sub/reply/ReplyInput";
 import { useRepliesQuery } from "@/lib/apiHandlers/recordAPI";
 import { GetDimensions } from "@/components/interface/Interface";
 import { RecordExtended } from "@/types/globalTypes";

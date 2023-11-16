@@ -9,7 +9,7 @@ import { Record, User } from "@/types/dbTypes";
 // Handle FeedRecord Click
 export const useHandleRecordClick = (record: Record) => {
   const { setPages, setIsVisible } = useInterfaceContext();
-  const { setThreadcrumbs, setReplyParent } = useThreadcrumb();
+  const { setThreadcrumbs } = useThreadcrumb();
 
   return () => {
     setIsVisible(true);
@@ -28,14 +28,12 @@ export const useHandleRecordClick = (record: Record) => {
       },
     ]);
     setThreadcrumbs([record.id]);
-    setReplyParent(record);
     window.history.pushState(null, "");
   };
 };
 
 // Handle User Click
 export const useHandleUserClick = (author: User) => {
-  const { setReplyParent } = useThreadcrumb();
   const { setPages, setIsVisible } = useInterfaceContext();
 
   return () => {
@@ -50,7 +48,6 @@ export const useHandleUserClick = (author: User) => {
       },
     ]);
     setIsVisible(true);
-    setReplyParent(null);
   };
 };
 
@@ -59,7 +56,6 @@ export const useHandleSoundClick = () => {
   // CMDK context
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setSelectedSound } = useSound();
-  const { setReplyParent } = useThreadcrumb();
 
   const handleSelectSound = async (
     sound: AlbumData | SongData,
@@ -71,7 +67,7 @@ export const useHandleSoundClick = () => {
       {
         key: uuidv4(),
         name: "album",
-        sound: sound,
+        sound: { sound: sound, artworkUrl },
         dimensions: {
           width: 480,
           height: 832,
@@ -80,7 +76,6 @@ export const useHandleSoundClick = () => {
       },
     ]);
     setIsVisible(true);
-    setReplyParent(null);
   };
 
   return { handleSelectSound };
