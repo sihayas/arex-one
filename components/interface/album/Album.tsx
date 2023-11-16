@@ -56,7 +56,7 @@ const Album = () => {
     springConfig,
   );
   let albumScale = useSpring(
-    useTransform(scrollY, [0, 24], [1, 0]),
+    useTransform(scrollY, [0, 24], [1, 0.8667]),
     springConfig,
   );
 
@@ -75,7 +75,7 @@ const Album = () => {
   const textColor = useTransform(scrollY, [0, 24], ["#FFF", "#333"]);
 
   // Rating footer opacity
-  const borderRadius = useSpring(useTransform(scrollY, [0, 24], [32, 240]), {
+  const borderRadius = useSpring(useTransform(scrollY, [0, 24], [32, 16]), {
     damping: 36,
     stiffness: 400,
   });
@@ -95,15 +95,13 @@ const Album = () => {
       ) : (
         <>
           <motion.div
-            style={
-              {
-                // x: albumX,
-                // y: albumY,
-                // borderRadius,
-                // scale: albumScale,
-                // transformOrigin: "bottom right",
-              }
-            }
+            style={{
+              // x: albumX,
+              // y: albumY,
+              borderRadius,
+              scale: albumScale,
+              // transformOrigin: "bottom right",
+            }}
             className="pointer-events-none overflow-hidden"
           >
             <Image
@@ -127,7 +125,7 @@ const Album = () => {
 
           {/* Sort/Filter */}
           <motion.div
-            className={`w-[calc(100%-88px)] z-10 p-8  py-0 pr-8 absolute bottom-0`}
+            className={`w-[calc(100%-88px)] z-10 p-8 pt-0 pb-4 pr-8 absolute bottom-0`}
           >
             {"relationships" in selectedSound.sound &&
               "tracks" in selectedSound.sound.relationships && (

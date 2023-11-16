@@ -30,8 +30,7 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
   return (
     <motion.div
       ref={scrollContainerRef}
-      tabIndex={0}
-      className="flex flex-col gap-2 scrollbar-none overflow-y-auto will-change-transform w-full h-[112px] pt-[36px] pb-[36px] snap-mandatory snap-y"
+      className="flex flex-col gap-2 scrollbar-none overflow-y-auto will-change-transform w-full h-[112px] pt-[52px] pb-[36px] snap-mandatory snap-y"
     >
       {/* Album Button */}
       <Button

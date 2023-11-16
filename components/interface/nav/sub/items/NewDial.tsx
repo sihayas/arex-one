@@ -1,14 +1,22 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-type RatingDialProps = {
+type NewDialProps = {
   ratings: number[];
 };
 
-const RatingDial: React.FC<RatingDialProps> = ({ ratings }) => {
-  const strokeWidth = 8;
+const ratings = Array.from({ length: 11 }, (_, i) => i * 0.5);
+
+const NewDial: React.FC<NewDialProps> = ({ ratings }) => {
+  const [ratingIndex, setRatingIndex] = useState(0);
+  const maxRating = 5;
+
+  const ratingValue = ratings[ratingIndex];
+  const ratingPercentage = (ratingValue / maxRating) * 100;
+
+  const strokeWidth = 4;
   const dotRadius = 1.5;
-  const radius = 76;
+  const radius = 59;
 
   const circumference = 2 * Math.PI * radius;
   const viewBoxSize = radius * 2 + strokeWidth; // for big dot add dotR * 2
@@ -65,11 +73,26 @@ const RatingDial: React.FC<RatingDialProps> = ({ ratings }) => {
     return { x, y };
   };
 
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === "ArrowUp" && ratingIndex < ratings.length - 1) {
+      setRatingIndex((prev) => prev + 1);
+    } else if (e.key === "ArrowDown" && ratingIndex > 0) {
+      setRatingIndex((prev) => prev - 1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [ratingIndex]);
+
   return (
     <svg
       width={viewBoxSize}
       height={viewBoxSize}
       viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+      tabIndex={0}
+      onKeyDown={(e) => handleKeyPress(e.nativeEvent)}
     >
       {ratings.map((rating, index) => {
         const strokeDasharray = calculateStrokeDashArray(rating);
@@ -113,6 +136,16 @@ const RatingDial: React.FC<RatingDialProps> = ({ ratings }) => {
               }}
               transition={{ type: "spring", stiffness: 100, damping: 20 }}
             />
+            <text
+              x={viewBoxSize / 2}
+              y={viewBoxSize / 2}
+              textAnchor="middle"
+              alignmentBaseline="central"
+              fontSize="20"
+              fill="black"
+            >
+              {ratings[ratingIndex]}
+            </text>
           </Fragment>
         );
       })}
@@ -120,4 +153,4 @@ const RatingDial: React.FC<RatingDialProps> = ({ ratings }) => {
   );
 };
 
-export default RatingDial;
+export default NewDial;

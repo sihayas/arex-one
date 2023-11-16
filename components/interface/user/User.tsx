@@ -85,7 +85,7 @@ const User = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full flex justify-between px-8"
+      className="w-full h-full flex flex-col px-8 pb-8"
     >
       {isLoading ? (
         <JellyComponent className={``} isVisible={true} />
@@ -93,88 +93,91 @@ const User = () => {
         <div>Error</div>
       ) : (
         <>
-          {/* Left Side */}
-          <div className={`flex flex-col py-8`}>
-            {/* Logo and Date */}
-            <div className={`flex items-center text-gray3`}>
-              <div className="text-[19px] leading-[13px] text-black font-serif">
-                RX
+          <div className={`flex justify-between w-full h-full`}>
+            {/* Left Side */}
+            <div className={`flex flex-col py-8`}>
+              {/* Logo and Date */}
+              <div className={`flex items-center text-gray3`}>
+                <div className="text-[19px] leading-[13px] text-black font-serif">
+                  RX
+                </div>
+                <div className={`mx-1`}>&middot;</div>
+                <div className="text-xs text-gray3 font-bold leading-[9px]">
+                  MONTH 1
+                </div>
               </div>
-              <div className={`mx-1`}>&middot;</div>
-              <div className="text-xs text-gray3 font-bold leading-[9px]">
-                MONTH 1
+
+              {/*  Sounds Count */}
+              <div className={`flex flex-col gap-[12px] mt-[42px]`}>
+                <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
+                <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
+                  {userData.uniqueAlbums.length}
+                </div>
               </div>
+
+              {/*  Records Count */}
+              <div className={`flex flex-col gap-[12px] mt-6`}>
+                <div className="text-xs text-gray3 leading-[9px]">RECORDS</div>
+                <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
+                  {userData._count.record}
+                </div>
+              </div>
+
+              {/*  */}
             </div>
 
-            {/*  Sounds Count */}
-            <div className={`flex flex-col gap-[12px] mt-[42px]`}>
-              <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
-              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                {userData.uniqueAlbums.length}
-              </div>
-            </div>
+            {/* Right Side , Essentials & Settings*/}
+            {isOwnProfile &&
+            authenticatedUserId &&
+            subSection !== "essentials" ? (
+              // Show settings if subsection is not essentials and own profile
+              <Settings
+                userId={authenticatedUserId}
+                essentials={essentials}
+                bio={userData.bio}
+              />
+            ) : (
+              // Show essentials by default or if subsection is "essentials"
+              <Essentials essentials={essentials} />
+            )}
+          </div>
 
-            {/*  Records Count */}
-            <div className={`flex flex-col gap-[12px] mt-6`}>
-              <div className="text-xs text-gray3 leading-[9px]">RECORDS</div>
-              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                {userData._count.record}
-              </div>
-            </div>
+          {/* Avatar and Link */}
+          <div className={`flex gap-4 relative`}>
+            <Image
+              className={`rounded-full border border-gray3`}
+              src={userData.image}
+              alt={`${userData.name}'s avatar`}
+              width={80}
+              height={80}
+            />
 
             {/* Name and Bio */}
-            <div className={`flex flex-col gap-[11px] mt-auto`}>
+            <div className={`flex flex-col gap-[6px] mt-[18px] w-full`}>
+              <div className={`text-sm font-semibold text-gray4 leading-[9px]`}>
+                {userData.username}
+              </div>
               <div
-                className={`text-xs text-gray2 w-[160px] max-h-[105px] line-clamp-5`}
+                className={`text-sm text-gray2 w-full max-h-[105px] line-clamp-5`}
               >
                 {userData.bio}
               </div>
-              <div className={`text-xs font-semibold text-gray4 leading-[9px]`}>
-                {userData.username}
-              </div>
             </div>
 
-            {/* Avatar and Link */}
-            <div className={`flex items-center gap-4 mt-4 relative`}>
-              <Image
-                className={`rounded-full border border-gray3`}
-                src={userData.image}
-                alt={`${userData.name}'s avatar`}
-                width={160}
-                height={160}
+            {isOwnProfile ? (
+              <SettingsIcon
+                onClick={() => handleSubSectionClick("settings")}
+                className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}
               />
-
-              {isOwnProfile ? (
-                <SettingsIcon
-                  onClick={() => handleSubSectionClick("settings")}
-                  className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}
-                />
-              ) : (
-                <FollowButton
-                  followState={followState}
-                  handleFollowUnfollow={handleFollowUnfollow}
-                  linkColor={linkColor}
-                  linkText={linkText}
-                />
-              )}
-            </div>
-            {/*  */}
+            ) : (
+              <FollowButton
+                followState={followState}
+                handleFollowUnfollow={handleFollowUnfollow}
+                linkColor={linkColor}
+                linkText={linkText}
+              />
+            )}
           </div>
-
-          {/* Right Side , Essentials & Settings*/}
-          {isOwnProfile &&
-          authenticatedUserId &&
-          subSection !== "essentials" ? (
-            // Show settings if subsection is not essentials and own profile
-            <Settings
-              userId={authenticatedUserId}
-              essentials={essentials}
-              bio={userData.bio}
-            />
-          ) : (
-            // Show essentials by default or if subsection is "essentials"
-            <Essentials essentials={essentials} />
-          )}
         </>
       )}
     </motion.div>

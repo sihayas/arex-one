@@ -35,11 +35,11 @@ export default function Layout({ children }: { children: ReactNode }) {
       const animationConfig = {
         scale: isVisible ? 0.88 : 1,
         opacity: isVisible ? 0 : 1,
+        pointerEvents: isVisible ? "none" : "auto",
       };
       const transitionConfig = {
-        filter: {
-          duration: isVisible ? 0.7 : 0.3,
-          delay: isVisible ? 0.5 : 0,
+        opacity: {
+          duration: 0.3,
         },
         scale: {
           type: "spring" as const,

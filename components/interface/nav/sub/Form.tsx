@@ -8,6 +8,7 @@ import { useSound } from "@/context/SoundContext";
 import Dial from "./items/Dial";
 import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import NewDial from "@/components/interface/nav/sub/items/NewDial";
 
 const Form = () => {
   const { user } = useInterfaceContext();
@@ -112,7 +113,8 @@ const Form = () => {
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={`flex`}>
       {renderAlbumSection()}
-      <Dial setRatingValue={handleRatingChange} />
+      {/*<Dial setRatingValue={handleRatingChange} />*/}
+      <NewDial />
     </form>
   );
 };

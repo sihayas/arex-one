@@ -217,10 +217,13 @@ const Nav = () => {
 
     // Input & Search Results/Form
     middle = (
-      <div className={`flex flex-col rounded-[18px] w-full relative`}>
+      <div
+        onClick={handleNavClick}
+        className={`flex flex-col rounded-[18px] w-full relative`}
+      >
         {/* Input Outer */}
         <div
-          className={`bg-[#F4F4F4] flex flex-col items-end absolute bottom-1 left-0 rounded-[18px] shadow-shadowKitLow outline outline-silver outline-1`}
+          className={`bg-[#F4F4F4]/90 flex flex-col items-end absolute bottom-1 left-0 rounded-[18px] shadow-shadowKitMedium outline outline-silver outline-1`}
         >
           {/* Top / Form / Search Results */}
           {expandInput && !replyParent && (selectedFormSound || inputValue) && (
@@ -248,7 +251,6 @@ const Nav = () => {
 
           {/* Input & Icons */}
           <div
-            onClick={handleNavClick}
             className={`px-3 pt-[6px] pb-[7px] flex items-center w-full relative`}
           >
             {/* Context Icons */}
@@ -257,7 +259,7 @@ const Nav = () => {
                 <motion.button
                   exit={{ scale: 0, width: 0 }}
                   initial={{ scale: 0, width: 0 }}
-                  animate={{ scale: 1, width: 22 }}
+                  animate={{ scale: 1, width: expandInput ? 22 : 18 }}
                   onClick={handleNavClick}
                   className="h-[18px] relative"
                 >
@@ -323,18 +325,19 @@ const Nav = () => {
                 maxRows={6}
                 tabIndex={0}
               />
-
               {/* Placeholder text */}
               {expandInput && !inputValue && (
-                <div className="absolute left-0 top-0 flex items-center h-full pointer-events-none text-xs text-gray5">
+                <div
+                  className={`absolute left-0 top-0 flex items-center h-full pointer-events-none text-sm text-gray5 min-w-[32rem]`}
+                >
                   {activeAction === "none"
                     ? activePage.sound
-                      ? "Press enter to create record, type to explore"
+                      ? "Enter to create record, type to explore"
                       : activePage.record
                       ? "Press enter to reply, type to explore"
                       : "Type to explore"
                     : activeAction === "form"
-                    ? "Use arrow keys to dial in a rating, Backspace to cancel"
+                    ? "Arrow UP/DOWN to dial, Backspace to cancel"
                     : activeAction === "reply"
                     ? "Creating chain"
                     : null}
@@ -368,7 +371,7 @@ const Nav = () => {
           </div>
 
           {/* Bubbles */}
-          <div className={`w-3 h-3 absolute -bottom-1 -left-1`}>
+          <div className={`w-3 h-3 absolute -bottom-1 -left-1 -z-10`}>
             <div
               className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
             />
