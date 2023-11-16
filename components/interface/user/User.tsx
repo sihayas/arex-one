@@ -154,7 +154,7 @@ const User = () => {
 
             {/* Name and Bio */}
             <div className={`flex flex-col gap-[6px] mt-[18px] w-full`}>
-              <div className={`text-sm font-semibold text-gray4 leading-[9px]`}>
+              <div className={`text-sm text-gray4 leading-[9px]`}>
                 {userData.username}
               </div>
               <div
