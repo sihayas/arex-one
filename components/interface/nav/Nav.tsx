@@ -29,7 +29,7 @@ const Nav = () => {
   let middle;
   let right;
 
-  // For record page/reply
+  // For record page/reply input
   const { replyParent, record, setReplyParent } = useThreadcrumb();
   const { user, pages } = useInterfaceContext();
   const {
@@ -67,6 +67,33 @@ const Nav = () => {
         error: "Error submitting reply",
       },
     );
+  };
+
+  // Width expansion variants
+  const widthVariants = {
+    collapsed: {
+      width: 0,
+    },
+    expanded: {
+      width: 376,
+    },
+  };
+
+  const heightVariants = {
+    collapsed: {
+      height: 33,
+    },
+    expanded: {
+      height: expandInput
+        ? activeAction === "none" && inputValue
+          ? 481
+          : activeAction === "form"
+          ? 255
+          : activeAction === "reply"
+          ? 36
+          : 33
+        : 33,
+    },
   };
 
   // Debounce the search query
@@ -190,12 +217,14 @@ const Nav = () => {
 
     // Input & Search Results/Form
     middle = (
-      <div className={`flex flex-col rounded-[18px] w-[416px] relative`}>
+      <div className={`flex flex-col rounded-[18px] w-full relative`}>
         {/* Input Outer */}
         <motion.div
+          variants={heightVariants}
+          animate={expandInput ? "expanded" : "collapsed"}
           className={`bg-[#F4F4F4] flex flex-col items-center absolute bottom-1 left-0 rounded-[18px]`}
         >
-          {/* Expanded Area */}
+          {/* Top / Form / Search Results */}
           {expandInput && !replyParent && (selectedFormSound || inputValue) && (
             <div
               className={`flex flex-col relative w-full p-3 pb-[6px] overflow-scroll scrollbar-none`}
@@ -221,7 +250,7 @@ const Nav = () => {
           {/* Input & Context */}
           <div
             onClick={handleNavClick}
-            className={`px-3 pt-[6px] pb-[7px] flex items-center w-full`}
+            className={`px-3 pt-[6px] pb-[7px] flex items-center w-full relative`}
           >
             {/* Page Aware Context Icon */}
             {activeAction === "none" && (!expandInput || !inputValue) && (
@@ -273,11 +302,15 @@ const Nav = () => {
               )}
 
             {/* TextArea */}
-            <div className={`relative flex items-center`}>
+            <motion.div
+              variants={widthVariants}
+              animate={expandInput ? "expanded" : "collapsed"}
+              className={`flex items-center`}
+            >
               <TextareaAutosize
                 id="entryText"
-                className={`bg-transparent text-sm outline-none resize-none text-gray5 ${
-                  expandInput ? "pl-1 w-[336px]" : "w-0"
+                className={`bg-transparent text-sm outline-none resize-none text-gray5 w-full ${
+                  expandInput ? "pl-1" : "w-0"
                 }`}
                 value={expandInput ? inputValue : ""}
                 onChange={(e) => handleInputTextChange(e.target.value)}
@@ -292,7 +325,7 @@ const Nav = () => {
 
               {/* Placeholder text */}
               {expandInput && (
-                <div className="absolute left-1 top-0 flex items-center h-full pointer-events-none text-xs text-gray5 font-medium">
+                <div className="absolute left-9 top-0 flex items-center h-full pointer-events-none text-xs text-gray5">
                   {!inputValue && !selectedFormSound
                     ? "Explore RX..."
                     : selectedFormSound && !inputValue
@@ -300,7 +333,7 @@ const Nav = () => {
                     : null}
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {/* Active Action is Reply Icon */}
             {activeAction !== "none" &&
@@ -339,7 +372,7 @@ const Nav = () => {
   }
 
   return (
-    <div className="absolute z-50 flex items-start gap-1 -bottom-6 -left-6 max-h-9">
+    <div className="fixed z-50 flex items-start gap-1 -bottom-6 -left-6 max-h-9">
       {left}
       {middle}
       {right}

@@ -53,8 +53,6 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       // If not changing essential, store input value and prepare form
       await handleSelectSound(sound, artworkUrl);
       setExpandInput(false);
-      setStoredInputValue(inputValue);
-      setInputValue("");
     }
   };
 

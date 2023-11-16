@@ -101,11 +101,11 @@ const Form = () => {
   const renderAlbumSection = () => (
     <Image
       id={selectedFormSound.sound.id}
-      className="rounded-2xl shadow-shadowKitHigh outline outline-silver outline-1"
+      className="rounded-xl shadow-shadowKitHigh outline outline-silver outline-1"
       src={selectedFormSound.artworkUrl}
       alt={`${selectedFormSound.sound.attributes.name} artwork`}
-      width={114}
-      height={114}
+      width={198}
+      height={198}
     />
   );
 

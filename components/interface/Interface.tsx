@@ -256,7 +256,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           {/* Footer */}
         </motion.div>
         <Nav />
-        {/*{renderPageContent(activePage)}*/}
       </Command>
     </motion.div>
   );
