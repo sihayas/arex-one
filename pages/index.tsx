@@ -2,37 +2,32 @@ import Layout from "../components/layout";
 import Head from "next/head";
 import React from "react";
 import FeedUser from "@/components/feed/FeedUser";
+import FeedTrending from "@/components/feed/FeedTrending";
 import UserAvatar from "@/components/global/UserAvatar";
 import DashedLine from "@/components/interface/record/sub/icons/DashedLine";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { User } from "@/types/dbTypes";
+import { BloomIcon } from "@/components/icons";
+import Image from "next/image";
 
 const springConfig = { type: "spring", damping: 14, stiffness: 100 };
 
 export default function Home() {
-  const {
-    activeFeedUser,
-    feedUserHistory,
-    setActiveFeedUser,
-    setFeedUserHistory,
-    user,
-  } = useInterfaceContext();
+  const { activeFeed, feedHistory, setActiveFeed, setFeedHistory, user } =
+    useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const supabaseClient = useSupabaseClient();
-  const isProfile = activeFeedUser?.id !== user?.id;
 
   const handleAvatarClick = (clickedUser: User) => {
     // Move the clicked user to the front of the array
-    const reorderedHistory = feedUserHistory.filter(
-      (u) => u.id !== clickedUser.id,
-    );
+    const reorderedHistory = feedHistory.filter((u) => u.id !== clickedUser.id);
     reorderedHistory.unshift(clickedUser);
 
     // Update the feedUserHistory and setActiveFeedUser
-    setFeedUserHistory(reorderedHistory);
-    setActiveFeedUser(clickedUser);
+    setFeedHistory(reorderedHistory);
+    setActiveFeed(clickedUser);
   };
 
   if (!user) {
@@ -45,28 +40,6 @@ export default function Home() {
           <div className="col-start-1 row-start-1 text-sm font-medium text-black">
             AREX [alpha]
           </div>
-          {/*<div className="col-span-5 col-start-2 row-start-1 flex flex-col justify-between text-xs">*/}
-          {/*  <div className="tracking-widest text-black">*/}
-          {/*    A NETWORK FOR THE LOVE OF*/}
-          {/*    <span className="font-medium tracking-normal"> SOUND*</span>*/}
-          {/*  </div>*/}
-          {/*  <div className="text-gray2 tracking-widest italic font-baskerville text-sm">*/}
-          {/*    HEARING BRINGS US INTO THE LIVING WORLD, SIGHT MOVES US TOWARDS*/}
-          {/*    ATROPHY & DEATH.*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-
-          {/*<div className="col-span-5 col-start-3 row-start-3 self-end uppercase text-gray2 text-xs tracking-widest">*/}
-          {/*  MORE THAN JUST A FEED*/}
-          {/*</div>*/}
-
-          {/*<div className="col-span-4 col-start-3 row-span-1 row-start-5 items-end text-xs tracking-widest uppercase text-gray2">*/}
-          {/*  <span className="text-black">AREX</span> exists for those few and*/}
-          {/*  far between, to revel in the shared love for the invisible waves*/}
-          {/*  that bind us.*/}
-          {/*  /!* <span className="text-black">AREX</span> exists for ...., to ... that*/}
-          {/*bind us. *!/*/}
-          {/*</div>*/}
 
           <div className="col-span-5 col-start-2 self-end uppercase row-start-9 text-xs tracking-widest text-red shadow-album leading-[75%] p-2 rounded font-medium">
             <button
@@ -88,25 +61,28 @@ export default function Home() {
     );
   }
 
-  // User data is stored in interface context
   return (
     <Layout>
       <Head>
         <title>rx</title>
       </Head>
 
-      {activeFeedUser && (
+      {/* Stack of User History for Feed */}
+      {activeFeed && (
         <div
-          className={`flex items-center gap-2 fixed w-full translate-y-8 -z-20`}
+          className={`flex items-center gap-2 fixed w-full translate-y-8 z-50`}
         >
+          {/* History Images Stack / Left Side */}
           <motion.div
             layout
             initial={{ y: 0 }}
-            animate={activeFeedUser.id !== user?.id ? { x: 40 } : {}}
+            animate={
+              activeFeed === user && activeFeed.id !== user?.id ? { x: 40 } : {}
+            }
             transition={springConfig}
             className={`flex items-center justify-end w-[167px] gap-1`}
           >
-            {feedUserHistory
+            {feedHistory
               .slice()
               .reverse()
               .map((historyUser, index) => (
@@ -116,9 +92,9 @@ export default function Home() {
                   layoutId={historyUser.id}
                   animate={{
                     scale:
-                      activeFeedUser.id === user?.id
+                      activeFeed.id === user?.id
                         ? 0.75
-                        : activeFeedUser.id === historyUser.id
+                        : activeFeed.id === historyUser.id
                         ? 1
                         : 0.75,
                   }}
@@ -137,64 +113,88 @@ export default function Home() {
               ))}
           </motion.div>
 
-          {/* Authenticated User */}
-          <div className={`flex items-center gap-2`}>
+          {/*  Right Side / Authenticated User & Other Feeds */}
+          <div className={`flex items-center gap-8`}>
             {/* Shift the auth user up to make space for another */}
             <motion.div
               initial={{ y: 0 }}
-              animate={activeFeedUser?.id !== user?.id ? { y: -46 } : {}}
+              animate={
+                typeof activeFeed === "string" && activeFeed === "bloom"
+                  ? { scale: 0.75 }
+                  : activeFeed &&
+                    typeof activeFeed !== "string" &&
+                    activeFeed.id !== user.id
+                  ? { y: -46 }
+                  : {}
+              }
               transition={{ type: "spring", stiffness: 100, damping: 20 }}
-              onClick={() => setActiveFeedUser(user)}
+              onClick={() => setActiveFeed(user)}
               className={`cursor-pointer`}
             >
-              <UserAvatar
-                imageSrc={user?.image}
-                altText={`${user?.username}'s avatar`}
+              <Image
+                className={`rounded-full`}
+                src={user?.image}
+                alt={`${user?.username}'s avatar`}
                 width={32}
                 height={32}
-                user={activeFeedUser}
-                onClick={() => setActiveFeedUser(user)}
+                onClick={() => setActiveFeed(user)}
               />
             </motion.div>
 
-            {/* Active Feed Username */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              className={`text-gray2 text-xs font-medium uppercase`}
+            {/* In Bloom Feed */}
+            <motion.button
+              initial={{ opacity: 0.2, scale: 0.75, boxShadow: "none" }}
+              animate={
+                activeFeed === "bloom"
+                  ? {
+                      opacity: 1,
+                      scale: 1,
+                      boxShadow:
+                        "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",
+                    }
+                  : {}
+              }
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+              onClick={() => setActiveFeed("bloom")}
+              className={`p-1 rounded-full shadow-shadowKitLow relative`}
             >
-              {isProfile
-                ? `${activeFeedUser.username}&apos; profile`
-                : "What's" + " the" + " anthem of your personal utopia?"}
-            </motion.div>
+              <BloomIcon color={"#999"} />
+              <div
+                className={`absolute left-1/2 -translate-x-1/2 text-xs text-gray2 -top-6 w-max`}
+              >
+                IN BLOOM
+              </div>
+            </motion.button>
           </div>
         </div>
       )}
 
       <DashedLine className="absolute translate-x-[190px] translate-y-8" />
 
-      {/* Show Auth Feed or Profile Records */}
+      {/* Show Feed or Profile Records */}
       <motion.div
         ref={scrollContainerRef}
-        className={`relative flex flex-col gap-[50px] overflow-scroll pl-0 p-12 pb-0 pt-28 max-w-screen max-h-[125vh] scrollbar-none`}
+        className={`relative flex flex-col gap-[50px] overflow-scroll pl-0 p-12 pb-60 pt-28 max-w-screen max-h-[125vh] scrollbar-none`}
       >
-        {scrollContainerRef && activeFeedUser && (
+        {scrollContainerRef && activeFeed && activeFeed !== "bloom" && (
           <FeedUser
-            userId={activeFeedUser.id}
+            userId={activeFeed.id}
+            scrollContainerRef={scrollContainerRef}
+          />
+        )}
+        {scrollContainerRef && activeFeed === "bloom" && (
+          <FeedTrending
+            userId={user.id}
             scrollContainerRef={scrollContainerRef}
           />
         )}
       </motion.div>
 
+      {/* DISCONNECT */}
       <button
         className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"
         onClick={async () => {
-          console.log("signing out");
           const { error } = await supabaseClient.auth.signOut();
-          {
-            error ? console.log(error) : console.log("signed out");
-          }
         }}
       >
         CONNECTED

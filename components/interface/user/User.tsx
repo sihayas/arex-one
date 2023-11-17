@@ -26,13 +26,8 @@ const User = () => {
   const authenticatedUserId = user?.id;
 
   // Get page user
-  const {
-    pages,
-    feedUserHistory,
-    setFeedUserHistory,
-    setActiveFeedUser,
-    setIsVisible,
-  } = useInterfaceContext();
+  const { pages, feedHistory, setFeedHistory, setActiveFeed, setIsVisible } =
+    useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
 
   // Check if the profile belongs to the authenticated user
@@ -67,16 +62,16 @@ const User = () => {
 
   const handleSetFeedUser = (user: User) => {
     // Remove the user if they are already in the feed user history
-    const newHistory = feedUserHistory.filter((u) => u.id !== user.id);
+    const newHistory = feedHistory.filter((u) => u.id !== user.id);
 
     // Add the user to the front of the feed user history
     newHistory.unshift(user);
 
     // Update the feed user history
-    setFeedUserHistory(newHistory);
+    setFeedHistory(newHistory);
 
     // Set the active feed user
-    setActiveFeedUser(user);
+    setActiveFeed(user);
     setIsVisible(false);
   };
 

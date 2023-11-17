@@ -258,7 +258,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
               </AnimatePresence>
             </div>
           </div>
-          {/* Footer */}
         </motion.div>
         <Nav />
       </Command>

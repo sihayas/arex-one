@@ -106,12 +106,26 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
         </div>
       </div>
 
-      <Artwork
-        className="rounded-[16px] ml-[224px] -mt-1 outline outline-silver outline-1 shadow-shadowKitHigh"
-        sound={sound}
-        width={320}
-        height={320}
-      />
+      {/* Artwork */}
+      {isAlbumEntry ? (
+        <Artwork
+          outerClassName={`ml-[224px] -mt-1 w-fit h-fit rounded-2xl`}
+          className="rounded-2xl outline outline-silver outline-1"
+          sound={sound}
+          width={320}
+          height={320}
+        />
+      ) : (
+        <div className={`ml-[224px] -mt-1 flex items-end`}>
+          <Artwork
+            outerClassName={`rounded-2xl`}
+            className="rounded-2xl outline outline-silver outline-1"
+            sound={sound}
+            width={158}
+            height={158}
+          />
+        </div>
+      )}
     </motion.div>
   );
 };

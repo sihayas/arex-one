@@ -6,7 +6,7 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Record, User } from "@/types/dbTypes";
 
-// Handle FeedRecord Click
+// Handle RecordFeed Click
 export const useHandleRecordClick = (record: Record) => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();

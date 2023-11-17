@@ -115,59 +115,119 @@ const fetchFeedAndMergeAlbums = async (
   });
 
   return {
-    data: feedData, // this is your activities data
-    pagination: res.data.data.pagination, // this is your pagination data
+    data: feedData,
+    pagination: res.data.data.pagination,
   };
 };
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-// export const useFetchBloomingEntries = (page: number) => {
-//   // Grab blooming entries from redis
-//   const bloomingEntriesQuery = useQuery(["bloomingEntries", page], async () => {
-//     const { data } = await axios.get(
-//       `/api/index/get/bloomingEntries?page=${page}`,
-//     );
-//     return data;
-//   });
-//
-//   // Pull review data from DB with ID
-//   const bloomingEntriesDataQuery = useQuery(
-//     ["entryDetails", bloomingEntriesQuery.data || []],
-//     async () => {
-//       const { data } = await axios.post("/api/record/record/getByIds", {
-//         ids: bloomingEntriesQuery.data,
-//       });
-//       return data;
-//     },
-//     {
-//       enabled: !!bloomingEntriesQuery.data?.length, // Only run the query if 'entryId's' is not an empty array
-//     },
-//   );
-//
-//   return { bloomingEntriesQuery, bloomingEntriesDataQuery };
-// };
+export const useBloomingFeedQuery = (userId: string, limit: number = 6) => {
+  const result = useInfiniteQuery(
+    ["bloomingFeed", userId],
+    ({ pageParam = 1 }) => {
+      if (!userId) {
+        return Promise.reject(new Error("User ID is undefined"));
+      }
+      return fetchBloomingFeedAndMergeAlbums(userId, pageParam, limit);
+    },
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const lastPageData = allPages[allPages.length - 1];
+        return lastPageData.pagination?.nextPage || null;
+      },
+      enabled: !!userId,
+    },
+  );
+
+  return {
+    data: result.data,
+    error: result.error,
+    fetchNextPage: result.fetchNextPage,
+    hasNextPage: result.hasNextPage,
+    isFetchingNextPage: result.isFetchingNextPage,
+  };
+};
+
+const fetchBloomingFeedAndMergeAlbums = async (
+  userId: string,
+  pageParam: number = 1,
+  limit: number = 6,
+) => {
+  const url = `/api/cron/get/bloomingEntries`;
+  const dataUrl = `/api/feed/get/trendingActivities`;
+
+  const params = {
+    userId,
+    page: pageParam,
+    limit,
+  };
+
+  // Get trending record entry activity ids from Redis
+  const res = await axios.get(url, { params });
+
+  // Check if res.data.data has the correct structure
+  if (!res.data.data || !res.data.data.entries || !res.data.data.pagination) {
+    throw new Error("Unexpected server response structure");
+  }
+
+  const activityIds = res.data.data.entries;
+  const activityIdsParam = activityIds.join(",");
+
+  // Get the activity.record data for returned list of activity ids
+  const response = await axios.get(dataUrl, {
+    params: {
+      ids: activityIdsParam,
+      userId,
+    },
+  });
+
+  const activityData = response.data;
+
+  // 2. Group Records by Type
+  const albumIds: string[] = [];
+  const trackIds: string[] = [];
+  activityData.forEach((activity: Activity) => {
+    if (activity.record && activity.type === ActivityType.RECORD) {
+      if (activity.record.album) {
+        albumIds.push(activity.record.album.appleId);
+      }
+      if (activity.record.track) {
+        trackIds.push(activity.record.track.appleId);
+      }
+    }
+  });
+
+  // 3. Fetch Album Details
+  const albums = await fetchSoundsByTypes({
+    albums: albumIds,
+    songs: trackIds,
+  });
+
+  // Create a map for easy lookup
+  const albumMap = new Map<string, AlbumData>(
+    albums.map((album: AlbumData) => [album.id, album]),
+  );
+
+  // 4. Append Album Details
+  activityData.forEach((activity: Activity) => {
+    // If activity is a record, append album details from albumMap
+    if (activity.type === ActivityType.RECORD && activity.record) {
+      const albumId = activity.record.album?.appleId;
+      const trackId = activity.record.track?.appleId;
+      if (albumId) {
+        activity.record.appleAlbumData = <AlbumData>albumMap.get(albumId);
+      } else if (trackId) {
+        // Assuming track ID can be used as a key to fetch album data
+        activity.record.appleAlbumData = <AlbumData>albumMap.get(trackId);
+      }
+    }
+  });
+
+  return {
+    data: activityData,
+    pagination: res.data.data.pagination,
+  };
+};
 
 // To call above function:
 // const { bloomingEntriesQuery, bloomingEntriesDataQuery } =
-//   useFetchBloomingEntries(page);
+//   useFetchBloomingEntries(1, "d");

@@ -10,9 +10,9 @@ interface DottedLineProps {
 
 const DottedLine: React.FC<DottedLineProps> = ({
   width = "2px",
-  color = "rgba(0, 0, 0, 0.1)",
+  color = "rgba(0, 0, 0, 0.02)",
   className = "",
-  dotSize = "2",
+  dotSize = "4",
   spaceBetween = "8",
 }) => {
   const dotPattern = `${dotSize}, ${spaceBetween}`;

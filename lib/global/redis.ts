@@ -1,7 +1,7 @@
 import Redis from "ioredis";
 
 const client = new Redis(
-  "rediss://default:84d612f0fd4740ed9b53cdb2368be8fb@stable-emu-38672.upstash.io:38672"
+  "redis://default:ce01f2aef8b74c88932b8e28d0dec717@us1-evolved-squirrel-39264.upstash.io:39264",
 );
 
 export default client;

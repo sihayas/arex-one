@@ -1,4 +1,4 @@
-import { useFeedQuery } from "@/lib/apiHandlers/feedAPI";
+import { useBloomingFeedQuery } from "@/lib/apiHandlers/feedAPI";
 import { FeedRecord } from "@/components/feed/subcomponents/RecordFeed";
 import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";
@@ -14,7 +14,7 @@ const FeedUser = ({
   scrollContainerRef: React.RefObject<HTMLDivElement>;
 }) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useFeedQuery(userId);
+    useBloomingFeedQuery(userId);
 
   // Track scrolling for infinite scroll
   const { scrollYProgress } = useScroll({

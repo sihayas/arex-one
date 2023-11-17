@@ -262,7 +262,7 @@ model Activity {
 
   // Polymorphic relations
   record        Record?         @relation("ActivityRecord", fields:  [referenceId], references: [id], map: "ActivityToRecord_fkey")
-  heart          Heart?         @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "ActivityToHeart_fkey")
+  heart         Heart?         @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "ActivityToHeart_fkey")
   follow        Follows?        @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "ActivityToFollow_fkey")
   reply         Reply?          @relation("ActivityReply",   fields: [referenceId], references: [id], map: "ActivityToReply_fkey")
 

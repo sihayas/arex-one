@@ -113,8 +113,8 @@ const Form = () => {
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={`flex`}>
       {renderAlbumSection()}
-      {/*<Dial setRatingValue={handleRatingChange} />*/}
-      <NewDial />
+      <Dial setRatingValue={handleRatingChange} />
+      {/*<NewDial />*/}
     </form>
   );
 };
