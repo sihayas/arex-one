@@ -76,12 +76,14 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
         </div>
 
         {/* Bubbles */}
-        <div
-          className={`bg-[#F4F4F4] w-2 h-2 absolute bottom-0 left-0 rounded-full`}
-        />
-        <div
-          className={`bg-[#F4F4F4] w-1 h-1 absolute -bottom-1 -left-1 rounded-full`}
-        />
+        <div className={`w-3 h-3 absolute -bottom-1 -left-1 -z-10`}>
+          <div
+            className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
+          />
+          <div
+            className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
+          />
+        </div>
         {/*<HeartButton*/}
         {/*  handleHeartClick={handleHeartClick}*/}
         {/*  hearted={hearted}*/}

@@ -70,14 +70,18 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
         <div
           className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[384px] w-fit mb-3 ml-3`}
         >
+          {/* White Outline */}
           <div
             className={`-z-10 bg-white rounded-[16px] w-[86px] h-[40px] absolute -top-[1px] -left-[1px]`}
-          ></div>
+          />
           {/* Names */}
           <div
-            className={`absolute -top-4 left-[18px] text-xs text-gray5 leading-[1] font-medium w-max`}
+            className={`absolute -top-4 left-[18px] text-xs text-gray5 leading-[1] w-max gap-1 flex`}
           >
-            {sound.attributes.name} &middot;{" "}
+            <div className={`font-medium`}>
+              {record.track ? record.track.name : sound.attributes.name}
+            </div>
+            &middot;
             <span className={`font-normal`}>{sound.attributes.artistName}</span>
           </div>
 
@@ -90,12 +94,14 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
           </div>
 
           {/* Bubbles */}
-          <div
-            className={`bg-[#F4F4F4] w-2 h-2 absolute bottom-0 left-0 rounded-full`}
-          />
-          <div
-            className={`bg-[#F4F4F4] w-1 h-1 absolute -bottom-1 -left-1 rounded-full`}
-          />
+          <div className={`w-3 h-3 absolute -bottom-1 -left-1 -z-10`}>
+            <div
+              className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
+            />
+            <div
+              className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
+            />
+          </div>
           <HeartButton
             handleHeartClick={handleHeartClick}
             hearted={hearted}

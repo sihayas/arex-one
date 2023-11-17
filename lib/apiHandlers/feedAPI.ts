@@ -227,7 +227,3 @@ const fetchBloomingFeedAndMergeAlbums = async (
     pagination: res.data.data.pagination,
   };
 };
-
-// To call above function:
-// const { bloomingEntriesQuery, bloomingEntriesDataQuery } =
-//   useFetchBloomingEntries(1, "d");

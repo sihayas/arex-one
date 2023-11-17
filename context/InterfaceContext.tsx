@@ -9,6 +9,7 @@ import { SelectedSound } from "@/context/SoundContext";
 import { Record, User } from "@/types/dbTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useScroll } from "framer-motion";
 
 export type Page = {
   key: string;
@@ -36,8 +37,10 @@ export type InterfaceContext = {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   session: Session | null;
   setSession: React.Dispatch<React.SetStateAction<any>>;
-  activeFeed: User | "bloom" | null;
-  setActiveFeed: React.Dispatch<React.SetStateAction<User | "bloom" | null>>;
+  activeFeed: User | "bloom" | "recent" | null;
+  setActiveFeed: React.Dispatch<
+    React.SetStateAction<User | "bloom" | "recent" | null>
+  >;
   feedHistory: User[];
   setFeedHistory: React.Dispatch<React.SetStateAction<User[]>>;
 };
@@ -77,7 +80,9 @@ export const InterfaceContextProvider = ({
   const [pages, setPages] = useState<Page[]>([]);
 
   // Initialize the feed stack
-  const [activeFeed, setActiveFeed] = useState<User | "bloom" | null>(null);
+  const [activeFeed, setActiveFeed] = useState<
+    User | "bloom" | "recent" | null
+  >(null);
   const [feedHistory, setFeedHistory] = useState<User[]>([]);
 
   // Prepare the user and session states
@@ -199,40 +204,3 @@ export const InterfaceContextProvider = ({
     </InterfaceContext.Provider>
   );
 };
-
-// useEffect(() => {
-//   const { data: authListener } = supabaseClient.auth.onAuthStateChange(
-//       async (event, session) => {
-//         if (event === "SIGNED_IN" && session) {
-//           console.log("SIGNED_IN");
-//
-//           setSession({ session: session });
-//           console.log("SESSION", session);
-//
-//           const authUser = session.user;
-//           console.log(authUser);
-//           // Fetch user profile data from the database
-//           const { data: fetchedUser, error: fetchError } = await supabaseClient
-//               .from("User")
-//               .select("*")
-//               .eq("email", authUser.email)
-//               .single();
-//           {
-//             fetchError &&
-//             console.error("Error fetching user data:", fetchError);
-//           }
-//
-//           setUser(fetchedUser);
-//           console.log("fetchedUser", fetchedUser);
-//         } else if (event === "SIGNED_OUT") {
-//           setUser(null);
-//           setSession(null);
-//         }
-//       },
-//   );
-//
-//   // Cleanup subscription
-//   return () => {
-//     authListener.subscription.unsubscribe();
-//   };
-// }, []);

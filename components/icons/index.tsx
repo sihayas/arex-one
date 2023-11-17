@@ -474,3 +474,20 @@ export function BloomIcon({ ...props }) {
     </svg>
   );
 }
+
+export function RecentIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      fill="none"
+      {...props}
+    >
+      <path
+        fill={props.color}
+        d="m17.957 22.73-5.98-.011L6 22.71l2.996-5.172 2.996-5.176 2.98 5.184 2.985 5.183Zm-5.965-10.367L8.996 7.191 6 2.02l5.977-.012L17.953 2l-2.98 5.184-2.98 5.18Zm-.004-1.191 2.297-3.988 2.293-3.993-4.601.008-4.602.008 2.305 3.98 2.308 3.985Z"
+      />
+    </svg>
+  );
+}

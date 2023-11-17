@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useSound } from "@/context/SoundContext";
 
 import { useAlbumQuery } from "@/lib/apiHandlers/albumAPI";
-import RenderRecords from "./sub/RenderRecords";
+import RenderRecords from "./RenderRecords";
 import {
   AnimatePresence,
   motion,

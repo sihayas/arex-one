@@ -108,16 +108,12 @@ const Nav = () => {
   const { data, isInitialLoading, isFetching, error } =
     GetSearchResults(searchQuery);
 
-  const onFocus = useCallback(() => {
-    setExpandInput(true);
-  }, [setExpandInput]);
-
-  // Reset the nav context to its appropriate state relative to active page
   const onBlur = useCallback(() => {
     setExpandInput(false);
   }, [setExpandInput]);
-
-  // Focus input on click
+  const onFocus = useCallback(() => {
+    setExpandInput(true);
+  }, [setExpandInput]);
   const handleNavClick = useCallback(() => {
     setExpandInput(true);
   }, [setExpandInput]);

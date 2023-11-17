@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useSound } from "@/context/SoundContext";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 
@@ -17,11 +16,8 @@ import {
   useScroll,
   useTransform,
   MotionValue,
-  LayoutGroup,
 } from "framer-motion";
-import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { PageName } from "@/context/InterfaceContext";
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
@@ -104,36 +100,25 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         x: "-50%",
         y: "-50%",
         opacity: isVisible ? 1 : 0,
+        scale: isVisible ? 1 : 0.9,
       };
       const transitionConfig = {
         type: "spring" as const,
         stiffness: isVisible ? 1200 : 800,
         damping: isVisible ? 120 : 50,
+        scale: {
+          type: "spring" as const,
+          mass: 0.75,
+          stiffness: 180,
+          damping: 22,
+        },
       };
       await animateRoot(rootScope.current, animationConfig, transitionConfig);
     };
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
-  // Animates WINDOW presence
-  useEffect(() => {
-    const animateParent = async () => {
-      const animationConfig = {
-        scale: isVisible ? 1 : 0.9,
-      };
-      const transitionConfig = {
-        type: "spring" as const,
-        mass: 0.75,
-        stiffness: 180,
-        damping: 22,
-      };
-
-      await animate(scope.current, animationConfig, transitionConfig);
-    };
-    animateParent();
-  }, [isVisible, animate, scope, expandInput, expandSignals]);
-
-  // Animate WINDOW to shrink when nav is expanded
+  // Animate WINDOW box shadow and scale when expanding input
   useEffect(() => {
     const adjustBoxShadow = async () => {
       const initialBoxShadow =
