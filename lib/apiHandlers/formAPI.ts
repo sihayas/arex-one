@@ -11,8 +11,8 @@ export const postEntry = async (submissionData: {
   // Determine the correct endpoint and payload based on the rating
   const endpoint =
     submissionData.rating === 0
-      ? "/api/record/caption/post/submitCaption"
-      : "/api/record/entry/post/submitEntry";
+      ? "/api/record/caption/post/caption"
+      : "/api/record/entry/post/entry";
 
   try {
     const response = await axios.post(endpoint, submissionData);

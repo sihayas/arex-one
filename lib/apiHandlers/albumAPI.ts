@@ -10,7 +10,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 export const useReviewsQuery = (
   soundId: string,
   user: User,
-  sortOrder: string
+  sortOrder: string,
 ) => {
   const result = useInfiniteQuery(
     ["reviews", soundId, user.id, sortOrder],
@@ -27,7 +27,7 @@ export const useReviewsQuery = (
       },
       enabled: !!soundId,
       refetchOnWindowFocus: false,
-    }
+    },
   );
 
   return {
@@ -51,7 +51,7 @@ export async function fetchReviews({
   userId: string;
   sort: string;
 }) {
-  const response = await axios.get(`/api/album/get/reviews`, {
+  const response = await axios.get(`/api/album/get/records`, {
     params: {
       soundId,
       page: pageParam,

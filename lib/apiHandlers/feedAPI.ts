@@ -154,7 +154,7 @@ const fetchBloomingFeedAndMergeAlbums = async (
   pageParam: number = 1,
   limit: number = 6,
 ) => {
-  const url = `/api/cron/get/bloomingEntries`;
+  const url = `/api/scores/get/bloomingEntries`;
   const dataUrl = `/api/feed/get/trendingActivities`;
 
   const params = {

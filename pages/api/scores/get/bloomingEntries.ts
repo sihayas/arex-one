@@ -10,9 +10,9 @@ export default async function handler(
     const limit = parseInt(req.query.limit as string) || 8;
 
     const start = (page - 1) * limit;
-    const end = start + limit; // Fetch one more than the limit
+    const end = start + limit;
 
-    // Fetch entries
+    // Fetch entries (recordIds) from Redis
     const entries = await client.zrevrange("bloomingEntries", start, end);
 
     // Check if there are more pages

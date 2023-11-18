@@ -95,7 +95,7 @@ export default async function handle(
         };
       });
 
-      // Less expensive but more queries
+      // Less expensive but more queries, maybe better hearts
       // const reviewsWithUserhearts = await Promise.all(
       //   reviews.map(async (review) => {
       //     const heartCount = await prisma.heart.count({

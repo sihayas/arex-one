@@ -8,7 +8,6 @@ import { useSound } from "@/context/SoundContext";
 import Dial from "./items/Dial";
 import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import NewDial from "@/components/interface/nav/sub/items/NewDial";
 
 const Form = () => {
   const { user } = useInterfaceContext();
