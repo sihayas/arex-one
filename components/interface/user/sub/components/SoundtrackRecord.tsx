@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, useSpring, useTransform } from "framer-motion";
-import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import ArtworkURL from "@/components/global/ArtworkURL";
 import format from "date-fns/format";
 import Stars from "@/components/global/Stars";
 import Image from "next/image";
@@ -40,14 +40,8 @@ const SoundtrackRecord = ({ record, associatedType }: ItemProps) => {
         ref={ref}
         src={
           associatedType === "album"
-            ? GenerateArtworkUrl(
-                record.appleAlbumData.attributes.artwork.url,
-                "160"
-              )
-            : GenerateArtworkUrl(
-                record.appleTrackData.attributes.artwork.url,
-                "160"
-              )
+            ? ArtworkURL(record.appleAlbumData.attributes.artwork.url, "160")
+            : ArtworkURL(record.appleTrackData.attributes.artwork.url, "160")
         }
         alt="artwork"
         width={64}

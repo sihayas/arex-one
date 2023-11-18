@@ -3,9 +3,9 @@ import React from "react";
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { useHandleRecordClick } from "@/hooks/useInteractions/useHandlePageChange";
 
-import { Artwork } from "../../global/Artwork";
-import UserAvatar from "@/components/global/UserAvatar";
-import HeartButton from "@/components/global/HeartButton";
+import { Artwork } from "../global/Artwork";
+import Avatar from "@/components/global/Avatar";
+import Heart from "@/components/global/Heart";
 import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { RecordExtended } from "@/types/globalTypes";
@@ -49,7 +49,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
           >
             {record.author.username}
           </p>
-          <UserAvatar
+          <Avatar
             className={`h-[42px] border border-gray3`}
             imageSrc={record.author.image}
             altText={`${record.author.username}'s avatar`}
@@ -102,7 +102,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
               className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
             />
           </div>
-          <HeartButton
+          <Heart
             handleHeartClick={handleHeartClick}
             hearted={hearted}
             className="absolute -bottom-1 -right-1"

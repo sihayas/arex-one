@@ -110,7 +110,7 @@ const User = () => {
                 </div>
               </div>
 
-              {/*  Records Count */}
+              {/*  records Count */}
               <div className={`flex flex-col gap-[12px] mt-6`}>
                 <div className="text-xs text-gray3 leading-[9px]">RECORDS</div>
                 <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">

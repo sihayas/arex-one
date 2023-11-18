@@ -4,7 +4,7 @@ import React from "react";
 import FeedUser from "@/components/feed/FeedUser";
 import FeedTrending from "@/components/feed/FeedTrending";
 import FeedRecent from "@/components/feed/FeedRecent";
-import UserAvatar from "@/components/global/UserAvatar";
+import Avatar from "@/components/global/Avatar";
 import DashedLine from "@/components/interface/record/sub/icons/DashedLine";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
@@ -110,7 +110,7 @@ export default function Home() {
                     }}
                     transition={springConfig}
                   >
-                    <UserAvatar
+                    <Avatar
                       className=""
                       imageSrc={historyUser.image}
                       altText={`${historyUser.username}'s avatar`}
@@ -205,7 +205,7 @@ export default function Home() {
 
           <DashedLine className="absolute translate-x-[190px] translate-y-8" />
 
-          {/* Feeds or Profile Records Container */}
+          {/* Feeds or Profile records Container */}
           <motion.div
             ref={scrollContainerRef}
             className={`relative flex flex-col gap-[50px] pl-0 p-12 pb-60 pt-28 max-w-screen max-h-[125vh] overflow-scroll scrollbar-none`}

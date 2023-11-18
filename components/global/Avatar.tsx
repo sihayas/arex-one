@@ -15,7 +15,7 @@ interface UserAvatarProps {
   onClick?: (event: React.MouseEvent) => void;
 }
 
-const UserAvatar: React.FC<UserAvatarProps> = ({
+const Avatar: React.FC<UserAvatarProps> = ({
   className,
   imageSrc,
   altText,
@@ -56,4 +56,4 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   );
 };
 
-export default UserAvatar;
+export default Avatar;

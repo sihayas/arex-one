@@ -75,7 +75,7 @@ const fetchFeedAndMergeAlbums = async (
 
   const feedData = res.data.data.activities;
 
-  // 2. Group Records by Type
+  // 2. Group records by Type
   const albumIds: string[] = [];
   const trackIds: string[] = [];
   feedData.forEach((activity: Activity) => {
@@ -184,7 +184,7 @@ const fetchBloomingFeedAndMergeAlbums = async (
 
   const activityData = response.data;
 
-  // 2. Group Records by Type
+  // 2. Group records by Type
   const albumIds: string[] = [];
   const trackIds: string[] = [];
   activityData.forEach((activity: Activity) => {
@@ -284,7 +284,7 @@ const fetchRecentFeedAndMergeAlbums = async (
 
   const activityData = res.data.data.activities;
 
-  // 2. Group Records by Type
+  // 2. Group records by Type
   const albumIds: string[] = [];
   const trackIds: string[] = [];
   activityData.forEach((activity: Activity) => {

@@ -1,4 +1,3 @@
-// Get reviews for an album
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 
@@ -66,7 +65,6 @@ export default async function handle(
           author: true,
           // Check if hearted
           hearts: {
-            select: { id: true },
             where: { authorId: userId },
           },
           _count: {

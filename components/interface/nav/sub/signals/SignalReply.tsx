@@ -1,6 +1,6 @@
 import { User } from "@/types/dbTypes";
 import { extendedNotification } from "../Signals";
-import UserAvatar from "@/components/global/UserAvatar";
+import Avatar from "@/components/global/Avatar";
 import Stars from "@/components/global/Stars";
 
 interface SignalReplyProps {
@@ -28,7 +28,7 @@ const SignalReply = ({ notification }: SignalReplyProps) => {
     }`;
 
     return (
-      <UserAvatar
+      <Avatar
         className={avatarClass}
         imageSrc={user.image}
         altText={`${user.username}'s avatar`}

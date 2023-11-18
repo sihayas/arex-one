@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
-import GenerateArtworkUrl from "@/components/global/GenerateArtworkUrl";
+import ArtworkURL from "@/components/global/ArtworkURL";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { motion } from "framer-motion";
 
@@ -24,7 +24,7 @@ export const Artwork = ({
   const { handleSelectSound } = useHandleSoundClick();
   const ref = React.useRef<HTMLImageElement>(null);
 
-  const artworkUrl = GenerateArtworkUrl(sound.attributes.artwork.url, "1200");
+  const artworkUrl = ArtworkURL(sound.attributes.artwork.url, "1200");
 
   const handleSoundClick = async () => {
     await handleSelectSound(sound, artworkUrl);

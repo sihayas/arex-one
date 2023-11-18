@@ -3,15 +3,13 @@ import React from "react";
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { useHandleRecordClick } from "@/hooks/useInteractions/useHandlePageChange";
 
-import UserAvatar from "@/components/global/UserAvatar";
-import HeartButton from "@/components/global/HeartButton";
+import Avatar from "@/components/global/Avatar";
 import Stars from "@/components/global/Stars";
 import { useSound } from "@/context/SoundContext";
-import { motion } from "framer-motion";
 import { RecordExtended } from "@/types/globalTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData } from "@/types/appleTypes";
-import { Artwork } from "@/components/global/Artwork";
+import Heart from "@/components/global/Heart";
 
 const RecordAlbum = ({ record }: { record: RecordExtended }) => {
   const { selectedSound } = useSound();
@@ -38,7 +36,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
   return (
     <div className={`flex items-end relative w-full`}>
       {/* Username and Avatar*/}
-      <UserAvatar
+      <Avatar
         className={`h-[32px] border border-gray3`}
         imageSrc={record.author.image}
         altText={`${record.author.username}'s avatar`}
@@ -84,59 +82,16 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
             className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
           />
         </div>
-        {/*<HeartButton*/}
-        {/*  handleHeartClick={handleHeartClick}*/}
-        {/*  hearted={hearted}*/}
-        {/*  className="absolute -bottom-0 -right-0"*/}
-        {/*  heartCount={heartCount}*/}
-        {/*  replyCount={record._count.replies}*/}
-        {/*/>*/}
+        <Heart
+          handleHeartClick={handleHeartClick}
+          hearted={hearted}
+          className="absolute -bottom-1 -right-1"
+          heartCount={heartCount}
+          replyCount={record._count.replies}
+        />
       </div>
     </div>
   );
 };
 
 export default RecordAlbum;
-// {/* Author Avatar / Left Side*/}
-// <div className={`relative min-w-[42px] min-h-[42px] drop-shadow-sm`}>
-//   <UserAvatar
-//       className="border border-gray3"
-//       imageSrc={record.author.image}
-//       altText={`${record.author.username}'s avatar`}
-//       width={42}
-//       height={42}
-//       user={record.author}
-//   />
-//   <Stars
-//       className={`bg-[#E5E5E5] absolute -top-[28px] left-[34px] rounded-full backdrop-blur-xl p-[6px] w-max z-10`}
-//       rating={record.entry!.rating}
-//   />
-//   <div
-//       className={`bg-[#E5E5E5] w-1 h-1 absolute top-0 left-[38px] rounded-full`}
-//   />
-//   <div
-//       className={`bg-[#E5E5E5] w-2 h-2 absolute -top-2 left-[42px] rounded-full`}
-//   />
-// </div>
-//
-// {/* Right Side / Name & Content */}
-// <div className="flex flex-col gap-[7px] w-full mt-[6px] mb-[10px]">
-//   <p className="text-gray5 font-semibold text-xs leading-[8px]">
-//     {record.author.username}
-//   </p>
-//   {/* Content*/}
-//   <div
-//       onClick={handleEntryClick}
-//       className={`break-words line-clamp-6 w-full text-sm text-gray5 leading-normal cursor-pointer`}
-//   >
-//     {record.entry?.text}
-//   </div>
-// </div>
-//
-// <HeartButton
-//     handleHeartClick={handleHeartClick}
-//     hearted={hearted}
-//     className="absolute bottom-0 right-0"
-//     heartCount={heartCount}
-//     replyCount={record._count.replies}
-// />

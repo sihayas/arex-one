@@ -1,4 +1,3 @@
-// Importing all necessary libraries and components
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import {
   Page,
@@ -17,12 +16,13 @@ import {
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { Artwork } from "@/components/global/Artwork";
 import Stars from "@/components/global/Stars";
-import UserAvatar from "@/components/global/UserAvatar";
+import Avatar from "@/components/global/Avatar";
 import RenderReplies from "@/components/interface/record/sub/reply/RenderReplies";
 import { useRepliesQuery } from "@/lib/apiHandlers/recordAPI";
 import { GetDimensions } from "@/components/interface/Interface";
 import { RecordExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
+import Heart from "@/components/global/Heart";
 
 export const RecordFace = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
@@ -130,19 +130,11 @@ export const RecordFace = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             key={record.id}
-            className={`absolute top-0 flex bg-[#F4F4F4] rounded-[24px] w-[464px] gap-4 z-20 shadow-shadowKitHigh`}
+            className={`absolute top-0 flex flex-col bg-[#F4F4F4] rounded-[24px] w-[464px] z-20 shadow-shadowKitHigh`}
           >
             <div
-              className={`relative min-w-[40px] min-h-[40px] drop-shadow-sm ml-4 mt-4 flex flex-col`}
+              className={`flex items-center gap-2 relative min-w-[40px] min-h-[40px] drop-shadow-sm ml-4 mt-4`}
             >
-              <UserAvatar
-                className="border border-gray3 min-w-[40px] min-h-[40px]"
-                imageSrc={record.author.image}
-                altText={`${record.author.username}'s avatar`}
-                width={40}
-                height={40}
-                user={record.author}
-              />
               <Stars
                 className={`bg-[#E5E5E5] absolute -top-[28px] left-[36px] p-[6px] rounded-full backdrop-blur-xl w-max z-10 text-gray5 max-h-[24px]`}
                 rating={record.entry?.rating}
@@ -156,24 +148,33 @@ export const RecordFace = () => {
               <div
                 className={`bg-[#E5E5E5] w-2 h-2 absolute -top-2 left-[44px] rounded-full`}
               />
-            </div>
-            <div className="flex flex-col gap-[5px] w-full pt-6 pr-4 pb-[10px] overflow-scroll scrollbar-none">
+              <Avatar
+                className="border border-gray3 min-w-[40px] min-h-[40px]"
+                imageSrc={record.author.image}
+                altText={`${record.author.username}'s avatar`}
+                width={40}
+                height={40}
+                user={record.author}
+              />
               <p className="text-gray5 font-semibold text-sm leading-[1]">
                 {record.author.username}
               </p>
+            </div>
+
+            <div className="flex flex-col gap-[5px] w-full px-4 pb-[10px] pt-[11px] overflow-scroll scrollbar-none">
               <div
                 className={`break-words w-full text-sm text-gray5 leading-normal cursor-pointer`}
               >
                 {record.entry?.text || record.caption?.text}
               </div>
             </div>
-            {/*<HeartButton*/}
-            {/*  handleHeartClick={handleHeartClick}*/}
-            {/*  hearted={hearted}*/}
-            {/*  className="absolute bottom-0 right-0"*/}
-            {/*  heartCount={heartCount}*/}
-            {/*  replyCount={record._count.replies}*/}
-            {/*/>*/}
+            <Heart
+              handleHeartClick={handleHeartClick}
+              hearted={hearted}
+              className="absolute bottom-4 right-4"
+              heartCount={heartCount}
+              replyCount={record._count.replies}
+            />
             <motion.div
               style={{ opacity: scrollIndicatorOpacity }}
               className={`absolute -bottom-[25px] text-xs font-medium text-gray3 left-1/2 -translate-x-1/2 leading-[1]`}

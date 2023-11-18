@@ -44,7 +44,7 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
         </div>
       </Button>
       {/* Track Buttons */}
-      {songs.map((track, index) => (
+      {songs.map((track) => (
         <Button
           key={track.id}
           onClick={() => handleTabChange(track)}

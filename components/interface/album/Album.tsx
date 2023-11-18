@@ -19,7 +19,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
 
 import Statline from "@/components/interface/album/sub/RatingDial";
-import SortChange from "@/components/global/SortChange";
+import SortChange from "@/components/interface/album/sub/SortChange";
 
 const springConfig = { damping: 40, stiffness: 400, mass: 1 };
 

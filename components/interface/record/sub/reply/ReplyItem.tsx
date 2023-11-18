@@ -12,9 +12,9 @@ import RenderChildren from "@/components/interface/record/sub/reply/RenderChildr
 import { motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { useUser } from "@supabase/auth-helpers-react";
-import UserAvatar from "@/components/global/UserAvatar";
+import Avatar from "@/components/global/Avatar";
 import { v4 as uuidv4 } from "uuid";
-import HeartButton from "@/components/global/HeartButton";
+import Heart from "@/components/global/Heart";
 
 interface ReplyProps {
   reply: Reply;
@@ -96,7 +96,7 @@ export default function ReplyItem({
     >
       {/* Main Reply */}
       <div className={`flex gap-2 items-end ${flexDirection}`}>
-        <UserAvatar
+        <Avatar
           className="w-8 h-8 rounded-full border border-gray3"
           imageSrc={reply.author.image}
           altText={`${reply.author.username}'s avatar`}
@@ -130,7 +130,7 @@ export default function ReplyItem({
             >
               {reply.content}
             </motion.div>
-            <HeartButton
+            <Heart
               handleHeartClick={handleHeartClick}
               hearted={hearted}
               className={`absolute -bottom-1 z-20 ${

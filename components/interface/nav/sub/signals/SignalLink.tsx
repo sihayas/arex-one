@@ -1,6 +1,6 @@
 import { ActivityType, User } from "@/types/dbTypes";
 import { extendedNotification } from "../Signals";
-import UserAvatar from "@/components/global/UserAvatar";
+import Avatar from "@/components/global/Avatar";
 
 interface SignalLinkProps {
   notification: extendedNotification;
@@ -26,7 +26,7 @@ const SignalLink = ({ notification }: SignalLinkProps) => {
     } ${index === 1 && "absolute bottom-0 right-0"}`;
 
     return (
-      <UserAvatar
+      <Avatar
         className={avatarClass}
         imageSrc={user.image}
         altText={`${user.username}'s avatar`}

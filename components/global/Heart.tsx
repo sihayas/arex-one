@@ -30,7 +30,7 @@ const formatText = (
   );
 };
 
-const HeartButton: React.FC<HeartButtonProps> = ({
+const Heart: React.FC<HeartButtonProps> = ({
   handleHeartClick,
   hearted,
   className,
@@ -102,7 +102,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   );
 };
 
-export default HeartButton;
+export default Heart;
 
 // const renderCounts = () => {
 //   if (isReply) {

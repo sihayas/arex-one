@@ -8,7 +8,7 @@ import Search from "./sub/Search";
 import Form from "./sub/Form";
 import { ChainIcon } from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
-import UserAvatar from "@/components/global/UserAvatar";
+import Avatar from "@/components/global/Avatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import Image from "next/image";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
@@ -201,7 +201,7 @@ const Nav = () => {
 
   if (user) {
     left = (
-      <UserAvatar
+      <Avatar
         className="shadow-shadowKitLow"
         imageSrc={user.image}
         altText={`${user.username}'s avatar`}
