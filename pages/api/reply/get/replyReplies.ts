@@ -1,4 +1,3 @@
-// Fetch replies to a reply by [replyId]
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 
@@ -11,89 +10,61 @@ export default async function handle(
   const { replyId, pageSize = 10, lastId = null, userId } = req.query;
 
   // Input validation
-  if (
-    !Number.isInteger(Number(pageSize)) ||
-    Number(pageSize) < 1 ||
-    Number(pageSize) > MAX_PAGE_SIZE
-  ) {
-    res.status(400).json({
+  if (Number(pageSize) < 1 || Number(pageSize) > MAX_PAGE_SIZE) {
+    return res.status(400).json({
       error: `Invalid pageSize. Must be an integer between 1 and ${MAX_PAGE_SIZE}`,
     });
-    return;
   }
 
   if (lastId !== null && !Number.isInteger(Number(lastId))) {
-    res.status(400).json({ error: "Invalid lastId. Must be an integer" });
-    return;
+    return res
+      .status(400)
+      .json({ error: "Invalid lastId. Must be an integer" });
   }
 
   if (typeof replyId !== "string") {
-    res.status(400).json({ error: "Invalid replyId. Must be a string." });
-    return;
+    return res
+      .status(400)
+      .json({ error: "Invalid replyId. Must be a string." });
   }
 
   if (userId !== undefined && typeof userId !== "string") {
-    res.status(400).json({ error: "Invalid userId. Must be a string." });
-    return;
+    return res.status(400).json({ error: "Invalid userId. Must be a string." });
   }
 
-  if (req.method === "GET") {
-    try {
-      // Fetch replies pertaining to the [replyId] passed in request.
-      const replies = await prisma.reply.findMany({
-        where: {
-          replyToId: String(replyId),
-        },
-        take: Number(pageSize),
-        cursor: lastId ? { id: String(lastId) } : undefined,
-        orderBy: {
-          createdAt: "desc",
-        },
-        select: {
-          id: true,
-          author: true,
-          hearts: {
-            select: { id: true },
-            where: { authorId: userId },
-          },
-          replies: {
-            select: {
-              author: {
-                select: {
-                  image: true,
-                },
-              },
-            },
-            take: 3,
-          },
-          content: true,
-          _count: {
-            select: { replies: true, hearts: true },
-          },
-          recordId: true,
-        },
-      });
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed." });
+  }
 
-      if (replies) {
-        const promises = replies.map(async (reply: any) => {
-          const heartedByUser = reply.hearts.length > 0;
+  try {
+    const replies = await prisma.reply.findMany({
+      where: { replyToId: String(replyId) },
+      take: Number(pageSize),
+      cursor: lastId ? { id: String(lastId) } : undefined,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        author: true,
+        hearts: { select: { id: true }, where: { authorId: userId } },
+        replies: { select: { author: { select: { image: true } } }, take: 3 },
+        content: true,
+        _count: { select: { replies: true, hearts: true } },
+        recordId: true,
+      },
+    });
 
-          return {
-            ...reply,
-            heartedByUser,
-          };
-        });
-
-        const repliesWithUserHeart = await Promise.all(promises);
-
-        res.status(200).json(repliesWithUserHeart);
-      } else {
-        console.log("No replies found for reply id:", replyId);
-        res.status(404).json({ error: "No replies found." });
-      }
-    } catch (error) {
-      console.error("Error fetching replies:", error);
-      res.status(500).json({ error: "Error fetching replies." });
+    if (!replies) {
+      return res.status(404).json({ error: "No replies found." });
     }
+
+    const repliesWithUserHeart = replies.map((reply: any) => ({
+      ...reply,
+      heartedByUser: reply.hearts.length > 0,
+    }));
+
+    return res.status(200).json(repliesWithUserHeart);
+  } catch (error) {
+    console.error("Error fetching replies:", error);
+    return res.status(500).json({ error: "Error fetching replies." });
   }
 }

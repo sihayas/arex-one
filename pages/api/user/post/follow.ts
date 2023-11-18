@@ -14,28 +14,24 @@ export default async function handle(
   }
 
   const { followerId, followingId } = req.body;
+  const followType = (await prisma.follows.findUnique({
+    where: {
+      followerId_followingId: {
+        followerId: followingId,
+        followingId: followerId,
+      },
+    },
+  }))
+    ? ActivityType.FOLLOWED_BACK
+    : ActivityType.FOLLOWED;
 
   try {
-    const existingFollow = await prisma.follows.findUnique({
-      where: {
-        followerId_followingId: {
-          followerId: followingId,
-          followingId: followerId,
-        },
-      },
-    });
-
     const follow = await prisma.follows.create({
       data: { followerId, followingId },
     });
-
-    const followType = existingFollow
-      ? ActivityType.FOLLOWED_BACK
-      : ActivityType.FOLLOWED;
-
     const activity = await createFollowActivity(follow.id, followType);
-
     const aggregationKey = `${followType}|${followerId}|${followingId}`;
+
     await prisma.notification.create({
       data: {
         recipientId: followingId,

@@ -19,7 +19,6 @@ export default async function handler(
       include: {
         activity: {
           include: {
-            // record: { include: { album: true, track: true } },
             heart: {
               include: {
                 author: true,

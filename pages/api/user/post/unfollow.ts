@@ -7,15 +7,11 @@ export default async function handle(
   res: NextApiResponse
 ) {
   const { followerId, followingId } = req.query;
-
-  if (req.method !== "DELETE") {
-    return res
-      .status(405)
-      .json({ error: "This endpoint only supports DELETE requests." });
-  }
+  if (req.method !== "DELETE")
+    return res.status(405).json({ error: "Endpoint supports DELETE only." });
 
   try {
-    // Find existing follow relationship
+    // Check follow relationship
     const existingFollow = await prisma.follows.findUnique({
       where: {
         followerId_followingId: {
@@ -24,24 +20,16 @@ export default async function handle(
         },
       },
     });
-
-    if (!existingFollow) {
+    if (!existingFollow)
       return res.status(404).json({ error: "Follow relationship not found." });
-    }
 
-    // Find the associated activity
+    // Check associated activity
     const existingActivity = await prisma.activity.findFirst({
-      where: {
-        type: ActivityType.FOLLOWED,
-        referenceId: existingFollow.id,
-      },
+      where: { type: ActivityType.FOLLOWED, referenceId: existingFollow.id },
     });
-
     if (existingActivity) {
-      // Delete the notification
-      const followType = existingActivity.type;
-      const aggregationKey = `${followType}|${followingId}|${followerId}`;
-
+      // Delete notification
+      const aggregationKey = `${existingActivity.type}|${followingId}|${followerId}`;
       await prisma.notification.deleteMany({
         where: {
           aggregation_Key: aggregationKey,
@@ -49,14 +37,11 @@ export default async function handle(
           activityId: String(existingActivity.id),
         },
       });
-
-      // Delete the activity
-      await prisma.activity.delete({
-        where: { id: existingActivity.id },
-      });
+      // Delete activity
+      await prisma.activity.delete({ where: { id: existingActivity.id } });
     }
 
-    // Delete the follow relationship
+    // Delete follow relationship
     await prisma.follows.delete({
       where: {
         followerId_followingId: {
@@ -65,7 +50,6 @@ export default async function handle(
         },
       },
     });
-
     res.status(200).json({ success: true });
   } catch (error) {
     console.error("Error deleting follow relationship:", error);

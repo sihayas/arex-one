@@ -5,37 +5,6 @@ import { ActivityType } from "@/types/dbTypes";
 type Data = {
   success: boolean;
 };
-async function unnotifyReplyChain(
-  replyId: string,
-  userId: string,
-  activityId: string
-) {
-  let currentReply = await prisma.reply.findUnique({
-    where: { id: replyId },
-    select: { authorId: true, replyToId: true },
-  });
-
-  while (currentReply) {
-    const { authorId, replyToId } = currentReply;
-
-    if (authorId !== userId) {
-      const aggregationKey = `HEART|${replyId}|${authorId}`;
-      await prisma.notification.deleteMany({
-        where: {
-          aggregation_Key: aggregationKey,
-          recipientId: authorId,
-        },
-      });
-    }
-
-    currentReply = replyToId
-      ? await prisma.reply.findUnique({
-          where: { id: replyToId },
-          select: { authorId: true, replyToId: true },
-        })
-      : null;
-  }
-}
 
 export default async function handler(
   req: NextApiRequest,
@@ -59,11 +28,8 @@ export default async function handler(
     });
 
     if (existingActivity) {
-      // Unnotify users in the reply chain
-      await unnotifyReplyChain(replyId, userId, existingActivity.id);
-
-      // Delete the notification
       const aggregationKey = `HEART|${replyId}|${authorId}`;
+      // Unnotify users in the reply chain and delete the notification
       await prisma.notification.deleteMany({
         where: {
           aggregation_Key: aggregationKey,

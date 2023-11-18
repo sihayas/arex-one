@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { searchAlbums } from "@/lib/global/musicKit";
-import { prisma } from "@/lib/global/prisma"; // Make sure to import Prisma
+import { prisma } from "@/lib/global/prisma";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { query } = req.query;
 
@@ -34,36 +34,3 @@ export default async function handler(
 
   res.json(combinedResponse);
 }
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-// for (const album of apple_response.filteredAlbums) {
-//   const averageRating = await client.get(`album:${album.id}:averageRating`);
-
-//   if (averageRating !== null) {
-//     album.averageRating = parseFloat(averageRating);
-//   } else {
-//     album.averageRating = "n/a"; // default value
-//   }
-// }
