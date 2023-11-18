@@ -1,4 +1,4 @@
-import { useBloomingFeedQuery } from "@/lib/apiHandlers/feedAPI";
+import { useRecentFeedQuery } from "@/lib/apiHandlers/feedAPI";
 import { FeedRecord } from "@/components/feed/subcomponents/RecordFeed";
 import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";
@@ -6,7 +6,7 @@ import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
 import { RecordExtended } from "@/types/globalTypes";
 
-const FeedTrending = ({
+const FeedRecent = ({
   userId,
   scrollContainerRef,
 }: {
@@ -14,7 +14,7 @@ const FeedTrending = ({
   scrollContainerRef: React.RefObject<HTMLDivElement>;
 }) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useBloomingFeedQuery(userId);
+    useRecentFeedQuery(userId);
 
   // Track scrolling for infinite scroll
   const { scrollYProgress } = useScroll({
@@ -33,6 +33,7 @@ const FeedTrending = ({
 
   const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
 
+  console.log(allActivities);
   return (
     <>
       {error && "an error has occurred"}
@@ -41,7 +42,17 @@ const FeedTrending = ({
           {activity.record ? (
             <FeedRecord
               record={activity.record as RecordExtended}
-              associatedType={activity.record?.album ? "album" : "track"}
+              associatedType={activity.record.album ? "album" : "track"}
+            />
+          ) : activity.reply?.record ? (
+            <FeedRecord
+              record={activity.reply.record as RecordExtended}
+              associatedType={activity.reply.record.album ? "album" : "track"}
+            />
+          ) : activity.heart?.record ? (
+            <FeedRecord
+              record={activity.heart.record as RecordExtended}
+              associatedType={activity.heart.record.album ? "album" : "track"}
             />
           ) : (
             "No record available for this activity."
@@ -68,4 +79,4 @@ const FeedTrending = ({
   );
 };
 
-export default FeedTrending;
+export default FeedRecent;

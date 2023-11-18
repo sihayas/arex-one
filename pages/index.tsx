@@ -3,6 +3,7 @@ import Head from "next/head";
 import React from "react";
 import FeedUser from "@/components/feed/FeedUser";
 import FeedTrending from "@/components/feed/FeedTrending";
+import FeedRecent from "@/components/feed/FeedRecent";
 import UserAvatar from "@/components/global/UserAvatar";
 import DashedLine from "@/components/interface/record/sub/icons/DashedLine";
 import { motion } from "framer-motion";
@@ -128,7 +129,8 @@ export default function Home() {
               <motion.div
                 initial={{ y: 0 }}
                 animate={
-                  typeof activeFeed === "string" && activeFeed === "bloom"
+                  (typeof activeFeed === "string" && activeFeed === "bloom") ||
+                  activeFeed === "recent"
                     ? { scale: 0.75 }
                     : typeof activeFeed !== "string" &&
                       activeFeed.id !== user.id
@@ -203,22 +205,30 @@ export default function Home() {
 
           <DashedLine className="absolute translate-x-[190px] translate-y-8" />
 
-          {/* Feed or Profile Records Container */}
+          {/* Feeds or Profile Records Container */}
           <motion.div
             ref={scrollContainerRef}
-            className={`relative flex flex-col gap-[50px] pl-0 p-12 pb-60 pt-28 max-w-screen max-h-[125vh] overflow-scroll  scrollbar-none`}
+            className={`relative flex flex-col gap-[50px] pl-0 p-12 pb-60 pt-28 max-w-screen max-h-[125vh] overflow-scroll scrollbar-none`}
           >
-            {scrollContainerRef && activeFeed !== "bloom" && (
-              <FeedUser
-                userId={activeFeed.id}
-                scrollContainerRef={scrollContainerRef}
-              />
-            )}
-            {scrollContainerRef && activeFeed === "bloom" && (
-              <FeedTrending
-                userId={user.id}
-                scrollContainerRef={scrollContainerRef}
-              />
+            {scrollContainerRef && (
+              <>
+                {activeFeed === "bloom" ? (
+                  <FeedTrending
+                    userId={user.id}
+                    scrollContainerRef={scrollContainerRef}
+                  />
+                ) : activeFeed === user ? (
+                  <FeedUser
+                    userId={activeFeed.id}
+                    scrollContainerRef={scrollContainerRef}
+                  />
+                ) : activeFeed === "recent" ? (
+                  <FeedRecent
+                    userId={user.id}
+                    scrollContainerRef={scrollContainerRef}
+                  />
+                ) : null}
+              </>
             )}
           </motion.div>
         </>

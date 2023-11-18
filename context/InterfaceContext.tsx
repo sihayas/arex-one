@@ -90,42 +90,47 @@ export const InterfaceContextProvider = ({
   const [session, setSession] = useState<Session | null>(null);
   const supabaseClient = useSupabaseClient();
 
-  // Initialize the session and user on page load
   useEffect(() => {
-    // Initialize a session and user if they exist on page load
-    const setData = async () => {
-      // Get a session if it exists
-      const {
-        data: { session },
-        error,
-      } = await supabaseClient.auth.getSession();
-      if (error) throw error;
-      setSession(session);
+    let currentSessionId: string | null | undefined = null;
 
-      // Get the user profile details from the database
-      const { data: userData, error: fetchError } = await supabaseClient
-        .from("User")
-        .select("*")
-        .eq("email", session?.user.email)
-        .single();
+    const setData = async (session: Session | null) => {
+      if (session?.user?.id === currentSessionId) return;
+      currentSessionId = session?.user?.id;
 
-      if (fetchError) throw fetchError;
-      setUser(userData);
+      if (session) {
+        setSession(session);
+
+        // Get the user profile details from the database
+        try {
+          const { data: userData, error: fetchError } = await supabaseClient
+            .from("User")
+            .select("*")
+            .eq("email", session.user.email)
+            .single();
+
+          if (fetchError) throw fetchError;
+          setUser(userData);
+          setActiveFeed(userData);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        setUser(null);
+        setSession(null);
+      }
     };
 
     // Listen for changes to authentication
     const { data: listener } = supabaseClient.auth.onAuthStateChange(
       (event, session) => {
-        if (event === "SIGNED_IN" && session) {
-          setData();
-        } else if (event === "SIGNED_OUT") {
-          setUser(null);
-          setSession(null);
-        }
+        setData(session);
       },
     );
 
-    setData();
+    // Initial call to set data
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+      setData(session);
+    });
 
     return () => {
       listener?.subscription.unsubscribe();
@@ -144,7 +149,6 @@ export const InterfaceContextProvider = ({
           scrollPosition: 0,
         },
       ]);
-      setActiveFeed(user);
     }
   }, [pages.length, user]);
 

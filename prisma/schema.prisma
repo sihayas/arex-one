@@ -9,7 +9,6 @@ datasource db {
 
 //User
 model User {
-  // Fields
   id            String           @id @default(cuid())
   email         String           @unique
   username      String           @unique
@@ -27,7 +26,6 @@ model User {
   isDeleted     Boolean          @default(false) @map(name: "is_deleted")
   isSuspended   Boolean          @default(false) @map(name: "is_suspended")
 
-  // Relations
   notifications Notification[]
   essentials    Essential[]
   following     Follows[]        @relation("following")
@@ -198,7 +196,6 @@ model Heart {
   @@index([replyId])
 }
 
-
 model Reply {
   id          String      @id @default(cuid())
   content     String      
@@ -228,8 +225,6 @@ model Reply {
   @@index([rootReplyId])
 }
 
-
-
 model View {
   id          String   @id @default(cuid())
   viewType    ViewType
@@ -245,13 +240,11 @@ model View {
   @@index([referenceId])
 }
 
-
 enum ViewType {
   RECORD
   REPLY
   ALBUM
 }
-
 
 model Activity {
   id            String          @id @default(cuid())
@@ -271,7 +264,6 @@ model Activity {
   @@index([referenceId])
 }
 
-
 enum ActivityType {
   RECORD
   HEART
@@ -279,7 +271,6 @@ enum ActivityType {
   FOLLOWED_BACK
   REPLY
 }
-
 
 model Notification {
   id              String   @id @default(cuid())

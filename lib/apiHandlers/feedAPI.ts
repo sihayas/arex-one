@@ -5,7 +5,7 @@ import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
-// React query hook for fetching feed data
+// Fetch a users personal feed
 export const useFeedQuery = (userId: string, limit: number = 6) => {
   const { user } = useInterfaceContext();
 
@@ -44,7 +44,6 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
   };
 };
 
-// Helper function for fetching feed data or profile records with axios
 const fetchFeedAndMergeAlbums = async (
   userId: string,
   pageParam: number = 1,
@@ -52,7 +51,9 @@ const fetchFeedAndMergeAlbums = async (
   isProfile: boolean = false,
   authUserId?: string,
 ) => {
-  const url = isProfile ? `/api/feed/get/records` : `/api/feed/get/activities`;
+  const url = isProfile
+    ? `/api/feed/get/profileRecords`
+    : `/api/feed/get/activities`;
 
   const params = {
     userId,
@@ -120,6 +121,7 @@ const fetchFeedAndMergeAlbums = async (
   };
 };
 
+// Fetch basic periodically ranked feed
 export const useBloomingFeedQuery = (userId: string, limit: number = 6) => {
   const result = useInfiniteQuery(
     ["bloomingFeed", userId],
@@ -227,3 +229,112 @@ const fetchBloomingFeedAndMergeAlbums = async (
     pagination: res.data.data.pagination,
   };
 };
+
+// Fetch recently interacted with records
+export const useRecentFeedQuery = (userId: string, limit: number = 6) => {
+  const result = useInfiniteQuery(
+    ["recentRecords", userId],
+    ({ pageParam = 1 }) => {
+      if (!userId) {
+        return Promise.reject(new Error("User ID is undefined"));
+      }
+      return fetchRecentFeedAndMergeAlbums(userId, pageParam, limit);
+    },
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const lastPageData = allPages[allPages.length - 1];
+        return lastPageData.pagination?.nextPage || null;
+      },
+      enabled: !!userId,
+    },
+  );
+
+  return {
+    data: result.data,
+    error: result.error,
+    fetchNextPage: result.fetchNextPage,
+    hasNextPage: result.hasNextPage,
+    isFetchingNextPage: result.isFetchingNextPage,
+  };
+};
+
+const fetchRecentFeedAndMergeAlbums = async (
+  userId: string,
+  pageParam: number = 1,
+  limit: number = 6,
+) => {
+  const url = `/api/feed/get/recentActivities`;
+
+  const params = {
+    userId,
+    page: pageParam,
+    limit,
+  };
+
+  const res = await axios.get(url, { params });
+
+  // Check if res.data.data has the correct structure
+  if (
+    !res.data.data ||
+    !res.data.data.activities ||
+    !res.data.data.pagination
+  ) {
+    throw new Error("Unexpected server response structure");
+  }
+
+  const activityData = res.data.data.activities;
+
+  // 2. Group Records by Type
+  const albumIds: string[] = [];
+  const trackIds: string[] = [];
+  activityData.forEach((activity: Activity) => {
+    const record = extractRecordFromActivity(activity);
+    if (record?.album) {
+      albumIds.push(record.album.appleId);
+    }
+    if (record?.track) {
+      trackIds.push(record.track.appleId);
+    }
+  });
+
+  // 3. Fetch Album Details
+  const albums = await fetchSoundsByTypes({
+    albums: albumIds,
+    songs: trackIds,
+  });
+
+  // Create a map for easy lookup
+  const albumMap = new Map<string, AlbumData>(
+    albums.map((album: AlbumData) => [album.id, album]),
+  );
+
+  // 4. Append Album Details
+  activityData.forEach((activity: Activity) => {
+    const record = extractRecordFromActivity(activity);
+    if (record) {
+      const albumId = record.album?.appleId;
+      const trackId = record.track?.appleId;
+      if (albumId) record.appleAlbumData = <AlbumData>albumMap.get(albumId);
+      else if (trackId)
+        record.appleAlbumData = <AlbumData>albumMap.get(trackId);
+    }
+  });
+
+  return {
+    data: activityData,
+    pagination: res.data.data.pagination,
+  };
+};
+
+function extractRecordFromActivity(activity: Activity) {
+  switch (activity.type) {
+    case ActivityType.RECORD:
+      return activity.record;
+    case ActivityType.REPLY:
+      return activity.reply?.record;
+    case ActivityType.HEART:
+      return activity.heart?.record;
+    default:
+      return null;
+  }
+}
