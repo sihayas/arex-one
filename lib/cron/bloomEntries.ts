@@ -36,7 +36,7 @@ function calculateBloomingScore(record: Record) {
 }
 
 // Returns a list of activity IDs sorted by blooming score
-export async function updateBloomingEntryScores() {
+export async function entryScores() {
   const activities = await prisma.activity.findMany({
     where: {
       type: "RECORD",

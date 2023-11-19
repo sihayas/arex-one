@@ -5,7 +5,7 @@ import FeedUser from "@/components/feed/FeedUser";
 import FeedTrending from "@/components/feed/FeedTrending";
 import FeedRecent from "@/components/feed/FeedRecent";
 import Avatar from "@/components/global/Avatar";
-import DashedLine from "@/components/interface/record/sub/icons/DashedLine";
+import Dash from "@/components/global/Dash";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -203,7 +203,7 @@ export default function Home() {
             </div>
           </div>
 
-          <DashedLine className="absolute translate-x-[190px] translate-y-8" />
+          <Dash className="absolute translate-x-[190px] translate-y-8" />
 
           {/* Feeds or Profile records Container */}
           <motion.div

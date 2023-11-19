@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
-import { motion, useSpring, useTransform } from "framer-motion";
 import ArtworkURL from "@/components/global/ArtworkURL";
-import format from "date-fns/format";
 import Stars from "@/components/global/Stars";
 import Image from "next/image";
 import { Record } from "@/types/dbTypes";
