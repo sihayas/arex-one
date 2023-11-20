@@ -1,6 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 
+const addHeartedByUser = (record: any) => ({
+  ...record,
+  heartedByUser: record.hearts.length > 0,
+});
+
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -11,8 +16,6 @@ export default async function handle(
 
   const userId =
     typeof req.query.userId === "string" ? req.query.userId : undefined;
-  const authUserId =
-    typeof req.query.authUserId === "string" ? req.query.authUserId : undefined;
 
   if (!userId) {
     return res.status(400).json({ error: "User ID is required." });
@@ -42,11 +45,10 @@ export default async function handle(
             createdAt: true,
             entry: true,
             caption: true,
-            hearts: { where: { authorId: authUserId } },
+            hearts: { where: { authorId: userId } },
             _count: { select: { replies: true, hearts: true } },
           },
         },
-        follow: true,
         heart: {
           include: {
             author: true,
@@ -105,10 +107,6 @@ export default async function handle(
         return true;
       })
       .map((activity) => {
-        const addHeartedByUser = (record: any) => ({
-          ...record,
-          heartedByUser: record.hearts.length > 0,
-        });
         const modifiedActivity = {
           ...activity,
           record: activity.record && addHeartedByUser(activity.record),

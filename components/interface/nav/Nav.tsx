@@ -4,7 +4,7 @@ import GetSearchResults from "@/lib/apiHandlers/searchAPI";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
 
-import Search from "./sub/Search";
+import RenderResults from "./sub/RenderResults";
 import Form from "./sub/Form";
 import { ChainIcon } from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
@@ -104,7 +104,7 @@ const Nav = () => {
     debouncedSetSearchQuery(value);
   };
 
-  // Search results
+  // RenderResults results
   const { data, isInitialLoading, isFetching, error } =
     GetSearchResults(searchQuery);
 
@@ -211,7 +211,7 @@ const Nav = () => {
       />
     );
 
-    // Input & Search Results/Form
+    // Input & RenderResults Results/Form
     middle = (
       <div
         onClick={handleNavClick}
@@ -221,7 +221,7 @@ const Nav = () => {
         <div
           className={`bg-[#F4F4F4]/90 flex flex-col items-end absolute bottom-1 left-0 rounded-[18px] shadow-shadowKitMedium outline outline-silver outline-1`}
         >
-          {/* Top / Form / Search Results */}
+          {/* Top / Form / RenderResults Results */}
           {expandInput && !replyParent && (selectedFormSound || inputValue) && (
             <motion.div
               className={`flex flex-col relative w-full p-3 pb-[6px] overflow-scroll scrollbar-none`}
@@ -234,7 +234,7 @@ const Nav = () => {
               ) : (
                 !selectedFormSound &&
                 inputValue && (
-                  <Search
+                  <RenderResults
                     searchData={data}
                     isInitialLoading={isInitialLoading}
                     isFetching={isFetching}

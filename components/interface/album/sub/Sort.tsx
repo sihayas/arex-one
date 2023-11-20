@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import { PositiveIcon, NegativeIcon, HighlightsIcon } from "@/components/icons";
 
 type sortOrder = "newest" | "positive" | "negative";
 
-type SortChangeProps = {
+type SortProps = {
   onSortOrderChange: (newSortOrder: sortOrder) => void;
 };
 
-const SortChange = ({ onSortOrderChange }: SortChangeProps) => {
+const Sort = ({ onSortOrderChange }: SortProps) => {
   const [currentSortOrder, setCurrentSortOrder] = useState<sortOrder>("newest");
 
   // Update the sort order when the current sort order changes
@@ -68,4 +68,4 @@ const SortChange = ({ onSortOrderChange }: SortChangeProps) => {
   );
 };
 
-export default SortChange;
+export default Sort;

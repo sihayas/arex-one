@@ -7,7 +7,7 @@ interface SignalReplyProps {
   notification: extendedNotification;
 }
 
-const SignalReply = ({ notification }: SignalReplyProps) => {
+const Reply = ({ notification }: SignalReplyProps) => {
   const { users, fetchedSound, activity } = notification;
   const isAggregated = users.length > 1;
 
@@ -93,4 +93,4 @@ const SignalReply = ({ notification }: SignalReplyProps) => {
   );
 };
 
-export default SignalReply;
+export default Reply;

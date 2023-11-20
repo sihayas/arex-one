@@ -21,7 +21,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
   associatedType,
 }) => {
   const user = useUser();
-  const sound = record.appleAlbumData;
+  const sound = record.appleAlbumData || record.appleTrackData;
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     record.heartedByUser,
@@ -127,8 +127,8 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
             outerClassName={`rounded-2xl`}
             className="rounded-2xl outline outline-silver outline-1"
             sound={sound}
-            width={158}
-            height={158}
+            width={128}
+            height={128}
           />
         </div>
       )}

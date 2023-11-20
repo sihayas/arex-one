@@ -36,7 +36,7 @@ function calculateBloomingScore(record: Record) {
 }
 
 // Returns a list of activity IDs sorted by blooming score
-export async function entryScores() {
+export async function bloomingActivities() {
   const activities = await prisma.activity.findMany({
     where: {
       type: "RECORD",
@@ -58,7 +58,7 @@ export async function entryScores() {
     if (activity.record) {
       const record = activity.record;
       const bloomingScore = calculateBloomingScore(record);
-      await client.zadd("bloomingEntries", bloomingScore, activity.id);
+      await client.zadd("bloomingActivityIds", bloomingScore, activity.id);
       console.log(
         `Updated record ${record.id} /  with new trending score: ${bloomingScore}`,
       );

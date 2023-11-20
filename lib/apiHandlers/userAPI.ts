@@ -1,6 +1,6 @@
 import axios from "axios";
-import { fetchSoundsByTypes, fetchSoundsbyType } from "@/lib/global/musicKit";
-import { Essential, Record, Notification } from "@/types/dbTypes";
+import { fetchSoundsByTypes, fetchSoundsByType } from "@/lib/global/musicKit";
+import { Essential, Record } from "@/types/dbTypes";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
@@ -11,7 +11,6 @@ export const useUserDataAndAlbumsQuery = (
   userId: string | undefined,
   sessionUserId: string | undefined,
 ) => {
-  // Follow state
   const [followState, setFollowState] = useState<{
     followingAtoB: boolean | null;
     followingBtoA: boolean | null;
@@ -68,7 +67,7 @@ export const useUserDataAndAlbumsQuery = (
       const albumIds = userData.essentials.map(
         (essential: Essential) => essential.album.appleId,
       );
-      const albumsData = await fetchSoundsbyType("albums", albumIds);
+      const albumsData = await fetchSoundsByType("albums", albumIds);
 
       // Attach album data to each favorite
       userData.essentials.forEach((essential: Essential, index: number) => {
@@ -117,7 +116,6 @@ export const useUserSoundtrackQuery = (userId: string) => {
   const { data, isLoading, isError } = useQuery(
     ["mergedData", userId],
     async () => {
-      // Axios request for soundtrack data
       const url = `/api/user/get/soundtrackById`;
       const response = await axios.get(url, {
         params: {

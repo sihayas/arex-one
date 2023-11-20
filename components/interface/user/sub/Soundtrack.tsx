@@ -1,22 +1,10 @@
-// Fetches user sound history.
 import React, { Fragment, useRef } from "react";
-import { AlbumData, SongData } from "@/types/appleTypes";
 import { useUserSoundtrackQuery } from "@/lib/apiHandlers/userAPI";
 
-import SoundtrackRecord from "./components/SoundtrackRecord";
+import SoundtrackRecord from "../../../records/SoundtrackRecord";
 import format from "date-fns/format";
 import { Record } from "@/types/dbTypes";
 import { JellyComponent } from "@/components/global/Loading";
-
-type SoundtrackData = {
-  albumId: string;
-  createdAt: string;
-  rating: number;
-};
-
-type ExtendedSoundtrackData = SoundtrackData & {
-  albumDetails: AlbumData;
-};
 
 const Soundtrack = ({ userId }: { userId: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);

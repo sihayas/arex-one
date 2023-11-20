@@ -1,7 +1,7 @@
 import { useNotificationsQuery } from "@/lib/apiHandlers/userAPI";
-import SignalHeart from "./signals/SignalHeart";
-import SignalReply from "./signals/SignalReply";
-import SignalLink from "./signals/SignalLink";
+import Heart from "./signals/Heart";
+import Reply from "./signals/Reply";
+import Link from "./signals/Link";
 import { Notification, User } from "@/types/dbTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData, SongData } from "@/types/appleTypes";
@@ -35,11 +35,11 @@ const Signals = () => {
 
             switch (notificationType) {
               case "HEART":
-                return <SignalHeart key={index} notification={notification} />;
+                return <Heart key={index} notification={notification} />;
               case "REPLY":
-                return <SignalReply key={index} notification={notification} />;
+                return <Reply key={index} notification={notification} />;
               case "FOLLOWED":
-                return <SignalLink key={index} notification={notification} />;
+                return <Link key={index} notification={notification} />;
               default:
                 return <div key={index}>n.a</div>;
             }

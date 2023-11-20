@@ -5,21 +5,14 @@ import { useSound } from "@/context/SoundContext";
 
 import { useAlbumQuery } from "@/lib/apiHandlers/albumAPI";
 import RenderRecords from "./RenderRecords";
-import {
-  AnimatePresence,
-  motion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Filter from "@/components/interface/album/sub/Filter";
 
 import { TrackData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
 
-import Statline from "@/components/interface/album/sub/RatingDial";
-import SortChange from "@/components/interface/album/sub/SortChange";
+import Statline from "@/components/interface/album/sub/Dial";
 
 const springConfig = { damping: 40, stiffness: 400, mass: 1 };
 
@@ -136,7 +129,7 @@ const Album = () => {
                 />
               )}
             {/*<div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">*/}
-            {/*  <SortChange onSortOrderChange={handleSortOrderChange} />*/}
+            {/*  <Sort onSortOrderChange={handleSortOrderChange} />*/}
             {/*</div>*/}
           </motion.div>
 

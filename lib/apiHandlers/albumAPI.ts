@@ -2,7 +2,7 @@ import axios from "axios";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { User } from "@/types/dbTypes";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import { fetchSoundsbyType } from "../global/musicKit";
+import { fetchSoundsByType } from "../global/musicKit";
 import { useSound } from "@/context/SoundContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -69,31 +69,35 @@ export function useAlbumQuery() {
 
   return useQuery(["album", selectedSound?.sound.id], async () => {
     if (
-      selectedSound &&
-      user &&
-      ["songs", "albums"].includes(selectedSound.sound.type)
+      !selectedSound ||
+      !user ||
+      !["songs", "albums"].includes(selectedSound.sound.type)
     ) {
-      let soundData = selectedSound.sound as AlbumData | SongData;
-
-      // If the sound is a song or an album without relationships, fetch more detailed album data
-      if (
-        soundData.type === "songs" ||
-        (soundData.type === "albums" && !soundData.relationships)
-      ) {
-        const id =
-          soundData.type === "songs"
-            ? (soundData as SongData).relationships.albums.data[0].id
-            : soundData.id;
-        const sounds = await fetchSoundsbyType("albums", [id]);
-        soundData = sounds[0];
-      }
-
-      setSelectedSound({ ...selectedSound, sound: soundData });
-
-      return initializeAlbum(soundData as AlbumData, user.id);
+      return {};
     }
 
-    return Promise.resolve({});
+    let sound = selectedSound.sound;
+    // Get detailed album data if necessary
+    if (
+      sound.type === "songs" ||
+      (sound.type === "albums" && !sound.relationships)
+    ) {
+      const ids =
+        sound.type === "songs"
+          ? (sound as SongData).relationships.albums.data
+              .map((album) => album.id)
+              .join(",")
+          : sound.id;
+
+      const response = await axios.get(`/api/sounds/get/cachedAlbum`, {
+        params: { ids: ids },
+      });
+
+      [sound] = response.data;
+    }
+
+    setSelectedSound({ ...selectedSound, sound });
+    return initializeAlbum(sound as AlbumData, user.id);
   });
 }
 

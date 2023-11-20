@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion } from "framer-motion";
-import Soundtrack from "@/components/interface/user/sub/Soundtrack";
 import { useUserDataAndAlbumsQuery } from "@/lib/apiHandlers/userAPI";
 import Essentials from "@/components/interface/user/sub/Essentials";
 import Settings from "@/components/interface/user/sub/Settings";
 import { JellyComponent } from "@/components/global/Loading";
 import { useUser } from "@supabase/auth-helpers-react";
 import { SettingsIcon } from "@/components/icons";
-import FollowButton from "./sub/components/LinkButton";
+import FollowButton from "./sub/components/Link";
 import { User } from "@/types/dbTypes";
 
 // Define link properties for different states
@@ -140,7 +139,7 @@ const User = () => {
           {/* Avatar and Link */}
           <div className={`flex gap-4 relative`}>
             <Image
-              className={`rounded-full border border-gray3`}
+              className={`rounded-full border border-silver`}
               src={userData.image}
               alt={`${userData.name}'s avatar`}
               width={80}
@@ -149,7 +148,7 @@ const User = () => {
 
             {/* Name and Bio */}
             <div className={`flex flex-col gap-[6px] mt-[18px] w-full`}>
-              <div className={`text-sm text-gray4 leading-[9px]`}>
+              <div className={`text-sm text-gray4 leading-[9px] font-medium`}>
                 {userData.username}
               </div>
               <div

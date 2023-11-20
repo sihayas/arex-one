@@ -14,7 +14,7 @@ interface SearchProps {
   error: any;
 }
 
-const Search = ({
+const RenderResults = ({
   searchData,
   isInitialLoading,
   isFetching,
@@ -57,4 +57,4 @@ const Search = ({
   );
 };
 
-export default Search;
+export default RenderResults;

@@ -80,25 +80,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    function ({ addUtilities }) {
-      addUtilities(
-        {
-          ".h-albums": {
-            height: "calc(100% - 64px)",
-          },
-        },
-        ["responsive", "hover"],
-      );
-    },
-    plugin(function ({ addUtilities }) {
-      addUtilities({
-        ".shadow-bubble": {
-          filter:
-            "drop-shadow(0px 0px 0px rgba(0, 0, 0, 0.01)) drop-shadow(-7px 4px 18px rgba(0, 0, 0, 0.01)) drop-shadow(-30px 15px 33px rgba(0, 0, 0, 0.01)) drop-shadow(-67px 33px 45px rgba(0, 0, 0, 0.01)) drop-shadow(-119px 59px 53px rgba(0, 0, 0, 0.00)) drop-shadow(-185px 92px 58px rgba(0, 0, 0, 0.00))",
-        },
-      });
-    }),
-    require("tailwind-scrollbar"),
-  ],
+  plugins: [require("tailwind-scrollbar")],
 };

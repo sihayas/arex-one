@@ -4,9 +4,8 @@ import Image from "next/image";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { Reply } from "@/types/dbTypes";
-import Line from "@/components/interface/record/sub/icons/Line";
 import { StatLineIcon } from "@/components/icons";
-import DashedLine from "@/components/interface/record/sub/icons/DashedLine";
+import Dash from "@/components/global/Dash";
 
 import RenderChildren from "@/components/interface/record/sub/reply/RenderChildren";
 import { motion } from "framer-motion";
@@ -185,7 +184,7 @@ export default function ReplyItem({
                 }}
                 className="min-w-[8px] min-h-[8px] rounded-full bg-[#e5e5e6] cursor-pointer z-30"
               />
-              <DashedLine
+              <Dash
                 className={"flex flex-grow ml-auto mr-auto mb-8"}
                 color={"#e5e5e6"}
               />
@@ -230,3 +229,25 @@ export default function ReplyItem({
     </motion.div>
   );
 }
+
+const Line: React.FC<{
+  height?: string;
+  width?: string;
+  color?: string;
+  className?: string;
+  horizontal?: boolean;
+}> = ({
+  height = "1px",
+  width = "100%",
+  color = "rgba(0, 0, 0, 0.1)",
+  className = "",
+  horizontal = false,
+}) => (
+  <div
+    style={{
+      ...(horizontal ? { width: height, height: width } : { height, width }),
+      backgroundColor: color,
+    }}
+    className={className}
+  />
+);

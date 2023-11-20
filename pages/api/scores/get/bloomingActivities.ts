@@ -12,8 +12,8 @@ export default async function handler(
     const start = (page - 1) * limit;
     const end = start + limit;
 
-    // Fetch bloomEntries (recordIds) from Redis
-    const entries = await client.zrevrange("bloomingEntries", start, end);
+    // Fetch bloomingActivities (recordIds) from Redis
+    const entries = await client.zrevrange("bloomingActivityIds", start, end);
 
     // Check if there are more pages
     const hasMorePages = entries.length > limit;

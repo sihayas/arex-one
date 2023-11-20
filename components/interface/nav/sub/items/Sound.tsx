@@ -16,13 +16,8 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const artworkUrl = ArtworkURL(sound.attributes.artwork.url, "1200");
   const { handleSelectSound } = useHandleSoundClick();
   const { prevEssentialId, setPrevEssentialId, rank, setRank } = useSound();
-  const {
-    inputValue,
-    setInputValue,
-    setStoredInputValue,
-    isChangingEssential,
-    setExpandInput,
-  } = useNavContext();
+  const { setInputValue, isChangingEssential, setExpandInput } =
+    useNavContext();
 
   // Determine sound type
   const soundType = sound.type === "albums" ? "ALBUM" : "SONG";

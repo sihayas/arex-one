@@ -93,14 +93,14 @@ model Album {
   artist        String
   releaseDate   String
   averageRating Float    @default(0)
-  lastUpdated   DateTime @default(now()) @updatedAt
-  notes         String?  
+  notes         String?
 
   tracks        Track[]
   essentials    Essential[]
   record        Record[]
   views         View[]   @relation("AlbumViews")
 
+  lastUpdated   DateTime @default(now()) @updatedAt
   @@unique([id])
   @@index([appleId, id])
 }
@@ -249,7 +249,7 @@ enum ViewType {
 model Activity {
   id            String          @id @default(cuid())
   type          ActivityType
-  referenceId   String
+  œ  String
   createdAt     DateTime        @default(now()) @map(name: "created_at")
   updatedAt     DateTime        @updatedAt @map(name: "updated_at")
 

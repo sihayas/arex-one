@@ -1,6 +1,6 @@
 import React from "react";
 import { useReviewsQuery } from "@/lib/apiHandlers/albumAPI";
-import RecordAlbum from "@/components/interface/album/sub/RecordAlbum";
+import RecordAlbum from "@/components/records/RecordAlbum";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
@@ -16,7 +16,7 @@ const RenderEntries: React.FC<RenderRecordsProps> = ({
 }) => {
   const { user } = useInterfaceContext();
 
-  // Get entries & flatten
+  // Get bloomingActivities & flatten
   const {
     data: entries,
     fetchNextPage,

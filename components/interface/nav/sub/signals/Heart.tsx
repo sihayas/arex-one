@@ -7,7 +7,7 @@ interface SignalHeartProps {
   notification: extendedNotification;
 }
 
-const SignalHeart = ({ notification }: SignalHeartProps) => {
+const Heart = ({ notification }: SignalHeartProps) => {
   const { users, fetchedSound, activity } = notification;
   const isAggregated = users.length > 1;
 
@@ -102,4 +102,4 @@ const SignalHeart = ({ notification }: SignalHeartProps) => {
   );
 };
 
-export default SignalHeart;
+export default Heart;

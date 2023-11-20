@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { bloomEntries } from "@/lib/cron/bloomEntries";
+import { bloomingActivities } from "@/lib/cron/bloomingActivities";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST" || req.method === "GET") {
     try {
-      await bloomEntries();
+      await bloomingActivities();
       res
         .status(200)
         .json({ message: "Successfully updated record blooming scores." });

@@ -5,3 +5,18 @@ const client = new Redis(
 );
 
 export default client;
+
+// Set data in Redis cache
+export const setCache = async (
+  key: string,
+  value: any,
+  ttl: number,
+): Promise<void> => {
+  await client.setex(key, ttl, JSON.stringify(value));
+};
+
+// Get data from Redis cache
+export const getCache = async (key: string): Promise<any | null> => {
+  const data = await client.get(key);
+  return data ? JSON.parse(data) : null;
+};

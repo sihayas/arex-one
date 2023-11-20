@@ -21,12 +21,10 @@ export const postEntry = async (submissionData: {
       console.log("Submission successful", response.data);
       return response.data;
     } else {
-      // You could log this case or handle it as per your application's needs
       throw new Error(`Unexpected response status: ${response.status}`);
     }
   } catch (error) {
     console.error("Error submitting data:", error);
-    // Re-throwing the error to be handled by the caller, if needed
     throw new Error(`Error during submission:`);
   }
 };

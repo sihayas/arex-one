@@ -1,6 +1,6 @@
 import { prisma } from "../global/prisma";
 
-export async function updateAlbumRatings() {
+export async function averageRating() {
   // Using a tagged template literal for the query
   await prisma.$executeRaw`
     UPDATE "Album"

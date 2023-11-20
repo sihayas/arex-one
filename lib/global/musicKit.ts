@@ -2,22 +2,22 @@ import axios from "axios";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
-const baseURL = "https://api.music.apple.com/v1/catalog/us";
+export const baseURL = "https://api.music.apple.com/v1/catalog/us";
 
 // Helper function to check if the title contains unwanted keywords
 const isUnwanted = (title: string) => {
   const unwantedKeywords = ["remix", "edition", "mix"];
   return unwantedKeywords.some((keyword) =>
-    title.toLowerCase().includes(keyword)
+    title.toLowerCase().includes(keyword),
   );
 };
 
-// Search for sounds method
+// RenderResults for sounds method
 export const searchAlbums = async (keyword: string) => {
   const limit = 12;
   const types = "albums,songs";
   const url = `${baseURL}/search?term=${encodeURIComponent(
-    keyword
+    keyword,
   )}&limit=${limit}&types=${types}`;
 
   const response = await axios.get(url, {
@@ -35,7 +35,7 @@ export const searchAlbums = async (keyword: string) => {
     .filter(
       (album: AlbumData) =>
         !album.attributes.isSingle && // Check if the album is not a single
-        !isUnwanted(album.attributes.name) // Check if the album title contains unwanted keywords
+        !isUnwanted(album.attributes.name), // Check if the album title contains unwanted keywords
     )
     .slice(0, 4);
 
@@ -46,7 +46,7 @@ export const searchAlbums = async (keyword: string) => {
 export const fetchSoundsByTypes = async (idTypes: Record<string, string[]>) => {
   const idParams = Object.entries(idTypes)
     .flatMap(([type, ids]) =>
-      ids.length > 0 ? `ids[${type}]=${ids.join(",")}` : []
+      ids.length > 0 ? `ids[${type}]=${ids.join(",")}` : [],
     )
     .join("&");
 
@@ -61,12 +61,14 @@ export const fetchSoundsByTypes = async (idTypes: Record<string, string[]>) => {
 };
 
 // Fetch one or more sounds by a single type (song or album)
-export const fetchSoundsbyType = async (type: string, ids: string[]) => {
+export const fetchSoundsByType = async (type: string, ids: string[]) => {
   if (ids.length === 0) return [];
+  console.log("baseURL", `${baseURL}/${type}?ids=${ids.join(",")}`);
   const response = await axios.get(`${baseURL}/${type}?ids=${ids.join(",")}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+
   return response.data.data;
 };
