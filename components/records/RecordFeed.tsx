@@ -45,12 +45,12 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
         {/* Username and Avatar*/}
         <div className={`flex items-center gap-2 h-fit`}>
           <p
-            className={`text-gray4 font-medium text-xs leading-[75%] min-w-[162px] text-end`}
+            className={`text-gray4 font-medium text-sm leading-[75%] min-w-[162px] text-end`}
           >
             {record.author.username}
           </p>
           <Avatar
-            className={`h-[42px] border border-gray3`}
+            className={`h-[42px] border border-silver`}
             imageSrc={record.author.image}
             altText={`${record.author.username}'s avatar`}
             width={42}

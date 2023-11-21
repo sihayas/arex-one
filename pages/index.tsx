@@ -70,7 +70,7 @@ export default function Home() {
       <div
         className={`text-sm text-[#000] font-serif absolute top-4 left-4 drop-shadow-sm`}
       >
-        RX
+        ARE.X ALPHA
       </div>
 
       {activeFeed && (

@@ -21,13 +21,13 @@ export default async function handler(
 
     const idsArray = ids.split(",");
     let responseData = [];
-    let needToFetch = [];
+    let needToFetch: string[] = [];
 
     for (const id of idsArray) {
       const songKey = `sound:songs:${id}:albumId`;
       const albumKey = `sound:albums:${id}:data`;
 
-      // Fetch album data from cache or mark for fetching
+      // Fetch album data from cache & return if found, otherwise add to list of IDs to fetch
       const cachedData = await getCache(type === "albums" ? albumKey : songKey);
       if (cachedData) {
         responseData.push(cachedData);

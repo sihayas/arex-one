@@ -9,7 +9,6 @@ import { SelectedSound } from "@/context/SoundContext";
 import { Record, User } from "@/types/dbTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useScroll } from "framer-motion";
 
 export type Page = {
   key: string;
