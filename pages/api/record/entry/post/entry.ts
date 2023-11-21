@@ -3,6 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 import { createEntryRecordActivity } from "@/pages/api/middleware/createActivity";
 import { SongData } from "@/types/appleTypes";
 import { fetchSoundsByType } from "@/lib/global/musicKit";
+import { setCache } from "@/lib/global/redis";
 
 export default async function handle(
   req: NextApiRequest,
@@ -26,22 +27,34 @@ export default async function handle(
       const id = sound.id;
       const fetchedData = await fetchSoundsByType("songs", [id]);
       const albumData = fetchedData[0];
-      const cacheKey = `sound:albums:${albumData.id}:data`;
+      const albumKey = `sound:albums:${albumData.id}:data`;
+      const songKey = `sound:songs:${id}:albumId`;
 
-      // Create album in database
-      await prisma.album.create({
-        data: {
+      // Cache  data
+      await setCache(albumKey, albumData, 3600);
+      await setCache(songKey, albumData.id, 3600);
+
+      // Upsert album with track in database, otherwise add track to album
+      await prisma.album.upsert({
+        where: { appleId: albumData.id },
+        update: {
+          tracks: {
+            create: {
+              appleId: sound.id,
+              name: sound.attributes.name,
+            },
+          },
+        },
+        create: {
           appleId: albumData.id,
           name: albumData.attributes.name,
           releaseDate: albumData.attributes.releaseDate,
           artist: albumData.attributes.artistName,
           tracks: {
-            create: albumData.relationships.tracks.data.map(
-              (track: SongData) => ({
-                appleId: track.id,
-                name: track.attributes.name,
-              }),
-            ),
+            create: {
+              appleId: sound.id,
+              name: sound.attributes.name,
+            },
           },
         },
       });
@@ -52,6 +65,48 @@ export default async function handle(
           type: "ENTRY",
           author: { connect: { id: userId } },
           track: { connect: { appleId: sound.id } },
+        },
+      });
+
+      // Create entry
+      await prisma.entry.create({
+        data: {
+          text,
+          rating,
+          loved,
+          replay: false,
+          recordId: record.id,
+        },
+      });
+
+      await createEntryRecordActivity(record.id);
+    } else if (!existingSound && type === "albums") {
+      const id = sound.id;
+      const fetchedData = await fetchSoundsByType("albums", [id]);
+      const albumData = fetchedData[0];
+      const albumKey = `sound:albums:${id}:data`;
+
+      // Cache album data
+      await setCache(albumKey, albumData, 3600);
+
+      // Upsert album in database
+      await prisma.album.upsert({
+        where: { appleId: albumData.id },
+        update: {},
+        create: {
+          appleId: albumData.id,
+          name: albumData.attributes.name,
+          releaseDate: albumData.attributes.releaseDate,
+          artist: albumData.attributes.artistName,
+        },
+      });
+
+      // Set up the record
+      const record = await prisma.record.create({
+        data: {
+          type: "ENTRY",
+          author: { connect: { id: userId } },
+          album: { connect: { appleId: sound.id } },
         },
       });
 
