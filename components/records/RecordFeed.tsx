@@ -34,7 +34,7 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
   );
 
   const isAlbumEntry = associatedType === "album";
-  const isCaption = record.caption ? true : false;
+  const isCaption = !!record.caption;
 
   const handleEntryClick = useHandleRecordClick(record);
 

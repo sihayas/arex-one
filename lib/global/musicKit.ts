@@ -60,15 +60,18 @@ export const fetchSoundsByTypes = async (idTypes: Record<string, string[]>) => {
   return response.data.data;
 };
 
-// Fetch one or more sounds by a single type (song or album)
+// Fetch one or more sounds by a single type (song or album), returns albums
 export const fetchSoundsByType = async (type: string, ids: string[]) => {
   if (ids.length === 0) return [];
-  console.log("baseURL", `${baseURL}/${type}?ids=${ids.join(",")}`);
-  const response = await axios.get(`${baseURL}/${type}?ids=${ids.join(",")}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+
+  const endpoint =
+    type === "songs"
+      ? `${type}/${ids.join(",")}/albums`
+      : `${type}?ids=${ids.join(",")}`;
+
+  const { data } = await axios.get(`${baseURL}/${endpoint}`, {
+    headers: { Authorization: `Bearer ${token}` },
   });
 
-  return response.data.data;
+  return data.data;
 };

@@ -5,32 +5,47 @@ import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
-// Fetch a users personal feed
+// Fetch users personal feed
 export const useFeedQuery = (userId: string, limit: number = 6) => {
   const { user } = useInterfaceContext();
-
-  // Check if grabbing profile records or user feed
   const isProfile = user?.id !== userId;
 
   const result = useInfiniteQuery(
     ["feed", userId],
-    ({ pageParam = 1 }) => {
-      if (!userId) {
-        return Promise.reject(new Error("User ID is undefined"));
-      }
-      return fetchFeedAndMergeAlbums(
+    async ({ pageParam = 1 }) => {
+      const url = isProfile
+        ? `/api/feed/get/profileRecords`
+        : `/api/feed/get/activities`;
+
+      // Fetch activity data
+      const params = {
         userId,
-        pageParam,
+        page: pageParam,
         limit,
-        isProfile,
-        user?.id,
-      );
+        ...(isProfile && user?.id && { authUserId: user.id }),
+      };
+
+      const response = await axios.get(url, { params });
+
+      if (
+        !response.data.data ||
+        !response.data.data.activities ||
+        !response.data.data.pagination
+      ) {
+        throw new Error("Unexpected server response structure");
+      }
+
+      const mergedData = await attachSoundData(response.data.data.activities);
+
+      return {
+        data: mergedData,
+        pagination: response.data.data.pagination,
+      };
     },
+    // Pagination
     {
-      getNextPageParam: (lastPage, allPages) => {
-        const lastPageData = allPages[allPages.length - 1];
-        return lastPageData.pagination?.nextPage || null;
-      },
+      getNextPageParam: (lastPage, allPages) =>
+        lastPage.pagination?.nextPage || null,
       enabled: !!userId,
     },
   );
@@ -44,59 +59,33 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
   };
 };
 
-const fetchFeedAndMergeAlbums = async (
-  userId: string,
-  pageParam: number = 1,
-  limit: number = 6,
-  isProfile: boolean = false,
-  authUserId?: string,
-) => {
-  const url = isProfile
-    ? `/api/feed/get/profileRecords`
-    : `/api/feed/get/activities`;
-
-  const params = {
-    userId,
-    page: pageParam,
-    limit,
-    ...(isProfile && authUserId && { authUserId }),
-  };
-
-  const res = await axios.get(url, { params });
-
-  // Check if res.data.data has the correct structure
-  if (
-    !res.data.data ||
-    !res.data.data.activities ||
-    !res.data.data.pagination
-  ) {
-    throw new Error("Unexpected server response structure");
-  }
-
-  const activityData = res.data.data.activities;
-  const mergedData = await attachAlbumAndTrackData(activityData);
-
-  return {
-    data: mergedData,
-    pagination: res.data.data.pagination,
-  };
-};
-
-// Fetch basic periodically ranked feed
+// Fetch ranked feed
 export const useBloomingFeedQuery = (userId: string, limit: number = 6) => {
   const result = useInfiniteQuery(
     ["bloomingFeed", userId],
-    ({ pageParam = 1 }) => {
-      if (!userId) {
-        return Promise.reject(new Error("User ID is undefined"));
-      }
-      return fetchBloomingFeedAndMergeAlbums(userId, pageParam, limit);
+    async ({ pageParam = 1 }) => {
+      const dataUrl = `/api/feed/get/bloomingActivities`;
+
+      const activitiesResponse = await axios.get(dataUrl, {
+        params: {
+          userId,
+          page: pageParam,
+          limit,
+        },
+      });
+
+      const activities = activitiesResponse.data.data.activities;
+      // Attach album and track data to activities
+      const mergedData = await attachSoundData(activities);
+
+      return {
+        data: mergedData,
+        pagination: activitiesResponse.data.data.pagination,
+      };
     },
     {
-      getNextPageParam: (lastPage, allPages) => {
-        const lastPageData = allPages[allPages.length - 1];
-        return lastPageData.pagination?.nextPage || null;
-      },
+      getNextPageParam: (lastPage, allPages) =>
+        lastPage.pagination?.nextPage || null,
       enabled: !!userId,
     },
   );
@@ -110,49 +99,7 @@ export const useBloomingFeedQuery = (userId: string, limit: number = 6) => {
   };
 };
 
-const fetchBloomingFeedAndMergeAlbums = async (
-  userId: string,
-  pageParam: number = 1,
-  limit: number = 6,
-) => {
-  const idsUrl = `/api/scores/get/bloomingActivities`;
-  const dataUrl = `/api/feed/get/bloomingActivities`;
-
-  const params = {
-    userId,
-    page: pageParam,
-    limit,
-  };
-
-  // Get trending record entry activity ids from Redis
-  const res = await axios.get(idsUrl, { params });
-
-  // Validate res.data.data has the correct structure
-  if (!res.data.data || !res.data.data.entries || !res.data.data.pagination) {
-    throw new Error("Unexpected server response structure");
-  }
-
-  const activityIds = res.data.data.entries;
-  const activityIdsParam = activityIds.join(",");
-
-  // Get the activity.record data for returned list of activity ids
-  const activities = await axios.get(dataUrl, {
-    params: {
-      ids: activityIdsParam,
-      userId,
-    },
-  });
-
-  const activityData = activities.data;
-  const mergedData = await attachAlbumAndTrackData(activityData);
-
-  return {
-    data: mergedData,
-    pagination: res.data.data.pagination,
-  };
-};
-
-// Fetch recently interacted with records
+// Fetch recently interacted feed
 export const useRecentFeedQuery = (userId: string, limit: number = 6) => {
   const result = useInfiniteQuery(
     ["recentRecords", userId],
@@ -248,21 +195,8 @@ const fetchRecentFeedAndMergeAlbums = async (
   };
 };
 
-function extractRecordFromActivity(activity: Activity) {
-  switch (activity.type) {
-    case ActivityType.RECORD:
-      return activity.record;
-    case ActivityType.REPLY:
-      return activity.reply?.record;
-    case ActivityType.HEART:
-      return activity.heart?.record;
-    default:
-      return null;
-  }
-}
-
 // Utility function to attach album and track data to activities
-const attachAlbumAndTrackData = async (activityData: Activity[]) => {
+const attachSoundData = async (activityData: Activity[]) => {
   const albumIds: string[] = [];
   const trackIds: string[] = [];
 
@@ -280,7 +214,7 @@ const attachAlbumAndTrackData = async (activityData: Activity[]) => {
 
   // Fetch album and track data
   const idTypes = { albums: albumIds, songs: trackIds };
-  const response = await axios.get(`/api/sounds/get/cachedSounds`, {
+  const response = await axios.get(`/api/sounds/get/sounds`, {
     params: { idTypes: JSON.stringify(idTypes) },
   });
   const { albums, songs } = response.data;
@@ -310,3 +244,16 @@ const attachAlbumAndTrackData = async (activityData: Activity[]) => {
 
   return activityData;
 };
+
+function extractRecordFromActivity(activity: Activity) {
+  switch (activity.type) {
+    case ActivityType.RECORD:
+      return activity.record;
+    case ActivityType.REPLY:
+      return activity.reply?.record;
+    case ActivityType.HEART:
+      return activity.heart?.record;
+    default:
+      return null;
+  }
+}

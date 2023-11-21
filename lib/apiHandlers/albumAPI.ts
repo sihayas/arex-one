@@ -2,7 +2,6 @@ import axios from "axios";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { User } from "@/types/dbTypes";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import { fetchSoundsByType } from "../global/musicKit";
 import { useSound } from "@/context/SoundContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -62,42 +61,26 @@ export async function fetchReviews({
   return response.data;
 }
 
-// Fetch detailed album data on album page if necessary and mark as viewed.
+// Helper for loading album page data
 export function useAlbumQuery() {
   const { selectedSound, setSelectedSound } = useSound();
-  const { user } = useInterfaceContext();
 
   return useQuery(["album", selectedSound?.sound.id], async () => {
-    if (
-      !selectedSound ||
-      !user ||
-      !["songs", "albums"].includes(selectedSound.sound.type)
-    ) {
-      return {};
-    }
+    const shouldFetch =
+      selectedSound &&
+      (selectedSound.sound.type === "songs" ||
+        !selectedSound.sound.relationships);
 
-    let sound = selectedSound.sound;
-    // Get detailed album data if necessary
-    if (
-      sound.type === "songs" ||
-      (sound.type === "albums" && !sound.relationships)
-    ) {
-      const ids =
-        sound.type === "songs"
-          ? (sound as SongData).relationships.albums.data
-              .map((album) => album.id)
-              .join(",")
-          : sound.id;
+    if (!shouldFetch) return selectedSound?.sound || null;
 
-      const response = await axios.get(`/api/sounds/get/cachedAlbum`, {
-        params: { ids: ids },
-      });
+    const response = await axios.get(`/api/sounds/get/sound`, {
+      params: { ids: selectedSound.sound.id, type: selectedSound.sound.type },
+    });
 
-      [sound] = response.data;
-    }
+    const updatedSound = response.data[0];
+    setSelectedSound({ ...selectedSound, sound: updatedSound });
 
-    setSelectedSound({ ...selectedSound, sound });
-    return initializeAlbum(sound as AlbumData, user.id);
+    return updatedSound;
   });
 }
 

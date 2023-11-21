@@ -108,6 +108,8 @@ const Nav = () => {
   const { data, isInitialLoading, isFetching, error } =
     GetSearchResults(searchQuery);
 
+  console.log("data", data);
+
   const onBlur = useCallback(() => {
     setExpandInput(false);
   }, [setExpandInput]);

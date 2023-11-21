@@ -1,15 +1,24 @@
-import client from "../global/redis";
+import client, { setCache } from "../global/redis";
 import { prisma } from "../global/prisma";
+import { Record } from "@/types/dbTypes";
 
-interface Record {
+type SelectedRecordFields = Pick<
+  Record,
+  | "id"
+  | "updatedAt"
+  | "type"
+  | "author"
+  | "album"
+  | "track"
+  | "createdAt"
+  | "entry"
+> & {
   _count: {
-    hearts: number;
     replies: number;
+    hearts: number;
     views: number;
   };
-  id: string;
-  updatedAt: Date;
-}
+};
 
 const weights = {
   views: 0.3,
@@ -18,7 +27,7 @@ const weights = {
   recency: 0.3,
 };
 
-function calculateBloomingScore(record: Record) {
+function calculateBloomingScore(record: SelectedRecordFields) {
   const currentTime = new Date();
   const lastInteractionTime = new Date(record.updatedAt);
   const diffInMilliseconds =
@@ -45,10 +54,14 @@ export async function bloomingActivities() {
       record: {
         select: {
           id: true,
-          _count: {
-            select: { replies: true, hearts: true, views: true },
-          },
           updatedAt: true,
+          type: true,
+          author: true,
+          album: true,
+          track: true,
+          createdAt: true,
+          entry: true,
+          _count: { select: { replies: true, hearts: true, views: true } },
         },
       },
     },
@@ -57,11 +70,11 @@ export async function bloomingActivities() {
   for (const activity of activities) {
     if (activity.record) {
       const record = activity.record;
+      // @ts-ignore
       const bloomingScore = calculateBloomingScore(record);
-      await client.zadd("bloomingActivityIds", bloomingScore, activity.id);
-      console.log(
-        `Updated record ${record.id} /  with new trending score: ${bloomingScore}`,
-      );
+      // Add blooming score to sorted set, and cache activity data
+      await client.zadd("activity:blooming", bloomingScore, activity.id);
+      await setCache(`activity:data:${activity.id}`, activity, 3600);
     }
   }
 

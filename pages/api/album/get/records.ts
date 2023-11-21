@@ -35,13 +35,13 @@ export default async function handle(
     let orderBy: ReviewOrderByWithRelationInput | undefined;
 
     switch (sort) {
-      case "newest": // Switch to Popular
+      case "newest":
         orderBy = { createdAt: "desc" };
         break;
-      case "positive": // Switch to popular with rating > 2.5
+      case "positive":
         orderBy = { rating: "desc" };
         break;
-      case "negative": // Switch to popular with rating < 2.5
+      case "negative":
         orderBy = { rating: "asc" };
         break;
       default:
@@ -63,7 +63,6 @@ export default async function handle(
         include: {
           entry: true,
           author: true,
-          // Check if hearted
           hearts: {
             where: { authorId: userId },
           },

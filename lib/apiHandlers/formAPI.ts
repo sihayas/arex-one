@@ -1,14 +1,15 @@
 import axios from "axios";
+import { AlbumData, SongData, TrackData } from "@/types/appleTypes";
 
 export const postEntry = async (submissionData: {
   text: string;
   rating: number;
   loved: boolean;
   userId: string;
-  appleAlbumId?: string;
-  appleTrackId?: string;
+  sound: AlbumData | SongData;
+  type: "albums" | "songs";
 }) => {
-  // Determine the correct endpoint and payload based on the rating
+  // No rating means it's a caption
   const endpoint =
     submissionData.rating === 0
       ? "/api/record/caption/post/caption"
