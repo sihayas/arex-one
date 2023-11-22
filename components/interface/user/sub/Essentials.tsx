@@ -22,13 +22,13 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
           <Artwork sound={essential.appleAlbumData} width={176} height={176} />
         </div>
       ))}
-      {/*<div className={`relative`}>*/}
-      {/*  <p*/}
-      {/*    className={`absolute leading-[9px] text-xs text-gray5 uppercase left-1/2 -translate-x-1/2 top-3`}*/}
-      {/*  >*/}
-      {/*    essentials*/}
-      {/*  </p>*/}
-      {/*</div>*/}
+      <div className={`relative`}>
+        <p
+          className={`absolute leading-[9px] text-xs font-bold text-white uppercase left-1/2 -translate-x-1/2 top-3`}
+        >
+          essentials
+        </p>
+      </div>
     </motion.div>
   );
 };

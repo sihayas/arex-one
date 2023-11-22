@@ -127,8 +127,8 @@ export const FeedRecord: React.FC<FeedRecordProps> = ({
             outerClassName={`rounded-2xl`}
             className="rounded-2xl outline outline-silver outline-1"
             sound={sound}
-            width={128}
-            height={128}
+            width={160}
+            height={160}
           />
         </div>
       )}

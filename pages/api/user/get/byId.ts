@@ -50,7 +50,7 @@ export default async function handle(
       }
     }
 
-    const [followAtoB, followBtoA, uniqueRecords] = await Promise.all([
+    const [followAtoB, followBtoA, uniqueAlbums] = await Promise.all([
       prisma.follows.findFirst({
         where: {
           followerId: String(sessionUserId),
@@ -75,7 +75,7 @@ export default async function handle(
       essentials: userEssentials,
       isFollowingAtoB: followAtoB != null,
       isFollowingBtoA: followBtoA != null,
-      uniqueRecords: uniqueRecords,
+      uniqueAlbums: uniqueAlbums,
     });
   } catch (error) {
     console.error("Error fetching user:", error);
