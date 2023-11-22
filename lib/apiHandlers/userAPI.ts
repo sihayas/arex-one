@@ -98,7 +98,7 @@ export const useUserSettingsQuery = (userId: string) => {
   const { data, isLoading, isError } = useQuery(
     ["userSettings", userId],
     async () => {
-      const url = `/api/user/get/settingsById`;
+      const url = `/api/user/get/settings`;
       const response = await axios.get(url, {
         params: {
           userId,
@@ -116,7 +116,7 @@ export const useUserSoundtrackQuery = (userId: string) => {
   const { data, isLoading, isError } = useQuery(
     ["mergedData", userId],
     async () => {
-      const url = `/api/user/get/soundtrackById`;
+      const url = `/api/user/get/soundtrack`;
       const response = await axios.get(url, {
         params: {
           userId,
@@ -192,7 +192,7 @@ export const useNotificationsQuery = (userId: string | undefined) => {
   } = useQuery(
     ["notifications", userId],
     async () => {
-      const url = `/api/user/get/notificationsById`;
+      const url = `/api/user/get/notifications`;
       const response = await axios.get(url, {
         params: {
           userId,

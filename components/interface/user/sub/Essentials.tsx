@@ -10,7 +10,7 @@ interface EssentialsProps {
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   return (
     <motion.div
-      className={`flex flex-col px-2 pb-8 bg-[#E4E4E4] items-center rounded-b-2xl shadow-shadowKitMedium h-fit`}
+      className={`flex flex-col px-2 pb-8 bg-[#E4E4E4] items-center rounded-b-2xl shadow-shadowKitMedium h-fit absolute right-8 top-0 z-20`}
     >
       {essentials.map((essential, i) => (
         <div

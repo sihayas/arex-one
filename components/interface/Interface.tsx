@@ -46,8 +46,8 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 448, height: 672 },
-      target: { width: 448, height: 672 },
+      base: { width: 672, height: 384 },
+      target: { width: 672, height: 384 },
     },
     album: {
       base: { width: 480, height: 480 },

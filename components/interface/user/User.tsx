@@ -10,6 +10,10 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { SettingsIcon } from "@/components/icons";
 import FollowButton from "./sub/components/Link";
 import { User } from "@/types/dbTypes";
+import { createPortal } from "react-dom";
+import Stars from "@/components/global/Stars";
+import Avatar from "@/components/global/Avatar";
+import Heart from "@/components/global/Heart";
 
 // Define link properties for different states
 const linkProps = {
@@ -23,8 +27,8 @@ const linkProps = {
 const User = () => {
   const user = useUser();
   const authenticatedUserId = user?.id;
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
-  // Get page user
   const { pages, feedHistory, setFeedHistory, setActiveFeed, setIsVisible } =
     useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
@@ -79,7 +83,7 @@ const User = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full flex flex-col px-8 pb-8"
+      className="w-full h-full flex p-8"
     >
       {isLoading ? (
         <JellyComponent className={``} isVisible={true} />
@@ -87,91 +91,74 @@ const User = () => {
         <div>Error</div>
       ) : (
         <>
-          <div className={`flex justify-between w-full h-full`}>
-            {/* Left Side */}
-            <div className={`flex flex-col py-8`}>
-              {/* Logo and Date */}
-              <div className={`flex items-center text-gray3`}>
-                <div className="text-[19px] leading-[13px] text-black font-serif">
-                  RX
-                </div>
-                <div className={`mx-1`}>&middot;</div>
-                <div className="text-xs text-gray3 font-bold leading-[9px]">
-                  MONTH 1
-                </div>
-              </div>
-
-              {/*  Sounds Count */}
-              <div className={`flex flex-col gap-[12px] mt-[42px]`}>
-                <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
-                <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                  {userData.uniqueAlbums.length}
-                </div>
-              </div>
-
-              {/*  records Count */}
-              <div className={`flex flex-col gap-[12px] mt-6`}>
-                <div className="text-xs text-gray3 leading-[9px]">RECORDS</div>
-                <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                  {userData._count.record}
-                </div>
-              </div>
-
-              {/*  */}
+          {/* Left Side */}
+          <div className={`flex flex-col`}>
+            {/* Logo and Date */}
+            <div className={`flex items-center text-gray3 font-serif`}>
+              <div className="text-xs leading-[13px] text-black">RX</div>
+              <div className={`mx-1`}>&middot;</div>
+              <div className="text-xs text-gray2 leading-[9px]">MONTH 1</div>
             </div>
 
-            {/* Right Side , Essentials & Settings*/}
-            {isOwnProfile &&
-            authenticatedUserId &&
-            subSection !== "essentials" ? (
-              // Show settings if subsection is not essentials and own profile
-              <Settings
-                userId={authenticatedUserId}
-                essentials={essentials}
-                bio={userData.bio}
-              />
-            ) : (
-              // Show essentials by default or if subsection is "essentials"
-              <Essentials essentials={essentials} />
-            )}
-          </div>
-
-          {/* Avatar and Link */}
-          <div className={`flex gap-4 relative`}>
-            <Image
-              className={`rounded-full border border-silver`}
-              src={userData.image}
-              alt={`${userData.name}'s avatar`}
-              width={80}
-              height={80}
-            />
-
-            {/* Name and Bio */}
-            <div className={`flex flex-col gap-[6px] mt-[18px] w-full`}>
-              <div className={`text-sm text-gray4 leading-[9px] font-medium`}>
-                {userData.username}
-              </div>
-              <div
-                className={`text-sm text-gray2 w-full max-h-[105px] line-clamp-5`}
-              >
-                {userData.bio}
+            {/* Sounds Count */}
+            <div className={`flex flex-col gap-[12px] mt-6`}>
+              <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
+              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
+                {userData.uniqueAlbums.length}
               </div>
             </div>
 
-            {isOwnProfile ? (
-              <SettingsIcon
-                onClick={() => handleSubSectionClick("settings")}
-                className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}
+            {/* Records Count */}
+            <div className={`flex flex-col gap-[12px] mt-[23px]`}>
+              <div className="text-xs text-gray3 leading-[9px]">RECORDS</div>
+              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
+                {userData._count.record}
+              </div>
+            </div>
+
+            {/* Avatar and Link */}
+            <div className={`flex gap-4 relative mt-auto`}>
+              <Image
+                className={`rounded-full border border-silver`}
+                src={userData.image}
+                alt={`${userData.name}'s avatar`}
+                width={80}
+                height={80}
               />
-            ) : (
-              <FollowButton
-                followState={followState}
-                handleFollowUnfollow={handleFollowUnfollow}
-                linkColor={linkColor}
-                linkText={linkText}
-              />
-            )}
+
+              {/* Name and Bio */}
+              <div className={`flex flex-col gap-[6px] mt-[18px] w-full`}>
+                <div className={`text-sm text-gray4 leading-[9px] font-medium`}>
+                  {userData.username}
+                </div>
+                <div
+                  className={`text-sm text-gray2 w-full max-h-[105px] line-clamp-5`}
+                >
+                  {userData.bio}
+                </div>
+              </div>
+
+              {isOwnProfile ? (
+                <SettingsIcon
+                  onClick={() => handleSubSectionClick("settings")}
+                  className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}
+                />
+              ) : (
+                <FollowButton
+                  followState={followState}
+                  handleFollowUnfollow={handleFollowUnfollow}
+                  linkColor={linkColor}
+                  linkText={linkText}
+                />
+              )}
+            </div>
+
+            {/*  */}
           </div>
+
+          {createPortal(<Essentials essentials={essentials} />, cmdk)}
+
+          {/* Right Side , Essentials & Settings*/}
         </>
       )}
     </motion.div>
