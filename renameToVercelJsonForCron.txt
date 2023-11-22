@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/cron/averageRating",
+      "path": "/api/cron/soundRatings",
       "schedule": "0 18 * * *"
     },
     {

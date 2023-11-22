@@ -25,11 +25,10 @@ export default async function handle(
         .status(400)
         .json({ error: "Sound ID and User ID are required." });
     }
+    const sort = req.query.sort || "newest";
 
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 6;
-    const sort = req.query.sort || "newest";
-
     const skip = (page - 1) * limit;
 
     let orderBy: ReviewOrderByWithRelationInput | undefined;

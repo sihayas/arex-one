@@ -54,14 +54,14 @@ export async function bloomingActivities() {
       record: {
         select: {
           id: true,
-          updatedAt: true,
           type: true,
           author: true,
           album: true,
           track: true,
-          createdAt: true,
           entry: true,
           _count: { select: { replies: true, hearts: true, views: true } },
+          createdAt: true,
+          updatedAt: true,
         },
       },
     },
@@ -73,8 +73,12 @@ export async function bloomingActivities() {
       // @ts-ignore
       const bloomingScore = calculateBloomingScore(record);
       // Add blooming score to sorted set, and cache activity data
-      await client.zadd("activity:blooming", bloomingScore, activity.id);
-      await setCache(`activity:data:${activity.id}`, activity, 3600);
+      await client.zadd(
+        `activity:record:blooming:score`,
+        bloomingScore,
+        activity.id,
+      );
+      await setCache(`activity:record:data:${activity.id}`, activity, 3600);
     }
   }
 

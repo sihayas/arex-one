@@ -92,7 +92,7 @@ model Album {
   name          String
   artist        String
   releaseDate   String
-  averageRating Float    @default(0)
+  soundRatings Float    @default(0)
   notes         String?
 
   tracks        Track[]
