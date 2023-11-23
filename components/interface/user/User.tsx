@@ -25,8 +25,7 @@ const linkProps = {
 
 // User component
 const User = () => {
-  const user = useUser();
-  const authenticatedUserId = user?.id;
+  const { user } = useInterfaceContext();
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
   const { pages, feedHistory, setFeedHistory, setActiveFeed, setIsVisible } =
@@ -34,12 +33,12 @@ const User = () => {
   const pageUser = pages[pages.length - 1].user;
 
   // Check if the profile belongs to the authenticated user
-  const isOwnProfile = authenticatedUserId === pageUser?.id;
+  const isOwnProfile = user?.id === pageUser?.id;
 
   // Fetch user data and albums
   const { data, isLoading, isError, followState, handleFollowUnfollow } =
-    useUserDataAndAlbumsQuery(pageUser?.id, authenticatedUserId);
-  const { userData, essentials } = data || {};
+    useUserDataAndAlbumsQuery(user?.id, pageUser?.id);
+  const { userData } = data || {};
 
   // Determine link status based on follow state
   const linkStatus =
@@ -104,7 +103,7 @@ const User = () => {
             <div className={`flex flex-col gap-[12px] mt-6`}>
               <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
               <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                {userData.uniqueAlbums.length}
+                {userData.uniqueAlbums}
               </div>
             </div>
 
@@ -156,7 +155,7 @@ const User = () => {
             {/*  */}
           </div>
 
-          {createPortal(<Essentials essentials={essentials} />, cmdk)}
+          {createPortal(<Essentials essentials={userData.essentials} />, cmdk)}
 
           {/* Right Side , Essentials & Settings*/}
         </>

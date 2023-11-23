@@ -1,10 +1,10 @@
 import { prisma } from "../global/prisma";
 
-export async function soundRatings() {
+export async function soundAverage() {
   // Using a tagged template literal for the query
   await prisma.$executeRaw`
     UPDATE "Album"
-    SET "averageRating" = COALESCE((
+    SET "rating" = COALESCE((
       SELECT AVG("Entry"."rating")
       FROM "Record"
       INNER JOIN "Entry" ON "Record"."id" = "Entry"."recordId"

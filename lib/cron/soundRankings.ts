@@ -41,7 +41,7 @@ function calculateScore(record: RecordCounts) {
 }
 
 // Update the positive review rankings
-export async function soundRankings(isNegative = false) {
+export async function soundRankings(isNegative: boolean) {
   const ratingCondition = isNegative ? { lte: 2.5 } : { gt: 2.5 };
   const activities = await prisma.activity.findMany({
     where: {
@@ -90,12 +90,13 @@ export async function soundRankings(isNegative = false) {
         : `track:${record.track?.id}`;
       if (!contextKey) continue;
 
-      await client.zadd(
-        `${contextKey}:activity:record:positive:score`,
-        calculateScore(recordCounts),
-        activity.id,
-      );
+      const key = isNegative
+        ? `${contextKey}:activity:record:positive:score`
+        : `${contextKey}:activity:record:negative:score`;
+
+      await client.zadd(key, calculateScore(recordCounts), activity.id);
       await setCache(`activity:record:data:${activity.id}`, activity, 3600);
+      console.log(`Updated score for activity ${activity.id}`);
     }
   }
 

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AlbumData, SongData } from "@/types/appleTypes";
+import { getCache, setCache } from "@/lib/global/redis";
 
 const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
 export const baseURL = "https://api.music.apple.com/v1/catalog/us";

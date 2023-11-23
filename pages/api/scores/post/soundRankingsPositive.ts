@@ -4,7 +4,7 @@ import { soundRankings } from "@/lib/cron/soundRankings";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST" || req.method === "GET") {
     try {
-      await soundRankings();
+      await soundRankings(false);
       res
         .status(200)
         .json({ message: "Successfully updated record blooming scores." });

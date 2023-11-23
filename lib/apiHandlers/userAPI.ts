@@ -1,6 +1,6 @@
 import axios from "axios";
-import { fetchSoundsByTypes, fetchSoundsByType } from "@/lib/global/musicKit";
-import { Essential, Record } from "@/types/dbTypes";
+import { fetchSoundsByTypes } from "@/lib/global/musicKit";
+import { Record } from "@/types/dbTypes";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
@@ -8,8 +8,8 @@ import { extendedNotification } from "@/components/interface/nav/sub/Signals";
 
 // Get user data, handle follow/unfollow, and fetch favorites
 export const useUserDataAndAlbumsQuery = (
-  userId: string | undefined,
   sessionUserId: string | undefined,
+  pageUserId: string | undefined,
 ) => {
   const [followState, setFollowState] = useState<{
     followingAtoB: boolean | null;
@@ -22,7 +22,7 @@ export const useUserDataAndAlbumsQuery = (
   });
 
   const handleFollowUnfollow = async (action: "follow" | "unfollow") => {
-    if (!sessionUserId || !userId) return;
+    if (!sessionUserId || !pageUserId) return;
 
     // Optimistically update the state
     setFollowState((prevState) => ({
@@ -30,11 +30,12 @@ export const useUserDataAndAlbumsQuery = (
       followingAtoB: action === "follow",
     }));
 
+    // Follow/unfollow user
     try {
       const newState =
         action === "follow"
-          ? await followUser(sessionUserId, userId)
-          : await unfollowUser(sessionUserId, userId);
+          ? await followUser(sessionUserId, pageUserId)
+          : await unfollowUser(sessionUserId, pageUserId);
 
       // Update the state with the actual result
       setFollowState((prevState) => ({
@@ -52,27 +53,17 @@ export const useUserDataAndAlbumsQuery = (
 
   // Fetch user data and albums
   const { data, isLoading, isError } = useQuery(
-    ["userDataAndAlbums", userId],
+    ["userData", pageUserId],
     async () => {
-      if (!userId || !sessionUserId) return null;
-      // Axios request for user data
+      if (!sessionUserId || !pageUserId) return null;
       const url = `/api/user/get/byId`;
       const response = await axios.get(url, {
         params: {
-          id: userId,
           sessionUserId,
+          pageUserId,
         },
       });
       const userData = response.data;
-      const albumIds = userData.essentials.map(
-        (essential: Essential) => essential.album.appleId,
-      );
-      const albumsData = await fetchSoundsByType("albums", albumIds);
-
-      // Attach album data to each favorite
-      userData.essentials.forEach((essential: Essential, index: number) => {
-        essential.appleAlbumData = albumsData[index];
-      });
 
       setFollowState((prevState) => ({
         ...prevState,
@@ -80,7 +71,7 @@ export const useUserDataAndAlbumsQuery = (
         followingBtoA: userData.isFollowingBtoA,
       }));
 
-      return { userData, essentials: userData.essentials };
+      return { userData };
     },
   );
 
@@ -265,7 +256,7 @@ export const changeEssential = async (
     appleId,
     rank,
   });
-  return response; // return the entire response object
+  return response;
 };
 
 // Toggle settings handler
@@ -281,7 +272,7 @@ export const toggleSetting = async (
     userId,
     settingKey,
   });
-  return response; // return the entire response object
+  return response;
 };
 
 // Change bio handler
@@ -291,5 +282,5 @@ export const changeBio = async (userId: string, bio: string) => {
     userId,
     bio,
   });
-  return response; // return the entire response object
+  return response;
 };
