@@ -65,8 +65,16 @@ export default async function handler(
 
       fetchedData.forEach((item: AlbumData | SongData) => {
         if (isKeyOfResponseData(item.type)) {
-          const cacheKey = `sound:${item.type}:${item.id}`;
-          setCache(cacheKey, item, 3600);
+          if (item.type === "albums") {
+            setCache(`sound:albums:${item.id}:data`, item, 3600);
+          } else if (item.type === "songs") {
+            const i = item as SongData;
+            setCache(
+              `sound:songs:${item.id}:albumId`,
+              i.relationships.albums.data[0].id,
+              3600,
+            );
+          }
           responseData[item.type].set(item.id, item);
         }
       });

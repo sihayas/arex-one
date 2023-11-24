@@ -3,6 +3,7 @@ export interface AlbumData {
   id: string;
   relationships: AlbumRelationships;
   type: string;
+  href: string;
 }
 
 export interface AlbumAttributes {
