@@ -28,8 +28,8 @@ model User {
 
   notifications Notification[]
   essentials    Essential[]
-  followers  Follows[]    @relation("follower")
-  following  Follows[]    @relation("following")
+  followers     Follows[]    @relation("follower")
+  following     Follows[]    @relation("following")
   record        Record[]
   replies       Reply[]
   hearts        Heart[]

@@ -64,13 +64,11 @@ export const useUserDataAndAlbumsQuery = (
         },
       });
       const userData = response.data;
-
       setFollowState((prevState) => ({
         ...prevState,
         followingAtoB: userData.isFollowingAtoB,
         followingBtoA: userData.isFollowingBtoA,
       }));
-
       return { userData };
     },
   );

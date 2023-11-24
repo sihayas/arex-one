@@ -30,43 +30,51 @@ export default async function handler(
 
 export async function fetchAndCacheSoundsByType(ids: any, type: string) {
   const idsArray = ids.split(",");
-  let responseData: AlbumData[] = [];
+  let responseDataMap = new Map(idsArray.map((id: string) => [id, null]));
   let needToFetch: string[] = [];
 
   // Check the cache for all IDs at once
   const cacheResponses = await Promise.all(
     idsArray.map((id: string) =>
-      getCache(
-        type === "albums"
-          ? `sound:albums:${id}:data`
-          : `sound:songs:${id}:albumId`,
-      ),
+      getCache(`sound:${type}:${id}:${type === "albums" ? "data" : "albumId"}`),
     ),
   );
 
-  cacheResponses.forEach((cachedData, index) => {
-    if (cachedData) {
-      responseData.push(cachedData);
-    } else {
-      needToFetch.push(idsArray[index]);
+  const promises = cacheResponses.map(async (cachedData, index) => {
+    const id = idsArray[index];
+
+    if (!cachedData) {
+      needToFetch.push(id);
+      return;
     }
+
+    if (type === "songs") {
+      const album = await getCache(`sound:albums:${cachedData}:data`);
+      if (album) {
+        responseDataMap.set(id, album);
+      } else {
+        needToFetch.push(id);
+      }
+      return;
+    }
+
+    responseDataMap.set(id, cachedData);
   });
+
+  await Promise.all(promises);
 
   // Fetch data not found in cache
   if (needToFetch.length > 0) {
     const fetchedData = await fetchSoundsByType(type, needToFetch);
-
-    // Process fetched data, cache it, and add to response
     fetchedData.forEach((data: AlbumData, index: number) => {
-      const key =
-        type === "albums"
-          ? `sound:albums:${data.id}:data`
-          : `sound:songs:${needToFetch[index]}:albumId`;
-      // Key is albumId for songs, and album data for albums
-      setCache(key, type === "albums" ? data : data.id, 3600);
-      responseData.push(data);
+      setCache(`sound:albums:${data.id}:data`, data, 3600);
+      {
+        type === "songs" &&
+          setCache(`sound:songs:${needToFetch[index]}:albumId`, data.id, 3600);
+      }
+      responseDataMap.set(needToFetch[index], data);
     });
   }
 
-  return responseData;
+  return Array.from(responseDataMap.values()).filter(Boolean);
 }

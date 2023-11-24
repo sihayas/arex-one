@@ -43,7 +43,7 @@ export const useHandleUserClick = (author: User) => {
         key: uuidv4(),
         name: "user",
         user: author,
-        dimensions: { width: 352, height: 576 },
+        dimensions: { width: 576, height: 346 },
         scrollPosition: 0,
       },
     ]);

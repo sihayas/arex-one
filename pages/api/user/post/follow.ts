@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createFollowActivity } from "@/pages/api/middleware/createActivity";
 import { ActivityType, Follows } from "@/types/dbTypes";
-import { getCache, setCache } from "@/lib/global/redis";
+import { setCache } from "@/lib/global/redis";
+import { getUserData } from "@/services/userServices";
 
 export default async function handle(
   req: NextApiRequest,
@@ -16,53 +17,13 @@ export default async function handle(
 
   const { followerId, followingId } = req.body;
 
-  // Get sessionUser followers
-  let followerData = await getCache(`user:${followerId}:data`);
-  if (!followerData) {
-    // Fetch user data and update cache
-    followerData = await prisma.user.findUnique({
-      where: { id: String(followerId) },
-      select: {
-        _count: { select: { record: true, followers: true } },
-        essentials: {
-          include: {
-            album: { select: { appleId: true } },
-          },
-          orderBy: { rank: "desc" },
-        },
-        followers: { select: { followerId: true } },
-        username: true,
-        id: true,
-        image: true,
-      },
-    });
-    await setCache(`user:${followerId}:data`, followerData, 3600);
-  }
+  if (followerId === followingId)
+    return res.status(400).json({ error: "You cannot follow yourself." });
 
-  // Get pageUser data
-  let followingData = await getCache(`user:${followingId}:data`);
-  if (!followingData) {
-    // Fetch user data and update cache
-    followingData = await prisma.user.findUnique({
-      where: { id: String(followingId) },
-      select: {
-        _count: { select: { record: true, followers: true } },
-        essentials: {
-          include: {
-            album: { select: { appleId: true } },
-          },
-          orderBy: { rank: "desc" },
-        },
-        followers: { select: { followerId: true } },
-        username: true,
-        id: true,
-        image: true,
-      },
-    });
-    await setCache(`user:${followingId}:data`, followingData, 3600);
-  }
+  let followerData = await getUserData(followerId);
+  let followingData = await getUserData(followingId);
 
-  // Check if follower already has following as a follower
+  // Check if follower already has followee as a follower
   const isFollowingBtoA = followerData.followers.some((follower: Follows) => {
     return follower.followerId === String(followingId);
   });
@@ -75,8 +36,9 @@ export default async function handle(
     const follow = await prisma.follows.create({
       data: { followerId: followerId, followingId: followingId },
     });
-    console.log("created follow relationship", follow);
+
     const activity = await createFollowActivity(follow.id, followType);
+
     const aggregationKey = `${followType}|${followerId}|${followingId}`;
 
     await prisma.notification.create({

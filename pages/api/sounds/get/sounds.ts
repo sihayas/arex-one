@@ -1,16 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
 import { setCache, getCache } from "@/lib/global/redis";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import { baseURL, fetchSoundsByTypes } from "@/lib/global/musicKit";
-
-const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
+import { fetchSoundsByTypes } from "@/lib/global/musicKit";
 
 type ResponseData = {
-  albums: string[];
-  songs: string[];
+  albums: Map<string, AlbumData | null>;
+  songs: Map<string, SongData | null>;
 };
-
 function isKeyOfResponseData(key: string): key is keyof ResponseData {
   return key === "albums" || key === "songs";
 }
@@ -21,42 +17,65 @@ export default async function handler(
 ) {
   try {
     const idTypes = JSON.parse(req.query.idTypes as string);
-    let needToFetch: ResponseData = { albums: [], songs: [] };
-    let responseData: ResponseData = { albums: [], songs: [] };
+    let responseData: ResponseData = {
+      albums: new Map(idTypes.albums.map((id: string) => [id, null])),
+      songs: new Map(idTypes.songs.map((id: string) => [id, null])),
+    };
+    let needToFetch: ResponseData = { albums: new Map(), songs: new Map() };
 
-    // Check cache for each album and song
+    // Check cache and update maps
     for (const type in idTypes) {
       if (isKeyOfResponseData(type)) {
         for (const id of idTypes[type]) {
-          const cacheKey = `soundData:${type}:${id}`;
+          const cacheKey = `sound:${type}:${id}:${
+            type === "albums" ? "data" : "albumId"
+          }`;
           const cachedData = await getCache(cacheKey);
 
-          if (cachedData) {
-            responseData[type].push(cachedData);
+          if (!cachedData) {
+            needToFetch[type].set(id, null);
+            continue;
+          }
+
+          if (type === "songs") {
+            // Assume cachedData contains albumId for the song
+            const albumData = await getCache(`sound:albums:${cachedData}:data`);
+            if (albumData) {
+              responseData[type].set(id, albumData);
+            } else {
+              needToFetch[type].set(id, null);
+            }
           } else {
-            needToFetch[type].push(id);
+            responseData[type].set(id, cachedData);
           }
         }
       }
     }
 
-    // Fetch missing data from Apple Music API
-    if (needToFetch.albums.length > 0 || needToFetch.songs.length > 0) {
-      // Call the fetchSoundsByTypes function
-      const fetchedData = await fetchSoundsByTypes(needToFetch);
+    // Fetch missing data
+    if (
+      Array.from(needToFetch.albums.keys()).length > 0 ||
+      Array.from(needToFetch.songs.keys()).length > 0
+    ) {
+      const fetchIds = {
+        albums: Array.from(needToFetch.albums.keys()),
+        songs: Array.from(needToFetch.songs.keys()),
+      };
+      const fetchedData = await fetchSoundsByTypes(fetchIds);
 
-      // Process the fetched data
       fetchedData.forEach((item: AlbumData | SongData) => {
         if (isKeyOfResponseData(item.type)) {
-          const cacheKey = `soundData:${item.type}:${item.id}`;
+          const cacheKey = `sound:${item.type}:${item.id}`;
           setCache(cacheKey, item, 3600);
-          // @ts-ignore
-          responseData[item.type as keyof ResponseData].push(item);
+          responseData[item.type].set(item.id, item);
         }
       });
     }
 
-    res.status(200).json(responseData);
+    res.status(200).json({
+      albums: Array.from(responseData.albums.values()).filter(Boolean),
+      songs: Array.from(responseData.songs.values()).filter(Boolean),
+    });
   } catch (error) {
     console.error("Error in /api/album/get/cachedAlbums:", error);
     res.status(500).json({ error: "Internal Server Error" });
