@@ -13,7 +13,7 @@ export interface User {
   notifications: Notification[];
   essentials: Essential[];
   following: Follows[];
-  followers: Follows[];
+  followedBy: Follows[];
   record: Record[];
   replies: Reply[];
   hearts: Heart[];

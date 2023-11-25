@@ -1,4 +1,4 @@
-import { prisma } from "../../../lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 import { ActivityType } from "@/types/dbTypes";
 
 export async function createEntryRecordActivity(recordId: string) {
@@ -30,7 +30,7 @@ export async function createReplyRecordActivity(replyId: string) {
 
 export async function createFollowActivity(
   followId: string,
-  followType: ActivityType.FOLLOWED | ActivityType.FOLLOWED_BACK
+  followType: ActivityType.FOLLOWED | ActivityType.FOLLOWED_BACK,
 ) {
   return prisma.activity.create({
     data: {

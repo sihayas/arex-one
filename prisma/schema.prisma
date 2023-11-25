@@ -28,8 +28,8 @@ model User {
 
   notifications Notification[]
   essentials    Essential[]
-  followers     Follows[]    @relation("follower")
-  following     Follows[]    @relation("following")
+  following     Follows[]    @relation("follower")
+  followedBy     Follows[]    @relation("following")
   record        Record[]
   replies       Reply[]
   hearts        Heart[]
@@ -77,9 +77,11 @@ model Follows {
   followerId   String
   followingId  String
 
-  follower  User   @relation("follower", fields: [followerId], references: [id])
-  following  User   @relation("following", fields: [followingId], references: [id])
+  follower  User   @relation("following", fields: [followerId], references:[id])
+  following  User   @relation("follower", fields: [followingId], references:[id])
   activities   Activity[] @relation("ActivityFollow")
+
+  isDeleted    Boolean    @default(false) @map(name: "is_deleted")
 
   @@index([followerId])
   @@index([followingId])
@@ -143,6 +145,8 @@ model Record {
   hearts       Heart[]
   replies     Reply[]
 
+  isDeleted   Boolean   @default(false) @map(name: "is_deleted")
+
   @@index([authorId])
   @@index([albumId])
   @@index([trackId])
@@ -191,6 +195,8 @@ model Heart {
   reply      Reply?      @relation(fields: [replyId], references: [id])
   activities Activity[]  @relation("ActivityHeart")
 
+  isDeleted  Boolean     @default(false) @map(name: "is_deleted")
+
   @@index([authorId])
   @@index([recordId])
   @@index([replyId])
@@ -218,6 +224,8 @@ model Reply {
   rootReplies Reply[]     @relation("ReplyToRoot")
   views       View[]      @relation("ReplyViews")
   activities  Activity[]  @relation("ActivityReply")
+
+  isDeleted   Boolean     @default(false) @map(name: "is_deleted")
 
   @@index([recordId])
   @@index([authorId])
@@ -259,6 +267,7 @@ model Activity {
   follow        Follows?        @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "ActivityToFollow_fkey")
   reply         Reply?          @relation("ActivityReply",   fields: [referenceId], references: [id], map: "ActivityToReply_fkey")
 
+  isDeleted     Boolean         @default(false) @map(name: "is_deleted")
   notifications Notification[]
 
   @@index([referenceId])
@@ -280,6 +289,7 @@ model Notification {
   activityId      String
   
   aggregation_Key String?
+  isDeleted       Boolean  @default(false) @map(name: "is_deleted")
 
   @@index([recipientId])
   @@index([activityId])

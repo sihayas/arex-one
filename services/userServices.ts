@@ -8,14 +8,14 @@ async function getUserData(userId: string) {
     userData = await prisma.user.findUnique({
       where: { id: String(userId) },
       select: {
-        _count: { select: { record: true, followers: true } },
+        _count: { select: { record: true, followedBy: true } },
         essentials: {
           include: {
             album: { select: { appleId: true } },
           },
           orderBy: { rank: "desc" },
         },
-        followers: { select: { followerId: true } },
+        followedBy: true,
         username: true,
         id: true,
         image: true,
@@ -23,6 +23,7 @@ async function getUserData(userId: string) {
     });
     await setCache(`user:${userId}:data`, userData, 3600);
   }
+  console.log("user data", userData);
   return userData;
 }
 

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createFollowActivity } from "@/pages/api/middleware/createActivity";
+import { createNotification } from "@/pages/api/middleware/createNotification";
 import { ActivityType, Follows } from "@/types/dbTypes";
 import { setCache } from "@/lib/global/redis";
 import { getUserData } from "@/services/userServices";
@@ -24,7 +25,7 @@ export default async function handle(
   let followingData = await getUserData(followingId);
 
   // Check if follower already has followee as a follower
-  const isFollowingBtoA = followerData.followers.some((follower: Follows) => {
+  const isFollowingBtoA = followerData.followedBy.some((follower: Follows) => {
     return follower.followerId === String(followingId);
   });
 
@@ -41,16 +42,11 @@ export default async function handle(
 
     const aggregationKey = `${followType}|${followerId}|${followingId}`;
 
-    await prisma.notification.create({
-      data: {
-        recipientId: followingId,
-        activityId: activity.id,
-        aggregation_Key: aggregationKey,
-      },
-    });
+    await createNotification(followingId, activity.id, aggregationKey);
 
     // Update the cache
-    followingData.followers.push({ followerId: followerId });
+    followingData.followedBy.push({ followerId: followerId });
+    followingData._count.followedBy++;
     await setCache(`user:${followingId}:data`, followingData, 3600);
 
     res.status(200).json(follow);

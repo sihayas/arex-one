@@ -3,6 +3,9 @@ import { prisma } from "@/lib/global/prisma";
 import { ActivityType, Follows } from "@/types/dbTypes";
 import { getUserData } from "@/services/userServices";
 import { setCache } from "@/lib/global/redis";
+import { deleteNotification } from "@/pages/api/middleware/createNotification";
+import { deleteActivity } from "@/pages/api/middleware/createActivity";
+import { createAggKey } from "@/pages/api/middleware/aggKey";
 
 export default async function handle(
   req: NextApiRequest,
@@ -31,7 +34,7 @@ export default async function handle(
     let followingData = await getUserData(unfollowingId);
 
     // Confirm followee has follower as a follower
-    const isFollowingAtoB = followingData.followers.some(
+    const isFollowingAtoB = followingData.followedBy.some(
       (follower: Follows) => {
         return follower.followerId === String(unfollowerId);
       },
@@ -40,21 +43,34 @@ export default async function handle(
     if (!isFollowingAtoB)
       return res.status(404).json({ error: "Follow relationship not found." });
 
-    const existingActivity = await prisma.activity.findFirst({
-      where: { type: ActivityType.FOLLOWED, referenceId: isFollowingAtoB.id },
+    const followsWithActivities = await prisma.follows.findFirst({
+      where: {
+        followerId: String(unfollowerId),
+        followingId: String(unfollowingId),
+      },
+      include: {
+        activities: true,
+      },
     });
+
+    // Access the activities
+    const existingActivity = followsWithActivities?.activities[0];
 
     // Delete the follow relationship
     if (existingActivity) {
-      const aggregationKey = `${existingActivity.type}|${unfollowingId}|${unfollowerId}`;
-      await prisma.notification.deleteMany({
-        where: {
-          aggregation_Key: aggregationKey,
-          recipientId: String(unfollowingId),
-          activityId: String(existingActivity.id),
-        },
-      });
-      await prisma.activity.delete({ where: { id: existingActivity.id } });
+      const aggKey = createAggKey(
+        existingActivity.type,
+        String(unfollowingId),
+        String(unfollowerId),
+      );
+
+      await deleteNotification(
+        String(unfollowingId),
+        String(existingActivity.id),
+        aggKey,
+      );
+
+      await deleteActivity(String(existingActivity.id));
     }
 
     await prisma.follows.delete({
@@ -66,8 +82,8 @@ export default async function handle(
       },
     });
 
-    // Update the cache
-    followingData.followers.pop({ followerId: unfollowerId });
+    followingData.followedBy.pop({ followerId: unfollowerId });
+    followingData.followedByCount -= 1;
     await setCache(`user:${unfollowingId}:data`, followingData, 3600);
 
     res.status(200).json({ success: true });

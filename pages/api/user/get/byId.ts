@@ -90,11 +90,13 @@ export default async function handle(
     }
 
     // Determine follow status
-    const isFollowingAtoB = pageUserData.followers.some((follower: Follows) => {
-      return follower.followerId === String(sessionUserId);
-    });
+    const isFollowingAtoB = pageUserData.followedBy.some(
+      (follower: Follows) => {
+        return follower.followerId === String(sessionUserId);
+      },
+    );
 
-    const isFollowingBtoA = sessionUserData.followers.some(
+    const isFollowingBtoA = sessionUserData.followedBy.some(
       (follower: Follows) => {
         return follower.followerId === String(pageUserId);
       },
