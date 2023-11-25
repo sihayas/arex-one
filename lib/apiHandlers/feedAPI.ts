@@ -1,5 +1,4 @@
 import axios from "axios";
-import { fetchSoundsByTypes } from "../global/musicKit";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
@@ -36,7 +35,7 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
     {
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       enabled: !!userId,
-    }
+    },
   );
 
   return {
@@ -70,7 +69,7 @@ export const useBloomingFeedQuery = (userId: string, limit: number = 6) => {
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       enabled: !!userId,
       refetchOnWindowFocus: false,
-    }
+    },
   );
 
   return {
@@ -104,7 +103,7 @@ export const useRecentFeedQuery = (userId: string, limit: number = 6) => {
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       enabled: !!userId,
       refetchOnWindowFocus: false,
-    }
+    },
   );
 
   return {
