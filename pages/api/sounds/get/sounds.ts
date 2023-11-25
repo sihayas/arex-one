@@ -7,9 +7,8 @@ type ResponseData = {
   albums: Map<string, AlbumData | null>;
   songs: Map<string, SongData | null>;
 };
-function isKeyOfResponseData(key: string): key is keyof ResponseData {
-  return key === "albums" || key === "songs";
-}
+const isKeyOfResponseData = (key: string): key is keyof ResponseData =>
+  ["albums", "songs"].includes(key);
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,11 +16,11 @@ export default async function handler(
 ) {
   try {
     const idTypes = JSON.parse(req.query.idTypes as string);
-    let responseData: ResponseData = {
+    const responseData: ResponseData = {
       albums: new Map(idTypes.albums.map((id: string) => [id, null])),
       songs: new Map(idTypes.songs.map((id: string) => [id, null])),
     };
-    let needToFetch: ResponseData = { albums: new Map(), songs: new Map() };
+    const needToFetch: ResponseData = { albums: new Map(), songs: new Map() };
 
     // Check cache and update maps
     for (const type in idTypes) {
@@ -32,31 +31,22 @@ export default async function handler(
           }`;
           const cachedData = await getCache(cacheKey);
 
-          if (!cachedData) {
+          if (
+            !cachedData ||
+            (type === "songs" &&
+              !(await getCache(`sound:albums:${cachedData}:data`)))
+          ) {
             needToFetch[type].set(id, null);
             continue;
           }
 
-          if (type === "songs") {
-            // Assume cachedData contains albumId for the song
-            const albumData = await getCache(`sound:albums:${cachedData}:data`);
-            if (albumData) {
-              responseData[type].set(id, albumData);
-            } else {
-              needToFetch[type].set(id, null);
-            }
-          } else {
-            responseData[type].set(id, cachedData);
-          }
+          responseData[type].set(id, cachedData);
         }
       }
     }
 
     // Fetch missing data
-    if (
-      Array.from(needToFetch.albums.keys()).length > 0 ||
-      Array.from(needToFetch.songs.keys()).length > 0
-    ) {
+    if (needToFetch.albums.size || needToFetch.songs.size) {
       const fetchIds = {
         albums: Array.from(needToFetch.albums.keys()),
         songs: Array.from(needToFetch.songs.keys()),
@@ -64,19 +54,18 @@ export default async function handler(
       const fetchedData = await fetchSoundsByTypes(fetchIds);
 
       fetchedData.forEach((item: AlbumData | SongData) => {
-        if (isKeyOfResponseData(item.type)) {
-          if (item.type === "albums") {
-            setCache(`sound:albums:${item.id}:data`, item, 3600);
-          } else if (item.type === "songs") {
-            const i = item as SongData;
-            setCache(
-              `sound:songs:${item.id}:albumId`,
-              i.relationships.albums.data[0].id,
-              3600,
-            );
-          }
-          responseData[item.type].set(item.id, item);
-        }
+        const cacheKey =
+          item.type === "songs"
+            ? `sound:songs:${item.id}:albumId`
+            : `sound:albums:${item.id}:data`;
+
+        const dataToCache =
+          item.type === "songs"
+            ? (item as SongData).relationships.albums.data[0].id
+            : item;
+
+        setCache(cacheKey, dataToCache, 3600);
+        responseData[item.type].set(item.id, item);
       });
     }
 
