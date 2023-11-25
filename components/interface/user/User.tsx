@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion } from "framer-motion";
-import { useUserDataAndAlbumsQuery } from "@/lib/apiHandlers/userAPI";
+import { useUserDataQuery } from "@/lib/apiHandlers/userAPI";
 import Essentials from "@/components/interface/user/sub/Essentials";
 import Settings from "@/components/interface/user/sub/Settings";
 import { JellyComponent } from "@/components/global/Loading";
@@ -25,19 +25,21 @@ const linkProps = {
 
 // User component
 const User = () => {
-  const { user } = useInterfaceContext();
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
-
-  const { pages, feedHistory, setFeedHistory, setActiveFeed, setIsVisible } =
-    useInterfaceContext();
+  const {
+    user,
+    pages,
+    feedHistory,
+    setFeedHistory,
+    setActiveFeed,
+    setIsVisible,
+  } = useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
-
-  // Check if the profile belongs to the authenticated user
   const isOwnProfile = user?.id === pageUser?.id;
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
   // Fetch user data and albums
   const { data, isLoading, isError, followState, handleFollowUnfollow } =
-    useUserDataAndAlbumsQuery(user?.id, pageUser?.id);
+    useUserDataQuery(user?.id, pageUser?.id);
   const { userData } = data || {};
 
   // Determine link status based on follow state

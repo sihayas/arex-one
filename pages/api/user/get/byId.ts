@@ -41,6 +41,7 @@ export default async function handle(
       );
       const albumDataMap: { [key: string]: AlbumData } = essentialAlbums.reduce(
         (map: { [key: string]: AlbumData }, album) => {
+          // @ts-ignore
           map[album.id] = album;
           return map;
         },

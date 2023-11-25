@@ -1,11 +1,10 @@
-// pages/api/user/post/toggleSetting.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { SettingKey } from "@/components/interface/user/sub/Settings";
 
 export default async function toggleSetting(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { userId, settingKey }: { userId: string; settingKey: SettingKey } =
     req.body;

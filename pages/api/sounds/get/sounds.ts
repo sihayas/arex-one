@@ -12,7 +12,7 @@ const isKeyOfResponseData = (key: string): key is keyof ResponseData =>
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   try {
     const idTypes = JSON.parse(req.query.idTypes as string);
@@ -54,17 +54,23 @@ export default async function handler(
       const fetchedData = await fetchSoundsByTypes(fetchIds);
 
       fetchedData.forEach((item: AlbumData | SongData) => {
-        const cacheKey =
-          item.type === "songs"
-            ? `sound:songs:${item.id}:albumId`
-            : `sound:albums:${item.id}:data`;
+        const isSong = item.type === "songs";
+        const cacheKey = `sound:${item.type}:${item.id}:${
+          isSong ? "albumId" : "data"
+        }`;
+        const dataToCache = isSong
+          ? (item as SongData).relationships.albums.data[0].id
+          : item;
 
-        const dataToCache =
-          item.type === "songs"
-            ? (item as SongData).relationships.albums.data[0].id
-            : item;
+        // Cache the song data if the item is a song
+        if (isSong) {
+          const songDataKey = `sound:songs:${item.id}:data`;
+          setCache(songDataKey, item, 3600);
+        }
 
+        // Cache the item data and update the response data
         setCache(cacheKey, dataToCache, 3600);
+        // @ts-ignore
         responseData[item.type].set(item.id, item);
       });
     }
