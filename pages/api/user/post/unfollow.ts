@@ -1,11 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { Follows } from "@/types/dbTypes";
 import { getUserData } from "@/services/userServices";
 import { setCache } from "@/lib/global/redis";
-import { deleteNotification } from "@/pages/api/middleware/createNotification";
-import { deleteActivity } from "@/pages/api/middleware/createActivity";
-import { createAggKey } from "@/pages/api/middleware/aggKey";
 
 export default async function handle(
   req: NextApiRequest,
@@ -29,12 +25,12 @@ export default async function handle(
   try {
     let followingData = await getUserData(unfollowingId);
 
-    // If the user is not following, return
+    // If the user is not following, exit early
     const isFollowingAtoB = followingData.followedBy.includes(unfollowerId);
     if (!isFollowingAtoB)
       return res.status(404).json({ error: "Follow relationship not found." });
 
-    // Double check it already hasn't been deleted
+    // Double check it already hasn't been deleted and exit early
     const alreadyDeleted = await prisma.follows.findFirst({
       where: {
         followerId: unfollowerId,

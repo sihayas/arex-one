@@ -142,7 +142,7 @@ model Record {
 
   activities  Activity[]  @relation("ActivityRecord")
   views       View[]      @relation("RecordViews")
-  hearts       Heart[]
+  hearts      Heart[]
   replies     Reply[]
 
   isDeleted   Boolean   @default(false) @map(name: "is_deleted")

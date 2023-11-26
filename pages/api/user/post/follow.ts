@@ -99,7 +99,6 @@ export default async function handle(
     let follow;
     if (existingFollow) {
       follow = await updateExistingFollow(existingFollow);
-      console.log("Updating existing follow relationship", existingFollow);
     } else {
       const isFollowingBtoA = followerData.followedBy.includes(followingId);
       const followType = isFollowingBtoA

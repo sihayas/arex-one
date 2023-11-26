@@ -1,6 +1,6 @@
 import { useFeedQuery } from "@/lib/apiHandlers/feedAPI";
 import { FeedRecord } from "@/components/records/RecordFeed";
-import { Activity } from "@/types/dbTypes";
+import { Activity, Record } from "@/types/dbTypes";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
@@ -31,21 +31,18 @@ const FeedUser = ({
     }
   });
 
-  const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
+  const records = data ? data.pages.flatMap((page) => page.data) : [];
+  console.log("records", records);
 
   return (
     <>
       {error && "an error has occurred"}
-      {allActivities.map((activity: Activity, i) => (
-        <Fragment key={activity.id}>
-          {activity.record ? (
-            <FeedRecord
-              record={activity.record as RecordExtended}
-              associatedType={activity.record?.album ? "album" : "track"}
-            />
-          ) : (
-            "No record available for this activity."
-          )}
+      {records.map((record: Record, i) => (
+        <Fragment key={record.id}>
+          <FeedRecord
+            record={record as RecordExtended}
+            associatedType={record?.album ? "album" : "track"}
+          />
         </Fragment>
       ))}
       {/* Pagination */}

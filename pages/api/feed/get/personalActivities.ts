@@ -30,17 +30,21 @@ export default async function handle(
 
   try {
     const following = await prisma.follows.findMany({
-      where: { followerId: userId },
+      where: { followerId: userId, isDeleted: false },
     });
     const followingIds = following.map((f) => f.followingId);
     followingIds.push(userId);
 
     const activities = await prisma.activity.findMany({
-      where: { record: { authorId: { in: followingIds } } },
+      where: {
+        record: {
+          authorId: { in: followingIds },
+        },
+      },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit + 1,
-      include: {
+      select: {
         record: {
           select: {
             id: true,
@@ -55,8 +59,6 @@ export default async function handle(
             _count: { select: { replies: true, hearts: true } },
           },
         },
-        heart: true,
-        reply: true,
       },
     });
 

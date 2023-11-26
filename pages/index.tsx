@@ -68,7 +68,7 @@ export default function Home() {
         <title>rx</title>
       </Head>
       <div
-        className={`text-sm text-[#000] font-serif absolute top-4 left-4 drop-shadow-sm`}
+        className={`text-sm text-gray2 absolute top-4 left-4 drop-shadow-sm`}
       >
         ARE.X ALPHA
       </div>

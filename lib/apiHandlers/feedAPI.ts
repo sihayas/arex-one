@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Activity, ActivityType } from "@/types/dbTypes";
+import { Activity, ActivityType, Record } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -10,7 +10,7 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
   const isProfile = user?.id !== userId;
   const url = isProfile
     ? `/api/feed/get/profileRecords`
-    : `/api/feed/get/activities`;
+    : `/api/feed/get/personalActivities`;
 
   const result = useInfiniteQuery(
     ["feed", userId],
@@ -116,15 +116,14 @@ export const useRecentFeedQuery = (userId: string, limit: number = 6) => {
 };
 
 // Utility function to attach album and track data to activities
-const attachSoundData = async (activityData: Activity[]) => {
+const attachSoundData = async (records: Record[]) => {
   const albumIds: string[] = [];
   const trackIds: string[] = [];
 
   // Extract album and track IDs
-  activityData.forEach((activity) => {
-    const record = extractRecordFromActivity(activity);
-    if (record?.album) albumIds.push(record.album.appleId);
-    if (record?.track) trackIds.push(record.track.appleId);
+  records.forEach((record) => {
+    if (record.album) albumIds.push(record.album.appleId);
+    if (record.track) trackIds.push(record.track.appleId);
   });
 
   // Fetch album and track data
@@ -139,8 +138,7 @@ const attachSoundData = async (activityData: Activity[]) => {
   const songMap = new Map(songs.map((song: SongData) => [song.id, song]));
 
   // Attach album and track data to activity records
-  activityData.forEach((activity) => {
-    const record = extractRecordFromActivity(activity);
+  records.forEach((record) => {
     if (record) {
       const albumId = record.album?.appleId;
       const trackId = record.track?.appleId;
@@ -149,18 +147,5 @@ const attachSoundData = async (activityData: Activity[]) => {
     }
   });
 
-  return activityData;
+  return records;
 };
-
-function extractRecordFromActivity(activity: Activity) {
-  switch (activity.type) {
-    case ActivityType.RECORD:
-      return activity.record;
-    case ActivityType.REPLY:
-      return activity.reply?.record;
-    case ActivityType.HEART:
-      return activity.heart?.record;
-    default:
-      return null;
-  }
-}
