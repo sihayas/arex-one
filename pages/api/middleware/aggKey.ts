@@ -11,11 +11,15 @@ export function createAggKey(
     case ActivityType.HEART:
       aggregationKey = `HEART|${targetId}|${userId}`;
       break;
-    case ActivityType.FOLLOWED:
     case ActivityType.FOLLOWED_BACK:
       const unfollowingId = targetId;
       const unfollowerId = userId;
-      aggregationKey = `${type}|${unfollowingId}|${unfollowerId}`;
+      aggregationKey = `FOLLOWED_BACK|${unfollowingId}|${unfollowerId}`;
+      break;
+    case ActivityType.FOLLOWED:
+      const followingId = targetId;
+      const followerId = userId;
+      aggregationKey = `FOLLOWED|${followerId}|${followingId}`;
       break;
     case ActivityType.REPLY:
       aggregationKey = `REPLY|${targetId}|${userId}`;
@@ -30,11 +34,6 @@ export function createAggKey(
   return aggregationKey;
 }
 
-// Heart post
-// const aggregationKey = `HEART|${recordId}|${authorId}`;
-// // Heart reply
-// const aggregationKey = `HEART|${replyId}|${authorId}`;
-//
 // //follow
 // const followType = isFollowingBtoA
 //   ? ActivityType.FOLLOWED_BACK

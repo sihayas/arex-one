@@ -54,6 +54,7 @@ export interface Follows {
   follower: User;
   following: User;
   activities: Activity[];
+  isDeleted: boolean;
 }
 
 export interface Album {

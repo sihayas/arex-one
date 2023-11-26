@@ -126,8 +126,8 @@ export const followUser = async (followerId: string, followingId: string) => {
 export const unfollowUser = async (followerId: string, followingId: string) => {
   await axios.delete(`/api/user/post/unfollow`, {
     params: {
-      followerId,
-      followingId,
+      unfollowerId: followerId,
+      unfollowingId: followingId,
     },
   });
   return { followingAtoB: false };

@@ -1,9 +1,54 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { Essential, Follows } from "@/types/dbTypes";
+import { Essential } from "@/types/dbTypes";
 import { fetchAndCacheSoundsByType } from "@/pages/api/sounds/get/sound";
 import { AlbumData } from "@/types/appleTypes";
 import { getUserData } from "@/services/userServices";
+
+async function attachAlbumData(
+  essentials: Essential[],
+  albumIds: string[],
+): Promise<Essential[]> {
+  const albumData = await fetchAndCacheSoundsByType(
+    albumIds.join(","),
+    "albums",
+  );
+  const albumDataMap = albumData.reduce(
+    (map: { [key: string]: AlbumData }, album) => {
+      // @ts-ignore
+      map[album.id] = album;
+      return map;
+    },
+    {},
+  );
+
+  return essentials.map((essential) => ({
+    ...essential,
+    appleAlbumData: albumDataMap[essential.album.appleId],
+  }));
+}
+
+async function countUniqueAlbumsAndTracks(
+  userId: string,
+): Promise<{ albumCount: number; trackCount: number }> {
+  const [uniqueAlbumCount, uniqueTrackCount] = await Promise.all([
+    prisma.record.groupBy({
+      by: ["albumId"],
+      where: { authorId: userId, type: "ENTRY", albumId: { not: null } },
+      _count: { albumId: true },
+    }),
+    prisma.record.groupBy({
+      by: ["trackId"],
+      where: { authorId: userId, type: "ENTRY", trackId: { not: null } },
+      _count: { trackId: true },
+    }),
+  ]);
+
+  return {
+    albumCount: uniqueAlbumCount.length,
+    trackCount: uniqueTrackCount.length,
+  };
+}
 
 export default async function handle(
   req: NextApiRequest,
@@ -14,7 +59,6 @@ export default async function handle(
   }
 
   const { sessionUserId, pageUserId } = req.query;
-
   if (
     !sessionUserId ||
     typeof sessionUserId !== "string" ||
@@ -30,84 +74,31 @@ export default async function handle(
     let sessionUserData = await getUserData(sessionUserId);
     let pageUserData = await getUserData(pageUserId);
 
-    // Attach album data to each essential
+    // Attach album data to essentials
     if (pageUserData.essentials.length > 0) {
       const albumIds = pageUserData.essentials.map(
         (essential: Essential) => essential.album.appleId,
       );
-      const essentialAlbums = await fetchAndCacheSoundsByType(
-        albumIds.join(","),
-        "albums",
+      pageUserData.essentials = await attachAlbumData(
+        pageUserData.essentials,
+        albumIds,
       );
-      const albumDataMap: { [key: string]: AlbumData } = essentialAlbums.reduce(
-        (map: { [key: string]: AlbumData }, album) => {
-          // @ts-ignore
-          map[album.id] = album;
-          return map;
-        },
-        {},
-      );
-      pageUserData.essentials.forEach((essential: Essential) => {
-        essential.appleAlbumData = albumDataMap[essential.album.appleId];
-      });
     }
 
-    // Counts unique albums and tracks
-    const [uniqueAlbumCount, uniqueTrackCount] = await Promise.all([
-      prisma.record.groupBy({
-        by: ["albumId"],
-        where: {
-          authorId: String(pageUserId),
-          type: "ENTRY",
-          albumId: { not: null },
-        },
-        _count: {
-          albumId: true,
-        },
-      }),
-      prisma.record.groupBy({
-        by: ["trackId"],
-        where: {
-          authorId: String(pageUserId),
-          type: "ENTRY",
-          trackId: { not: null },
-        },
-        _count: {
-          trackId: true,
-        },
-      }),
-    ]);
+    const { albumCount, trackCount } =
+      await countUniqueAlbumsAndTracks(pageUserId);
 
-    const albumCount = uniqueAlbumCount.length;
-    const trackCount = uniqueTrackCount.length;
+    const isFollowingAtoB = pageUserData.followedBy.includes(sessionUserId);
+    const isFollowingBtoA = sessionUserData.followedBy.includes(pageUserId);
 
-    // Exit early if pageUser is sessionUser
-    if (pageUserId === sessionUserId) {
-      return res.status(200).json({
-        ...pageUserData,
-        uniqueAlbums: albumCount + trackCount,
-      });
-    }
-
-    // Determine follow status
-    const isFollowingAtoB = pageUserData.followedBy.some(
-      (follower: Follows) => {
-        return follower.followerId === String(sessionUserId);
-      },
-    );
-
-    const isFollowingBtoA = sessionUserData.followedBy.some(
-      (follower: Follows) => {
-        return follower.followerId === String(pageUserId);
-      },
-    );
-
-    return res.status(200).json({
+    const response = {
       ...pageUserData,
       isFollowingAtoB,
       isFollowingBtoA,
       uniqueAlbums: albumCount + trackCount,
-    });
+    };
+
+    return res.status(200).json(response);
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ error: "Error fetching user." });

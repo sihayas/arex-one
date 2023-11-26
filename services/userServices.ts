@@ -5,25 +5,31 @@ import { prisma } from "@/lib/global/prisma";
 async function getUserData(userId: string) {
   let userData = await getCache(`user:${userId}:data`);
   if (!userData) {
-    userData = await prisma.user.findUnique({
-      where: { id: String(userId) },
-      select: {
-        _count: { select: { record: true, followedBy: true } },
-        essentials: {
-          include: {
-            album: { select: { appleId: true } },
+    userData = await prisma.user
+      .findUnique({
+        where: { id: String(userId), isDeleted: false, isBanned: false },
+        select: {
+          _count: { select: { record: true, followedBy: true } },
+          essentials: {
+            include: { album: { select: { appleId: true } } },
+            orderBy: { rank: "desc" },
           },
-          orderBy: { rank: "desc" },
+          followedBy: {
+            where: { isDeleted: false },
+            select: { followerId: true },
+          },
+          username: true,
+          id: true,
+          image: true,
         },
-        followedBy: true,
-        username: true,
-        id: true,
-        image: true,
-      },
-    });
-    await setCache(`user:${userId}:data`, userData, 3600);
+      })
+      .then(
+        (u) => u && { ...u, followedBy: u.followedBy.map((f) => f.followerId) },
+      );
+
+    if (userData) await setCache(`user:${userId}:data`, userData, 3600);
   }
-  console.log("user data", userData);
+
   return userData;
 }
 

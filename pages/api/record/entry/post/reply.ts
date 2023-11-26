@@ -23,6 +23,7 @@ async function notifyReplyChain(
       notifiedUsers.add(authorId);
 
       const aggKey = createAggKey(ActivityType.REPLY, replyId, authorId);
+
       await createNotification(authorId, activityId, aggKey);
     }
     currentReply = replyToId
@@ -66,9 +67,10 @@ export default async function handle(
       data: { rootReply: { connect: { id: rootReplyId } } },
     });
 
+    const aggKey = createAggKey(ActivityType.REPLY, createdReply.id, userId);
+
     const activity = await createReplyRecordActivity(createdReply.id);
 
-    const aggKey = createAggKey(ActivityType.REPLY, createdReply.id, userId);
     await createNotification(recordAuthorId, activity.id, aggKey);
 
     await notifyReplyChain(createdReply.id, userId, activity.id);

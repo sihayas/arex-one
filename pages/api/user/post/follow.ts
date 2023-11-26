@@ -2,9 +2,35 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createFollowActivity } from "@/pages/api/middleware/createActivity";
 import { createNotification } from "@/pages/api/middleware/createNotification";
-import { ActivityType, Follows } from "@/types/dbTypes";
+import { ActivityType } from "@/types/dbTypes";
 import { setCache } from "@/lib/global/redis";
 import { getUserData } from "@/services/userServices";
+import { createAggKey } from "@/pages/api/middleware/aggKey";
+
+async function updateExistingFollow(existingFollow: any) {
+  if (!existingFollow) return;
+
+  await prisma.follows.update({
+    where: { id: existingFollow.id },
+    data: { isDeleted: false },
+  });
+
+  const activity = existingFollow.activities[0];
+  if (activity) {
+    await prisma.activity.update({
+      where: { id: activity.id },
+      data: { isDeleted: false },
+    });
+
+    const notification = activity.notifications[0];
+    if (notification) {
+      await prisma.notification.update({
+        where: { id: notification.id },
+        data: { isDeleted: false },
+      });
+    }
+  }
+}
 
 export default async function handle(
   req: NextApiRequest,
@@ -18,36 +44,81 @@ export default async function handle(
 
   const { followerId, followingId } = req.body;
 
-  if (followerId === followingId)
-    return res.status(400).json({ error: "You cannot follow yourself." });
-
-  let followerData = await getUserData(followerId);
-  let followingData = await getUserData(followingId);
-
-  // Check if follower already has followee as a follower
-  const isFollowingBtoA = followerData.followedBy.some((follower: Follows) => {
-    return follower.followerId === String(followingId);
-  });
-
-  const followType = isFollowingBtoA
-    ? ActivityType.FOLLOWED_BACK
-    : ActivityType.FOLLOWED;
+  if (
+    typeof followerId !== "string" ||
+    typeof followingId !== "string" ||
+    followerId === followingId
+  ) {
+    return res
+      .status(400)
+      .json({ error: "Invalid followerId or followingId." });
+  }
 
   try {
-    const follow = await prisma.follows.create({
-      data: { followerId: followerId, followingId: followingId },
+    const [followerData, followingData] = await Promise.all([
+      getUserData(followerId),
+      getUserData(followingId),
+    ]);
+
+    // Check if follower is already following
+    if (followingData.followedBy.includes(followerId)) {
+      return res
+        .status(400)
+        .json({ error: "You are already following this user." });
+    }
+
+    // Check if follow relationship already exists, but is deleted
+    const existingFollow = await prisma.follows.findFirst({
+      where: {
+        followerId,
+        followingId,
+        isDeleted: true,
+        activities: {
+          some: {
+            isDeleted: true,
+            notifications: { some: { isDeleted: true } },
+          },
+        },
+      },
+      select: {
+        id: true,
+        activities: {
+          select: {
+            id: true,
+            notifications: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
     });
 
-    const activity = await createFollowActivity(follow.id, followType);
+    // Create or update follow relationship
+    let follow;
+    if (existingFollow) {
+      follow = await updateExistingFollow(existingFollow);
+      console.log("Updating existing follow relationship", existingFollow);
+    } else {
+      const isFollowingBtoA = followerData.followedBy.includes(followingId);
+      const followType = isFollowingBtoA
+        ? ActivityType.FOLLOWED_BACK
+        : ActivityType.FOLLOWED;
+      follow = await prisma.follows.create({
+        data: { followerId, followingId },
+      });
+      const activity = await createFollowActivity(follow.id, followType);
+      const aggKey = createAggKey(followType, followerId, followingId);
+      await createNotification(followingId, activity.id, aggKey);
+    }
 
-    const aggregationKey = `${followType}|${followerId}|${followingId}`;
-
-    await createNotification(followingId, activity.id, aggregationKey);
-
-    // Update the cache
-    followingData.followedBy.push({ followerId: followerId });
-    followingData._count.followedBy++;
-    await setCache(`user:${followingId}:data`, followingData, 3600);
+    // Update following's data in cache
+    const updatedFollowingData = {
+      ...followingData,
+      followedBy: [...followingData.followedBy, followerId],
+    };
+    await setCache(`user:${followingId}:data`, updatedFollowingData, 3600);
 
     res.status(200).json(follow);
   } catch (error) {
