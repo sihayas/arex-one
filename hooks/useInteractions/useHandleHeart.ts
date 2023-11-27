@@ -30,8 +30,6 @@ const useHandleHeartClick = (
         authorId,
       });
 
-      console.log("response", response);
-
       if (!response.data.success) {
         // Revert state on failure
         setHeart(hearted);

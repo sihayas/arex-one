@@ -28,15 +28,12 @@ const Form = () => {
       const gatherSubmissionData = () => {
         const sound = selectedFormSound?.sound;
         if (!sound) return undefined;
-        const type: "albums" | "songs" =
-          sound.type === "albums" ? "albums" : "songs";
         return {
           text: inputValue,
           rating,
           loved,
           userId,
           sound: sound as AlbumData | SongData,
-          type: type,
         };
       };
 
@@ -51,8 +48,8 @@ const Form = () => {
 
       toast.promise(
         postEntry(submissionData).then(() => {
-          setSelectedFormSound(null); // Set selectedFormSound to null on success
-          setInputValue(""); // Reset input value on success
+          setSelectedFormSound(null);
+          setInputValue("");
         }),
         {
           loading: "Sending...",

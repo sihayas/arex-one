@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { createArtifactEntryActivity } from "@/pages/api/middleware/createActivity";
+import { createArtifactActivity } from "@/pages/api/middleware/createActivity";
 import { fetchSoundsByType } from "@/lib/global/musicKit";
 import { setCache } from "@/lib/global/redis";
-import { AlbumData } from "@/types/appleTypes";
+import { ArtifactType, SoundType } from "@prisma/client";
 
 export default async function handle(
   req: NextApiRequest,
@@ -13,17 +13,20 @@ export default async function handle(
     return res.status(405).json({ error: "Method not allowed." });
   }
 
-  const { rating, loved, text, userId, sound, type } = req.body;
+  const { rating, loved, text, userId, sound } = req.body;
   const appleId = sound.id;
+  const isWisp = rating === 0;
+  const type = sound.type;
 
   try {
     // @ts-ignore
     const existingSound = await prisma.sound.findUnique({
       where: { appleId },
     });
-    let newArtifact, newEntry;
+    let newArtifact;
     // sound holds the song
 
+    // Create the sound if it doesn't exist
     if (!existingSound) {
       const fetchedData = await fetchSoundsByType(type, [appleId]);
       const album = fetchedData[0];
@@ -31,13 +34,13 @@ export default async function handle(
       // If submission is for a SONG
       if (type === "songs") {
         // Create album with song if it doesn't exist or Update
-        const created = await prisma.sound.upsert({
-          where: { appleId: album.id, type: "albums" },
+        await prisma.sound.upsert({
+          where: { appleId: album.id, type: SoundType.albums },
           update: {
-            songs: {
+            Songs: {
               create: {
                 appleId: sound.id,
-                type: "songs",
+                type: SoundType.songs,
                 rating: 0,
                 attributes: {
                   create: {
@@ -52,7 +55,7 @@ export default async function handle(
           },
           create: {
             appleId: album.id,
-            type: "albums",
+            type: SoundType.albums,
             rating: 0,
             attributes: {
               create: {
@@ -61,10 +64,10 @@ export default async function handle(
                 releaseDate: album.attributes.releaseDate,
               },
             },
-            songs: {
+            Songs: {
               create: {
                 appleId: sound.id,
-                type: "songs",
+                type: SoundType.songs,
                 rating: 0,
                 attributes: {
                   create: {
@@ -93,7 +96,7 @@ export default async function handle(
         await prisma.sound.create({
           data: {
             appleId: album.id,
-            type: "albums",
+            type: SoundType.albums,
             rating: 0,
             attributes: {
               create: {
@@ -105,32 +108,32 @@ export default async function handle(
           },
         });
       }
+    }
+    // If sound exists
 
+    if (isWisp) {
       newArtifact = await prisma.artifact.create({
         data: {
-          type: "entry",
+          type: ArtifactType.wisp,
+          author: { connect: { id: userId } },
+          sound: { connect: { appleId } },
+          content: { create: { text } },
+        },
+      });
+    } else {
+      newArtifact = await prisma.artifact.create({
+        data: {
+          type: ArtifactType.entry,
           author: { connect: { id: userId } },
           sound: { connect: { appleId } },
           content: { create: { text, rating, loved, replay: false } },
         },
       });
-
-      await createArtifactEntryActivity(newArtifact.id);
-    }
-    // If sound exists, check if entry exists
-    else {
-      newArtifact = await prisma.artifact.create({
-        data: {
-          type: "entry",
-          author: { connect: { id: userId } },
-          sound: { connect: { appleId } },
-          content: { create: { text, rating, loved, replay: false } },
-        },
-      });
-      await createArtifactEntryActivity(newArtifact.id);
     }
 
-    res.status(201).json({ newRecord, newEntry });
+    await createArtifactActivity(newArtifact.id);
+
+    res.status(201).json({ newArtifact });
   } catch (error) {
     console.error("Failed to create review:", error);
     res.status(500).json({ error: "Failed to create review." });

@@ -1,10 +1,10 @@
 import { prisma } from "@/lib/global/prisma";
-import { ActivityType } from "@/types/dbTypes";
+import { ActivityType } from "@prisma/client";
 
-export async function createArtifactEntryActivity(artifactId: string) {
+export async function createArtifactActivity(artifactId: string) {
   return prisma.activity.create({
     data: {
-      type: ActivityType.ENTRY,
+      type: ActivityType.artifact,
       referenceId: artifactId,
     },
   });
@@ -13,7 +13,7 @@ export async function createArtifactEntryActivity(artifactId: string) {
 export async function createHeartActivity(heartId: string) {
   return prisma.activity.create({
     data: {
-      type: ActivityType.HEART,
+      type: ActivityType.heart,
       referenceId: heartId,
     },
   });
@@ -22,7 +22,7 @@ export async function createHeartActivity(heartId: string) {
 export async function createReplyRecordActivity(replyId: string) {
   return prisma.activity.create({
     data: {
-      type: ActivityType.REPLY,
+      type: ActivityType.reply,
       referenceId: replyId,
     },
   });
@@ -30,20 +30,12 @@ export async function createReplyRecordActivity(replyId: string) {
 
 export async function createFollowActivity(
   followId: string,
-  followType: ActivityType.FOLLOWED | ActivityType.FOLLOWED_BACK,
+  followType: "followed" | "followed_back",
 ) {
   return prisma.activity.create({
     data: {
-      type: followType,
+      type: ActivityType[followType],
       referenceId: followId,
-    },
-  });
-}
-
-export async function deleteActivity(activityId: string) {
-  return prisma.activity.delete({
-    where: {
-      id: activityId,
     },
   });
 }

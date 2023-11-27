@@ -1,17 +1,10 @@
 import client, { setCache } from "../global/redis";
 import { prisma } from "../global/prisma";
-import { Record } from "@/types/dbTypes";
+import { Artifact } from "@/types/dbTypes";
 
 type SelectedRecordFields = Pick<
-  Record,
-  | "id"
-  | "updatedAt"
-  | "type"
-  | "author"
-  | "album"
-  | "track"
-  | "createdAt"
-  | "entry"
+  Artifact,
+  "id" | "updatedAt" | "type" | "author" | "createdAt" | "sound"
 > & {
   _count: {
     replies: number;
@@ -48,18 +41,17 @@ function calculateBloomingScore(record: SelectedRecordFields) {
 export async function bloomingActivities() {
   const activities = await prisma.activity.findMany({
     where: {
-      type: "RECORD",
+      type: "artifact",
     },
     include: {
-      record: {
+      artifact: {
         select: {
           id: true,
           type: true,
           author: true,
-          album: true,
-          track: true,
-          entry: true,
-          _count: { select: { replies: true, hearts: true, views: true } },
+          _count: { select: { replies: true, hearts: true } },
+          content: true,
+          sound: true,
           createdAt: true,
           updatedAt: true,
         },
@@ -68,17 +60,17 @@ export async function bloomingActivities() {
   });
 
   for (const activity of activities) {
-    if (activity.record) {
-      const record = activity.record;
+    if (activity.artifact) {
+      const artifact = activity.artifact;
       // @ts-ignore
-      const bloomingScore = calculateBloomingScore(record);
+      const bloomingScore = calculateBloomingScore(artifact);
       // Add blooming score to sorted set, and cache activity data
       await client.zadd(
-        `activity:record:blooming:score`,
+        `activity:artifact:blooming:score`,
         bloomingScore,
         activity.id,
       );
-      await setCache(`activity:record:data:${activity.id}`, activity, 3600);
+      await setCache(`activity:artifact:data:${activity.id}`, activity, 3600);
     }
   }
 

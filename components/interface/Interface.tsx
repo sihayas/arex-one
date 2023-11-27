@@ -6,7 +6,7 @@ import { Command } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
 
 import Album from "@/components/interface/album/Album";
-import RecordFace from "@/components/interface/record/RecordFace";
+import Artifact from "@/components/interface/artifact/Artifact";
 import User from "@/components/interface/user/User";
 
 import {
@@ -21,7 +21,7 @@ import { PageName } from "@/context/InterfaceContext";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   album: Album,
-  record: RecordFace,
+  artifact: Artifact,
   user: User,
 };
 // Calculate & set base dimensions and target dimensions for the window per page
@@ -31,13 +31,13 @@ export const GetDimensions = (pageName: PageName) => {
   const { pages } = useInterfaceContext();
   const activePage = pages[pages.length - 1];
 
-  // Initialize base height for record page
+  // Initialize base height for artifact page
   const [baseHeight, setBaseHeight] = useState(432);
   const maxHeight = viewportHeight - 2 * 32; // * by 40 for base
 
-  // When switching to record page, use calculated->stored height from
-  // useLayoutEffect in Record to set the base height for record page. We
-  // are adding the foundation height of the record + height of entry content
+  // When switching to artifact page, use calculated->stored height from
+  // useLayoutEffect in Record to set the base height for artifact page. We
+  // are adding the foundation height of the artifact + height of entry content
   useEffect(() => {
     if (activePage.name === "record") {
       setBaseHeight(activePage.dimensions.height + 432);
@@ -53,7 +53,7 @@ export const GetDimensions = (pageName: PageName) => {
       base: { width: 480, height: 480 },
       target: { width: 480, height: maxHeight },
     },
-    record: {
+    artifact: {
       base: { width: 432, height: baseHeight },
       target: { width: 432, height: maxHeight },
     },

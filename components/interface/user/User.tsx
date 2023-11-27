@@ -134,7 +134,7 @@ const User = () => {
             <div className={`flex flex-col gap-[12px] mt-auto`}>
               <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
               <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                {userData.uniqueAlbums}
+                {userData.soundCount}
               </div>
             </div>
 

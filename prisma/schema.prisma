@@ -87,8 +87,8 @@ model Follows {
 }
 
 enum SoundType {
-  ALBUMS
-  SONGS
+  albums
+  songs
 }
 
 
@@ -152,8 +152,8 @@ model View {
 }
 
 enum ArtifactType {
-  ENTRY // A rating post
-  WISP // A non-rating post
+  entry // A rating post
+  wisp // A non-rating post
 }
 
 model Artifact {
@@ -258,11 +258,11 @@ model Activity {
 }
 
 enum ActivityType {
-  ARTIFACT
-  HEART
-  FOLLOWED
-  FOLLOWED_BACK
-  REPLY
+  artifact
+  heart
+  followed
+  followed_back
+  reply
 }
 
 model Notification {

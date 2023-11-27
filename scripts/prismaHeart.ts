@@ -19,7 +19,7 @@
 //   try {
 //     for (const userId of userIds) {
 //       if (authorId !== userId) {
-//         // Create a new heart for the record
+//         // Create a new heart for the artifact
 //         const newHeart = await prisma.heart.create({
 //           data: { authorId: userId, recordId },
 //         });
@@ -44,7 +44,7 @@
 //       }
 //     }
 //   } catch (error) {
-//     console.error("Error hearting record:", error);
+//     console.error("Error hearting artifact:", error);
 //   }
 //
 //   await prisma.$disconnect();

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 import { createReplyRecordActivity } from "@/pages/api/middleware/createActivity";
 import { createNotification } from "@/pages/api/middleware/createNotification";
 import { createAggKey } from "@/pages/api/middleware/aggKey";
-import { ActivityType } from "@/types/dbTypes";
+import { ActivityType } from "@prisma/client";
 
 // Notify all users in the reply chain
 async function notifyReplyChain(
@@ -22,7 +22,7 @@ async function notifyReplyChain(
     if (!notifiedUsers.has(authorId) && authorId !== userId) {
       notifiedUsers.add(authorId);
 
-      const aggKey = createAggKey(ActivityType.REPLY, replyId, authorId);
+      const aggKey = createAggKey(ActivityType.reply, replyId, authorId);
 
       await createNotification(authorId, activityId, aggKey);
     }
@@ -52,30 +52,29 @@ export default async function handle(
   }
 
   try {
-    const newReply = {
-      author: { connect: { id: userId } },
-      record: { connect: { id: recordId } },
-      replyTo: replyId ? { connect: { id: replyId } } : undefined,
-      content,
-    };
-
-    const createdReply = await prisma.reply.create({ data: newReply });
-
-    rootReplyId = rootReplyId || createdReply.id;
-    await prisma.reply.update({
-      where: { id: createdReply.id },
-      data: { rootReply: { connect: { id: rootReplyId } } },
-    });
-
-    const aggKey = createAggKey(ActivityType.REPLY, createdReply.id, userId);
-
-    const activity = await createReplyRecordActivity(createdReply.id);
-
-    await createNotification(recordAuthorId, activity.id, aggKey);
-
-    await notifyReplyChain(createdReply.id, userId, activity.id);
-
-    res.status(200).json(createdReply);
+    // const newReply = {
+    //   author: { connect: { id: userId } },
+    //   record: { connect: { id: recordId } },
+    //   replyTo: replyId ? { connect: { id: replyId } } : undefined,
+    //   content,
+    // };
+    //
+    // const createdReply = await prisma.reply.create({ data: newReply });
+    //
+    // rootReplyId = rootReplyId || createdReply.id;
+    // // await prisma.reply.update({
+    // //   where: { id: createdReply.id },
+    // //   // data: { rootReply: { connect: { id: rootReplyId } } },
+    // // });
+    //
+    // const aggKey = createAggKey(ActivityType.reply, createdReply.id, userId);
+    //
+    // const activity = await createReplyRecordActivity(createdReply.id);
+    //
+    // await createNotification(recordAuthorId, activity.id, aggKey);
+    //
+    // await notifyReplyChain(createdReply.id, userId, activity.id);
+    // res.status(200).json(createdReply);
   } catch (error) {
     console.error("Error adding reply:", error);
     res.status(500).json({ error: "Error adding reply." });

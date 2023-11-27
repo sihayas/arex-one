@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useSound } from "@/context/SoundContext";
 
 import { useAlbumQuery } from "@/lib/apiHandlers/albumAPI";
-import RenderRecords from "./RenderRecords";
+import RenderRecords from "./RenderArtifacts";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Filter from "@/components/interface/album/sub/Filter";
 

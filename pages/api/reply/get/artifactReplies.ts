@@ -5,9 +5,9 @@ const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  const { recordId, pageSize = 10, lastId = null, userId } = req.query;
+  const { artifactId, pageSize = 10, lastId = null, userId } = req.query;
 
   // Input validation
   if (
@@ -26,7 +26,7 @@ export default async function handle(
       .json({ error: "Invalid lastId. Must be an integer" });
   }
 
-  if (typeof recordId !== "string") {
+  if (typeof artifactId !== "string") {
     return res
       .status(400)
       .json({ error: "Invalid reviewId. Must be a string." });
@@ -42,7 +42,7 @@ export default async function handle(
 
   try {
     const replies = await prisma.reply.findMany({
-      where: { recordId: String(recordId), replyToId: null },
+      where: { artifactId, replyToId: null },
       take: Number(pageSize),
       cursor: lastId ? { id: String(lastId) } : undefined,
       orderBy: { createdAt: "desc" },
@@ -51,9 +51,8 @@ export default async function handle(
         author: true,
         hearts: { select: { id: true }, where: { authorId: userId } },
         replies: { select: { author: { select: { image: true } } }, take: 3 },
-        content: true,
+        artifactId: true,
         _count: { select: { replies: true, hearts: true } },
-        recordId: true,
       },
     });
 

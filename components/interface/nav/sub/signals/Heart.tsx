@@ -11,16 +11,16 @@ const Heart = ({ notification }: SignalHeartProps) => {
   const { users, fetchedSound, activity } = notification;
   const isAggregated = users.length > 1;
 
-  // Determine if the heart activity is towards a reply or an record
+  // Determine if the heart activity is towards a reply or an artifact
   const isReplyHeart = activity.heart?.reply ? true : false;
 
-  // Get the rating from the record associated with the heart activity
-  const recordRating = isReplyHeart
-    ? activity.heart?.reply?.record?.entry?.rating
-    : activity.heart?.record?.entry?.rating;
+  // Get the rating from the artifact associated with the heart activity
+  const artifactRating = isReplyHeart
+    ? activity.heart?.reply?.artifact?.content?.rating
+    : activity.heart?.artifact?.content?.rating;
 
-  // Use the rating from the record
-  const rating = recordRating;
+  // Use the rating from the artifact
+  const rating = artifactRating;
 
   const heartLabel =
     users.length > 1 ? "HEARTS" : isReplyHeart ? "CHAIN HEART" : "HEART";

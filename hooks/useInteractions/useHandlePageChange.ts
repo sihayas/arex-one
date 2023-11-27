@@ -4,10 +4,10 @@ import { useSound } from "@/context/SoundContext";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { v4 as uuidv4 } from "uuid";
-import { Record, User } from "@/types/dbTypes";
+import { Artifact, User } from "@/types/dbTypes";
 
 // Handle RecordFeed Click
-export const useHandleRecordClick = (record: Record) => {
+export const useHandleArtifactClick = (artifact: Artifact) => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();
 
@@ -18,16 +18,16 @@ export const useHandleRecordClick = (record: Record) => {
       {
         key: uuidv4(),
         name: "record",
-        threadcrumbs: [record.id],
+        threadcrumbs: [artifact.id],
         dimensions: {
           width: 432,
           height: 832,
         },
         scrollPosition: 0,
-        record: record,
+        artifact: artifact,
       },
     ]);
-    setThreadcrumbs([record.id]);
+    setThreadcrumbs([artifact.id]);
     window.history.pushState(null, "");
   };
 };

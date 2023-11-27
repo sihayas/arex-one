@@ -7,7 +7,7 @@ import { Reply } from "@/types/dbTypes";
 import { StatLineIcon } from "@/components/icons";
 import Dash from "@/components/global/Dash";
 
-import RenderChildren from "@/components/interface/record/sub/reply/RenderChildren";
+import RenderChildren from "@/components/interface/artifact/sub/reply/RenderChildren";
 import { motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -127,7 +127,7 @@ export default function ReplyItem({
               transition={{ duration: 0.24 }}
               className={`${maxWidth} text-sm break-words cursor-pointer`}
             >
-              {reply.content}
+              {reply.text}
             </motion.div>
             <Heart
               handleHeartClick={handleHeartClick}

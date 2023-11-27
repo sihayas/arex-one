@@ -10,7 +10,7 @@ const Link = ({ notification }: SignalLinkProps) => {
   const { users, activity } = notification;
   const isAggregated = users.length > 1;
 
-  const isFollowBack = activity.type === ActivityType.FOLLOWED_BACK;
+  const isFollowBack = activity.type === ActivityType.FollowedBack;
   console.log(isFollowBack);
 
   const getUserAvatar = (user: User, index: number) => {

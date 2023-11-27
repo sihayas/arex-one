@@ -4,16 +4,16 @@ import { ActivityType } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ success: boolean; message?: string }>
+  res: NextApiResponse<{ success: boolean; message?: string }>,
 ) {
-  const { recordId, userId, authorId } = req.body;
+  const { artifactId, userId, authorId } = req.body;
 
   if (authorId === userId) {
     return res.status(400).json({ success: false });
   }
 
   const existingHeart = await prisma.heart.findFirst({
-    where: { authorId: userId, recordId },
+    where: { authorId: userId, artifactId },
   });
 
   if (!existingHeart) {
@@ -23,7 +23,7 @@ export default async function handler(
   }
 
   const existingActivity = await prisma.activity.findFirst({
-    where: { type: ActivityType.HEART, referenceId: existingHeart.id },
+    where: { type: ActivityType.heart, referenceId: existingHeart.id },
   });
 
   if (!existingActivity) {
@@ -32,7 +32,7 @@ export default async function handler(
       .json({ success: false, message: "No activity found to unheart" });
   }
 
-  const aggregationKey = `HEART|${recordId}|${authorId}`;
+  const aggregationKey = `heart|${artifactId}|${authorId}`;
   await prisma.$transaction([
     prisma.notification.deleteMany({
       where: {

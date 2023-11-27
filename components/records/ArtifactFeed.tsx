@@ -1,42 +1,37 @@
 import React from "react";
 
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
-import { useHandleRecordClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { useHandleArtifactClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 import { Artwork } from "../global/Artwork";
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
 import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
-import { RecordExtended } from "@/types/globalTypes";
+import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
-
 interface ArtifactFeedProps {
-  artifact: RecordExtended;
-  associatedType: "album" | "track";
+  artifact: ArtifactExtended;
 }
 
-export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({
-  record,
-  associatedType,
-}) => {
+export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({ artifact }) => {
   const user = useUser();
-  const sound = record.appleAlbumData || record.appleTrackData;
+  const sound = artifact.appleAlbumData || artifact.appleTrackData;
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    record.heartedByUser,
-    record._count.hearts,
-    "/api/record/entry/post/",
-    "recordId",
-    record.id,
-    record.author.id,
+    artifact.heartedByUser,
+    artifact._count.hearts,
+    "/api/artifact/entry/post/",
+    "artifactId",
+    artifact.id,
+    artifact.author.id,
     user?.id,
   );
 
-  const isAlbumEntry = associatedType === "album";
-  const isCaption = !!record.caption;
+  const isAlbumEntry = artifact.sound.type === "albums";
+  const isWisp = artifact.type === "wisp";
 
-  const handleEntryClick = useHandleRecordClick(record);
+  const handleEntryClick = useHandleArtifactClick(artifact);
 
   return (
     <motion.div className="flex flex-col w-fit relative">
@@ -47,23 +42,23 @@ export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({
           <p
             className={`text-gray4 font-medium text-sm leading-[75%] min-w-[162px] text-end`}
           >
-            {record.author.username}
+            {artifact.author.username}
           </p>
           <Avatar
             className={`h-[42px] border border-silver`}
-            imageSrc={record.author.image}
-            altText={`${record.author.username}'s avatar`}
+            imageSrc={artifact.author.image}
+            altText={`${artifact.author.username}'s avatar`}
             width={42}
             height={42}
-            user={record.author}
+            user={artifact.author}
           />
         </div>
 
         {/* Rating */}
         <Stars
           className={`bg-[#E5E5E6] absolute -top-[14px] left-[210px] rounded-full w-max text-[#808084] -z-10 p-[6px]`}
-          rating={record.entry?.rating}
-          isCaption={isCaption}
+          rating={artifact.content?.rating}
+          isWisp={isWisp}
         />
 
         {/* Rating, content & bubbles */}
@@ -78,9 +73,7 @@ export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({
           <div
             className={`absolute -top-4 left-[18px] text-xs text-gray5 leading-[1] w-max gap-1 flex`}
           >
-            <div className={`font-medium`}>
-              {record.track ? record.track.name : sound.attributes.name}
-            </div>
+            <div className={`font-medium`}>{sound.attributes.name}</div>
             &middot;
             <span className={`font-normal`}>{sound.attributes.artistName}</span>
           </div>
@@ -90,7 +83,7 @@ export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({
             onClick={handleEntryClick}
             className={`break-words line-clamp-6 w-full text-sm text-gray5 cursor-pointer z-10`}
           >
-            {record.entry?.text || record.caption?.text}
+            {artifact.content?.text || artifact.content?.text}
           </div>
 
           {/* Bubbles */}
@@ -107,7 +100,7 @@ export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({
             hearted={hearted}
             className="absolute -bottom-1 -right-1"
             heartCount={heartCount}
-            replyCount={record._count.replies}
+            replyCount={artifact._count.replies}
           />
         </div>
       </div>

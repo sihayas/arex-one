@@ -5,7 +5,7 @@ const MAX_PAGE_SIZE = 100; // Maximum allowed pageSize
 
 export default async function handle(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { replyId, pageSize = 10, lastId = null, userId } = req.query;
 
@@ -47,9 +47,9 @@ export default async function handle(
         author: true,
         hearts: { select: { id: true }, where: { authorId: userId } },
         replies: { select: { author: { select: { image: true } } }, take: 3 },
-        content: true,
+        text: true,
         _count: { select: { replies: true, hearts: true } },
-        recordId: true,
+        artifactId: true,
       },
     });
 

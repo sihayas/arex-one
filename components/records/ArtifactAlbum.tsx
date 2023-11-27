@@ -1,32 +1,32 @@
 import React from "react";
 
 import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
-import { useHandleRecordClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { useHandleArtifactClick } from "@/hooks/useInteractions/useHandlePageChange";
 
 import Avatar from "@/components/global/Avatar";
 import Stars from "@/components/global/Stars";
 import { useSound } from "@/context/SoundContext";
-import { RecordExtended } from "@/types/globalTypes";
+import { ArtifactExtended } from "@/types/globalTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
 
-const RecordAlbum = ({ record }: { record: RecordExtended }) => {
+const ArtifactAlbum = ({ artifact }: { artifact: ArtifactExtended }) => {
   const { selectedSound } = useSound();
   const user = useUser();
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    record.heartedByUser,
-    record._count.hearts,
-    "/api/record/record/post/",
+    artifact.heartedByUser,
+    artifact._count.hearts,
+    "/api/artifact/entry/post/",
     "recordId",
-    record.id,
-    record.author.id,
+    artifact.id,
+    artifact.author.id,
     user?.id,
   );
 
-  const handleEntryClick = useHandleRecordClick({
-    ...record,
+  const handleEntryClick = useHandleArtifactClick({
+    ...artifact,
     appleAlbumData: selectedSound?.sound as AlbumData,
   });
 
@@ -38,17 +38,17 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
       {/* Username and Avatar*/}
       <Avatar
         className={`h-[32px] border border-gray3`}
-        imageSrc={record.author.image}
-        altText={`${record.author.username}'s avatar`}
+        imageSrc={artifact.author.image}
+        altText={`${artifact.author.username}'s avatar`}
         width={32}
         height={32}
-        user={record.author}
+        user={artifact.author}
       />
 
       {/* Rating */}
       <Stars
         className={`bg-[#E5E5E6] absolute -top-[14px] left-[30px] rounded-full w-max text-[#808084] -z-10 p-[6px]`}
-        rating={record.entry?.rating}
+        rating={artifact.content?.rating}
       />
 
       {/* Rating, content & bubbles */}
@@ -62,7 +62,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
         <div
           className={`absolute -top-4 left-[18px] text-xs text-gray5 leading-[1] font-medium w-max`}
         >
-          {record.author.username}
+          {artifact.author.username}
         </div>
 
         {/* Content */}
@@ -70,7 +70,7 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
           onClick={handleEntryClick}
           className={`break-words line-clamp-6 w-full text-sm text-gray5 leading-normal cursor-pointer z-10`}
         >
-          {record.entry?.text || record.caption?.text}
+          {artifact.content?.text}
         </div>
 
         {/* Bubbles */}
@@ -87,11 +87,11 @@ const RecordAlbum = ({ record }: { record: RecordExtended }) => {
           hearted={hearted}
           className="absolute -bottom-1 -right-1"
           heartCount={heartCount}
-          replyCount={record._count.replies}
+          replyCount={artifact._count.replies}
         />
       </div>
     </div>
   );
 };
 
-export default RecordAlbum;
+export default ArtifactAlbum;

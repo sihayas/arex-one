@@ -36,23 +36,21 @@ export default async function handle(
     followingIds.push(userId);
 
     const activities = await prisma.activity.findMany({
-      where: { record: { authorId: { in: followingIds } } },
+      where: { artifact: { authorId: { in: followingIds } } },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit + 1,
       include: {
-        record: {
+        artifact: {
           select: {
             id: true,
             type: true,
             author: true,
-            album: true,
-            track: true,
             createdAt: true,
-            entry: true,
-            caption: true,
             hearts: { where: { authorId: userId } },
             _count: { select: { replies: true, hearts: true } },
+            content: true,
+            sound: true,
           },
         },
         heart: true,
@@ -65,9 +63,9 @@ export default async function handle(
 
     const activitiesWithUserHeart = activities.map((activity) => ({
       ...activity,
-      record: activity.record && {
-        ...activity.record,
-        heartedByUser: activity.record.hearts.length > 0,
+      artifact: activity.artifact && {
+        ...activity.artifact,
+        heartedByUser: activity.artifact.hearts.length > 0,
       },
     }));
 

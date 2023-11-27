@@ -24,29 +24,23 @@ async function attachAlbumData(
 
   return essentials.map((essential) => ({
     ...essential,
-    appleAlbumData: albumDataMap[essential.album.appleId],
+    appleAlbumData: albumDataMap[essential.sound.appleId],
   }));
 }
 
 async function countUniqueAlbumsAndTracks(
   userId: string,
-): Promise<{ albumCount: number; trackCount: number }> {
-  const [uniqueAlbumCount, uniqueTrackCount] = await Promise.all([
-    prisma.record.groupBy({
-      by: ["albumId"],
-      where: { authorId: userId, type: "ENTRY", albumId: { not: null } },
-      _count: { albumId: true },
-    }),
-    prisma.record.groupBy({
-      by: ["trackId"],
-      where: { authorId: userId, type: "ENTRY", trackId: { not: null } },
-      _count: { trackId: true },
+): Promise<{ soundCount: number }> {
+  const [uniqueAlbumCount] = await Promise.all([
+    prisma.artifact.groupBy({
+      by: ["soundId"],
+      where: { authorId: userId, type: "entry" },
+      _count: { soundId: true },
     }),
   ]);
 
   return {
-    albumCount: uniqueAlbumCount.length,
-    trackCount: uniqueTrackCount.length,
+    soundCount: uniqueAlbumCount.length,
   };
 }
 
@@ -77,7 +71,7 @@ export default async function handle(
     // Attach album data to essentials
     if (pageUserData.essentials.length > 0) {
       const albumIds = pageUserData.essentials.map(
-        (essential: Essential) => essential.album.appleId,
+        (essential: Essential) => essential.sound.appleId,
       );
       pageUserData.essentials = await attachAlbumData(
         pageUserData.essentials,
@@ -85,8 +79,7 @@ export default async function handle(
       );
     }
 
-    const { albumCount, trackCount } =
-      await countUniqueAlbumsAndTracks(pageUserId);
+    const { soundCount } = await countUniqueAlbumsAndTracks(pageUserId);
 
     const isFollowingAtoB = pageUserData.followedBy.includes(sessionUserId);
     const isFollowingBtoA = sessionUserData.followedBy.includes(pageUserId);
@@ -95,7 +88,7 @@ export default async function handle(
       ...pageUserData,
       isFollowingAtoB,
       isFollowingBtoA,
-      uniqueAlbums: albumCount + trackCount,
+      soundCount,
     };
 
     return res.status(200).json(response);

@@ -1,7 +1,7 @@
-import { AlbumData, SongData } from "@/types/appleTypes";
-import { Record } from "@/types/dbTypes";
+import { AlbumData } from "@/types/appleTypes";
+import { Artifact } from "@/types/dbTypes";
 
-export interface RecordExtended extends Record {
+export interface ArtifactExtended extends Artifact {
   appleAlbumData: AlbumData;
   _count: {
     hearts: number;

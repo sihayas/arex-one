@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 
 export default async function changeEssential(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { userId, prevEssentialId, appleId, rank } = req.body;
 
@@ -13,13 +13,13 @@ export default async function changeEssential(
     return res.status(400).json({ error: "Invalid rank." });
 
   try {
-    const appleAlbum = await prisma.album.findFirst({ where: { appleId } });
+    const appleAlbum = await prisma.sound.findFirst({ where: { appleId } });
     if (!appleAlbum) return res.status(404).json({ error: "Album not found." });
 
     await prisma.essential.deleteMany({ where: { id: prevEssentialId } });
 
     const newEssential = await prisma.essential.create({
-      data: { userId, albumId: appleAlbum.id, rank },
+      data: { userId, soundId: appleAlbum.id, rank },
     });
 
     console.log("Successfully changed essential. New essential:", newEssential);

@@ -48,19 +48,16 @@ export default async function handle(
     }
 
     try {
-      const reviews = await prisma.record.findMany({
+      const reviews = await prisma.artifact.findMany({
         where: {
-          type: "ENTRY",
-          OR: [
-            { track: { appleId: soundId } },
-            { album: { appleId: soundId } },
-          ],
+          type: "entry",
+          OR: [{ sound: { appleId: soundId } }],
         },
         skip,
         orderBy,
         take: 6,
         include: {
-          entry: true,
+          content: true,
           author: true,
           hearts: {
             where: { authorId: userId },

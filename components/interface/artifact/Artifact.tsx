@@ -17,29 +17,29 @@ import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
 import { Artwork } from "@/components/global/Artwork";
 import Stars from "@/components/global/Stars";
 import Avatar from "@/components/global/Avatar";
-import RenderReplies from "@/components/interface/record/sub/reply/RenderReplies";
-import { useRepliesQuery } from "@/lib/apiHandlers/recordAPI";
+import RenderReplies from "@/components/interface/artifact/sub/reply/RenderReplies";
+import { useRepliesQuery } from "@/lib/apiHandlers/artifactAPI";
 import { GetDimensions } from "@/components/interface/Interface";
-import { RecordExtended } from "@/types/globalTypes";
+import { ArtifactExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
 import Heart from "@/components/global/Heart";
 
-export const RecordFace = () => {
+export const Artifact = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
-  const { setReplyParent, setRecord } = useThreadcrumb();
+  const { setReplyParent, setArtifact } = useThreadcrumb();
   const height = useRef(0);
 
-  // Set max height for the record content based on the target height set in GetDimensions
+  // Set max height for the artifact content based on the target height set in GetDimensions
   const activePage: Page = pages[pages.length - 1];
   const { target } = GetDimensions(activePage.name as PageName);
   const entryContentMax = target.height * 0.4;
 
-  // Hook for record content animation
+  // Hook for artifact content animation
   const [scope, animate] = useAnimate();
 
-  // Upon mount, store the height of the record content into dimensions so
+  // Upon mount, store the height of the artifact content into dimensions so
   // GetDimensions can use it to calculate the base height for this specific
   // Record as the Record page can vary depending on the length of the entry
   useLayoutEffect(() => {
@@ -54,7 +54,7 @@ export const RecordFace = () => {
   const replyInputOpacity = useTransform(scrollY, [0, 24], [0, 1]);
   const scrollIndicatorOpacity = useTransform(scrollY, [0, 24], [1, 0]);
 
-  // Animate record height from whatever it is to 72px
+  // Animate artifact height from whatever it is to 72px
   const newHeight = useTransform(scrollY, [0, 24], [height.current, 72]);
 
   // Animate scale
@@ -77,29 +77,29 @@ export const RecordFace = () => {
     return () => unsubHeight();
   }, [animate, newHeight, scope]);
 
-  const { data: replies } = useRepliesQuery(activePage.record?.id, user!.id);
+  const { data: replies } = useRepliesQuery(activePage.artifact?.id, user!.id);
 
-  const record = useMemo(
-    () => activePage.record as RecordExtended,
+  const artifact = useMemo(
+    () => activePage.artifact as ArtifactExtended,
     [activePage],
   );
 
-  const isCaption = record.caption ? true : false;
+  const isWisp = artifact.type === "wisp";
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    record.heartedByUser,
-    record._count.hearts,
-    "/api/record/record/post/heart",
-    "recordId",
-    record.id,
-    record.author.id,
+    artifact.heartedByUser,
+    artifact._count.hearts,
+    "/api/artifact/entry/post/heart",
+    "artifactId",
+    artifact.id,
+    artifact.authorId,
     user?.id,
   );
 
   useEffect(() => {
-    if (record) setRecord(record);
-  }, [record, setRecord]);
-  if (!record) return null;
+    if (artifact) setArtifact(artifact);
+  }, [artifact, setArtifact]);
+  if (!artifact) return null;
 
   return (
     <motion.div
@@ -111,7 +111,7 @@ export const RecordFace = () => {
       <div className="flex flex-col items-center relative">
         <Artwork
           className="!rounded-3xl !rounded-bl-none !rounded-br-none"
-          sound={record.appleAlbumData}
+          sound={artifact.appleAlbumData}
           width={480}
           height={480}
         />
@@ -120,7 +120,7 @@ export const RecordFace = () => {
           <motion.div
             ref={scope}
             whileHover={{ color: "rgba(0,0,0,1)" }}
-            onClick={() => setReplyParent(record)}
+            onClick={() => setReplyParent(artifact)}
             style={{
               maxHeight: entryContentMax,
               scale: springScale,
@@ -129,7 +129,7 @@ export const RecordFace = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            key={record.id}
+            key={artifact.id}
             className={`absolute top-0 flex flex-col bg-[#F4F4F4] rounded-[24px] w-[464px] z-20 shadow-shadowKitHigh`}
           >
             <div
@@ -137,10 +137,10 @@ export const RecordFace = () => {
             >
               <Stars
                 className={`bg-[#E5E5E5] absolute -top-[28px] left-[36px] p-[6px] rounded-full backdrop-blur-xl w-max z-10 text-gray5 max-h-[24px]`}
-                rating={record.entry?.rating}
-                soundName={record.appleAlbumData.attributes.name}
-                artist={record.appleAlbumData.attributes.artistName}
-                isCaption={isCaption}
+                rating={artifact.content?.rating}
+                soundName={artifact.appleAlbumData.attributes.name}
+                artist={artifact.appleAlbumData.attributes.artistName}
+                isWisp={isWisp}
               />
               <div
                 className={`bg-[#E5E5E5] w-1 h-1 absolute top-0 left-[40px] rounded-full`}
@@ -150,14 +150,14 @@ export const RecordFace = () => {
               />
               <Avatar
                 className="border border-gray3 min-w-[40px] min-h-[40px]"
-                imageSrc={record.author.image}
-                altText={`${record.author.username}'s avatar`}
+                imageSrc={artifact.author.image}
+                altText={`${artifact.author.username}'s avatar`}
                 width={40}
                 height={40}
-                user={record.author}
+                user={artifact.author}
               />
               <p className="text-gray5 font-semibold text-sm leading-[1]">
-                {record.author.username}
+                {artifact.author.username}
               </p>
             </div>
 
@@ -165,7 +165,7 @@ export const RecordFace = () => {
               <div
                 className={`break-words w-full text-sm text-gray5 leading-normal cursor-pointer`}
               >
-                {record.entry?.text || record.caption?.text}
+                {artifact.content?.text || artifact.content?.text}
               </div>
             </div>
             <Heart
@@ -173,7 +173,7 @@ export const RecordFace = () => {
               hearted={hearted}
               className="absolute bottom-4 right-4"
               heartCount={heartCount}
-              replyCount={record._count.replies}
+              replyCount={artifact._count.replies}
             />
             <motion.div
               style={{ opacity: scrollIndicatorOpacity }}
@@ -195,4 +195,4 @@ export const RecordFace = () => {
   );
 };
 
-export default RecordFace;
+export default Artifact;

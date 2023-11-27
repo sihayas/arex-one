@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 import { SelectedSound } from "@/context/SoundContext";
-import { Record, User } from "@/types/dbTypes";
+import { User, Artifact } from "@/types/dbTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
 
@@ -15,7 +15,7 @@ export type Page = {
   name: string;
   sound?: SelectedSound;
   user?: User;
-  record?: Record;
+  artifact?: Artifact;
   scrollPosition: number;
   dimensions: {
     width: number;
@@ -23,7 +23,7 @@ export type Page = {
   };
 };
 
-export type PageName = "album" | "user" | "record";
+export type PageName = "album" | "user" | "artifact";
 
 export type InterfaceContext = {
   isVisible: boolean;

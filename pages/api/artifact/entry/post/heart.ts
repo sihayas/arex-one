@@ -1,16 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createHeartActivity } from "@/pages/api/middleware/createActivity";
+import { createAggKey } from "@/pages/api/middleware/aggKey";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ success: boolean; message?: string }>
+  res: NextApiResponse<{ success: boolean; message?: string }>,
 ) {
-  const { recordId, userId, authorId } = req.body;
+  const { artifactId, userId, authorId } = req.body;
 
   if (
     authorId === userId ||
-    (await prisma.heart.findFirst({ where: { authorId: userId, recordId } }))
+    (await prisma.heart.findFirst({ where: { authorId: userId, artifactId } }))
   ) {
     return res
       .status(400)
@@ -18,15 +19,18 @@ export default async function handler(
   }
 
   const newHeart = await prisma.heart.create({
-    data: { authorId: userId, recordId },
+    data: { authorId: userId, artifactId },
   });
+
   const activity = await createHeartActivity(newHeart.id);
+
+  const aggKey = createAggKey("heart", artifactId, authorId);
 
   await prisma.notification.create({
     data: {
       recipientId: authorId,
       activityId: activity.id,
-      aggregation_Key: `HEART|${recordId}|${authorId}`,
+      aggregation_Key: aggKey,
     },
   });
 

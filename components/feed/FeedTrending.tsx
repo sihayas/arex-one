@@ -1,10 +1,10 @@
 import { useBloomingFeedQuery } from "@/lib/apiHandlers/feedAPI";
-import { FeedRecord } from "@/components/records/ArtifactFeed";
+import { ArtifactFeed } from "@/components/records/ArtifactFeed";
 import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
-import { RecordExtended } from "@/types/globalTypes";
+import { ArtifactExtended } from "@/types/globalTypes";
 
 const FeedTrending = ({
   userId,
@@ -38,13 +38,10 @@ const FeedTrending = ({
       {error && "an error has occurred"}
       {allActivities.map((activity: Activity, i) => (
         <Fragment key={activity.id}>
-          {activity.record ? (
-            <FeedRecord
-              record={activity.record as RecordExtended}
-              associatedType={activity.record?.album ? "album" : "track"}
-            />
+          {activity.artifact ? (
+            <ArtifactFeed artifact={activity.artifact as ArtifactExtended} />
           ) : (
-            "No record available for this activity."
+            "No artifact available for this activity."
           )}
         </Fragment>
       ))}

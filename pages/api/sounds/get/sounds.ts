@@ -12,7 +12,7 @@ const isKeyOfResponseData = (key: string): key is keyof ResponseData =>
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const idTypes = JSON.parse(req.query.idTypes as string);
@@ -20,6 +20,8 @@ export default async function handler(
       albums: new Map(idTypes.albums.map((id: string) => [id, null])),
       songs: new Map(idTypes.songs.map((id: string) => [id, null])),
     };
+
+    // Initialize maps for data that needs to be fetched
     const needToFetch: ResponseData = { albums: new Map(), songs: new Map() };
 
     // Check cache and update maps

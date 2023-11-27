@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { groupBy } from "lodash";
 import { User } from "@/types/dbTypes";
+import { ActivityType } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,11 +23,13 @@ export default async function handler(
             heart: {
               include: {
                 author: true,
-                record: { include: { album: true, track: true, entry: true } },
+                artifact: {
+                  include: { sound: true, content: true },
+                },
                 reply: {
                   include: {
-                    record: {
-                      include: { album: true, track: true, entry: true },
+                    artifact: {
+                      include: { sound: true, content: true },
                     },
                   },
                 },
@@ -41,7 +44,9 @@ export default async function handler(
             reply: {
               include: {
                 author: true,
-                record: { select: { album: true, track: true, entry: true } },
+                artifact: {
+                  include: { sound: true, content: true },
+                },
               },
             },
           },
@@ -68,7 +73,10 @@ export default async function handler(
         let specificActivity;
 
         // Check if the type is FOLLOWED or FOLLOWED_BACK to set the specific activity directly
-        if (type === "FOLLOWED" || type === "FOLLOWED_BACK") {
+        if (
+          type === ActivityType.followed ||
+          type === ActivityType.followed_back
+        ) {
           specificActivity = { follow: n.activity.follow };
         } else {
           // Access the specific activity based on the type for other activity types
@@ -77,7 +85,7 @@ export default async function handler(
           ];
         }
 
-        // Destructure author, record, reply, and follow from the specific activity
+        // Destructure author, artifact, reply, and follow from the specific activity
         const { author, record, reply, follow } = specificActivity || {};
 
         if (author) {
@@ -86,7 +94,7 @@ export default async function handler(
           users.push(follow.follower);
         }
 
-        // Get albumId and trackId from record or reply
+        // Get albumId and trackId from artifact or reply
         const albumId = record?.album?.appleId || reply?.record.album?.appleId;
         const trackId = record?.track?.appleId || reply?.record.track?.appleId;
 

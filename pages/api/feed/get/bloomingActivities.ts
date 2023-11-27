@@ -40,17 +40,15 @@ export default async function handle(
           activityData = await prisma.activity.findUnique({
             where: { id },
             include: {
-              record: {
+              artifact: {
                 select: {
                   id: true,
                   type: true,
                   author: true,
-                  album: true,
-                  track: true,
                   createdAt: true,
-                  entry: true,
                   _count: { select: { replies: true, hearts: true } },
                   hearts: { where: { authorId: userId } },
+                  sound: true,
                 },
               },
             },
@@ -61,7 +59,7 @@ export default async function handle(
           const dynamicData = await prisma.activity.findUnique({
             where: { id },
             include: {
-              record: {
+              artifact: {
                 select: {
                   hearts: { where: { authorId: userId } },
                   _count: { select: { replies: true, hearts: true } },
@@ -71,11 +69,11 @@ export default async function handle(
           });
 
           const mergedRecord =
-            dynamicData && dynamicData.record
+            dynamicData && dynamicData.artifact
               ? {
-                  ...activityData.record,
-                  ...dynamicData.record,
-                  heartedByUser: dynamicData.record.hearts?.length > 0,
+                  ...activityData.artifact,
+                  ...dynamicData.artifact,
+                  heartedByUser: dynamicData.artifact.hearts?.length > 0,
                 }
               : activityData.record;
 

@@ -1,4 +1,4 @@
-import { useNotificationsQuery } from "@/lib/apiHandlers/userAPI";
+// import { useNotificationsQuery } from "@/lib/apiHandlers/userAPI";
 import Heart from "./signals/Heart";
 import Reply from "./signals/Reply";
 import Link from "./signals/Link";
@@ -18,34 +18,34 @@ const Signals = () => {
   const userId = user?.id;
 
   // Fetch notifications for the user
-  const { data: fetchedNotifications, isLoading } =
-    useNotificationsQuery(userId);
+  // const { data: fetchedNotifications, isLoading } =
+  //   useNotificationsQuery(userId);
 
-  console.log(fetchedNotifications);
+  // console.log(fetchedNotifications);
 
   return (
     <div className={`flex flex-col w-full gap-8`}>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        fetchedNotifications.map(
-          (notification: extendedNotification, index: number) => {
-            const notificationType =
-              notification.aggregation_Key?.split("|")[0];
+      {/*{isLoading ? (*/}
+      {/*  <div>Loading...</div>*/}
+      {/*) : (*/}
+      {/*  fetchedNotifications.map(*/}
+      {/*    (notification: extendedNotification, index: number) => {*/}
+      {/*      const notificationType =*/}
+      {/*        notification.aggregation_Key?.split("|")[0];*/}
 
-            switch (notificationType) {
-              case "HEART":
-                return <Heart key={index} notification={notification} />;
-              case "REPLY":
-                return <Reply key={index} notification={notification} />;
-              case "FOLLOWED":
-                return <Link key={index} notification={notification} />;
-              default:
-                return <div key={index}>n.a</div>;
-            }
-          },
-        )
-      )}
+      {/*      switch (notificationType) {*/}
+      {/*        case "HEART":*/}
+      {/*          return <Heart key={index} notification={notification} />;*/}
+      {/*        case "REPLY":*/}
+      {/*          return <Reply key={index} notification={notification} />;*/}
+      {/*        case "FOLLOWED":*/}
+      {/*          return <Link key={index} notification={notification} />;*/}
+      {/*        default:*/}
+      {/*          return <div key={index}>n.a</div>;*/}
+      {/*      }*/}
+      {/*    },*/}
+      {/*  )*/}
+      {/*)}*/}
     </div>
   );
 };

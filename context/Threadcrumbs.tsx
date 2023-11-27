@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Record, Reply } from "@/types/dbTypes";
+import { Artifact, Reply } from "@/types/dbTypes";
 
 type ThreadcrumbProviderType = {
   children: React.ReactNode;
@@ -12,16 +12,16 @@ export type ThreadcrumbContextType = {
   removeLastThreadcrumb: () => void;
   resetThreadcrumbs: () => void;
   removeUpToId: (id: string) => void;
-  replyParent: Record | Reply | null;
-  setReplyParent: React.Dispatch<React.SetStateAction<Record | Reply | null>>;
-  record: Record | null;
-  setRecord: React.Dispatch<React.SetStateAction<Record | null>>;
+  replyParent: Artifact | Reply | null;
+  setReplyParent: React.Dispatch<React.SetStateAction<Artifact | Reply | null>>;
+  artifact: Artifact | null;
+  setArtifact: React.Dispatch<React.SetStateAction<Artifact | null>>;
   setThreadcrumbs: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 // Create the context with a default empty object
 export const ThreadcrumbContext = createContext<ThreadcrumbContextType | null>(
-  null
+  null,
 );
 
 // Create a hook to use the context
@@ -36,8 +36,8 @@ export const useThreadcrumb = () => {
 // Create a provider component
 export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
   const [threadcrumbs, setThreadcrumbs] = useState<string[]>([]);
-  const [replyParent, setReplyParent] = useState<Record | Reply | null>(null);
-  const [record, setRecord] = useState<Record | null>(null);
+  const [replyParent, setReplyParent] = useState<Artifact | Reply | null>(null);
+  const [artifact, setArtifact] = useState<Artifact | null>(null);
 
   const addToThreadcrumbs = (id: string) => {
     const newThreadcrumbs = [...threadcrumbs, id];
@@ -73,8 +73,8 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
         resetThreadcrumbs,
         replyParent,
         setReplyParent,
-        record,
-        setRecord,
+        artifact,
+        setArtifact,
         setThreadcrumbs,
       }}
     >

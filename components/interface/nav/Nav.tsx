@@ -12,16 +12,16 @@ import Avatar from "@/components/global/Avatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import Image from "next/image";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { Record, Reply } from "@/types/dbTypes";
-import { addReply } from "@/lib/apiHandlers/recordAPI";
+import { Artifact, Reply } from "@/types/dbTypes";
+import { addReply } from "@/lib/apiHandlers/artifactAPI";
 import { toast } from "sonner";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { AnimatePresence, motion } from "framer-motion";
 
-const isRecord = (
-  replyParent: Record | Reply | null,
-): replyParent is Record => {
-  return (replyParent as Record).appleAlbumData !== undefined;
+const isArtifact = (
+  replyParent: Artifact | Reply | null,
+): replyParent is Artifact => {
+  return (replyParent as Artifact).appleAlbumData !== undefined;
 };
 
 const Nav = () => {
@@ -29,8 +29,8 @@ const Nav = () => {
   let middle;
   let right;
 
-  // For record page/reply input
-  const { replyParent, record, setReplyParent } = useThreadcrumb();
+  // For artifact page/reply input
+  const { replyParent, artifact, setReplyParent } = useThreadcrumb();
   const { user, pages } = useInterfaceContext();
   const {
     inputValue,
@@ -50,13 +50,13 @@ const Nav = () => {
   const activePage: Page = pages[pages.length - 1];
 
   const handleReplySubmit = () => {
-    if (!replyParent || !inputValue || !user?.id || !record) return;
+    if (!replyParent || !inputValue || !user?.id || !artifact) return;
 
-    const type = isRecord(replyParent) ? "record" : "reply";
+    const type = isArtifact(replyParent) ? "artifact" : "reply";
 
     // Wrap the addReply call in toast.promise
     toast.promise(
-      addReply(record?.author.id, replyParent, inputValue, user?.id, type).then(
+      addReply(artifact.authorId, replyParent, inputValue, user?.id, type).then(
         () => {
           setInputValue("");
         },
@@ -179,12 +179,12 @@ const Nav = () => {
     // Prepare reply parent
     else if (
       e.key === "Enter" &&
-      activePage.record &&
+      activePage.artifact &&
       activeAction === "none" &&
       !inputValue
     ) {
       e.preventDefault();
-      setReplyParent(activePage.record);
+      setReplyParent(activePage.artifact);
     }
   };
 
@@ -259,12 +259,12 @@ const Nav = () => {
                   onClick={handleNavClick}
                   className="h-[18px] relative"
                 >
-                  {activePage.record ? (
+                  {activePage.artifact ? (
                     <>
                       <ChainIcon />
                       <Image
                         className="absolute top-0 left-0 rounded-full border border-gray6"
-                        src={activePage.record.author.image}
+                        src={activePage.artifact.author.image}
                         alt="artwork"
                         width={16}
                         height={16}
@@ -328,8 +328,8 @@ const Nav = () => {
                 >
                   {activeAction === "none"
                     ? activePage.sound
-                      ? "Enter to create record, type to explore"
-                      : activePage.record
+                      ? "Enter to create artifact, type to explore"
+                      : activePage.artifact
                       ? "Press enter to reply, type to explore"
                       : "Type to explore"
                     : activeAction === "form"

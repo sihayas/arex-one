@@ -7,13 +7,9 @@ export const postEntry = async (submissionData: {
   loved: boolean;
   userId: string;
   sound: AlbumData | SongData;
-  type: "albums" | "songs";
 }) => {
-  // No rating means it's a caption
-  const endpoint =
-    submissionData.rating === 0
-      ? "/api/record/caption/post/caption"
-      : "/api/record/entry/post/entry";
+  // No rating means it's a wisp
+  const endpoint = "/api/artifact/submit";
 
   try {
     const response = await axios.post(endpoint, submissionData);

@@ -1,9 +1,6 @@
 import axios from "axios";
-import { Record } from "@/types/dbTypes";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { AlbumData, SongData } from "@/types/appleTypes";
-import { extendedNotification } from "@/components/interface/nav/sub/Signals";
 
 // Get user data, handle follow/unfollow, and fetch favorites
 export const useUserDataQuery = (
@@ -77,12 +74,12 @@ export const useUserSettingsQuery = (userId: string) => {
 //
 //       // Extract albumIds and trackIds
 //       const albumIds = soundtrackData
-//         .filter((record: Record): boolean => Boolean(record.album))
-//         .map((record: Record): string => record.album!.appleId);
+//         .filter((artifact: Record): boolean => Boolean(artifact.album))
+//         .map((artifact: Record): string => artifact.album!.appleId);
 //
 //       const trackIds = soundtrackData
-//         .filter((record: Record): boolean => Boolean(record.track))
-//         .map((record: Record): string => record.track!.appleId);
+//         .filter((artifact: Record): boolean => Boolean(artifact.track))
+//         .map((artifact: Record): string => artifact.track!.appleId);
 //
 //       // Fetch albums and tracks by ids
 //       const idTypes = { albums: albumIds, songs: trackIds };

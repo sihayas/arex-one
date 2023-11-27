@@ -8,24 +8,24 @@ export function createAggKey(
   let aggregationKey: string;
 
   switch (type) {
-    case ActivityType.HEART:
-      aggregationKey = `HEART|${targetId}|${userId}`;
+    case ActivityType.heart:
+      aggregationKey = `heart|${targetId}|${userId}`;
       break;
-    case ActivityType.FOLLOWED_BACK:
+    case ActivityType.followed_back:
       const unfollowingId = targetId;
       const unfollowerId = userId;
-      aggregationKey = `FOLLOWED_BACK|${unfollowingId}|${unfollowerId}`;
+      aggregationKey = `followed_back|${unfollowingId}|${unfollowerId}`;
       break;
-    case ActivityType.FOLLOWED:
+    case ActivityType.followed:
       const followingId = targetId;
       const followerId = userId;
-      aggregationKey = `FOLLOWED|${followerId}|${followingId}`;
+      aggregationKey = `followed|${followerId}|${followingId}`;
       break;
-    case ActivityType.REPLY:
-      aggregationKey = `REPLY|${targetId}|${userId}`;
+    case ActivityType.reply:
+      aggregationKey = `reply|${targetId}|${userId}`;
       break;
-    case ActivityType.RECORD:
-      aggregationKey = `RECORD|${targetId}|${userId}`;
+    case ActivityType.artifact:
+      aggregationKey = `artifact|${targetId}|${userId}`;
       break;
     default:
       throw new Error(`Unsupported activity type: ${type}`);

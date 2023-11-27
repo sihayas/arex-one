@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 
 export default async function getUniqueAlbumsByUserId(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { userId, page = 1 } = req.query;
 
@@ -15,13 +15,13 @@ export default async function getUniqueAlbumsByUserId(
     const pageSize = 9;
     const skip = (Number(page) - 1) * pageSize;
 
-    const uniqueAlbums = await prisma.record.findMany({
+    const uniqueAlbums = await prisma.artifact.findMany({
       where: { authorId: String(userId) },
-      select: { album: true, track: true, entry: true, createdAt: true },
+      select: { sound: true, content: true, createdAt: true },
       orderBy: { createdAt: "desc" },
       skip,
       take: pageSize,
-      distinct: ["albumId"],
+      distinct: ["soundId"],
     });
 
     return uniqueAlbums

@@ -1,27 +1,29 @@
 // New function to get root replies for a specific review
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Record, Reply } from "@/types/dbTypes";
+import { Artifact, Reply } from "@/types/dbTypes";
 
 interface RepliesProps {
-  recordId?: string;
+  artifactId?: string;
   replyId?: string;
   userId: string;
 }
 export const fetchReplies = async ({
-  recordId,
+  artifactId,
   replyId,
   userId,
 }: RepliesProps) => {
-  const baseURL = "/api/reply/get/";
+  const baseURL = "/api/reply/get";
 
   // Decide URL based on presence of reviewId or replyId
-  const url = recordId ? `${baseURL}recordReplies` : `${baseURL}replyReplies`;
+  const url = artifactId
+    ? `${baseURL}/artifactReplies`
+    : `${baseURL}/replyReplies`;
 
   return axios
     .get(url, {
       params: {
-        recordId: recordId ? recordId : undefined,
+        artifactId: artifactId ? artifactId : undefined,
         replyId: replyId ? replyId : undefined,
         userId,
       },
@@ -30,51 +32,50 @@ export const fetchReplies = async ({
 };
 
 export const useRepliesQuery = (
-  recordId: string | undefined,
+  artifactId: string | undefined,
   userId: string,
 ) => {
   const { data, isLoading, isError } = useQuery(
-    ["replies", recordId],
-    () => fetchReplies({ recordId, userId }),
-    { enabled: !!recordId, refetchOnWindowFocus: false },
+    ["replies", artifactId],
+    () => fetchReplies({ artifactId, userId }),
+    { enabled: !!artifactId, refetchOnWindowFocus: false },
   );
 
   return { data, isLoading, isError };
 };
 
-const isRecord = (
-  replyParent: Record | Reply | null,
-): replyParent is Record => {
-  return (replyParent as Record).appleAlbumData !== undefined;
+const isArtifact = (
+  replyParent: Artifact | Reply | null,
+): replyParent is Artifact => {
+  return (replyParent as Artifact).appleAlbumData !== undefined;
 };
 
 export const addReply = async (
   recordAuthorId: string,
-  replyParent: Record | Reply,
+  replyParent: Artifact | Reply,
   replyContent: string,
   userId: string,
   type: string,
 ) => {
   if (!replyParent) return;
 
-  const isReply = !isRecord(replyParent) && type === "reply";
-  const isRecordType = isRecord(replyParent) && type === "record";
+  const isReply = !isArtifact(replyParent) && type === "reply";
+  const isRecordType = isArtifact(replyParent) && type === "artifact";
 
   const requestBody = {
     recordAuthorId,
     replyId: isReply ? replyParent.id : null, // Only if replyToReply
-    recordId: isRecordType // Access record id depending on reply or record
+    recordId: isRecordType // Access artifact id depending on reply or artifact
       ? replyParent.id
       : isReply
-      ? replyParent.recordId
+      ? replyParent.artifactId
       : null,
-    rootReplyId: isReply ? replyParent.rootReplyId : null,
     text: replyContent,
     userId,
   };
 
   try {
-    const res = await axios.post("/api/record/entry/post/reply", requestBody);
+    const res = await axios.post("/api/artifact/entry/post/reply", requestBody);
     if (res.status !== 200) {
       console.error(`Error adding reply: ${res.status}`);
     }

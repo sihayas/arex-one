@@ -4,7 +4,7 @@ import {
   StarThreeIcon,
   StarFourIcon,
   AsteriskIcon,
-  CaptionIcon,
+  WispIcon,
 } from "../icons";
 import React from "react";
 import { Artwork } from "./Artwork";
@@ -16,7 +16,7 @@ interface StarsProps {
   soundName?: string;
   artist?: string;
   sound?: AlbumData | SongData;
-  isCaption?: boolean;
+  isWisp?: boolean;
 }
 
 const Stars: React.FC<StarsProps> = ({
@@ -25,7 +25,7 @@ const Stars: React.FC<StarsProps> = ({
   soundName,
   artist,
   sound,
-  isCaption,
+  isWisp,
 }) => {
   const getStarIcon = (rating: number) => {
     switch (Math.floor(rating)) {
@@ -48,7 +48,7 @@ const Stars: React.FC<StarsProps> = ({
         <Artwork className="rounded" sound={sound} width={24} height={24} />
       )}
       {rating && <div className={`min-w-[12px]`}>{getStarIcon(rating)}</div>}
-      {isCaption && <CaptionIcon />}
+      {isWisp && <WispIcon />}
       {soundName && (
         <div className={`flex gap-1 text-xs`}>
           <div className="font-medium line-clamp-1">{soundName}</div>

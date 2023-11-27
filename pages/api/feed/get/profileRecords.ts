@@ -41,21 +41,19 @@ export default async function handle(
           createdAt: "desc",
         },
         where: {
-          record: {
+          artifact: {
             authorId: userId,
           },
         },
         include: {
-          record: {
+          artifact: {
             select: {
               id: true,
               type: true,
               author: true,
-              album: true,
-              track: true,
               createdAt: true,
-              entry: true,
-              caption: true,
+              content: true,
+              sound: true,
               hearts: {
                 where: { authorId: authUserId },
               },
@@ -79,12 +77,12 @@ export default async function handle(
 
       // Attach heartedByUser property to each activity
       const activitiesWithUserHeart = activities.map((activity) => {
-        if (activity.record) {
+        if (activity.artifact) {
           return {
             ...activity,
-            record: {
-              ...activity.record,
-              heartedByUser: activity.record.hearts.length > 0,
+            artifact: {
+              ...activity.artifact,
+              heartedByUser: activity.artifact.hearts.length > 0,
             },
           };
         }

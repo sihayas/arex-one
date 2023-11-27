@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { ActivityType } from "@/types/dbTypes";
+import { ActivityType } from "@prisma/client";
 
 type Data = {
   success: boolean;
@@ -8,7 +8,7 @@ type Data = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data>,
 ) {
   const { replyId, userId, authorId } = req.body;
 
@@ -22,13 +22,13 @@ export default async function handler(
   if (existingHeart) {
     const existingActivity = await prisma.activity.findFirst({
       where: {
-        type: ActivityType.HEART,
+        type: ActivityType.heart,
         referenceId: existingHeart.id,
       },
     });
 
     if (existingActivity) {
-      const aggregationKey = `HEART|${replyId}|${authorId}`;
+      const aggregationKey = `heart|${replyId}|${authorId}`;
       // Unnotify users in the reply chain and delete the notification
       await prisma.notification.deleteMany({
         where: {

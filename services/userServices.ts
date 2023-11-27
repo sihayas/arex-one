@@ -9,9 +9,9 @@ async function getUserData(userId: string) {
       .findUnique({
         where: { id: String(userId), isDeleted: false, isBanned: false },
         select: {
-          _count: { select: { record: true, followedBy: true } },
+          _count: { select: { artifact: true, followedBy: true } },
           essentials: {
-            include: { album: { select: { appleId: true } } },
+            include: { sound: { select: { appleId: true } } },
             orderBy: { rank: "desc" },
           },
           followedBy: {

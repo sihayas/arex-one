@@ -30,21 +30,21 @@ export default async function handle(
 
   try {
     const activities = await prisma.activity.findMany({
-      where: { OR: [{ type: "HEART" }, { type: "REPLY" }, { type: "RECORD" }] },
+      where: {
+        OR: [{ type: "heart" }, { type: "reply" }, { type: "artifact" }],
+      },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit + 1,
       include: {
-        record: {
+        artifact: {
           select: {
             id: true,
             type: true,
             author: true,
-            album: true,
-            track: true,
             createdAt: true,
-            entry: true,
-            caption: true,
+            content: true,
+            sound: true,
             hearts: { where: { authorId: userId } },
             _count: { select: { replies: true, hearts: true } },
           },
@@ -52,16 +52,14 @@ export default async function handle(
         heart: {
           include: {
             author: true,
-            record: {
+            artifact: {
               select: {
                 id: true,
                 type: true,
                 author: true,
-                album: true,
-                track: true,
                 createdAt: true,
-                entry: true,
-                caption: true,
+                content: true,
+                sound: true,
                 hearts: { where: { authorId: userId } },
                 _count: { select: { replies: true, hearts: true } },
               },
@@ -71,16 +69,14 @@ export default async function handle(
         reply: {
           include: {
             author: true,
-            record: {
+            artifact: {
               select: {
                 id: true,
                 type: true,
                 author: true,
-                album: true,
-                track: true,
                 createdAt: true,
-                entry: true,
-                caption: true,
+                content: true,
+                sound: true,
                 hearts: { where: { authorId: userId } },
                 _count: { select: { replies: true, hearts: true } },
               },
@@ -95,28 +91,28 @@ export default async function handle(
     if (hasMorePages) activities.pop();
 
     // Remove duplicate records and add heartedByUser property
-    const uniqueRecords = new Map();
+    const uniqueArtifacts = new Map();
     const activitiesWithUserHeart = activities
       .filter((activity) => {
-        const recordId =
-          activity.record?.id ||
-          activity.heart?.record?.id ||
-          activity.reply?.record?.id;
-        if (recordId && uniqueRecords.has(recordId)) return false;
-        if (recordId) uniqueRecords.set(recordId, true);
+        const artifactId =
+          activity.artifact?.id ||
+          activity.heart?.artifact?.id ||
+          activity.reply?.artifact?.id;
+        if (artifactId && uniqueArtifacts.has(artifactId)) return false;
+        if (artifactId) uniqueArtifacts.set(artifactId, true);
         return true;
       })
       .map((activity) => {
         const modifiedActivity = {
           ...activity,
-          record: activity.record && addHeartedByUser(activity.record),
+          artifact: activity.artifact && addHeartedByUser(activity.artifact),
           heart: activity.heart && {
             ...activity.heart,
-            record: addHeartedByUser(activity.heart.record),
+            artifact: addHeartedByUser(activity.heart.artifact),
           },
           reply: activity.reply && {
             ...activity.reply,
-            record: addHeartedByUser(activity.reply.record),
+            record: addHeartedByUser(activity.reply.artifact),
           },
         };
         return modifiedActivity;

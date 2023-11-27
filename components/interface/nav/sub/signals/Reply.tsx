@@ -11,7 +11,7 @@ const Reply = ({ notification }: SignalReplyProps) => {
   const { users, fetchedSound, activity } = notification;
   const isAggregated = users.length > 1;
 
-  const rating = activity.reply?.record?.entry?.rating;
+  const rating = activity.reply?.artifact?.content?.rating;
 
   const heartLabel = users.length > 1 ? "CHAINS" : "CHAIN";
 

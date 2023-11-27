@@ -102,8 +102,8 @@ export default async function handle(
     } else {
       const isFollowingBtoA = followerData.followedBy.includes(followingId);
       const followType = isFollowingBtoA
-        ? ActivityType.FOLLOWED_BACK
-        : ActivityType.FOLLOWED;
+        ? ActivityType.FollowedBack
+        : ActivityType.Followed;
       follow = await prisma.follows.create({
         data: { followerId, followingId },
       });
