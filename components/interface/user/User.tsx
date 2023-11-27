@@ -94,31 +94,8 @@ const User = () => {
         <>
           {/* Left Side */}
           <div className={`flex flex-col`}>
-            {/* Logo and Date */}
-            <div className={`flex items-center text-gray3 font-serif`}>
-              <div className="text-xs leading-[13px] text-black">RX</div>
-              <div className={`mx-1`}>&middot;</div>
-              <div className="text-xs text-gray2 leading-[9px]">MONTH 1</div>
-            </div>
-
-            {/* Sounds Count */}
-            <div className={`flex flex-col gap-[12px] mt-6`}>
-              <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
-              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                {userData.uniqueAlbums}
-              </div>
-            </div>
-
-            {/* Records Count */}
-            <div className={`flex flex-col gap-[12px] mt-[23px]`}>
-              <div className="text-xs text-gray3 leading-[9px]">RECORDS</div>
-              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                {userData._count.record}
-              </div>
-            </div>
-
             {/* Avatar and Link */}
-            <div className={`flex gap-4 relative mt-auto`}>
+            <div className={`flex gap-4 relative`}>
               <Image
                 className={`rounded-full border border-silver`}
                 src={userData.image}
@@ -153,7 +130,27 @@ const User = () => {
                 />
               )}
             </div>
+            {/* Sounds Count */}
+            <div className={`flex flex-col gap-[12px] mt-auto`}>
+              <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
+              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
+                {userData.uniqueAlbums}
+              </div>
+            </div>
 
+            {/* Records Count */}
+            <div className={`flex flex-col gap-[12px] mt-[23px]`}>
+              <div className="text-xs text-gray3 leading-[9px]">RECORDS</div>
+              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
+                {userData._count.record}
+              </div>
+            </div>
+            {/* Logo and Date */}
+            {/*<div className={`flex items-center text-gray3 font-serif`}>*/}
+            {/*  <div className="text-xs leading-[13px] text-black">RX</div>*/}
+            {/*  <div className={`mx-1`}>&middot;</div>*/}
+            {/*  <div className="text-xs text-gray2 leading-[9px]">MONTH 1</div>*/}
+            {/*</div>*/}
             {/*  */}
           </div>
 

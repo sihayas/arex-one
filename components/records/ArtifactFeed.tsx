@@ -11,12 +11,12 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { RecordExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 
-interface FeedRecordProps {
-  record: RecordExtended;
+interface ArtifactFeedProps {
+  artifact: RecordExtended;
   associatedType: "album" | "track";
 }
 
-export const FeedRecord: React.FC<FeedRecordProps> = ({
+export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({
   record,
   associatedType,
 }) => {

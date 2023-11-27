@@ -76,6 +76,8 @@ const Album = () => {
   // Initializes album. If the album doesn't have detailed data it gets it.
   const { isLoading } = useAlbumQuery();
 
+  console.log("selectedSound", selectedSound);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}

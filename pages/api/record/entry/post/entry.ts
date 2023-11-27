@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { createEntryRecordActivity } from "@/pages/api/middleware/createActivity";
+import { createArtifactEntryActivity } from "@/pages/api/middleware/createActivity";
 import { fetchSoundsByType } from "@/lib/global/musicKit";
 import { setCache } from "@/lib/global/redis";
+import { AlbumData } from "@/types/appleTypes";
 
 export default async function handle(
   req: NextApiRequest,
@@ -14,97 +15,119 @@ export default async function handle(
 
   const { rating, loved, text, userId, sound, type } = req.body;
   const appleId = sound.id;
-  const dbType = type === "albums" ? "album" : "track";
 
   try {
     // @ts-ignore
-    const existingSound = await prisma[dbType].findUnique({
+    const existingSound = await prisma.sound.findUnique({
       where: { appleId },
     });
-    let newRecord, newEntry;
+    let newArtifact, newEntry;
+    // sound holds the song
 
     if (!existingSound) {
       const fetchedData = await fetchSoundsByType(type, [appleId]);
-      const data = fetchedData[0];
+      const album = fetchedData[0];
 
+      // If submission is for a SONG
       if (type === "songs") {
-        // Cache album data and song -> album id
-        const albumKey = `sound:albums:${data.id}:data`;
-        const songKey = `sound:songs:${appleId}:albumId`;
-
-        await setCache(albumKey, data, 3600);
-        await setCache(songKey, data.id, 3600);
-
-        // Upsert: Create album with song if it doesn't exist, otherwise update
-        await prisma.album.upsert({
-          where: { appleId: data.id },
+        // Create album with song if it doesn't exist or Update
+        const created = await prisma.sound.upsert({
+          where: { appleId: album.id, type: "albums" },
           update: {
-            tracks: { create: { appleId, name: sound.attributes.name } },
+            songs: {
+              create: {
+                appleId: sound.id,
+                type: "songs",
+                rating: 0,
+                attributes: {
+                  create: {
+                    name: sound.attributes.albumName,
+                    artistName: sound.attributes.artistName,
+                    releaseDate: sound.attributes.releaseDate,
+                    albumName: sound.attributes.albumName,
+                  },
+                },
+              },
+            },
           },
           create: {
-            appleId: data.id,
-            name: data.attributes.name,
-            releaseDate: data.attributes.releaseDate,
-            artist: data.attributes.artistName,
-            tracks: {
-              create: { appleId: sound.id, name: sound.attributes.name },
+            appleId: album.id,
+            type: "albums",
+            rating: 0,
+            attributes: {
+              create: {
+                name: album.attributes.name,
+                artistName: album.attributes.artistName,
+                releaseDate: album.attributes.releaseDate,
+              },
+            },
+            songs: {
+              create: {
+                appleId: sound.id,
+                type: "songs",
+                rating: 0,
+                attributes: {
+                  create: {
+                    name: sound.attributes.albumName,
+                    artistName: sound.attributes.artistName,
+                    releaseDate: sound.attributes.releaseDate,
+                    albumName: sound.attributes.albumName,
+                  },
+                },
+              },
             },
           },
         });
+
+        // Cache album data and song -> album id
+        const albumKey = `sound:albums:${album.id}:data`;
+        const songKey = `sound:songs:${appleId}:albumId`;
+        const songData = `sound:songs:${sound.id}:data`;
+
+        await setCache(albumKey, album, 3600);
+        await setCache(songKey, album.id, 3600);
+        await setCache(songData, sound, 3600);
       } else {
         const key = `sound:${type}:${appleId}:data`;
-        await setCache(key, data, 3600);
-        await prisma.album.create({
+        await setCache(key, album, 3600);
+        await prisma.sound.create({
           data: {
-            appleId,
-            name: data.attributes.name,
-            releaseDate: data.attributes.releaseDate,
-            artist: data.attributes.artistName,
+            appleId: album.id,
+            type: "albums",
+            rating: 0,
+            attributes: {
+              create: {
+                name: album.attributes.name,
+                artistName: album.attributes.artistName,
+                releaseDate: album.attributes.releaseDate,
+              },
+            },
           },
         });
       }
 
-      newRecord = await prisma.record.create({
+      newArtifact = await prisma.artifact.create({
         data: {
-          type: "ENTRY",
+          type: "entry",
           author: { connect: { id: userId } },
-          [dbType]: { connect: { appleId } },
+          sound: { connect: { appleId } },
+          content: { create: { text, rating, loved, replay: false } },
         },
       });
 
-      newEntry = await prisma.entry.create({
-        data: {
-          text,
-          rating,
-          loved,
-          replay: false,
-          recordId: newRecord.id,
-        },
-      });
-
-      await createEntryRecordActivity(newRecord.id);
+      await createArtifactEntryActivity(newArtifact.id);
     }
     // If sound exists, check if entry exists
     else {
-      newRecord = await prisma.record.create({
+      newArtifact = await prisma.artifact.create({
         data: {
-          type: "ENTRY",
+          type: "entry",
           author: { connect: { id: userId } },
-          [dbType]: { connect: { appleId } },
+          sound: { connect: { appleId } },
+          content: { create: { text, rating, loved, replay: false } },
         },
       });
-
-      newEntry = await prisma.entry.create({
-        data: {
-          text,
-          rating,
-          loved,
-          replay: false,
-          recordId: newRecord.id,
-        },
-      });
-
-      await createEntryRecordActivity(newRecord.id);
+      await createArtifactEntryActivity(newArtifact.id);
     }
 
     res.status(201).json({ newRecord, newEntry });

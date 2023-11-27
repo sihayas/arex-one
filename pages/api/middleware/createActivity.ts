@@ -1,11 +1,11 @@
 import { prisma } from "@/lib/global/prisma";
 import { ActivityType } from "@/types/dbTypes";
 
-export async function createEntryRecordActivity(recordId: string) {
+export async function createArtifactEntryActivity(artifactId: string) {
   return prisma.activity.create({
     data: {
-      type: ActivityType.RECORD,
-      referenceId: recordId,
+      type: ActivityType.ENTRY,
+      referenceId: artifactId,
     },
   });
 }

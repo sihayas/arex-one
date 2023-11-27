@@ -73,11 +73,6 @@ export function useAlbumQuery() {
 
     if (!shouldFetch) return selectedSound?.sound || null;
 
-    console.log("params", {
-      ids: selectedSound.sound.id,
-      type: selectedSound.sound.type,
-    });
-
     const response = await axios.get(`/api/sounds/get/sound`, {
       params: { ids: selectedSound.sound.id, type: selectedSound.sound.type },
     });

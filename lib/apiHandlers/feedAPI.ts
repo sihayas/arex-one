@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Activity, ActivityType, Record } from "@/types/dbTypes";
+import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -116,14 +116,15 @@ export const useRecentFeedQuery = (userId: string, limit: number = 6) => {
 };
 
 // Utility function to attach album and track data to activities
-const attachSoundData = async (records: Record[]) => {
+const attachSoundData = async (activityData: Activity[]) => {
   const albumIds: string[] = [];
   const trackIds: string[] = [];
 
   // Extract album and track IDs
-  records.forEach((record) => {
-    if (record.album) albumIds.push(record.album.appleId);
-    if (record.track) trackIds.push(record.track.appleId);
+  activityData.forEach((activity) => {
+    const record = extractRecordFromActivity(activity);
+    if (record?.album) albumIds.push(record.album.appleId);
+    if (record?.track) trackIds.push(record.track.appleId);
   });
 
   // Fetch album and track data
@@ -138,7 +139,8 @@ const attachSoundData = async (records: Record[]) => {
   const songMap = new Map(songs.map((song: SongData) => [song.id, song]));
 
   // Attach album and track data to activity records
-  records.forEach((record) => {
+  activityData.forEach((activity) => {
+    const record = extractRecordFromActivity(activity);
     if (record) {
       const albumId = record.album?.appleId;
       const trackId = record.track?.appleId;
@@ -147,5 +149,20 @@ const attachSoundData = async (records: Record[]) => {
     }
   });
 
-  return records;
+  console.log(activityData);
+
+  return activityData;
 };
+
+function extractRecordFromActivity(activity: Activity) {
+  switch (activity.type) {
+    case ActivityType.RECORD:
+      return activity.record;
+    case ActivityType.REPLY:
+      return activity.reply?.record;
+    case ActivityType.HEART:
+      return activity.heart?.record;
+    default:
+      return null;
+  }
+}

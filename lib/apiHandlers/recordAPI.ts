@@ -69,7 +69,7 @@ export const addReply = async (
       ? replyParent.recordId
       : null,
     rootReplyId: isReply ? replyParent.rootReplyId : null,
-    content: replyContent,
+    text: replyContent,
     userId,
   };
 
