@@ -57,7 +57,7 @@ export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({ artifact }) => {
 
         {/* Rating */}
         <Stars
-          className={`bg-[#E5E5E6] absolute -top-[14px] left-[210px] rounded-full w-max text-[#808084] -z-10 p-[6px]`}
+          className={`border-[#E5E5E6] border absolute -top-[14px] left-[210px] rounded-full w-max text-[#808084] -z-10 p-[6px]`}
           rating={artifact.content?.rating}
           isWisp={isWisp}
         />

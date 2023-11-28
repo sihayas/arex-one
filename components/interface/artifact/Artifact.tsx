@@ -36,6 +36,8 @@ export const Artifact = () => {
   const { target } = GetDimensions(activePage.name as PageName);
   const entryContentMax = target.height * 0.4;
 
+  const { data: replies } = useRepliesQuery(activePage.artifact?.id, user!.id);
+
   // Hook for artifact content animation
   const [scope, animate] = useAnimate();
 
@@ -76,8 +78,6 @@ export const Artifact = () => {
     const unsubHeight = newHeight.on("change", () => shiftDimension());
     return () => unsubHeight();
   }, [animate, newHeight, scope]);
-
-  const { data: replies } = useRepliesQuery(activePage.artifact?.id, user!.id);
 
   const artifact = useMemo(
     () => activePage.artifact as ArtifactExtended,
@@ -121,7 +121,7 @@ export const Artifact = () => {
           <motion.div
             ref={scope}
             whileHover={{ color: "rgba(0,0,0,1)" }}
-            onClick={() => setReplyParent(artifact)}
+            onClick={() => setReplyParent({ artifact })}
             style={{
               maxHeight: entryContentMax,
               scale: springScale,

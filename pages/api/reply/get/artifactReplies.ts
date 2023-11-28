@@ -42,15 +42,18 @@ export default async function handle(
 
   try {
     const replies = await prisma.reply.findMany({
-      where: { artifactId, replyToId: null },
+      where: { artifactId, rootId: null },
       take: Number(pageSize),
       cursor: lastId ? { id: String(lastId) } : undefined,
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
         author: true,
+        rootId: true,
+        replyToId: true,
         hearts: { select: { id: true }, where: { authorId: userId } },
         replies: { select: { author: { select: { image: true } } }, take: 3 },
+        text: true,
         artifactId: true,
         _count: { select: { replies: true, hearts: true } },
       },

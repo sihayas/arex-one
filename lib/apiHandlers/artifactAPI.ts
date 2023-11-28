@@ -1,7 +1,6 @@
 // New function to get root replies for a specific review
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Artifact, Reply } from "@/types/dbTypes";
 import { ReplyParent } from "@/context/Threadcrumbs";
 
 interface RepliesProps {
@@ -54,7 +53,7 @@ export const addReply = async (
   if (!replyParent.artifact) return console.error("No artifact found");
 
   let artifactId = replyParent.artifact.id;
-  let artifactAuthorId = replyParent.artifact.authorId;
+  let artifactAuthorId = replyParent.artifact.author.id;
   let replyingToId: string | null = null;
   let replyingToReplyId: string | null = null;
   let rootId: string | null = null;

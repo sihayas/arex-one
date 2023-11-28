@@ -45,11 +45,13 @@ export default async function handle(
       select: {
         id: true,
         author: true,
+        replyToId: true,
+        rootId: true,
         hearts: { select: { id: true }, where: { authorId: userId } },
         replies: { select: { author: { select: { image: true } } }, take: 3 },
         text: true,
-        _count: { select: { replies: true, hearts: true } },
         artifactId: true,
+        _count: { select: { replies: true, hearts: true } },
       },
     });
 

@@ -12,7 +12,6 @@ import Avatar from "@/components/global/Avatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import Image from "next/image";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { Artifact, Reply } from "@/types/dbTypes";
 import { addReply } from "@/lib/apiHandlers/artifactAPI";
 import { toast } from "sonner";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
@@ -24,7 +23,7 @@ const Nav = () => {
   let right;
 
   // For artifact page/reply input
-  const { replyParent, artifact, setReplyParent } = useThreadcrumb();
+  const { replyParent, setReplyParent } = useThreadcrumb();
   const { user, pages } = useInterfaceContext();
   const {
     inputValue,
@@ -334,7 +333,7 @@ const Nav = () => {
             <AnimatePresence>
               {activeAction !== "none" &&
                 activeAction === "reply" &&
-                replyParent && (
+                replyParent?.artifact && (
                   <motion.button
                     exit={{ scale: 0, width: 0 }}
                     initial={{ scale: 0, width: 0 }}
@@ -346,7 +345,11 @@ const Nav = () => {
                     <ChainIcon />
                     <Image
                       className="absolute top-0 left-0 rounded-full border border-gray6"
-                      src={replyParent.author.image}
+                      src={
+                        replyParent.reply
+                          ? replyParent.reply.author.image
+                          : replyParent.artifact.author.image
+                      }
                       alt="artwork"
                       width={16}
                       height={16}

@@ -9,7 +9,7 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
   const { user } = useInterfaceContext();
   const isProfile = user?.id !== userId;
   const url = isProfile
-    ? `/api/feed/get/profileRecords`
+    ? `/api/feed/get/personalArtifacts`
     : `/api/feed/get/personalActivities`;
 
   const result = useInfiniteQuery(

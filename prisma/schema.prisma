@@ -223,8 +223,8 @@ model Reply {
 
   // Relationships
   replyTo      Reply?      @relation("ReplyParent", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  root         Reply?      @relation("RootToReplies", fields: [rootId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   replies      Reply[]     @relation("ReplyParent")
+  root         Reply?      @relation("RootToReplies", fields: [rootId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   rootReplies  Reply[]     @relation("RootToReplies")
   author       User        @relation(fields: [authorId], references: [id])
   artifact     Artifact    @relation(fields: [artifactId], references: [id])

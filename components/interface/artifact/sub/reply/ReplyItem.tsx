@@ -14,6 +14,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import Avatar from "@/components/global/Avatar";
 import { v4 as uuidv4 } from "uuid";
 import Heart from "@/components/global/Heart";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 interface ReplyProps {
   reply: Reply;
@@ -30,12 +31,15 @@ export default function ReplyItem({
 }: ReplyProps) {
   const user = useUser();
   const { setReplyParent, replyParent } = useThreadcrumb();
+  const { pages } = useInterfaceContext();
   const [showChildReplies, setShowChildReplies] = useState<boolean>(false);
 
   const replyCount = reply._count ? reply._count.replies : 0;
+  const activePage = pages[pages.length - 1];
 
   const handleReplyParent = useCallback(() => {
-    setReplyParent(reply);
+    const artifact = activePage.artifact;
+    setReplyParent({ artifact, reply });
   }, [reply, setReplyParent]);
 
   const handleLoadReplies = useCallback(() => {

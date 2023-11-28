@@ -38,6 +38,10 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed." });
+  }
+
   const {
     artifactId,
     artifactAuthorId,
@@ -48,19 +52,11 @@ export default async function handle(
     userId,
   } = req.body;
 
-  if (
-    req.method !== "POST" ||
-    !userId ||
-    (!artifactId && !artifactAuthorId) ||
-    !text
-  ) {
-    return res.status(req.method !== "POST" ? 405 : 400).json({
-      error:
-        req.method !== "POST"
-          ? "Method not allowed."
-          : "Review ID or Reply ID and content are required.",
-    });
+  if (!userId || (!artifactId && !artifactAuthorId) || !text) {
+    return res.status(400).json({ error: "Required parameters are missing." });
   }
+
+  console.log("req.body", req.body);
 
   try {
     const newReplyData = {
