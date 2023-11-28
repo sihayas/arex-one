@@ -2,47 +2,42 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ReplyParent } from "@/context/Threadcrumbs";
-
-interface RepliesProps {
-  artifactId?: string;
-  replyId?: string;
-  userId: string;
-}
-
-export const fetchReplies = async ({
-  artifactId,
-  replyId,
-  userId,
-}: RepliesProps) => {
-  const baseURL = "/api/reply/get";
-
-  // Decide URL based on presence of reviewId or replyId
-  const url = artifactId
-    ? `${baseURL}/artifactReplies`
-    : `${baseURL}/replyReplies`;
-
-  return axios
-    .get(url, {
-      params: {
-        artifactId: artifactId ? artifactId : undefined,
-        replyId: replyId ? replyId : undefined,
-        userId,
-      },
-    })
-    .then((res) => res.data);
-};
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 export const useRepliesQuery = (
   artifactId: string | undefined,
   userId: string,
 ) => {
-  const { data, isLoading, isError } = useQuery(
-    ["replies", artifactId],
-    () => fetchReplies({ artifactId, userId }),
-    { enabled: !!artifactId, refetchOnWindowFocus: false },
+  const { user } = useInterfaceContext();
+  const isArtifactReplies = !!artifactId;
+  const url = isArtifactReplies
+    ? `/api/reply/get/artifactReplies`
+    : `/api/reply/get/replyReplies`;
+
+  const result = useQuery(
+    ["replies", artifactId, userId],
+    async () => {
+      const params = {
+        artifactId,
+        userId,
+        ...(isArtifactReplies && user?.id && { authUserId: user.id }),
+      };
+      const { data } = await axios.get(url, { params });
+      if (!data) throw new Error("Unexpected server response structure");
+      return data;
+    },
+    {
+      enabled: !!artifactId,
+      refetchOnWindowFocus: false,
+    },
   );
 
-  return { data, isLoading, isError };
+  return {
+    data: result.data,
+    error: result.error,
+    isLoading: result.isLoading,
+    isError: result.isError,
+  };
 };
 
 export const addReply = async (
