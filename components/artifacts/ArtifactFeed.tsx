@@ -16,8 +16,7 @@ interface ArtifactFeedProps {
 
 export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({ artifact }) => {
   const user = useUser();
-  const sound = artifact.appleAlbumData || artifact.appleTrackData;
-
+  const sound = artifact.appleData;
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     artifact.heartedByUser,
     artifact._count.hearts,
@@ -27,11 +26,13 @@ export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({ artifact }) => {
     artifact.author.id,
     user?.id,
   );
+  const handleEntryClick = useHandleArtifactClick(artifact);
+
+  if (!sound) return null;
 
   const isAlbumEntry = artifact.sound.type === "albums";
   const isWisp = artifact.type === "wisp";
-
-  const handleEntryClick = useHandleArtifactClick(artifact);
+  const bgColor = sound.attributes.artwork.bgColor;
 
   return (
     <motion.div className="flex flex-col w-fit relative">
@@ -109,19 +110,21 @@ export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({ artifact }) => {
       {isAlbumEntry ? (
         <Artwork
           outerClassName={`ml-[224px] -mt-1 w-fit h-fit rounded-2xl`}
-          className="rounded-2xl outline outline-silver outline-1"
+          className="rounded-2xl"
           sound={sound}
           width={320}
           height={320}
+          bgColor={bgColor}
         />
       ) : (
         <div className={`ml-[224px] -mt-1 flex items-end`}>
           <Artwork
             outerClassName={`rounded-2xl`}
-            className="rounded-2xl outline outline-silver outline-1"
+            className="rounded-2xl"
             sound={sound}
             width={160}
             height={160}
+            bgColor={bgColor}
           />
         </div>
       )}

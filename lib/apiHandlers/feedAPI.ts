@@ -35,6 +35,7 @@ export const useFeedQuery = (userId: string, limit: number = 6) => {
     {
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       enabled: !!userId,
+      refetchOnWindowFocus: false,
     },
   );
 
@@ -140,7 +141,7 @@ const attachSoundData = async (activityData: Activity[]) => {
   const albumMap = new Map(albums.map((album: AlbumData) => [album.id, album]));
   const songMap = new Map(songs.map((song: SongData) => [song.id, song]));
 
-  // Attach album and track data to activity records
+  // Attach album and track data to activity artifacts
   activityData.forEach((activity) => {
     const artifact = extractArtifact(activity);
     if (artifact) {

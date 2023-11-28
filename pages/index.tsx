@@ -205,7 +205,7 @@ export default function Home() {
 
           <Dash className="absolute translate-x-[190px] translate-y-8" />
 
-          {/* Feeds or Profile records Container */}
+          {/* Feeds or Profile artifacts Container */}
           <motion.div
             ref={scrollContainerRef}
             className={`relative flex flex-col gap-[50px] pl-0 p-12 pb-60 pt-28 max-w-screen max-h-[125vh] overflow-scroll scrollbar-none`}

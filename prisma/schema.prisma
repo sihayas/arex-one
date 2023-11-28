@@ -217,15 +217,17 @@ model Reply {
   id           String      @id @default(cuid())
   text         String
   replyToId    String?
+  rootId       String?
   artifactId   String
   authorId     String
-  isDeleted    Boolean     @default(false)
 
   // Relationships
-  replyTo      Reply?      @relation("ReplyHierarchy", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  artifact     Artifact    @relation(fields: [artifactId], references: [id])
+  replyTo      Reply?      @relation("ReplyParent", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  root         Reply?      @relation("RootToReplies", fields: [rootId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  replies      Reply[]     @relation("ReplyParent")
+  rootReplies  Reply[]     @relation("RootToReplies")
   author       User        @relation(fields: [authorId], references: [id])
-  replies      Reply[]     @relation("ReplyHierarchy") // Replies to this reply
+  artifact     Artifact    @relation(fields: [artifactId], references: [id])
   hearts       Heart[]
   activities   Activity[]  @relation("ActivityReply")
 
@@ -233,8 +235,10 @@ model Reply {
   updatedAt    DateTime    @updatedAt
 
   // Indexes
-  @@index([artifactId, authorId, replyToId])
+  isDeleted    Boolean     @default(false)
+  @@index([artifactId, authorId, replyToId, rootId]) // Index including rootId
 }
+
 
 
 

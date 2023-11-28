@@ -90,7 +90,7 @@ export default async function handle(
     const hasMorePages = activities.length > limit;
     if (hasMorePages) activities.pop();
 
-    // Remove duplicate records and add heartedByUser property
+    // Remove duplicate artifacts and add heartedByUser property
     const uniqueArtifacts = new Map();
     const activitiesWithUserHeart = activities
       .filter((activity) => {

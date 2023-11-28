@@ -39,7 +39,7 @@ export const GetDimensions = (pageName: PageName) => {
   // useLayoutEffect in Record to set the base height for artifact page. We
   // are adding the foundation height of the artifact + height of entry content
   useEffect(() => {
-    if (activePage.name === "record") {
+    if (activePage.name === "artifact") {
       setBaseHeight(activePage.dimensions.height + 432);
     }
   }, [pages, activePage.name, activePage.dimensions.height]);

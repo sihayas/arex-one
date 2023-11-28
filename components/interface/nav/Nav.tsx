@@ -18,12 +18,6 @@ import { toast } from "sonner";
 import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
 import { AnimatePresence, motion } from "framer-motion";
 
-const isArtifact = (
-  replyParent: Artifact | Reply | null,
-): replyParent is Artifact => {
-  return (replyParent as Artifact).appleAlbumData !== undefined;
-};
-
 const Nav = () => {
   let left;
   let middle;
@@ -48,26 +42,6 @@ const Nav = () => {
 
   // Determine current page
   const activePage: Page = pages[pages.length - 1];
-
-  const handleReplySubmit = () => {
-    if (!replyParent || !inputValue || !user?.id || !artifact) return;
-
-    const type = isArtifact(replyParent) ? "artifact" : "reply";
-
-    // Wrap the addReply call in toast.promise
-    toast.promise(
-      addReply(artifact.authorId, replyParent, inputValue, user?.id, type).then(
-        () => {
-          setInputValue("");
-        },
-      ),
-      {
-        loading: "Sending reply...",
-        success: "Reply sent successfully!",
-        error: "Error submitting reply",
-      },
-    );
-  };
 
   // Width expansion variants
   const widthVariants = {
@@ -184,8 +158,24 @@ const Nav = () => {
       !inputValue
     ) {
       e.preventDefault();
-      setReplyParent(activePage.artifact);
+      setReplyParent({ artifact: activePage.artifact });
     }
+  };
+
+  const handleReplySubmit = () => {
+    if (!replyParent || !inputValue || !user?.id) return;
+
+    // Wrap the addReply call in toast.promise
+    toast.promise(
+      addReply(replyParent, inputValue, user?.id).then(() => {
+        setInputValue("");
+      }),
+      {
+        loading: "Sending reply...",
+        success: "Reply sent successfully!",
+        error: "Error submitting reply",
+      },
+    );
   };
 
   // Determine the action indicator (takes precedence over page indicator)
@@ -245,7 +235,7 @@ const Nav = () => {
             </motion.div>
           )}
 
-          {/* Input & Icons */}
+          {/* Input & Context Icons */}
           <div
             className={`px-3 pt-[6px] pb-[7px] flex items-center w-full relative`}
           >

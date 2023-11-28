@@ -2,12 +2,14 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Artifact, Reply } from "@/types/dbTypes";
+import { ReplyParent } from "@/context/Threadcrumbs";
 
 interface RepliesProps {
   artifactId?: string;
   replyId?: string;
   userId: string;
 }
+
 export const fetchReplies = async ({
   artifactId,
   replyId,
@@ -44,38 +46,41 @@ export const useRepliesQuery = (
   return { data, isLoading, isError };
 };
 
-const isArtifact = (
-  replyParent: Artifact | Reply | null,
-): replyParent is Artifact => {
-  return (replyParent as Artifact).appleAlbumData !== undefined;
-};
-
 export const addReply = async (
-  recordAuthorId: string,
-  replyParent: Artifact | Reply,
-  replyContent: string,
+  replyParent: ReplyParent,
+  text: string,
   userId: string,
-  type: string,
 ) => {
-  if (!replyParent) return;
+  if (!replyParent.artifact) return console.error("No artifact found");
 
-  const isReply = !isArtifact(replyParent) && type === "reply";
-  const isRecordType = isArtifact(replyParent) && type === "artifact";
+  let artifactId = replyParent.artifact.id;
+  let artifactAuthorId = replyParent.artifact.authorId;
+  let replyingToId: string | null = null;
+  let replyingToReplyId: string | null = null;
+  let rootId: string | null = null;
+
+  // replying to a reply
+  if (replyParent.reply) {
+    //*
+    rootId = replyParent.reply.rootId
+      ? replyParent.reply.rootId
+      : replyParent.reply.id;
+    replyingToId = replyParent.reply.id;
+    replyingToReplyId = replyParent.reply.replyToId || null;
+  }
 
   const requestBody = {
-    recordAuthorId,
-    replyId: isReply ? replyParent.id : null, // Only if replyToReply
-    recordId: isRecordType // Access artifact id depending on reply or artifact
-      ? replyParent.id
-      : isReply
-      ? replyParent.artifactId
-      : null,
-    text: replyContent,
+    artifactId,
+    artifactAuthorId,
+    replyingToId,
+    replyingToReplyId,
+    rootId,
+    text,
     userId,
   };
 
   try {
-    const res = await axios.post("/api/artifact/entry/post/reply", requestBody);
+    const res = await axios.post("/api/artifact/post/reply", requestBody);
     if (res.status !== 200) {
       console.error(`Error adding reply: ${res.status}`);
     }
@@ -83,3 +88,8 @@ export const addReply = async (
     console.error("Error adding reply:", error);
   }
 };
+
+//*
+// if reply parent has a reply to id, it's a reply to a reply, so the root_id
+// value exists, use it. else, the parent is a main artifact reply, so the
+// root id is the id of the parent

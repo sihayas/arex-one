@@ -19,7 +19,7 @@ export async function createHeartActivity(heartId: string) {
   });
 }
 
-export async function createReplyRecordActivity(replyId: string) {
+export async function createReplyActivity(replyId: string) {
   return prisma.activity.create({
     data: {
       type: ActivityType.reply,

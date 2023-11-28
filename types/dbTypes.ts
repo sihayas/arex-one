@@ -132,7 +132,7 @@ export interface Artifact {
   createdAt: Date;
   updatedAt: Date;
   activities: Activity[];
-  appleData?: AlbumData | SongData;
+  appleData: AlbumData | SongData;
 }
 
 export interface Content {
@@ -162,6 +162,7 @@ export interface Heart {
 export interface Reply {
   id: string;
   text: string;
+  rootId?: string;
   replyToId?: string;
   artifactId: string;
   authorId: string;

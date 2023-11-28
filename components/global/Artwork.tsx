@@ -12,6 +12,7 @@ interface ArtworkProps {
   height?: number;
   className?: string;
   outerClassName?: string;
+  bgColor?: string;
 }
 
 export const Artwork = ({
@@ -20,6 +21,7 @@ export const Artwork = ({
   height = 352,
   className,
   outerClassName,
+  bgColor,
 }: ArtworkProps) => {
   const { handleSelectSound } = useHandleSoundClick();
   const ref = React.useRef<HTMLImageElement>(null);
@@ -32,18 +34,8 @@ export const Artwork = ({
 
   return (
     <motion.div
-      initial={{
-        scale: 1,
-        boxShadow:
-          "0px 4px 8px 0px rgba(0, 0, 0, 0.06), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
-      }}
-      whileHover={{
-        scale: 0.98,
-        boxShadow:
-          "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",
-      }}
       transition={{ type: "spring", damping: 20, stiffness: 200 }}
-      className={`${outerClassName}`}
+      className={`${outerClassName} relative`}
     >
       <Image
         onClick={handleSoundClick}
@@ -57,6 +49,11 @@ export const Artwork = ({
         loading="lazy"
         quality={100}
         ref={ref}
+      />
+      {/*  circle*/}
+      <div
+        style={{ backgroundColor: `#${bgColor}` }}
+        className={`absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-full h-full rounded-full blur-[80px] -z-10`}
       />
     </motion.div>
   );

@@ -33,7 +33,7 @@ export default async function handle(
     const skip = (page - 1) * limit;
 
     try {
-      // Fetch all activity records for the user profile
+      // Fetch all activity artifacts for the user profile
       const activities = await prisma.activity.findMany({
         skip,
         take: limit + 1,

@@ -111,9 +111,10 @@ export const Artifact = () => {
       <div className="flex flex-col items-center relative">
         <Artwork
           className="!rounded-3xl !rounded-bl-none !rounded-br-none"
-          sound={artifact.appleAlbumData}
+          sound={artifact.appleData}
           width={480}
           height={480}
+          bgColor={artifact.appleData.attributes.artwork.bgColor}
         />
 
         {createPortal(
@@ -138,8 +139,8 @@ export const Artifact = () => {
               <Stars
                 className={`bg-[#E5E5E5] absolute -top-[28px] left-[36px] p-[6px] rounded-full backdrop-blur-xl w-max z-10 text-gray5 max-h-[24px]`}
                 rating={artifact.content?.rating}
-                soundName={artifact.appleAlbumData.attributes.name}
-                artist={artifact.appleAlbumData.attributes.artistName}
+                soundName={artifact.appleData.attributes.name}
+                artist={artifact.appleData.attributes.artistName}
                 isWisp={isWisp}
               />
               <div

@@ -1,5 +1,5 @@
 import { useRecentFeedQuery } from "@/lib/apiHandlers/feedAPI";
-import { ArtifactFeed } from "@/components/records/ArtifactFeed";
+import { ArtifactFeed } from "@/components/artifacts/ArtifactFeed";
 import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";

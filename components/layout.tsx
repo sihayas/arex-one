@@ -33,19 +33,20 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const animateMainContent = async () => {
       const animationConfig = {
-        scale: isVisible ? 0.88 : 1,
-        opacity: isVisible ? 0 : 1,
+        scale: isVisible ? 0.86 : 1,
+        opacity: isVisible ? 0.5 : 1,
+        filter: isVisible ? "blur(24px)" : "blur(0px)",
         pointerEvents: isVisible ? "none" : "auto",
       };
       const transitionConfig = {
-        opacity: {
-          duration: 0.3,
-        },
         scale: {
           type: "spring" as const,
           mass: 0.75,
-          stiffness: 180,
+          stiffness: 200,
           damping: 22,
+        },
+        opacity: {
+          duration: 0.5,
         },
       };
       await animate(scope.current, animationConfig, transitionConfig);

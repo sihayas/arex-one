@@ -17,7 +17,7 @@ export const useHandleArtifactClick = (artifact: Artifact) => {
       ...prevPages,
       {
         key: uuidv4(),
-        name: "record",
+        name: "artifact",
         threadcrumbs: [artifact.id],
         dimensions: {
           width: 432,

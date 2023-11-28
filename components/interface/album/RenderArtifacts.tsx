@@ -1,6 +1,6 @@
 import React from "react";
 import { useReviewsQuery } from "@/lib/apiHandlers/albumAPI";
-import ArtifactAlbum from "@/components/records/ArtifactAlbum";
+import ArtifactAlbum from "@/components/artifacts/ArtifactAlbum";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";

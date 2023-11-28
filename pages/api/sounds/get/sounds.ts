@@ -28,21 +28,15 @@ export default async function handler(
     for (const type in idTypes) {
       if (isKeyOfResponseData(type)) {
         for (const id of idTypes[type]) {
-          const cacheKey = `sound:${type}:${id}:${
-            type === "albums" ? "data" : "albumId"
-          }`;
+          const cacheKey = `sound:${type}:${id}:data`;
           const cachedData = await getCache(cacheKey);
 
-          if (
-            !cachedData ||
-            (type === "songs" &&
-              !(await getCache(`sound:albums:${cachedData}:data`)))
-          ) {
+          if (!cachedData) {
             needToFetch[type].set(id, null);
             continue;
+          } else {
+            responseData[type].set(id, cachedData);
           }
-
-          responseData[type].set(id, cachedData);
         }
       }
     }
@@ -60,19 +54,20 @@ export default async function handler(
         const cacheKey = `sound:${item.type}:${item.id}:${
           isSong ? "albumId" : "data"
         }`;
-        const dataToCache = isSong
-          ? (item as SongData).relationships.albums.data[0].id
-          : item;
 
         // Cache the song data if the item is a song
         if (isSong) {
           const songDataKey = `sound:songs:${item.id}:data`;
           setCache(songDataKey, item, 3600);
         }
+        // Cache the song id -> album id if the item is a song
+        const dataToCache = isSong
+          ? (item as SongData).relationships.albums.data[0].id
+          : item;
 
         // Cache the item data and update the response data
         setCache(cacheKey, dataToCache, 3600);
-        // @ts-ignore
+        // @ts-ignores
         responseData[item.type].set(item.id, item);
       });
     }

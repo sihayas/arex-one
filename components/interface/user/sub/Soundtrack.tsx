@@ -1,7 +1,7 @@
 // import React, { Fragment, useRef } from "react";
 // import { useUserSoundtrackQuery } from "@/lib/apiHandlers/userAPI";
 //
-// import ArtifactUser from "../../../records/ArtifactUser";
+// import ArtifactUser from "../../../artifacts/ArtifactUser";
 // import format from "date-fns/format";
 // import { Record } from "@/types/dbTypes";
 // import { JellyComponent } from "@/components/global/Loading";
