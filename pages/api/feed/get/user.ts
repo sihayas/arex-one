@@ -57,6 +57,9 @@ export default async function handle(
       },
     });
 
+    const hasMorePages = activities.length > limit;
+    if (hasMorePages) activities.pop();
+
     // Extract activity IDs
     const activityIds = activities.map((activity) => activity.id);
 
@@ -72,9 +75,6 @@ export default async function handle(
       },
       heartedByUser: (activity.artifact?.hearts?.length ?? 0) > 0,
     }));
-
-    const hasMorePages = activities.length > limit;
-    if (hasMorePages) activities.pop();
 
     return res.status(200).json({
       data: {
