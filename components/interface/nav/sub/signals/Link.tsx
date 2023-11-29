@@ -1,4 +1,4 @@
-import { ActivityType, User } from "@/types/dbTypes";
+import { ActivityType, UserType } from "@/types/dbTypes";
 import { extendedNotification } from "../Signals";
 import Avatar from "@/components/global/Avatar";
 
@@ -13,7 +13,7 @@ const Link = ({ notification }: SignalLinkProps) => {
   const isFollowBack = activity.type === ActivityType.FollowedBack;
   console.log(isFollowBack);
 
-  const getUserAvatar = (user: User, index: number) => {
+  const getUserAvatar = (user: UserType, index: number) => {
     const avatarSize = isAggregated
       ? index === 0
         ? 24

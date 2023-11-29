@@ -3,19 +3,20 @@ import { Command } from "cmdk";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import ArtworkURL from "@/components/global/ArtworkURL";
 // Importing context hooks
-import { useSound } from "@/context/SoundContext";
+import { useSoundContext } from "@/context/SoundContext";
 import { useNavContext } from "@/context/NavContext";
-import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { useSound } from "@/hooks/usePage";
 // Importing function to change essential
-import { changeEssential } from "@/lib/apiHandlers/userAPI";
+import { changeEssential } from "@/lib/api/user";
 import { useUser } from "@supabase/auth-helpers-react";
 
 // Component to handle sound
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const user = useUser();
   const artworkUrl = ArtworkURL(sound.attributes.artwork.url, "1200");
-  const { handleSelectSound } = useHandleSoundClick();
-  const { prevEssentialId, setPrevEssentialId, rank, setRank } = useSound();
+  const { handleSelectSound } = useSound();
+  const { prevEssentialId, setPrevEssentialId, rank, setRank } =
+    useSoundContext();
   const { setInputValue, isChangingEssential, setExpandInput } =
     useNavContext();
 

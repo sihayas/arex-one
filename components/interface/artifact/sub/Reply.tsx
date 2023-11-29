@@ -3,13 +3,13 @@ import Image from "next/image";
 
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
-import { Reply } from "@/types/dbTypes";
+import { ReplyType } from "@/types/dbTypes";
 import { StatLineIcon } from "@/components/icons";
 import Dash from "@/components/global/Dash";
 
-import RenderChildren from "@/components/interface/artifact/sub/reply/RenderChildren";
+import RenderChildren from "@/components/interface/artifact/sub/RenderChildren";
 import { motion } from "framer-motion";
-import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
+import useHandleHeartClick from "@/hooks/useHeart";
 import { useUser } from "@supabase/auth-helpers-react";
 import Avatar from "@/components/global/Avatar";
 import { v4 as uuidv4 } from "uuid";
@@ -17,18 +17,13 @@ import Heart from "@/components/global/Heart";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 interface ReplyProps {
-  reply: Reply;
+  reply: ReplyType;
   level: number;
   isChild: boolean;
   index: number;
 }
 
-export default function ReplyItem({
-  reply,
-  level,
-  isChild,
-  index,
-}: ReplyProps) {
+export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const user = useUser();
   const { setReplyParent, replyParent } = useThreadcrumb();
   const { pages } = useInterfaceContext();

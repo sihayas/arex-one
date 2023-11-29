@@ -1,7 +1,7 @@
-import ReplyItem from "@/components/interface/artifact/sub/reply/ReplyItem";
+import Reply from "@/components/interface/artifact/sub/Reply";
 import { useQuery } from "@tanstack/react-query";
-import { Reply } from "@/types/dbTypes";
-import { useRepliesQuery } from "@/lib/apiHandlers/artifactAPI";
+import { ReplyType } from "@/types/dbTypes";
+import { useRepliesQuery } from "@/lib/api/artifact";
 import React from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
@@ -25,9 +25,9 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
   return (
     <motion.div layout="position" className="flex flex-col w-full mb-8">
       {childReplies && childReplies.length > 0 ? (
-        childReplies.map((childReply: Reply, index: number) => {
+        childReplies.map((childReply: ReplyType, index: number) => {
           return (
-            <ReplyItem
+            <Reply
               index={index}
               key={childReply.id}
               reply={childReply}

@@ -1,10 +1,10 @@
 import Image from "next/image";
 import React, { useState } from "react";
 
-import { useSound } from "@/context/SoundContext";
+import { useSoundContext } from "@/context/SoundContext";
 
-import { useAlbumQuery } from "@/lib/apiHandlers/albumAPI";
-import RenderRecords from "./RenderArtifacts";
+import { useAlbumQuery } from "@/lib/api/album";
+import RenderRecords from "./sub/RenderArtifacts";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Filter from "@/components/interface/album/sub/Filter";
 
@@ -18,7 +18,7 @@ const springConfig = { damping: 40, stiffness: 400, mass: 1 };
 
 const Album = () => {
   // Hooks
-  const { selectedSound } = useSound();
+  const { selectedSound } = useSoundContext();
   const { scrollContainerRef } = useInterfaceContext();
 
   // Filter state

@@ -1,10 +1,10 @@
-import { User } from "@/types/dbTypes";
+import { UserType } from "@/types/dbTypes";
 import Image from "next/image";
 import { Command } from "cmdk";
-import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { useUser } from "@/hooks/usePage";
 
-const UserItem = ({ user }: { user: User }) => {
-  const handleUserClick = useHandleUserClick(user);
+const UserItem = ({ user }: { user: UserType }) => {
+  const handleUserClick = useUser(user);
 
   return (
     <Command.Item

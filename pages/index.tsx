@@ -1,15 +1,15 @@
 import Layout from "../components/layout";
 import Head from "next/head";
 import React from "react";
-import FeedUser from "@/components/feed/FeedUser";
-import FeedTrending from "@/components/feed/FeedTrending";
-import FeedRecent from "@/components/feed/FeedRecent";
+import User from "@/components/feed/User";
+import Trending from "@/components/feed/Trending";
+import Recent from "@/components/feed/Recent";
 import Avatar from "@/components/global/Avatar";
 import Dash from "@/components/global/Dash";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { User } from "@/types/dbTypes";
+import { UserType } from "@/types/dbTypes";
 import { BloomIcon, RecentIcon } from "@/components/icons";
 import Image from "next/image";
 
@@ -21,7 +21,7 @@ export default function Home() {
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const supabaseClient = useSupabaseClient();
 
-  const handleAvatarClick = (clickedUser: User) => {
+  const handleAvatarClick = (clickedUser: UserType) => {
     // Move the clicked user to the front of the array
     const reorderedHistory = feedHistory.filter((u) => u.id !== clickedUser.id);
     reorderedHistory.unshift(clickedUser);
@@ -213,17 +213,17 @@ export default function Home() {
             {scrollContainerRef && (
               <>
                 {activeFeed === "bloom" ? (
-                  <FeedTrending
+                  <Trending
                     userId={user.id}
                     scrollContainerRef={scrollContainerRef}
                   />
                 ) : activeFeed === user ? (
-                  <FeedUser
+                  <User
                     userId={activeFeed.id}
                     scrollContainerRef={scrollContainerRef}
                   />
                 ) : activeFeed === "recent" ? (
-                  <FeedRecent
+                  <Recent
                     userId={user.id}
                     scrollContainerRef={scrollContainerRef}
                   />

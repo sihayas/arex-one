@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Artifact, Reply } from "@/types/dbTypes";
+import { Artifact, ReplyType } from "@/types/dbTypes";
 
 type ThreadcrumbProviderType = {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ type ThreadcrumbProviderType = {
 
 export type ReplyParent = {
   artifact?: Artifact;
-  reply?: Reply;
+  reply?: ReplyType;
 };
 
 // Define the context type

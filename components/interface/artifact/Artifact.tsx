@@ -13,12 +13,12 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
+import useHandleHeartClick from "@/hooks/useHeart";
 import { Artwork } from "@/components/global/Artwork";
 import Stars from "@/components/global/Stars";
 import Avatar from "@/components/global/Avatar";
-import RenderReplies from "@/components/interface/artifact/sub/reply/RenderReplies";
-import { useRepliesQuery } from "@/lib/apiHandlers/artifactAPI";
+import RenderReplies from "@/components/interface/artifact/sub/RenderReplies";
+import { useRepliesQuery } from "@/lib/api/artifact";
 import { GetDimensions } from "@/components/interface/Interface";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";

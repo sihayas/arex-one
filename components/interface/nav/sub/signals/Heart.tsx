@@ -1,4 +1,4 @@
-import { User } from "@/types/dbTypes";
+import { UserType } from "@/types/dbTypes";
 import { extendedNotification } from "../Signals";
 import Avatar from "@/components/global/Avatar";
 import Stars from "@/components/global/Stars";

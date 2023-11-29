@@ -1,7 +1,7 @@
 // import React, { Fragment, useRef } from "react";
-// import { useUserSoundtrackQuery } from "@/lib/apiHandlers/userAPI";
+// import { useUserSoundtrackQuery } from "@/lib/api/userAPI";
 //
-// import ArtifactUser from "../../../artifacts/ArtifactUser";
+// import User from "../../../artifacts/User";
 // import format from "date-fns/format";
 // import { Record } from "@/types/dbTypes";
 // import { JellyComponent } from "@/components/global/Loading";
@@ -49,7 +49,7 @@
 //                   {currentMonth}
 //                 </h2>
 //               )}
-//               <ArtifactUser
+//               <User
 //                 record={record}
 //                 associatedType={record.album ? "album" : "song"}
 //               />

@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import { toast } from "sonner";
-import { postEntry } from "@/lib/apiHandlers/formAPI";
-import { useSound } from "@/context/SoundContext";
+import { postEntry } from "@/lib/api/form";
+import { useSoundContext } from "@/context/SoundContext";
 
 import Dial from "./items/Dial";
 import { useNavContext } from "@/context/NavContext";
@@ -12,7 +12,7 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 
 const Form = () => {
   const { user } = useInterfaceContext();
-  const { selectedFormSound, setSelectedFormSound } = useSound();
+  const { selectedFormSound, setSelectedFormSound } = useSoundContext();
   const { inputRef, inputValue, setInputValue } = useNavContext();
 
   const formRef = useRef<HTMLFormElement>(null);

@@ -1,13 +1,9 @@
 import { Artwork } from "@/components/global/Artwork";
 import { useNavContext } from "@/context/NavContext";
-import {
-  useUserSettingsQuery,
-  toggleSetting,
-  changeBio,
-} from "@/lib/apiHandlers/userAPI";
+import { useUserSettingsQuery, toggleSetting, changeBio } from "@/lib/api/user";
 import { Essential, Settings } from "@/types/dbTypes";
 import React, { useEffect, useState } from "react";
-import { useSound } from "@/context/SoundContext";
+import { useSoundContext } from "@/context/SoundContext";
 import { SwapIcon, EditIcon } from "@/components/icons";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -38,7 +34,7 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
     isChangingEssential,
     setIsChangingEssential,
   } = useNavContext();
-  const { setPrevEssentialId, setRank } = useSound();
+  const { setPrevEssentialId, setRank } = useSoundContext();
   const [bioValue, setBioValue] = useState(bio);
 
   // Function to handle edit click

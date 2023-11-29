@@ -1,13 +1,13 @@
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { useSound } from "@/context/SoundContext";
+import { useSoundContext } from "@/context/SoundContext";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { v4 as uuidv4 } from "uuid";
 import { Artifact, User } from "@/types/dbTypes";
 
 // Handle RecordFeed Click
-export const useHandleArtifactClick = (artifact: Artifact) => {
+export const useArtifact = (artifact: Artifact) => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();
 
@@ -33,7 +33,7 @@ export const useHandleArtifactClick = (artifact: Artifact) => {
 };
 
 // Handle User Click
-export const useHandleUserClick = (author: User) => {
+export const useUser = (author: User) => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
   return () => {
@@ -52,10 +52,10 @@ export const useHandleUserClick = (author: User) => {
 };
 
 // Handle Sound Click
-export const useHandleSoundClick = () => {
+export const useSound = () => {
   // CMDK context
   const { setPages, setIsVisible } = useInterfaceContext();
-  const { setSelectedSound } = useSound();
+  const { setSelectedSound } = useSoundContext();
 
   const handleSelectSound = async (
     sound: AlbumData | SongData,

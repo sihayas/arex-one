@@ -4,14 +4,14 @@ import Stars from "@/components/global/Stars";
 import Image from "next/image";
 import { Artifact } from "@/types/dbTypes";
 
-type ItemProps = {
+type UserProps = {
   artifact: Artifact;
 };
 
-const ArtifactUser = ({ artifact }: ItemProps) => {
+const User = ({ artifact }: UserProps) => {
   const ref = useRef(null);
   const isAlbum = artifact.sound.type === "albums";
-  const soundData = isAlbum ? artifact.appleAlbumData : artifact.appleTrackData;
+  const soundData = isAlbum ? artifact.appleData : artifact.appleData;
   if (!soundData) return null;
 
   return (
@@ -37,8 +37,8 @@ const ArtifactUser = ({ artifact }: ItemProps) => {
         ref={ref}
         src={
           isAlbum
-            ? ArtworkURL(artifact.appleAlbumData!.attributes.artwork.url, "160")
-            : ArtworkURL(artifact.appleTrackData!.attributes.artwork.url, "160")
+            ? ArtworkURL(artifact.appleData.attributes.artwork.url, "160")
+            : ArtworkURL(artifact.appleData.attributes.artwork.url, "160")
         }
         alt="artwork"
         width={64}
@@ -49,4 +49,4 @@ const ArtifactUser = ({ artifact }: ItemProps) => {
   );
 };
 
-export default ArtifactUser;
+export default User;

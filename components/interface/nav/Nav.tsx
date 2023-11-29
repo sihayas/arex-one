@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useSound } from "@/context/SoundContext";
-import GetSearchResults from "@/lib/apiHandlers/searchAPI";
+import { useSoundContext } from "@/context/SoundContext";
+import GetSearchResults from "@/lib/api/search";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -12,9 +12,9 @@ import Avatar from "@/components/global/Avatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import Image from "next/image";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { addReply } from "@/lib/apiHandlers/artifactAPI";
+import { addReply } from "@/lib/api/artifact";
 import { toast } from "sonner";
-import { useHandleSoundClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { useSound } from "@/hooks/usePage";
 import { AnimatePresence, motion } from "framer-motion";
 
 const Nav = () => {
@@ -36,8 +36,8 @@ const Nav = () => {
     activeAction,
     setActiveAction,
   } = useNavContext();
-  const { selectedFormSound, setSelectedFormSound } = useSound();
-  const { handleSelectSound } = useHandleSoundClick();
+  const { selectedFormSound, setSelectedFormSound } = useSoundContext();
+  const { handleSelectSound } = useSound();
 
   // Determine current page
   const activePage: Page = pages[pages.length - 1];

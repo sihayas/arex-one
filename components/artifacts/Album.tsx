@@ -1,18 +1,18 @@
 import React from "react";
 
-import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
-import { useHandleArtifactClick } from "@/hooks/useInteractions/useHandlePageChange";
+import useHandleHeartClick from "@/hooks/useHeart";
+import { useArtifact } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
 import Stars from "@/components/global/Stars";
-import { useSound } from "@/context/SoundContext";
+import { useSoundContext } from "@/context/SoundContext";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
 
-const ArtifactAlbum = ({ artifact }: { artifact: ArtifactExtended }) => {
-  const { selectedSound } = useSound();
+const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
+  const { selectedSound } = useSoundContext();
   const user = useUser();
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
@@ -25,7 +25,7 @@ const ArtifactAlbum = ({ artifact }: { artifact: ArtifactExtended }) => {
     user?.id,
   );
 
-  const handleEntryClick = useHandleArtifactClick({
+  const handleEntryClick = useArtifact({
     ...artifact,
     appleData: selectedSound?.sound as AlbumData,
   });
@@ -94,4 +94,4 @@ const ArtifactAlbum = ({ artifact }: { artifact: ArtifactExtended }) => {
   );
 };
 
-export default ArtifactAlbum;
+export default Album;

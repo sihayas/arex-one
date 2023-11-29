@@ -1,12 +1,12 @@
-import { useBloomingFeedQuery } from "@/lib/apiHandlers/feedAPI";
-import { ArtifactFeed } from "@/components/artifacts/ArtifactFeed";
+import { useFeedQuery } from "@/lib/api/feed";
+import { Feed } from "@/components/artifacts/Feed";
 import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
 import { ArtifactExtended } from "@/types/globalTypes";
 
-const FeedTrending = ({
+const User = ({
   userId,
   scrollContainerRef,
 }: {
@@ -14,7 +14,7 @@ const FeedTrending = ({
   scrollContainerRef: React.RefObject<HTMLDivElement>;
 }) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useBloomingFeedQuery(userId);
+    useFeedQuery(userId);
 
   // Track scrolling for infinite scroll
   const { scrollYProgress } = useScroll({
@@ -36,10 +36,10 @@ const FeedTrending = ({
   return (
     <>
       {error && "an error has occurred"}
-      {allActivities.map((activity: Activity, i) => (
+      {allActivities.map((activity: Activity) => (
         <Fragment key={activity.id}>
           {activity.artifact ? (
-            <ArtifactFeed artifact={activity.artifact as ArtifactExtended} />
+            <Feed artifact={activity.artifact as ArtifactExtended} />
           ) : (
             "No artifact available for this activity."
           )}
@@ -65,4 +65,4 @@ const FeedTrending = ({
   );
 };
 
-export default FeedTrending;
+export default User;

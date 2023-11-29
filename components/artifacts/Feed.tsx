@@ -1,7 +1,7 @@
 import React from "react";
 
-import useHandleHeartClick from "@/hooks/useInteractions/useHandleHeart";
-import { useHandleArtifactClick } from "@/hooks/useInteractions/useHandlePageChange";
+import useHandleHeartClick from "@/hooks/useHeart";
+import { useArtifact } from "@/hooks/usePage";
 
 import { Artwork } from "../global/Artwork";
 import Avatar from "@/components/global/Avatar";
@@ -10,11 +10,12 @@ import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
-interface ArtifactFeedProps {
+
+interface FeedProps {
   artifact: ArtifactExtended;
 }
 
-export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({ artifact }) => {
+export const Feed: React.FC<FeedProps> = ({ artifact }) => {
   const user = useUser();
   const sound = artifact.appleData;
   const apiUrl = artifact.heartedByUser
@@ -30,7 +31,7 @@ export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({ artifact }) => {
     artifact.author.id,
     user?.id,
   );
-  const handleEntryClick = useHandleArtifactClick(artifact);
+  const handleEntryClick = useArtifact(artifact);
 
   if (!sound) return null;
 

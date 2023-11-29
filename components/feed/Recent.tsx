@@ -1,12 +1,12 @@
-import { useFeedQuery } from "@/lib/apiHandlers/feedAPI";
-import { ArtifactFeed } from "@/components/artifacts/ArtifactFeed";
+import { useRecentFeedQuery } from "@/lib/api/feed";
+import { Feed } from "@/components/artifacts/Feed";
 import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
 import { ArtifactExtended } from "@/types/globalTypes";
 
-const FeedUser = ({
+const Recent = ({
   userId,
   scrollContainerRef,
 }: {
@@ -14,7 +14,7 @@ const FeedUser = ({
   scrollContainerRef: React.RefObject<HTMLDivElement>;
 }) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useFeedQuery(userId);
+    useRecentFeedQuery(userId);
 
   // Track scrolling for infinite scroll
   const { scrollYProgress } = useScroll({
@@ -33,13 +33,18 @@ const FeedUser = ({
 
   const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
 
+  console.log(allActivities);
   return (
     <>
       {error && "an error has occurred"}
-      {allActivities.map((activity: Activity) => (
+      {allActivities.map((activity: Activity, i) => (
         <Fragment key={activity.id}>
           {activity.artifact ? (
-            <ArtifactFeed artifact={activity.artifact as ArtifactExtended} />
+            <Feed artifact={activity.artifact as ArtifactExtended} />
+          ) : activity.reply?.artifact ? (
+            <Feed artifact={activity.reply.artifact as ArtifactExtended} />
+          ) : activity.heart?.artifact ? (
+            <Feed artifact={activity.heart.artifact as ArtifactExtended} />
           ) : (
             "No artifact available for this activity."
           )}
@@ -65,4 +70,4 @@ const FeedUser = ({
   );
 };
 
-export default FeedUser;
+export default Recent;

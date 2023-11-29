@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion } from "framer-motion";
-import { useUserDataQuery } from "@/lib/apiHandlers/userAPI";
+import { useUserDataQuery } from "@/lib/api/user";
 import Essentials from "@/components/interface/user/sub/Essentials";
 import Settings from "@/components/interface/user/sub/Settings";
 import { JellyComponent } from "@/components/global/Loading";
 import { useUser } from "@supabase/auth-helpers-react";
 import { SettingsIcon } from "@/components/icons";
 import FollowButton from "./sub/components/Link";
-import { User } from "@/types/dbTypes";
+import { UserType } from "@/types/dbTypes";
 import { createPortal } from "react-dom";
 import Stars from "@/components/global/Stars";
 import Avatar from "@/components/global/Avatar";
@@ -64,7 +64,7 @@ const User = () => {
   const handleSubSectionClick = (section: "essentials" | "settings") =>
     setSubSection(section === subSection ? "essentials" : section);
 
-  const handleSetFeedUser = (user: User) => {
+  const handleSetFeedUser = (user: UserType) => {
     // Remove the user if they are already in the feed user history
     const newHistory = feedHistory.filter((u) => u.id !== user.id);
 

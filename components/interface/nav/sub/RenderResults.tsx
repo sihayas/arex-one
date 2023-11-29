@@ -4,7 +4,7 @@ import { Command } from "cmdk";
 
 import UserItem from "./items/User";
 import Sound from "./items/Sound";
-import { User } from "@/types/dbTypes";
+import { UserType } from "@/types/dbTypes";
 import { motion } from "framer-motion";
 
 interface SearchProps {
@@ -35,7 +35,7 @@ const RenderResults = ({
   const allData = [
     ...filteredAlbums.map((album: AlbumData) => ({ ...album, type: "albums" })),
     ...filteredSongs.map((song: SongData) => ({ ...song, type: "songs" })),
-    ...userData.map((user: User) => ({ ...user, type: "users" })),
+    ...userData.map((user: UserType) => ({ ...user, type: "users" })),
   ];
 
   return (

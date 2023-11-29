@@ -36,7 +36,7 @@ export const SoundContext = React.createContext<SoundContextType | undefined>(
 );
 
 // Export the hook
-export const useSound = (): SoundContextType => {
+export const useSoundContext = (): SoundContextType => {
   const context = useContext(SoundContext);
   if (!context) {
     throw new Error("useAlbumDetails must be used within AlbumDetailsProvider");

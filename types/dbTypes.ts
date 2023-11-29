@@ -1,6 +1,6 @@
 import { AlbumData, SongData } from "@/types/appleTypes";
 
-export interface User {
+export interface UserType {
   id: string;
   email: string;
   username: string;
@@ -20,7 +20,7 @@ export interface User {
   essentials: Essential[];
   notifications: Notification[];
   artifact: Artifact[];
-  replies: Reply[];
+  replies: ReplyType[];
   hearts: Heart[];
   views: View[];
   settings?: Settings;
@@ -38,7 +38,7 @@ export interface Settings {
   heartNotifications: boolean;
   createdAt: Date;
   updatedAt: Date;
-  user: User;
+  user: UserType;
 }
 
 export interface Essential {
@@ -46,7 +46,7 @@ export interface Essential {
   userId: string;
   soundId: string;
   rank?: number;
-  user: User;
+  user: UserType;
   sound: Sound;
   createdAt: Date;
   updatedAt: Date;
@@ -57,8 +57,8 @@ export interface Follows {
   id: string;
   followerId: string;
   followingId: string;
-  follower: User;
-  following: User;
+  follower: UserType;
+  following: UserType;
   activities: Activity[];
   isDeleted: boolean;
 }
@@ -107,7 +107,7 @@ export interface Metrics {
 
 export interface View {
   id: string;
-  user: User;
+  user: UserType;
   userId: string;
   viewedAt: Date;
   metrics: Metrics[];
@@ -124,9 +124,9 @@ export interface Artifact {
   authorId: string;
   soundId: string;
   sound: Sound;
-  author: User;
+  author: UserType;
   hearts: Heart[];
-  replies: Reply[];
+  replies: ReplyType[];
   content?: Content;
   isDeleted: boolean;
   createdAt: Date;
@@ -154,16 +154,16 @@ export interface Heart {
   authorId: string;
   artifactId?: string;
   replyId?: string;
-  author: User;
+  author: UserType;
   artifact?: Artifact;
-  reply?: Reply;
+  reply?: ReplyType;
   activities: Activity[];
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
 }
 
-export interface Reply {
+export interface ReplyType {
   id: string;
   text: string;
   rootId?: string;
@@ -171,10 +171,10 @@ export interface Reply {
   artifactId: string;
   authorId: string;
   isDeleted: boolean;
-  replyTo?: Reply;
+  replyTo?: ReplyType;
   artifact: Artifact;
-  author: User;
-  replies: Reply[];
+  author: UserType;
+  replies: ReplyType[];
   hearts: Heart[];
   activities: Activity[];
   createdAt: Date;
@@ -183,7 +183,7 @@ export interface Reply {
     hearts: number;
     replies: number;
   };
-  heartedByUser: boolean;
+  heartedByUserType: boolean;
 }
 
 export interface Activity {
@@ -195,7 +195,7 @@ export interface Activity {
   artifact?: Artifact;
   heart?: Heart;
   follow?: Follows;
-  reply?: Reply;
+  reply?: ReplyType;
   isDeleted: boolean;
   notifications: Notification[];
 }
@@ -205,12 +205,12 @@ export enum ActivityType {
   Heart = "heart",
   Followed = "followed",
   FollowedBack = "followed_back",
-  Reply = "reply",
+  ReplyType = "reply",
 }
 
 export interface Notification {
   id: string;
-  recipient: User;
+  recipient: UserType;
   recipientId: string;
   activity: Activity;
   activityId: string;

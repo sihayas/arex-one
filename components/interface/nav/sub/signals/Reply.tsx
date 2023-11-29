@@ -1,4 +1,4 @@
-import { User } from "@/types/dbTypes";
+import { UserType } from "@/types/dbTypes";
 import { extendedNotification } from "../Signals";
 import Avatar from "@/components/global/Avatar";
 import Stars from "@/components/global/Stars";
@@ -15,7 +15,7 @@ const Reply = ({ notification }: SignalReplyProps) => {
 
   const heartLabel = users.length > 1 ? "CHAINS" : "CHAIN";
 
-  const getUserAvatar = (user: User, index: number) => {
+  const getUserAvatar = (user: UserType, index: number) => {
     const avatarSize = isAggregated
       ? index === 0
         ? 24

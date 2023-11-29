@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { useHandleUserClick } from "@/hooks/useInteractions/useHandlePageChange";
+import { useUser } from "@/hooks/usePage";
 import React from "react";
-import { User } from "@/types/dbTypes";
+import { UserType } from "@/types/dbTypes";
 
 interface UserAvatarProps {
-  user: User;
+  user: UserType;
   imageSrc: string | undefined;
   altText: string;
   height?: number;
@@ -26,7 +26,7 @@ const Avatar: React.FC<UserAvatarProps> = ({
   style,
   onClick,
 }) => {
-  const handleUserClick = useHandleUserClick(user);
+  const handleUserClick = useUser(user);
   if (!imageSrc) {
     return (
       <div

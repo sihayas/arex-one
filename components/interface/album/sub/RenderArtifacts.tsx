@@ -1,6 +1,6 @@
 import React from "react";
-import { useReviewsQuery } from "@/lib/apiHandlers/albumAPI";
-import ArtifactAlbum from "@/components/artifacts/ArtifactAlbum";
+import { useArtifactsQuery } from "@/lib/api/album";
+import Album from "@/components/artifacts/Album";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
@@ -15,14 +15,14 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
   sortOrder = "newest",
 }) => {
   const { user } = useInterfaceContext();
+  const userId = user?.id;
 
-  // Get bloomingActivities & flatten
   const {
     data: entries,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useReviewsQuery(soundId, user!, sortOrder);
+  } = useArtifactsQuery(soundId, userId, sortOrder);
 
   const flattenedEntries = entries?.pages.flat() || [];
 
@@ -48,7 +48,7 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
     <div className="flex flex-col h-full w-full items-center p-8 gap-9">
       {flattenedEntries?.length > 0 ? (
         flattenedEntries.map((entry) => (
-          <ArtifactAlbum key={entry.id} artifact={entry} />
+          <Album key={entry.id} artifact={entry} />
         ))
       ) : (
         <div className="p-2 text-xs uppercase text-gray2">

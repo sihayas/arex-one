@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { groupBy } from "lodash";
-import { User } from "@/types/dbTypes";
+import { UserType } from "@/types/dbTypes";
 import { ActivityType } from "@prisma/client";
 
 export default async function handler(
