@@ -39,7 +39,7 @@ function calculateScore(record: RecordCounts) {
   );
 }
 
-// Update the positive review rankings
+// Update the  entry rankings
 export async function soundRankings(isNegative: boolean) {
   const ratingCondition = isNegative ? { lte: 2.5 } : { gt: 2.5 };
   const activities = await prisma.activity.findMany({
@@ -49,21 +49,22 @@ export async function soundRankings(isNegative: boolean) {
         gte: new Date(new Date().getTime() - 48 * 60 * 60 * 1000),
       },
       artifact: {
+        type: "entry",
         content: {
           rating: ratingCondition,
         },
       },
     },
-    include: {
+    select: {
+      id: true,
       artifact: {
         select: {
           id: true,
           author: { select: { id: true, username: true, image: true } },
           _count: { select: { replies: true, hearts: true } },
-          createdAt: true,
-          updatedAt: true,
           content: true,
           sound: true,
+          createdAt: true,
         },
       },
     },

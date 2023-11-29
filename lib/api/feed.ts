@@ -77,7 +77,7 @@ const useGenericFeedQuery = (
   );
 };
 
-// Fetch users personal feed
+// Fetch profile feed
 export const useFeedQuery = (userId: string, limit = 6) => {
   const { user } = useInterfaceContext();
   const isProfile = user?.id !== userId;
@@ -108,7 +108,7 @@ function extractArtifact(activity: Activity) {
   switch (activity.type) {
     case ActivityType.Artifact:
       return activity.artifact;
-    case ActivityType.Reply:
+    case ActivityType.ReplyType:
       return activity.reply?.artifact;
     case ActivityType.Heart:
       return activity.heart?.artifact;

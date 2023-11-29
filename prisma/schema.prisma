@@ -101,18 +101,23 @@ model Sound {
   attributes  Attributes @relation(fields: [attributesId], references:[id])
   attributesId String
 
+  // Self relation for Album
   albumId      String?
   album        Sound?      @relation("AlbumSongs", fields: [albumId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   Songs        Sound[]     @relation("AlbumSongs")
 
+  views         View[]
   essentials    Essential[]
   artifact      Artifact[]
-  metrics       Metrics[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   @@unique([id])
-  @@index([appleId, id])
+  @@index([id])
+  @@index([appleId])
+  @@index([attributesId])
+  @@index([albumId])
+
 }
 
 
@@ -130,25 +135,19 @@ model Attributes{
   @@unique([id])
 }
 
-model Metrics{
-  id          String   @id @default(cuid())
-  soundId     String
-  views       View[]
-
-  sound       Sound    @relation(fields: [soundId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-
 model View {
   id          String   @id @default(cuid())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  viewedAt    DateTime @default(now())
-  metrics     Metrics[]
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
+  sound       Sound    @relation(fields: [soundId], references: [id])
+  soundId     String
+  artifact    Artifact @relation(fields: [artifactId], references: [id])
+  artifactId  String
 
-  @@index([userId])
+  viewedAt    DateTime @default(now())
+  @@index([authorId])
+  @@index([soundId])
+  @@index([artifactId])
 }
 
 enum ArtifactType {
@@ -167,6 +166,7 @@ model Artifact {
 
   hearts      Heart[]
   replies     Reply[]
+  views       View[]
   content     Content?
 
   isDeleted   Boolean   @default(false) @map(name: "is_deleted")
@@ -236,7 +236,10 @@ model Reply {
 
   // Indexes
   isDeleted    Boolean     @default(false)
-  @@index([artifactId, authorId, replyToId, rootId]) // Index including rootId
+  @@index([artifactId])
+  @@index([authorId])
+  @@index([replyToId])
+  @@index([rootId])
 }
 
 
