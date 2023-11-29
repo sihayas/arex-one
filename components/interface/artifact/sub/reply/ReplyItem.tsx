@@ -49,7 +49,7 @@ export default function ReplyItem({
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     reply.heartedByUser,
     reply._count.hearts,
-    "/api/reply/post/",
+    "/api/heart/post/reply",
     "replyId",
     reply.id,
     reply.author.id,

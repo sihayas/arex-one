@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
+import { getActivityData } from "@/services/activityServices";
 
 export default async function handle(
   req: NextApiRequest,
@@ -29,49 +30,55 @@ export default async function handle(
   }
 
   try {
-    const following = await prisma.follows.findMany({
-      where: { followerId: userId, isDeleted: false },
-    });
-    const followingIds = following.map((f) => f.followingId);
-    followingIds.push(userId);
+    const followingIds = (
+      await prisma.follows.findMany({
+        where: { followerId: userId, isDeleted: false },
+        select: { followingId: true },
+      })
+    )
+      .map((f) => f.followingId)
+      .concat(userId);
 
+    // FEtch following activity artifacts
     const activities = await prisma.activity.findMany({
-      where: { artifact: { authorId: { in: followingIds } } },
+      where: { artifact: { authorId: { in: followingIds } }, type: "artifact" },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit + 1,
-      include: {
+      select: {
+        id: true,
         artifact: {
           select: {
-            id: true,
-            type: true,
-            author: true,
-            createdAt: true,
             hearts: { where: { authorId: userId } },
             _count: { select: { replies: true, hearts: true } },
-            content: true,
-            sound: true,
           },
         },
-        heart: true,
-        reply: true,
+        type: true,
       },
     });
+
+    // Extract activity IDs
+    const activityIds = activities.map((activity) => activity.id);
+
+    // Fetch detailed activity data using getActivityData
+    const detailedActivityData = await getActivityData(activityIds);
+
+    // Merge detailed data with basic activity data
+    const enrichedActivities = activities.map((activity) => ({
+      ...activity,
+      artifact: {
+        ...activity.artifact,
+        ...detailedActivityData.find((d) => d.id === activity.id)?.artifact,
+      },
+      heartedByUser: (activity.artifact?.hearts?.length ?? 0) > 0,
+    }));
 
     const hasMorePages = activities.length > limit;
     if (hasMorePages) activities.pop();
 
-    const activitiesWithUserHeart = activities.map((activity) => ({
-      ...activity,
-      artifact: activity.artifact && {
-        ...activity.artifact,
-        heartedByUser: activity.artifact.hearts.length > 0,
-      },
-    }));
-
     return res.status(200).json({
       data: {
-        activities: activitiesWithUserHeart,
+        activities: enrichedActivities,
         pagination: { nextPage: hasMorePages ? page + 1 : null },
       },
     });

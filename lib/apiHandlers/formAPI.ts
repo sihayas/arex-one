@@ -9,7 +9,7 @@ export const postEntry = async (submissionData: {
   sound: AlbumData | SongData;
 }) => {
   // No rating means it's a wisp
-  const endpoint = "/api/artifact/submit";
+  const endpoint = "/api/artifact/post/submit";
 
   try {
     const response = await axios.post(endpoint, submissionData);

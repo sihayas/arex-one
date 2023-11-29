@@ -8,11 +8,13 @@ export default async function handle(
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed." });
   }
-
-  const { replyId, lastId = null } = req.query;
-
+  const { artifactId } = req.query;
   const userId =
     typeof req.query.userId === "string" ? req.query.userId : undefined;
+
+  if (artifactId !== undefined && typeof artifactId !== "string") {
+    return res.status(400).json({ error: "Invalid artifact ID." });
+  }
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 6;
 
@@ -32,14 +34,14 @@ export default async function handle(
 
   try {
     const replies = await prisma.reply.findMany({
-      where: { replyToId: String(replyId) },
+      where: { artifactId, rootId: null },
       take: Number(6),
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
         author: true,
-        replyToId: true,
         rootId: true,
+        replyToId: true,
         hearts: { select: { id: true }, where: { authorId: userId } },
         replies: { select: { author: { select: { image: true } } }, take: 3 },
         text: true,

@@ -36,7 +36,7 @@ export const Artifact = () => {
   const { target } = GetDimensions(activePage.name as PageName);
   const entryContentMax = target.height * 0.4;
 
-  const { data: replies } = useRepliesQuery(activePage.artifact?.id, user!.id);
+  const { data: replies } = useRepliesQuery(user!.id, activePage.artifact?.id);
 
   // Hook for artifact content animation
   const [scope, animate] = useAnimate();
@@ -89,7 +89,7 @@ export const Artifact = () => {
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     artifact.heartedByUser,
     artifact._count.hearts,
-    "/api/artifact/entry/post/heart",
+    "/api/heart/post/artifact",
     "artifactId",
     artifact.id,
     artifact.authorId,

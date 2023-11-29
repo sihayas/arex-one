@@ -1,7 +1,7 @@
 import ReplyItem from "@/components/interface/artifact/sub/reply/ReplyItem";
 import { useQuery } from "@tanstack/react-query";
 import { Reply } from "@/types/dbTypes";
-import { fetchReplies } from "@/lib/apiHandlers/artifactAPI";
+import { useRepliesQuery } from "@/lib/apiHandlers/artifactAPI";
 import React from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
@@ -15,11 +15,10 @@ type RenderChildrenProps = {
 function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
   const user = useUser();
 
-  // Fetch reply children
-  const { data: childReplies } = useQuery(
-    ["replies", parentReplyId],
-    () => fetchReplies({ replyId: parentReplyId, userId: user!.id }),
-    { refetchOnWindowFocus: false },
+  const { data: childReplies } = useRepliesQuery(
+    user!.id,
+    undefined,
+    parentReplyId,
   );
 
   // The layout prop preserves the LayoutGroup functionality of animating the container to expand/contract when replies are loaded or unloaded.

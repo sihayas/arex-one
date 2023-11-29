@@ -1,33 +1,33 @@
-// New function to get root replies for a specific review
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ReplyParent } from "@/context/Threadcrumbs";
-import { useInterfaceContext } from "@/context/InterfaceContext";
 
 export const useRepliesQuery = (
-  artifactId: string | undefined,
   userId: string,
+  artifactId?: string | undefined,
+  replyId?: string | undefined,
 ) => {
-  const { user } = useInterfaceContext();
   const isArtifactReplies = !!artifactId;
+
+  const queryKey = isArtifactReplies
+    ? ["replies", artifactId]
+    : ["replies", replyId];
   const url = isArtifactReplies
-    ? `/api/reply/get/artifactReplies`
-    : `/api/reply/get/replyReplies`;
+    ? `/api/artifact/get/artifactReplies`
+    : `/api/artifact/get/replyReplies`;
 
   const result = useQuery(
-    ["replies", artifactId, userId],
+    queryKey,
     async () => {
-      const params = {
-        artifactId,
-        userId,
-        ...(isArtifactReplies && user?.id && { authUserId: user.id }),
-      };
+      const params = isArtifactReplies
+        ? { artifactId, userId }
+        : { replyId, userId };
       const { data } = await axios.get(url, { params });
       if (!data) throw new Error("Unexpected server response structure");
       return data;
     },
     {
-      enabled: !!artifactId,
+      enabled: isArtifactReplies ? !!artifactId : !!replyId,
       refetchOnWindowFocus: false,
     },
   );

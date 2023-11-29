@@ -133,6 +133,10 @@ export interface Artifact {
   updatedAt: Date;
   activities: Activity[];
   appleData: AlbumData | SongData;
+  _count: {
+    hearts: number;
+    replies: number;
+  };
 }
 
 export interface Content {
