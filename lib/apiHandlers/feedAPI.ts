@@ -45,114 +45,56 @@ const attachSoundData = async (activityData: Activity[]) => {
 
   return activityData;
 };
+// Common logic for fetching feed data
+const useGenericFeedQuery = (key, url, userId, limit) => {
+  return useInfiniteQuery(
+    [key, userId],
+    async ({ pageParam = 1 }) => {
+      const { data } = await axios.get(url, {
+        params: { userId, page: pageParam, limit },
+      });
+
+      const { activities, pagination } = data.data;
+      if (!activities || !pagination) {
+        throw new Error("Unexpected server response structure");
+      }
+
+      const mergedData = await attachSoundData(activities);
+      return { data: mergedData, pagination };
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
+      enabled: !!userId,
+      refetchOnWindowFocus: false,
+    },
+  );
+};
+
 // Fetch users personal feed
-export const useFeedQuery = (userId: string, limit: number = 6) => {
+export const useFeedQuery = (userId, limit = 6) => {
   const { user } = useInterfaceContext();
   const isProfile = user?.id !== userId;
   const url = isProfile ? `/api/feed/get/profile` : `/api/feed/get/user`;
 
-  const result = useInfiniteQuery(
-    ["feed", userId],
-    async ({ pageParam = 1 }) => {
-      const params = {
-        userId,
-        page: pageParam,
-        limit,
-        ...(isProfile && user?.id && { authUserId: user.id }),
-      };
+  const result = useGenericFeedQuery("feed", url, userId, limit);
 
-      const { data } = await axios.get(url, { params });
-      const { activities, pagination } = data.data;
-
-      if (!activities || !pagination)
-        throw new Error("Unexpected server response structure");
-
-      const mergedData = await attachSoundData(activities);
-
-      return { data: mergedData, pagination };
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
-      enabled: !!userId,
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  return {
-    data: result.data,
-    error: result.error,
-    fetchNextPage: result.fetchNextPage,
-    hasNextPage: result.hasNextPage,
-    isFetchingNextPage: result.isFetchingNextPage,
-  };
+  return { ...result };
 };
 
 // Fetch ranked feed
-export const useBloomingFeedQuery = (userId: string, limit: number = 6) => {
-  const result = useInfiniteQuery(
-    ["bloomingFeed", userId],
-    async ({ pageParam = 1 }) => {
-      const { data } = await axios.get(`/api/feed/get/bloomingActivities`, {
-        params: { userId, page: pageParam, limit },
-      });
+export const useBloomingFeedQuery = (userId, limit = 6) => {
+  const url = `/api/feed/get/bloomingActivities`;
+  const result = useGenericFeedQuery("bloomingFeed", url, userId, limit);
 
-      const { activities, pagination } = data.data;
-      if (!activities || !pagination)
-        throw new Error("Unexpected server response structure");
-
-      // Attach album and track data to activities
-      const mergedData = await attachSoundData(activities);
-
-      return { data: mergedData, pagination };
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
-      enabled: !!userId,
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  return {
-    data: result.data,
-    error: result.error,
-    fetchNextPage: result.fetchNextPage,
-    hasNextPage: result.hasNextPage,
-    isFetchingNextPage: result.isFetchingNextPage,
-  };
+  return { ...result };
 };
 
 // Fetch recently interacted feed
-export const useRecentFeedQuery = (userId: string, limit: number = 6) => {
-  const result = useInfiniteQuery(
-    ["recentRecords", userId],
-    async ({ pageParam = 1 }) => {
-      const { data } = await axios.get(`/api/feed/get/recent`, {
-        params: { userId, page: pageParam, limit },
-      });
+export const useRecentFeedQuery = (userId, limit = 6) => {
+  const url = `/api/feed/get/recent`;
+  const result = useGenericFeedQuery("recentRecords", url, userId, limit);
 
-      const { activities, pagination } = data.data;
-      if (!activities || !pagination)
-        throw new Error("Unexpected server response structure");
-
-      // Attach album and track data to activities
-      const mergedData = await attachSoundData(activities);
-
-      return { data: mergedData, pagination };
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
-      enabled: !!userId,
-      refetchOnWindowFocus: false,
-    },
-  );
-
-  return {
-    data: result.data,
-    error: result.error,
-    fetchNextPage: result.fetchNextPage,
-    hasNextPage: result.hasNextPage,
-    isFetchingNextPage: result.isFetchingNextPage,
-  };
+  return { ...result };
 };
 
 function extractArtifact(activity: Activity) {
