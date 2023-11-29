@@ -46,6 +46,10 @@ export default function ReplyItem({
     setShowChildReplies(true);
   }, []);
 
+  const apiUrl = reply.heartedByUser
+    ? "/api/heart/delete/reply"
+    : "/api/heart/post/reply";
+
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     reply.heartedByUser,
     reply._count.hearts,

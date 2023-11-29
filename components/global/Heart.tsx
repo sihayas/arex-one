@@ -80,8 +80,8 @@ const Heart: React.FC<HeartButtonProps> = ({
           hover: {
             scale: 1,
             opacity: 1,
-            x: -6.5,
-            y: -6.5,
+            x: -8,
+            y: -8,
           },
           initial: { scale: 0, x: -4, y: -4, opacity: 0 },
         }}

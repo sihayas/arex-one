@@ -4,26 +4,26 @@ import axios from "axios";
 const useHandleHeartClick = (
   initialHeartByUser: boolean,
   initialHearts: number,
-  heartApiUrl: string,
+  apiUrl: string,
   idKey: string,
   idValue: any,
   authorId: string,
   userId?: string,
 ) => {
-  const [hearted, setHeart] = useState(initialHeartByUser);
+  const [hearted, setHearted] = useState(initialHeartByUser);
   const [heartCount, setHeartCount] = useState(initialHearts);
 
   const handleHeartClick = async () => {
     if (!userId) return;
 
-    // Optimistically update state
+    const newHeartedState = !hearted;
     const newHeartCount = hearted ? heartCount - 1 : heartCount + 1;
-    setHeart(!hearted);
+
+    // Optimistically update state
+    setHearted(newHeartedState);
     setHeartCount(newHeartCount);
 
     try {
-      const action = hearted ? "unheart" : "heart";
-      const apiUrl = `${heartApiUrl}/${action}`;
       const response = await axios.post(apiUrl, {
         [idKey]: idValue,
         userId,
@@ -31,20 +31,17 @@ const useHandleHeartClick = (
       });
 
       if (!response.data.success) {
-        // Revert state on failure
-        setHeart(hearted);
-        setHeartCount(heartCount);
-        console.error("Failed to update hearts:", response.data);
+        throw new Error("Failed to update hearts");
       }
     } catch (error) {
-      // Revert state on error
-      setHeart(hearted);
+      // Revert state on failure or error
+      setHearted(hearted);
       setHeartCount(heartCount);
       console.error("Error updating hearts:", error);
     }
   };
 
-  return { hearted, heartCount, handleHeartClick, setHeart, setHeartCount };
+  return { hearted, heartCount, handleHeartClick };
 };
 
 export default useHandleHeartClick;

@@ -39,7 +39,7 @@ export default async function handle(
       .map((f) => f.followingId)
       .concat(userId);
 
-    // FEtch following activity artifacts
+    // Fetch following activity artifacts
     const activities = await prisma.activity.findMany({
       where: { artifact: { authorId: { in: followingIds } }, type: "artifact" },
       orderBy: { createdAt: "desc" },
@@ -72,8 +72,8 @@ export default async function handle(
       artifact: {
         ...activity.artifact,
         ...detailedActivityData.find((d) => d.id === activity.id)?.artifact,
+        heartedByUser: (activity.artifact?.hearts?.length ?? 0) > 0,
       },
-      heartedByUser: (activity.artifact?.hearts?.length ?? 0) > 0,
     }));
 
     return res.status(200).json({

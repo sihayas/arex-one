@@ -17,10 +17,14 @@ interface ArtifactFeedProps {
 export const ArtifactFeed: React.FC<ArtifactFeedProps> = ({ artifact }) => {
   const user = useUser();
   const sound = artifact.appleData;
+  const apiUrl = artifact.heartedByUser
+    ? "/api/heart/delete/artifact"
+    : "/api/heart/post/artifact";
+
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     artifact.heartedByUser,
     artifact._count.hearts,
-    "/api/artifact/entry/post/",
+    apiUrl,
     "artifactId",
     artifact.id,
     artifact.author.id,

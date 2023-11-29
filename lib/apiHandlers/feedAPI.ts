@@ -45,8 +45,14 @@ const attachSoundData = async (activityData: Activity[]) => {
 
   return activityData;
 };
+
 // Common logic for fetching feed data
-const useGenericFeedQuery = (key, url, userId, limit) => {
+const useGenericFeedQuery = (
+  key: string,
+  url: string,
+  userId: string,
+  limit: number,
+) => {
   return useInfiniteQuery(
     [key, userId],
     async ({ pageParam = 1 }) => {
@@ -55,6 +61,7 @@ const useGenericFeedQuery = (key, url, userId, limit) => {
       });
 
       const { activities, pagination } = data.data;
+
       if (!activities || !pagination) {
         throw new Error("Unexpected server response structure");
       }
@@ -71,7 +78,7 @@ const useGenericFeedQuery = (key, url, userId, limit) => {
 };
 
 // Fetch users personal feed
-export const useFeedQuery = (userId, limit = 6) => {
+export const useFeedQuery = (userId: string, limit = 6) => {
   const { user } = useInterfaceContext();
   const isProfile = user?.id !== userId;
   const url = isProfile ? `/api/feed/get/profile` : `/api/feed/get/user`;
@@ -82,7 +89,7 @@ export const useFeedQuery = (userId, limit = 6) => {
 };
 
 // Fetch ranked feed
-export const useBloomingFeedQuery = (userId, limit = 6) => {
+export const useBloomingFeedQuery = (userId: string, limit = 6) => {
   const url = `/api/feed/get/bloomingActivities`;
   const result = useGenericFeedQuery("bloomingFeed", url, userId, limit);
 
@@ -90,7 +97,7 @@ export const useBloomingFeedQuery = (userId, limit = 6) => {
 };
 
 // Fetch recently interacted feed
-export const useRecentFeedQuery = (userId, limit = 6) => {
+export const useRecentFeedQuery = (userId: string, limit = 6) => {
   const url = `/api/feed/get/recent`;
   const result = useGenericFeedQuery("recentRecords", url, userId, limit);
 
