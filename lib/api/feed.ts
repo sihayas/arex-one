@@ -91,7 +91,7 @@ export const useFeedQuery = (userId: string, limit = 6) => {
 
 // Fetch ranked feed
 export const useBloomingFeedQuery = (userId: string, limit = 6) => {
-  const url = `/api/feed/get/bloomingActivities`;
+  const url = `/api/feed/get/bloom`;
   const result = useGenericFeedQuery("bloomingFeed", url, userId, limit);
 
   return { ...result };

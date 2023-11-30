@@ -3,13 +3,6 @@ import { prisma } from "@/lib/global/prisma";
 import { getActivityData } from "@/services/activityServices";
 import client from "@/lib/global/redis";
 
-type SortOrder = "asc" | "desc";
-
-interface ReviewOrderByWithRelationInput {
-  rating?: SortOrder;
-  createdAt?: SortOrder;
-}
-
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -39,7 +32,7 @@ export default async function handle(
 
   try {
     let activities = [];
-    let hasMorePages = false;
+    let hasMorePages: boolean;
 
     if (sort === "newest") {
       activities = await prisma.activity.findMany({
@@ -89,8 +82,6 @@ export default async function handle(
 
     const activityIds = activities.map((activity) => activity.id);
     const detailedActivityData = await getActivityData(activityIds);
-
-    console.log(detailedActivityData, "d");
 
     const enrichedActivities = activities.map((activity) => ({
       ...activity,

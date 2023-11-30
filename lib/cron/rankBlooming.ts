@@ -38,7 +38,7 @@ function calculateBloomingScore(record: SelectedRecordFields) {
 }
 
 // Returns a list of activity IDs sorted by blooming score
-export async function bloomingActivities() {
+export async function rankBlooming() {
   const activities = await prisma.activity.findMany({
     where: {
       type: "artifact",

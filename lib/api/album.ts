@@ -1,10 +1,9 @@
 import axios from "axios";
-import { Activity, UserType } from "@/types/dbTypes";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useSoundContext } from "@/context/SoundContext";
 import { AlbumData } from "@/types/appleTypes";
 
-// React Query hook for fetching album reviews
+// React Query hook for fetching album artifact entries
 export const useArtifactsQuery = (
   sound: AlbumData,
   userId: string | undefined,
@@ -54,13 +53,3 @@ export function useAlbumQuery() {
     return updatedSound;
   });
 }
-
-// // Helper to update/create albums and add view.
-// const initializeAlbum = async (album: AlbumData, userId: string) => {
-//   const requestBody = {
-//     album,
-//     userId,
-//   };
-//   const res = await axios.post(`/api/album/post/album`, requestBody);
-//   return res.data;
-// };

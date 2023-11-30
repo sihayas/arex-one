@@ -30,8 +30,6 @@ model User {
   artifact      Artifact[]
   replies       Reply[]
   hearts        Heart[]
-  views         View[]           @relation(name: "ViewUser") // Times profile viewed
-  authoredViews View[]           @relation(name: "ViewAuthor") // Viewed others
   settings      Settings?
 }
 
@@ -46,7 +44,7 @@ model Settings {
   isMinus               Boolean  @default(false) @map(name: "is_premium")
   followerNotifications Boolean  @default(true) @map(name: "follower_notifications")
   replyNotifications    Boolean  @default(true) @map(name: "reply_notifications")
-  heartNotifications     Boolean  @default(true) @map(name: "heart_notifications")
+  heartNotifications    Boolean  @default(true) @map(name: "heart_notifications")
 
 
   createdAt           DateTime @default(now()) @map(name: "created_at")
@@ -107,7 +105,6 @@ model Sound {
   album        Sound?      @relation("AlbumSongs", fields: [albumId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   Songs        Sound[]     @relation("AlbumSongs")
 
-  views         View[]
   essentials    Essential[]
   artifact      Artifact[]
 
@@ -136,22 +133,7 @@ model Attributes{
   @@unique([id])
 }
 
-model View {
-  id          String    @id @default(cuid())
-  author      User      @relation(name: "ViewAuthor", fields: [authorId], references: [id])
-  authorId    String
-  sound       Sound     @relation(fields: [soundId], references: [id])
-  soundId     String
-  artifact    Artifact  @relation(fields: [artifactId], references: [id])
-  artifactId  String
-  user        User      @relation(name: "ViewUser", fields: [userId], references: [id])
-  userId      String
 
-  viewedAt    DateTime  @default(now())
-  @@index([authorId])
-  @@index([soundId])
-  @@index([artifactId])
-}
 
 
 enum ArtifactType {
@@ -170,7 +152,6 @@ model Artifact {
 
   hearts      Heart[]
   replies     Reply[]
-  views       View[]
   content     Content?
 
   isDeleted   Boolean   @default(false) @map(name: "is_deleted")
@@ -257,10 +238,10 @@ model Activity {
   updatedAt     DateTime        @updatedAt @map(name: "updated_at")
 
   // Polymorphic relations
-  artifact      Artifact?      @relation("ActivityArtifact", fields:  [referenceId], references: [id], map: "ActivityToArtifact_fkey")
-  heart         Heart?         @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "ActivityToHeart_fkey")
-  follow        Follows?       @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "ActivityToFollow_fkey")
-  reply         Reply?         @relation("ActivityReply",   fields: [referenceId], references: [id], map: "ActivityToReply_fkey")
+  artifact      Artifact?      @relation("ActivityArtifact", fields: [referenceId], references: [id], map: "activity_artifact_id")
+  heart         Heart?         @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "activity_heart_id")
+  follow        Follows?       @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "activity_follow_id")
+  reply         Reply?         @relation("ActivityReply",   fields: [referenceId], references: [id], map: "activity_reply_id")
 
   isDeleted     Boolean         @default(false) @map(name: "is_deleted")
   notifications Notification[]
@@ -289,3 +270,4 @@ model Notification {
   @@index([recipientId])
   @@index([activityId])
 }
+

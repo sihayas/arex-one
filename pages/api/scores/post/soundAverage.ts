@@ -1,11 +1,11 @@
-import { soundAverage } from "@/lib/cron/soundAverage";
+import { averageSounds } from "@/lib/cron/averageSounds";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST" || req.method === "GET") {
     try {
       // Call updateAlbumRatings with the stored lastRunDate
-      await soundAverage();
+      await averageSounds();
       res.status(200).json({ message: "Successfully updated album ratings." });
     } catch (error) {
       console.error(error);

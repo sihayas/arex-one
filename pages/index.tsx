@@ -38,7 +38,7 @@ export default function Home() {
           <title>rx</title>
         </Head>
         <div className="m-8 grid h-screen w-screen gap-8 grid-cols-17 grid-rows-11">
-          <div className="col-start-1 row-start-1 text-[34px] font-medium text-[#000] leading-[22px] drop-shadow">
+          <div className="col-start-1 row-start-1 text-[34px] font-medium text-[#4733ff] leading-[22px] drop-shadow">
             RX
           </div>
 

@@ -1,11 +1,10 @@
-import client, { setCache } from "../global/redis";
+import client from "../global/redis";
 import { prisma } from "../global/prisma";
 
-type RecordCounts = {
+type ArtifactCounts = {
   _count: {
     replies: number;
     hearts: number;
-    views: number;
   };
   rating: number | null;
   loved: boolean | null;
@@ -14,7 +13,6 @@ type RecordCounts = {
 };
 
 const weights = {
-  views: 0.25,
   hearts: 0.15,
   replies: 0.15,
   recency: 0.25,
@@ -22,26 +20,25 @@ const weights = {
   replay: 0.1,
 };
 
-function calculateScore(record: RecordCounts) {
+function calculateScore(artifact: ArtifactCounts) {
   const diffInHours =
-    (new Date().getTime() - new Date(record.createdAt).getTime()) /
+    (new Date().getTime() - new Date(artifact.createdAt).getTime()) /
     1000 /
     60 /
     60;
   const recencyScore = 1 / Math.sqrt(diffInHours + 1);
 
   return (
-    record._count.views * weights.views +
-    record._count.hearts * weights.hearts +
-    record._count.replies * weights.replies +
+    artifact._count.hearts * weights.hearts +
+    artifact._count.replies * weights.replies +
     recencyScore * weights.recency +
-    Number(record.loved) * weights.loved +
-    Number(record.replay) * weights.replay
+    Number(artifact.loved) * weights.loved +
+    Number(artifact.replay) * weights.replay
   );
 }
 
 // Update the positive/negative entry rankings for a sound of a given type
-export async function soundRankings(
+export async function rankEntries(
   isNegative: boolean,
   soundId: string,
   type: string,
@@ -67,7 +64,7 @@ export async function soundRankings(
       id: true,
       artifact: {
         select: {
-          _count: { select: { replies: true, hearts: true, views: true } },
+          _count: { select: { replies: true, hearts: true } },
           content: {
             select: { rating: true, loved: true, replay: true },
           },
@@ -84,7 +81,6 @@ export async function soundRankings(
         _count: {
           replies: artifact._count.replies,
           hearts: artifact._count.hearts,
-          views: artifact._count.views,
         },
 
         rating: activity.artifact.content.rating,
