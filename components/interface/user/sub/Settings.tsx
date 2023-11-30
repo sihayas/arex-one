@@ -1,6 +1,10 @@
 import { Artwork } from "@/components/global/Artwork";
 import { useNavContext } from "@/context/NavContext";
-import { useUserSettingsQuery, toggleSetting, changeBio } from "@/lib/api/user";
+import {
+  useUserSettingsQuery,
+  toggleSetting,
+  changeBio,
+} from "@/lib/apiHelper/user";
 import { Essential, Settings } from "@/types/dbTypes";
 import React, { useEffect, useState } from "react";
 import { useSoundContext } from "@/context/SoundContext";

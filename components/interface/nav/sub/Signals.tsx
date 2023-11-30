@@ -1,4 +1,4 @@
-// import { useNotificationsQuery } from "@/lib/api/userAPI";
+// import { useNotificationsQuery } from "@/lib/apiHelper/userAPI";
 import Heart from "./signals/Heart";
 import Reply from "./signals/Reply";
 import Link from "./signals/Link";

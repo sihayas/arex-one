@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { getActivityData } from "@/services/activityServices";
-import { Activity } from "@/types/dbTypes";
+import { fetchOrCacheActivities } from "@/pages/api/caches/activity";
 
 export default async function handle(
   req: NextApiRequest,
@@ -40,7 +39,7 @@ export default async function handle(
       .map((f) => f.followingId)
       .concat(userId);
 
-    // Fetch following activity artifacts
+    // Fetch bare artifacts
     const activities = await prisma.activity.findMany({
       where: { artifact: { authorId: { in: followingIds } }, type: "artifact" },
       orderBy: { createdAt: "desc" },
@@ -50,6 +49,7 @@ export default async function handle(
         id: true,
         artifact: {
           select: {
+            id: true,
             hearts: { where: { authorId: userId } },
             _count: { select: { replies: true, hearts: true } },
           },
@@ -58,17 +58,14 @@ export default async function handle(
       },
     });
 
+    const hasMorePages = activities.length > limit;
+    if (hasMorePages) activities.pop();
+
     // Extract activity IDs
     const activityIds = activities.map((activity) => activity.id);
-    // Extract author IDs
-    const authorIds = activities.map((activity) => activity.artifact.authorId);
-    // Extract sound IDs
-    const soundIds = activities.map(
-      (activity) => activity.artifact.sound.appleId,
-    );
 
-    // Fetch cached activity data using getActivityData
-    const detailedActivityData = await getActivityData(activityIds);
+    // Fetch enriched artifacts
+    const detailedActivityData = await fetchOrCacheActivities(activityIds);
 
     // Merge detailed data with basic activity data
     const enrichedActivities = activities.map((activity) => ({
@@ -80,9 +77,7 @@ export default async function handle(
       },
     }));
 
-    const hasMorePages = activities.length > limit;
-    if (hasMorePages) activities.pop();
-    s;
+    console.log("Enriched activities:", enrichedActivities);
 
     return res.status(200).json({
       data: {
@@ -94,42 +89,4 @@ export default async function handle(
     console.error("Error fetching activities:", error);
     return res.status(500).json({ error: "Error fetching activities." });
   }
-}
-
-async function enrichActivities(activities: any, userId: any) {
-  const artifactData = await getActivityData(
-    activities.map((a: Activity) => a.artifact?.id),
-  );
-  const authorData = {};
-  const soundData = {};
-
-  // Enrich activities with artifact, author, and sound data
-  const enrichedActivities = await Promise.all(
-    activities.map(async (a: Activity) => {
-      const artifact = artifactData.find((ad) => ad.id === a.artifact?.id);
-      const author =
-        authorData[artifact.authorId] ||
-        (await getAuthorData(artifact.authorId));
-      const sound =
-        soundData[artifact.soundId] || (await getSoundData(artifact.soundId));
-
-      // Cache the fetched author and sound data
-      authorData[artifact.authorId] = author;
-      soundData[artifact.soundId] = sound;
-
-      return {
-        ...activity,
-        artifact: {
-          ...artifact,
-          author,
-          sound,
-          heartedByUser: artifact.hearts.some(
-            (heart) => heart.authorId === userId,
-          ),
-        },
-      };
-    }),
-  );
-
-  return enrichedActivities;
 }

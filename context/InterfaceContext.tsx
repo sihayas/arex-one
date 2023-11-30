@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 import { SelectedSound } from "@/context/SoundContext";
-import { User, Artifact } from "@/types/dbTypes";
+import { UserType, Artifact } from "@/types/dbTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
 
@@ -14,7 +14,7 @@ export type Page = {
   key: string;
   name: string;
   sound?: SelectedSound;
-  user?: User;
+  user?: UserType;
   artifact?: Artifact;
   scrollPosition: number;
   dimensions: {
@@ -32,16 +32,16 @@ export type InterfaceContext = {
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
   navigateBack: (pageNumber?: number) => void;
   scrollContainerRef: React.MutableRefObject<HTMLDivElement | null>;
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  user: UserType | null;
+  setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   session: Session | null;
   setSession: React.Dispatch<React.SetStateAction<any>>;
-  activeFeed: User | "bloom" | "recent" | null;
+  activeFeed: "user" | "bloom" | "recent" | null;
   setActiveFeed: React.Dispatch<
-    React.SetStateAction<User | "bloom" | "recent" | null>
+    React.SetStateAction<"user" | "bloom" | "recent" | null>
   >;
-  feedHistory: User[];
-  setFeedHistory: React.Dispatch<React.SetStateAction<User[]>>;
+  feedHistory: UserType[];
+  setFeedHistory: React.Dispatch<React.SetStateAction<UserType[]>>;
 };
 
 // Define the props for the InterfaceProvider component
@@ -80,12 +80,12 @@ export const InterfaceContextProvider = ({
 
   // Initialize the feed stack
   const [activeFeed, setActiveFeed] = useState<
-    User | "bloom" | "recent" | null
+    "user" | "bloom" | "recent" | null
   >(null);
-  const [feedHistory, setFeedHistory] = useState<User[]>([]);
+  const [feedHistory, setFeedHistory] = useState<UserType[]>([]);
 
   // Prepare the user and session states
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const supabaseClient = useSupabaseClient();
 

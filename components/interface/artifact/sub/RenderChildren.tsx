@@ -1,10 +1,10 @@
 import Reply from "@/components/interface/artifact/sub/Reply";
 import { useQuery } from "@tanstack/react-query";
 import { ReplyType } from "@/types/dbTypes";
-import { useRepliesQuery } from "@/lib/api/artifact";
+import { useRepliesQuery } from "@/lib/apiHelper/artifact";
 import React from "react";
 import { useUser } from "@supabase/auth-helpers-react";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 type RenderChildrenProps = {
   parentReplyId: string;

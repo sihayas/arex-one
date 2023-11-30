@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import { toast } from "sonner";
-import { postEntry } from "@/lib/api/form";
+import { postEntry } from "@/lib/apiHelper/form";
 import { useSoundContext } from "@/context/SoundContext";
 
 import Dial from "./items/Dial";

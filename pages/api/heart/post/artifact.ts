@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createHeartActivity } from "@/pages/api/middleware/createActivity";
-import { createAggKey } from "@/pages/api/middleware/aggKey";
+import { createAggKey } from "@/pages/api/middleware/createAggKey";
 
 export default async function handler(
   req: NextApiRequest,

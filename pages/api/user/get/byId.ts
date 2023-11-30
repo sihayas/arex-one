@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 import { Essential } from "@/types/dbTypes";
 import { fetchAndCacheSoundsByType } from "@/pages/api/sounds/get/sound";
 import { AlbumData } from "@/types/appleTypes";
-import { getUserData } from "@/services/userServices";
+import { fetchOrCacheUser } from "@/pages/api/caches/user";
 
 async function attachAlbumData(
   essentials: Essential[],
@@ -65,8 +65,8 @@ export default async function handle(
   }
 
   try {
-    let sessionUserData = await getUserData(sessionUserId);
-    let pageUserData = await getUserData(pageUserId);
+    let sessionUserData = await fetchOrCacheUser(sessionUserId);
+    let pageUserData = await fetchOrCacheUser(pageUserId);
 
     // Attach album data to essentials
     if (pageUserData.essentials.length > 0) {

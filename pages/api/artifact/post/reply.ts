@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createReplyActivity } from "@/pages/api/middleware/createActivity";
 import { createNotification } from "@/pages/api/middleware/createNotification";
-import { createAggKey } from "@/pages/api/middleware/aggKey";
+import { createAggKey } from "@/pages/api/middleware/createAggKey";
 import { ActivityType } from "@prisma/client";
 import { Reply } from "@/types/dbTypes";
 

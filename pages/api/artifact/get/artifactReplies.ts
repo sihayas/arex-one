@@ -36,7 +36,12 @@ export default async function handle(
     const replies = await prisma.reply.findMany({
       where: { artifactId, rootId: null },
       take: Number(6),
-      orderBy: { createdAt: "desc" },
+      // order by hearts count
+      orderBy: {
+        hearts: {
+          _count: "desc",
+        },
+      },
       select: {
         id: true,
         author: true,

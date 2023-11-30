@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { getUserData } from "@/services/userServices";
+import { fetchOrCacheUser } from "@/pages/api/caches/user";
 import { setCache } from "@/lib/global/redis";
 
 export default async function handle(
@@ -23,7 +23,7 @@ export default async function handle(
   }
 
   try {
-    let followingData = await getUserData(unfollowingId);
+    let followingData = await fetchOrCacheUser(unfollowingId);
 
     // If the user is not following, exit early
     const isFollowingAtoB = followingData.followedBy.includes(unfollowerId);

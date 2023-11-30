@@ -63,7 +63,7 @@ export const useUserSettingsQuery = (userId: string) => {
 //   const { data, isLoading, isError } = useQuery(
 //     ["mergedData", userId],
 //     async () => {
-//       const url = `/api/user/get/soundtrack`;
+//       const url = `/apiHelper/user/get/soundtrack`;
 //       const response = await axios.get(url, {
 //         params: {
 //           userId,
@@ -139,7 +139,7 @@ export const unfollowUser = async (followerId: string, followingId: string) => {
 //   } = useQuery(
 //     ["notifications", userId],
 //     async () => {
-//       const url = `/api/user/get/notifications`;
+//       const url = `/apiHelper/user/get/notifications`;
 //       const response = await axios.get(url, {
 //         params: {
 //           userId,

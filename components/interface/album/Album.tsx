@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import { useSoundContext } from "@/context/SoundContext";
 
-import { useAlbumQuery } from "@/lib/api/album";
+import { useAlbumQuery } from "@/lib/apiHelper/album";
 import RenderArtifacts from "./sub/RenderArtifacts";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Filter from "@/components/interface/album/sub/Filter";

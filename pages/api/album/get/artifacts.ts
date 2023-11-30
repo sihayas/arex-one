@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { getActivityData } from "@/services/activityServices";
+import { fetchOrCacheActivities } from "@/pages/api/caches/activity";
 import client from "@/lib/global/redis";
 
 export default async function handle(
@@ -77,20 +77,22 @@ export default async function handle(
         },
       });
     }
-
     if (hasMorePages) activities.pop();
 
     const activityIds = activities.map((activity) => activity.id);
-    const detailedActivityData = await getActivityData(activityIds);
+    const detailedActivityData = await fetchOrCacheActivities(activityIds);
 
-    const enrichedActivities = activities.map((activity) => ({
-      ...activity,
-      artifact: {
-        ...activity.artifact,
-        ...detailedActivityData.find((d) => d.id === activity.id)?.artifact,
-        heartedByUser: (activity.artifact?.hearts?.length ?? 0) > 0,
-      },
-    }));
+    const enrichedActivities = activities.map((activity, index) => {
+      const detailedData = detailedActivityData[index];
+      return {
+        ...activity,
+        artifact: {
+          ...activity.artifact,
+          ...(detailedData?.artifact ?? {}),
+          heartedByUser: (activity.artifact?.hearts?.length ?? 0) > 0,
+        },
+      };
+    });
 
     return res.status(200).json({
       data: {

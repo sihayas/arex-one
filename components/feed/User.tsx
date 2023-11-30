@@ -1,4 +1,4 @@
-import { useFeedQuery } from "@/lib/api/feed";
+import { useFeedQuery } from "@/lib/apiHelper/feed";
 import { Feed } from "@/components/artifacts/Feed";
 import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";

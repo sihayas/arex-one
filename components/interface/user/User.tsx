@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion } from "framer-motion";
-import { useUserDataQuery } from "@/lib/api/user";
+import { useUserDataQuery } from "@/lib/apiHelper/user";
 import Essentials from "@/components/interface/user/sub/Essentials";
 import Settings from "@/components/interface/user/sub/Settings";
 import { JellyComponent } from "@/components/global/Loading";
@@ -64,20 +64,20 @@ const User = () => {
   const handleSubSectionClick = (section: "essentials" | "settings") =>
     setSubSection(section === subSection ? "essentials" : section);
 
-  const handleSetFeedUser = (user: UserType) => {
-    // Remove the user if they are already in the feed user history
-    const newHistory = feedHistory.filter((u) => u.id !== user.id);
-
-    // Add the user to the front of the feed user history
-    newHistory.unshift(user);
-
-    // Update the feed user history
-    setFeedHistory(newHistory);
-
-    // Set the active feed user
-    setActiveFeed(user);
-    setIsVisible(false);
-  };
+  // const handleSetFeedUser = (user: UserType) => {
+  //   // Remove the user if they are already in the feed user history
+  //   const newHistory = feedHistory.filter((u) => u.id !== user.id);
+  //
+  //   // Add the user to the front of the feed user history
+  //   newHistory.unshift(user);
+  //
+  //   // Update the feed user history
+  //   setFeedHistory(newHistory);
+  //
+  //   // Set the active feed user
+  //   setActiveFeed(user);
+  //   setIsVisible(false);
+  // };
 
   return (
     <motion.div

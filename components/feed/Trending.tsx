@@ -1,4 +1,4 @@
-import { useBloomingFeedQuery } from "@/lib/api/feed";
+import { useBloomingFeedQuery } from "@/lib/apiHelper/feed";
 import { Feed } from "@/components/artifacts/Feed";
 import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";

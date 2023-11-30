@@ -18,7 +18,7 @@ import { Artwork } from "@/components/global/Artwork";
 import Stars from "@/components/global/Stars";
 import Avatar from "@/components/global/Avatar";
 import RenderReplies from "@/components/interface/artifact/sub/RenderReplies";
-import { useRepliesQuery } from "@/lib/api/artifact";
+import { useRepliesQuery } from "@/lib/apiHelper/artifact";
 import { GetDimensions } from "@/components/interface/Interface";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";

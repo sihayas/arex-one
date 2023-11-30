@@ -4,8 +4,8 @@ import { createFollowActivity } from "@/pages/api/middleware/createActivity";
 import { createNotification } from "@/pages/api/middleware/createNotification";
 import { ActivityType } from "@/types/dbTypes";
 import { setCache } from "@/lib/global/redis";
-import { getUserData } from "@/services/userServices";
-import { createAggKey } from "@/pages/api/middleware/aggKey";
+import { fetchOrCacheUser } from "@/pages/api/caches/user";
+import { createAggKey } from "@/pages/api/middleware/createAggKey";
 
 async function updateExistingFollow(existingFollow: any) {
   if (!existingFollow) return;
@@ -56,8 +56,8 @@ export default async function handle(
 
   try {
     const [followerData, followingData] = await Promise.all([
-      getUserData(followerId),
-      getUserData(followingId),
+      fetchOrCacheUser(followerId),
+      fetchOrCacheUser(followingId),
     ]);
 
     // Check if follower is already following

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSoundContext } from "@/context/SoundContext";
-import GetSearchResults from "@/lib/api/search";
+import GetSearchResults from "@/lib/apiHelper/search";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -12,7 +12,7 @@ import Avatar from "@/components/global/Avatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import Image from "next/image";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { addReply } from "@/lib/api/artifact";
+import { addReply } from "@/lib/apiHelper/artifact";
 import { toast } from "sonner";
 import { useSound } from "@/hooks/usePage";
 import { AnimatePresence, motion } from "framer-motion";
@@ -208,7 +208,7 @@ const Nav = () => {
       >
         {/* Input Outer */}
         <div
-          className={`bg-[#F4F4F4]/90 flex flex-col items-end absolute bottom-1 left-0 rounded-[18px] shadow-shadowKitMedium outline outline-silver outline-1`}
+          className={`bg-[#F4F4F4] flex flex-col items-end absolute bottom-1 left-0 rounded-[18px] shadow-shadowKitMedium outline outline-silver outline-1`}
         >
           {/* Top / Form / RenderResults Results */}
           {expandInput && !replyParent && (selectedFormSound || inputValue) && (

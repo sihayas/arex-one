@@ -2,7 +2,7 @@ import { getCache, setCache } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
 
 // Fetches and/or caches user data
-async function getUserData(userId: string) {
+async function fetchOrCacheUser(userId: string) {
   let userData = await getCache(`user:${userId}:data`);
   if (!userData) {
     userData = await prisma.user
@@ -33,4 +33,4 @@ async function getUserData(userId: string) {
   return userData;
 }
 
-export { getUserData };
+export { fetchOrCacheUser };

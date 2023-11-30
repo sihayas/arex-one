@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { useArtifactsQuery } from "@/lib/api/album";
+import { useArtifactsQuery } from "@/lib/apiHelper/album";
 import Album from "@/components/artifacts/Album";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";

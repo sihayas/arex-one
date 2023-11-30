@@ -7,7 +7,7 @@ import { useSoundContext } from "@/context/SoundContext";
 import { useNavContext } from "@/context/NavContext";
 import { useSound } from "@/hooks/usePage";
 // Importing function to change essential
-import { changeEssential } from "@/lib/api/user";
+import { changeEssential } from "@/lib/apiHelper/user";
 import { useUser } from "@supabase/auth-helpers-react";
 
 // Component to handle sound
