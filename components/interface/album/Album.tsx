@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { useSoundContext } from "@/context/SoundContext";
 
 import { useAlbumQuery } from "@/lib/api/album";
-import RenderRecords from "./sub/RenderArtifacts";
+import RenderArtifacts from "./sub/RenderArtifacts";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Filter from "@/components/interface/album/sub/Filter";
 
-import { TrackData } from "@/types/appleTypes";
+import { AlbumData, TrackData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
 
@@ -24,7 +24,7 @@ const Album = () => {
   // Filter state
   const [activeSong, setActiveSong] = useState<TrackData | null>(null);
   const [sortOrder, setSortOrder] = useState<
-    "newest" | "positive" | "negative"
+    "newest" | "highlights" | "positive" | "critical"
   >("newest");
 
   const handleActiveSongChange = (newActiveSong: TrackData | null) => {
@@ -39,15 +39,6 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  // Album artwork scale
-  let albumX = useSpring(
-    useTransform(scrollY, [0, 24], [0, -48]),
-    springConfig,
-  );
-  let albumY = useSpring(
-    useTransform(scrollY, [0, 24], [0, -48]),
-    springConfig,
-  );
   let albumScale = useSpring(
     useTransform(scrollY, [0, 24], [1, 0.8667]),
     springConfig,
@@ -75,8 +66,6 @@ const Album = () => {
 
   // Initializes album. If the album doesn't have detailed data it gets it.
   const { isLoading } = useAlbumQuery();
-
-  console.log("selectedSound", selectedSound);
 
   return (
     <motion.div
@@ -113,8 +102,8 @@ const Album = () => {
           <div className="w-full h-[24px]">&nbsp;</div>
 
           {/* Entries */}
-          <RenderRecords
-            soundId={`${!activeSong ? selectedSound.sound.id : activeSong.id}`}
+          <RenderArtifacts
+            sound={selectedSound.sound as AlbumData}
             sortOrder={sortOrder}
           />
 

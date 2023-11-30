@@ -38,25 +38,29 @@ export default function Home() {
           <title>rx</title>
         </Head>
         <div className="m-8 grid h-screen w-screen gap-8 grid-cols-17 grid-rows-11">
-          <div className="col-start-1 row-start-1 text-sm font-medium text-black">
-            AREX [alpha]
+          <div className="col-start-1 row-start-1 text-[34px] font-medium text-[#000] leading-[22px] drop-shadow">
+            RX
           </div>
 
-          <div className="col-span-5 col-start-2 self-end uppercase row-start-9 text-xs tracking-widest text-red shadow-album leading-[75%] p-2 rounded font-medium">
-            <button
-              onClick={async () => {
-                const { data, error } =
-                  await supabaseClient.auth.signInWithOAuth({
-                    provider: "google",
-                  });
-                {
-                  error ? console.log(error) : console.log(data);
-                }
-              }}
-            >
-              CONNECT WITH GOOGLE
-            </button>
+          <div className="col-span-4 col-start-2 uppercase row-start-1 text-xs tracking-widest text-red -mt-1 animate-pulse">
+            pardon our appearance while facade work in progress...
           </div>
+
+          <button
+            onClick={async () => {
+              const { data, error } = await supabaseClient.auth.signInWithOAuth(
+                {
+                  provider: "google",
+                },
+              );
+              {
+                error ? console.log(error) : console.log(data);
+              }
+            }}
+            className="col-span-5 col-start-2 uppercase row-start-9 text-xs text-gray2 tracking-widest "
+          >
+            connect
+          </button>
         </div>
       </Layout>
     );
@@ -65,12 +69,12 @@ export default function Home() {
   return (
     <Layout>
       <Head>
-        <title>rx</title>
+        <title>RX</title>
       </Head>
       <div
-        className={`text-sm text-gray2 absolute top-4 left-4 drop-shadow-sm`}
+        className={`text-[42px] leading-[33px] text-gray3 absolute top-8 left-8 drop-shadow font-thin`}
       >
-        ARE.X ALPHA
+        RX
       </div>
 
       {activeFeed && (

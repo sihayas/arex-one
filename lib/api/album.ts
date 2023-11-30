@@ -1,26 +1,33 @@
 import axios from "axios";
-import { UserType } from "@/types/dbTypes";
+import { Activity, UserType } from "@/types/dbTypes";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useSoundContext } from "@/context/SoundContext";
+import { AlbumData } from "@/types/appleTypes";
 
 // React Query hook for fetching album reviews
 export const useArtifactsQuery = (
-  soundId: string,
+  sound: AlbumData,
   userId: string | undefined,
-  sortOrder: string,
+  sort: string,
 ) =>
   useInfiniteQuery(
-    ["reviews", soundId],
+    ["artifacts", sound],
     async ({ pageParam = 1 }) => {
-      const { data } = await axios.get(`/api/album/get/artifacts`, {
-        params: { soundId, page: pageParam, sort: sortOrder, userId },
+      const url = `/api/album/get/artifacts`;
+      const { data } = await axios.get(url, {
+        params: { soundId: sound.id, page: pageParam, sort, userId, limit: 6 },
       });
-      return data;
+      const { activities, pagination } = data.data;
+
+      if (!activities || !pagination) {
+        throw new Error("Unexpected server response structure");
+      }
+
+      return { data: activities, pagination };
     },
     {
-      getNextPageParam: (lastPage, pages) =>
-        lastPage.length === 10 ? pages.length + 1 : false,
-      enabled: !!soundId,
+      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
+      enabled: !!userId,
       refetchOnWindowFocus: false,
     },
   );

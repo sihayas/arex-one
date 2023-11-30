@@ -1,9 +1,9 @@
 import { getCache, setCache } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
-import { Activity, Artifact, Sound, User } from "@/types/dbTypes";
+import { Activity, Artifact, Sound, UserType } from "@/types/dbTypes";
 import { Artifact as PrismaArtifact } from "@prisma/client";
 
-type AuthorData = Pick<User, "id" | "username" | "image">;
+type AuthorData = Pick<UserType, "id" | "username" | "image">;
 
 type ArtifactType = PrismaArtifact["type"];
 

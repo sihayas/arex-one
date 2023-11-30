@@ -1,30 +1,30 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useArtifactsQuery } from "@/lib/api/album";
 import Album from "@/components/artifacts/Album";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
+import { AlbumData } from "@/types/appleTypes";
+import { Activity } from "@/types/dbTypes";
+import { Feed } from "@/components/artifacts/Feed";
+import { ArtifactExtended } from "@/types/globalTypes";
 
 interface RenderArtifactsProps {
-  soundId: string;
-  sortOrder: "newest" | "positive" | "negative";
+  sound: AlbumData;
+  sortOrder: "newest" | "highlights" | "positive" | "critical";
 }
 
 const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
-  soundId,
+  sound,
   sortOrder = "newest",
 }) => {
   const { user } = useInterfaceContext();
   const userId = user?.id;
 
-  const {
-    data: entries,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useArtifactsQuery(soundId, userId, sortOrder);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useArtifactsQuery(sound, userId, sortOrder);
 
-  const flattenedEntries = entries?.pages.flat() || [];
+  const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
 
   // Initialize infinite scroll
   const { scrollContainerRef } = useInterfaceContext();
@@ -46,15 +46,16 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
   return (
     // Gap-5 to align with statistics
     <div className="flex flex-col h-full w-full items-center p-8 gap-9">
-      {flattenedEntries?.length > 0 ? (
-        flattenedEntries.map((entry) => (
-          <Album key={entry.id} artifact={entry} />
-        ))
-      ) : (
-        <div className="p-2 text-xs uppercase text-gray2">
-          {/* surrender the sound */}
-        </div>
-      )}
+      {allActivities.map((activity: Activity) => (
+        <Fragment key={activity.id}>
+          {activity.artifact ? (
+            <Album artifact={activity.artifact as ArtifactExtended} />
+          ) : (
+            "No artifact available for this activity."
+          )}
+        </Fragment>
+      ))}
+      {/* End */}
       {hasNextPage ? (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           {isFetchingNextPage ? (

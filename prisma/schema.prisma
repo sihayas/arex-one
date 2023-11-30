@@ -23,14 +23,15 @@ model User {
   isBanned      Boolean          @default(false) @map(name: "is_banned")
   isDeleted     Boolean          @default(false) @map(name: "is_deleted")
   isSuspended   Boolean          @default(false) @map(name: "is_suspended")
-  following     Follows[]    @relation("follower")
-  followedBy    Follows[]    @relation("following")
+  following     Follows[]        @relation("follower")
+  followedBy    Follows[]        @relation("following")
   essentials    Essential[]
   notifications Notification[]
   artifact      Artifact[]
   replies       Reply[]
   hearts        Heart[]
-  views         View[]
+  views         View[]           @relation(name: "ViewUser") // Times profile viewed
+  authoredViews View[]           @relation(name: "ViewAuthor") // Viewed others
   settings      Settings?
 }
 
@@ -136,19 +137,22 @@ model Attributes{
 }
 
 model View {
-  id          String   @id @default(cuid())
-  author      User     @relation(fields: [authorId], references: [id])
+  id          String    @id @default(cuid())
+  author      User      @relation(name: "ViewAuthor", fields: [authorId], references: [id])
   authorId    String
-  sound       Sound    @relation(fields: [soundId], references: [id])
+  sound       Sound     @relation(fields: [soundId], references: [id])
   soundId     String
-  artifact    Artifact @relation(fields: [artifactId], references: [id])
+  artifact    Artifact  @relation(fields: [artifactId], references: [id])
   artifactId  String
+  user        User      @relation(name: "ViewUser", fields: [userId], references: [id])
+  userId      String
 
-  viewedAt    DateTime @default(now())
+  viewedAt    DateTime  @default(now())
   @@index([authorId])
   @@index([soundId])
   @@index([artifactId])
 }
+
 
 enum ArtifactType {
   entry // A rating post

@@ -89,7 +89,7 @@ export const Feed: React.FC<FeedProps> = ({ artifact }) => {
             onClick={handleEntryClick}
             className={`break-words line-clamp-6 w-full text-sm text-gray5 cursor-pointer z-10`}
           >
-            {artifact.content?.text || artifact.content?.text}
+            {artifact.content?.text}
           </div>
 
           {/* Bubbles */}

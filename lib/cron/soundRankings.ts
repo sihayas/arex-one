@@ -3,8 +3,9 @@ import { prisma } from "../global/prisma";
 
 type RecordCounts = {
   _count: {
-    replies: number | null;
-    hearts: number | null;
+    replies: number;
+    hearts: number;
+    views: number;
   };
   rating: number | null;
   loved: boolean | null;
@@ -30,17 +31,21 @@ function calculateScore(record: RecordCounts) {
   const recencyScore = 1 / Math.sqrt(diffInHours + 1);
 
   return (
-    // record._count.views * weights.views +
-    // record._count?.hearts? * weights.hearts +
-    // record._count?.replies? * weights.replies +
+    record._count.views * weights.views +
+    record._count.hearts * weights.hearts +
+    record._count.replies * weights.replies +
     recencyScore * weights.recency +
     Number(record.loved) * weights.loved +
     Number(record.replay) * weights.replay
   );
 }
 
-// Update the  entry rankings
-export async function soundRankings(isNegative: boolean) {
+// Update the positive/negative entry rankings for a sound of a given type
+export async function soundRankings(
+  isNegative: boolean,
+  soundId: string,
+  type: string,
+) {
   const ratingCondition = isNegative ? { lte: 2.5 } : { gt: 2.5 };
   const activities = await prisma.activity.findMany({
     where: {
@@ -53,17 +58,19 @@ export async function soundRankings(isNegative: boolean) {
         content: {
           rating: ratingCondition,
         },
+        sound: {
+          appleId: soundId,
+        },
       },
     },
     select: {
       id: true,
       artifact: {
         select: {
-          id: true,
-          author: { select: { id: true, username: true, image: true } },
-          _count: { select: { replies: true, hearts: true } },
-          content: true,
-          sound: true,
+          _count: { select: { replies: true, hearts: true, views: true } },
+          content: {
+            select: { rating: true, loved: true, replay: true },
+          },
           createdAt: true,
         },
       },
@@ -77,24 +84,21 @@ export async function soundRankings(isNegative: boolean) {
         _count: {
           replies: artifact._count.replies,
           hearts: artifact._count.hearts,
+          views: artifact._count.views,
         },
+
         rating: activity.artifact.content.rating,
         loved: activity.artifact.content.loved,
         replay: activity.artifact.content.replay,
         createdAt: activity.artifact.createdAt,
       };
-      const contextKey =
-        artifact.sound.type === "albums"
-          ? `album:${artifact.sound.id}`
-          : `track:${artifact.sound.id}`;
-      if (!contextKey) continue;
 
       const key = isNegative
-        ? `${contextKey}:activity:record:positive:score`
-        : `${contextKey}:activity:record:negative:score`;
+        ? `sound:${type}:${soundId}:critical:score`
+        : `sound:${type}:${soundId}:positive:score`;
 
       await client.zadd(key, calculateScore(artifactCounts), activity.id);
-      await setCache(`activity:record:data:${activity.id}`, activity, 3600);
+
       console.log(`Updated score for activity ${activity.id}`);
     }
   }
