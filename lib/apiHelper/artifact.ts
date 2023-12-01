@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ReplyParent } from "@/context/Threadcrumbs";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 export const useRepliesQuery = (
   userId: string,
@@ -16,9 +16,9 @@ export const useRepliesQuery = (
     ? `/api/artifact/get/artifactReplies`
     : `/api/artifact/get/replyReplies`;
 
-  const result = useQuery(
+  const result = useInfiniteQuery(
     queryKey,
-    async () => {
+    async ({ pageParam = 1 }) => {
       const params = isArtifactReplies
         ? { artifactId, userId }
         : { replyId, userId };

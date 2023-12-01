@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
+import { fetchOrCacheRoots } from "@/pages/api/caches/reply";
 
 export default async function handle(
   req: NextApiRequest,
@@ -8,6 +9,7 @@ export default async function handle(
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed." });
   }
+
   const { artifactId } = req.query;
   const userId =
     typeof req.query.userId === "string" ? req.query.userId : undefined;
@@ -44,14 +46,9 @@ export default async function handle(
       },
       select: {
         id: true,
-        author: true,
-        rootId: true,
-        replyToId: true,
-        hearts: { select: { id: true }, where: { authorId: userId } },
-        replies: { select: { author: { select: { image: true } } }, take: 3 },
-        text: true,
-        artifactId: true,
+        hearts: { where: { authorId: userId } },
         _count: { select: { replies: true, hearts: true } },
+        replies: { select: { author: { select: { image: true } } }, take: 3 },
       },
     });
 
@@ -59,12 +56,22 @@ export default async function handle(
       return res.status(404).json({ error: "No replies found." });
     }
 
-    const repliesWithUserHeart = replies.map((reply: any) => ({
-      ...reply,
-      heartedByUser: reply.hearts.length > 0,
-    }));
+    const replyIds = replies.map((reply) => reply.id);
 
-    return res.status(200).json(repliesWithUserHeart);
+    const detailedReplyData = await fetchOrCacheRoots(replyIds);
+
+    const enrichedReplies = replies.map((reply) => {
+      const detailedReply = detailedReplyData.find(
+        (detailedReply) => detailedReply.id === reply.id,
+      );
+      return {
+        ...reply,
+        ...detailedReply,
+        heartedByUser: reply.hearts.length > 0,
+      };
+    });
+
+    return res.status(200).json(enrichedReplies);
   } catch (error) {
     console.error("Error fetching replies:", error);
     return res.status(500).json({ error: "Error fetching replies." });
