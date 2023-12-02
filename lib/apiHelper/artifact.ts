@@ -6,39 +6,33 @@ export const useRepliesQuery = (
   userId: string,
   artifactId?: string | undefined,
   replyId?: string | undefined,
-) => {
-  const isArtifactReplies = !!artifactId;
-
-  const queryKey = isArtifactReplies
-    ? ["replies", artifactId]
-    : ["replies", replyId];
-  const url = isArtifactReplies
-    ? `/api/artifact/get/artifactReplies`
-    : `/api/artifact/get/replyReplies`;
-
-  const result = useInfiniteQuery(
-    queryKey,
+) =>
+  useInfiniteQuery(
+    ["replies", artifactId || replyId],
     async ({ pageParam = 1 }) => {
+      const isArtifactReplies = !!artifactId;
+
+      const url = `/api/artifact/get/replies`;
       const params = isArtifactReplies
-        ? { artifactId, userId }
-        : { replyId, userId };
+        ? { artifactId, userId, page: pageParam, limit: 6 }
+        : { replyId, userId, page: pageParam, limit: 6 };
+
       const { data } = await axios.get(url, { params });
-      if (!data) throw new Error("Unexpected server response structure");
-      return data;
+      console.log("test", data);
+
+      const { replies, pagination } = data.data;
+
+      if (!replies || !pagination) {
+        throw new Error("Unexpected server response structure");
+      }
+
+      return { data: replies, pagination };
     },
     {
-      enabled: isArtifactReplies ? !!artifactId : !!replyId,
+      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       refetchOnWindowFocus: false,
     },
   );
-
-  return {
-    data: result.data,
-    error: result.error,
-    isLoading: result.isLoading,
-    isError: result.isError,
-  };
-};
 
 export const addReply = async (
   replyParent: ReplyParent,

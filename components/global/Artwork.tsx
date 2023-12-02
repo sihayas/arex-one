@@ -51,10 +51,10 @@ export const Artwork = ({
         ref={ref}
       />
       {/*  circle*/}
-      <div
-        style={{ backgroundColor: `#${bgColor}` }}
-        className={`absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-full h-full rounded-full blur-[80px] -z-10`}
-      />
+      {/*<div*/}
+      {/*  style={{ backgroundColor: `#${bgColor}` }}*/}
+      {/*  className={`absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-full h-full rounded-full blur-[80px] -z-10`}*/}
+      {/*/>*/}
     </motion.div>
   );
 };

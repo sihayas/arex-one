@@ -35,7 +35,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       const animationConfig = {
         scale: isVisible ? 0.86 : 1,
         opacity: isVisible ? 0.5 : 1,
-        filter: isVisible ? "blur(24px)" : "blur(0px)",
         pointerEvents: isVisible ? "none" : "auto",
       };
       const transitionConfig = {

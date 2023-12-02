@@ -77,6 +77,7 @@ export default async function handle(
         },
       });
     }
+
     if (hasMorePages) activities.pop();
 
     const activityIds = activities.map((activity) => activity.id);

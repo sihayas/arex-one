@@ -6,7 +6,6 @@ import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
 import { AlbumData } from "@/types/appleTypes";
 import { Activity } from "@/types/dbTypes";
-import { Feed } from "@/components/artifacts/Feed";
 import { ArtifactExtended } from "@/types/globalTypes";
 
 interface RenderArtifactsProps {

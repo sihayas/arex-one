@@ -62,19 +62,21 @@ export const Feed: React.FC<FeedProps> = ({ artifact }) => {
 
         {/* Rating */}
         <Stars
-          className={`border-[#E5E5E6] border absolute -top-[14px] left-[210px] rounded-full w-max text-[#808084] -z-10 p-[6px]`}
+          className={`border-white border absolute -top-[14px] left-[210px] rounded-full w-max text-[#808084] -z-10 p-[6px]`}
           rating={artifact.content?.rating}
           isWisp={isWisp}
+        />
+
+        {/* Artwork */}
+        <div
+          style={{ backgroundColor: `#${bgColor}` }}
+          className={`absolute -top-[19px] left-[205px] w-9 h-9 rounded-full blur-[24px] -z-20`}
         />
 
         {/* Rating, content & bubbles */}
         <div
           className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[384px] w-fit mb-3 ml-3`}
         >
-          {/* White Outline */}
-          <div
-            className={`-z-10 bg-white rounded-[16px] w-[86px] h-[40px] absolute -top-[1px] -left-[1px]`}
-          />
           {/* Names */}
           <div
             className={`absolute -top-4 left-[18px] text-xs text-gray5 leading-[1] w-max gap-1 flex`}

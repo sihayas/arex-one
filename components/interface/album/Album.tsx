@@ -64,7 +64,7 @@ const Album = () => {
     stiffness: 400,
   });
 
-  // Initializes album. If the album doesn't have detailed data it gets it.
+  // Initializes album. If the album doesn't have detailed data fetch it.
   const { isLoading } = useAlbumQuery();
 
   return (

@@ -183,7 +183,7 @@ export interface ReplyType {
     hearts: number;
     replies: number;
   };
-  heartedByUserType: boolean;
+  heartedByUser: boolean;
 }
 
 export interface Activity {

@@ -1,12 +1,21 @@
 import { LayoutGroup } from "framer-motion";
 import Reply from "./Reply";
 import { ReplyType } from "@/types/dbTypes";
+import { useRepliesQuery } from "@/lib/apiHelper/artifact";
+import { JellyComponent } from "@/components/global/Loading";
+import React from "react";
 
 type RenderRepliesProps = {
-  replies: ReplyType[];
+  userId: string;
+  artifactId: string;
 };
 
-function RenderReplies({ replies }: RenderRepliesProps) {
+function RenderReplies({ userId, artifactId }: RenderRepliesProps) {
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useRepliesQuery(userId, artifactId);
+
+  const replies = data ? data.pages.flatMap((page) => page.data) : [];
+
   return (
     <>
       {replies && replies.length > 0 ? (
@@ -23,6 +32,21 @@ function RenderReplies({ replies }: RenderRepliesProps) {
         </LayoutGroup>
       ) : (
         <div className="text-xs text-[#CCC]">seems quiet</div>
+      )}
+
+      {/* End */}
+      {hasNextPage && (
+        <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+          {isFetchingNextPage ? (
+            <JellyComponent
+              className={"fixed"}
+              key="jelly"
+              isVisible={isFetchingNextPage}
+            />
+          ) : (
+            <div className={`text-sm text-gray2`}>more</div>
+          )}
+        </button>
       )}
     </>
   );

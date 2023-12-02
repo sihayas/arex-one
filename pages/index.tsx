@@ -39,7 +39,7 @@ export default function Home() {
         </Head>
         <div className="m-8 grid h-screen w-screen gap-8 grid-cols-17 grid-rows-11">
           <div className="col-start-1 row-start-1 text-[34px] font-medium text-[#4733ff] leading-[22px] drop-shadow">
-            RX
+            Rx
           </div>
 
           <div className="col-span-4 col-start-2 uppercase row-start-1 text-xs tracking-widest text-red -mt-1 animate-pulse">
@@ -69,12 +69,12 @@ export default function Home() {
   return (
     <Layout>
       <Head>
-        <title>RX</title>
+        <title>Rx</title>
       </Head>
       <div
-        className={`text-[42px] leading-[33px] text-gray3 absolute top-8 left-8 drop-shadow font-thin`}
+        className={`text-[42px] leading-[33px] text-black absolute top-8 left-8`}
       >
-        RX
+        Rx
       </div>
 
       {activeFeed && (
@@ -156,54 +156,56 @@ export default function Home() {
               </motion.div>
 
               {/* Show In Bloom Feed */}
-              <motion.button
-                initial={{ opacity: 0.2, scale: 0.75, boxShadow: "none" }}
-                animate={
-                  activeFeed === "bloom"
-                    ? {
-                        opacity: 1,
-                        scale: 1,
-                        boxShadow:
-                          "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",
-                      }
-                    : {}
-                }
-                transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                onClick={() => setActiveFeed("bloom")}
-                className={`p-1 rounded-full shadow-shadowKitLow relative`}
-              >
-                <BloomIcon color={"#999"} />
-                <div
-                  className={`absolute left-1/2 -translate-x-1/2 text-xs text-gray2 -top-6 w-max`}
-                >
-                  IN BLOOM
-                </div>
-              </motion.button>
+              {/*<motion.button*/}
+              {/*  initial={{ opacity: 0.2, scale: 0.75, boxShadow: "none" }}*/}
+              {/*  animate={*/}
+              {/*    activeFeed === "bloom"*/}
+              {/*      ? {*/}
+              {/*          opacity: 1,*/}
+              {/*          scale: 1,*/}
+              {/*          boxShadow:*/}
+              {/*            "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",*/}
+              {/*        }*/}
+              {/*      : {}*/}
+              {/*  }*/}
+              {/*  transition={{ type: "spring", stiffness: 100, damping: 20 }}*/}
+              {/*  onClick={() => setActiveFeed("bloom")}*/}
+              {/*  className={`p-1 rounded-full shadow-shadowKitLow relative`}*/}
+              {/*>*/}
+              {/*  <BloomIcon color={"#999"} />*/}
+              {/*  <div*/}
+              {/*    className={`absolute left-1/2 -translate-x-1/2 text-xs text-gray2 -top-6 w-max`}*/}
+              {/*  >*/}
+              {/*    IN BLOOM*/}
+              {/*  </div>*/}
+              {/*</motion.button>*/}
 
               {/* Show In Bloom Feed */}
-              <motion.button
-                initial={{ opacity: 0.2, scale: 0.75, boxShadow: "none" }}
-                animate={
-                  activeFeed === "recent"
-                    ? {
-                        opacity: 1,
-                        scale: 1,
-                        boxShadow:
-                          "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",
-                      }
-                    : {}
-                }
-                transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                onClick={() => setActiveFeed("recent")}
-                className={`p-1 rounded-full shadow-shadowKitLow relative`}
-              >
-                <RecentIcon color={"#999"} />
-                <div
-                  className={`absolute left-1/2 -translate-x-1/2 text-xs text-gray2 -top-6 w-max`}
-                >
-                  RECENT
-                </div>
-              </motion.button>
+              {/*<motion.button*/}
+              {/*  initial={{ opacity: 0.2, scale: 0.75, boxShadow: "none" }}*/}
+              {/*  animate={*/}
+              {/*    activeFeed === "recent"*/}
+              {/*      ? {*/}
+              {/*          opacity: 1,*/}
+              {/*          scale: 1,*/}
+              {/*          boxShadow:*/}
+              {/*            "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",*/}
+              {/*        }*/}
+              {/*      : {}*/}
+              {/*  }*/}
+              {/*  transition={{ type: "spring", stiffness: 100, damping: 20 }}*/}
+              {/*  onClick={() => setActiveFeed("recent")}*/}
+              {/*  className={`p-1 rounded-full shadow-shadowKitLow relative`}*/}
+              {/*>*/}
+              {/*  <RecentIcon color={"#999"} />*/}
+              {/*  <div*/}
+              {/*    className={`absolute left-1/2 -translate-x-1/2 text-xs text-gray2 -top-6 w-max`}*/}
+              {/*  >*/}
+              {/*    RECENT*/}
+              {/*  </div>*/}
+              {/*</motion.button>*/}
+
+              {/*    */}
             </div>
           </div>
 
