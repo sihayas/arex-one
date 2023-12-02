@@ -41,7 +41,7 @@ export const Artifact = () => {
   // *
   useLayoutEffect(() => {
     if (scope.current) height.current = scope.current.offsetHeight;
-    activePage.dimensions.height = scope.current.offsetHeight + 5;
+    activePage.dimensions.height = scope.current.offsetHeight;
   }, [activePage.dimensions, scope]);
 
   // Scroll tracker hook
@@ -59,7 +59,7 @@ export const Artifact = () => {
   const springScale = useSpring(newScale, { stiffness: 160, damping: 20 });
 
   // Animate Y
-  const y = useTransform(scrollY, [0, 24], [396, 10]);
+  const y = useTransform(scrollY, [0, 24], [400, 10]);
   const springY = useSpring(y, { stiffness: 160, damping: 20 });
 
   useEffect(() => {
@@ -144,7 +144,7 @@ export const Artifact = () => {
                 {artifact.author.username}
               </p>
               <Stars
-                className={`ml-auto mr-4 bg-[#E5E5E5] p-[6px] rounded-full w-max z-10 text-gray5 max-h-[24px]`}
+                className={`ml-auto mr-4 p-[6px] bg-[#E5E5E5] rounded-full w-max z-10 text-white max-h-[24px]`}
                 rating={artifact.content?.rating}
                 soundName={artifact.appleData.attributes.name}
                 artist={artifact.appleData.attributes.artistName}
@@ -152,9 +152,9 @@ export const Artifact = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-[5px] w-full px-4 pt-[11px] overflow-scroll scrollbar-none">
+            <div className="flex flex-col gap-[5px] w-full px-4 overflow-scroll scrollbar-none">
               <div
-                className={`break-words w-full text-sm text-gray5 leading-normal cursor-pointer`}
+                className={`break-words w-full text-sm text-gray5 leading-normal cursor-pointer pt-[11px] pb-[10px]`}
               >
                 {artifact.content?.text || artifact.content?.text}
               </div>
@@ -171,9 +171,9 @@ export const Artifact = () => {
 
             <motion.div
               style={{ opacity: scrollIndicatorOpacity }}
-              className={`absolute -bottom-[25px] text-xs font-medium text-gray3 left-1/2 -translate-x-1/2 leading-[1]`}
+              className={`absolute -bottom-[25px] text-xs font-medium text-gray3 left-1/2 -translate-x-1/2 leading-[9px]`}
             >
-              SCROLL TO SHOW CHAINS
+              scroll for chains ({artifact._count.replies})
             </motion.div>
           </motion.div>,
           cmdk,

@@ -50,7 +50,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
               isVisible={isFetchingNextPage}
             />
           ) : (
-            <div className={`text-sm text-gray2`}>more</div>
+            <div className={`text-xs text-gray3 font-bold pt-8`}>more</div>
           )}
         </button>
       )}

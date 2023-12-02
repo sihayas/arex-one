@@ -10,25 +10,19 @@ interface EssentialsProps {
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   return (
     <motion.div
-      className={`flex flex-col px-2 pb-8 bg-[#E4E4E4] items-center rounded-b-2xl shadow-shadowKitMedium h-fit absolute right-8 top-0 z-20`}
+      className={`flex flex-col items-center rounded-b-2xl shadow-shadowKitLow h-fit absolute right-8 top-0 z-20`}
     >
       {essentials.map((essential, i) => (
-        <div
-          className={`w-fit h-fit overflow-hidden ${
+        <Artwork
+          className={`outline outline-1 outline-silver  ${
             i === 2 && "rounded-b-2xl"
           }`}
+          sound={essential.appleAlbumData}
+          width={192}
+          height={192}
           key={essential.id}
-        >
-          <Artwork sound={essential.appleAlbumData} width={176} height={176} />
-        </div>
+        />
       ))}
-      <div className={`relative`}>
-        <p
-          className={`absolute leading-[9px] text-xs font-bold text-white uppercase left-1/2 -translate-x-1/2 top-3`}
-        >
-          essentials
-        </p>
-      </div>
     </motion.div>
   );
 };

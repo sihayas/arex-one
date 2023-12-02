@@ -147,7 +147,7 @@ export const InterfaceContextProvider = ({
           key: uuidv4(),
           name: "user",
           user: user,
-          dimensions: { width: 576, height: 352 },
+          dimensions: { width: 352, height: 512 },
           scrollPosition: 0,
         },
       ]);

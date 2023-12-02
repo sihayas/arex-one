@@ -74,7 +74,7 @@ export default function Home() {
       <div
         className={`text-[42px] leading-[33px] text-black absolute top-8 left-8`}
       >
-        Rx
+        arex
       </div>
 
       {activeFeed && (

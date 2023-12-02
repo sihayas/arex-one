@@ -40,14 +40,16 @@ export const GetDimensions = (pageName: PageName) => {
   // are adding the foundation height of the artifact + height of entry content
   useEffect(() => {
     if (activePage.name === "artifact") {
-      setBaseHeight(activePage.dimensions.height + 432);
+      const base = 400;
+      const target = base + 41;
+      setBaseHeight(activePage.dimensions.height + target);
     }
   }, [pages, activePage.name, activePage.dimensions.height]);
 
   const dimensions = {
     user: {
-      base: { width: 576, height: 352 },
-      target: { width: 576, height: 352 },
+      base: { width: 384, height: 512 },
+      target: { width: 384, height: 512 },
     },
     album: {
       base: { width: 480, height: 480 },

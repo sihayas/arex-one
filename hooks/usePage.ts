@@ -4,7 +4,7 @@ import { useSoundContext } from "@/context/SoundContext";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { v4 as uuidv4 } from "uuid";
-import { Artifact, User } from "@/types/dbTypes";
+import { Artifact, UserType } from "@/types/dbTypes";
 
 // Handle RecordFeed Click
 export const useArtifact = (artifact: Artifact) => {
@@ -33,7 +33,7 @@ export const useArtifact = (artifact: Artifact) => {
 };
 
 // Handle User Click
-export const useUser = (author: User) => {
+export const useUser = (author: UserType) => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
   return () => {

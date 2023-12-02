@@ -94,44 +94,8 @@ const User = () => {
         <>
           {/* Left Side */}
           <div className={`flex flex-col`}>
-            {/* Avatar and Link */}
-            <div className={`flex gap-4 relative`}>
-              <Image
-                className={`rounded-full border border-silver`}
-                src={userData.image}
-                alt={`${userData.name}'s avatar`}
-                width={80}
-                height={80}
-              />
-
-              {/* Name and Bio */}
-              <div className={`flex flex-col gap-[6px] mt-[18px] w-full`}>
-                <div className={`text-sm text-gray4 leading-[9px] font-medium`}>
-                  {userData.username}
-                </div>
-                <div
-                  className={`text-sm text-gray2 w-full max-h-[105px] line-clamp-5`}
-                >
-                  {userData.bio}
-                </div>
-              </div>
-
-              {isOwnProfile ? (
-                <SettingsIcon
-                  onClick={() => handleSubSectionClick("settings")}
-                  className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}
-                />
-              ) : (
-                <FollowButton
-                  followState={followState}
-                  handleFollowUnfollow={handleFollowUnfollow}
-                  linkColor={linkColor}
-                  linkText={linkText}
-                />
-              )}
-            </div>
             {/* Sounds Count */}
-            <div className={`flex flex-col gap-[12px] mt-auto`}>
+            <div className={`flex flex-col gap-[12px]`}>
               <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
               <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
                 {userData.soundCount}
@@ -144,6 +108,43 @@ const User = () => {
               <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
                 {userData._count.record}
               </div>
+            </div>
+
+            {/* Avatar and Link */}
+            <div className={`flex gap-4 relative mt-auto`}>
+              <Image
+                className={`rounded-full border border-silver`}
+                src={userData.image}
+                alt={`${userData.name}'s avatar`}
+                width={64}
+                height={64}
+              />
+
+              {/* Name and Bio */}
+              {/*<div className={`flex flex-col gap-[6px] mt-[18px] w-full`}>*/}
+              {/*  <div className={`text-sm text-gray4 leading-[9px] font-medium`}>*/}
+              {/*    {userData.username}*/}
+              {/*  </div>*/}
+              {/*  <div*/}
+              {/*    className={`text-sm text-gray2 w-full max-h-[105px] line-clamp-5`}*/}
+              {/*  >*/}
+              {/*    {userData.bio}*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+
+              {/*{isOwnProfile ? (*/}
+              {/*  <SettingsIcon*/}
+              {/*    onClick={() => handleSubSectionClick("settings")}*/}
+              {/*    className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}*/}
+              {/*  />*/}
+              {/*) : (*/}
+              {/*  <FollowButton*/}
+              {/*    followState={followState}*/}
+              {/*    handleFollowUnfollow={handleFollowUnfollow}*/}
+              {/*    linkColor={linkColor}*/}
+              {/*    linkText={linkText}*/}
+              {/*  />*/}
+              {/*)}*/}
             </div>
             {/* Logo and Date */}
             {/*<div className={`flex items-center text-gray3 font-serif`}>*/}
