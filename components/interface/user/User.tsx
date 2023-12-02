@@ -132,19 +132,19 @@ const User = () => {
               {/*  </div>*/}
               {/*</div>*/}
 
-              {/*{isOwnProfile ? (*/}
-              {/*  <SettingsIcon*/}
-              {/*    onClick={() => handleSubSectionClick("settings")}*/}
-              {/*    className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}*/}
-              {/*  />*/}
-              {/*) : (*/}
-              {/*  <FollowButton*/}
-              {/*    followState={followState}*/}
-              {/*    handleFollowUnfollow={handleFollowUnfollow}*/}
-              {/*    linkColor={linkColor}*/}
-              {/*    linkText={linkText}*/}
-              {/*  />*/}
-              {/*)}*/}
+              {isOwnProfile ? (
+                <SettingsIcon
+                  onClick={() => handleSubSectionClick("settings")}
+                  className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}
+                />
+              ) : (
+                <FollowButton
+                  followState={followState}
+                  handleFollowUnfollow={handleFollowUnfollow}
+                  linkColor={linkColor}
+                  linkText={linkText}
+                />
+              )}
             </div>
             {/* Logo and Date */}
             {/*<div className={`flex items-center text-gray3 font-serif`}>*/}
