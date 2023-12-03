@@ -375,7 +375,7 @@ const Nav = () => {
   }
 
   return (
-    <div className="absolute z-50 flex items-start gap-1 -bottom-6 -left-6 max-h-9">
+    <div className="absolute z-50 flex items-start gap-1 -bottom-8 -left-8 max-h-9">
       {left}
       {/*{middle}*/}
       {right}

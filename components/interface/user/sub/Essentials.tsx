@@ -9,10 +9,9 @@ interface EssentialsProps {
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   return (
-    <motion.div className={`w-max flex items-center pt-8 z-20`}>
+    <motion.div className={`w-max flex items-center pb-8 z-20`}>
       {essentials.map((essential, i) => (
         <Artwork
-          className={`outline outline-1 outline-silver`}
           sound={essential.appleData}
           width={160}
           height={160}

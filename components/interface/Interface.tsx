@@ -48,8 +48,8 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 480, height: 544 },
-      target: { width: 480, height: 544 },
+      base: { width: 480, height: 576 },
+      target: { width: 480, height: 576 },
     },
     album: {
       base: { width: 480, height: 480 },
@@ -124,7 +124,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   useEffect(() => {
     const adjustBoxShadow = async () => {
       const initialBoxShadow =
-        "4px 7px 18px 0px rgba(0, 0, 0, 0.04), 15px 28px 32px 0px rgba(0, 0, 0, 0.04), 35px 63px 43px 0px rgba(0, 0, 0, 0.02), 61px 113px 51px 0px rgba(0, 0, 0, 0.01), 96px 176px 56px 0px rgba(0, 0, 0, 0.00)";
+        "8px 15px 38px 0px rgba(0, 0, 0, 0.10), 34px 59px 68px 0px rgba(0, 0, 0, 0.08), 75px 134px 92px 0px rgba(0, 0, 0, 0.05), 134px 238px 109px 0px rgba(0, 0, 0, 0.01), 210px 372px 120px 0px rgba(0, 0, 0, 0.00)";
       const finalBoxShadow =
         "2px 4px 9px 0px rgba(0, 0, 0, 0.02), 8px 14px 16px 0px rgba(0, 0, 0, 0.02), 18px 32px 22px 0px rgba(0, 0, 0, 0.01), 31px 57px 26px 0px rgba(0, 0, 0, 0.005), 48px 88px 28px 0px rgba(0, 0, 0, 0.002)";
 

@@ -94,22 +94,11 @@ const User = () => {
       ) : (
         <>
           {/* Left Side */}
-          <div className={`flex flex-col`}>
-            <Essentials essentials={userData.essentials} />
-            <div className="text-xs text-gray3 leading-[9px] uppercase mt-[23px] ml-8">
-              essentials
-            </div>
-
-            <Recents artifacts={userData.artifact} />
-            <div className="text-xs text-gray3 leading-[9px] uppercase mt-[23px] ml-8">
-              recent
-            </div>
+          <div className={`flex flex-col w-full`}>
             {/* Avatar & Link */}
-            <div
-              className={`flex justify-between items-end gap-8 relative mt-auto p-8`}
-            >
+            <div className={`flex justify-between gap-8 relative p-8`}>
               {/* Name & Bio */}
-              <div className={`flex flex-col w-full`}>
+              <div className={`flex flex-col w-full mt-8`}>
                 <div
                   className={`text-[24px] text-black leading-[17px] font-semibold`}
                 >
@@ -121,21 +110,21 @@ const User = () => {
                   {userData.bio}
                 </div>
 
-                <div className={`flex items-center mt-[19px] gap-8`}>
+                <div className={`flex items-center mt-[44px] gap-8`}>
                   {/* Sounds Count */}
-                  <div className={`flex flex-col gap-[12px] min-w-[4rem]`}>
+                  <div className={`flex items-end gap-2 min-w-[4rem]`}>
                     <div className="text-xs text-gray3 leading-[9px] font-medium">
-                      SOUNDS
+                      SOUND
                     </div>
                     <div className="text-gray4 font-baskerville text-[24px] leading-[16px]">
-                      {userData.soundCount}
+                      {userData.soundCount}*
                     </div>
                   </div>
 
                   {/*/!* Records Count *!/*/}
-                  <div className={`flex flex-col gap-[12px]`}>
-                    <div className="text-xs text-gray3 leading-[9px] font-medium">
-                      RECORDS
+                  <div className={`flex items-end gap-[12px]`}>
+                    <div className="text-xs text-gray3 leading-[9px] font-medium uppercase">
+                      artifacts
                     </div>
                     <div className="text-gray4 font-baskerville text-[24px] leading-[16px]">
                       {/*{userData._count.record}*/}
@@ -145,7 +134,7 @@ const User = () => {
                 </div>
               </div>
 
-              <div className={`min-w-[96px] flex items-end`}>
+              <div className={`min-w-[96px] flex`}>
                 <Image
                   className={`rounded-full border border-silver min-w-[96px] shadow-userAvi`}
                   src={userData.image}
@@ -155,20 +144,30 @@ const User = () => {
                 />
               </div>
 
-              {isOwnProfile ? (
-                <SettingsIcon
-                  onClick={() => handleSubSectionClick("settings")}
-                  className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}
-                />
-              ) : (
-                <FollowButton
-                  followState={followState}
-                  handleFollowUnfollow={handleFollowUnfollow}
-                  linkColor={linkColor}
-                  linkText={linkText}
-                />
-              )}
+              {/*{isOwnProfile ? (*/}
+              {/*  <SettingsIcon*/}
+              {/*    onClick={() => handleSubSectionClick("settings")}*/}
+              {/*    className={`absolute left-0 bottom-0 bg-white rounded-full cursor-pointer`}*/}
+              {/*  />*/}
+              {/*) : (*/}
+              {/*  <FollowButton*/}
+              {/*    followState={followState}*/}
+              {/*    handleFollowUnfollow={handleFollowUnfollow}*/}
+              {/*    linkColor={linkColor}*/}
+              {/*    linkText={linkText}*/}
+              {/*  />*/}
+              {/*)}*/}
             </div>
+            <div className="text-xs text-gray3 leading-[9px] uppercase ml-8">
+              recent
+            </div>
+            <Recents artifacts={userData.artifact} />
+
+            <div className="text-xs text-gray3 leading-[9px] uppercase mb-[23px] ml-8 mt-auto">
+              essentials
+            </div>
+            <Essentials essentials={userData.essentials} />
+
             {/* Logo and Date */}
             {/*<div className={`flex items-center text-gray3 font-serif`}>*/}
             {/*  <div className="text-xs leading-[13px] text-black">RX</div>*/}

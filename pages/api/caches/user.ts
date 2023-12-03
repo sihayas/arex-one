@@ -26,7 +26,7 @@ async function fetchOrCacheUser(userId: string) {
           artifact: {
             where: { isDeleted: false, type: "entry" },
             orderBy: { createdAt: "desc" },
-            take: 7,
+            take: 5,
             select: {
               id: true,
               sound: { select: { appleId: true, type: true } },
