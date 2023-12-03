@@ -1,31 +1,53 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { Essential } from "@/types/dbTypes";
+import { Artifact, Essential } from "@/types/dbTypes";
 import { fetchAndCacheSoundsByType } from "@/pages/api/sounds/get/sound";
-import { AlbumData } from "@/types/appleTypes";
+import { fetchAndCacheSoundsByTypes } from "@/pages/api/sounds/get/sounds";
 import { fetchOrCacheUser } from "@/pages/api/caches/user";
 
-async function attachAlbumData(
-  essentials: Essential[],
-  albumIds: string[],
-): Promise<Essential[]> {
-  const albumData = await fetchAndCacheSoundsByType(
-    albumIds.join(","),
-    "albums",
-  );
-  const albumDataMap = albumData.reduce(
-    (map: { [key: string]: AlbumData }, album) => {
-      // @ts-ignore
-      map[album.id] = album;
-      return map;
-    },
-    {},
+async function enrichEssentialsWithAlbumData(essentials: Essential[]) {
+  if (essentials.length === 0) {
+    return essentials;
+  }
+
+  const albumIds = essentials.map((e) => e.sound.appleId).join(",");
+  const albumData = await fetchAndCacheSoundsByType(albumIds, "albums");
+  const albumDataMap = Object.fromEntries(
+    // @ts-ignore
+    albumData.map((album) => [album.id, album]),
   );
 
   return essentials.map((essential) => ({
     ...essential,
-    appleAlbumData: albumDataMap[essential.sound.appleId],
+    appleData: albumDataMap[essential.sound.appleId],
   }));
+}
+
+async function enrichArtifactsWithSoundData(artifacts: Artifact[]) {
+  if (artifacts.length === 0) {
+    return artifacts;
+  }
+
+  // Separate the ids by type
+  const idTypes = { albums: [], songs: [] };
+  artifacts.forEach((artifact) => {
+    idTypes[artifact.sound.type].push(artifact.sound.appleId);
+  });
+
+  // Fetch data for both types
+  const responseData = await fetchAndCacheSoundsByTypes(idTypes);
+
+  // Function to map sound data
+  const mapSoundData = (artifact, appleData) => ({
+    ...artifact,
+    appleData: appleData.get(artifact.sound.appleId),
+  });
+
+  // Enrich artifacts with sound data
+  return artifacts.map((artifact) => {
+    const type = artifact.sound.type;
+    return mapSoundData(artifact, responseData[type]);
+  });
 }
 
 async function countUniqueAlbumsAndTracks(
@@ -69,15 +91,13 @@ export default async function handle(
     let pageUserData = await fetchOrCacheUser(pageUserId);
 
     // Attach album data to essentials
-    if (pageUserData.essentials.length > 0) {
-      const albumIds = pageUserData.essentials.map(
-        (essential: Essential) => essential.sound.appleId,
-      );
-      pageUserData.essentials = await attachAlbumData(
-        pageUserData.essentials,
-        albumIds,
-      );
-    }
+    pageUserData.essentials = await enrichEssentialsWithAlbumData(
+      pageUserData.essentials,
+    );
+
+    pageUserData.artifact = await enrichArtifactsWithSoundData(
+      pageUserData.artifact,
+    );
 
     const { soundCount } = await countUniqueAlbumsAndTracks(pageUserId);
 

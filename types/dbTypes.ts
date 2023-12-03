@@ -50,7 +50,7 @@ export interface Essential {
   sound: Sound;
   createdAt: Date;
   updatedAt: Date;
-  appleAlbumData: AlbumData;
+  appleData: AlbumData;
 }
 
 export interface Follows {

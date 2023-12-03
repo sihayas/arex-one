@@ -44,8 +44,6 @@ export const Artwork = ({
         alt={`artwork`}
         width={width}
         height={height}
-        onDragStart={(e) => e.preventDefault()}
-        draggable="false"
         loading="lazy"
         quality={100}
         ref={ref}

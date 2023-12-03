@@ -4,6 +4,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion } from "framer-motion";
 import { useUserDataQuery } from "@/lib/apiHelper/user";
 import Essentials from "@/components/interface/user/sub/Essentials";
+import Recents from "@/components/interface/user/sub/Recents";
 import Settings from "@/components/interface/user/sub/Settings";
 import { JellyComponent } from "@/components/global/Loading";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -35,13 +36,13 @@ const User = () => {
   } = useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
   const isOwnProfile = user?.id === pageUser?.id;
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
   // Fetch user data and albums
   const { data, isLoading, isError, followState, handleFollowUnfollow } =
     useUserDataQuery(user?.id, pageUser?.id);
   const { userData } = data || {};
 
+  console.log("userData", userData);
   // Determine link status based on follow state
   const linkStatus =
     followState?.followingAtoB && followState?.followingBtoA
@@ -84,7 +85,7 @@ const User = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full flex p-8"
+      className="w-full h-full flex"
     >
       {isLoading ? (
         <JellyComponent className={``} isVisible={true} />
@@ -94,43 +95,65 @@ const User = () => {
         <>
           {/* Left Side */}
           <div className={`flex flex-col`}>
-            {/* Sounds Count */}
-            <div className={`flex flex-col gap-[12px]`}>
-              <div className="text-xs text-gray3 leading-[9px]">SOUNDS</div>
-              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                {userData.soundCount}
-              </div>
+            <Essentials essentials={userData.essentials} />
+            <div className="text-xs text-gray3 leading-[9px] uppercase mt-[23px] ml-8">
+              essentials
             </div>
 
-            {/* Records Count */}
-            <div className={`flex flex-col gap-[12px] mt-[23px]`}>
-              <div className="text-xs text-gray3 leading-[9px]">RECORDS</div>
-              <div className="text-gray4 font-baskerville text-[30px] leading-[20px]">
-                {userData._count.record}
-              </div>
+            <Recents artifacts={userData.artifact} />
+            <div className="text-xs text-gray3 leading-[9px] uppercase mt-[23px] ml-8">
+              recent
             </div>
+            {/* Avatar & Link */}
+            <div
+              className={`flex justify-between items-end gap-8 relative mt-auto p-8`}
+            >
+              {/* Name & Bio */}
+              <div className={`flex flex-col w-full`}>
+                <div
+                  className={`text-[24px] text-black leading-[17px] font-semibold`}
+                >
+                  {userData.username}
+                </div>
+                <div
+                  className={`text-sm text-gray2 w-full max-h-[288px] line-clamp-5 mt-[9px]`}
+                >
+                  {userData.bio}
+                </div>
 
-            {/* Avatar and Link */}
-            <div className={`flex gap-4 relative mt-auto`}>
-              <Image
-                className={`rounded-full border border-silver`}
-                src={userData.image}
-                alt={`${userData.name}'s avatar`}
-                width={64}
-                height={64}
-              />
+                <div className={`flex items-center mt-[19px] gap-8`}>
+                  {/* Sounds Count */}
+                  <div className={`flex flex-col gap-[12px] min-w-[4rem]`}>
+                    <div className="text-xs text-gray3 leading-[9px] font-medium">
+                      SOUNDS
+                    </div>
+                    <div className="text-gray4 font-baskerville text-[24px] leading-[16px]">
+                      {userData.soundCount}
+                    </div>
+                  </div>
 
-              {/* Name and Bio */}
-              {/*<div className={`flex flex-col gap-[6px] mt-[18px] w-full`}>*/}
-              {/*  <div className={`text-sm text-gray4 leading-[9px] font-medium`}>*/}
-              {/*    {userData.username}*/}
-              {/*  </div>*/}
-              {/*  <div*/}
-              {/*    className={`text-sm text-gray2 w-full max-h-[105px] line-clamp-5`}*/}
-              {/*  >*/}
-              {/*    {userData.bio}*/}
-              {/*  </div>*/}
-              {/*</div>*/}
+                  {/*/!* Records Count *!/*/}
+                  <div className={`flex flex-col gap-[12px]`}>
+                    <div className="text-xs text-gray3 leading-[9px] font-medium">
+                      RECORDS
+                    </div>
+                    <div className="text-gray4 font-baskerville text-[24px] leading-[16px]">
+                      {/*{userData._count.record}*/}
+                      44
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`min-w-[96px] flex items-end`}>
+                <Image
+                  className={`rounded-full border border-silver min-w-[96px] shadow-userAvi`}
+                  src={userData.image}
+                  alt={`${userData.name}'s avatar`}
+                  width={96}
+                  height={96}
+                />
+              </div>
 
               {isOwnProfile ? (
                 <SettingsIcon
@@ -154,8 +177,6 @@ const User = () => {
             {/*</div>*/}
             {/*  */}
           </div>
-
-          {createPortal(<Essentials essentials={userData.essentials} />, cmdk)}
 
           {/* Right Side , Essentials & Settings*/}
         </>

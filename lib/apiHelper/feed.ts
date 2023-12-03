@@ -112,7 +112,5 @@ const attachSoundData = async (activityData: Activity[]) => {
     }
   });
 
-  console.log(activityData);
-
   return activityData;
 };

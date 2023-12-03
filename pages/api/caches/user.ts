@@ -11,16 +11,36 @@ async function fetchOrCacheUser(userId: string) {
         select: {
           _count: { select: { artifact: true, followedBy: true } },
           essentials: {
-            include: { sound: { select: { appleId: true } } },
+            select: {
+              id: true,
+              rank: true,
+              sound: { select: { appleId: true } },
+            },
             orderBy: { rank: "desc" },
           },
           followedBy: {
             where: { isDeleted: false },
             select: { followerId: true },
           },
+
+          artifact: {
+            where: { isDeleted: false, type: "entry" },
+            orderBy: { createdAt: "desc" },
+            take: 7,
+            select: {
+              id: true,
+              sound: { select: { appleId: true, type: true } },
+              content: {
+                select: {
+                  rating: true,
+                },
+              },
+            },
+          },
           username: true,
           id: true,
           image: true,
+          bio: true,
         },
       })
       .then(

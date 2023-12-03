@@ -3,31 +3,6 @@ import { fetchSoundsByType } from "@/lib/global/musicKit";
 import { AlbumData } from "@/types/appleTypes";
 import { getCache, setCache } from "@/lib/global/redis";
 
-// Returns apple album objects given a list of type of IDs
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  try {
-    const { ids, type } = req.query;
-    if (
-      typeof ids !== "string" ||
-      ids.length === 0 ||
-      typeof type !== "string" ||
-      !["albums", "songs"].includes(type)
-    ) {
-      return res.status(400).json({ error: "Invalid request parameters" });
-    }
-
-    const responseData = await fetchAndCacheSoundsByType(ids, type);
-
-    res.status(200).json(responseData);
-  } catch (error) {
-    console.error(`Error in /api/sounds/get/sound: ${error}`);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-}
-
 export async function fetchAndCacheSoundsByType(ids: any, type: string) {
   const idsArray = ids.split(",");
   let responseDataMap = new Map(idsArray.map((id: string) => [id, null]));
@@ -77,4 +52,29 @@ export async function fetchAndCacheSoundsByType(ids: any, type: string) {
   }
 
   return Array.from(responseDataMap.values()).filter(Boolean);
+}
+
+// Returns apple album objects given a list of type of IDs
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  try {
+    const { ids, type } = req.query;
+    if (
+      typeof ids !== "string" ||
+      ids.length === 0 ||
+      typeof type !== "string" ||
+      !["albums", "songs"].includes(type)
+    ) {
+      return res.status(400).json({ error: "Invalid request parameters" });
+    }
+
+    const responseData = await fetchAndCacheSoundsByType(ids, type);
+
+    res.status(200).json(responseData);
+  } catch (error) {
+    console.error(`Error in /api/sounds/get/sound: ${error}`);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 }
