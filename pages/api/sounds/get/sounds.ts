@@ -63,7 +63,6 @@ export async function fetchAndCacheSoundsByTypes(
     }
   }
 
-  console.log("responseData", responseData);
   return responseData;
 }
 

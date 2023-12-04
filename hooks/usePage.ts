@@ -32,7 +32,7 @@ export const useArtifact = (artifact: Artifact) => {
   };
 };
 
-// Handle User Click
+// Handle Personal Click
 export const useUser = (author: UserType) => {
   const { setPages, setIsVisible } = useInterfaceContext();
 

@@ -54,7 +54,7 @@ const Reply = ({ notification }: SignalReplyProps) => {
         <div className={`flex items-center gap-1 mt-[10px]`}>
           {isAggregated ? (
             <>
-              {/* User Avatars */}
+              {/* Personal Avatars */}
               {users.length > 2 && (
                 <div className={`flex`}>
                   {users

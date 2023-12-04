@@ -4,40 +4,6 @@ import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
-// Common logic for fetching feed data
-const useGenericFeedQuery = (
-  key: string,
-  url: string,
-  userId: string,
-  limit: number,
-) => {
-  return useInfiniteQuery(
-    [key, userId],
-    async ({ pageParam = 1 }) => {
-      const { data } = await axios.get(url, {
-        params: { userId, page: pageParam, limit },
-      });
-
-      const { activities, pagination } = data.data;
-
-      if (!activities || !pagination) {
-        throw new Error("Unexpected server response structure");
-      }
-
-      const mergedData = await attachSoundData(activities);
-
-      console.log("Merged data:", data);
-
-      return { data: mergedData, pagination };
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
-      enabled: !!userId,
-      refetchOnWindowFocus: false,
-    },
-  );
-};
-
 // Fetch profile feed
 export const useFeedQuery = (userId: string, limit = 6) => {
   const { user } = useInterfaceContext();
@@ -65,6 +31,38 @@ export const useRecentFeedQuery = (userId: string, limit = 6) => {
   return { ...result };
 };
 
+// Common logic for fetching feed data
+const useGenericFeedQuery = (
+  key: string,
+  url: string,
+  userId: string,
+  limit: number,
+) => {
+  return useInfiniteQuery(
+    [key, userId],
+    async ({ pageParam = 1 }) => {
+      const { data } = await axios.get(url, {
+        params: { userId, page: pageParam, limit },
+      });
+
+      const { activities, pagination } = data.data;
+
+      if (!activities || !pagination) {
+        throw new Error("Unexpected server response structure");
+      }
+
+      const mergedData = await attachSoundData(activities);
+
+      return { data: mergedData, pagination };
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
+      enabled: !!userId,
+      refetchOnWindowFocus: false,
+    },
+  );
+};
+
 function extractArtifact(activity: Activity) {
   return activity.type === ActivityType.Artifact
     ? activity.artifact
@@ -75,22 +73,22 @@ function extractArtifact(activity: Activity) {
     : null;
 }
 
-// Utility function to attach album and track data to activities
-const attachSoundData = async (activityData: Activity[]) => {
+// Utility function to attach album and song data to activities
+export const attachSoundData = async (activityData: Activity[]) => {
   const albumIds: string[] = [];
-  const trackIds: string[] = [];
+  const songIds: string[] = [];
 
   activityData.forEach((activity) => {
     const artifact = extractArtifact(activity);
     if (artifact) {
       const { type, appleId } = artifact.sound;
       if (type === "albums") albumIds.push(appleId);
-      else if (type === "songs") trackIds.push(appleId);
+      else if (type === "songs") songIds.push(appleId);
     }
   });
 
   // Fetch album and track data
-  const idTypes = { albums: albumIds, songs: trackIds };
+  const idTypes = { albums: albumIds, songs: songIds };
   const response = await axios.get(`/api/sounds/get/sounds`, {
     params: { idTypes: JSON.stringify(idTypes) },
   });

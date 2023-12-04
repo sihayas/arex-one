@@ -6,7 +6,7 @@ import { useMotionValueEvent, useScroll } from "framer-motion";
 import { JellyComponent } from "@/components/global/Loading";
 import { ArtifactExtended } from "@/types/globalTypes";
 
-const User = ({
+const Personal = ({
   userId,
   scrollContainerRef,
 }: {
@@ -65,4 +65,4 @@ const User = ({
   );
 };
 
-export default User;
+export default Personal;

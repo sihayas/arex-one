@@ -1,64 +1,78 @@
-// import React, { Fragment, useRef } from "react";
-// import { useUserSoundtrackQuery } from "@/lib/apiHelper/userAPI";
-//
-// import User from "../../../artifacts/User";
-// import format from "date-fns/format";
-// import { Record } from "@/types/dbTypes";
-// import { JellyComponent } from "@/components/global/Loading";
-//
-// const Soundtrack = ({ userId }: { userId: string }) => {
-//   const containerRef = useRef<HTMLDivElement>(null);
-//
-//   const {
-//     data: mergedData,
-//     isLoading,
-//     isError,
-//   } = useUserSoundtrackQuery(userId);
-//
-//   let lastMonth = "";
-//   return (
-//     <div
-//       ref={containerRef}
-//       className="flex flex-col w-1/2 overflow-scroll h-full pt-8 gap-4"
-//     >
-//       {isLoading ? (
-//         <JellyComponent
-//           className={
-//             "absolute left-1/2 top-1/2 translate-x-1/2 translate-y-1/2"
-//           }
-//           key="jelly"
-//           isVisible={true}
-//         />
-//       ) : isError ? (
-//         <p>An error occurred</p>
-//       ) : (
-//         mergedData.map((record: Record, index: number) => {
-//           const createdAt = new Date(record.createdAt);
-//           const currentMonth = format(createdAt, "MMMM");
-//
-//           const isNewMonth = lastMonth !== currentMonth;
-//
-//           if (isNewMonth) {
-//             lastMonth = currentMonth;
-//           }
-//
-//           return (
-//             <Fragment key={record.albumId}>
-//               {isNewMonth && (
-//                 <h2 className="px-8 text-xs uppercase font-medium text-gray3 -mb-4 tracking-widest">
-//                   {currentMonth}
-//                 </h2>
-//               )}
-//               <User
-//                 record={record}
-//                 associatedType={record.album ? "album" : "song"}
-//               />
-//             </Fragment>
-//           );
-//         })
-//       )}
-//     </div>
-//   );
-// };
-//
-// export default Soundtrack;
+import React, { useRef } from "react";
+import { useSoundtrackQuery } from "@/lib/apiHelper/user";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore from "swiper";
+import "swiper/swiper-bundle.css";
+import "swiper/css";
+import "swiper/css/effect-cards";
+import { EffectCards } from "swiper/modules";
+import { Artwork } from "@/components/global/Artwork";
+import { useMotionValueEvent, useScroll } from "framer-motion";
+import { useInterfaceContext } from "@/context/InterfaceContext";
+
+const Soundtrack = ({ userId }: { userId: string | undefined }) => {
+  const { scrollContainerRef } = useInterfaceContext();
+  const swiperRef = useRef<SwiperCore>();
+
+  const { data, isLoading, isError } = useSoundtrackQuery(userId);
+
+  // Track scrolling for infinite scroll
+  const { scrollYProgress } = useScroll({
+    container: scrollContainerRef,
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    console.log("x changed to", latest);
+
+    const swiper = swiperRef.current;
+    if (swiper) {
+      swiper.setProgress(latest);
+    }
+  });
+
+  if (!data) return;
+  return (
+    <div className="flex flex-col w-full h-full">
+      <div className={`min-h-[100vh]`}>
+        <Swiper
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          effect={"cards"}
+          grabCursor={true}
+          modules={[EffectCards]}
+          cardsEffect={{ slideShadows: false }}
+          className="!fixed"
+        >
+          {data.map((activity, index) => (
+            <SwiperSlide key={index}>
+              <div className={`relative`}>
+                <Artwork
+                  className="rounded-2xl rounded-b-none"
+                  // @ts-ignore
+                  sound={activity.artifact?.appleData}
+                  width={320}
+                  height={320}
+                  bgColor={
+                    activity.artifact?.appleData?.attributes?.artwork?.bgColor
+                  }
+                />
+                <div
+                  className={`absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-[#F4F4F4] z-50`}
+                />
+              </div>
+
+              <div className={`p-4 pt-[11px]`}>
+                <div className={`text-sm text-gray5 line-clamp-5`}>
+                  {activity.artifact?.content?.text}
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </div>
+  );
+};
+
+export default Soundtrack;

@@ -18,7 +18,7 @@ export default async function handle(
     typeof req.query.userId === "string" ? req.query.userId : undefined;
 
   if (!userId) {
-    return res.status(400).json({ error: "User ID is required." });
+    return res.status(400).json({ error: "Personal ID is required." });
   }
 
   const page = Number(req.query.page) || 1;

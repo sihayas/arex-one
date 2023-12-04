@@ -31,6 +31,7 @@ async function enrichArtifactsWithSoundData(artifacts: Artifact[]) {
   // Separate the ids by type
   const idTypes = { albums: [], songs: [] };
   artifacts.forEach((artifact) => {
+    // @ts-ignore
     idTypes[artifact.sound.type].push(artifact.sound.appleId);
   });
 
@@ -38,6 +39,7 @@ async function enrichArtifactsWithSoundData(artifacts: Artifact[]) {
   const responseData = await fetchAndCacheSoundsByTypes(idTypes);
 
   // Function to map sound data
+  // @ts-ignore
   const mapSoundData = (artifact, appleData) => ({
     ...artifact,
     appleData: appleData.get(artifact.sound.appleId),
@@ -83,7 +85,7 @@ export default async function handle(
   ) {
     return res
       .status(400)
-      .json({ error: "Signed in User is required and must be a string." });
+      .json({ error: "Signed in Personal is required and must be a string." });
   }
 
   try {

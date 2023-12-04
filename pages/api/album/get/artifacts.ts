@@ -21,7 +21,7 @@ export default async function handle(
   if (!soundId || !userId) {
     return res
       .status(400)
-      .json({ error: "Sound ID and User ID are required." });
+      .json({ error: "Sound ID and Personal ID are required." });
   }
 
   const sort = req.query.sort || "newest";

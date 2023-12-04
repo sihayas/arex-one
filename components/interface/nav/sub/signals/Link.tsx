@@ -55,7 +55,7 @@ const Link = ({ notification }: SignalLinkProps) => {
           {users[0].username}
         </div>
         <div className={`flex items-center gap-1 mt-[10px]`}>
-          {/* User Avatars */}
+          {/* Personal Avatars */}
           {users.length > 2 && (
             <div className={`flex`}>
               {users

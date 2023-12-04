@@ -1,7 +1,7 @@
 import Layout from "../components/layout";
 import Head from "next/head";
 import React from "react";
-import User from "@/components/feed/User";
+import Personal from "@/components/feed/Personal";
 import Trending from "@/components/feed/Trending";
 import Recent from "@/components/feed/Recent";
 import Avatar from "@/components/global/Avatar";
@@ -73,13 +73,11 @@ export default function Home() {
       </Head>
       <div
         className={`text-[42px] leading-[33px] text-black absolute top-8 left-8`}
-      >
-        arex
-      </div>
+      ></div>
 
       {activeFeed && (
         <>
-          {/* Stack of User History for Feed */}
+          {/* Stack of Personal History for Feed */}
           <div
             className={`flex items-center gap-2 fixed w-full translate-y-8 z-50`}
           >
@@ -127,7 +125,7 @@ export default function Home() {
                 ))}
             </motion.div>
 
-            {/*  Right Side / Authenticated User & Other Feeds */}
+            {/*  Right Side / Authenticated Personal & Other Feeds */}
             <div className={`flex items-center gap-8`}>
               {/* Shift the auth user up to make space for another */}
               <motion.div
@@ -224,7 +222,7 @@ export default function Home() {
                     scrollContainerRef={scrollContainerRef}
                   />
                 ) : activeFeed === user ? (
-                  <User
+                  <Personal
                     userId={activeFeed.id}
                     scrollContainerRef={scrollContainerRef}
                   />

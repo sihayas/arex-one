@@ -68,11 +68,6 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
     setThreadcrumbs([]);
   };
 
-  // log every time replyParent changes
-  useEffect(() => {
-    console.log("replyParent changed");
-  }, [replyParent]);
-
   return (
     <ThreadcrumbContext.Provider
       value={{

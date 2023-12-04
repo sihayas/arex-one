@@ -12,7 +12,7 @@ export default async function handle(
 
   const userId =
     typeof req.query.userId === "string" ? req.query.userId : undefined;
-  if (!userId) return res.status(400).json({ error: "User ID required." });
+  if (!userId) return res.status(400).json({ error: "Personal ID required." });
 
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 8;

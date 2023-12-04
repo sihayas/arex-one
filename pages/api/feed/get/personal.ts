@@ -47,6 +47,7 @@ export default async function handle(
       take: limit + 1,
       select: {
         id: true,
+        type: true,
         artifact: {
           select: {
             id: true,
@@ -54,7 +55,6 @@ export default async function handle(
             _count: { select: { replies: true, hearts: true } },
           },
         },
-        type: true,
       },
     });
 
@@ -76,8 +76,6 @@ export default async function handle(
         heartedByUser: (activity.artifact?.hearts?.length ?? 0) > 0,
       },
     }));
-
-    console.log("Enriched activities:", enrichedActivities);
 
     return res.status(200).json({
       data: {

@@ -9,7 +9,7 @@ async function seedUsers() {
       username: "user3",
       image:
         "https://i.pinimg.com/474x/3c/08/4c/3c084c62320470a8719600a02887cfff.jpg",
-      bio: "User 3 bio",
+      bio: "Personal 3 bio",
       emailVerified: null,
       password_hash: null,
       dateJoined: new Date(),
@@ -38,7 +38,7 @@ async function seedUsers() {
       username: "user4",
       image:
         "https://i.pinimg.com/474x/11/19/f9/1119f96357199a037aee85560c3ffb9d.jpg",
-      bio: "User 4 bio",
+      bio: "Personal 4 bio",
       emailVerified: null,
       password_hash: null,
       dateJoined: new Date(),
@@ -67,7 +67,7 @@ async function seedUsers() {
       username: "user5",
       image:
         "https://i.pinimg.com/474x/8a/83/a2/8a83a23b494b80404fa8c26455a99126.jpg",
-      bio: "User 5 bio",
+      bio: "Personal 5 bio",
       emailVerified: null,
       password_hash: null,
       dateJoined: new Date(),
@@ -96,7 +96,7 @@ async function seedUsers() {
       username: "user6",
       image:
         "https://i.pinimg.com/474x/fb/0f/88/fb0f8838de2b43e6c98225ee8db83051.jpg",
-      bio: "User 6 bio",
+      bio: "Personal 6 bio",
       emailVerified: null,
       password_hash: null,
       dateJoined: new Date(),
@@ -125,7 +125,7 @@ async function seedUsers() {
       username: "user7",
       image:
         "https://i.pinimg.com/474x/3a/b7/3e/3ab73ed328ddd75961cbc2d4de401a11.jpg",
-      bio: "User 7 bio",
+      bio: "Personal 7 bio",
       emailVerified: null,
       password_hash: null,
       dateJoined: new Date(),
@@ -154,7 +154,7 @@ async function seedUsers() {
   for (const user of users) {
     try {
       await prisma.user.create({ data: user });
-      console.log("User created:", user.email);
+      console.log("Personal created:", user.email);
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error creating user:", user.email, error.message);

@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { Activity, ActivityType } from "@/types/dbTypes";
+import { AlbumData, SongData } from "@/types/appleTypes";
+import { attachSoundData } from "@/lib/apiHelper/feed";
 
 // Get user data, handle follow/unfollow, and fetch favorites
 export const useUserDataQuery = (
@@ -59,59 +62,28 @@ export const useUserSettingsQuery = (userId: string) => {
 };
 
 // Soundtrack (sound history) handlers
-// export const useUserSoundtrackQuery = (userId: string) => {
-//   const { data, isLoading, isError } = useQuery(
-//     ["mergedData", userId],
-//     async () => {
-//       const url = `/apiHelper/user/get/soundtrack`;
-//       const response = await axios.get(url, {
-//         params: {
-//           userId,
-//         },
-//       });
-//
-//       const soundtrackData = response.data;
-//
-//       // Extract albumIds and trackIds
-//       const albumIds = soundtrackData
-//         .filter((artifact: Record): boolean => Boolean(artifact.album))
-//         .map((artifact: Record): string => artifact.album!.appleId);
-//
-//       const trackIds = soundtrackData
-//         .filter((artifact: Record): boolean => Boolean(artifact.track))
-//         .map((artifact: Record): string => artifact.track!.appleId);
-//
-//       // Fetch albums and tracks by ids
-//       const idTypes = { albums: albumIds, songs: trackIds };
-//       const anyData = await fetchSoundsByTypes(idTypes);
-//
-//       // Create lookup tables for quick access
-//       const albumLookup = Object.fromEntries(
-//         anyData
-//           .filter((item: AlbumData | SongData) => item.type === "albums")
-//           .map((album: AlbumData) => [album.id, album]),
-//       );
-//
-//       const trackLookup = Object.fromEntries(
-//         anyData
-//           .filter((item: AlbumData | SongData) => item.type === "songs")
-//           .map((track: SongData) => [track.id, track]),
-//       );
-//
-//       // Merge soundtrackData, albumData, and trackData
-//       const finalMergedData = soundtrackData.map((item: Record) => {
-//         return {
-//           ...item,
-//           appleAlbumData: item.album ? albumLookup[item.album.appleId] : null,
-//           appleTrackData: item.track ? trackLookup[item.track.appleId] : null,
-//         };
-//       });
-//       return finalMergedData;
-//     },
-//   );
-//
-//   return { data, isLoading, isError };
-// };
+export const useSoundtrackQuery = (userId: string | undefined) => {
+  return useQuery(
+    ["soundtrack", userId],
+    async () => {
+      const url = `/api/user/get/soundtrack`;
+      const response = await axios.get(url, {
+        params: {
+          userId,
+        },
+      });
+
+      const activities = response.data;
+
+      return await attachSoundData(activities);
+    },
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!userId,
+      retry: false,
+    },
+  );
+};
 
 // Following handlers
 export const followUser = async (followerId: string, followingId: string) => {

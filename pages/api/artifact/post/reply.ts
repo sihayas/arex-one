@@ -4,9 +4,9 @@ import { createReplyActivity } from "@/pages/api/middleware/createActivity";
 import { createNotification } from "@/pages/api/middleware/createNotification";
 import { createAggKey } from "@/pages/api/middleware/createAggKey";
 import { ActivityType } from "@prisma/client";
-import { Reply } from "@/types/dbTypes";
+import { ReplyType } from "@/types/dbTypes";
 
-type NewReplyBase = Pick<Reply, "id" | "authorId" | "replyToId">;
+type NewReplyBase = Pick<ReplyType, "id" | "authorId" | "replyToId">;
 
 async function notifyReplyChain(
   replyingToId: string,

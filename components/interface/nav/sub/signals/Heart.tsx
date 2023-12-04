@@ -64,7 +64,7 @@ const Heart = ({ notification }: SignalHeartProps) => {
         <div className={`flex items-center gap-1 mt-[10px]`}>
           {isAggregated ? (
             <>
-              {/* User Avatars */}
+              {/* Personal Avatars */}
               <div className={`flex`}>
                 {users
                   .slice(2, 5)

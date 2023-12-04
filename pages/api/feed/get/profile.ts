@@ -16,7 +16,7 @@ export default async function handle(
 
     // Validation
     if (!userId) {
-      return res.status(400).json({ error: "User ID is required." });
+      return res.status(400).json({ error: "Personal ID is required." });
     }
 
     const page = Number(req.query.page) || 1;

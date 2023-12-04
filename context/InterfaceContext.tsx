@@ -107,12 +107,9 @@ export const InterfaceContextProvider = ({
             .eq("email", session.user.email)
             .single();
 
-          console.log(userData);
-
           if (fetchError) throw fetchError;
           setUser(userData);
           setActiveFeed(userData);
-          console.log(userData);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }

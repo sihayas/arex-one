@@ -2,14 +2,14 @@
 import Heart from "./signals/Heart";
 import Reply from "./signals/Reply";
 import Link from "./signals/Link";
-import { Notification, User } from "@/types/dbTypes";
+import { Notification, UserType } from "@/types/dbTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 export interface extendedNotification extends Notification {
   soundAppleId: { type: string; id: string };
   fetchedSound: SongData | AlbumData;
-  users: User[];
+  users: UserType[];
 }
 
 // Signals component
