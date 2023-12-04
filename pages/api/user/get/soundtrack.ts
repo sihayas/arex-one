@@ -16,11 +16,15 @@ export default async function getUniqueAlbumsByUserId(
     return res.status(405).json({ error: "Method not allowed." });
   }
 
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 6;
+
   try {
     const activities = await prisma.activity.findMany({
       where: { artifact: { authorId: userId }, type: "artifact" },
       orderBy: { createdAt: "desc" },
-      take: 6,
+      skip: (page - 1) * limit,
+      take: limit + 1,
       select: {
         id: true,
         type: true,
@@ -34,10 +38,11 @@ export default async function getUniqueAlbumsByUserId(
       },
     });
 
+    const hasMorePages = activities.length > limit;
+    if (hasMorePages) activities.pop();
+
     // Extract activity IDs
     const activityIds = activities.map((activity) => activity.id);
-
-    console.log("activityIds:OST", activityIds);
 
     // Fetch enriched artifacts
     const detailedActivityData = await fetchOrCacheActivities(activityIds);
@@ -53,7 +58,12 @@ export default async function getUniqueAlbumsByUserId(
     }));
 
     // Return enriched activities
-    return res.status(200).json(enrichedActivities);
+    return res.status(200).json({
+      data: {
+        activities: enrichedActivities,
+        pagination: { nextPage: hasMorePages ? page + 1 : null },
+      },
+    });
   } catch (error) {
     console.error("Error fetching unique albums:", error);
     return res.status(500).json({ error: "Error fetching unique albums." });

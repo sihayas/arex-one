@@ -1,8 +1,6 @@
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Activity, ActivityType } from "@/types/dbTypes";
-import { AlbumData, SongData } from "@/types/appleTypes";
 import { attachSoundData } from "@/lib/apiHelper/feed";
 
 // Get user data, handle follow/unfollow, and fetch favorites
@@ -63,24 +61,28 @@ export const useUserSettingsQuery = (userId: string) => {
 
 // Soundtrack (sound history) handlers
 export const useSoundtrackQuery = (userId: string | undefined) => {
-  return useQuery(
+  return useInfiniteQuery(
     ["soundtrack", userId],
-    async () => {
+    async ({ pageParam = 1 }) => {
       const url = `/api/user/get/soundtrack`;
-      const response = await axios.get(url, {
+      const { data } = await axios.get(url, {
         params: {
           userId,
+          page: pageParam,
+          limit: 6,
         },
       });
 
-      const activities = response.data;
+      const { activities, pagination } = data.data;
 
-      return await attachSoundData(activities);
+      const mergedData = await attachSoundData(activities);
+
+      return { data: mergedData, pagination };
     },
     {
-      refetchOnWindowFocus: false,
+      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       enabled: !!userId,
-      retry: false,
+      refetchOnWindowFocus: false,
     },
   );
 };

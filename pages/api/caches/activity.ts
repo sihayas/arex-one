@@ -41,7 +41,6 @@ async function fetchOrCacheActivities(ids: string[]): Promise<ActivityData[]> {
     const id = ids[index];
     if (result.status === "fulfilled" && result.value) {
       activityData[id] = result.value;
-      console.log(`Found activity ${id} in cache`, result.value);
     } else {
       idsToFetch.push(id);
     }

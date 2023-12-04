@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSoundtrackQuery } from "@/lib/apiHelper/user";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
@@ -9,12 +9,18 @@ import { EffectCards } from "swiper/modules";
 import { Artwork } from "@/components/global/Artwork";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import { GetDimensions } from "@/components/interface/Interface";
+import { JellyComponent } from "@/components/global/Loading";
 
 const Soundtrack = ({ userId }: { userId: string | undefined }) => {
   const { scrollContainerRef } = useInterfaceContext();
   const swiperRef = useRef<SwiperCore>();
+  const heightContainerRef = useRef<HTMLDivElement>(null);
 
-  const { data, isLoading, isError } = useSoundtrackQuery(userId);
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useSoundtrackQuery(userId);
+  const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
+  console.log("allActivities", data);
 
   // Track scrolling for infinite scroll
   const { scrollYProgress } = useScroll({
@@ -22,18 +28,28 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
   });
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    console.log("x changed to", latest);
-
+    // console.log("x changed to", latest);
     const swiper = swiperRef.current;
     if (swiper) {
       swiper.setProgress(latest);
+      // swiper.slideToClosest();
     }
   });
+
+  useEffect(() => {
+    if (heightContainerRef.current && data) {
+      const baseHeight = 576;
+      heightContainerRef.current.style.minHeight = `${
+        allActivities.length * 48 + baseHeight
+      }px`;
+    }
+  }, [data, scrollContainerRef]);
 
   if (!data) return;
   return (
     <div className="flex flex-col w-full h-full">
-      <div className={`min-h-[100vh]`}>
+      {/* Outer Container */}
+      <div ref={heightContainerRef}>
         <Swiper
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
@@ -44,7 +60,7 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
           cardsEffect={{ slideShadows: false }}
           className="!fixed"
         >
-          {data.map((activity, index) => (
+          {allActivities.map((activity, index) => (
             <SwiperSlide key={index}>
               <div className={`relative`}>
                 <Artwork
@@ -69,6 +85,25 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
               </div>
             </SwiperSlide>
           ))}
+          {/* Pagination */}
+          {hasNextPage ? (
+            <button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+            >
+              {isFetchingNextPage ? (
+                <JellyComponent
+                  className={"fixed left-[247px] bottom-8"}
+                  key="jelly"
+                  isVisible={isFetchingNextPage}
+                />
+              ) : (
+                "more"
+              )}
+            </button>
+          ) : (
+            <div className="text-xs text-action">end of line</div>
+          )}
         </Swiper>
       </div>
     </div>
