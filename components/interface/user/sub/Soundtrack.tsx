@@ -7,9 +7,13 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 import { EffectCards } from "swiper/modules";
 import { Artwork } from "@/components/global/Artwork";
-import { useMotionValueEvent, useScroll } from "framer-motion";
+import {
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { GetDimensions } from "@/components/interface/Interface";
 import { JellyComponent } from "@/components/global/Loading";
 
 const Soundtrack = ({ userId }: { userId: string | undefined }) => {
@@ -19,8 +23,8 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSoundtrackQuery(userId);
+
   const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
-  console.log("allActivities", data);
 
   // Track scrolling for infinite scroll
   const { scrollYProgress } = useScroll({
@@ -28,7 +32,6 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
   });
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // console.log("x changed to", latest);
     const swiper = swiperRef.current;
     if (swiper) {
       swiper.setProgress(latest);
@@ -74,7 +77,7 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
                   }
                 />
                 <div
-                  className={`absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-[#F4F4F4] z-50`}
+                  className={`absolute bottom-0 w-full h-full bg-gradient-to-t from-[#F4F4F4] z-50`}
                 />
               </div>
 
@@ -92,11 +95,7 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
               disabled={isFetchingNextPage}
             >
               {isFetchingNextPage ? (
-                <JellyComponent
-                  className={"fixed left-[247px] bottom-8"}
-                  key="jelly"
-                  isVisible={isFetchingNextPage}
-                />
+                <JellyComponent className={``} isVisible={isFetchingNextPage} />
               ) : (
                 "more"
               )}
