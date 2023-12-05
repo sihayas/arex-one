@@ -65,7 +65,7 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
         effect={"cards"}
         grabCursor={true}
         modules={[EffectCards]}
-        className="!fixed"
+        className="!fixed !-z-10"
       >
         {allActivities.map((activity, index) => {
           if (!activity.artifact) return null;

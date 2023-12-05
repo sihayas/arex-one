@@ -6,7 +6,6 @@ import { useUserDataQuery } from "@/lib/apiHelper/user";
 import Essentials from "@/components/interface/user/sub/Essentials";
 import Recents from "@/components/interface/user/sub/Recents";
 import Settings from "@/components/interface/user/sub/Settings";
-import { JellyComponent } from "@/components/global/Loading";
 import { useUser } from "@supabase/auth-helpers-react";
 import { SettingsIcon, CardsIcon } from "@/components/icons";
 import FollowButton from "./sub/components/Link";
@@ -55,7 +54,6 @@ const User = () => {
   const { data, isLoading, isError, followState, handleFollowUnfollow } =
     useUserDataQuery(user?.id, pageUser?.id);
 
-  const isSettings = subSection === "settings";
   const isSoundtrack = subSection === "soundtrack";
   const isEssentials = subSection === "essentials";
 
@@ -77,7 +75,9 @@ const User = () => {
       className="w-full h-full flex flex-col relative"
     >
       {/* Header */}
-      <div className={`fixed z-50 top-0 flex justify-between gap-8 p-8 w-full`}>
+      <div
+        className={`fixed z-[100] top-0 flex justify-between gap-8 p-8 w-full h-fit`}
+      >
         {/* Text Info & Avatar */}
         <motion.div
           initial={{ y: 32 }}
