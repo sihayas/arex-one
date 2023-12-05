@@ -4,29 +4,20 @@ import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
-// Fetch profile feed
-export const useFeedQuery = (userId: string, limit = 6) => {
-  const { user } = useInterfaceContext();
-  const isProfile = user?.id !== userId;
-  const url = isProfile ? `/api/feed/get/profile` : `/api/feed/get/personal`;
+export const useFeedQuery = (userId: string, type: string, limit = 6) => {
+  let url;
+
+  if (type === "personal") {
+    url = `/api/feed/get/personal`;
+  } else if (type === "bloom") {
+    url = `/api/feed/get/bloom`;
+  } else if (type === "recent") {
+    url = `/api/feed/get/recent`;
+  }
+
+  if (!url) throw new Error("Invalid type passed to useTestQuery");
 
   const result = useGenericFeedQuery("feed", url, userId, limit);
-
-  return { ...result };
-};
-
-// Fetch ranked feed
-export const useBloomingFeedQuery = (userId: string, limit = 6) => {
-  const url = `/api/feed/get/bloom`;
-  const result = useGenericFeedQuery("bloomingFeed", url, userId, limit);
-
-  return { ...result };
-};
-
-// Fetch recently interacted feed
-export const useRecentFeedQuery = (userId: string, limit = 6) => {
-  const url = `/api/feed/get/recent`;
-  const result = useGenericFeedQuery("recentRecords", url, userId, limit);
 
   return { ...result };
 };

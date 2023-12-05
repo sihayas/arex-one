@@ -45,7 +45,7 @@ const Avatar: React.FC<UserAvatarProps> = ({
   return (
     <Image
       onClick={onClick ? onClick : handleUserClick}
-      className={`rounded-full ${className} aspect-square cursor-pointer`}
+      className={`rounded-full ${className} aspect-square cursor-pointer shadow-shadowKitLow`}
       src={imageSrc}
       alt={altText}
       height={height}

@@ -65,7 +65,7 @@ input {
   right: 0;
   height: 50px; /* Height of the gradient mask */
   background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
-  pointer-events: none; /* Ensures the gradient doesn't interfere with scrolling */
+  pointer-events: none;
 }
 
 
@@ -80,7 +80,7 @@ input {
   display: flex;
   flex-direction: column;
   border-radius: 32px;
-    background-color: #F4F4F4;
+  background-color: #FFF;
   position: relative;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04);
 }

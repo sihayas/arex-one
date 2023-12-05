@@ -44,7 +44,7 @@ const SettingsButton = ({
 );
 
 const User = () => {
-  const { user, pages, setIsVisible } = useInterfaceContext();
+  const { user, pages } = useInterfaceContext();
   const pageUser = pages[pages.length - 1].user;
   const isOwnProfile = user?.id === pageUser?.id;
 
@@ -68,6 +68,7 @@ const User = () => {
 
   if (isLoading) return;
   if (isError) return <div>Error</div>;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}

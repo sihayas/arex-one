@@ -52,6 +52,7 @@ const Stars: React.FC<StarsProps> = ({
       {soundName && (
         <div className={`flex gap-1 text-xs`}>
           <div className="font-medium line-clamp-1">{soundName}</div>
+          &middot;
           <div className="line-clamp-1">{artist}</div>
         </div>
       )}

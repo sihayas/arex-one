@@ -15,6 +15,9 @@ import {
 } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { JellyComponent } from "@/components/global/Loading";
+import Image from "next/image";
+import artworkURL from "@/components/global/ArtworkURL";
+import Stars from "@/components/global/Stars";
 
 const Soundtrack = ({ userId }: { userId: string | undefined }) => {
   const { scrollContainerRef } = useInterfaceContext();
@@ -26,7 +29,6 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
 
   const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
 
-  // Track scrolling for infinite scroll
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,
   });
@@ -36,6 +38,11 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
     if (swiper) {
       swiper.setProgress(latest);
       // swiper.slideToClosest();
+    }
+    if (latest > 0.8 && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage().catch((error) => {
+        console.error("Error fetching next page:", error);
+      });
     }
   });
 
@@ -50,61 +57,58 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
 
   if (!data) return;
   return (
-    <div className="flex flex-col w-full h-full">
-      {/* Outer Container */}
-      <div ref={heightContainerRef}>
-        <Swiper
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-          }}
-          effect={"cards"}
-          grabCursor={true}
-          modules={[EffectCards]}
-          cardsEffect={{ slideShadows: false }}
-          className="!fixed"
-        >
-          {allActivities.map((activity, index) => (
-            <SwiperSlide key={index}>
-              <div className={`relative`}>
-                <Artwork
-                  className="rounded-2xl rounded-b-none"
-                  // @ts-ignore
-                  sound={activity.artifact?.appleData}
-                  width={320}
-                  height={320}
-                  bgColor={
-                    activity.artifact?.appleData?.attributes?.artwork?.bgColor
-                  }
-                />
-                <div
-                  className={`absolute bottom-0 w-full h-full bg-gradient-to-t from-[#F4F4F4] z-50`}
-                />
-              </div>
+    <div className={`z-50`} ref={heightContainerRef}>
+      <Swiper
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+        }}
+        effect={"cards"}
+        grabCursor={true}
+        modules={[EffectCards]}
+        className="!fixed"
+      >
+        {allActivities.map((activity, index) => {
+          if (!activity.artifact) return null;
+          const color = activity.artifact.appleData.attributes.artwork.bgColor;
+          const title = activity.artifact.appleData.attributes.name;
+          const artist = activity.artifact.appleData.attributes.artistName;
+          const url = artworkURL(
+            activity.artifact.appleData.attributes.artwork.url,
+            "1120",
+          );
 
-              <div className={`p-4 pt-[11px]`}>
-                <div className={`text-sm text-gray5 line-clamp-5`}>
-                  {activity.artifact?.content?.text}
-                </div>
+          return (
+            <SwiperSlide key={index}>
+              <Stars
+                className={`bg-white absolute top-4 left-4 rounded-full w-max text-[#000] p-2 pr-[10px] shadow-shadowKitLow z-10 max-w-[282px]`}
+                rating={activity.artifact.content?.rating}
+                soundName={title}
+                artist={artist}
+              />
+              <Image
+                className={`cursor-pointer rounded-2xl rounded-b-none`}
+                src={url}
+                alt={`artwork`}
+                loading="lazy"
+                quality={100}
+                style={{ objectFit: "cover" }}
+                fill={true}
+              />
+              <div
+                style={{
+                  background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
+                }}
+                className="absolute bottom-0 w-full h-[192px]"
+              />
+              <div
+                className={`absolute px-4 text-sm text-white font-medium line-clamp-5 bottom-[10px]`}
+              >
+                {activity.artifact.content?.text}
               </div>
             </SwiperSlide>
-          ))}
-          {/* Pagination */}
-          {hasNextPage ? (
-            <button
-              onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage}
-            >
-              {isFetchingNextPage ? (
-                <JellyComponent className={``} isVisible={isFetchingNextPage} />
-              ) : (
-                "more"
-              )}
-            </button>
-          ) : (
-            <div className="text-xs text-action">end of line</div>
-          )}
-        </Swiper>
-      </div>
+          );
+        })}
+      </Swiper>
     </div>
   );
 };
