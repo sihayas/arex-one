@@ -98,7 +98,7 @@ const Soundtrack = ({ userId }: { userId: string | undefined }) => {
                 style={{
                   background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
                 }}
-                className="absolute bottom-0 w-full h-[192px]"
+                className="absolute bottom-0 w-full h-full"
               />
               <div
                 className={`absolute px-4 text-sm text-white font-medium line-clamp-5 bottom-[10px]`}

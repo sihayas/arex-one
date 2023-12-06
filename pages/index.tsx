@@ -5,25 +5,13 @@ import Dash from "@/components/global/Dash";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { UserType } from "@/types/dbTypes";
 import Image from "next/image";
 import Stream from "@/components/Stream";
 
 export default function Home() {
-  const { activeFeed, feedHistory, setActiveFeed, setFeedHistory, user } =
-    useInterfaceContext();
+  const { activeFeed, user } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const supabaseClient = useSupabaseClient();
-
-  const handleAvatarClick = (clickedUser: UserType) => {
-    // Move the clicked user to the front of the array
-    const reorderedHistory = feedHistory.filter((u) => u.id !== clickedUser.id);
-    reorderedHistory.unshift(clickedUser);
-
-    // Update the feedUserHistory and setActiveFeedUser
-    setFeedHistory(reorderedHistory);
-    setActiveFeed(clickedUser);
-  };
 
   if (!user) {
     return (
@@ -71,75 +59,22 @@ export default function Home() {
 
       {activeFeed && (
         <>
-          <div className={`flex items-center gap-8`}>
+          <div className={`absolute left-[167px] flex items-center gap-8`}>
             <Image
               className={`rounded-full`}
               src={user?.image}
               alt={`${user?.username}'s avatar`}
-              width={64}
-              height={64}
-              onClick={() => setActiveFeed(user)}
+              width={48}
+              height={48}
             />
-
-            {/* Show In Bloom Feed */}
-            {/*<motion.button*/}
-            {/*  initial={{ opacity: 0.2, scale: 0.75, boxShadow: "none" }}*/}
-            {/*  animate={*/}
-            {/*    activeFeed === "bloom"*/}
-            {/*      ? {*/}
-            {/*          opacity: 1,*/}
-            {/*          scale: 1,*/}
-            {/*          boxShadow:*/}
-            {/*            "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",*/}
-            {/*        }*/}
-            {/*      : {}*/}
-            {/*  }*/}
-            {/*  transition={{ type: "spring", stiffness: 100, damping: 20 }}*/}
-            {/*  onClick={() => setActiveFeed("bloom")}*/}
-            {/*  className={`p-1 rounded-full shadow-shadowKitLow relative`}*/}
-            {/*>*/}
-            {/*  <BloomIcon color={"#999"} />*/}
-            {/*  <div*/}
-            {/*    className={`absolute left-1/2 -translate-x-1/2 text-xs text-gray2 -top-6 w-max`}*/}
-            {/*  >*/}
-            {/*    IN BLOOM*/}
-            {/*  </div>*/}
-            {/*</motion.button>*/}
-
-            {/* Show In Bloom Feed */}
-            {/*<motion.button*/}
-            {/*  initial={{ opacity: 0.2, scale: 0.75, boxShadow: "none" }}*/}
-            {/*  animate={*/}
-            {/*    activeFeed === "recent"*/}
-            {/*      ? {*/}
-            {/*          opacity: 1,*/}
-            {/*          scale: 1,*/}
-            {/*          boxShadow:*/}
-            {/*            "0px 2px 4px 0px rgba(0, 0, 0, 0.08), 0px 0px 6px 0px rgba(0, 0, 0, 0.02)",*/}
-            {/*        }*/}
-            {/*      : {}*/}
-            {/*  }*/}
-            {/*  transition={{ type: "spring", stiffness: 100, damping: 20 }}*/}
-            {/*  onClick={() => setActiveFeed("recent")}*/}
-            {/*  className={`p-1 rounded-full shadow-shadowKitLow relative`}*/}
-            {/*>*/}
-            {/*  <RecentIcon color={"#999"} />*/}
-            {/*  <div*/}
-            {/*    className={`absolute left-1/2 -translate-x-1/2 text-xs text-gray2 -top-6 w-max`}*/}
-            {/*  >*/}
-            {/*    RECENT*/}
-            {/*  </div>*/}
-            {/*</motion.button>*/}
-
-            {/*    */}
           </div>
 
-          <Dash className="absolute translate-x-[190px] translate-y-8" />
+          <Dash className="absolute translate-x-[190px]" />
 
           {/* Feeds or Profile artifacts Container */}
           <motion.div
             ref={scrollContainerRef}
-            className={`relative flex flex-col gap-[50px] pl-0 p-12 pb-60 pt-28 max-w-screen max-h-[125vh] overflow-scroll scrollbar-none`}
+            className={`relative flex flex-col pl-0 p-12 pt-12 pb-60 gap-16 max-w-screen max-h-[125vh] overflow-scroll scrollbar-none`}
           >
             {scrollContainerRef && (
               <>
@@ -149,9 +84,9 @@ export default function Home() {
                     scrollContainerRef={scrollContainerRef}
                     type={"bloom"}
                   />
-                ) : activeFeed === user ? (
+                ) : activeFeed === "personal" ? (
                   <Stream
-                    userId={activeFeed.id}
+                    userId={user.id}
                     scrollContainerRef={scrollContainerRef}
                     type={"personal"}
                   />

@@ -75,7 +75,9 @@ export const useSound = () => {
         scrollPosition: 0,
       },
     ]);
-    setIsVisible(true);
+    setTimeout(() => {
+      setIsVisible(true);
+    }, 250);
   };
 
   return { handleSelectSound };

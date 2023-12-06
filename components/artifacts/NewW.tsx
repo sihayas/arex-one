@@ -1,7 +1,7 @@
 import React from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
-import { useArtifact } from "@/hooks/usePage";
+import { useArtifact, useSound } from "@/hooks/usePage";
 
 import { Artwork } from "../global/Artwork";
 import Avatar from "@/components/global/Avatar";
@@ -10,14 +10,20 @@ import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
+import ArtworkURL from "@/components/global/ArtworkURL";
+import Image from "next/image";
 
-interface FeedProps {
+interface NewWProps {
   artifact: ArtifactExtended;
 }
 
-export const Feed: React.FC<FeedProps> = ({ artifact }) => {
+export const NewW: React.FC<NewWProps> = ({ artifact }) => {
   const user = useUser();
+  const { handleSelectSound } = useSound();
+
   const sound = artifact.appleData;
+  const url = ArtworkURL(sound.attributes.artwork.url, "320");
+  const color = sound.attributes.artwork.bgColor;
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
@@ -31,42 +37,55 @@ export const Feed: React.FC<FeedProps> = ({ artifact }) => {
     artifact.author.id,
     user?.id,
   );
+
   const handleEntryClick = useArtifact(artifact);
+  const handleSoundClick = async () => {
+    await handleSelectSound(sound, url);
+  };
 
   if (!sound) return null;
 
-  const isAlbum = artifact.sound.type === "albums";
-  const bgColor = sound.attributes.artwork.bgColor;
-
   return (
-    <motion.div className="flex flex-col gap-4 w-fit relative">
-      {/* Artwork */}
-      {isAlbum ? (
-        <Artwork
-          outerClassName={`ml-[224px] w-fit h-fit`}
-          className="rounded-[32px]"
-          sound={sound}
-          width={320}
-          height={320}
-          rating={artifact.content?.rating}
-          bgColor={bgColor}
-          isFeed={true}
-          isAlbum={true}
-        />
-      ) : (
-        <div className={`ml-[224px] flex items-end`}>
-          <Artwork
-            outerClassName={`rounded-[32px]`}
-            className="rounded-[32px]"
-            sound={sound}
-            width={160}
-            height={160}
-            bgColor={bgColor}
-            isFeed={true}
-            isAlbum={false}
+    <motion.div className="flex flex-col gap-2 relative">
+      {/* Top */}
+      <div className={`ml-[224px] flex items-end relative`}>
+        {/* Artwork Capsule */}
+        <div
+          className={`flex bg-[#F4F4F4]/50 items-center gap-4 p-4 rounded-[32px] relative w-[384px] h-fit`}
+        >
+          <Image
+            className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
+            src={url}
+            alt={`artwork`}
+            loading="lazy"
+            quality={100}
+            width={128}
+            height={128}
+            onClick={handleSoundClick}
           />
+          {/* Names */}
+          <div className={`flex flex-col gap-3`}>
+            <p
+              className={`text-black font-medium text-xs leading-[9px] w-[162px]`}
+            >
+              {sound.attributes.name}
+            </p>
+            <p
+              className={`text-gray2 font-medium text-xs leading-[9px] min-w-[162px]`}
+            >
+              {sound.attributes.artistName}
+            </p>
+          </div>
         </div>
-      )}
+        <div
+          style={{
+            background: `#${color}`,
+            backgroundRepeat: "repeat, no-repeat",
+          }}
+          className={`absolute left-0 top-0 w-[160px] h-[160px] -z-10 blur-3xl rounded-full`}
+        />
+      </div>
+
       <div className={`flex items-end w-[608px] -z-20`}>
         {/* Username and Avatar*/}
         <div className={`flex items-center gap-2 h-fit`}>

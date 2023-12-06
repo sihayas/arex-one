@@ -1,34 +1,46 @@
 import React from "react";
+import { motion } from "framer-motion";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
-const Dash: React.FC<{
-  width?: string;
-  color?: string;
-  className?: string;
-  dotSize?: string;
-  spaceBetween?: string;
-}> = ({
+const Dash = ({
   width = "2px",
-  color = "rgba(0, 0, 0, 0.02)",
+  color = "rgba(0, 0, 0, 0.05)",
   className = "",
-  dotSize = "4",
+  dotSize = "1",
   spaceBetween = "8",
-}) => (
-  <svg
-    className={className}
-    style={{ width: "2px", height: "100%" }}
-    preserveAspectRatio="none"
-  >
-    <line
-      x1="50%"
-      y1="0"
-      x2="50%"
-      y2="100%"
-      stroke={color}
-      strokeWidth={width}
-      strokeDasharray={`${dotSize}, ${spaceBetween}`}
-      strokeLinecap="round"
-    />
-  </svg>
-);
+}) => {
+  const { isLoading } = useInterfaceContext();
+  const lineAnimation = isLoading
+    ? {
+        stroke: ["#A6FF47", "#A6FF47"],
+        opacity: [1, 0.5, 1],
+        transition: {
+          duration: 0.5,
+          repeat: Infinity,
+          ease: "linear",
+        },
+      }
+    : {};
+
+  return (
+    <svg
+      className={className}
+      style={{ width: width, height: "100%" }}
+      preserveAspectRatio="none"
+    >
+      <motion.line
+        x1="50%"
+        y1="0"
+        x2="50%"
+        y2="100%"
+        stroke={color}
+        strokeWidth={width}
+        strokeDasharray={`${dotSize}, ${spaceBetween}`}
+        strokeLinecap="round"
+        animate={lineAnimation}
+      />
+    </svg>
+  );
+};
 
 export default Dash;

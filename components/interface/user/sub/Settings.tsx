@@ -120,7 +120,7 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
           <div className={`flex gap-4 relative`} key={essential.id}>
             <Artwork
               className="rounded-xl border border-silver"
-              sound={essential.appleAlbumData}
+              sound={essential.appleData}
               width={96}
               height={96}
             />

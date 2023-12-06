@@ -36,12 +36,12 @@ export type InterfaceContext = {
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   session: Session | null;
   setSession: React.Dispatch<React.SetStateAction<any>>;
-  activeFeed: "user" | "bloom" | "recent" | null;
+  activeFeed: "personal" | "bloom" | "recent" | null;
   setActiveFeed: React.Dispatch<
-    React.SetStateAction<"user" | "bloom" | "recent" | null>
+    React.SetStateAction<"personal" | "bloom" | "recent" | null>
   >;
-  feedHistory: UserType[];
-  setFeedHistory: React.Dispatch<React.SetStateAction<UserType[]>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // Define the props for the InterfaceProvider component
@@ -71,6 +71,7 @@ export const InterfaceContextProvider = ({
 }: InterfaceContextProviderProps) => {
   // Control the visibility of the window
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Create a ref for animations scrolling within the window
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -80,9 +81,8 @@ export const InterfaceContextProvider = ({
 
   // Initialize the feed stack
   const [activeFeed, setActiveFeed] = useState<
-    "user" | "bloom" | "recent" | null
+    "personal" | "bloom" | "recent" | null
   >(null);
-  const [feedHistory, setFeedHistory] = useState<UserType[]>([]);
 
   // Prepare the user and session states
   const [user, setUser] = useState<UserType | null>(null);
@@ -109,7 +109,7 @@ export const InterfaceContextProvider = ({
 
           if (fetchError) throw fetchError;
           setUser(userData);
-          setActiveFeed(userData);
+          setActiveFeed("personal");
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -183,6 +183,10 @@ export const InterfaceContextProvider = ({
     };
   }, [pages, navigateBack]);
 
+  useEffect(() => {
+    console.log(isLoading);
+  }, [isLoading]);
+
   // Render the provider with the context value
   return (
     <InterfaceContext.Provider
@@ -199,8 +203,8 @@ export const InterfaceContextProvider = ({
         setSession,
         activeFeed,
         setActiveFeed,
-        feedHistory,
-        setFeedHistory,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}

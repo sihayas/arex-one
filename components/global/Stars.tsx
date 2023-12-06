@@ -43,17 +43,23 @@ const Stars: React.FC<StarsProps> = ({
   };
 
   return (
-    <div className={`flex items-center gap-2 ${className} max-w-[376px]`}>
+    <div className={`flex items-center gap-2 ${className}`}>
       {sound && (
         <Artwork className="rounded" sound={sound} width={24} height={24} />
       )}
       {rating && <div className={`min-w-[12px]`}>{getStarIcon(rating)}</div>}
       {isWisp && <WispIcon />}
       {soundName && (
-        <div className={`flex gap-1 text-xs`}>
-          <div className="font-medium line-clamp-1">{soundName}</div>
-          &middot;
-          <div className="line-clamp-1">{artist}</div>
+        <div className={`flex items-center gap-1 text-xs text-[#000]`}>
+          <div className="font-medium line-clamp-1 leading-[9px]">
+            {soundName}
+          </div>
+          {artist && (
+            <>
+              &middot;
+              <div className="line-clamp-1 leading-[9px]">{artist}</div>
+            </>
+          )}
         </div>
       )}
     </div>
