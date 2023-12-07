@@ -30,7 +30,7 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
   return (
     <motion.div
       ref={scrollContainerRef}
-      className="flex flex-col gap-2 scrollbar-none overflow-y-auto will-change-transform w-full h-[112px] pt-[52px] pb-[36px] snap-mandatory snap-y"
+      className="flex flex-col gap-2 scrollbar-none overflow-y-auto will-change-transform w-full h-[112px] pt-[52px] pb-[44px] snap-mandatory snap-y"
     >
       {/* Album Button */}
       <Button
@@ -76,7 +76,7 @@ const Button = ({
   });
 
   // Range of scroll progress (0 at end, 0.5 at center, 1 at start)
-  const scrollRange = [0, 0.5, 1];
+  const scrollRange = [0.25, 0.5, 0.75];
   // Map the range of scroll progress to
   const opacityValues = [0, 1, 0];
   // const scaleValues = [0.8, 1, 0.8];
@@ -87,7 +87,7 @@ const Button = ({
     <motion.button
       ref={ref}
       onClick={onClick}
-      className={`snap-center ${
+      className={`snap-center relative ${
         active ? "!text-black" : "text-gray2" + " hover:text-gray3"
       }`}
       style={{

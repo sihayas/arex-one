@@ -52,8 +52,8 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 480, height: 576 },
     },
     album: {
-      base: { width: 480, height: 480 },
-      target: { width: 480, height: maxHeight },
+      base: { width: 512, height: 480 },
+      target: { width: 512, height: maxHeight },
     },
     artifact: {
       base: { width: 432, height: baseHeight },

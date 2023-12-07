@@ -45,19 +45,16 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
         user={artifact.author}
       />
 
-      {/* Rating */}
-      <Stars
-        className={`bg-[#E5E5E6] absolute -top-[14px] left-[30px] rounded-full w-max text-[#808084] -z-10 p-[6px]`}
-        rating={artifact.content?.rating}
-      />
-
       {/* Rating, content & bubbles */}
       <div
-        className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[384px] w-fit mb-3 ml-3`}
+        className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[404px] w-fit mb-3 ml-3`}
       >
-        <div
-          className={`-z-10 bg-white rounded-[16px] w-[86px] h-[40px] absolute -top-[1px] -left-[1px]`}
-        ></div>
+        {/* Rating */}
+        <Stars
+          className={`absolute bg-white -top-[18px] -left-[18px] rounded-full w-max text-[#808084] p-2 shadow-shadowKitMedium z-10`}
+          rating={artifact.content?.rating}
+        />
+
         {/* Names */}
         <div
           className={`absolute -top-4 left-[18px] text-xs text-gray5 leading-[1] font-medium w-max`}

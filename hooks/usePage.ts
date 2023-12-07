@@ -69,7 +69,7 @@ export const useSound = () => {
         name: "album",
         sound: { sound: sound, artworkUrl },
         dimensions: {
-          width: 480,
+          width: 512,
           height: 832,
         },
         scrollPosition: 0,
