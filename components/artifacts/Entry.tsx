@@ -3,7 +3,6 @@ import React from "react";
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact, useSound } from "@/hooks/usePage";
 
-import { Artwork } from "../global/Artwork";
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
 import Stars from "@/components/global/Stars";
@@ -17,7 +16,7 @@ interface NewAProps {
   artifact: ArtifactExtended;
 }
 
-export const NewA: React.FC<NewAProps> = ({ artifact }) => {
+export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const user = useUser();
   const { handleSelectSound } = useSound();
 
@@ -45,7 +44,7 @@ export const NewA: React.FC<NewAProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <div className={`flex items-end gap-2 relative`}>
+    <div className={`flex items-end gap-2 relative group`}>
       {/* Username and Avatar*/}
       <div className={`flex items-center gap-2 h-fit`}>
         <p
@@ -65,16 +64,17 @@ export const NewA: React.FC<NewAProps> = ({ artifact }) => {
 
       {/* Content Inner / Card */}
       <motion.div
+        onClick={handleEntryClick}
         initial={{ rotate: -1 }}
         whileHover={{ scale: 0.95, rotate: 0 }}
         transition={{ type: "spring", stiffness: 220, damping: 13 }}
-        className={`flex flex-col rounded-[32px] bg-white relative w-[320px] h-[448px] shadow-shadowKitLow`}
+        className={`flex flex-col rounded-[32px] bg-white relative w-[320px] h-[448px] shadow-shadowKitLow will-change-transform`}
       >
         <Stars
-          className={`bg-white absolute top-6 left-6 rounded-full w-max text-[#000] p-2 shadow-shadowKitLow z-10 max-w-[282px]`}
+          className={`bg-white absolute top-6 left-6 rounded-full w-max text-[#000] p-2 pr-[10px] shadow-shadowKitLow z-10 max-w-[272px]`}
           rating={artifact.content?.rating}
-          // soundName={sound.attributes.name}
-          // artist={sound.attributes.artistName}
+          soundName={sound.attributes.name}
+          artist={sound.attributes.artistName}
         />
         <Image
           className={`cursor-pointer rounded-[32px]`}
@@ -84,7 +84,7 @@ export const NewA: React.FC<NewAProps> = ({ artifact }) => {
           quality={100}
           style={{ objectFit: "cover" }}
           fill={true}
-          onClick={handleSoundClick}
+          // onClick={handleSoundClick}
         />
         <div
           style={{

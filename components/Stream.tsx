@@ -4,8 +4,8 @@ import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { NewA } from "@/components/artifacts/NewA";
-import { NewW } from "@/components/artifacts/NewW";
+import { Entry } from "@/components/artifacts/Entry";
+import { Wisp } from "@/components/artifacts/Wisp";
 
 const Stream = ({
   userId,
@@ -49,9 +49,9 @@ const Stream = ({
       {allActivities.map((activity: Activity) => (
         <Fragment key={activity.id}>
           {activity.artifact && activity.artifact.type === "entry" ? (
-            <NewA artifact={activity.artifact as ArtifactExtended} />
+            <Entry artifact={activity.artifact as ArtifactExtended} />
           ) : activity.artifact && activity.artifact.type === "wisp" ? (
-            <NewW artifact={activity.artifact as ArtifactExtended} />
+            <Wisp artifact={activity.artifact as ArtifactExtended} />
           ) : (
             "No artifact available for this activity."
           )}

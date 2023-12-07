@@ -83,7 +83,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   // Shift width and height of shape-shifter/window while scrolling
   const { scrollY } = useScroll({ container: scrollContainerRef });
-  const maxScroll = 24;
+  const maxScroll = 1;
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],

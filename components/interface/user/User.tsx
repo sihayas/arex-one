@@ -21,10 +21,7 @@ const SoundtrackButton = ({
 }: {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }) => (
-  <button
-    className={`p-[6px] border border-gray3 rounded-full`}
-    onClick={onClick}
-  >
+  <button className={`p-2 rounded-full shadow-shadowKitLow`} onClick={onClick}>
     <CardsIcon />
   </button>
 );
@@ -34,10 +31,7 @@ const SettingsButton = ({
 }: {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }) => (
-  <button
-    className={`p-[6px] border border-gray3 rounded-full`}
-    onClick={onClick}
-  >
+  <button className={`p-2 rounded-full shadow-shadowKitLow`} onClick={onClick}>
     <SettingsIcon />
   </button>
 );

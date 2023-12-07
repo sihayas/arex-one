@@ -17,7 +17,7 @@ interface NewWProps {
   artifact: ArtifactExtended;
 }
 
-export const NewW: React.FC<NewWProps> = ({ artifact }) => {
+export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
   const user = useUser();
   const { handleSelectSound } = useSound();
 
@@ -54,7 +54,7 @@ export const NewW: React.FC<NewWProps> = ({ artifact }) => {
           className={`flex bg-[#F4F4F4]/50 items-center gap-4 p-4 rounded-[32px] relative w-[384px] h-fit`}
         >
           <Image
-            className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
+            className={`cursor-pointer rounded-[16px] shadow-shadowKitLow -rotate-2`}
             src={url}
             alt={`artwork`}
             loading="lazy"
@@ -66,7 +66,7 @@ export const NewW: React.FC<NewWProps> = ({ artifact }) => {
           {/* Names */}
           <div className={`flex flex-col gap-3`}>
             <p
-              className={`text-black font-medium text-xs leading-[9px] w-[162px]`}
+              className={`text-black font-medium text-sm leading-[10px] w-[162px]`}
             >
               {sound.attributes.name}
             </p>
