@@ -19,6 +19,10 @@ import { AlbumData, TrackData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import Statline from "@/components/interface/album/sub/Dial";
+import { createPortal } from "react-dom";
+import Avatar from "@/components/global/Avatar";
+import Stars from "@/components/global/Stars";
+import Heart from "@/components/global/Heart";
 
 const springConfig = { damping: 22, stiffness: 180 };
 const scaleArtConfig = { damping: 20, stiffness: 122 };
@@ -28,6 +32,7 @@ const yArtConfig = { damping: 20, stiffness: 180 };
 const Album = () => {
   const { selectedSound } = useSoundContext();
   const { scrollContainerRef } = useInterfaceContext();
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
   const [activeSong, setActiveSong] = useState<TrackData | null>(null);
   const [sortOrder, setSortOrder] = useState<
@@ -46,19 +51,19 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  const xArtKeyframes = useTransform(scrollY, [0, 1, 2], [0, -2400, 160]);
+  const xArtKeyframes = useTransform(scrollY, [0, 1], [0, 176]);
   const xArt = useSpring(xArtKeyframes, xArtConfig);
 
-  const yArtKeyframes = useTransform(scrollY, [0, 1], [0, 680]);
+  const yArtKeyframes = useTransform(scrollY, [0, 1], [0, 664]);
   const yArt = useSpring(yArtKeyframes, yArtConfig);
 
   const scaleArtKeyframes = useTransform(scrollY, [0, 1], [1, 0.1]);
   const scaleArt = useSpring(scaleArtKeyframes, scaleArtConfig);
 
-  const xDialKeyframes = useTransform(scrollY, [0, 1], [-160, -32]);
+  const xDialKeyframes = useTransform(scrollY, [0, 1], [-176, -32]);
   const xDial = useSpring(xDialKeyframes, springConfig);
 
-  const yDialKeyframes = useTransform(scrollY, [0, 1], [160, 808]);
+  const yDialKeyframes = useTransform(scrollY, [0, 1], [176, 808]);
   const yDial = useSpring(yDialKeyframes, springConfig);
 
   const scaleDialKeyframes = useTransform(scrollY, [0, 1], [1, 0.6]);
@@ -82,25 +87,29 @@ const Album = () => {
       exit={{ opacity: 0 }}
       className="w-full h-full"
     >
-      <motion.div
-        style={{
-          x: xArt,
-          y: yArt,
-          scale: scaleArt,
-          borderRadius,
-        }}
-        className="absolute pointer-events-none overflow-hidden z-50 right-0 top-0"
-      >
-        <Image
-          src={selectedSound.artworkUrl || "/public/images/default.png"}
-          alt={`${selectedSound.sound.attributes.name} artwork`}
-          width={512}
-          height={512}
-          quality={100}
-          draggable="false"
-          onDragStart={(e) => e.preventDefault()}
-        />
-      </motion.div>
+      {createPortal(
+        <motion.div
+          style={{
+            x: xArt,
+            y: yArt,
+            scale: scaleArt,
+            borderRadius,
+          }}
+          className="absolute pointer-events-none overflow-hidden z-50 right-0 top-0"
+        >
+          <Image
+            src={selectedSound.artworkUrl}
+            alt={`${selectedSound.sound.attributes.name} artwork`}
+            width={512}
+            height={512}
+            quality={100}
+            draggable="false"
+            onDragStart={(e) => e.preventDefault()}
+          />
+        </motion.div>,
+        cmdk,
+      )}
+
       {/* Empty 480 px ghost div to take up space */}
       <div className="w-full h-[24px]">&nbsp;</div>
 
@@ -129,7 +138,7 @@ const Album = () => {
 
       {/* Rating */}
       <motion.div
-        className={`absolute z-50 pointer-events-none right-0 top-0 flex items-center justify-center`}
+        className={`absolute z-50 pointer-events-none right-0 top-0 flex items-center justify-center drop-shadow`}
         style={{
           x: xDial,
           y: yDial,

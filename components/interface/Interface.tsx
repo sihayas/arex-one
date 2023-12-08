@@ -52,12 +52,12 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 480, height: 576 },
     },
     album: {
-      base: { width: 512, height: 480 },
+      base: { width: 512, height: 512 },
       target: { width: 512, height: maxHeight },
     },
     artifact: {
-      base: { width: 432, height: baseHeight },
-      target: { width: 432, height: maxHeight },
+      base: { width: 480, height: baseHeight },
+      target: { width: 480, height: maxHeight },
     },
   };
 
@@ -124,7 +124,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   useEffect(() => {
     const adjustBoxShadow = async () => {
       const initialBoxShadow =
-        "8px 15px 38px 0px rgba(0, 0, 0, 0.10), 34px 59px 68px 0px rgba(0, 0, 0, 0.08), 75px 134px 92px 0px rgba(0, 0, 0, 0.05), 134px 238px 109px 0px rgba(0, 0, 0, 0.01), 210px 372px 120px 0px rgba(0, 0, 0, 0.00)";
+        "0px 11px 24px 0px rgba(130, 130, 130, 0.12), 0px 44px 44px 0px rgba(130, 130, 130, 0.10), 0px 99px 60px 0px rgba(130, 130, 130, 0.06), 0px 176px 71px 0px rgba(130, 130, 130, 0.02), 0px 276px 77px 0px rgba(130, 130, 130, 0.00)";
       const finalBoxShadow =
         "2px 4px 9px 0px rgba(0, 0, 0, 0.02), 8px 14px 16px 0px rgba(0, 0, 0, 0.02), 18px 32px 22px 0px rgba(0, 0, 0, 0.01), 31px 57px 26px 0px rgba(0, 0, 0, 0.005), 48px 88px 28px 0px rgba(0, 0, 0, 0.002)";
 

@@ -25,7 +25,7 @@ const Dash = ({
   return (
     <svg
       className={className}
-      style={{ width: width, height: "100%" }}
+      style={{ width: width, height: "100%", zIndex: -10 }}
       preserveAspectRatio="none"
     >
       <motion.line

@@ -39,7 +39,7 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
         active={!activeSong}
         scrollContainerRef={scrollContainerRef}
       >
-        <div className="w-[calculate(100%-32px)] text-end transition line-clamp-1 will-change-transform text-xs font-medium">
+        <div className="w-[calculate(100%-32px)] text-end transition line-clamp-1 will-change-transform text-sm font-medium">
           {albumName}
         </div>
       </Button>
@@ -52,7 +52,7 @@ const Filter = ({ songs, onActiveSongChange, albumName }: FilterProps) => {
           scrollContainerRef={scrollContainerRef}
         >
           {/* Name */}
-          <div className="w-full text-end transition line-clamp-1 will-change-transform text-xs">
+          <div className="w-full text-end transition line-clamp-1 will-change-transform text-sm font-medium">
             {track.attributes.name}
           </div>
         </Button>
@@ -76,7 +76,7 @@ const Button = ({
   });
 
   // Range of scroll progress (0 at end, 0.5 at center, 1 at start)
-  const scrollRange = [0.25, 0.5, 0.75];
+  const scrollRange = [0, 0.5, 1];
   // Map the range of scroll progress to
   const opacityValues = [0, 1, 0];
   // const scaleValues = [0.8, 1, 0.8];

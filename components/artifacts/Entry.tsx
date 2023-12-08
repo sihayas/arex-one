@@ -103,7 +103,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute left-[220px] w-[320px] h-[448px] -z-10 blur-3xl rounded-full`}
+        className={`absolute left-[220px] w-[320px] h-[448px] -z-10 blur-3xl -rotate-1`}
       />
     </div>
   );

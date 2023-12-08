@@ -13,7 +13,7 @@ module.exports = {
       boxShadow: {
         nav: "0px 0px 20px 0px rgba(0, 0, 0, 0.09)",
         interface:
-          "4px 7px 18px 0px rgba(0, 0, 0, 0.04), 15px 28px 32px 0px rgba(0, 0, 0, 0.04), 35px 63px 43px 0px rgba(0, 0, 0, 0.02), 61px 113px 51px 0px rgba(0, 0, 0, 0.01), 96px 176px 56px 0px rgba(0, 0, 0, 0.00)",
+          "0px 1px 3px 0px rgba(0, 0, 0, 0.07), 0px 5px 5px 0px rgba(0, 0, 0, 0.06), 0px 11px 7px 0px rgba(0, 0, 0, 0.04), 0px 20px 8px 0px rgba(0, 0, 0, 0.01), 0px 31px 9px 0px rgba(0, 0, 0, 0.00)",
         stars:
           "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
         shadowKitMedium:

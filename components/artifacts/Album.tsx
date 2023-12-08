@@ -10,6 +10,7 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
+import { motion } from "framer-motion";
 
 const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
   const { selectedSound } = useSoundContext();
@@ -54,6 +55,12 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
           className={`absolute bg-white -top-[18px] -left-[18px] rounded-full w-max text-[#808084] p-2 shadow-shadowKitMedium z-10`}
           rating={artifact.content?.rating}
         />
+        <motion.div
+          style={{
+            backgroundColor: `#${selectedSound.sound.attributes.artwork.bgColor}`,
+          }}
+          className="absolute -top-[18px] -left-[18px] w-8 h-8 blur-lg rounded-full"
+        ></motion.div>
 
         {/* Names */}
         <div

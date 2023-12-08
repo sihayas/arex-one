@@ -33,6 +33,7 @@ export const Artifact = () => {
   // Set max height for the artifact content based on the target height set in GetDimensions
   const activePage: Page = pages[pages.length - 1];
   const { target } = GetDimensions(activePage.name as PageName);
+  const replyContainerHeight = target.height - 92; //76 to baseline
   const entryContentMax = target.height * 0.4;
 
   // Hook for artifact content animation
@@ -113,6 +114,13 @@ export const Artifact = () => {
           bgColor={artifact.appleData.attributes.artwork.bgColor}
         />
 
+        <div
+          style={{
+            background: `linear-gradient(to top, #FFFFFF, rgba(0,0,0,0)`,
+          }}
+          className="absolute top-[304px] w-full h-[176px] pointer-events-none"
+        />
+
         {createPortal(
           <motion.div
             ref={scope}
@@ -127,7 +135,7 @@ export const Artifact = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             key={artifact.id}
-            className={`absolute top-0 flex flex-col bg-[#F4F4F4] rounded-[24px] w-[464px] z-20 shadow-shadowKitHigh`}
+            className={`absolute top-0 flex flex-col bg-[#F4F4F4] rounded-[24px] w-[512px] z-20 shadow-shadowKitHigh`}
           >
             <div
               className={`flex items-center gap-2 relative min-w-[40px] min-h-[40px] drop-shadow-sm ml-4 mt-4`}
@@ -180,8 +188,8 @@ export const Artifact = () => {
         )}
       </div>
       <motion.div
-        style={{ height: target.height, opacity: replyInputOpacity }}
-        className={`flex flex-col p-8 pt-[88px] overflow-scroll scrollbar-none`}
+        style={{ height: replyContainerHeight, opacity: replyInputOpacity }}
+        className={`flex flex-col p-8 pt-0 overflow-scroll scrollbar-none`}
       >
         {user && <RenderReplies userId={user.id} artifactId={artifact.id} />}
       </motion.div>
