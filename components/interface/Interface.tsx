@@ -26,25 +26,8 @@ const componentMap: Record<PageName, React.ComponentType<any>> = {
 };
 // Calculate & set base dimensions and target dimensions for the window per page
 export const GetDimensions = (pageName: PageName) => {
-  // Initialize base height for window at its longest
   const viewportHeight = window.innerHeight;
-  const { pages } = useInterfaceContext();
-  const activePage = pages[pages.length - 1];
-
-  // Initialize base height for artifact page
-  const [baseHeight, setBaseHeight] = useState(432);
-  const maxHeight = viewportHeight - 2 * 32; // * by 40 for base
-
-  // When switching to artifact page, use calculated->stored height from
-  // useLayoutEffect in Record to set the base height for artifact page. We
-  // are adding the foundation height of the artifact + height of entry content
-  useEffect(() => {
-    if (activePage.name === "artifact") {
-      const base = 400;
-      const target = base + 41;
-      setBaseHeight(activePage.dimensions.height + target);
-    }
-  }, [pages, activePage.name, activePage.dimensions.height]);
+  const maxHeight = viewportHeight - 2 * 32;
 
   const dimensions = {
     user: {
@@ -56,7 +39,7 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 512, height: maxHeight },
     },
     artifact: {
-      base: { width: 480, height: baseHeight },
+      base: { width: 402, height: 640 },
       target: { width: 480, height: maxHeight },
     },
   };
@@ -237,6 +220,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           >
             {/* Container for items within a page. */}
             <div
+              id={`cmdk-scroll`}
               ref={scrollContainerRef}
               className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-[32px]`}
             >

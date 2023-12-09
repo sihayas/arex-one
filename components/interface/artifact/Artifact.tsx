@@ -9,6 +9,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import {
   motion,
   useAnimate,
+  useMotionValueEvent,
   useScroll,
   useSpring,
   useTransform,
@@ -25,75 +26,48 @@ import Heart from "@/components/global/Heart";
 import ArtworkURL from "@/components/global/ArtworkURL";
 import Image from "next/image";
 
-const scaleArtConfig = { damping: 20, stiffness: 122 };
-const borderConfig = { damping: 30, stiffness: 122 };
-const yEntryConfig = { damping: 20, stiffness: 122 };
 const scaleEntryConfig = { damping: 20, stiffness: 160 };
 
 export const Artifact = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
+  const cmdkScroll = document.getElementById("cmdk-scroll") as HTMLDivElement;
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
-  const { setReplyParent, setArtifact } = useThreadcrumb();
-  const height = useRef(0);
+  const { setArtifact } = useThreadcrumb();
 
-  // Set max height for the artifact content based on the target height set in GetDimensions
   const activePage: Page = pages[pages.length - 1];
-  const { target } = GetDimensions(activePage.name as PageName);
-  const entryContentMax = target.height * 0.4;
 
-  // Hook for artifact content animation
   const [scope, animate] = useAnimate();
-
-  // *
-  useLayoutEffect(() => {
-    if (scope.current) height.current = scope.current.offsetHeight;
-    activePage.dimensions.height = scope.current.offsetHeight;
-  }, [activePage.dimensions, scope]);
 
   const { scrollY } = useScroll({ container: scrollContainerRef });
 
-  const scaleArtKeyframes = useTransform(scrollY, [0, 1], [1, 0.2167]);
-  const scaleArt = useSpring(scaleArtKeyframes, scaleArtConfig);
+  useMotionValueEvent(scrollY, "change", async (latest) => {
+    if (latest > 1) {
+      setTimeout(() => {
+        setIsOpen(true);
+      }, 130);
+    } else if (latest < 1) {
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 70);
+    }
+  });
 
-  const borderBLKeyframes = useTransform(scrollY, [0, 1], [0, 128]);
-  const borderBLSpring = useSpring(borderBLKeyframes, borderConfig);
+  const scaleCardKeyframes = useTransform(scrollY, [0, 1], [1, 0.811]);
+  const scaleCard = useSpring(scaleCardKeyframes, scaleEntryConfig);
 
-  const borderTLKeyframes = useTransform(scrollY, [0, 1], [32, 0]);
-  const borderTLSpring = useSpring(borderTLKeyframes, borderConfig);
+  const rotateCardKeyframes = useTransform(scrollY, [0, 1], [0, -3]);
+  const rotateCard = useSpring(rotateCardKeyframes, scaleEntryConfig);
 
-  const borderTRKeyframes = useTransform(scrollY, [0, 1], [0, 128]);
-  const borderTRSpring = useSpring(borderTRKeyframes, borderConfig);
+  const yEntryConfig = !isOpen
+    ? { damping: 20, stiffness: 122, delay: 50 }
+    : { damping: 20, stiffness: 300 };
+  const yEntryKeyframes = useTransform(scrollY, [0, 1], [0, -240]);
+  const yEntry = useSpring(yEntryKeyframes, yEntryConfig);
 
   const replyInputOpacity = useTransform(scrollY, [0, 1], [0, 1]);
   const scrollIndicatorOpacity = useTransform(scrollY, [0, 1], [1, 0]);
-
-  // Animate artifact height from whatever it is to 72px
-  const newHeight = useTransform(scrollY, [0, 1], [height.current, 72]);
-  const newWidth = useTransform(scrollY, [0, 1], [512, 344]);
-
-  // Animate Y
-  const yEntryKeyframes = useTransform(scrollY, [0, 1], [400, 16]);
-  const yEntry = useSpring(yEntryKeyframes, yEntryConfig);
-
-  const xEntryKeyframes = useTransform(scrollY, [0, 1], [0, -52]);
-  const xEntry = useSpring(xEntryKeyframes, yEntryConfig);
-
-  useEffect(() => {
-    const shiftDimension = () => {
-      animate(
-        scope.current,
-        { height: newHeight.get(), width: newWidth.get() },
-        { type: "spring", stiffness: 160, damping: 20 },
-      );
-    };
-    const unsubHeight = newHeight.on("change", () => shiftDimension());
-    const unsubWidth = newWidth.on("change", () => shiftDimension());
-    return () => {
-      unsubHeight();
-      unsubWidth();
-    };
-  }, [animate, newHeight, newWidth, scope]);
 
   const artifact = useMemo(
     () => activePage.artifact as ArtifactExtended,
@@ -126,53 +100,77 @@ export const Artifact = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-full relative"
+      className="w-full h-full relative"
     >
-      <motion.div
-        style={{ opacity: replyInputOpacity }}
-        className={`flex flex-col p-8 pt-[104px] mt-[1px] overflow-scroll scrollbar-none h-full`}
-      >
-        {user && <RenderReplies userId={user.id} artifactId={artifact.id} />}
-      </motion.div>
-
-      <motion.div
+      <div
         style={{
-          scale: scaleArt,
-          borderTopRightRadius: borderTRSpring,
-          borderTopLeftRadius: borderTLSpring,
-          borderBottomLeftRadius: borderBLSpring,
+          background: `#${color}`,
+          backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute top-0 right-0 origin-top-right overflow-hidden shadow-userAvi  `}
-      >
-        <Image
-          src={url}
-          alt={`${name}'s artwork`}
-          width={512}
-          height={512}
-          quality={100}
-        />
-      </motion.div>
+        className={`absolute top-[-118px] left-16 w-[352px] h-[493px] -z-10 blur-3xl -rotate-3`}
+      />
+      {/*<motion.div*/}
+      {/*  style={{ opacity: replyInputOpacity }}*/}
+      {/*  className={`flex flex-col p-8 pt-[104px] mt-[1px] overflow-scroll scrollbar-none h-full`}*/}
+      {/*>*/}
+      {/*  {user && <RenderReplies userId={user.id} artifactId={artifact.id} />}*/}
+      {/*</motion.div>*/}
+      <div className={`h-[100vh]`}>&nbsp;</div>
 
       {createPortal(
         <motion.div
-          layout
           ref={scope}
-          whileHover={{ color: "rgba(0,0,0,1)" }}
-          onClick={() => setReplyParent({ artifact })}
           style={{
-            maxHeight: entryContentMax,
+            width: 434,
+            height: 608,
+            scale: scaleCard,
+            rotate: rotateCard,
             y: yEntry,
-            x: xEntry,
           }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          key={artifact.id}
-          className={`absolute top-0 flex flex-col bg-[#F4F4F4] rounded-[24px] z-20`}
+          className={`absolute top-0 flex flex-col rounded-[32px] shadow-shadowKitHigh will-change-transform z-20 pointer-events-none
+            ${!isOpen ? "opacity-100" : "opacity-0"}
+            `}
         >
+          <Image
+            className={`absolute rounded-[32px]`}
+            src={url}
+            alt={`artwork`}
+            loading="lazy"
+            quality={100}
+            style={{ objectFit: "cover" }}
+            fill={true}
+          />
+
+          {/* Stars */}
           <div
-            className={`flex items-center gap-2 relative min-w-[40px] min-h-[40px] drop-shadow-sm ml-4 mt-4`}
+            className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] max-h-8 z-10 gap-2 shadow-shadowKitMedium`}
           >
+            <Stars rating={artifact.content?.rating} />
+            <div className={`text-xs text-[#000] leading-[9px] font-medium`}>
+              {sound.attributes.name}
+            </div>
+            <div className={`-ml-1`}>&middot;</div>
+            <div
+              className={`-ml-1 text-xs text-[#000] leading-[9px] font-medium`}
+            >
+              {sound.attributes.artistName}
+            </div>
+          </div>
+
+          <div
+            style={{
+              background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
+            }}
+            className="absolute bottom-0 w-full h-[416px] rounded-b-[32px] pointer-events-none"
+          />
+
+          <div
+            className={`z-10 p-6 text-sm text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
+          >
+            {artifact.content?.text}
+          </div>
+
+          <div className={`z-10 flex items-center gap-2 p-6 pt-2`}>
             <Avatar
               className="border border-gray3 min-w-[40px] min-h-[40px]"
               imageSrc={artifact.author.image}
@@ -181,46 +179,80 @@ export const Artifact = () => {
               height={40}
               user={artifact.author}
             />
-            <p className="text-gray5 font-semibold text-sm leading-[10px]">
+            <p className="text-white font-bold text-sm leading-[10px]">
               {artifact.author.username}
             </p>
-
-            {/* Star */}
-            <div
-              className={`flex items-center ml-auto mr-4 p-2 bg-white rounded-full w-max z-10 gap-2 shadow-shadowKitMedium`}
-            >
-              <div className={`text-xs text-[#000] leading-[9px] font-medium`}>
-                {sound.attributes.name}
-              </div>
-              <Stars rating={artifact.content?.rating} />
-            </div>
           </div>
-
-          <div className="flex flex-col gap-[5px] w-full px-4 overflow-scroll scrollbar-none">
-            <div
-              className={`break-words w-full text-sm text-gray5 leading-normal cursor-pointer pt-[11px] pb-[10px]`}
-            >
-              {artifact.content?.text || artifact.content?.text}
-            </div>
-          </div>
-          <motion.div style={{ opacity: scrollIndicatorOpacity }}>
-            <Heart
-              handleHeartClick={handleHeartClick}
-              hearted={hearted}
-              className="absolute bottom-4 right-4"
-              heartCount={heartCount}
-              replyCount={artifact._count.replies}
-            />
-          </motion.div>
-
-          <motion.div
-            style={{ opacity: scrollIndicatorOpacity }}
-            className={`absolute -bottom-[25px] text-xs font-medium text-gray3 left-1/2 -translate-x-1/2 leading-[9px]`}
-          >
-            scroll for chains ({artifact._count.replies})
-          </motion.div>
         </motion.div>,
         cmdk,
+      )}
+
+      {createPortal(
+        <motion.div
+          ref={scope}
+          style={{
+            width: 434,
+            height: 608,
+            scale: scaleCard,
+            rotate: rotateCard,
+            y: yEntry,
+          }}
+          className={`absolute top-0 flex flex-col rounded-[32px] shadow-shadowKitHigh will-change-transform z-20 pointer-events-none`}
+        >
+          <Image
+            className={`absolute rounded-[32px]`}
+            src={url}
+            alt={`artwork`}
+            loading="lazy"
+            quality={100}
+            style={{ objectFit: "cover" }}
+            fill={true}
+          />
+
+          {/* Stars */}
+          <div
+            className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium`}
+          >
+            <Stars rating={artifact.content?.rating} />
+            <div className={`text-xs text-[#000] leading-[9px] font-medium`}>
+              {sound.attributes.name}
+            </div>
+            <div className={`-ml-1`}>&middot;</div>
+            <div
+              className={`-ml-1 text-xs text-[#000] leading-[9px] font-medium`}
+            >
+              {sound.attributes.artistName}
+            </div>
+          </div>
+
+          <div
+            style={{
+              background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
+            }}
+            className="absolute bottom-0 w-full h-[416px] rounded-b-[32px] pointer-events-none"
+          />
+
+          <div
+            className={`z-10 p-6 text-sm text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
+          >
+            {artifact.content?.text}
+          </div>
+
+          <div className={`z-10 flex items-center gap-2 p-6 pt-2`}>
+            <Avatar
+              className="border border-gray3 min-w-[40px] min-h-[40px]"
+              imageSrc={artifact.author.image}
+              altText={`${artifact.author.username}'s avatar`}
+              width={40}
+              height={40}
+              user={artifact.author}
+            />
+            <p className="text-white font-bold text-sm leading-[10px]">
+              {artifact.author.username}
+            </p>
+          </div>
+        </motion.div>,
+        cmdkScroll,
       )}
     </motion.div>
   );
