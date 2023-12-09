@@ -38,10 +38,9 @@ export const Artifact = () => {
 
   const activePage: Page = pages[pages.length - 1];
 
-  const [scope, animate] = useAnimate();
-
   const { scrollY } = useScroll({ container: scrollContainerRef });
 
+  // Time transition
   useMotionValueEvent(scrollY, "change", async (latest) => {
     if (latest > 1) {
       setTimeout(() => {
@@ -61,12 +60,13 @@ export const Artifact = () => {
   const rotateCard = useSpring(rotateCardKeyframes, scaleEntryConfig);
 
   const yEntryConfig = !isOpen
-    ? { damping: 20, stiffness: 122, delay: 50 }
+    ? { damping: 20, stiffness: 122, delay: 50 } // Delay translate up for scale
     : { damping: 20, stiffness: 300 };
-  const yEntryKeyframes = useTransform(scrollY, [0, 1], [0, -240]);
+
+  const yEntryKeyframes = useTransform(scrollY, [0, 1], [0, -326]);
   const yEntry = useSpring(yEntryKeyframes, yEntryConfig);
 
-  const replyInputOpacity = useTransform(scrollY, [0, 1], [0, 1]);
+  const opacityReplies = useTransform(scrollY, [0, 1], [0, 1]);
   const scrollIndicatorOpacity = useTransform(scrollY, [0, 1], [1, 0]);
 
   const artifact = useMemo(
@@ -91,7 +91,6 @@ export const Artifact = () => {
   if (!artifact) return null;
 
   const sound = artifact.appleData;
-  const name = sound.attributes.name;
   const color = sound.attributes.artwork.bgColor;
   const url = ArtworkURL(sound.attributes.artwork.url, "1200");
 
@@ -100,26 +99,31 @@ export const Artifact = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full relative"
+      className="w-full min-h-full relative mt-[1px]"
     >
       <div
         style={{
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute top-[-118px] left-16 w-[352px] h-[493px] -z-10 blur-3xl -rotate-3`}
+        className={`absolute -top-[268px] left-16 w-[352px] h-[493px] z-10 blur-3xl -rotate-3`}
       />
-      {/*<motion.div*/}
-      {/*  style={{ opacity: replyInputOpacity }}*/}
-      {/*  className={`flex flex-col p-8 pt-[104px] mt-[1px] overflow-scroll scrollbar-none h-full`}*/}
-      {/*>*/}
-      {/*  {user && <RenderReplies userId={user.id} artifactId={artifact.id} />}*/}
-      {/*</motion.div>*/}
-      <div className={`h-[100vh]`}>&nbsp;</div>
+      <div
+        style={{
+          background: `linear-gradient(to bottom, #FFF, rgba(0,0,0,0) z-0`,
+        }}
+        className="absolute top-0 left-0 w-full h-[288px] pointer-events-none"
+      />
+      <motion.div
+        style={{ opacity: opacityReplies }}
+        className={`flex flex-col p-8 pt-[256px] overflow-scroll scrollbar-none h-full relative`}
+      >
+        {user && <RenderReplies userId={user.id} artifactId={artifact.id} />}
+      </motion.div>
 
+      {/* Top */}
       {createPortal(
         <motion.div
-          ref={scope}
           style={{
             width: 434,
             height: 608,
@@ -186,10 +190,9 @@ export const Artifact = () => {
         </motion.div>,
         cmdk,
       )}
-
+      {/* Transition Clone (Mini) */}
       {createPortal(
         <motion.div
-          ref={scope}
           style={{
             width: 434,
             height: 608,
@@ -259,7 +262,3 @@ export const Artifact = () => {
 };
 
 export default Artifact;
-
-// Upon mount, store the height of the artifact content into dimensions so
-// GetDimensions can use it to calculate the base height for this specific
-// Record as the Record page can vary depending on the length of the entry
