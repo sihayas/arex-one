@@ -48,10 +48,10 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  const xArtKeyframes = useTransform(scrollY, [0, 1], [0, 176]);
+  const xArtKeyframes = useTransform(scrollY, [0, 1], [0, -54]);
   const xArt = useSpring(xArtKeyframes, xArtConfig);
 
-  const yArtKeyframes = useTransform(scrollY, [0, 1], [0, 664]);
+  const yArtKeyframes = useTransform(scrollY, [0, 1], [0, -54]);
   const yArt = useSpring(yArtKeyframes, yArtConfig);
 
   const scaleArtKeyframes = useTransform(scrollY, [0, 1], [1, 0.1]);
@@ -60,7 +60,7 @@ const Album = () => {
   const xDialKeyframes = useTransform(scrollY, [0, 1], [-176, -32]);
   const xDial = useSpring(xDialKeyframes, springConfig);
 
-  const yDialKeyframes = useTransform(scrollY, [0, 1], [176, 808]);
+  const yDialKeyframes = useTransform(scrollY, [0, 1], [-176, -32]);
   const yDial = useSpring(yDialKeyframes, springConfig);
 
   const scaleDialKeyframes = useTransform(scrollY, [0, 1], [1, 0.6]);
@@ -82,7 +82,7 @@ const Album = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full"
+      className="w-full min-h-full mt-[1px]"
     >
       {createPortal(
         <motion.div
@@ -92,7 +92,7 @@ const Album = () => {
             scale: scaleArt,
             borderRadius,
           }}
-          className="absolute pointer-events-none overflow-hidden z-50 right-0 top-0"
+          className="absolute pointer-events-none overflow-hidden z-50 right-0 bottom-0 origin-bottom-right"
         >
           <Image
             src={selectedSound.artworkUrl}
@@ -107,8 +107,20 @@ const Album = () => {
         cmdk,
       )}
 
-      {/* Empty 480 px ghost div to take up space */}
-      <div className="w-full h-[24px]">&nbsp;</div>
+      {createPortal(
+        <motion.div
+          className={`absolute z-50 pointer-events-none right-0 bottom-0 flex items-center justify-center drop-shadow`}
+          style={{
+            x: xDial,
+            y: yDial,
+            scale: scaleDial,
+            transformOrigin: "bottom right",
+          }}
+        >
+          <Statline ratings={[4, 8900, 2445, 5000, 500]} />
+        </motion.div>,
+        cmdk,
+      )}
 
       {/* Entries */}
       <RenderArtifacts
@@ -133,26 +145,6 @@ const Album = () => {
         {/*</div>*/}
       </div>
 
-      {/* Rating */}
-      <motion.div
-        className={`absolute z-50 pointer-events-none right-0 top-0 flex items-center justify-center drop-shadow`}
-        style={{
-          x: xDial,
-          y: yDial,
-          scale: scaleDial,
-          transformOrigin: "bottom right",
-        }}
-      >
-        <Statline ratings={[4, 8900, 2445, 5000, 500]} />
-        {/*<motion.div*/}
-        {/*  id={`rating`}*/}
-        {/*  className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville`}*/}
-        {/*  style={{ color: textColor }}*/}
-        {/*>*/}
-        {/*  3.7*/}
-        {/*</motion.div>*/}
-      </motion.div>
-
       <motion.div
         style={{
           backgroundColor: `#${selectedSound.sound.attributes.artwork.bgColor}`,
@@ -164,3 +156,24 @@ const Album = () => {
 };
 
 export default Album;
+{
+  /*<motion.div*/
+}
+{
+  /*  id={`rating`}*/
+}
+{
+  /*  className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville`}*/
+}
+{
+  /*  style={{ color: textColor }}*/
+}
+{
+  /*>*/
+}
+{
+  /*  3.7*/
+}
+{
+  /*</motion.div>*/
+}

@@ -10,7 +10,6 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
-import { motion } from "framer-motion";
 
 const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
   const { selectedSound } = useSoundContext();
@@ -36,59 +35,47 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
   }
 
   return (
-    <div className={`flex items-end relative w-full`}>
-      {/* Username and Avatar*/}
-      <Avatar
-        className={`h-[32px] border border-gray3`}
-        imageSrc={artifact.author.image}
-        altText={`${artifact.author.username}'s avatar`}
-        width={32}
-        height={32}
-        user={artifact.author}
-      />
-
-      {/* Rating, content & bubbles */}
+    <div
+      className={`flex flex-col bg-[#F4F4F4] items-center justify-center relative w-full px-6 pt-[18px] pb-[19px] rounded-[32px]`}
+    >
+      {/* Rating & Attribution */}
       <div
-        className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[404px] w-fit mb-3 ml-3`}
+        className={`absolute left-1/2 -translate-x-1/2 -top-[23px] py-1 px-[5px] flex items-center gap-2 bg-white shadow-shadowKitMedium rounded-full`}
       >
         <div
-          className={`absolute bg-white -top-[18px] -left-[18px] flex items-center p-2 rounded-full w-max z-10 gap-2 shadow-shadowKitMedium`}
+          className={`flex items-center justify-center p-2 outline outline-silver outline-1 rounded-full w-max`}
         >
           <Stars rating={artifact.content?.rating} />
         </div>
 
-        {/* Names */}
-        <div
-          className={`absolute -top-4 left-[18px] text-xs text-gray5 leading-[1] font-medium w-max`}
-        >
+        <div className={`text-sm leading-[10px] text-[#000] font-bold`}>
           {artifact.author.username}
         </div>
-
-        {/* Content */}
-        <div
-          onClick={handleEntryClick}
-          className={`break-words line-clamp-6 w-full text-sm text-gray5 leading-normal cursor-pointer z-10`}
-        >
-          {artifact.content?.text}
-        </div>
-
-        {/* Bubbles */}
-        <div className={`w-3 h-3 absolute -bottom-1 -left-1 -z-10`}>
-          <div
-            className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
-          />
-          <div
-            className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
-          />
-        </div>
-        <Heart
-          handleHeartClick={handleHeartClick}
-          hearted={hearted}
-          className="absolute -bottom-1 -right-1"
-          heartCount={heartCount}
-          replyCount={artifact._count.replies}
+        <Avatar
+          className={`h-[30px]`}
+          imageSrc={artifact.author.image}
+          altText={`${artifact.author.username}'s avatar`}
+          width={30}
+          height={30}
+          user={artifact.author}
         />
       </div>
+
+      {/* Content */}
+      <div
+        onClick={handleEntryClick}
+        className={`break-words line-clamp-6 w-full text-sm text-gray5 leading-normal font-medium cursor-pointer z-10`}
+      >
+        {artifact.content?.text}
+      </div>
+
+      <Heart
+        handleHeartClick={handleHeartClick}
+        hearted={hearted}
+        className="absolute -bottom-1 -right-1"
+        heartCount={heartCount}
+        replyCount={artifact._count.replies}
+      />
     </div>
   );
 };
