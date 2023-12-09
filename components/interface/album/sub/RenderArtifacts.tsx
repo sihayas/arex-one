@@ -3,7 +3,6 @@ import { useArtifactsQuery } from "@/lib/apiHelper/album";
 import Album from "@/components/artifacts/Album";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
-import { JellyComponent } from "@/components/global/Loading";
 import { AlbumData } from "@/types/appleTypes";
 import { Activity } from "@/types/dbTypes";
 import { ArtifactExtended } from "@/types/globalTypes";
@@ -57,15 +56,7 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
       {/* End */}
       {hasNextPage ? (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-          {isFetchingNextPage ? (
-            <JellyComponent
-              className={"fixed left-[247px] bottom-8"}
-              key="jelly"
-              isVisible={isFetchingNextPage}
-            />
-          ) : (
-            "more"
-          )}
+          {isFetchingNextPage ? "loading" : "more"}
         </button>
       ) : (
         <div className="flex justify-center items-center">

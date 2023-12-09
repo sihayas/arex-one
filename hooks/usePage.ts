@@ -20,7 +20,7 @@ export const useArtifact = (artifact: Artifact) => {
         name: "artifact",
         threadcrumbs: [artifact.id],
         dimensions: {
-          width: 432,
+          width: 480,
           height: 832,
         },
         scrollPosition: 0,

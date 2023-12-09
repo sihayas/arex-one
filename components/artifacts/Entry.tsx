@@ -70,12 +70,22 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         transition={{ type: "spring", stiffness: 220, damping: 13 }}
         className={`flex flex-col rounded-[32px] bg-white relative w-[320px] h-[448px] shadow-shadowKitLow will-change-transform`}
       >
-        <Stars
-          className={`bg-white absolute top-6 left-6 rounded-full w-max text-[#000] p-2 pr-[10px] shadow-shadowKitLow z-10 max-w-[272px]`}
-          rating={artifact.content?.rating}
-          soundName={sound.attributes.name}
-          artist={sound.attributes.artistName}
-        />
+        {/* Stars */}
+        <div
+          className={`absolute top-6 left-6 flex items-center p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium`}
+        >
+          <Stars rating={artifact.content?.rating} />
+          <div className={`text-xs text-[#000] leading-[9px] font-medium`}>
+            {sound.attributes.name}
+          </div>
+          <div className={`-ml-1`}>&middot;</div>
+          <div
+            className={`-ml-1 text-xs text-[#000] leading-[9px] font-medium`}
+          >
+            {sound.attributes.artistName}
+          </div>
+        </div>
+
         <Image
           className={`cursor-pointer rounded-[32px]`}
           src={url}

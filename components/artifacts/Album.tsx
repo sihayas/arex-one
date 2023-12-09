@@ -34,6 +34,7 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
   if (!selectedSound?.sound) {
     return null;
   }
+
   return (
     <div className={`flex items-end relative w-full`}>
       {/* Username and Avatar*/}
@@ -50,17 +51,11 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
       <div
         className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[404px] w-fit mb-3 ml-3`}
       >
-        {/* Rating */}
-        <Stars
-          className={`absolute bg-white -top-[18px] -left-[18px] rounded-full w-max text-[#808084] p-2 shadow-shadowKitMedium z-10`}
-          rating={artifact.content?.rating}
-        />
-        <motion.div
-          style={{
-            backgroundColor: `#${selectedSound.sound.attributes.artwork.bgColor}`,
-          }}
-          className="absolute -top-[18px] -left-[18px] w-8 h-8 blur-lg rounded-full"
-        ></motion.div>
+        <div
+          className={`absolute bg-white -top-[18px] -left-[18px] flex items-center p-2 rounded-full w-max z-10 gap-2 shadow-shadowKitMedium`}
+        >
+          <Stars rating={artifact.content?.rating} />
+        </div>
 
         {/* Names */}
         <div

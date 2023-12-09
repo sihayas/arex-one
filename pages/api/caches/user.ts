@@ -22,7 +22,6 @@ async function fetchOrCacheUser(userId: string) {
             where: { isDeleted: false },
             select: { followerId: true },
           },
-
           artifact: {
             where: { isDeleted: false, type: "entry" },
             orderBy: { createdAt: "desc" },
@@ -43,6 +42,7 @@ async function fetchOrCacheUser(userId: string) {
           bio: true,
         },
       })
+      //cache followers list
       .then(
         (u) => u && { ...u, followedBy: u.followedBy.map((f) => f.followerId) },
       );

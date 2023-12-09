@@ -2,7 +2,6 @@ import { LayoutGroup } from "framer-motion";
 import Reply from "./Reply";
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/apiHelper/artifact";
-import { JellyComponent } from "@/components/global/Loading";
 import React from "react";
 
 type RenderRepliesProps = {
@@ -38,11 +37,7 @@ function RenderReplies({ userId, artifactId }: RenderRepliesProps) {
       {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           {isFetchingNextPage ? (
-            <JellyComponent
-              className={"fixed"}
-              key="jelly"
-              isVisible={isFetchingNextPage}
-            />
+            "loading"
           ) : (
             <div className={`text-xs text-gray3 font-bold pt-8`}>more</div>
           )}

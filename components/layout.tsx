@@ -29,12 +29,10 @@ export default function Layout({ children }: { children: ReactNode }) {
     [inputRef, setIsVisible],
   );
 
-  // Modify this to animate the main content
   useEffect(() => {
     const animateMainContent = async () => {
       const animationConfig = {
-        scale: isVisible ? 0.86 : 1,
-        opacity: isVisible ? 0 : 1,
+        scale: isVisible ? 0.95 : 1,
         pointerEvents: isVisible ? "none" : "auto",
       };
       const transitionConfig = {
@@ -43,9 +41,6 @@ export default function Layout({ children }: { children: ReactNode }) {
           mass: 0.75,
           stiffness: 200,
           damping: 22,
-        },
-        opacity: {
-          duration: 0.5,
         },
       };
       await animate(scope.current, animationConfig, transitionConfig);

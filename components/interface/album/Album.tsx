@@ -20,9 +20,6 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import Statline from "@/components/interface/album/sub/Dial";
 import { createPortal } from "react-dom";
-import Avatar from "@/components/global/Avatar";
-import Stars from "@/components/global/Stars";
-import Heart from "@/components/global/Heart";
 
 const springConfig = { damping: 22, stiffness: 180 };
 const scaleArtConfig = { damping: 20, stiffness: 122 };

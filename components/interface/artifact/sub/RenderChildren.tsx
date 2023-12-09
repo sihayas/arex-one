@@ -5,7 +5,6 @@ import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/apiHelper/artifact";
 import { useUser } from "@supabase/auth-helpers-react";
 import { motion } from "framer-motion";
-import { JellyComponent } from "@/components/global/Loading";
 
 type RenderChildrenProps = {
   parentReplyId: string;
@@ -44,11 +43,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
       {hasNextPage && (
         <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
           {isFetchingNextPage ? (
-            <JellyComponent
-              className={"fixed"}
-              key="jelly"
-              isVisible={isFetchingNextPage}
-            />
+            "loading"
           ) : (
             <div className={`text-xs text-gray3 font-bold pt-8`}>more</div>
           )}
