@@ -45,11 +45,11 @@ export const Artifact = () => {
     if (latest > 1) {
       setTimeout(() => {
         setIsOpen(true);
-      }, 130);
+      }, 50);
     } else if (latest < 1) {
       setTimeout(() => {
         setIsOpen(false);
-      }, 70);
+      }, 130);
     }
   });
 
@@ -61,7 +61,7 @@ export const Artifact = () => {
 
   const yEntryConfig = !isOpen
     ? { damping: 20, stiffness: 122, delay: 50 } // Delay translate up for scale
-    : { damping: 20, stiffness: 300 };
+    : { damping: 24, stiffness: 300 };
 
   const yEntryKeyframes = useTransform(scrollY, [0, 1], [0, -326]);
   const yEntry = useSpring(yEntryKeyframes, yEntryConfig);
