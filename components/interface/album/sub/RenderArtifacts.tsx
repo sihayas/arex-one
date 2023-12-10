@@ -43,7 +43,7 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
 
   return (
     // Gap-5 to align with statistics
-    <div className="flex flex-col h-full w-full items-center p-8 gap-9">
+    <div className="flex flex-col h-full w-full items-center p-8 gap-9 overflow-scroll">
       {allActivities.map((activity: Activity) => (
         <Fragment key={activity.id}>
           {activity.artifact ? (

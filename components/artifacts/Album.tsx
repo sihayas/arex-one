@@ -64,7 +64,7 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
       {/* Content */}
       <div
         onClick={handleEntryClick}
-        className={`break-words line-clamp-6 w-full text-sm text-gray5 leading-normal font-medium cursor-pointer z-10`}
+        className={`break-words line-clamp-6 w-full text-sm text-center text-gray5 leading-normal font-medium cursor-pointer z-10`}
       >
         {artifact.content?.text}
       </div>

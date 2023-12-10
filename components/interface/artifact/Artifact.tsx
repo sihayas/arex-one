@@ -1,25 +1,19 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import {
-  Page,
-  PageName,
-  useInterfaceContext,
-} from "@/context/InterfaceContext";
+import React, { useEffect, useMemo } from "react";
+import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useUser } from "@supabase/auth-helpers-react";
 import {
   motion,
-  useAnimate,
   useMotionValueEvent,
   useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
+import { useSound } from "@/hooks/usePage";
 import useHandleHeartClick from "@/hooks/useHeart";
-import { Artwork } from "@/components/global/Artwork";
 import Stars from "@/components/global/Stars";
 import Avatar from "@/components/global/Avatar";
 import RenderReplies from "@/components/interface/artifact/sub/RenderReplies";
-import { GetDimensions } from "@/components/interface/Interface";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
 import Heart from "@/components/global/Heart";
@@ -35,6 +29,7 @@ export const Artifact = () => {
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
   const { setArtifact } = useThreadcrumb();
+  const { handleSelectSound } = useSound();
 
   const activePage: Page = pages[pages.length - 1];
 
@@ -94,6 +89,10 @@ export const Artifact = () => {
   const color = sound.attributes.artwork.bgColor;
   const url = ArtworkURL(sound.attributes.artwork.url, "1200");
 
+  const handleSoundClick = async () => {
+    await handleSelectSound(sound, url);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -131,11 +130,12 @@ export const Artifact = () => {
             rotate: rotateCard,
             y: yEntry,
           }}
-          className={`absolute top-0 flex flex-col rounded-[32px] shadow-shadowKitHigh will-change-transform z-20 pointer-events-none
+          className={`absolute top-0 flex flex-col rounded-[32px] shadow-shadowKitHigh will-change-transform z-20 cursor-pointer
             ${!isOpen ? "opacity-100" : "opacity-0"}
             `}
         >
           <Image
+            onClick={handleSoundClick}
             className={`absolute rounded-[32px]`}
             src={url}
             alt={`artwork`}
@@ -147,16 +147,14 @@ export const Artifact = () => {
 
           {/* Stars */}
           <div
-            className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] max-h-8 z-10 gap-2 shadow-shadowKitMedium`}
+            className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-full w-max max-w-[388px] max-h-8 z-10 gap-2 shadow-shadowKitMedium`}
           >
             <Stars rating={artifact.content?.rating} />
-            <div className={`text-xs text-[#000] leading-[9px] font-medium`}>
+            <div className={`text-sm text-[#000] leading-[10px] font-bold`}>
               {sound.attributes.name}
             </div>
             <div className={`-ml-1`}>&middot;</div>
-            <div
-              className={`-ml-1 text-xs text-[#000] leading-[9px] font-medium`}
-            >
+            <div className={`-ml-1 text-sm text-[#000] leading-[10px]`}>
               {sound.attributes.artistName}
             </div>
           </div>
@@ -169,7 +167,7 @@ export const Artifact = () => {
           />
 
           <div
-            className={`z-10 p-6 text-sm text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
+            className={`z-10 p-6 pb-0 text-sm text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
           >
             {artifact.content?.text}
           </div>

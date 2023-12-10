@@ -72,7 +72,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       >
         {/* Stars */}
         <div
-          className={`absolute top-6 left-6 flex items-center p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
+          className={`absolute top-6 left-1/2 -translate-x-1/2 flex items-center p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
         >
           <Stars rating={artifact.content?.rating} />
           <div className={`text-xs text-[#000] leading-[9px] font-medium`}>

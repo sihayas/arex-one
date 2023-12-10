@@ -82,7 +82,7 @@ const Album = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-full mt-[1px]"
+      className="w-full min-h-full mt-[1px] relative"
     >
       {createPortal(
         <motion.div
@@ -128,28 +128,15 @@ const Album = () => {
         sortOrder={sortOrder}
       />
 
-      {/* Sort/Filter */}
-      <div
-        className={`w-[calc(100%-88px)] z-10 p-8 pt-0 pb-6 pr-14 absolute bottom-0`}
-      >
-        {"relationships" in selectedSound.sound &&
-          "tracks" in selectedSound.sound.relationships && (
-            <Filter
-              albumName={selectedSound.sound.attributes.name}
-              songs={selectedSound.sound.relationships.tracks.data}
-              onActiveSongChange={handleActiveSongChange}
-            />
-          )}
-        {/*<div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">*/}
-        {/*  <Sort onSortOrderChange={handleSortOrderChange} />*/}
-        {/*</div>*/}
-      </div>
+      {/*<div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">*/}
+      {/*  <Sort onSortOrderChange={handleSortOrderChange} />*/}
+      {/*</div>*/}
 
       <motion.div
         style={{
           backgroundColor: `#${selectedSound.sound.attributes.artwork.bgColor}`,
         }}
-        className="absolute bottom-12 right-12 w-16 h-16 blur-lg"
+        className="absolute bottom-8 right-8 w-24 h-24 blur-2xl"
       ></motion.div>
     </motion.div>
   );
