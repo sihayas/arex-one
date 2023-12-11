@@ -116,6 +116,17 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           <div
             className={`relative bg-[#F4F4F4] px-[10px] pt-[6px] pb-[7px] w-fit rounded-[18px] overflow-visible mb-2`}
           >
+            <Heart
+              handleHeartClick={handleHeartClick}
+              hearted={hearted}
+              className={`absolute -top-1 z-20 ${
+                isEvenLevel ? "-right-1" : "-left-1 transform scale-x-[-1]"
+              }`}
+              heartCount={heartCount}
+              replyCount={reply._count.replies}
+              isReply={true}
+              isEvenLevel={isEvenLevel}
+            />
             {/* Content  */}
             <motion.div
               whileHover={{ color: "rgba(0,0,0,1)" }}
@@ -132,17 +143,6 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             >
               {reply.text}
             </motion.div>
-            <Heart
-              handleHeartClick={handleHeartClick}
-              hearted={hearted}
-              className={`absolute -bottom-1 z-20 ${
-                isEvenLevel ? "-right-1" : "-left-1 transform scale-x-[-1]"
-              }`}
-              heartCount={heartCount}
-              replyCount={reply._count.replies}
-              isReply={true}
-              isEvenLevel={isEvenLevel}
-            />
 
             {/* Bubbles */}
             <div className={`w-3 h-3 absolute ${bubblePosition}`}>

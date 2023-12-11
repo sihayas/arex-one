@@ -46,65 +46,56 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <motion.div className="flex flex-col gap-2">
-      {/* Top */}
-      <div className={`ml-[224px] flex items-end relative`}>
-        {/* Artwork Capsule */}
-        <div
-          className={`flex bg-[#F4F4F4]/50 items-center gap-4 p-4 rounded-[32px] relative w-[384px] h-fit`}
-        >
-          <Image
-            className={`cursor-pointer rounded-[16px] shadow-shadowKitLow -rotate-2`}
-            src={url}
-            alt={`artwork`}
-            loading="lazy"
-            quality={100}
-            width={128}
-            height={128}
-            onClick={handleSoundClick}
-          />
-          {/* Names */}
-          <div className={`flex flex-col gap-3`}>
-            <p
-              className={`text-black font-medium text-sm leading-[10px] w-[162px]`}
-            >
-              {sound.attributes.name}
-            </p>
-            <p
-              className={`text-gray2 font-medium text-xs leading-[9px] min-w-[162px]`}
-            >
-              {sound.attributes.artistName}
-            </p>
-          </div>
+    <motion.div className="flex flex-col gap-4 w-[438px]">
+      {/* Artwork Capsule */}
+      <div
+        className={`flex bg-[#F4F4F4]/50 items-center gap-4 p-4 rounded-[32px] w-[384px] h-fit relative ml-[54px]`}
+      >
+        <Image
+          className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
+          src={url}
+          alt={`artwork`}
+          loading="lazy"
+          quality={100}
+          width={128}
+          height={128}
+          onClick={handleSoundClick}
+        />
+        {/* Names */}
+        <div className={`flex flex-col gap-3`}>
+          <p
+            className={`text-black font-medium text-sm leading-[10px] w-[162px]`}
+          >
+            {sound.attributes.name}
+          </p>
+          <p
+            className={`text-gray2 font-medium text-xs leading-[9px] min-w-[162px]`}
+          >
+            {sound.attributes.artistName}
+          </p>
         </div>
-
         {/* Blur Color */}
         <div
           style={{
             background: `#${color}`,
             backgroundRepeat: "repeat, no-repeat",
           }}
-          className={`absolute left-0 top-0 w-[160px] h-[160px] -z-10 rounded-full`}
+          className={`absolute left-0 top-0 w-full h-full -z-10 rounded-full`}
         />
       </div>
 
-      <div className={`flex items-end w-[608px] z-10 mix-blend-multiply`}>
-        {/* Username and Avatar*/}
-        <div className={`flex items-center gap-2 h-fit`}>
-          <p
-            className={`text-gray4 font-medium text-sm leading-[75%] min-w-[162px] text-end`}
-          >
-            {artifact.author.username}
-          </p>
-          <Avatar
-            className={`h-[42px] border border-silver`}
-            imageSrc={artifact.author.image}
-            altText={`${artifact.author.username}'s avatar`}
-            width={42}
-            height={42}
-            user={artifact.author}
-          />
-        </div>
+      {/* Attribution & Content */}
+      <div className={`flex items-end w-full z-10 mix-blend-multiply`}>
+        {/* Avatar*/}
+        <Avatar
+          className={`h-[42px] border border-silver`}
+          imageSrc={artifact.author.image}
+          altText={`${artifact.author.username}'s avatar`}
+          width={42}
+          height={42}
+          user={artifact.author}
+        />
+        <div className={`flex flex-col gap-2`}></div>
 
         {/* Rating, content & bubbles */}
         <div
@@ -118,13 +109,20 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
             {artifact.content?.text}
           </div>
 
-          <Heart
-            handleHeartClick={handleHeartClick}
-            hearted={hearted}
-            className="absolute -bottom-1 -right-1"
-            heartCount={heartCount}
-            replyCount={artifact._count.replies}
-          />
+          {/* Name */}
+          <p
+            className={`absolute -bottom-[13px] left-2 text-gray2 font-medium text-xs leading-[9px]`}
+          >
+            {artifact.author.username}
+          </p>
+
+          {/*<Heart*/}
+          {/*  handleHeartClick={handleHeartClick}*/}
+          {/*  hearted={hearted}*/}
+          {/*  className="absolute -bottom-1 -right-1"*/}
+          {/*  heartCount={heartCount}*/}
+          {/*  replyCount={artifact._count.replies}*/}
+          {/*/>*/}
 
           {/* Count */}
           {heartCount > 0 ||

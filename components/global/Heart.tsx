@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { LoveIcon, Curve } from "../icons";
+import { LoveIcon, BubbleIcon, ChainIcon } from "../icons";
 
 interface HeartButtonProps {
   handleHeartClick: (
@@ -39,66 +39,89 @@ const Heart: React.FC<HeartButtonProps> = ({
   isReply = false,
   isEvenLevel = true,
 }) => {
-  const [iconColor, setIconColor] = useState(hearted ? "#FF3319" : "#CCC");
-  const [curveColor, setCurveColor] = useState(hearted ? "#FF3319" : "#E5E5E5");
+  const [heartColor, setHeartColor] = useState(hearted ? "#FFF" : "#CCC");
+  const [bubbleColor, setBubbleColor] = useState(hearted ? "#FF4DC9" : "#FFF");
   const controls = useAnimation();
 
   useEffect(() => {
-    setIconColor(hearted ? "#FF3319" : "#CCC");
+    setHeartColor(hearted ? "#FFF" : "#CCC");
   }, [hearted]);
 
   // Change curve color
   const handleMouseEnter = () => {
     controls.start("hover");
-    setCurveColor(hearted ? "#E5E5E5" : "#E5E5E5");
-    setIconColor(hearted ? "#FF3319" : "#CCC");
   };
 
   // Change curve color
   const handleMouseLeave = () => {
     controls.start("initial");
-    setCurveColor(hearted ? "#FF3319" : "#E5E5E5");
-    setIconColor(hearted ? "#FF3319" : "#CCC");
   };
 
   return (
-    <button
-      className={`${className}`}
+    <motion.button
+      className={`${className} flex gap-1`}
       onClick={(event) => {
         handleHeartClick(event);
         event.stopPropagation();
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      animate={controls}
     >
-      {/* Icon / Button */}
-      <motion.div
-        className={`absolute bg-white/80 backdrop-blur p-2 flex items-center rounded-full border-1 border-silver origin-bottom-right bottom-0 right-0`}
-        animate={controls}
-        initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
-        variants={{
-          hover: {
-            scale: 1,
-            opacity: 1,
-            x: -8,
-            y: -8,
-          },
-          initial: { scale: 0, x: -4, y: -4, opacity: 0 },
-        }}
-        transition={{ type: "tween", ease: "anticipate", duration: 0.45 }}
+      <div className={`flex flex-col w-7 h-8 will-change-transform`}>
+        <div className={`relative w-7 h-7`}>
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            variants={{
+              hover: {
+                scale: 1,
+                opacity: 1,
+              },
+              initial: { scale: 0, opacity: 0 },
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            style={{ transformOrigin: "bottom left" }}
+          >
+            <BubbleIcon color={bubbleColor} />
+          </motion.div>
+
+          <motion.div
+            initial={{ scale: 0, x: "50%", y: "50%" }}
+            variants={{
+              hover: { scale: 1 },
+              initial: { scale: 0 },
+            }}
+            className={`absolute top-0 left-0 origin-bottom-left`}
+          >
+            <LoveIcon color={heartColor} />
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ scale: 2 }}
+          style={{
+            backgroundColor: bubbleColor,
+            x: 7,
+            width: 4,
+            height: 4,
+            borderRadius: 4,
+          }}
+          variants={{
+            hover: { scale: 1 },
+            initial: { scale: 2 },
+          }}
+        />
+      </div>
+
+      <div
+        className={`bg-[#F4F4F4] flex items-center text-gray2 rounded-full px-1.5 py-[3px] mt-1`}
       >
-        <LoveIcon color={iconColor} />
-      </motion.div>
-      <Curve
-        color={curveColor}
-        className={`absolute bottom-0 right-0 rotate-[6deg] transition-colors duration-500`}
-      />
-      {/*<div*/}
-      {/*  className={`text-xs text-gray2 absolute -bottom-3 right-[8px] leading-[75%] flex`}*/}
-      {/*>*/}
-      {/*  {renderCounts()}*/}
-      {/*</div>*/}
-    </button>
+        <p className={`font-medium text-xs leading-[9px]`}>{heartCount}</p>
+        <div className={`w-0.5 h-0.5 bg-gray3 mx-1 rounded-full`} />
+        <ChainIcon />
+        <p className={`font-medium text-xs leading-[9px] ml-2`}>{replyCount}</p>
+      </div>
+    </motion.button>
   );
 };
 

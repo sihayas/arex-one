@@ -88,7 +88,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main
         ref={scope}
         id="main-content"
-        className={`origin-top-left flex items-center justify-center`}
+        className={`origin-center flex items-center justify-center`}
       >
         {children}
       </main>

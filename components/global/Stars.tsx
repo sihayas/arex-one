@@ -4,10 +4,8 @@ import {
   StarThreeIcon,
   StarFourIcon,
   AsteriskIcon,
-  WispIcon,
 } from "../icons";
 import React from "react";
-import { Artwork } from "./Artwork";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 interface StarsProps {

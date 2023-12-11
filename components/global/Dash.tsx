@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect } from "react";
+import { motion, useAnimation } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 const Dash = ({
@@ -10,22 +10,33 @@ const Dash = ({
   spaceBetween = "8",
 }) => {
   const { isLoading } = useInterfaceContext();
-  const lineAnimation = isLoading
-    ? {
-        stroke: ["#A6FF47", "#A6FF47"],
+  const controls = useAnimation();
+
+  useEffect(() => {
+    if (isLoading) {
+      // Flashing orange when loading
+      controls.start({
+        stroke: ["#FFA500", "#FFA500"],
         opacity: [1, 0.5, 1],
         transition: {
           duration: 0.5,
           repeat: Infinity,
           ease: "linear",
         },
-      }
-    : {};
+      });
+    } else {
+      // Green for a second, then revert to normal
+      controls.start({
+        stroke: ["#A6FF47", color],
+        transition: { duration: 1 },
+      });
+    }
+  }, [isLoading, color, controls]);
 
   return (
     <svg
       className={className}
-      style={{ width: width, height: "100%", zIndex: -10 }}
+      style={{ width: width, height: "100%" }}
       preserveAspectRatio="none"
     >
       <motion.line
@@ -37,7 +48,7 @@ const Dash = ({
         strokeWidth={width}
         strokeDasharray={`${dotSize}, ${spaceBetween}`}
         strokeLinecap="round"
-        animate={lineAnimation}
+        animate={controls}
       />
     </svg>
   );

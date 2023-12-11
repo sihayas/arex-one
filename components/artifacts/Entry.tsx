@@ -44,33 +44,33 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <div className={`flex items-end gap-2.5 relative group w-[608px]`}>
-      {/* Username and Avatar*/}
-      <div className={`flex items-center gap-2 h-fit`}>
-        <p
-          className={`text-gray4 font-medium text-sm leading-[75%] min-w-[162px] text-end`}
-        >
-          {artifact.author.username}
-        </p>
-        <Avatar
-          className={`h-[42px] border border-silver`}
-          imageSrc={artifact.author.image}
-          altText={`${artifact.author.username}'s avatar`}
-          width={42}
-          height={42}
-          user={artifact.author}
-        />
-      </div>
+    <div className={`flex items-end gap-2.5 relative group w-[438px] group`}>
+      <Avatar
+        className={`h-[42px] border border-silver`}
+        imageSrc={artifact.author.image}
+        altText={`${artifact.author.username}'s avatar`}
+        width={42}
+        height={42}
+        user={artifact.author}
+      />
 
       {/* Content Inner / Card */}
       <motion.div
         onClick={handleEntryClick}
-        initial={{ rotate: -1 }}
-        whileHover={{ scale: 0.95, rotate: 0 }}
-        transition={{ type: "spring", stiffness: 220, damping: 13 }}
-        className={`flex flex-col rounded-[32px] bg-white relative w-[320px] h-[448px] shadow-shadowKitHigh will-change-transform`}
+        initial={{ rotate: 3, scale: 0.5, opacity: 0 }}
+        animate={{ rotate: -1, scale: 1, opacity: 1 }}
+        whileHover={{ scale: 0.96, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 160, damping: 34 }}
+        className={`flex flex-col rounded-[32px] bg-white relative w-[384px] h-[538px] shadow-shadowKitHigh will-change-transform`}
       >
         {/* Stars */}
+        <Heart
+          handleHeartClick={handleHeartClick}
+          hearted={hearted}
+          className="absolute -top-7 -left-[7px]"
+          heartCount={heartCount}
+          replyCount={artifact._count.replies}
+        />
         <div
           className={`absolute top-6 left-1/2 -translate-x-1/2 flex items-center p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
         >
@@ -82,7 +82,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           </div>
           <div className={`-ml-1`}>&middot;</div>
           <div
-            className={`-ml-1 text-xs text-[#000] leading-[9px] font-medium line-clamp-1`}
+            className={`-ml-1 text-xs text-[#000] leading-[9px] line-clamp-1`}
           >
             {sound.attributes.artistName}
           </div>
@@ -98,37 +98,39 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           fill={true}
           // onClick={handleSoundClick}
         />
+        {/* Gradient */}
         <div
           style={{
             background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
           }}
-          className="absolute bottom-0 w-full h-2/5 rounded-b-[32px] pointer-events-none"
+          className="absolute bottom-0 w-full h-4/5 rounded-b-[32px] pointer-events-none"
         />
         <div
           className={`absolute px-6 text-sm text-white font-medium line-clamp-5 bottom-[18px] pointer-events-none`}
         >
           {artifact.content?.text}
         </div>
+
+        {/* Name */}
+        <p
+          className={`absolute -bottom-[13px] left-2 text-[#000] font-medium text-xs leading-[9px]`}
+        >
+          {artifact.author.username}
+        </p>
       </motion.div>
 
       {/* Color Blur */}
-      <div
+      <motion.div
         style={{
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute left-[222px] w-[320px] h-[448px] -z-10 -rotate-1`}
+        className={`absolute rounded-full left-[52px] w-[320px] h-[448px] -z-10 -rotate-1`}
       />
     </div>
   );
 };
-// <Heart
-//     handleHeartClick={handleHeartClick}
-//     hearted={hearted}
-//     className="absolute -bottom-1 -right-1"
-//     heartCount={heartCount}
-//     replyCount={artifact._count.replies}
-// />
+
 // {heartCount > 0 ||
 // (artifact._count.replies > 0 && (
 //     <div

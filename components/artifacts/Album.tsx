@@ -72,7 +72,7 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -bottom-1 -right-1"
+        className="absolute -top-[28px] -left-[7px]"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />

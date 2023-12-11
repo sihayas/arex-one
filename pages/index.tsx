@@ -57,29 +57,28 @@ export default function Home() {
         className={`text-[42px] leading-[33px] text-black absolute top-8 left-8`}
       ></div>
 
+      {/* Feed */}
       {activeFeed && (
         <>
-          <div className={`absolute left-[167px] flex items-center gap-8`}>
-            <Image
-              className={`rounded-full`}
-              src={user?.image}
-              alt={`${user?.username}'s avatar`}
-              width={48}
-              height={48}
-            />
-          </div>
-
-          <Dash className="absolute translate-x-[190px]" />
-
-          {/* Feeds */}
           <motion.div
             ref={scrollContainerRef}
-            className={`flex flex-col items-center pt-16 gap-16 max-h-[125vh] w-fit overflow-scroll scrollbar-none -ml-[224px]`}
+            className={`flex flex-col items-center pt-16 px-8 gap-32 max-h-[125vh] w-fit overflow-scroll scrollbar-none`}
           >
+            <Image
+              className={`rounded-full z-10 -translate-x-[198px] absolute shadow-shadowKitMedium`}
+              src={user?.image}
+              alt={`${user?.username}'s avatar`}
+              width={42}
+              height={42}
+            />
+            <Dash className="absolute z-10 -translate-x-[198px]" />
+
             {/*  Blur Backdrop */}
             <div
-              className={`absolute top-0 left-0 w-full h-full bg-white/0 backdrop-blur-3xl pointer-events-none z-0`}
+              className={`absolute top-0 left-0 w-full h-full bg-white/10 backdrop-blur-[124px] pointer-events-none z-0`}
             ></div>
+
+            {/*  Stream */}
             {scrollContainerRef && (
               <>
                 {activeFeed === "bloom" ? (

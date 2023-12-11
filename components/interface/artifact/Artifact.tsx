@@ -100,19 +100,6 @@ export const Artifact = () => {
       exit={{ opacity: 0 }}
       className="w-full min-h-full relative mt-[1px]"
     >
-      <div
-        style={{
-          background: `#${color}`,
-          backgroundRepeat: "repeat, no-repeat",
-        }}
-        className={`absolute -top-[268px] left-16 w-[352px] h-[493px] z-10 blur-3xl -rotate-3`}
-      />
-      <div
-        style={{
-          background: `linear-gradient(to bottom, #FFF, rgba(0,0,0,0) z-0`,
-        }}
-        className="absolute top-0 left-0 w-full h-[288px] pointer-events-none"
-      />
       <motion.div
         style={{ opacity: opacityReplies }}
         className={`flex flex-col p-8 pt-[256px] overflow-scroll scrollbar-none h-full relative`}
@@ -134,6 +121,13 @@ export const Artifact = () => {
             ${!isOpen ? "opacity-100" : "opacity-0"}
             `}
         >
+          <Heart
+            handleHeartClick={handleHeartClick}
+            hearted={hearted}
+            className="absolute -top-7 -left-[7px]"
+            heartCount={heartCount}
+            replyCount={artifact._count.replies}
+          />
           <Image
             onClick={handleSoundClick}
             className={`absolute rounded-[32px]`}
