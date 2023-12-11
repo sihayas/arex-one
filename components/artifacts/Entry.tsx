@@ -44,7 +44,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <div className={`flex items-end gap-2 relative group`}>
+    <div className={`flex items-end gap-2.5 relative group w-[608px]`}>
       {/* Username and Avatar*/}
       <div className={`flex items-center gap-2 h-fit`}>
         <p
@@ -68,19 +68,21 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         initial={{ rotate: -1 }}
         whileHover={{ scale: 0.95, rotate: 0 }}
         transition={{ type: "spring", stiffness: 220, damping: 13 }}
-        className={`flex flex-col rounded-[32px] bg-white relative w-[320px] h-[448px] shadow-shadowKitLow will-change-transform`}
+        className={`flex flex-col rounded-[32px] bg-white relative w-[320px] h-[448px] shadow-shadowKitHigh will-change-transform`}
       >
         {/* Stars */}
         <div
           className={`absolute top-6 left-1/2 -translate-x-1/2 flex items-center p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
         >
           <Stars rating={artifact.content?.rating} />
-          <div className={`text-xs text-[#000] leading-[9px] font-medium`}>
+          <div
+            className={`text-xs text-[#000] leading-[9px] font-medium line-clamp-1`}
+          >
             {sound.attributes.name}
           </div>
           <div className={`-ml-1`}>&middot;</div>
           <div
-            className={`-ml-1 text-xs text-[#000] leading-[9px] font-medium`}
+            className={`-ml-1 text-xs text-[#000] leading-[9px] font-medium line-clamp-1`}
           >
             {sound.attributes.artistName}
           </div>
@@ -108,12 +110,14 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           {artifact.content?.text}
         </div>
       </motion.div>
+
+      {/* Color Blur */}
       <div
         style={{
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute left-[220px] w-[320px] h-[448px] -z-10 blur-3xl -rotate-1`}
+        className={`absolute left-[222px] w-[320px] h-[448px] -z-10 -rotate-1`}
       />
     </div>
   );

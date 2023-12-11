@@ -71,11 +71,15 @@ export default function Home() {
 
           <Dash className="absolute translate-x-[190px]" />
 
-          {/* Feeds or Profile artifacts Container */}
+          {/* Feeds */}
           <motion.div
             ref={scrollContainerRef}
-            className={`relative flex flex-col pl-0 p-12 pt-12 pb-60 gap-16 max-w-screen max-h-[125vh] overflow-scroll scrollbar-none`}
+            className={`flex flex-col items-center pt-16 gap-16 max-h-[125vh] w-fit overflow-scroll scrollbar-none -ml-[224px]`}
           >
+            {/*  Blur Backdrop */}
+            <div
+              className={`absolute top-0 left-0 w-full h-full bg-white/0 backdrop-blur-3xl pointer-events-none z-0`}
+            ></div>
             {scrollContainerRef && (
               <>
                 {activeFeed === "bloom" ? (

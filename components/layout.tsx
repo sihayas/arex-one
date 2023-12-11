@@ -85,7 +85,11 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Interface isVisible={isVisible} />
         </div>
       )}
-      <main ref={scope} id="main-content" className={`origin-top-left`}>
+      <main
+        ref={scope}
+        id="main-content"
+        className={`origin-top-left flex items-center justify-center`}
+      >
         {children}
       </main>
     </>

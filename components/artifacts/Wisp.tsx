@@ -46,7 +46,7 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <motion.div className="flex flex-col gap-2 relative">
+    <motion.div className="flex flex-col gap-2">
       {/* Top */}
       <div className={`ml-[224px] flex items-end relative`}>
         {/* Artwork Capsule */}
@@ -77,16 +77,18 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
             </p>
           </div>
         </div>
+
+        {/* Blur Color */}
         <div
           style={{
             background: `#${color}`,
             backgroundRepeat: "repeat, no-repeat",
           }}
-          className={`absolute left-0 top-0 w-[160px] h-[160px] -z-10 blur-3xl rounded-full`}
+          className={`absolute left-0 top-0 w-[160px] h-[160px] -z-10 rounded-full`}
         />
       </div>
 
-      <div className={`flex items-end w-[608px] -z-20`}>
+      <div className={`flex items-end w-[608px] z-10 mix-blend-multiply`}>
         {/* Username and Avatar*/}
         <div className={`flex items-center gap-2 h-fit`}>
           <p
@@ -111,7 +113,7 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
           {/* Content */}
           <div
             onClick={handleEntryClick}
-            className={`break-words line-clamp-6 w-full text-sm text-gray5 cursor-pointer z-10`}
+            className={`break-words line-clamp-6 w-full text-sm text-gray5 cursor-pointer`}
           >
             {artifact.content?.text}
           </div>
@@ -145,7 +147,7 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
             ))}
 
           {/* Bubbles */}
-          <div className={`w-3 h-3 absolute -bottom-1 -left-1 -z-10`}>
+          <div className={`w-3 h-3 absolute -bottom-1 -left-1`}>
             <div
               className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
             />
