@@ -13,16 +13,21 @@ import { useUser } from "@supabase/auth-helpers-react";
 // Component to handle sound
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const user = useUser();
-  const artworkUrl = ArtworkURL(sound.attributes.artwork.url, "1200");
+
   const { handleSelectSound } = useSound();
   const { prevEssentialId, setPrevEssentialId, rank, setRank } =
     useSoundContext();
   const { setInputValue, isChangingEssential, setExpandInput } =
     useNavContext();
 
-  // Determine sound type
+  const isSongData = (sound: AlbumData | SongData): sound is SongData =>
+    sound.type === "songs";
+
   const soundType = sound.type === "albums" ? "ALBUM" : "SONG";
-  const artistName = sound.type === "songs" ? sound.attributes.artistName : "";
+
+  const album = isSongData(sound) ? sound.relationships.albums.data[0] : sound;
+  const artworkUrl = ArtworkURL(sound.attributes.artwork.url, "1200");
+  const artistName = sound.attributes.artistName;
 
   const onSelect = async (appleId: string) => {
     // If essential is being changed and user exists
@@ -47,7 +52,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       }
     } else {
       // If not changing essential, store input value and prepare form
-      await handleSelectSound(sound, artworkUrl);
+      await handleSelectSound(album, artworkUrl);
       setExpandInput(false);
       setInputValue("");
     }

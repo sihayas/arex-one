@@ -44,6 +44,8 @@ const useGenericFeedQuery = (
 
       const mergedData = await attachSoundData(activities);
 
+      console.log("mergedData", mergedData);
+
       return { data: mergedData, pagination };
     },
     {
@@ -80,7 +82,7 @@ export const attachSoundData = async (activityData: Activity[]) => {
 
   // Fetch album and track data
   const idTypes = { albums: albumIds, songs: songIds };
-  const response = await axios.get(`/api/sounds/get/sounds`, {
+  const response = await axios.get(`/api/caches/sounds`, {
     params: { idTypes: JSON.stringify(idTypes) },
   });
   const { albums, songs } = response.data;

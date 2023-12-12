@@ -10,9 +10,7 @@ export async function fetchAndCacheSoundsByType(ids: any, type: string) {
 
   // Check the cache for all IDs at once
   const cacheResponses = await Promise.all(
-    idsArray.map((id: string) =>
-      getCache(`sound:${type}:${id}:${type === "albums" ? "data" : "albumId"}`),
-    ),
+    idsArray.map((id: string) => getCache(`sound:${type}:${id}:data`)),
   );
 
   const promises = cacheResponses.map(async (cachedData, index) => {
@@ -20,16 +18,6 @@ export async function fetchAndCacheSoundsByType(ids: any, type: string) {
 
     if (!cachedData) {
       needToFetch.push(id);
-      return;
-    }
-
-    if (type === "songs") {
-      const album = await getCache(`sound:albums:${cachedData}:data`);
-      if (album) {
-        responseDataMap.set(id, album);
-      } else {
-        needToFetch.push(id);
-      }
       return;
     }
 
@@ -42,11 +30,7 @@ export async function fetchAndCacheSoundsByType(ids: any, type: string) {
   if (needToFetch.length > 0) {
     const fetchedData = await fetchSoundsByType(type, needToFetch);
     fetchedData.forEach((data: AlbumData, index: number) => {
-      setCache(`sound:albums:${data.id}:data`, data, 3600);
-      {
-        type === "songs" &&
-          setCache(`sound:songs:${needToFetch[index]}:albumId`, data.id, 3600);
-      }
+      setCache(`sound:${type}:${data.id}:data`, data, 3600);
       responseDataMap.set(needToFetch[index], data);
     });
   }

@@ -61,7 +61,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         animate={{ rotate: -1, scale: 1, opacity: 1 }}
         whileHover={{ scale: 0.96, rotate: 0 }}
         transition={{ type: "spring", stiffness: 160, damping: 34 }}
-        className={`flex flex-col rounded-[32px] bg-white relative w-[384px] h-[538px] shadow-shadowKitHigh will-change-transform`}
+        className={`flex flex-col rounded-[32px] bg-white relative w-[384px] h-[538px] shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
         {/* Stars */}
         <Heart
@@ -103,7 +103,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           style={{
             background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
           }}
-          className="absolute bottom-0 w-full h-4/5 rounded-b-[32px] pointer-events-none"
+          className="absolute bottom-0 w-full h-4/5 pointer-events-none"
         />
         <div
           className={`absolute px-6 text-sm text-white font-medium line-clamp-5 bottom-[18px] pointer-events-none`}

@@ -62,10 +62,10 @@ export default function Home() {
         <>
           <motion.div
             ref={scrollContainerRef}
-            className={`flex flex-col items-center pt-16 px-8 gap-32 max-h-[125vh] w-fit overflow-scroll scrollbar-none`}
+            className={`flex flex-col items-center pt-16 px-8 gap-32 max-h-[125vh] w-full overflow-scroll scrollbar-none`}
           >
             <Image
-              className={`rounded-full z-10 -translate-x-[198px] absolute shadow-shadowKitMedium`}
+              className={`rounded-full z-20 -translate-x-[198px] absolute shadow-shadowKitMedium`}
               src={user?.image}
               alt={`${user?.username}'s avatar`}
               width={42}
@@ -75,7 +75,7 @@ export default function Home() {
 
             {/*  Blur Backdrop */}
             <div
-              className={`absolute top-0 left-0 w-full h-full bg-white/10 backdrop-blur-[124px] pointer-events-none z-0`}
+              className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-white/10 backdrop-blur-[124px] pointer-events-none z-0`}
             ></div>
 
             {/*  Stream */}

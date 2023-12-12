@@ -1,6 +1,5 @@
 import axios from "axios";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import { getCache, setCache } from "@/lib/global/redis";
 
 const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
 export const baseURL = "https://api.music.apple.com/v1/catalog/us";
@@ -13,13 +12,12 @@ const isUnwanted = (title: string) => {
   );
 };
 
-// RenderResults for sounds method
 export const searchAlbums = async (keyword: string) => {
   const limit = 12;
   const types = "albums,songs";
   const url = `${baseURL}/search?term=${encodeURIComponent(
     keyword,
-  )}&limit=${limit}&types=${types}`;
+  )}&limit=${limit}&types=${types}&include[songs]=albums`;
 
   const response = await axios.get(url, {
     headers: {
@@ -47,7 +45,9 @@ export const searchAlbums = async (keyword: string) => {
 export const fetchSoundsByTypes = async (idTypes: Record<string, string[]>) => {
   const idParams = Object.entries(idTypes)
     .flatMap(([type, ids]) =>
-      ids.length > 0 ? `ids[${type}]=${ids.join(",")}` : [],
+      ids.length > 0
+        ? `ids[${type}]=${ids.join(",")}&include[songs]=albums`
+        : [],
     )
     .join("&");
 

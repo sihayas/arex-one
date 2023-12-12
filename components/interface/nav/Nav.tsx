@@ -208,7 +208,7 @@ const Nav = () => {
       >
         {/* Input Outer */}
         <div
-          className={`bg-[#F4F4F4] flex flex-col items-end absolute bottom-1 left-0 rounded-[18px] shadow-shadowKitMedium outline outline-silver outline-1`}
+          className={`bg-[#F4F4F4] flex flex-col items-end absolute bottom-1 left-0 rounded-[18px]`}
         >
           {/* Top / Form / RenderResults Results */}
           {expandInput && !replyParent && (selectedFormSound || inputValue) && (
@@ -375,7 +375,7 @@ const Nav = () => {
   }
 
   return (
-    <div className="absolute z-50 flex items-start gap-1 -bottom-8 -left-8 max-h-9">
+    <div className="absolute z-50 flex items-start gap-1 -bottom-9 -left-9 max-h-9">
       {left}
       {middle}
       {right}

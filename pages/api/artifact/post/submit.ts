@@ -15,8 +15,8 @@ export default async function handle(
 
   const { rating, loved, text, userId, sound } = req.body;
   const appleId = sound.id;
-  const isWisp = rating === 0;
   const type = sound.type;
+  const isWisp = rating === 0 || type === "songs";
 
   try {
     // @ts-ignore
@@ -31,7 +31,7 @@ export default async function handle(
       const fetchedData = await fetchSoundsByType(type, [appleId]);
       const album = fetchedData[0];
 
-      // If submission is for a SONG
+      // Initiate the sound in the database
       if (type === "songs") {
         // Create album with song if it doesn't exist or Update
         await prisma.sound.upsert({
@@ -109,8 +109,9 @@ export default async function handle(
         });
       }
     }
-    // If sound exists
 
+    // If sound exists ->
+    // If is wisp (sound is a song/not an album) or rating for an album is 0 ->
     if (isWisp) {
       newArtifact = await prisma.artifact.create({
         data: {

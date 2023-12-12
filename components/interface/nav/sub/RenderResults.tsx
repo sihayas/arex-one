@@ -5,7 +5,6 @@ import { Command } from "cmdk";
 import UserItem from "./items/User";
 import Sound from "./items/Sound";
 import { UserType } from "@/types/dbTypes";
-import { motion } from "framer-motion";
 
 interface SearchProps {
   searchData: any;

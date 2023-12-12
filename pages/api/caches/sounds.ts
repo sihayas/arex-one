@@ -44,20 +44,9 @@ export async function fetchAndCacheSoundsByTypes(
     const fetchedData = await fetchSoundsByTypes(fetchIds);
 
     for (const item of fetchedData) {
-      const isSong = item.type === "songs";
-      const cacheKey = `sound:${item.type}:${item.id}:${
-        isSong ? "albumId" : "data"
-      }`;
+      const cacheKey = `sound:${item.type}:${item.id}:data`;
 
-      if (isSong) {
-        const songDataKey = `sound:songs:${item.id}:data`;
-        await setCache(songDataKey, item, 3600);
-      }
-      const dataToCache = isSong
-        ? (item as SongData).relationships.albums.data[0].id
-        : item;
-
-      await setCache(cacheKey, dataToCache, 3600);
+      await setCache(cacheKey, item, 3600);
       // @ts-ignore
       responseData[item.type].set(item.id, item);
     }

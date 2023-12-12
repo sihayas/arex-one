@@ -3,17 +3,8 @@ import React, { useEffect, useState } from "react";
 
 import { useSoundContext } from "@/context/SoundContext";
 
-import { useAlbumQuery } from "@/lib/apiHelper/album";
 import RenderArtifacts from "./sub/RenderArtifacts";
-import {
-  motion,
-  useAnimate,
-  useMotionValueEvent,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import Filter from "@/components/interface/album/sub/Filter";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
 import { AlbumData, TrackData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
@@ -71,9 +62,6 @@ const Album = () => {
     damping: 36,
     stiffness: 400,
   });
-
-  // Initializes album. If the album doesn't have detailed data fetch it.
-  const { isLoading } = useAlbumQuery();
 
   if (!selectedSound) return;
 
@@ -143,24 +131,3 @@ const Album = () => {
 };
 
 export default Album;
-{
-  /*<motion.div*/
-}
-{
-  /*  id={`rating`}*/
-}
-{
-  /*  className={`text-[64px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-baskerville`}*/
-}
-{
-  /*  style={{ color: textColor }}*/
-}
-{
-  /*>*/
-}
-{
-  /*  3.7*/
-}
-{
-  /*</motion.div>*/
-}

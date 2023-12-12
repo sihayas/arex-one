@@ -119,8 +119,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             <Heart
               handleHeartClick={handleHeartClick}
               hearted={hearted}
-              className={`absolute -top-1 z-20 ${
-                isEvenLevel ? "-right-1" : "-left-1 transform scale-x-[-1]"
+              className={`absolute -top-7 z-20 ${
+                isEvenLevel
+                  ? "-right-[7px] transform scale-x-[-1]"
+                  : "-left-1.5"
               }`}
               heartCount={heartCount}
               replyCount={reply._count.replies}

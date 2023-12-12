@@ -49,28 +49,29 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
     <motion.div className="flex flex-col gap-4 w-[438px]">
       {/* Artwork Capsule */}
       <div
-        className={`flex bg-[#F4F4F4]/50 items-center gap-4 p-4 rounded-[32px] w-[384px] h-fit relative ml-[54px]`}
+        className={`flex items-center gap-4 w-[384px] h-fit relative ml-[54px]`}
       >
-        <Image
-          className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
-          src={url}
-          alt={`artwork`}
-          loading="lazy"
-          quality={100}
-          width={128}
-          height={128}
-          onClick={handleSoundClick}
-        />
+        <div className={`p-2 bg-[#F4F4F4]/50  rounded-[24px]`}>
+          <Image
+            className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
+            src={url}
+            alt={`artwork`}
+            loading="lazy"
+            quality={100}
+            width={128}
+            height={128}
+            onClick={handleSoundClick}
+          />
+        </div>
+
         {/* Names */}
         <div className={`flex flex-col gap-3`}>
           <p
-            className={`text-black font-medium text-sm leading-[10px] w-[162px]`}
+            className={`text-[#000] font-medium text-sm leading-[10px] w-[162px]`}
           >
             {sound.attributes.name}
           </p>
-          <p
-            className={`text-gray2 font-medium text-xs leading-[9px] min-w-[162px]`}
-          >
+          <p className={`text-[#000] font text-xs leading-[9px] min-w-[162px]`}>
             {sound.attributes.artistName}
           </p>
         </div>
