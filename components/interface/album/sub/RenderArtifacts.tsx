@@ -8,19 +8,19 @@ import { Activity } from "@/types/dbTypes";
 import { ArtifactExtended } from "@/types/globalTypes";
 
 interface RenderArtifactsProps {
-  sound: AlbumData;
+  soundId: string;
   sortOrder: "newest" | "highlights" | "positive" | "critical";
 }
 
 const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
-  sound,
+  soundId,
   sortOrder = "newest",
 }) => {
   const { user } = useInterfaceContext();
   const userId = user?.id;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useArtifactsQuery(sound, userId, sortOrder);
+    useArtifactsQuery(soundId, userId, sortOrder);
 
   const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
 

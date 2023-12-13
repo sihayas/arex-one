@@ -3,15 +3,16 @@ import Head from "next/head";
 import React from "react";
 import Dash from "@/components/global/Dash";
 import { motion } from "framer-motion";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Stream from "@/components/Stream";
 
 export default function Home() {
-  const { activeFeed, user } = useInterfaceContext();
+  const { activeFeed, user, pages, isVisible } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const supabaseClient = useSupabaseClient();
+  const activePage: Page = pages[pages.length - 1];
 
   if (!user) {
     return (
@@ -53,57 +54,47 @@ export default function Home() {
       <Head>
         <title>Rx</title>
       </Head>
-      <div
-        className={`text-[42px] leading-[33px] text-black absolute top-8 left-8`}
-      ></div>
 
       {/* Feed */}
       {activeFeed && (
-        <>
-          <motion.div
-            ref={scrollContainerRef}
-            className={`flex flex-col items-center pt-16 px-8 gap-32 max-h-[125vh] w-full overflow-scroll scrollbar-none`}
-          >
-            <Image
-              className={`rounded-full z-20 -translate-x-[198px] absolute shadow-shadowKitMedium`}
-              src={user?.image}
-              alt={`${user?.username}'s avatar`}
-              width={42}
-              height={42}
+        <motion.div
+          ref={scrollContainerRef}
+          className={`flex flex-col items-center pt-16 px-8 gap-32 max-h-[125vh] w-full overflow-scroll scrollbar-none`}
+        >
+          {/*  Blur Backdrop */}
+          <div
+            className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-white/5 backdrop-blur-[124px] pointer-events-none z-0`}
+          ></div>
+
+          {activeFeed === "bloom" ? (
+            <Stream
+              userId={user.id}
+              scrollContainerRef={scrollContainerRef}
+              type={"bloom"}
             />
-            <Dash className="absolute z-10 -translate-x-[198px]" />
+          ) : activeFeed === "personal" ? (
+            <Stream
+              userId={user.id}
+              scrollContainerRef={scrollContainerRef}
+              type={"personal"}
+            />
+          ) : activeFeed === "recent" ? (
+            <Stream
+              userId={user.id}
+              scrollContainerRef={scrollContainerRef}
+              type={"recent"}
+            />
+          ) : null}
 
-            {/*  Blur Backdrop */}
-            <div
-              className={`absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-white/10 backdrop-blur-[124px] pointer-events-none z-0`}
-            ></div>
-
-            {/*  Stream */}
-            {scrollContainerRef && (
-              <>
-                {activeFeed === "bloom" ? (
-                  <Stream
-                    userId={user.id}
-                    scrollContainerRef={scrollContainerRef}
-                    type={"bloom"}
-                  />
-                ) : activeFeed === "personal" ? (
-                  <Stream
-                    userId={user.id}
-                    scrollContainerRef={scrollContainerRef}
-                    type={"personal"}
-                  />
-                ) : activeFeed === "recent" ? (
-                  <Stream
-                    userId={user.id}
-                    scrollContainerRef={scrollContainerRef}
-                    type={"recent"}
-                  />
-                ) : null}
-              </>
-            )}
-          </motion.div>
-        </>
+          <Image
+            className={`rounded-full z-20 -translate-x-[198px] absolute shadow-shadowKitMedium`}
+            src={user?.image}
+            alt={`${user?.username}'s avatar`}
+            width={42}
+            height={42}
+          />
+          <Dash className="absolute z-10 -translate-x-[198px]" />
+        </motion.div>
       )}
 
       {/* DISCONNECT */}

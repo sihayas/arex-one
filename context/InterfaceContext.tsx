@@ -13,6 +13,7 @@ import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
 export type Page = {
   key: string;
   name: string;
+  color: string;
   sound?: SelectedSound;
   user?: UserType;
   artifact?: Artifact;
@@ -146,6 +147,7 @@ export const InterfaceContextProvider = ({
           user: user,
           dimensions: { width: 352, height: 512 },
           scrollPosition: 0,
+          color: "CCC",
         },
       ]);
     }

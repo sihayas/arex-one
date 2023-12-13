@@ -347,6 +347,40 @@ export function ChainIcon({ ...props }) {
   );
 }
 
+export function ReplyIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={18}
+      height={18}
+      fill="none"
+      {...props}
+    >
+      <rect
+        width={16.054}
+        height={16.054}
+        fill="#C4C4C7"
+        rx={8.027}
+        transform="matrix(-1 0 0 1 16.054 0)"
+      />
+      <circle
+        cx={0.973}
+        cy={0.973}
+        r={0.973}
+        fill="#C4C4C7"
+        transform="matrix(-1 0 0 1 18 16.054)"
+      />
+      <circle
+        cx={1.946}
+        cy={1.946}
+        r={1.946}
+        fill="#C4C4C7"
+        transform="matrix(-1 0 0 1 16.054 12.162)"
+      />
+    </svg>
+  );
+}
+
 export function BubbleIcon({ ...props }) {
   return (
     <svg

@@ -1,7 +1,7 @@
 import { useFeedQuery } from "@/lib/apiHelper/feed";
 import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";
-import { useMotionValueEvent, useScroll } from "framer-motion";
+import { AnimatePresence, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { Entry } from "@/components/artifacts/Entry";
@@ -16,7 +16,7 @@ const Stream = ({
   scrollContainerRef: React.RefObject<HTMLDivElement>;
   type: string;
 }) => {
-  const { isLoading, setIsLoading } = useInterfaceContext();
+  const { setIsLoading } = useInterfaceContext();
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useFeedQuery(userId, type);
@@ -45,7 +45,6 @@ const Stream = ({
 
   return (
     <>
-      {error && "an error has occurred"}
       {allActivities.map((activity: Activity) => (
         <Fragment key={activity.id}>
           {activity.artifact && activity.artifact.type === "entry" ? (

@@ -25,6 +25,7 @@ export const useArtifact = (artifact: Artifact) => {
         },
         scrollPosition: 0,
         artifact: artifact,
+        color: artifact.appleData.attributes.artwork.bgColor,
       },
     ]);
     setThreadcrumbs([artifact.id]);
@@ -45,6 +46,7 @@ export const useUser = (author: UserType) => {
         user: author,
         dimensions: { width: 576, height: 346 },
         scrollPosition: 0,
+        color: "CCC",
       },
     ]);
     setIsVisible(true);
@@ -53,31 +55,29 @@ export const useUser = (author: UserType) => {
 
 // Handle Sound Click
 export const useSound = () => {
-  // CMDK context
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setSelectedSound } = useSoundContext();
 
-  const handleSelectSound = async (
+  const handleSelectSound = (
     sound: AlbumData | SongData,
     artworkUrl: string,
   ) => {
-    setSelectedSound({ sound: sound, artworkUrl });
+    setSelectedSound({ sound, artworkUrl });
     setPages((prevPages) => [
       ...prevPages,
       {
         key: uuidv4(),
         name: "album",
-        sound: { sound: sound, artworkUrl },
+        sound: { sound, artworkUrl },
         dimensions: {
-          width: 512,
+          width: 576,
           height: 832,
         },
         scrollPosition: 0,
+        color: sound.attributes.artwork.bgColor,
       },
     ]);
-    setTimeout(() => {
-      setIsVisible(true);
-    }, 250);
+    setIsVisible(true);
   };
 
   return { handleSelectSound };

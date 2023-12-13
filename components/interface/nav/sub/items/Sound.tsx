@@ -20,12 +20,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const { setInputValue, isChangingEssential, setExpandInput } =
     useNavContext();
 
-  const isSongData = (sound: AlbumData | SongData): sound is SongData =>
-    sound.type === "songs";
-
   const soundType = sound.type === "albums" ? "ALBUM" : "SONG";
-
-  const album = isSongData(sound) ? sound.relationships.albums.data[0] : sound;
   const artworkUrl = ArtworkURL(sound.attributes.artwork.url, "1200");
   const artistName = sound.attributes.artistName;
 
@@ -52,7 +47,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       }
     } else {
       // If not changing essential, store input value and prepare form
-      await handleSelectSound(album, artworkUrl);
+      handleSelectSound(sound, artworkUrl);
       setExpandInput(false);
       setInputValue("");
     }

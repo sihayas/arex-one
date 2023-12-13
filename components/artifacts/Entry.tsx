@@ -119,13 +119,13 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         </p>
       </motion.div>
 
-      {/* Color Blur */}
+      {/* Ambien */}
       <motion.div
         style={{
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute rounded-full left-[52px] w-[320px] h-[448px] -z-10 -rotate-1`}
+        className={`absolute rounded-full left-[52px] w-[384px] h-[538px] -z-10 -rotate-1`}
       />
     </div>
   );

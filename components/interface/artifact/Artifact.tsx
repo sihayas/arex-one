@@ -98,7 +98,7 @@ export const Artifact = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-full relative mt-[1px]"
+      className="w-full min-h-full mt-[1px]"
     >
       <motion.div
         style={{ opacity: opacityReplies }}

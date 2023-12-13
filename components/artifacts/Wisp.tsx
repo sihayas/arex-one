@@ -39,16 +39,18 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
   );
 
   const handleEntryClick = useArtifact(artifact);
-  const handleSoundClick = async () => {
-    await handleSelectSound(sound, url);
+  const handleSoundClick = () => {
+    handleSelectSound(sound, url);
   };
 
   if (!sound) return null;
 
+  console.log("sound", sound);
   return (
     <motion.div className="flex flex-col gap-4 w-[438px]">
       {/* Artwork Capsule */}
       <div
+        onClick={handleSoundClick}
         className={`flex items-center gap-4 w-[384px] h-fit relative ml-[54px]`}
       >
         <div className={`p-2 bg-[#F4F4F4]/50  rounded-[24px]`}>
@@ -60,7 +62,6 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
             quality={100}
             width={128}
             height={128}
-            onClick={handleSoundClick}
           />
         </div>
 

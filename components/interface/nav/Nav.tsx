@@ -6,7 +6,7 @@ import TextareaAutosize from "react-textarea-autosize";
 
 import RenderResults from "./sub/RenderResults";
 import Form from "./sub/Form";
-import { ChainIcon } from "@/components/icons";
+import { ReplyIcon } from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
 import Avatar from "@/components/global/Avatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
@@ -250,7 +250,7 @@ const Nav = () => {
                 >
                   {activePage.artifact ? (
                     <>
-                      <ChainIcon />
+                      <ReplyIcon />
                       <Image
                         className="absolute top-0 left-0 rounded-full border border-gray6"
                         src={activePage.artifact.author.image}
@@ -342,7 +342,7 @@ const Nav = () => {
                     className="w-[18px] h-[18px] relative"
                     aria-label="Reply with selected parent"
                   >
-                    <ChainIcon />
+                    <ReplyIcon />
                     <Image
                       className="absolute top-0 left-0 rounded-full border border-gray6"
                       src={
@@ -378,7 +378,7 @@ const Nav = () => {
     <div className="absolute z-50 flex items-start gap-1 -bottom-9 -left-9 max-h-9">
       {left}
       {middle}
-      {right}
+      {/*{right}*/}
     </div>
   );
 };

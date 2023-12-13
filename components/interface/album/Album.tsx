@@ -6,7 +6,7 @@ import { useSoundContext } from "@/context/SoundContext";
 import RenderArtifacts from "./sub/RenderArtifacts";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
-import { AlbumData, TrackData } from "@/types/appleTypes";
+import { AlbumData, SongData, TrackData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import Statline from "@/components/interface/album/sub/Dial";
@@ -39,16 +39,16 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  const xArtKeyframes = useTransform(scrollY, [0, 1], [0, -54]);
+  const xArtKeyframes = useTransform(scrollY, [0, 1], [0, -222]);
   const xArt = useSpring(xArtKeyframes, xArtConfig);
 
-  const yArtKeyframes = useTransform(scrollY, [0, 1], [0, -54]);
+  const yArtKeyframes = useTransform(scrollY, [0, 1], [0, -48]);
   const yArt = useSpring(yArtKeyframes, yArtConfig);
 
   const scaleArtKeyframes = useTransform(scrollY, [0, 1], [1, 0.1]);
   const scaleArt = useSpring(scaleArtKeyframes, scaleArtConfig);
 
-  const xDialKeyframes = useTransform(scrollY, [0, 1], [-176, -32]);
+  const xDialKeyframes = useTransform(scrollY, [0, 1], [-176, -206]);
   const xDial = useSpring(xDialKeyframes, springConfig);
 
   const yDialKeyframes = useTransform(scrollY, [0, 1], [-176, -32]);
@@ -65,12 +65,21 @@ const Album = () => {
 
   if (!selectedSound) return;
 
+  let albumId;
+
+  if (selectedSound.sound.type === "albums") {
+    albumId = selectedSound.sound.id;
+  } else {
+    const song = selectedSound.sound as SongData;
+    albumId = song.relationships.albums.data[0].id;
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-full mt-[1px] relative"
+      className="w-full min-h-full mt-[1px]"
     >
       {createPortal(
         <motion.div
@@ -79,14 +88,16 @@ const Album = () => {
             y: yArt,
             scale: scaleArt,
             borderRadius,
+            width: 576,
+            height: 576,
           }}
-          className="absolute pointer-events-none overflow-hidden z-50 right-0 bottom-0 origin-bottom-right"
+          className="absolute pointer-events-none overflow-hidden z-50 right-0 bottom-0 origin-bottom-right shadow-shadowKitHigh"
         >
           <Image
             src={selectedSound.artworkUrl}
             alt={`${selectedSound.sound.attributes.name} artwork`}
-            width={512}
-            height={512}
+            width={576}
+            height={576}
             quality={100}
             draggable="false"
             onDragStart={(e) => e.preventDefault()}
@@ -111,21 +122,11 @@ const Album = () => {
       )}
 
       {/* Entries */}
-      <RenderArtifacts
-        sound={selectedSound.sound as AlbumData}
-        sortOrder={sortOrder}
-      />
+      <RenderArtifacts soundId={albumId} sortOrder={sortOrder} />
 
       {/*<div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">*/}
       {/*  <Sort onSortOrderChange={handleSortOrderChange} />*/}
       {/*</div>*/}
-
-      <motion.div
-        style={{
-          backgroundColor: `#${selectedSound.sound.attributes.artwork.bgColor}`,
-        }}
-        className="absolute bottom-8 right-8 w-24 h-24 blur-2xl"
-      ></motion.div>
     </motion.div>
   );
 };

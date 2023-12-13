@@ -35,7 +35,7 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 480, height: 576 },
     },
     album: {
-      base: { width: 512, height: 512 },
+      base: { width: 576, height: 576 },
       target: { width: 512, height: maxHeight },
     },
     artifact: {
@@ -104,29 +104,29 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
   // Animate WINDOW box shadow and scale when expanding input
-  useEffect(() => {
-    const adjustBoxShadow = async () => {
-      const initialBoxShadow =
-        "0px 11px 24px 0px rgba(130, 130, 130, 0.12), 0px 44px 44px 0px rgba(130, 130, 130, 0.10), 0px 99px 60px 0px rgba(130, 130, 130, 0.06), 0px 176px 71px 0px rgba(130, 130, 130, 0.02), 0px 276px 77px 0px rgba(130, 130, 130, 0.00)";
-      const finalBoxShadow =
-        "2px 4px 9px 0px rgba(0, 0, 0, 0.02), 8px 14px 16px 0px rgba(0, 0, 0, 0.02), 18px 32px 22px 0px rgba(0, 0, 0, 0.01), 31px 57px 26px 0px rgba(0, 0, 0, 0.005), 48px 88px 28px 0px rgba(0, 0, 0, 0.002)";
-
-      await animate(
-        scope.current,
-        {
-          boxShadow: expandInput ? finalBoxShadow : initialBoxShadow,
-          scale: expandInput ? 0.86 : 1,
-        },
-        {
-          type: "spring",
-          stiffness: 240,
-          damping: 18,
-        },
-      );
-    };
-
-    adjustBoxShadow();
-  }, [animate, scope, expandInput, expandSignals]);
+  // useEffect(() => {
+  //   const adjustBoxShadow = async () => {
+  //     const initialBoxShadow =
+  //       "10px 14px 37px 0px rgba(0, 0, 0, 0.15), 39px 56px 68px 0px rgba(0, 0, 0, 0.13), 88px 126px 92px 0px rgba(0, 0, 0, 0.08), 156px 223px 109px 0px rgba(0, 0, 0, 0.02), 244px 349px 119px 0px rgba(0, 0, 0, 0.00)";
+  //     const finalBoxShadow =
+  //       "2px 4px 9px 0px rgba(0, 0, 0, 0.02), 8px 14px 16px 0px rgba(0, 0, 0, 0.02), 18px 32px 22px 0px rgba(0, 0, 0, 0.01), 31px 57px 26px 0px rgba(0, 0, 0, 0.005), 48px 88px 28px 0px rgba(0, 0, 0, 0.002)";
+  //
+  //     await animate(
+  //       scope.current,
+  //       {
+  //         boxShadow: expandInput ? finalBoxShadow : initialBoxShadow,
+  //         scale: expandInput ? 0.86 : 1,
+  //       },
+  //       {
+  //         type: "spring",
+  //         stiffness: 240,
+  //         damping: 18,
+  //       },
+  //     );
+  //   };
+  //
+  //   adjustBoxShadow();
+  // }, [animate, scope, expandInput, expandSignals]);
 
   // Animate shape-shifting the WINDOW on scroll & page change & bounce
   useEffect(() => {
@@ -192,44 +192,29 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   ]);
 
   return (
-    <motion.div
-      ref={rootScope}
-      id={`cmdk`}
-      className={`cmdk z-10 rounded-[32px]`}
-    >
-      {/* CMD-K Inner  */}
+    <motion.div ref={rootScope} id={`cmdk`} className={`cmdk rounded-full`}>
+      {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`cmdk-inner flex rounded-[32px] gap-8 items-center`}
+        className={`flex items-start justify-center bg-white rounded-full overflow-hidden border border-silver`}
         shouldFilter={false}
         loop
+        ref={scope}
       >
-        {/* Shape-shift / Window, lies atop the rendered content */}
-        <motion.div
-          id={`cmdk-window`}
-          ref={scope}
-          className={`flex items-start justify-center bg-white overflow-hidden z-20 relative flex-shrink-0 rounded-[32px]`}
+        {/* Base layout / Static dimensions for a page */}
+        <div
+          id={`cmdk-scroll`}
+          ref={scrollContainerRef}
+          className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-full`}
+          style={{
+            width: `${target.width}px`,
+            height: `${target.height}px`,
+          }}
         >
-          {/* Base layout / Static dimensions for a page */}
-          <div
-            className={`flex absolute z-10`}
-            style={{
-              width: `${target.width}px`,
-              height: `${target.height}px`,
-            }}
-          >
-            {/* Container for items within a page. */}
-            <div
-              id={`cmdk-scroll`}
-              ref={scrollContainerRef}
-              className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-[32px]`}
-            >
-              <AnimatePresence>
-                <ActiveComponent />
-              </AnimatePresence>
-            </div>
-          </div>
-        </motion.div>
+          <AnimatePresence>
+            <ActiveComponent />
+          </AnimatePresence>
+        </div>
         <Nav />
       </Command>
     </motion.div>

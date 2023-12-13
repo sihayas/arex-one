@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 export interface SelectedSound {
@@ -53,6 +53,10 @@ export const SoundDetailsProvider = ({
 
   const [selectedFormSound, setSelectedFormSound] =
     useState<SelectedFormSound | null>(null);
+
+  useEffect(() => {
+    console.log(selectedFormSound);
+  }, [selectedFormSound]);
 
   const [prevEssentialId, setPrevEssentialId] = useState("");
   const [rank, setRank] = useState(0);

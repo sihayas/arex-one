@@ -10,7 +10,6 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { SettingsIcon, CardsIcon } from "@/components/icons";
 import FollowButton from "./sub/components/Link";
 import { UserType } from "@/types/dbTypes";
-import { createPortal } from "react-dom";
 import Stars from "@/components/global/Stars";
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";

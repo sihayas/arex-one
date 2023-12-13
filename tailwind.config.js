@@ -25,6 +25,10 @@ module.exports = {
         userAvi:
           "0px 2px 4px 0px rgba(0, 0, 0, 0.10), 0px 8px 8px 0px rgba(0, 0, 0, 0.09), 0px 18px 11px 0px rgba(0, 0, 0, 0.05), 0px 32px 13px 0px rgba(0, 0, 0, 0.01), 0px 49px 14px 0px rgba(0, 0, 0, 0.00)",
       },
+      borderRadius: {
+        full: "32px",
+        max: "9999px",
+      },
       fontFamily: {
         baskerville: ["Baskerville", "serif"],
         serif: ["Times New Roman", "serif"],
