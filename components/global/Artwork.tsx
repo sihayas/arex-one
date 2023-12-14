@@ -62,7 +62,7 @@ export const Artwork = ({
               background: `url('/images/nnnoise2.svg'), #${bgColor}`,
               backgroundRepeat: "repeat, no-repeat",
             }}
-            className={`absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-full h-full -z-10 blur-3xl`}
+            className={`absolute center-x center-y w-full h-full -z-10 blur-3xl`}
           />
           <div
             style={{

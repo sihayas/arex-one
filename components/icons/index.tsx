@@ -399,3 +399,21 @@ export function BubbleIcon({ ...props }) {
     </svg>
   );
 }
+
+export function TailIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={15}
+      height={6}
+      fill="none"
+      {...props}
+      className={props.className}
+    >
+      <path
+        fill="#FFF"
+        d="M4.5 4C5 2 1.667.5 0 0h15c-1.833 1.333-5.914 4.457-8 5.5C6 6 3.882 6.473 4.5 4Z"
+      />
+    </svg>
+  );
+}

@@ -32,6 +32,10 @@ module.exports = {
       fontFamily: {
         baskerville: ["Baskerville", "serif"],
         serif: ["Times New Roman", "serif"],
+        sfRounded: ["SF Pro Rounded", "sans-serif"],
+      },
+      fontSize: {
+        xxs: ["11px", "125%"],
       },
       colors: {
         black: "#333333",

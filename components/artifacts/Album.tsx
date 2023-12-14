@@ -40,7 +40,7 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
     >
       {/* Rating & Attribution */}
       <div
-        className={`absolute left-1/2 -translate-x-1/2 -top-[23px] py-1 px-[5px] flex items-center gap-2 bg-white shadow-shadowKitMedium rounded-full`}
+        className={`absolute center-x -top-[23px] py-1 px-[5px] flex items-center gap-2 bg-white shadow-shadowKitMedium rounded-full`}
       >
         <div
           className={`flex items-center justify-center p-2 outline outline-silver outline-1 rounded-full w-max`}

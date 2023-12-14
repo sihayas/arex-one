@@ -57,10 +57,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       {/* Content Inner / Card */}
       <motion.div
         onClick={handleEntryClick}
-        initial={{ rotate: 3, scale: 0.5, opacity: 0 }}
-        animate={{ rotate: -1, scale: 1, opacity: 1 }}
-        whileHover={{ scale: 0.96, rotate: 0 }}
-        transition={{ type: "spring", stiffness: 160, damping: 34 }}
+        transition={{ type: "spring", stiffness: 180, damping: 18 }}
         className={`flex flex-col rounded-[32px] bg-white relative w-[384px] h-[538px] shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
         {/* Stars */}
@@ -72,19 +69,11 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           replyCount={artifact._count.replies}
         />
         <div
-          className={`absolute top-6 left-1/2 -translate-x-1/2 flex items-center p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
+          className={`absolute top-8 center-x flex items-center p-2 pr-2.5 bg-white rounded-xl w-max max-w-[320px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
         >
           <Stars rating={artifact.content?.rating} />
-          <div
-            className={`text-xs text-[#000] leading-[9px] font-medium line-clamp-1`}
-          >
+          <div className={`text-sm text-[#000] font-bold line-clamp-1`}>
             {sound.attributes.name}
-          </div>
-          <div className={`-ml-1`}>&middot;</div>
-          <div
-            className={`-ml-1 text-xs text-[#000] leading-[9px] line-clamp-1`}
-          >
-            {sound.attributes.artistName}
           </div>
         </div>
 
@@ -106,7 +95,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           className="absolute bottom-0 w-full h-4/5 pointer-events-none"
         />
         <div
-          className={`absolute px-6 text-sm text-white font-medium line-clamp-5 bottom-[18px] pointer-events-none`}
+          className={`absolute px-8 text-sm text-white font-semibold line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
         >
           {artifact.content?.text}
         </div>
@@ -121,11 +110,13 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
 
       {/* Ambien */}
       <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
         style={{
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute rounded-full left-[52px] w-[384px] h-[538px] -z-10 -rotate-1`}
+        className={`absolute rounded-full left-[52px] w-[384px] h-[538px] -z-10`}
       />
     </div>
   );

@@ -21,7 +21,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
     useNavContext();
 
   const soundType = sound.type === "albums" ? "ALBUM" : "SONG";
-  const artworkUrl = ArtworkURL(sound.attributes.artwork.url, "1200");
+  const artworkUrl = ArtworkURL(sound.attributes.artwork.url, "120");
   const artistName = sound.attributes.artistName;
 
   const onSelect = async (appleId: string) => {

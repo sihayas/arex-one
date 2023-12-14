@@ -1,5 +1,5 @@
 import { Interface } from "./interface/Interface";
-import React, { useEffect, ReactNode, useCallback, useRef } from "react";
+import React, { useEffect, ReactNode, useRef } from "react";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -28,6 +28,17 @@ export default function Layout({ children }: { children: ReactNode }) {
           mass: 0.75,
           stiffness: 200,
           damping: 22,
+          delay: isVisible ? 0 : 0.15,
+        },
+        opacity: {
+          type: "spring" as const,
+          mass: 0.75,
+          stiffness: 200,
+          damping: 22,
+          delay: isVisible ? 0 : 0.15,
+        },
+        visibility: {
+          delay: 0.15,
         },
       };
       await animate(scope.current, animationConfig, transitionConfig);
@@ -71,14 +82,14 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       {/* Interface */}
       {user && pages.length > 0 && (
-        <div
-          className={`${
-            isVisible ? "pointer-events-auto" : "pointer-events-none hidden"
-          }`}
+        <motion.div
+          animate={{
+            opacity: isVisible ? 1 : 0,
+          }}
         >
           {/*  Blur Backdrop */}
           <div
-            className={`absolute top-0 left-1/2 -translate-x-1/2 w-screen h-screen bg-white/5 backdrop-blur-[124px] pointer-events-none z-0`}
+            className={`absolute top-0 left-0 w-screen h-screen bg-white/50 backdrop-blur-[124px] pointer-events-none z-0`}
           ></div>
           {/* Ambien */}
           <motion.div
@@ -87,10 +98,10 @@ export default function Layout({ children }: { children: ReactNode }) {
               width: `${activePage.dimensions.width}px`,
               height: `${activePage.dimensions.height}px`,
             }}
-            className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 -z-10 rounded-max"
+            className="absolute center-x center-y -z-10 rounded-max"
           />
           <Interface isVisible={isVisible} />
-        </div>
+        </motion.div>
       )}
 
       {/* Feed */}

@@ -90,7 +90,7 @@ export const Artifact = () => {
   const url = ArtworkURL(sound.attributes.artwork.url, "1200");
 
   const handleSoundClick = async () => {
-    await handleSelectSound(sound, url);
+    handleSelectSound(sound, url);
   };
 
   return (
@@ -117,7 +117,7 @@ export const Artifact = () => {
             rotate: rotateCard,
             y: yEntry,
           }}
-          className={`absolute top-0 flex flex-col rounded-[32px] shadow-shadowKitHigh will-change-transform z-20 cursor-pointer
+          className={`absolute top-0 flex flex-col rounded-full shadow-shadowKitLow will-change-transform z-20 cursor-pointer overflow-hidden
             ${!isOpen ? "opacity-100" : "opacity-0"}
             `}
         >
@@ -141,15 +141,11 @@ export const Artifact = () => {
 
           {/* Stars */}
           <div
-            className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-full w-max max-w-[388px] max-h-8 z-10 gap-2 shadow-shadowKitMedium`}
+            className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-xl w-max max-w-[388px] max-h-8 z-10 gap-2 shadow-shadowKitMedium`}
           >
             <Stars rating={artifact.content?.rating} />
             <div className={`text-sm text-[#000] leading-[10px] font-bold`}>
               {sound.attributes.name}
-            </div>
-            <div className={`-ml-1`}>&middot;</div>
-            <div className={`-ml-1 text-sm text-[#000] leading-[10px]`}>
-              {sound.attributes.artistName}
             </div>
           </div>
 
@@ -157,11 +153,11 @@ export const Artifact = () => {
             style={{
               background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
             }}
-            className="absolute bottom-0 w-full h-[416px] rounded-b-[32px] pointer-events-none"
+            className="absolute bottom-0 w-full h-[416px] pointer-events-none"
           />
 
           <div
-            className={`z-10 p-6 pb-0 text-sm text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
+            className={`z-10 p-6 pb-0 text-sm text-white font-semibold line-clamp-6 pointer-events-none mt-auto will-change-transform`}
           >
             {artifact.content?.text}
           </div>
@@ -192,7 +188,7 @@ export const Artifact = () => {
             rotate: rotateCard,
             y: yEntry,
           }}
-          className={`absolute top-0 flex flex-col rounded-[32px] shadow-shadowKitHigh will-change-transform z-20 pointer-events-none`}
+          className={`absolute top-0 flex flex-col rounded-full shadow-shadowKitHigh will-change-transform pointer-events-none overflow-hidden`}
         >
           <Image
             className={`absolute rounded-[32px]`}
@@ -224,7 +220,7 @@ export const Artifact = () => {
             style={{
               background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
             }}
-            className="absolute bottom-0 w-full h-[416px] rounded-b-[32px] pointer-events-none"
+            className="absolute bottom-0 w-full h-[416px] pointer-events-none"
           />
 
           <div

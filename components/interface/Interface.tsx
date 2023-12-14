@@ -31,8 +31,8 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 480, height: 576 },
-      target: { width: 480, height: 576 },
+      base: { width: 416, height: 608 },
+      target: { width: 416, height: 608 },
     },
     album: {
       base: { width: 576, height: 576 },
@@ -49,7 +49,7 @@ export const GetDimensions = (pageName: PageName) => {
 
 export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   const { pages, scrollContainerRef } = useInterfaceContext();
-  const { expandInput, expandSignals } = useNavContext();
+  const { expandInput } = useNavContext();
 
   // Page Tracker
   const activePage: Page = pages[pages.length - 1];
@@ -78,7 +78,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     [base.height, target.height],
   );
 
-  // Animate ROOT opacity.
+  // Animate interface visibility
   useEffect(() => {
     const animateParent = async () => {
       const animationConfig = {
@@ -86,16 +86,25 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         y: "-50%",
         opacity: isVisible ? 1 : 0,
         scale: isVisible ? 1 : 0.9,
+        visibility: isVisible ? "visible" : "hidden",
       };
       const transitionConfig = {
-        type: "spring" as const,
-        stiffness: isVisible ? 1200 : 800,
-        damping: isVisible ? 120 : 50,
         scale: {
           type: "spring" as const,
           mass: 0.75,
           stiffness: 180,
           damping: 22,
+          delay: isVisible ? 0.15 : 0,
+        },
+        opacity: {
+          type: "spring" as const,
+          mass: 0.75,
+          stiffness: 180,
+          damping: 22,
+          delay: isVisible ? 0.15 : 0,
+        },
+        visibility: {
+          delay: isVisible ? 0 : 0.15,
         },
       };
       await animateRoot(rootScope.current, animationConfig, transitionConfig);
@@ -196,7 +205,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`flex items-start justify-center bg-white rounded-full overflow-hidden border border-silver`}
+        className={`flex items-start justify-center bg-white rounded-full overflow-hidden`}
         shouldFilter={false}
         loop
         ref={scope}
@@ -205,7 +214,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         <div
           id={`cmdk-scroll`}
           ref={scrollContainerRef}
-          className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-full`}
+          className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-full relative`}
           style={{
             width: `${target.width}px`,
             height: `${target.height}px`,
