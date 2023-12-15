@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useUserDataQuery } from "@/lib/apiHelper/user";
 import Essentials from "@/components/interface/user/sub/Essentials";
 import Recents from "@/components/interface/user/sub/Recents";
@@ -22,7 +28,7 @@ const SoundtrackButton = ({
 }: {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }) => (
-  <button className={`p-2 rounded-full shadow-shadowKitLow`} onClick={onClick}>
+  <button className={`p-2 rounded-full shadow-shadowKitHigh`} onClick={onClick}>
     <CardsIcon />
   </button>
 );
@@ -32,22 +38,35 @@ const SettingsButton = ({
 }: {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }) => (
-  <button className={`p-2 rounded-full shadow-shadowKitLow`} onClick={onClick}>
+  <button className={`p-2 rounded-full shadow-shadowKitHigh`} onClick={onClick}>
     <SettingsIcon />
   </button>
 );
 
 const User = () => {
   const { user, pages, scrollContainerRef } = useInterfaceContext();
+  const [isOpen, setIsOpen] = useState(false);
   const pageUser = pages[pages.length - 1].user;
   const isOwnProfile = user?.id === pageUser?.id;
 
   const { scrollY } = useScroll({ container: scrollContainerRef });
 
-  const scaleCardKeyframes = useTransform(scrollY, [0, 1], [1, 0.893]);
+  useMotionValueEvent(scrollY, "change", async (latest) => {
+    if (latest > 1) {
+      setTimeout(() => {
+        setIsOpen(true);
+      }, 50);
+    } else if (latest < 1) {
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 130);
+    }
+  });
+
+  const scaleCardKeyframes = useTransform(scrollY, [0, 1], [1, 0.948]);
   const scaleCard = useSpring(scaleCardKeyframes, scaleEntryConfig);
 
-  const xCardKeyframes = useTransform(scrollY, [0, 1], [0, 13]);
+  const xCardKeyframes = useTransform(scrollY, [0, 1], [-1, 7]);
   const xCard = useSpring(xCardKeyframes, scaleEntryConfig);
 
   const [subSection, setSubSection] = useState<
@@ -82,7 +101,7 @@ const User = () => {
       {/* Card Area */}
       <motion.div
         style={{ scale: scaleCard, x: xCard, width: 352, height: 608 }}
-        className={`absolute flex rounded-full shadow-shadowKitHigh overflow-hidden z-0 will-change-transform`}
+        className={`flex rounded-full shadow-shadowKitHigh overflow-hidden z-0 will-change-transform top-0 left-0`}
       >
         <div
           className={`absolute bg-white/40 w-full h-full top-0 left-0 backdrop-blur-3xl overflow-visible -z-10`}
@@ -130,7 +149,7 @@ const User = () => {
               className={`absolute right-[40px] -top-[7px] drop-shadow-md opacity-90`}
             >
               <div
-                className={`bg-white rounded-[15px] py-1.5 px-[9px] text-xxs w-max text-center`}
+                className={`bg-white rounded-[15px] py-1.5 px-[9px] text-xs w-max text-center`}
               >
                 {userData.bio}
               </div>
@@ -139,16 +158,21 @@ const User = () => {
               />
             </div>
 
-            <div className={`text-[24px] text-[#000] leading-[17px] font-bold`}>
+            <div
+              className={`text-[24px] text-[#000] leading-[17px] font-medium`}
+            >
               {userData.username}
             </div>
           </div>
         </div>
       </motion.div>
-      {/*Header */}
+      {/* Soundtrack History */}
+      {isOpen && <Soundtrack userId={user?.id} />}
+      {/* Buttons */}
       <motion.div
         initial={{ x: -16, y: 16 }}
-        animate={subSection !== "essentials" ? { scale: 0 } : { scale: 1 }}
+        animate={isOpen ? { x: -32, y: 32 } : { x: -16, y: 16 }}
+        transition={{ damping: 20, stiffness: 160 }}
         className={`absolute flex flex-col items-center gap-4 top-0 right-0`}
       >
         <SoundtrackButton onClick={handleSubSectionClick("soundtrack")} />

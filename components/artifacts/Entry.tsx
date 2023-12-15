@@ -72,7 +72,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           className={`absolute top-8 center-x flex items-center p-2 pr-2.5 bg-white rounded-xl w-max max-w-[320px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
         >
           <Stars rating={artifact.content?.rating} />
-          <div className={`text-sm text-[#000] font-bold line-clamp-1`}>
+          <div className={`text-base text-[#000] font-bold line-clamp-1`}>
             {sound.attributes.name}
           </div>
         </div>
@@ -95,7 +95,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           className="absolute bottom-0 w-full h-4/5 pointer-events-none"
         />
         <div
-          className={`absolute px-8 text-sm text-white font-semibold line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
+          className={`absolute px-8 text-base text-white font-medium line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
         >
           {artifact.content?.text}
         </div>

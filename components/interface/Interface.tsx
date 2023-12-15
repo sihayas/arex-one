@@ -32,7 +32,7 @@ export const GetDimensions = (pageName: PageName) => {
   const dimensions = {
     user: {
       base: { width: 416, height: 608 },
-      target: { width: 416, height: 608 },
+      target: { width: 640, height: 608 },
     },
     album: {
       base: { width: 576, height: 576 },
@@ -205,7 +205,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`flex items-start justify-center bg-white rounded-full overflow-hidden`}
+        className={`flex items-start justify-center bg-white rounded-full overflow-hidden outline outline-silver outline-1`}
         shouldFilter={false}
         loop
         ref={scope}

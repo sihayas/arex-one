@@ -35,7 +35,9 @@ module.exports = {
         sfRounded: ["SF Pro Rounded", "sans-serif"],
       },
       fontSize: {
-        xxs: ["11px", "125%"],
+        xs: ["11px", "125%"],
+        sm: ["13px", "125%"],
+        base: ["15px", "150%"],
       },
       colors: {
         black: "#333333",

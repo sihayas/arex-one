@@ -117,7 +117,7 @@ export const Artifact = () => {
             rotate: rotateCard,
             y: yEntry,
           }}
-          className={`absolute top-0 flex flex-col rounded-full shadow-shadowKitLow will-change-transform z-20 cursor-pointer overflow-hidden
+          className={`absolute top-0 flex flex-col rounded-full shadow-shadowKitHigh will-change-transform cursor-pointer overflow-hidden
             ${!isOpen ? "opacity-100" : "opacity-0"}
             `}
         >
@@ -144,7 +144,7 @@ export const Artifact = () => {
             className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-xl w-max max-w-[388px] max-h-8 z-10 gap-2 shadow-shadowKitMedium`}
           >
             <Stars rating={artifact.content?.rating} />
-            <div className={`text-sm text-[#000] leading-[10px] font-bold`}>
+            <div className={`text-base text-[#000] leading-[10px] font-bold`}>
               {sound.attributes.name}
             </div>
           </div>
@@ -157,7 +157,7 @@ export const Artifact = () => {
           />
 
           <div
-            className={`z-10 p-6 pb-0 text-sm text-white font-semibold line-clamp-6 pointer-events-none mt-auto will-change-transform`}
+            className={`z-10 p-6 pb-0 text-base text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
           >
             {artifact.content?.text}
           </div>
@@ -171,7 +171,7 @@ export const Artifact = () => {
               height={40}
               user={artifact.author}
             />
-            <p className="text-white font-bold text-sm leading-[10px]">
+            <p className="text-white font-bold text-base leading-[10px]">
               {artifact.author.username}
             </p>
           </div>
@@ -188,10 +188,10 @@ export const Artifact = () => {
             rotate: rotateCard,
             y: yEntry,
           }}
-          className={`absolute top-0 flex flex-col rounded-full shadow-shadowKitHigh will-change-transform pointer-events-none overflow-hidden`}
+          className={`absolute top-0 flex flex-col rounded-full will-change-transform pointer-events-none overflow-hidden`}
         >
           <Image
-            className={`absolute rounded-[32px]`}
+            className={`absolute rounded-full`}
             src={url}
             alt={`artwork`}
             loading="lazy"
@@ -205,14 +205,8 @@ export const Artifact = () => {
             className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium`}
           >
             <Stars rating={artifact.content?.rating} />
-            <div className={`text-xs text-[#000] leading-[9px] font-medium`}>
+            <div className={`text-base text-[#000] leading-[9px] font-medium`}>
               {sound.attributes.name}
-            </div>
-            <div className={`-ml-1`}>&middot;</div>
-            <div
-              className={`-ml-1 text-xs text-[#000] leading-[9px] font-medium`}
-            >
-              {sound.attributes.artistName}
             </div>
           </div>
 
@@ -224,7 +218,7 @@ export const Artifact = () => {
           />
 
           <div
-            className={`z-10 p-6 text-sm text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
+            className={`z-10 p-6 text-base text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
           >
             {artifact.content?.text}
           </div>
@@ -238,7 +232,7 @@ export const Artifact = () => {
               height={40}
               user={artifact.author}
             />
-            <p className="text-white font-bold text-sm leading-[10px]">
+            <p className="text-white font-bold text-base leading-[10px]">
               {artifact.author.username}
             </p>
           </div>
