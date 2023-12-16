@@ -12,7 +12,7 @@ import Image from "next/image";
 import artworkURL from "@/components/global/ArtworkURL";
 import Stars from "@/components/global/Stars";
 
-const Soundtrack = ({ userId }: { userId: string | undefined }) => {
+const Soundtrack = ({ userId }: { userId: string }) => {
   const { scrollContainerRef } = useInterfaceContext();
   const swiperRef = useRef<SwiperCore>();
   const heightContainerRef = useRef<HTMLDivElement>(null);

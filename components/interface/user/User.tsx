@@ -86,6 +86,7 @@ const User = () => {
 
   const { userData } = data || {};
 
+  if (!user) return <div>log in</div>;
   if (isLoading) return;
   if (isError) return <div>Error</div>;
 
@@ -165,7 +166,7 @@ const User = () => {
         </div>
       </motion.div>
       {/* Soundtrack History */}
-      {isOpen && <Soundtrack userId={user?.id} />}
+      {isOpen && <Soundtrack userId={user.id} />}
     </motion.div>
   );
 };
