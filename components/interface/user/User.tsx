@@ -89,8 +89,6 @@ const User = () => {
   if (isLoading) return;
   if (isError) return <div>Error</div>;
 
-  console.log(userData);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -168,18 +166,20 @@ const User = () => {
       </motion.div>
       {/* Soundtrack History */}
       {isOpen && <Soundtrack userId={user?.id} />}
-      {/* Buttons */}
-      <motion.div
-        initial={{ x: -16, y: 16 }}
-        animate={isOpen ? { x: -32, y: 32 } : { x: -16, y: 16 }}
-        transition={{ damping: 20, stiffness: 160 }}
-        className={`absolute flex flex-col items-center gap-4 top-0 right-0`}
-      >
-        <SoundtrackButton onClick={handleSubSectionClick("soundtrack")} />
-        <SettingsButton onClick={handleSubSectionClick("settings")} />
-      </motion.div>
     </motion.div>
   );
 };
 
 export default User;
+{
+  /* Buttons */
+}
+// <motion.div
+//     initial={{ x: -16, y: 16 }}
+//     animate={isOpen ? { x: -32, y: 32 } : { x: -16, y: 16 }}
+//     transition={{ damping: 20, stiffness: 160 }}
+//     className={`absolute flex flex-col items-center gap-4 top-0 right-0`}
+// >
+//   <SoundtrackButton onClick={handleSubSectionClick("soundtrack")} />
+//   <SettingsButton onClick={handleSubSectionClick("settings")} />
+// </motion.div>

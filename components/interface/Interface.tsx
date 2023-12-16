@@ -205,7 +205,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`flex items-start justify-center bg-white rounded-full overflow-hidden outline outline-silver outline-1`}
+        className={`flex items-start justify-center bg-white rounded-full overflow-hidden outline outline-silver outline-1 relative`}
         shouldFilter={false}
         loop
         ref={scope}
@@ -214,7 +214,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         <div
           id={`cmdk-scroll`}
           ref={scrollContainerRef}
-          className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-full relative`}
+          className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-full`}
           style={{
             width: `${target.width}px`,
             height: `${target.height}px`,

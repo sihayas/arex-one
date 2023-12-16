@@ -54,10 +54,6 @@ export const SoundDetailsProvider = ({
   const [selectedFormSound, setSelectedFormSound] =
     useState<SelectedFormSound | null>(null);
 
-  useEffect(() => {
-    console.log(selectedFormSound);
-  }, [selectedFormSound]);
-
   const [prevEssentialId, setPrevEssentialId] = useState("");
   const [rank, setRank] = useState(0);
 

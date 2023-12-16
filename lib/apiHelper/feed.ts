@@ -44,8 +44,6 @@ const useGenericFeedQuery = (
 
       const mergedData = await attachSoundData(activities);
 
-      console.log("mergedData", mergedData);
-
       return { data: mergedData, pagination };
     },
     {

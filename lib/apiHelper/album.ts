@@ -12,7 +12,7 @@ export const useArtifactsQuery = (
     async ({ pageParam = 1 }) => {
       const url = `/api/album/get/artifacts`;
       const { data } = await axios.get(url, {
-        params: { soundId, page: pageParam, sort, userId, limit: 6 },
+        params: { soundId, page: pageParam, sort, userId, limit: 12 },
       });
       const { activities, pagination } = data.data;
 
@@ -26,5 +26,6 @@ export const useArtifactsQuery = (
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       enabled: !!userId,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     },
   );

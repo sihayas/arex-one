@@ -185,10 +185,6 @@ export const InterfaceContextProvider = ({
     };
   }, [pages, navigateBack]);
 
-  useEffect(() => {
-    console.log(isLoading);
-  }, [isLoading]);
-
   // Render the provider with the context value
   return (
     <InterfaceContext.Provider

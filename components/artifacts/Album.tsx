@@ -35,9 +35,7 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
   }
 
   return (
-    <div
-      className={`flex flex-col bg-[#F4F4F4] items-center justify-center relative w-full px-6 pt-[18px] pb-[19px] rounded-[32px]`}
-    >
+    <>
       {/* Rating & Attribution */}
       <div
         className={`absolute center-x -top-[23px] py-1 px-[5px] flex items-center gap-2 bg-white shadow-shadowKitMedium rounded-full`}
@@ -76,7 +74,7 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />
-    </div>
+    </>
   );
 };
 

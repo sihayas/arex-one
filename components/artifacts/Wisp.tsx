@@ -45,7 +45,6 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
 
   if (!sound) return null;
 
-  console.log("sound", sound);
   return (
     <motion.div className="flex flex-col gap-4 w-[438px]">
       {/* Artwork Capsule */}
