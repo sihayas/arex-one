@@ -44,6 +44,7 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
     ? allActivities.length + 1
     : allActivities.length;
 
+  // Helper to check if item is loaded -> for infinite scroll
   const isItemLoaded = (index: number) => {
     const loaded = !hasNextPage || index < allActivities.length;
     return loaded;
@@ -57,6 +58,7 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
         return fetchNextPage();
       };
 
+  // Measures row height and stores it in rowHeights
   const setRowHeight = (index: number, size: number) => {
     if (listRef.current) {
       listRef.current.resetAfterIndex(0);
@@ -64,9 +66,7 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
     rowHeights.current = { ...rowHeights.current, [index]: size };
   };
 
-  const getRowHeight = (index: number) =>
-    rowHeights.current[index] || DEFAULT_HEIGHT;
-
+  // Calculate row height
   const Row = ({ index }: { index: number }) => {
     const rowRef = useRef<HTMLDivElement>(null);
 
@@ -90,6 +90,10 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
       </div>
     );
   };
+
+  // Helper to get row height
+  const getRowHeight = (index: number) =>
+    rowHeights.current[index] || DEFAULT_HEIGHT;
 
   return (
     <InfiniteLoader

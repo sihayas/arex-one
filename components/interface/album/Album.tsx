@@ -17,24 +17,23 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import Statline from "@/components/interface/album/sub/Dial";
 
-const springConfig = { damping: 22, stiffness: 180 };
+const springConfig = { damping: 28, stiffness: 180 };
 const scaleArtConfig = { damping: 20, stiffness: 122 };
 const xArtConfig = { damping: 20, stiffness: 160 };
 const yArtConfig = { damping: 20, stiffness: 180 };
 
-const ART_BASELINE = 230;
-const ART_PADDING = 32;
-const ART_DIAL_OFFSET = 16;
+const Y_ART_BASELINE = 230;
+const Y_ART_PADDING = 16;
+const Y_ART_DIAL_OFFSET = 16;
 
 const X_ART_BASELINE = 234;
-const X_ART_PADDING = 32;
+const X_ART_PADDING = 16;
 const X_ART_DIAL_OFFSET = 18;
 
 const Album = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const { selectedSound } = useSoundContext();
   const { scrollContainerRef } = useInterfaceContext();
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
   const [sortOrder, setSortOrder] = useState<
     "newest" | "highlights" | "positive" | "critical"
@@ -48,30 +47,22 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  useMotionValueEvent(scrollY, "change", async (latest) => {
-    if (latest > 1) {
-      setIsOpen(true);
-    } else if (latest < 1) {
-      setIsOpen(false);
-    }
-  });
-
   const xArtOffset = X_ART_BASELINE - X_ART_PADDING - X_ART_DIAL_OFFSET;
   const xArtKeyframes = useTransform(scrollY, [0, 1], [0, xArtOffset]);
   const xArt = useSpring(xArtKeyframes, xArtConfig);
 
   // 230 to align with top of container 184
-  const yArtOffset = ART_BASELINE - ART_PADDING - ART_DIAL_OFFSET;
+  const yArtOffset = Y_ART_BASELINE - Y_ART_PADDING - Y_ART_DIAL_OFFSET;
   const yArtKeyframes = useTransform(scrollY, [0, 1], [0, -yArtOffset]);
   const yArt = useSpring(yArtKeyframes, yArtConfig);
 
   const scaleArtKeyframes = useTransform(scrollY, [0, 1], [1, 0.0833]);
   const scaleArt = useSpring(scaleArtKeyframes, scaleArtConfig);
 
-  const xDialKeyframes = useTransform(scrollY, [0, 1], [-208, -32]);
+  const xDialKeyframes = useTransform(scrollY, [0, 1], [-208, -16]);
   const xDial = useSpring(xDialKeyframes, springConfig);
 
-  const yDialKeyframes = useTransform(scrollY, [0, 1], [208, -48]);
+  const yDialKeyframes = useTransform(scrollY, [0, 1], [208, -64]);
   const yDial = useSpring(yDialKeyframes, springConfig);
 
   const scaleDialKeyframes = useTransform(scrollY, [0, 1], [1, 0.5]);
