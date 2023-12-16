@@ -95,7 +95,7 @@ const User = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-full flex flex-col mt-[1px]"
+      className="w-full min-h-full flex mt-[1px]"
     >
       {/* Card Area */}
       <motion.div

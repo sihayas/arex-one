@@ -41,7 +41,6 @@ body {
   height: 100vh;
   position: relative;
   overflow: hidden
-  /* background-color: rgba(237, 237, 237, 0.792); */
 }
 textarea {
   caret-color: #999;
@@ -63,39 +62,3 @@ input {
   caret-color: #999;
   -webkit-text-fill-color: black;
 }
-
-.scroll-container {
-  width: 300px; /* Adjust as needed */
-  height: 200px; /* Adjust as needed */
-  overflow-y: scroll; /* Enables vertical scrolling */
-  position: relative;
-}
-
-.scroll-container::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50px; /* Height of the gradient mask */
-  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
-  pointer-events: none;
-}
-
-
-.swiper {
-  width: 320px;
-  height: 448px;
-  left:32px;
-  top:96px;
-}
-
-.swiper-slide {
-  display: flex;
-  flex-direction: column;
-  border-radius: 32px;
-  background-color: #FFF;
-  position: relative;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04);
-}
-

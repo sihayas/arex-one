@@ -60,7 +60,7 @@ export const useUserSettingsQuery = (userId: string) => {
 };
 
 // Soundtrack (sound history) handlers
-export const useSoundtrackQuery = (userId: string | undefined) => {
+export const useSoundtrackQuery = (userId: string) => {
   return useInfiniteQuery(
     ["soundtrack", userId],
     async ({ pageParam = 1 }) => {
@@ -69,7 +69,7 @@ export const useSoundtrackQuery = (userId: string | undefined) => {
         params: {
           userId,
           page: pageParam,
-          limit: 6,
+          limit: 8,
         },
       });
 
