@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Essential } from "@/types/dbTypes";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -12,13 +12,15 @@ interface EssentialsProps {
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   const { handleSelectSound } = useSound();
   return (
-    <div className={`w-max flex flex-col items-center p-8 pb-[88px] gap-4`}>
+    <div
+      className={`w-max flex flex-col items-center p-8 pr-0 pb-[88px] gap-4`}
+    >
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const color = sound.attributes.artwork.bgColor;
         const url = ArtworkURL(sound.attributes.artwork.url, "400");
         return (
-          <>
+          <Fragment key={`essential-${i}`}>
             <Image
               onClick={() => handleSelectSound(sound, url)}
               className={`rounded-2xl shadow-shadowKitMedium`}
@@ -38,7 +40,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
               }}
               className="absolute left-8 -z-20 rounded-max"
             />
-          </>
+          </Fragment>
         );
       })}
       <div

@@ -44,7 +44,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <div className={`flex items-end gap-2.5 relative group w-[438px] group`}>
+    <div className={`flex items-end gap-2.5 relative group w-[468px] group`}>
       <Avatar
         className={`h-[42px] border border-silver`}
         imageSrc={artifact.author.image}
@@ -58,7 +58,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       <motion.div
         onClick={handleEntryClick}
         transition={{ type: "spring", stiffness: 180, damping: 18 }}
-        className={`flex flex-col rounded-[32px] bg-white relative w-[384px] h-[538px] shadow-shadowKitHigh will-change-transform overflow-hidden`}
+        className={`flex flex-col rounded-full bg-white relative w-[416px] h-[538px] shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
         {/* Stars */}
         <Heart
@@ -78,7 +78,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         </div>
 
         <Image
-          className={`cursor-pointer rounded-[32px]`}
+          className={`cursor-pointer `}
           src={url}
           alt={`artwork`}
           loading="lazy"

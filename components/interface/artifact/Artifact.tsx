@@ -111,8 +111,8 @@ export const Artifact = () => {
       {createPortal(
         <motion.div
           style={{
-            width: 434,
-            height: 608,
+            width: 416,
+            height: 538,
             scale: scaleCard,
             rotate: rotateCard,
             y: yEntry,
@@ -141,10 +141,10 @@ export const Artifact = () => {
 
           {/* Stars */}
           <div
-            className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-xl w-max max-w-[388px] max-h-8 z-10 gap-2 shadow-shadowKitMedium`}
+            className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-xl w-max max-w-[352px] max-h-8 z-10 gap-2 shadow-shadowKitMedium`}
           >
             <Stars rating={artifact.content?.rating} />
-            <div className={`text-base text-[#000] leading-[10px] font-bold`}>
+            <div className={`text-base text-[#000] font-bold line-clamp-1`}>
               {sound.attributes.name}
             </div>
           </div>
@@ -157,7 +157,7 @@ export const Artifact = () => {
           />
 
           <div
-            className={`z-10 p-6 pb-0 text-base text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
+            className={`z-10 p-8 pb-0 text-base text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
           >
             {artifact.content?.text}
           </div>
@@ -182,8 +182,8 @@ export const Artifact = () => {
       {createPortal(
         <motion.div
           style={{
-            width: 434,
-            height: 608,
+            width: 416,
+            height: 538,
             scale: scaleCard,
             rotate: rotateCard,
             y: yEntry,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact } from "@/hooks/usePage";
@@ -7,19 +7,47 @@ import Heart from "@/components/global/Heart";
 import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
-import { motion } from "framer-motion";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import Image from "next/image";
 import ArtworkURL from "@/components/global/ArtworkURL";
 
 interface NewAProps {
   artifact: ArtifactExtended;
+  containerRef: React.RefObject<HTMLElement>;
+  index: number;
 }
 
-export const User: React.FC<NewAProps> = ({ artifact }) => {
+export const User: React.FC<NewAProps> = ({
+  artifact,
+  containerRef,
+  index,
+}) => {
   const user = useUser();
+  const isEven = index % 2 === 0;
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    container: containerRef,
+    target: ref,
+    offset: ["center end", "center start"],
+  });
+
+  const scrollRange = [0, 0.5, 1];
+
+  const scaleValues = [0.875, 1, 0.875];
+  const rotateValues = isEven ? [-2, 0, -2] : [2, 0, 2];
+  const zIndexValues = [0, 1, 0];
+
+  const scale = useTransform(scrollYProgress, scrollRange, scaleValues);
+  const rotate = useTransform(scrollYProgress, scrollRange, rotateValues);
+  const zIndex = useTransform(scrollYProgress, scrollRange, zIndexValues);
 
   const sound = artifact.appleData;
-  const url = ArtworkURL(sound.attributes.artwork.url, "1148");
+  const url = ArtworkURL(sound.attributes.artwork.url, "720");
   const color = sound.attributes.artwork.bgColor;
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
@@ -39,48 +67,60 @@ export const User: React.FC<NewAProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <motion.div
-      onClick={handleEntryClick}
-      className={`flex flex-col rounded-3xl relative w-[256px] min-h-[359px] will-change-transform overflow-hidden snap-center`}
+    <section
+      style={{ marginTop: index > 0 ? "-32px" : "0" }}
+      className={`w-full min-h-fit flex snap-center`}
     >
-      {/* Stars */}
-      <Heart
-        handleHeartClick={handleHeartClick}
-        hearted={hearted}
-        className="absolute -top-7 -left-[7px]"
-        heartCount={heartCount}
-        replyCount={artifact._count.replies}
-      />
-      <div
-        className={`absolute top-6 center-x flex items-center p-2 pr-2.5 bg-white rounded-xl w-max max-w-[320px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
-      >
-        <Stars rating={artifact.content?.rating} />
-        <div className={`text-sm text-[#000] font-bold line-clamp-1`}>
-          {sound.attributes.name}
-        </div>
-      </div>
-
-      <Image
-        className={`cursor-pointer rounded-[32px]`}
-        src={url}
-        alt={`artwork`}
-        loading="lazy"
-        quality={100}
-        style={{ objectFit: "cover" }}
-        fill={true}
-      />
-      {/* Gradient */}
-      <div
+      <motion.div
+        ref={ref}
         style={{
-          background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
+          marginRight: isEven ? "auto" : "",
+          marginLeft: isEven ? "" : "auto",
+          rotate: rotate,
+          scale: scale,
+          zIndex: zIndex,
         }}
-        className="absolute bottom-0 w-full h-4/5 pointer-events-none"
-      />
-      <div
-        className={`absolute px-6 text-sm text-white font-medium line-clamp-6 bottom-[18px] pointer-events-none will-change-transform`}
+        className={`flex flex-col rounded-3xl relative w-[223px] min-h-[288px] will-change-transform overflow-hidden shadow-miniCard`}
       >
-        {artifact.content?.text}
-      </div>
-    </motion.div>
+        {/* Stars */}
+        <Heart
+          handleHeartClick={handleHeartClick}
+          hearted={hearted}
+          className="absolute -top-7 -left-[7px]"
+          heartCount={heartCount}
+          replyCount={artifact._count.replies}
+        />
+        <div
+          className={`absolute top-6 center-x flex items-center p-2 pr-2.5 bg-white rounded-xl w-max max-w-[175px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
+        >
+          <Stars rating={artifact.content?.rating} />
+          <div className={`text-sm text-[#000] font-bold line-clamp-1`}>
+            {sound.attributes.name}
+          </div>
+        </div>
+
+        <Image
+          className={`cursor-pointer`}
+          src={url}
+          alt={`artwork`}
+          loading="lazy"
+          quality={100}
+          style={{ objectFit: "cover" }}
+          fill={true}
+        />
+        {/* Gradient */}
+        <div
+          style={{
+            background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
+          }}
+          className="absolute bottom-0 w-full h-4/5 pointer-events-none"
+        />
+        <div
+          className={`absolute px-6 text-sm text-white font-semibold line-clamp-6 bottom-[18px] pointer-events-none will-change-transform`}
+        >
+          {artifact.content?.text}
+        </div>
+      </motion.div>
+    </section>
   );
 };

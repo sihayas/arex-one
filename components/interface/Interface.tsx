@@ -39,7 +39,7 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 512, height: maxHeight },
     },
     artifact: {
-      base: { width: 402, height: 640 },
+      base: { width: 384, height: 570 },
       target: { width: 480, height: maxHeight },
     },
   };
