@@ -1,8 +1,6 @@
 import React, { Fragment } from "react";
 import { Essential } from "@/types/dbTypes";
-import { motion } from "framer-motion";
 import Image from "next/image";
-import ArtworkURL from "@/components/global/ArtworkURL";
 import { useSound } from "@/hooks/usePage";
 
 interface EssentialsProps {
@@ -18,13 +16,15 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const color = sound.attributes.artwork.bgColor;
-        const url = ArtworkURL(sound.attributes.artwork.url, "400");
+        const artwork = sound.attributes.artwork.url
+          .replace("{w}", "400")
+          .replace("{h}", "400");
         return (
           <Fragment key={`essential-${i}`}>
             <Image
-              onClick={() => handleSelectSound(sound, url)}
+              onClick={() => handleSelectSound(sound, artwork)}
               className={`rounded-2xl shadow-shadowKitMedium`}
-              src={url}
+              src={artwork}
               alt={`artwork`}
               loading="lazy"
               quality={100}

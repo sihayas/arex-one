@@ -6,7 +6,14 @@ import TextareaAutosize from "react-textarea-autosize";
 
 import RenderResults from "./sub/RenderResults";
 import Form from "./sub/Form";
-import { ReplyIcon } from "@/components/icons";
+import {
+  ReplyIcon,
+  TargetIcon,
+  TargetBackIcon,
+  TargetIndexIcon,
+  TargetAddIcon,
+  TargetGoIcon,
+} from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
 import Avatar from "@/components/global/Avatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
@@ -15,7 +22,7 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { addReply } from "@/lib/apiHelper/artifact";
 import { toast } from "sonner";
 import { useSound } from "@/hooks/usePage";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 
 const Nav = () => {
   let left;
@@ -39,33 +46,72 @@ const Nav = () => {
   const { selectedFormSound, setSelectedFormSound } = useSoundContext();
   const { handleSelectSound } = useSound();
 
-  // Determine current page
   const activePage: Page = pages[pages.length - 1];
 
-  // Width expansion variants
   const widthVariants = {
     collapsed: {
-      width: 0,
+      width: 112,
+      borderRadius: 12,
+      transition: {
+        type: "spring",
+        damping: 28,
+        stiffness: 220,
+      },
     },
     expanded: {
-      width: 354,
+      width: 384,
+      borderRadius: 18,
+      transition: {
+        type: "spring",
+        damping: 21,
+        stiffness: 240,
+      },
+    },
+  };
+
+  const borderVariants = {
+    collapsed: {
+      borderRadius: 12,
+      transition: {
+        type: "spring",
+        damping: 28,
+        stiffness: 220,
+      },
+    },
+    expanded: {
+      borderRadius: 18,
+      transition: {
+        type: "spring",
+        damping: 21,
+        stiffness: 240,
+      },
     },
   };
 
   const heightVariants = {
     collapsed: {
-      height: 33,
+      height: 34,
+      transition: {
+        type: "spring",
+        damping: 21,
+        stiffness: 180,
+      },
     },
     expanded: {
       height: expandInput
         ? activeAction === "none" && inputValue
-          ? 481
+          ? 400
           : activeAction === "form"
-          ? 222
+          ? 370
           : activeAction === "reply"
           ? 36
-          : 33
-        : 33,
+          : 34
+        : 34,
+      transition: {
+        type: "spring",
+        damping: 32,
+        stiffness: 280,
+      },
     },
   };
 
@@ -77,7 +123,7 @@ const Nav = () => {
     debouncedSetSearchQuery(value);
   };
 
-  // RenderResults results
+  // Render search results
   const { data, isInitialLoading, isFetching, error } =
     GetSearchResults(searchQuery);
 
@@ -91,7 +137,7 @@ const Nav = () => {
     setExpandInput(true);
   }, [setExpandInput]);
 
-  // Key bindings for input
+  // Key bindings
   const handleKeyDown = (e: any) => {
     // New line if Form is expanded or ReplyParent is selected
     if (
@@ -121,7 +167,7 @@ const Nav = () => {
     // Switch to album page from form
     else if (e.key === "Enter" && selectedFormSound && inputValue === "") {
       e.preventDefault();
-      handleSelectSound(selectedFormSound.sound, selectedFormSound.artworkUrl);
+      handleSelectSound(selectedFormSound);
       inputRef?.current?.blur();
       window.history.pushState(null, "");
     } else if (
@@ -147,7 +193,7 @@ const Nav = () => {
       e.preventDefault();
       const sound = activePage.sound.sound;
       const artworkUrl = activePage.sound.artworkUrl;
-      setSelectedFormSound({ sound, artworkUrl });
+      setSelectedFormSound(sound);
     }
     // Prepare reply parent
     else if (
@@ -190,197 +236,227 @@ const Nav = () => {
 
   if (user) {
     left = (
+      <>
+        {/* Target Container */}
+        <AnimatePresence>
+          <motion.button
+            exit={{ scale: 0, width: 0 }}
+            initial={{ scale: 0, width: 0 }}
+            animate={{ scale: 1, width: 18 }}
+            onClick={handleNavClick}
+            className="w-[18px] h-[18px] relative"
+            aria-label="Reply with selected parent"
+          >
+            <TargetIcon color={`#CCC`} />
+            {/* Target */}
+            <div className={`absolute center-x center-y`}>
+              <TargetIndexIcon />
+            </div>
+          </motion.button>
+        </AnimatePresence>
+      </>
+    );
+
+    // Textarea
+    middle = (
+      <div
+        className={`px-3 pt-[6px] pb-[7px] flex items-center w-full relative`}
+      >
+        {/* TextArea */}
+        <motion.div className={`flex items-center relative w-full`}>
+          <TextareaAutosize
+            id="entryText"
+            className={`bg-transparent text-base outline-none resize-none text-gray5 w-full`}
+            value={expandInput ? inputValue : ""}
+            onChange={(e) => handleInputTextChange(e.target.value)}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            ref={inputRef}
+            onKeyDown={handleKeyDown}
+            minRows={1}
+            maxRows={6}
+            tabIndex={0}
+          />
+          {/* Placeholder text */}
+          {!inputValue && (
+            <div
+              className={`absolute left-0 top-0 flex items-center h-full pointer-events-none text-base text-gray2 min-w-[32rem]`}
+            >
+              {activeAction === "none"
+                ? activePage.sound
+                  ? "Enter to create artifact, type to explore"
+                  : activePage.artifact
+                  ? "Press enter to reply, type to explore"
+                  : "VOIR"
+                : activeAction === "form"
+                ? "Create..."
+                : activeAction === "reply"
+                ? "Creating chain"
+                : null}
+            </div>
+          )}
+        </motion.div>
+      </div>
+    );
+
+    right = (
       <Avatar
         className="shadow-shadowKitLow"
         imageSrc={user.image}
         altText={`${user.username}'s avatar`}
-        width={36}
-        height={36}
+        width={26}
+        height={26}
         user={user}
       />
-    );
-
-    // Input & RenderResults Results/Form
-    middle = (
-      <div
-        onClick={handleNavClick}
-        className={`flex flex-col rounded-[18px] w-full relative`}
-      >
-        {/* Input Outer */}
-        <div
-          className={`bg-[#F4F4F4] flex flex-col items-end absolute bottom-1 left-0 rounded-[18px]`}
-        >
-          {/* Top / Form / RenderResults Results */}
-          {expandInput && !replyParent && (selectedFormSound || inputValue) && (
-            <motion.div
-              className={`flex flex-col relative w-full p-3 pb-[6px] overflow-scroll scrollbar-none`}
-              variants={heightVariants}
-              animate={expandInput ? "expanded" : "collapsed"}
-            >
-              {/* If no selected form sound render search results */}
-              {selectedFormSound && expandInput ? (
-                <Form />
-              ) : (
-                !selectedFormSound &&
-                inputValue && (
-                  <RenderResults
-                    searchData={data}
-                    isInitialLoading={isInitialLoading}
-                    isFetching={isFetching}
-                    error={error}
-                  />
-                )
-              )}
-            </motion.div>
-          )}
-
-          {/* Input & Context Icons */}
-          <div
-            className={`px-3 pt-[6px] pb-[7px] flex items-center w-full relative`}
-          >
-            {/* Context Icons */}
-            <AnimatePresence>
-              {activeAction === "none" && (!expandInput || !inputValue) && (
-                <motion.button
-                  exit={{ scale: 0, width: 0 }}
-                  initial={{ scale: 0, width: 0 }}
-                  animate={{ scale: 1, width: expandInput ? 22 : 18 }}
-                  onClick={handleNavClick}
-                  className="h-[18px] relative"
-                >
-                  {activePage.artifact ? (
-                    <>
-                      <ReplyIcon />
-                      <Image
-                        className="absolute top-0 left-0 rounded-full border border-gray6"
-                        src={activePage.artifact.author.image}
-                        alt="artwork"
-                        width={16}
-                        height={16}
-                      />
-                    </>
-                  ) : activePage.sound ? (
-                    <Image
-                      className="rounded-[6px] border border-gray3"
-                      src={activePage.sound.artworkUrl}
-                      alt="artwork"
-                      width={18}
-                      height={18}
-                    />
-                  ) : null}
-                </motion.button>
-              )}
-            </AnimatePresence>
-
-            {/* Active Form Icon */}
-            {activeAction !== "none" &&
-              activeAction === "form" &&
-              selectedFormSound &&
-              !expandInput && (
-                <button onClick={handleNavClick} className="w-[18px] h-[18px]">
-                  {/* Sound */}
-                  {selectedFormSound.sound && (
-                    <Image
-                      className="rounded-[6px] border border-gray3"
-                      src={selectedFormSound.artworkUrl}
-                      alt="artwork"
-                      width={18}
-                      height={18}
-                    />
-                  )}
-                </button>
-              )}
-
-            {/* TextArea */}
-            <motion.div
-              variants={widthVariants}
-              animate={expandInput ? "expanded" : "collapsed"}
-              className={`flex items-center relative`}
-            >
-              <TextareaAutosize
-                id="entryText"
-                className={`bg-transparent text-sm outline-none resize-none text-gray5 w-full`}
-                value={expandInput ? inputValue : ""}
-                onChange={(e) => handleInputTextChange(e.target.value)}
-                onBlur={onBlur}
-                onFocus={onFocus}
-                ref={inputRef}
-                onKeyDown={handleKeyDown}
-                minRows={1}
-                maxRows={6}
-                tabIndex={0}
-              />
-              {/* Placeholder text */}
-              {expandInput && !inputValue && (
-                <div
-                  className={`absolute left-0 top-0 flex items-center h-full pointer-events-none text-sm text-gray5 min-w-[32rem]`}
-                >
-                  {activeAction === "none"
-                    ? activePage.sound
-                      ? "Enter to create artifact, type to explore"
-                      : activePage.artifact
-                      ? "Press enter to reply, type to explore"
-                      : "Type to explore"
-                    : activeAction === "form"
-                    ? "Arrow UP/DOWN to dial, Backspace to cancel"
-                    : activeAction === "reply"
-                    ? "Creating chain"
-                    : null}
-                </div>
-              )}
-            </motion.div>
-
-            <AnimatePresence>
-              {activeAction !== "none" &&
-                activeAction === "reply" &&
-                replyParent?.artifact && (
-                  <motion.button
-                    exit={{ scale: 0, width: 0 }}
-                    initial={{ scale: 0, width: 0 }}
-                    animate={{ scale: 1, width: 18 }}
-                    onClick={handleNavClick}
-                    className="w-[18px] h-[18px] relative"
-                    aria-label="Reply with selected parent"
-                  >
-                    <ReplyIcon />
-                    <Image
-                      className="absolute top-0 left-0 rounded-full border border-gray6"
-                      src={
-                        replyParent.reply
-                          ? replyParent.reply.author.image
-                          : replyParent.artifact.author.image
-                      }
-                      alt="artwork"
-                      width={16}
-                      height={16}
-                    />
-                  </motion.button>
-                )}
-            </AnimatePresence>
-          </div>
-
-          {/* Bubbles */}
-          <div className={`w-3 h-3 absolute -bottom-1 -left-1 -z-10`}>
-            <div
-              className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
-            />
-            <div
-              className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
-            />
-          </div>
-          {/*  */}
-        </div>
-      </div>
     );
   }
 
   return (
-    <div className="absolute z-50 flex items-start gap-1 -bottom-9 -left-9 max-h-9">
-      {left}
-      {middle}
-      {/*{right}*/}
-    </div>
+    <motion.div
+      variants={widthVariants}
+      animate={expandInput || inputValue ? "expanded" : "collapsed"}
+      className="absolute flex flex-col -bottom-[50px] center-x z-50 -space-y-[34px] overflow-hidden "
+    >
+      {/* Content */}
+      <motion.div
+        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#E5E5E5]/90 rounded-[18px] -z-10`}
+        variants={heightVariants}
+        animate={expandInput ? "expanded" : "collapsed"}
+      >
+        <div
+          style={{
+            background: `linear-gradient(to top, #E5E5E5, rgba(0,0,0,0)`,
+            opacity: activeAction === "none" ? 1 : 0,
+          }}
+          className="fixed bottom-0 w-full h-44 rounded-b-[16px] z-10"
+        />
+        {/* If no selected form sound render search results */}
+        {selectedFormSound && expandInput ? (
+          <Form />
+        ) : (
+          !selectedFormSound &&
+          inputValue &&
+          expandInput && <RenderResults searchData={data} />
+        )}
+      </motion.div>
+      {/* Bar */}
+      <motion.div
+        variants={borderVariants}
+        animate={expandInput ? "expanded" : "collapsed"}
+        className={`flex items-center pl-2 pr-1 py-1 bg-transparent max-h-[34px] justify-between relative`}
+      >
+        {left}
+        {middle}
+        {right}
+      </motion.div>
+    </motion.div>
   );
 };
 
 export default Nav;
+
+// {expandInput && !replyParent && (selectedFormSound || inputValue) && (
+//     <motion.div
+//         className={`flex flex-col relative w-full p-3 pb-[6px]
+// overflow-scroll scrollbar-none`}
+//         variants={heightVariants}
+//         animate={expandInput ? "expanded" : "collapsed"}
+//     >
+//       {/* If no selected form sound render search results */}
+//       {selectedFormSound && expandInput ? (
+//           <Form />
+//       ) : (
+//           !selectedFormSound &&
+//           inputValue && (
+//               <RenderResults
+//                   searchData={data}
+//                   isInitialLoading={isInitialLoading}
+//                   isFetching={isFetching}
+//                   error={error}
+//               />
+//           )
+//       )}
+//     </motion.div>
+// )}
+
+{
+  /*<AnimatePresence>*/
+}
+{
+  /*  {activeAction !== "none" &&*/
+}
+{
+  /*      activeAction === "reply" &&*/
+}
+{
+  /*      replyParent?.artifact && (*/
+}
+{
+  /*          <motion.button*/
+}
+{
+  /*              exit={{ scale: 0, width: 0 }}*/
+}
+{
+  /*              initial={{ scale: 0, width: 0 }}*/
+}
+{
+  /*              animate={{ scale: 1, width: 18 }}*/
+}
+{
+  /*              onClick={handleNavClick}*/
+}
+{
+  /*              className="w-[18px] h-[18px] relative"*/
+}
+{
+  /*              aria-label="Reply with selected parent"*/
+}
+{
+  /*          >*/
+}
+{
+  /*            <ReplyIcon />*/
+}
+{
+  /*            <Image*/
+}
+{
+  /*                className="absolute top-0 left-0 rounded-full border border-gray6"*/
+}
+{
+  /*                src={*/
+}
+{
+  /*                  replyParent.reply*/
+}
+{
+  /*                      ? replyParent.reply.author.image*/
+}
+{
+  /*                      : replyParent.artifact.author.image*/
+}
+{
+  /*                }*/
+}
+{
+  /*                alt="artwork"*/
+}
+{
+  /*                width={16}*/
+}
+{
+  /*                height={16}*/
+}
+{
+  /*            />*/
+}
+{
+  /*          </motion.button>*/
+}
+{
+  /*      )}*/
+}
+{
+  /*</AnimatePresence>*/
+}

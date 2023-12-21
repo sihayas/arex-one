@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 
-import { Command } from "cmdk";
+import { Command, useCommandState } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
 
 import Album from "@/components/interface/album/Album";
@@ -205,7 +205,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`flex items-start justify-center bg-white rounded-full overflow-hidden outline outline-silver outline-1 relative`}
+        className={`flex items-start justify-center bg-white rounded-full outline outline-silver outline-1 relative`}
         shouldFilter={false}
         loop
         ref={scope}

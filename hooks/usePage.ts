@@ -58,17 +58,14 @@ export const useSound = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setSelectedSound } = useSoundContext();
 
-  const handleSelectSound = (
-    sound: AlbumData | SongData,
-    artworkUrl: string,
-  ) => {
-    setSelectedSound({ sound, artworkUrl });
+  const handleSelectSound = (sound: AlbumData | SongData) => {
+    setSelectedSound(sound);
     setPages((prevPages) => [
       ...prevPages,
       {
         key: uuidv4(),
         name: "album",
-        sound: { sound, artworkUrl },
+        sound: { sound },
         dimensions: {
           width: 576,
           height: 832,

@@ -1,11 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
-export interface SelectedSound {
-  sound: AlbumData | SongData;
-  artworkUrl: string;
-}
-
 interface SelectedFormSound {
   sound: AlbumData | SongData;
   artworkUrl: string;
@@ -15,11 +10,13 @@ interface SelectedFormSound {
 // album obviously
 
 export type SoundContextType = {
-  selectedSound: SelectedSound | null;
-  setSelectedSound: React.Dispatch<React.SetStateAction<SelectedSound | null>>;
-  selectedFormSound: SelectedFormSound | null;
+  selectedSound: AlbumData | SongData | null;
+  setSelectedSound: React.Dispatch<
+    React.SetStateAction<AlbumData | SongData | null>
+  >;
+  selectedFormSound: AlbumData | SongData | null;
   setSelectedFormSound: React.Dispatch<
-    React.SetStateAction<SelectedFormSound | null>
+    React.SetStateAction<AlbumData | SongData | null>
   >;
   rank: number;
   setRank: React.Dispatch<React.SetStateAction<number>>;
@@ -47,12 +44,13 @@ export const useSoundContext = (): SoundContextType => {
 export const SoundDetailsProvider = ({
   children,
 }: SoundContextProviderProps) => {
-  const [selectedSound, setSelectedSound] = useState<SelectedSound | null>(
-    null,
-  );
+  const [selectedSound, setSelectedSound] = useState<
+    AlbumData | SongData | null
+  >(null);
 
-  const [selectedFormSound, setSelectedFormSound] =
-    useState<SelectedFormSound | null>(null);
+  const [selectedFormSound, setSelectedFormSound] = useState<
+    AlbumData | SongData | null
+  >(null);
 
   const [prevEssentialId, setPrevEssentialId] = useState("");
   const [rank, setRank] = useState(0);

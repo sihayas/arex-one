@@ -1,4 +1,3 @@
-import { Artwork } from "@/components/global/Artwork";
 import { useNavContext } from "@/context/NavContext";
 import {
   useUserSettingsQuery,
@@ -118,12 +117,12 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
       <div className="flex flex-col gap-4 mb-[64px]">
         {essentials.map((essential, i) => (
           <div className={`flex gap-4 relative`} key={essential.id}>
-            <Artwork
-              className="rounded-xl border border-silver"
-              sound={essential.appleData}
-              width={96}
-              height={96}
-            />
+            {/*<Artwork*/}
+            {/*  className="rounded-xl border border-silver"*/}
+            {/*  sound={essential.appleData}*/}
+            {/*  width={96}*/}
+            {/*  height={96}*/}
+            {/*/>*/}
             <SwapIcon
               className="absolute -bottom-1 -left-1 cursor-pointer"
               onClick={() => handleEditClick(essential.id, i)}

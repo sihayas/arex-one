@@ -17,7 +17,7 @@ const Soundtrack = ({ userId }: { userId: string }) => {
   return (
     <div
       ref={containerRef}
-      className={`absolute right-0 top-0 flex flex-col items-center w-[352px] h-[608px] overflow-y-auto snap-y snap-mandatory p-4 `}
+      className={`absolute right-0 top-0 flex flex-col items-center w-[352px] h-[608px] overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none `}
     >
       {allActivities.map((activity, index) => {
         if (!activity.artifact) return null;

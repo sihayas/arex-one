@@ -9,6 +9,9 @@ import Dial from "./items/Dial";
 import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { AlbumData, SongData } from "@/types/appleTypes";
+import Heart from "@/components/global/Heart";
+import Stars from "@/components/global/Stars";
+import { motion } from "framer-motion";
 
 const Form = () => {
   const { user } = useInterfaceContext();
@@ -26,7 +29,7 @@ const Form = () => {
       event?.preventDefault();
 
       const gatherSubmissionData = () => {
-        const sound = selectedFormSound?.sound;
+        const sound = selectedFormSound;
         if (!sound) return undefined;
         return {
           text: inputValue,
@@ -96,22 +99,30 @@ const Form = () => {
     setRating(rating);
   };
 
-  // Album styles
-  const renderAlbumSection = () => (
-    <Image
-      id={selectedFormSound.sound.id}
-      className="rounded-xl shadow-shadowKitHigh outline outline-silver outline-1"
-      src={selectedFormSound.artworkUrl}
-      alt={`${selectedFormSound.sound.attributes.name} artwork`}
-      width={198}
-      height={198}
-    />
-  );
+  const artwork = selectedFormSound.attributes.artwork.url
+    .replace("{w}", "1200")
+    .replace("{h}", "1200");
+  const name = selectedFormSound.attributes.name;
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className={`flex`}>
-      {renderAlbumSection()}
-      <Dial setRatingValue={handleRatingChange} />
+    <form ref={formRef} onSubmit={handleSubmit} className={`flex p-8`}>
+      <motion.div
+        initial={{ scale: 0.8, rotate: 8, opacity: 0 }}
+        animate={{ scale: 1, rotate: -3, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 180, damping: 18, delay: 0.4 }}
+        className={`flex flex-col rounded-3xl bg-white relative w-[223px] h-[288px] shadow-miniCard will-change-transform overflow-hidden`}
+      >
+        <Image
+          className={`cursor-pointer `}
+          src={artwork}
+          alt={`${name} artwork`}
+          loading="lazy"
+          quality={100}
+          style={{ objectFit: "cover" }}
+          fill={true}
+        />
+      </motion.div>
+      {/*<Dial setRatingValue={handleRatingChange} />*/}
       {/*<NewDial />*/}
     </form>
   );

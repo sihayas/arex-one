@@ -3,14 +3,13 @@ import React from "react";
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact, useSound } from "@/hooks/usePage";
 
-import { Artwork } from "../global/Artwork";
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
 import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
-import ArtworkURL from "@/components/global/ArtworkURL";
+
 import Image from "next/image";
 
 interface NewWProps {
@@ -22,7 +21,9 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
   const { handleSelectSound } = useSound();
 
   const sound = artifact.appleData;
-  const url = ArtworkURL(sound.attributes.artwork.url, "320");
+  const artwork = sound.attributes.artwork.url
+    .replace("{w}", "320")
+    .replace("{h}", "320");
   const color = sound.attributes.artwork.bgColor;
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
@@ -40,7 +41,7 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
 
   const handleEntryClick = useArtifact(artifact);
   const handleSoundClick = () => {
-    handleSelectSound(sound, url);
+    handleSelectSound(sound, artwork);
   };
 
   if (!sound) return null;
@@ -50,12 +51,12 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
       {/* Artwork Capsule */}
       <div
         onClick={handleSoundClick}
-        className={`flex items-center gap-4 w-[384px] h-fit relative ml-[54px]`}
+        className={`flex items-center gap-4 w-[468px] h-fit relative ml-[54px]`}
       >
         <div className={`p-2 bg-[#F4F4F4]/50  rounded-[24px]`}>
           <Image
             className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
-            src={url}
+            src={artwork}
             alt={`artwork`}
             loading="lazy"
             quality={100}
@@ -65,13 +66,11 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
         </div>
 
         {/* Names */}
-        <div className={`flex flex-col gap-3`}>
-          <p
-            className={`text-[#000] font-medium text-sm leading-[10px] w-[162px]`}
-          >
+        <div className={`flex flex-col gap-1`}>
+          <p className={`text-[#000] font-medium text-base  w-[162px]`}>
             {sound.attributes.name}
           </p>
-          <p className={`text-[#000] font text-xs leading-[9px] min-w-[162px]`}>
+          <p className={`text-[#000] font text-sm  min-w-[162px]`}>
             {sound.attributes.artistName}
           </p>
         </div>
@@ -105,7 +104,7 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
           {/* Content */}
           <div
             onClick={handleEntryClick}
-            className={`break-words line-clamp-6 w-full text-sm text-gray5 cursor-pointer`}
+            className={`break-words line-clamp-6 w-full text-base text-gray5 cursor-pointer`}
           >
             {artifact.content?.text}
           </div>

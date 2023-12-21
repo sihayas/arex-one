@@ -1,28 +1,35 @@
 import Image from "next/image";
 import { Command } from "cmdk";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import ArtworkURL from "@/components/global/ArtworkURL";
-// Importing context hooks
 import { useSoundContext } from "@/context/SoundContext";
 import { useNavContext } from "@/context/NavContext";
 import { useSound } from "@/hooks/usePage";
-// Importing function to change essential
 import { changeEssential } from "@/lib/apiHelper/user";
 import { useUser } from "@supabase/auth-helpers-react";
 
-// Component to handle sound
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const user = useUser();
 
   const { handleSelectSound } = useSound();
-  const { prevEssentialId, setPrevEssentialId, rank, setRank } =
-    useSoundContext();
+  const {
+    prevEssentialId,
+    setPrevEssentialId,
+    rank,
+    setRank,
+    setSelectedFormSound,
+  } = useSoundContext();
   const { setInputValue, isChangingEssential, setExpandInput } =
     useNavContext();
 
-  const soundType = sound.type === "albums" ? "ALBUM" : "SONG";
-  const artworkUrl = ArtworkURL(sound.attributes.artwork.url, "120");
+  const soundType = sound.type;
+
+  const artwork = sound.attributes.artwork.url
+    .replace("{w}", "720")
+    .replace("{h}", "720");
+
   const artistName = sound.attributes.artistName;
+
+  const song = soundType === "songs" ? (sound as SongData) : null;
 
   const onSelect = async (appleId: string) => {
     // If essential is being changed and user exists
@@ -30,7 +37,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       isChangingEssential &&
       user &&
       prevEssentialId &&
-      soundType === "ALBUM"
+      soundType === "albums"
     ) {
       // Change essential
       const response = await changeEssential(
@@ -47,8 +54,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       }
     } else {
       // If not changing essential, store input value and prepare form
-      handleSelectSound(sound, artworkUrl);
-      setExpandInput(false);
+      setSelectedFormSound(sound);
       setInputValue("");
     }
   };
@@ -56,34 +62,33 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   // Render command item
   return (
     <Command.Item
+      value={sound.id}
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full pb-8 will-change-transform"
+      className="w-full p-4 will-change-transform flex w-full items-center gap-4 z-10"
       onSelect={() => onSelect(sound.id)}
     >
-      <div className="flex w-full items-center gap-4">
-        <Image
-          id={sound.id}
-          className="rounded-xl shadow-shadowKitLow"
-          src={artworkUrl}
-          alt={`${sound.attributes.name} artwork`}
-          width={48}
-          height={48}
-          draggable="false"
-        />
+      <Image
+        id={sound.id}
+        className="rounded-lg border border-silver"
+        src={artwork}
+        alt={`${sound.attributes.name} artwork`}
+        width={38}
+        height={38}
+        draggable="false"
+      />
 
-        <div className="flex flex-col justify-center overflow-hidden">
-          <div className="flex items-center text-xs gap-[6px] text-gray">
-            <div className="font-medium">{soundType}</div>
-            {artistName && (
-              <>
-                <div>&middot;</div>
-                <div className="line-clamp-1">{artistName}</div>
-              </>
-            )}
-          </div>
-          <div className="text-sm text-black line-clamp-1">
-            {sound.attributes.name}
-          </div>
+      <div className="flex flex-col justify-center overflow-hidden">
+        <div className="flex items-center text-sm gap-1 text-gray">
+          <div className={`line-clamp-1`}>{artistName}</div>
+          {song && (
+            <>
+              <div>&middot;</div>
+              <div className="line-clamp-1">{song.attributes.albumName}</div>
+            </>
+          )}
+        </div>
+        <div className="text-base text-black line-clamp-1 font-medium">
+          {sound.attributes.name}
         </div>
       </div>
     </Command.Item>

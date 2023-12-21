@@ -14,7 +14,6 @@ import {
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
-import ArtworkURL from "@/components/global/ArtworkURL";
 
 interface NewAProps {
   artifact: ArtifactExtended;
@@ -47,7 +46,9 @@ export const User: React.FC<NewAProps> = ({
   const zIndex = useTransform(scrollYProgress, scrollRange, zIndexValues);
 
   const sound = artifact.appleData;
-  const url = ArtworkURL(sound.attributes.artwork.url, "720");
+  const artwork = sound.attributes.artwork.url
+    .replace("{w}", "720")
+    .replace("{h}", "720");
   const color = sound.attributes.artwork.bgColor;
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
@@ -101,7 +102,7 @@ export const User: React.FC<NewAProps> = ({
 
         <Image
           className={`cursor-pointer`}
-          src={url}
+          src={artwork}
           alt={`artwork`}
           loading="lazy"
           quality={100}

@@ -77,11 +77,15 @@ const Album = () => {
   if (!selectedSound) return;
 
   let albumId;
+  const artwork = selectedSound.attributes.artwork.url
+    .replace("{w}", "1200")
+    .replace("{h}", "1200");
+  const name = selectedSound.attributes.name;
 
-  if (selectedSound.sound.type === "albums") {
-    albumId = selectedSound.sound.id;
+  if (selectedSound.type === "albums") {
+    albumId = selectedSound.id;
   } else {
-    const song = selectedSound.sound as SongData;
+    const song = selectedSound as SongData;
     albumId = song.relationships.albums.data[0].id;
   }
 
@@ -102,8 +106,8 @@ const Album = () => {
         className="absolute pointer-events-none overflow-hidden z-50 right-0 top-0 shadow-shadowKitHigh"
       >
         <Image
-          src={selectedSound.artworkUrl}
-          alt={`${selectedSound.sound.attributes.name} artwork`}
+          src={artwork}
+          alt={`${name}'s artwork`}
           width={576}
           height={576}
           quality={100}
@@ -120,7 +124,7 @@ const Album = () => {
           transformOrigin: "bottom right",
         }}
       >
-        <Statline ratings={[4, 8900, 2445, 5000, 500]} />
+        <Statline ratings={[4, 8900, 2445, 5000000, 500]} />
       </motion.div>
       ,{/* Entries */}
       <RenderArtifacts

@@ -17,7 +17,7 @@ import RenderReplies from "@/components/interface/artifact/sub/RenderReplies";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { createPortal } from "react-dom";
 import Heart from "@/components/global/Heart";
-import ArtworkURL from "@/components/global/ArtworkURL";
+
 import Image from "next/image";
 
 const scaleEntryConfig = { damping: 20, stiffness: 160 };
@@ -87,10 +87,12 @@ export const Artifact = () => {
 
   const sound = artifact.appleData;
   const color = sound.attributes.artwork.bgColor;
-  const url = ArtworkURL(sound.attributes.artwork.url, "1200");
+  const artwork = sound.attributes.artwork.url
+    .replace("{w}", "1200")
+    .replace("{h}", "1200");
 
   const handleSoundClick = async () => {
-    handleSelectSound(sound, url);
+    handleSelectSound(sound);
   };
 
   return (
@@ -131,7 +133,7 @@ export const Artifact = () => {
           <Image
             onClick={handleSoundClick}
             className={`absolute rounded-[32px]`}
-            src={url}
+            src={artwork}
             alt={`artwork`}
             loading="lazy"
             quality={100}
@@ -157,7 +159,7 @@ export const Artifact = () => {
           />
 
           <div
-            className={`z-10 p-8 pb-0 text-base text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
+            className={`z-10 p-8 pb-0 text-base text-white font-bold line-clamp-6 pointer-events-none mt-auto will-change-transform`}
           >
             {artifact.content?.text}
           </div>
@@ -192,7 +194,7 @@ export const Artifact = () => {
         >
           <Image
             className={`absolute rounded-full`}
-            src={url}
+            src={artwork}
             alt={`artwork`}
             loading="lazy"
             quality={100}

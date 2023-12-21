@@ -142,7 +142,7 @@ const User = () => {
             className={`absolute right-4 bottom-4 flex items-center flex-row-reverse gap-4`}
           >
             <Image
-              className={`rounded-max min-w-[80px] shadow-userAvi`}
+              className={`rounded-max`}
               src={userData.image}
               alt={`${userData.name}'s avatar`}
               width={80}

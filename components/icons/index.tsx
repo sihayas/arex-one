@@ -272,26 +272,6 @@ export function LinkButton({ ...props }) {
   );
 }
 
-export function Curve({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={11}
-      height={13}
-      fill="none"
-      className={props.className}
-      {...props}
-    >
-      <path
-        stroke={props.color}
-        strokeLinecap="round"
-        strokeWidth={2}
-        d="M1 12c7.203-.681 9.532-4.062 8.902-11"
-      />
-    </svg>
-  );
-}
-
 export function SwapIcon({ ...props }) {
   return (
     <svg
@@ -347,6 +327,7 @@ export function ChainIcon({ ...props }) {
   );
 }
 
+// Reply bubbles for nav
 export function ReplyIcon({ ...props }) {
   return (
     <svg
@@ -381,6 +362,7 @@ export function ReplyIcon({ ...props }) {
   );
 }
 
+// For heart button
 export function BubbleIcon({ ...props }) {
   return (
     <svg
@@ -413,6 +395,94 @@ export function TailIcon({ ...props }) {
       <path
         fill="#FFF"
         d="M4.5 4C5 2 1.667.5 0 0h15c-1.833 1.333-5.914 4.457-8 5.5C6 6 3.882 6.473 4.5 4Z"
+      />
+    </svg>
+  );
+}
+
+// Dynamic Nav Icons
+
+export function TargetIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={18}
+      height={18}
+      fill="none"
+      {...props}
+    >
+      <path
+        fill={props.color}
+        d="M6.242.078c.918.398.528 1.698-.487 1.619-2.423-.188-4.198 1.66-4.054 4.08.072 1.21-1.6 1.276-1.675.242C-.237 2.409 2.412-.225 5.983.015c.09.007.177.028.259.063ZM12.031.014c1.513-.092 2.853.259 3.985 1.195 1.404 1.16 2.063 2.717 1.977 4.669-.053 1.23-1.77 1.12-1.692-.107.126-1.998-1.04-3.608-2.996-4.023-.366-.077-.775-.056-1.161-.05-1.142.016-1.191-1.618-.113-1.684ZM.006 12.133c.048-1.154 1.597-1.153 1.678-.137.016.2.02.408.013.625-.034.96.407 1.95 1.059 2.601a3.578 3.578 0 0 0 2.335 1.072c.396.031.929-.074 1.27.145.673.431.427 1.5-.392 1.55-3.532.21-6.11-2.324-5.963-5.857ZM16.45 11.621c.423-.611 1.452-.431 1.517.333.129 1.542-.234 2.858-1.09 3.95-1.19 1.517-2.855 2.189-4.806 2.083-.718-.04-1.044-.75-.65-1.349.268-.408.82-.342 1.245-.335 1.929.033 3.488-1.536 3.628-3.418.031-.407-.086-.914.156-1.264Z"
+      />
+    </svg>
+  );
+}
+
+export function TargetIndexIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={9}
+      height={9}
+      fill="none"
+      className={props.className}
+      {...props}
+    >
+      <circle cx={4.5} cy={4.5} r={3.75} stroke="#999" strokeWidth={1.5} />
+    </svg>
+  );
+}
+
+export function TargetGoIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={9}
+      height={9}
+      fill="none"
+      {...props}
+    >
+      <path
+        fill="#999"
+        d="M6.879 2.104c.018-.063-.006-.095-.071-.096a76.526 76.526 0 0 0-2.397.002C3.208 2.03 3.238.5 4.274.5c1.453 0 2.924 0 4.413.003.512 0 .815.337.813.816a654.327 654.327 0 0 0-.003 4.434C9.501 6.734 7.976 6.8 7.99 5.6 8 4.823 8 4.03 7.992 3.218a.078.078 0 0 0-.014-.044c-.06-.093-.106-.093-.137 0a.304.304 0 0 1-.076.12 3677.373 3677.373 0 0 0-5.979 5.983c-.553.556-1.505-.013-1.24-.764a1.1 1.1 0 0 1 .274-.405c2.1-2.091 4.073-4.063 5.919-5.915a.162.162 0 0 1 .085-.045c.03-.006.048-.02.055-.044Z"
+      />
+    </svg>
+  );
+}
+
+export function TargetAddIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={9}
+      height={9}
+      fill="none"
+      {...props}
+    >
+      <path
+        fill="#999"
+        d="M5.943 4.156c.782.008 1.634.008 2.555-.002 1.357-.015 1.313 1.686.115 1.691-.867.005-1.762.006-2.685.003a.07.07 0 0 0-.07.07 97.267 97.267 0 0 0 0 2.564c.02 1.363-1.683 1.338-1.69.115-.006-.866-.007-1.749-.003-2.647a.103.103 0 0 0-.103-.103c-.884.004-1.787.003-2.707-.003C.225 5.837.26 4.178 1.299 4.167c.833-.01 1.77-.011 2.811-.006a.054.054 0 0 0 .054-.055c-.001-.795-.003-1.652-.007-2.57-.003-.563.262-1.082.912-1.021.503.047.759.336.765.865.011.89.018 1.785.02 2.686 0 .059.03.089.089.09Z"
+      />
+    </svg>
+  );
+}
+
+export function TargetBackIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={18}
+      height={18}
+      fill="none"
+      {...props}
+    >
+      <path
+        stroke="#999"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M6.25 16.25v-2.5a2 2 0 0 0-2-2h-2.5M11.75 16.25v-2.5a2 2 0 0 1 2-2h2.5M11.75 1.75v2.5a2 2 0 0 0 2 2h2.5M6.25 1.75v2.5a2 2 0 0 1-2 2h-2.5"
       />
     </svg>
   );

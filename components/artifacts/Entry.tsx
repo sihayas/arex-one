@@ -10,7 +10,6 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import ArtworkURL from "@/components/global/ArtworkURL";
 
 interface NewAProps {
   artifact: ArtifactExtended;
@@ -21,7 +20,9 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const { handleSelectSound } = useSound();
 
   const sound = artifact.appleData;
-  const url = ArtworkURL(sound.attributes.artwork.url, "1148");
+  const artwork = sound.attributes.artwork.url
+    .replace("{w}", "1148")
+    .replace("{h}", "1148");
   const color = sound.attributes.artwork.bgColor;
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
@@ -38,7 +39,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   );
   const handleEntryClick = useArtifact(artifact);
   const handleSoundClick = async () => {
-    await handleSelectSound(sound, url);
+    handleSelectSound(sound, artwork);
   };
 
   if (!sound) return null;
@@ -58,7 +59,11 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       <motion.div
         onClick={handleEntryClick}
         transition={{ type: "spring", stiffness: 180, damping: 18 }}
-        className={`flex flex-col rounded-full bg-white relative w-[416px] h-[538px] shadow-shadowKitHigh will-change-transform overflow-hidden`}
+        style={{
+          width: 336,
+          height: 432,
+        }}
+        className={`flex flex-col rounded-full bg-white relative shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
         {/* Stars */}
         <Heart
@@ -79,7 +84,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
 
         <Image
           className={`cursor-pointer `}
-          src={url}
+          src={artwork}
           alt={`artwork`}
           loading="lazy"
           quality={100}
@@ -95,7 +100,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           className="absolute bottom-0 w-full h-4/5 pointer-events-none"
         />
         <div
-          className={`absolute px-8 text-base text-white font-medium line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
+          className={`absolute px-8 text-base text-white drop-shadow font-bold line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
         >
           {artifact.content?.text}
         </div>

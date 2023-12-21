@@ -18,14 +18,12 @@ export default function Home() {
     return (
       <Layout>
         <Head>
-          <title>rx</title>
+          <title>[redacted]</title>
         </Head>
         <div className="m-8 grid h-screen w-screen gap-8 grid-cols-17 grid-rows-11">
-          <div className="col-start-1 row-start-1 text-[34px] font-medium text-[#4733ff] leading-[22px] drop-shadow">
-            Rx
-          </div>
+          <div className="col-start-1 row-start-1 text-[34px]">VOIR</div>
 
-          <div className="col-span-4 col-start-2 uppercase row-start-1 text-xs tracking-widest text-red -mt-1 animate-pulse">
+          <div className="col-span-4 col-start-2 uppercase row-start-1 text-sm tracking-widest text-red animate-pulse duration-500">
             pardon our appearance while facade work in progress...
           </div>
 
@@ -59,7 +57,7 @@ export default function Home() {
       {activeFeed && (
         <motion.div
           ref={scrollContainerRef}
-          className={`flex flex-col items-center pt-16 px-8 gap-32 max-h-[125vh] w-full overflow-scroll scrollbar-none`}
+          className={`flex flex-col items-center pt-16 px-8 gap-32 max-h-screen w-full overflow-scroll scrollbar-none`}
         >
           {/*  Blur Backdrop */}
           <div

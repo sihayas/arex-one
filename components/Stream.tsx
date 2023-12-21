@@ -21,7 +21,6 @@ const Stream = ({
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useFeedQuery(userId, type);
 
-  // Track scrolling for infinite scroll
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,
   });
