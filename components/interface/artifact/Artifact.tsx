@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -15,6 +15,7 @@ import Stars from "@/components/global/Stars";
 import Avatar from "@/components/global/Avatar";
 import RenderReplies from "@/components/interface/artifact/sub/RenderReplies";
 import { ArtifactExtended } from "@/types/globalTypes";
+
 import { createPortal } from "react-dom";
 import Heart from "@/components/global/Heart";
 
@@ -23,13 +24,14 @@ import Image from "next/image";
 const scaleEntryConfig = { damping: 20, stiffness: 160 };
 
 export const Artifact = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
-  const cmdkScroll = document.getElementById("cmdk-scroll") as HTMLDivElement;
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
-  const { setArtifact } = useThreadcrumb();
+  const { setReplyParent } = useThreadcrumb();
   const { handleSelectSound } = useSound();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
+  const cmdkScroll = document.getElementById("cmdk-scroll") as HTMLDivElement;
 
   const activePage: Page = pages[pages.length - 1];
 
@@ -62,30 +64,25 @@ export const Artifact = () => {
   const yEntry = useSpring(yEntryKeyframes, yEntryConfig);
 
   const opacityReplies = useTransform(scrollY, [0, 1], [0, 1]);
-  const scrollIndicatorOpacity = useTransform(scrollY, [0, 1], [1, 0]);
 
-  const artifact = useMemo(
+  const artifactExtended = useMemo(
     () => activePage.artifact as ArtifactExtended,
     [activePage],
   );
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    artifact.heartedByUser,
-    artifact._count.hearts,
+    artifactExtended.heartedByUser,
+    artifactExtended._count.hearts,
     "/api/heart/post/artifact",
     "artifactId",
-    artifact.id,
-    artifact.authorId,
+    artifactExtended.id,
+    artifactExtended.authorId,
     user?.id,
   );
 
-  useEffect(() => {
-    if (artifact) setArtifact(artifact);
-  }, [artifact, setArtifact]);
+  if (!artifactExtended) return null;
 
-  if (!artifact) return null;
-
-  const sound = artifact.appleData;
+  const sound = artifactExtended.appleData;
   const color = sound.attributes.artwork.bgColor;
   const artwork = sound.attributes.artwork.url
     .replace("{w}", "1200")
@@ -106,7 +103,9 @@ export const Artifact = () => {
         style={{ opacity: opacityReplies }}
         className={`flex flex-col p-8 pt-[256px] overflow-scroll scrollbar-none h-full relative`}
       >
-        {user && <RenderReplies userId={user.id} artifactId={artifact.id} />}
+        {user && (
+          <RenderReplies userId={user.id} artifactId={artifactExtended.id} />
+        )}
       </motion.div>
 
       {/* Top */}
@@ -128,7 +127,7 @@ export const Artifact = () => {
             hearted={hearted}
             className="absolute -top-7 -left-[7px]"
             heartCount={heartCount}
-            replyCount={artifact._count.replies}
+            replyCount={artifactExtended._count.replies}
           />
           <Image
             onClick={handleSoundClick}
@@ -145,7 +144,7 @@ export const Artifact = () => {
           <div
             className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-xl w-max max-w-[352px] max-h-8 z-10 gap-2 shadow-shadowKitMedium`}
           >
-            <Stars rating={artifact.content?.rating} />
+            <Stars rating={artifactExtended.content?.rating} />
             <div className={`text-base text-[#000] font-bold line-clamp-1`}>
               {sound.attributes.name}
             </div>
@@ -161,20 +160,20 @@ export const Artifact = () => {
           <div
             className={`z-10 p-8 pb-0 text-base text-white font-bold line-clamp-6 pointer-events-none mt-auto will-change-transform`}
           >
-            {artifact.content?.text}
+            {artifactExtended.content?.text}
           </div>
 
           <div className={`z-10 flex items-center gap-2 p-6 pt-2`}>
             <Avatar
               className="border border-gray3 min-w-[40px] min-h-[40px]"
-              imageSrc={artifact.author.image}
-              altText={`${artifact.author.username}'s avatar`}
+              imageSrc={artifactExtended.author.image}
+              altText={`${artifactExtended.author.username}'s avatar`}
               width={40}
               height={40}
-              user={artifact.author}
+              user={artifactExtended.author}
             />
             <p className="text-white font-bold text-base leading-[10px]">
-              {artifact.author.username}
+              {artifactExtended.author.username}
             </p>
           </div>
         </motion.div>,
@@ -206,7 +205,7 @@ export const Artifact = () => {
           <div
             className={`flex items-center mx-auto mt-6 p-2 pr-2.5 bg-white rounded-full w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium`}
           >
-            <Stars rating={artifact.content?.rating} />
+            <Stars rating={artifactExtended.content?.rating} />
             <div className={`text-base text-[#000] leading-[9px] font-medium`}>
               {sound.attributes.name}
             </div>
@@ -222,20 +221,20 @@ export const Artifact = () => {
           <div
             className={`z-10 p-6 text-base text-white font-medium line-clamp-6 pointer-events-none mt-auto will-change-transform`}
           >
-            {artifact.content?.text}
+            {artifactExtended.content?.text}
           </div>
 
           <div className={`z-10 flex items-center gap-2 p-6 pt-2`}>
             <Avatar
               className="border border-gray3 min-w-[40px] min-h-[40px]"
-              imageSrc={artifact.author.image}
-              altText={`${artifact.author.username}'s avatar`}
+              imageSrc={artifactExtended.author.image}
+              altText={`${artifactExtended.author.username}'s avatar`}
               width={40}
               height={40}
-              user={artifact.author}
+              user={artifactExtended.author}
             />
             <p className="text-white font-bold text-base leading-[10px]">
-              {artifact.author.username}
+              {artifactExtended.author.username}
             </p>
           </div>
         </motion.div>,

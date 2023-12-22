@@ -18,8 +18,12 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
     setRank,
     setSelectedFormSound,
   } = useSoundContext();
-  const { setInputValue, isChangingEssential, setExpandInput } =
-    useNavContext();
+  const {
+    setInputValue,
+    isChangingEssential,
+    setStoredInputValue,
+    inputValue,
+  } = useNavContext();
 
   const soundType = sound.type;
 
@@ -55,6 +59,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
     } else {
       // If not changing essential, store input value and prepare form
       setSelectedFormSound(sound);
+      setStoredInputValue(inputValue);
       setInputValue("");
     }
   };

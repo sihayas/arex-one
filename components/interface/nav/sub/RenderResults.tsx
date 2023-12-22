@@ -13,12 +13,8 @@ interface SearchProps {
 }
 
 const RenderResults = ({ searchData }: SearchProps) => {
-  const [activeItem, setActiveItem] = useState(null);
+  // For tracking the active search item
   const active = useCommandState((state) => state.value);
-
-  useEffect(() => {
-    console.log("changed active item", active);
-  }, [active]);
 
   const appleData = searchData.appleData || {};
   const userData = Array.isArray(searchData.users) ? searchData.users : [];

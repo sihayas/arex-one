@@ -7,12 +7,12 @@ import TextareaAutosize from "react-textarea-autosize";
 import RenderResults from "./sub/RenderResults";
 import Form from "./sub/Form";
 import {
-  ReplyIcon,
   TargetIcon,
   TargetBackIcon,
   TargetIndexIcon,
   TargetAddIcon,
   TargetGoIcon,
+  TargetArtifactIcon,
 } from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
 import Avatar from "@/components/global/Avatar";
@@ -22,7 +22,8 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { addReply } from "@/lib/apiHelper/artifact";
 import { toast } from "sonner";
 import { useSound } from "@/hooks/usePage";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import exp from "node:constants";
 
 const Nav = () => {
   let left;
@@ -50,8 +51,8 @@ const Nav = () => {
 
   const widthVariants = {
     collapsed: {
-      width: 112,
-      borderRadius: 12,
+      width: 103,
+      borderRadius: 18,
       transition: {
         type: "spring",
         damping: 28,
@@ -64,14 +65,14 @@ const Nav = () => {
       transition: {
         type: "spring",
         damping: 21,
-        stiffness: 240,
+        stiffness: 300,
       },
     },
   };
 
   const borderVariants = {
     collapsed: {
-      borderRadius: 12,
+      borderRadius: 18,
       transition: {
         type: "spring",
         damping: 28,
@@ -137,7 +138,6 @@ const Nav = () => {
     setExpandInput(true);
   }, [setExpandInput]);
 
-  // Key bindings
   const handleKeyDown = (e: any) => {
     // New line if Form is expanded or ReplyParent is selected
     if (
@@ -170,8 +170,10 @@ const Nav = () => {
       handleSelectSound(selectedFormSound);
       inputRef?.current?.blur();
       window.history.pushState(null, "");
-    } else if (
-      // Wipe selectedFormSound and replyParent
+    }
+
+    // Wipe selectedFormSound and replyParent
+    else if (
       e.key === "Backspace" &&
       inputValue === "" &&
       activeAction !== "none"
@@ -192,7 +194,6 @@ const Nav = () => {
     ) {
       e.preventDefault();
       const sound = activePage.sound.sound;
-      const artworkUrl = activePage.sound.artworkUrl;
       setSelectedFormSound(sound);
     }
     // Prepare reply parent
@@ -203,7 +204,7 @@ const Nav = () => {
       !inputValue
     ) {
       e.preventDefault();
-      setReplyParent({ artifact: activePage.artifact });
+      setReplyParent(activePage.artifact);
     }
   };
 
@@ -223,7 +224,7 @@ const Nav = () => {
     );
   };
 
-  // Determine the action indicator (takes precedence over page indicator)
+  // Determine the active action
   useEffect(() => {
     if (selectedFormSound) {
       setActiveAction("form");
@@ -238,31 +239,187 @@ const Nav = () => {
     left = (
       <>
         {/* Target Container */}
-        <AnimatePresence>
-          <motion.button
-            exit={{ scale: 0, width: 0 }}
-            initial={{ scale: 0, width: 0 }}
-            animate={{ scale: 1, width: 18 }}
-            onClick={handleNavClick}
-            className="w-[18px] h-[18px] relative"
-            aria-label="Reply with selected parent"
-          >
-            <TargetIcon color={`#CCC`} />
-            {/* Target */}
-            <div className={`absolute center-x center-y`}>
-              <TargetIndexIcon />
-            </div>
-          </motion.button>
-        </AnimatePresence>
+        <motion.button
+          onClick={handleNavClick}
+          className="min-w-[18px] h-[18px] relative"
+        >
+          {/* Target */}
+          <AnimatePresence>
+            {activeAction === "none" && (
+              <>
+                {/* Target Nothing */}
+                {!activePage.sound && !activePage.artifact && !inputValue && (
+                  <>
+                    <motion.div
+                      exit={{ scale: 0, x: "-50%", y: "-50%" }}
+                      initial={{ scale: 0, x: "-50%", y: "-50%" }}
+                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                      className="absolute center-x center-y"
+                    >
+                      <TargetIndexIcon />
+                    </motion.div>
+
+                    <motion.div
+                      exit={{
+                        scale: 0.5,
+                        opacity: 0.5,
+                        x: "-50%",
+                        y: "-50%",
+                      }}
+                      initial={{
+                        scale: 0.5,
+                        opacity: 1,
+                        x: "-50%",
+                        y: "-50%",
+                      }}
+                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                      transition={{
+                        type: "spring",
+                        damping: 12,
+                        stiffness: 220,
+                      }}
+                      className="absolute left-1/2 top-1/2"
+                    >
+                      <TargetIcon color={`#999`} />
+                    </motion.div>
+                  </>
+                )}
+
+                {/* Target Search Result */}
+                {inputValue && (
+                  <>
+                    <motion.div
+                      exit={{ scale: 0, x: "-50%", y: "-50%" }}
+                      initial={{ scale: 0, x: "-50%", y: "-50%" }}
+                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                      className="absolute left-1/2 top-1/2"
+                    >
+                      <TargetGoIcon color="#999" />
+                    </motion.div>
+
+                    <motion.div
+                      exit={{ scale: 0.5, opacity: 0.5, x: "-50%", y: "-50%" }}
+                      initial={{
+                        scale: 0.5,
+                        opacity: 1,
+                        x: "-50%",
+                        y: "-50%",
+                      }}
+                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                      className="absolute left-1/2 top-1/2"
+                      transition={{
+                        type: "spring",
+                        damping: 12,
+                        stiffness: 220,
+                      }}
+                    >
+                      <TargetIcon color={`#999`} />
+                    </motion.div>
+                  </>
+                )}
+
+                {/* Target Sound */}
+                {!inputValue && activePage.sound && (
+                  <>
+                    <motion.div
+                      exit={{ scale: 0, x: "-50%", y: "-50%" }}
+                      initial={{ scale: 0, x: "-50%", y: "-50%" }}
+                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                      className="absolute left-1/2 top-1/2"
+                    >
+                      <TargetAddIcon color="#999" />
+                    </motion.div>
+
+                    <motion.div
+                      exit={{ scale: 0.5, opacity: 0.5, x: "-50%", y: "-50%" }}
+                      initial={{
+                        scale: 0.5,
+                        opacity: 1,
+                        x: "-50%",
+                        y: "-50%",
+                      }}
+                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                      className="absolute left-1/2 top-1/2"
+                      transition={{
+                        type: "spring",
+                        damping: 12,
+                        stiffness: 220,
+                      }}
+                    >
+                      <TargetIcon color={`#999`} />
+                    </motion.div>
+                  </>
+                )}
+
+                {/* Target Artifact */}
+                {!inputValue && activePage.artifact && (
+                  <>
+                    <motion.div
+                      exit={{ scale: 0, x: "-50%", y: "-50%" }}
+                      initial={{ scale: 0, x: "-50%", y: "-50%" }}
+                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                      className="absolute left-1/2 top-1/2"
+                    >
+                      <TargetArtifactIcon />
+                    </motion.div>
+
+                    <motion.div
+                      exit={{ scale: 0.5, opacity: 0.5, x: "-50%", y: "-50%" }}
+                      initial={{
+                        scale: 0.5,
+                        opacity: 1,
+                        x: "-50%",
+                        y: "-50%",
+                      }}
+                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                      className="absolute left-1/2 top-1/2"
+                      transition={{
+                        type: "spring",
+                        damping: 12,
+                        stiffness: 220,
+                      }}
+                    >
+                      <TargetIcon color={`#999`} />
+                    </motion.div>
+                  </>
+                )}
+              </>
+            )}
+          </AnimatePresence>
+
+          {/* Target Back Wrapper */}
+          <AnimatePresence>
+            {activeAction !== "none" && !inputValue && (
+              <motion.div
+                exit={{ scale: 0.5, opacity: 0.5, x: "-50%", y: "-50%" }}
+                initial={{
+                  scale: 0.5,
+                  opacity: 1,
+                  x: "-50%",
+                  y: "-50%",
+                }}
+                animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                className="absolute left-1/2 top-1/2"
+                transition={{
+                  type: "spring",
+                  damping: 12,
+                  stiffness: 220,
+                }}
+              >
+                <TargetBackIcon color={`#999`} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.button>
       </>
     );
 
     // Textarea
     middle = (
       <div
-        className={`px-3 pt-[6px] pb-[7px] flex items-center w-full relative`}
+        className={`px-2 pt-[6px] pb-[7px] flex items-center w-full relative`}
       >
-        {/* TextArea */}
+        {/* Text Area */}
         <motion.div className={`flex items-center relative w-full`}>
           <TextareaAutosize
             id="entryText"
@@ -277,24 +434,6 @@ const Nav = () => {
             maxRows={6}
             tabIndex={0}
           />
-          {/* Placeholder text */}
-          {!inputValue && (
-            <div
-              className={`absolute left-0 top-0 flex items-center h-full pointer-events-none text-base text-gray2 min-w-[32rem]`}
-            >
-              {activeAction === "none"
-                ? activePage.sound
-                  ? "Enter to create artifact, type to explore"
-                  : activePage.artifact
-                  ? "Press enter to reply, type to explore"
-                  : "VOIR"
-                : activeAction === "form"
-                ? "Create..."
-                : activeAction === "reply"
-                ? "Creating chain"
-                : null}
-            </div>
-          )}
         </motion.div>
       </div>
     );
@@ -315,7 +454,7 @@ const Nav = () => {
     <motion.div
       variants={widthVariants}
       animate={expandInput || inputValue ? "expanded" : "collapsed"}
-      className="absolute flex flex-col -bottom-[50px] center-x z-50 -space-y-[34px] overflow-hidden "
+      className="absolute flex flex-col -bottom-[50px] center-x z-50 -space-y-[34px] overflow-hidden"
     >
       {/* Content */}
       <motion.div
@@ -354,30 +493,6 @@ const Nav = () => {
 };
 
 export default Nav;
-
-// {expandInput && !replyParent && (selectedFormSound || inputValue) && (
-//     <motion.div
-//         className={`flex flex-col relative w-full p-3 pb-[6px]
-// overflow-scroll scrollbar-none`}
-//         variants={heightVariants}
-//         animate={expandInput ? "expanded" : "collapsed"}
-//     >
-//       {/* If no selected form sound render search results */}
-//       {selectedFormSound && expandInput ? (
-//           <Form />
-//       ) : (
-//           !selectedFormSound &&
-//           inputValue && (
-//               <RenderResults
-//                   searchData={data}
-//                   isInitialLoading={isInitialLoading}
-//                   isFetching={isFetching}
-//                   error={error}
-//               />
-//           )
-//       )}
-//     </motion.div>
-// )}
 
 {
   /*<AnimatePresence>*/

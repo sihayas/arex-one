@@ -39,7 +39,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   );
   const handleEntryClick = useArtifact(artifact);
   const handleSoundClick = async () => {
-    handleSelectSound(sound, artwork);
+    handleSelectSound(sound);
   };
 
   if (!sound) return null;
@@ -62,8 +62,9 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         style={{
           width: 336,
           height: 432,
+          rotate: -3,
         }}
-        className={`flex flex-col rounded-full bg-white relative shadow-shadowKitHigh will-change-transform overflow-hidden`}
+        className={`flex flex-col rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
         {/* Stars */}
         <Heart
@@ -74,7 +75,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           replyCount={artifact._count.replies}
         />
         <div
-          className={`absolute top-8 center-x flex items-center p-2 pr-2.5 bg-white rounded-xl w-max max-w-[320px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
+          className={`absolute top-8 center-x flex items-center p-2 pr-2.5 bg-white rounded-xl w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
         >
           <Stars rating={artifact.content?.rating} />
           <div className={`text-base text-[#000] font-bold line-clamp-1`}>

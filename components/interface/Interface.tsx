@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 
-import { Command, useCommandState } from "cmdk";
+import { Command } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
 
 import Album from "@/components/interface/album/Album";
@@ -78,7 +78,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     [base.height, target.height],
   );
 
-  // Animate interface visibility
+  // Animate portal visibility
   useEffect(() => {
     const animateParent = async () => {
       const animationConfig = {
@@ -112,18 +112,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
-  // Animate WINDOW box shadow and scale when expanding input
   // useEffect(() => {
-  //   const adjustBoxShadow = async () => {
-  //     const initialBoxShadow =
-  //       "10px 14px 37px 0px rgba(0, 0, 0, 0.15), 39px 56px 68px 0px rgba(0, 0, 0, 0.13), 88px 126px 92px 0px rgba(0, 0, 0, 0.08), 156px 223px 109px 0px rgba(0, 0, 0, 0.02), 244px 349px 119px 0px rgba(0, 0, 0, 0.00)";
-  //     const finalBoxShadow =
-  //       "2px 4px 9px 0px rgba(0, 0, 0, 0.02), 8px 14px 16px 0px rgba(0, 0, 0, 0.02), 18px 32px 22px 0px rgba(0, 0, 0, 0.01), 31px 57px 26px 0px rgba(0, 0, 0, 0.005), 48px 88px 28px 0px rgba(0, 0, 0, 0.002)";
-  //
+  //   const blurContent = async () => {
   //     await animate(
   //       scope.current,
   //       {
-  //         boxShadow: expandInput ? finalBoxShadow : initialBoxShadow,
+  //         filter: expandInput ? "blur(12px)" : "blur(0px)",
   //         scale: expandInput ? 0.86 : 1,
   //       },
   //       {
@@ -134,10 +128,10 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   //     );
   //   };
   //
-  //   adjustBoxShadow();
-  // }, [animate, scope, expandInput, expandSignals]);
+  //   blurContent();
+  // }, [animate, scope, expandInput]);
 
-  // Animate shape-shifting the WINDOW on scroll & page change & bounce
+  // Animate shape-shifting the portal on scroll & page change & bounce
   useEffect(() => {
     // Bounce and shift dimensions on page change
     const sequence = async () => {

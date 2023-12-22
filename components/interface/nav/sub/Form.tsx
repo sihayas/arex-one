@@ -109,7 +109,7 @@ const Form = () => {
       <motion.div
         initial={{ scale: 0.8, rotate: 8, opacity: 0 }}
         animate={{ scale: 1, rotate: -3, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 180, damping: 18, delay: 0.4 }}
+        transition={{ type: "spring", stiffness: 160, damping: 18, delay: 0.4 }}
         className={`flex flex-col rounded-3xl bg-white relative w-[223px] h-[288px] shadow-miniCard will-change-transform overflow-hidden`}
       >
         <Image
@@ -122,7 +122,7 @@ const Form = () => {
           fill={true}
         />
       </motion.div>
-      {/*<Dial setRatingValue={handleRatingChange} />*/}
+      <Dial setRatingValue={handleRatingChange} />
       {/*<NewDial />*/}
     </form>
   );

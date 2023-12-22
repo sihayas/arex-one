@@ -126,7 +126,7 @@ const Album = () => {
       >
         <Statline ratings={[4, 8900, 2445, 5000000, 500]} />
       </motion.div>
-      ,{/* Entries */}
+      {/* Entries */}
       <RenderArtifacts
         soundId={albumId}
         sortOrder={sortOrder}

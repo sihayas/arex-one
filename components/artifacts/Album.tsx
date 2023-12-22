@@ -27,10 +27,10 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
 
   const handleEntryClick = useArtifact({
     ...artifact,
-    appleData: selectedSound?.sound as AlbumData,
+    appleData: selectedSound as AlbumData,
   });
 
-  if (!selectedSound?.sound) {
+  if (!selectedSound) {
     return null;
   }
 
