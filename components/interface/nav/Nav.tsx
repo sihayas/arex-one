@@ -54,7 +54,7 @@ const Nav = () => {
       },
     },
     expanded: {
-      width: 384,
+      width: activeAction !== "notifications" ? 384 : 192,
       borderRadius: 18,
       transition: {
         type: "spring",
@@ -85,7 +85,7 @@ const Nav = () => {
 
   const heightVariants = {
     collapsed: {
-      height: 42,
+      height: 43,
       transition: {
         type: "spring",
         damping: 21,
@@ -102,6 +102,7 @@ const Nav = () => {
         : activeAction === "notifications"
         ? 610 // notifications
         : 42,
+      x: activeAction === "notifications" ? -192 : 0,
       transition: {
         type: "spring",
         damping: 32,
@@ -123,13 +124,15 @@ const Nav = () => {
 
   const onBlur = useCallback(() => {
     setExpandInput(false);
-  }, [setExpandInput]);
+    if (activeAction === "notifications") setActiveAction("none");
+  }, [setExpandInput, activeAction, setActiveAction]);
   const onFocus = useCallback(() => {
     setExpandInput(true);
   }, [setExpandInput]);
   const handleNavClick = useCallback(() => {
     setExpandInput(true);
-  }, [setExpandInput]);
+    setActiveAction("notifications");
+  }, [setExpandInput, setActiveAction]);
 
   const handleReplySubmit = () => {
     if (!replyParent || !inputValue || !user?.id) return;
@@ -162,9 +165,14 @@ const Nav = () => {
   if (user) {
     left = (
       <>
+        <button
+          onClick={handleNavClick}
+          className={`px-[7px] py-1 mr-2 bg-gray3 rounded-full flex items-center justify-center`}
+        >
+          <NotificationIcon color={`#7AFF00`} />
+        </button>
         {/* Target Container */}
         <motion.button
-          onClick={handleNavClick}
           className={`min-w-[24px] h-[24px] relative`}
           whileHover={{ scale: 1.1 }}
         >
@@ -223,13 +231,13 @@ const Nav = () => {
                           damping: 16,
                           stiffness: 80,
                         }}
-                        className="absolute left-1/2 top-1/2 bg-gray3 rounded-full w-6 h-6"
+                        className="absolute left-1/2 top-1/2 bg-gray2 rounded-full w-6 h-6"
                       />
                     </>
                   )}
 
                 {/* Target Search Result */}
-                {inputValue && (
+                {inputValue && expandInput && (
                   <>
                     <motion.div
                       exit={{ scale: 0, x: "-50%", y: "-50%" }}
@@ -259,13 +267,13 @@ const Nav = () => {
                         damping: 10,
                         stiffness: 80,
                       }}
-                      className="absolute left-1/2 top-1/2 bg-gray3 rounded-full w-6 h-6"
+                      className="absolute left-1/2 top-1/2 bg-gray2 rounded-full w-6 h-6"
                     />
                   </>
                 )}
 
                 {/* Target Sound */}
-                {!inputValue && activePage.sound && (
+                {!inputValue && activePage.sound && expandInput && (
                   <>
                     <motion.div
                       exit={{ scale: 0, x: "-50%", y: "-50%" }}
@@ -295,13 +303,13 @@ const Nav = () => {
                         damping: 16,
                         stiffness: 80,
                       }}
-                      className="absolute left-1/2 top-1/2 bg-gray3 rounded-full w-6 h-6"
+                      className="absolute left-1/2 top-1/2 bg-gray2 rounded-full w-6 h-6"
                     />
                   </>
                 )}
 
                 {/* Target Artifact */}
-                {!inputValue && activePage.artifact && (
+                {!inputValue && activePage.artifact && expandInput && (
                   <>
                     <motion.div
                       exit={{ scale: 0, x: "-50%", y: "-50%" }}
@@ -331,7 +339,7 @@ const Nav = () => {
                         damping: 16,
                         stiffness: 80,
                       }}
-                      className="absolute left-1/2 top-1/2 bg-gray3 rounded-full w-6 h-6"
+                      className="absolute left-1/2 top-1/2 bg-gray2 rounded-full w-6 h-6"
                     />
                   </>
                 )}
@@ -368,7 +376,7 @@ const Nav = () => {
 
     // Textarea
     middle = (
-      <div className={`p-2 flex items-center w-full relative`}>
+      <div className={`p-2 pr-0 flex items-center w-full relative`}>
         {/* Input */}
         <TextareaAutosize
           id="entryText"
@@ -396,18 +404,10 @@ const Nav = () => {
           }
           transition={{ duration: 0.2 }}
           exit={{ opacity: 0, scale: 0 }}
-          className="text-gray5 text-base font-medium origin-center"
+          className="text-black text-base origin-center leading-[11px]"
         >
-          {user.username}
+          RX
         </motion.div>
-      </div>
-    );
-
-    right = (
-      <div className={`flex items-center min-w-fit`}>
-        <button>
-          <NotificationIcon />
-        </button>
       </div>
     );
   }
@@ -416,21 +416,14 @@ const Nav = () => {
     <motion.div
       variants={widthVariants}
       animate={expandInput ? "expanded" : "collapsed"}
-      className="absolute flex flex-col -bottom-[50px] center-x z-50 -space-y-[42px] overflow-hidden"
+      className="absolute flex flex-col -bottom-[50px] center-x z-50 -space-y-[42px]"
     >
       {/* Content */}
       <motion.div
-        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#E5E5E5]/90 rounded-[18px] -z-10`}
+        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#E5E5E5]/90 rounded-2xl -z-10`}
         variants={heightVariants}
         animate={expandInput ? "expanded" : "collapsed"}
       >
-        <div
-          style={{
-            background: `linear-gradient(to top, #E5E5E5, rgba(0,0,0,0)`,
-            opacity: activeAction === "none" ? 1 : 0,
-          }}
-          className="fixed bottom-0 w-full h-44 rounded-b-[16px] z-10"
-        />
         {/* If no selected form sound render search results */}
         {selectedFormSound && expandInput ? (
           <Form />
@@ -444,11 +437,10 @@ const Nav = () => {
       <motion.div
         variants={borderVariants}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`flex items-center p-2 bg-transparent max-h-[42px] justify-between relative`}
+        className={`flex items-center p-2 bg-transparent max-h-[40px] justify-between relative`}
       >
         {left}
         {middle}
-        {right}
       </motion.div>
     </motion.div>
   );

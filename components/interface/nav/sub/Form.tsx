@@ -103,14 +103,35 @@ const Form = () => {
     .replace("{w}", "1200")
     .replace("{h}", "1200");
   const name = selectedFormSound.attributes.name;
+  const artist = selectedFormSound.attributes.artistName;
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={`flex p-8`}>
       <motion.div
-        initial={{ scale: 0.8, rotate: 8, opacity: 0 }}
-        animate={{ scale: 1, rotate: -3, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 160, damping: 18, delay: 0.4 }}
-        className={`flex flex-col rounded-3xl bg-white relative w-[223px] h-[288px] shadow-miniCard will-change-transform overflow-hidden`}
+        initial={{
+          scale: 0.75,
+          // rotateX: -30,
+          // rotateY: -15,
+          opacity: 0,
+          filter: "blur(8px)",
+        }}
+        animate={{
+          scale: 1,
+          // rotateX: 0,
+          // rotateY: 0,
+          rotateZ: -3,
+          opacity: 1,
+          filter: "blur(0px)",
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 48,
+          damping: 12,
+          mass: 2,
+          delay: 0.24,
+        }}
+        className={`flex flex-col rounded-3xl bg-white relative w-[224px] h-[288px] shadow-miniCard will-change-transform overflow-hidden origin-center`}
+        style={{ perspective: 1000 }}
       >
         <Image
           className={`cursor-pointer `}
@@ -121,6 +142,16 @@ const Form = () => {
           style={{ objectFit: "cover" }}
           fill={true}
         />
+        <div
+          className={`absolute bottom-0 left-0 flex flex-col p-4 drop-shadow`}
+        >
+          <h3 className={`text-base font-bold text-white line-clamp-1`}>
+            {name}
+          </h3>
+          <h4 className={`text-base font-medium text-white line-clamp-1`}>
+            {artist}
+          </h4>
+        </div>
       </motion.div>
       <Dial setRatingValue={handleRatingChange} />
       {/*<NewDial />*/}

@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import { SelectedSound } from "@/context/SoundContext";
 import { UserType, Artifact } from "@/types/dbTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -145,7 +146,7 @@ export const InterfaceContextProvider = ({
           key: uuidv4(),
           name: "user",
           user: user,
-          dimensions: { width: 576, height: 400 },
+          dimensions: { width: 640, height: 608 },
           scrollPosition: 0,
           color: "CCC",
         },

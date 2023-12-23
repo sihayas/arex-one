@@ -42,7 +42,6 @@ module.exports = {
         base: ["15px", "150%"],
       },
       colors: {
-        black: "#333333",
         gray: "#585858",
         gray1: "#777777",
         gray2: "#999999",

@@ -57,8 +57,8 @@ const User = () => {
   const scaleCardKeyframes = useTransform(scrollY, [0, 1], [1, 0.948]);
   const scaleCard = useSpring(scaleCardKeyframes, scaleEntryConfig);
 
-  // const widthCardKeyframes = useTransform(scrollY, [0, 1], [576, 288]);
-  // const widthCard = useSpring(widthCardKeyframes, scaleEntryConfig);
+  const widthCardKeyframes = useTransform(scrollY, [0, 1], [352, 288]);
+  const widthCard = useSpring(widthCardKeyframes, scaleEntryConfig);
 
   const xCardKeyframes = useTransform(scrollY, [0, 1], [0, 9]);
   const xCard = useSpring(xCardKeyframes, scaleEntryConfig);
@@ -92,7 +92,7 @@ const User = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-full flex flex-col mt-[1px]"
+      className="w-full min-h-full flex mt-[1px]"
     >
       {/* Card Area */}
       <motion.div
@@ -100,49 +100,17 @@ const User = () => {
           scale: scaleCard,
           x: xCard,
           y: yCard,
-          width: 576,
-          height: 368,
+          width: widthCard,
+          height: 608,
           borderRadius: borderCard,
         }}
-        className={`flex flex-col justify-between z-0 will-change-transform top-0 left-0 border border-silver`}
+        className={`flex justify-between shadow-shadowKitMedium overflow-hidden z-0 will-change-transform top-0 left-0 `}
       >
         <div
           className={`absolute bg-white/40 w-full h-full top-0 left-0 backdrop-blur-3xl overflow-visible -z-10`}
         />
         <Essentials essentials={userData.essentials} />
         <div className={`flex flex-col gap-[22px] items-end pl-0 p-8 z-0`}>
-          {/* Avatar */}
-          <div className={`absolute left-4 bottom-4 flex items-center gap-4`}>
-            <Image
-              className={`rounded-max`}
-              src={userData.image}
-              alt={`${userData.name}'s avatar`}
-              width={80}
-              height={80}
-            />
-            <motion.div
-              style={{
-                opacity: opacityEssentials,
-              }}
-              className={`absolute left-[48px] -top-[7px] drop-shadow-md opacity-90`}
-            >
-              <div
-                className={`bg-white rounded-[15px] py-1.5 px-[9px] text-xs w-max text-center`}
-              >
-                {userData.bio}
-              </div>
-              <TailIcon className={`absolute left-2 -translate-y-[2px]`} />
-            </motion.div>
-
-            <motion.div
-              style={{
-                opacity: opacityEssentials,
-              }}
-              className={`text-[24px] text-[#000] leading-[17px] font-medium`}
-            >
-              {userData.username}
-            </motion.div>
-          </div>
           {/* Stats */}
           <div className={`flex flex-col items-end gap-2`}>
             <div
@@ -168,10 +136,53 @@ const User = () => {
               {userData._count.artifact}
             </div>
           </div>
+
+          {/* Avatar */}
+          <div
+            className={`absolute right-4 bottom-4 flex items-center flex-row-reverse gap-4`}
+          >
+            <Image
+              className={`rounded-max`}
+              src={userData.image}
+              alt={`${userData.name}'s avatar`}
+              width={80}
+              height={80}
+            />
+            <motion.div
+              style={{
+                opacity: opacityEssentials,
+              }}
+              className={`absolute right-[40px] -top-[7px] drop-shadow-md opacity-90`}
+            >
+              <div
+                className={`bg-white rounded-[15px] py-1.5 px-[9px] text-xs w-max text-center`}
+              >
+                {userData.bio}
+              </div>
+              <TailIcon
+                className={`absolute right-2 -translate-y-[2px] scale-x-[-1]`}
+              />
+            </motion.div>
+
+            <motion.div
+              style={{
+                opacity: opacityEssentials,
+              }}
+              className={`text-[24px] text-[#000] leading-[17px] font-medium`}
+            >
+              {userData.username}
+            </motion.div>
+          </div>
         </div>
       </motion.div>
       {/* Soundtrack History */}
-      <motion.div className={`w-full h-full relative`}>
+      <motion.div
+        style={{
+          opacity: opacitySoundtrack,
+          zIndex: zSoundtrackKeyframes,
+          overflow: "visible",
+        }}
+      >
         <Soundtrack userId={user.id} />
       </motion.div>
     </motion.div>

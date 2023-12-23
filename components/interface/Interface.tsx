@@ -27,12 +27,12 @@ const componentMap: Record<PageName, React.ComponentType<any>> = {
 // Calculate & set base dimensions and target dimensions for the window per page
 export const GetDimensions = (pageName: PageName) => {
   const viewportHeight = window.innerHeight;
-  const maxHeight = viewportHeight - 2 * 32;
+  const maxHeight = viewportHeight - 2 * 64;
 
   const dimensions = {
     user: {
-      base: { width: 576, height: 400 },
-      target: { width: 576, height: maxHeight },
+      base: { width: 416, height: 608 },
+      target: { width: 640, height: 608 },
     },
     album: {
       base: { width: 576, height: 576 },
