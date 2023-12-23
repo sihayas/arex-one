@@ -101,7 +101,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           className="absolute bottom-0 w-full h-4/5 pointer-events-none"
         />
         <div
-          className={`absolute px-8 text-base text-white drop-shadow font-bold line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
+          className={`absolute px-8 text-base text-white drop-shadow font-semibold line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
         >
           {artifact.content?.text}
         </div>

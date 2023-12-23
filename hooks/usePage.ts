@@ -44,7 +44,7 @@ export const useUser = (author: UserType) => {
         key: uuidv4(),
         name: "user",
         user: author,
-        dimensions: { width: 640, height: 608 },
+        dimensions: { width: 576, height: 400 },
         scrollPosition: 0,
         color: "CCC",
       },
@@ -65,7 +65,7 @@ export const useSound = () => {
       {
         key: uuidv4(),
         name: "album",
-        sound: { sound },
+        sound: sound,
         dimensions: {
           width: 576,
           height: 832,

@@ -19,8 +19,10 @@ export type NavContextType = {
   setStoredInputValue: Dispatch<SetStateAction<string>>;
   isChangingEssential: boolean;
   setIsChangingEssential: Dispatch<SetStateAction<boolean>>;
-  activeAction: "form" | "reply" | "none";
-  setActiveAction: Dispatch<SetStateAction<"form" | "reply" | "none">>;
+  activeAction: "form" | "reply" | "notifications" | "none";
+  setActiveAction: Dispatch<
+    SetStateAction<"form" | "reply" | "notifications" | "none">
+  >;
 };
 
 // Create the context, initialized as undefined
@@ -54,9 +56,9 @@ export const NavProvider = ({ children }: NavProviderProps) => {
 
   const [isChangingEssential, setIsChangingEssential] = useState(false);
 
-  const [activeAction, setActiveAction] = useState<"form" | "reply" | "none">(
-    "none",
-  );
+  const [activeAction, setActiveAction] = useState<
+    "form" | "reply" | "notifications" | "none"
+  >("none");
 
   // Whenever expandInput changes and is true, focus the input
   useEffect(() => {

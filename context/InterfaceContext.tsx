@@ -5,16 +5,16 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { SelectedSound } from "@/context/SoundContext";
 import { UserType, Artifact } from "@/types/dbTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
 export type Page = {
   key: string;
   name: string;
   color: string;
-  sound?: SelectedSound;
+  sound?: AlbumData | SongData;
   user?: UserType;
   artifact?: Artifact;
   scrollPosition: number;
@@ -145,7 +145,7 @@ export const InterfaceContextProvider = ({
           key: uuidv4(),
           name: "user",
           user: user,
-          dimensions: { width: 640, height: 608 },
+          dimensions: { width: 576, height: 400 },
           scrollPosition: 0,
           color: "CCC",
         },

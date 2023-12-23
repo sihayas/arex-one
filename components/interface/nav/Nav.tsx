@@ -7,31 +7,28 @@ import TextareaAutosize from "react-textarea-autosize";
 import RenderResults from "./sub/RenderResults";
 import Form from "./sub/Form";
 import {
-  TargetIcon,
   TargetBackIcon,
   TargetIndexIcon,
   TargetAddIcon,
   TargetGoIcon,
   TargetArtifactIcon,
+  NotificationIcon,
 } from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
 import Avatar from "@/components/global/Avatar";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
-import Image from "next/image";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { addReply } from "@/lib/apiHelper/artifact";
 import { toast } from "sonner";
-import { useSound } from "@/hooks/usePage";
 import { AnimatePresence, motion } from "framer-motion";
-import exp from "node:constants";
+import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
 
 const Nav = () => {
   let left;
   let middle;
   let right;
 
-  // For artifact page/reply input
-  const { replyParent, setReplyParent } = useThreadcrumb();
+  const { replyParent } = useThreadcrumb();
   const { user, pages } = useInterfaceContext();
   const {
     inputValue,
@@ -39,19 +36,16 @@ const Nav = () => {
     expandInput,
     setExpandInput,
     inputRef,
-    storedInputValue,
-    setStoredInputValue,
     activeAction,
     setActiveAction,
   } = useNavContext();
-  const { selectedFormSound, setSelectedFormSound } = useSoundContext();
-  const { handleSelectSound } = useSound();
+  const { selectedFormSound } = useSoundContext();
 
   const activePage: Page = pages[pages.length - 1];
 
   const widthVariants = {
     collapsed: {
-      width: 103,
+      width: "fit-content",
       borderRadius: 18,
       transition: {
         type: "spring",
@@ -91,7 +85,7 @@ const Nav = () => {
 
   const heightVariants = {
     collapsed: {
-      height: 34,
+      height: 42,
       transition: {
         type: "spring",
         damping: 21,
@@ -99,15 +93,15 @@ const Nav = () => {
       },
     },
     expanded: {
-      height: expandInput
-        ? activeAction === "none" && inputValue
-          ? 400
-          : activeAction === "form"
-          ? 370
-          : activeAction === "reply"
-          ? 36
-          : 34
-        : 34,
+      height: !expandInput
+        ? 42 // base
+        : activeAction === "none" && inputValue
+        ? 432 // search
+        : activeAction === "form"
+        ? 370 // form
+        : activeAction === "notifications"
+        ? 610 // notifications
+        : 42,
       transition: {
         type: "spring",
         damping: 32,
@@ -125,8 +119,7 @@ const Nav = () => {
   };
 
   // Render search results
-  const { data, isInitialLoading, isFetching, error } =
-    GetSearchResults(searchQuery);
+  const { data } = GetSearchResults(searchQuery);
 
   const onBlur = useCallback(() => {
     setExpandInput(false);
@@ -138,80 +131,9 @@ const Nav = () => {
     setExpandInput(true);
   }, [setExpandInput]);
 
-  const handleKeyDown = (e: any) => {
-    // New line if Form is expanded or ReplyParent is selected
-    if (
-      e.key === "Enter" &&
-      expandInput &&
-      selectedFormSound &&
-      inputRef.current?.value !== ""
-    ) {
-      e.preventDefault();
-      const cursorPosition = e.target.selectionStart;
-      const value = e.target.value;
-      const newValue =
-        value.substring(0, cursorPosition) +
-        "\n" +
-        value.substring(cursorPosition);
-      handleInputTextChange(newValue);
-    }
-    //Submit reply with cmd/ctrl + enter
-    else if (
-      e.key === "Enter" &&
-      (e.metaKey || e.ctrlKey) &&
-      inputRef.current === document.activeElement &&
-      replyParent
-    ) {
-      handleReplySubmit();
-    }
-    // Switch to album page from form
-    else if (e.key === "Enter" && selectedFormSound && inputValue === "") {
-      e.preventDefault();
-      handleSelectSound(selectedFormSound);
-      inputRef?.current?.blur();
-      window.history.pushState(null, "");
-    }
-
-    // Wipe selectedFormSound and replyParent
-    else if (
-      e.key === "Backspace" &&
-      inputValue === "" &&
-      activeAction !== "none"
-    ) {
-      e.preventDefault();
-      setSelectedFormSound(null);
-      setReplyParent(null);
-      setInputValue(storedInputValue);
-      setStoredInputValue("");
-      inputRef?.current?.focus();
-    }
-    // Prepare form if on sound page
-    else if (
-      e.key === "Enter" &&
-      activePage.sound &&
-      activeAction === "none" &&
-      !inputValue
-    ) {
-      e.preventDefault();
-      const sound = activePage.sound.sound;
-      setSelectedFormSound(sound);
-    }
-    // Prepare reply parent
-    else if (
-      e.key === "Enter" &&
-      activePage.artifact &&
-      activeAction === "none" &&
-      !inputValue
-    ) {
-      e.preventDefault();
-      setReplyParent(activePage.artifact);
-    }
-  };
-
   const handleReplySubmit = () => {
     if (!replyParent || !inputValue || !user?.id) return;
 
-    // Wrap the addReply call in toast.promise
     toast.promise(
       addReply(replyParent, inputValue, user?.id).then(() => {
         setInputValue("");
@@ -224,7 +146,9 @@ const Nav = () => {
     );
   };
 
-  // Determine the active action
+  const handleKeyDown = Keybinds(handleInputTextChange, handleReplySubmit);
+
+  // Active Action
   useEffect(() => {
     if (selectedFormSound) {
       setActiveAction("form");
@@ -241,49 +165,68 @@ const Nav = () => {
         {/* Target Container */}
         <motion.button
           onClick={handleNavClick}
-          className="min-w-[18px] h-[18px] relative"
+          className={`min-w-[24px] h-[24px] relative`}
+          whileHover={{ scale: 1.1 }}
         >
           {/* Target */}
           <AnimatePresence>
             {activeAction === "none" && (
               <>
-                {/* Target Nothing */}
-                {!activePage.sound && !activePage.artifact && !inputValue && (
-                  <>
-                    <motion.div
-                      exit={{ scale: 0, x: "-50%", y: "-50%" }}
-                      initial={{ scale: 0, x: "-50%", y: "-50%" }}
-                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
-                      className="absolute center-x center-y"
-                    >
-                      <TargetIndexIcon />
-                    </motion.div>
-
-                    <motion.div
-                      exit={{
-                        scale: 0.5,
-                        opacity: 0.5,
-                        x: "-50%",
-                        y: "-50%",
-                      }}
-                      initial={{
-                        scale: 0.5,
-                        opacity: 1,
-                        x: "-50%",
-                        y: "-50%",
-                      }}
-                      animate={{ scale: 1, x: "-50%", y: "-50%" }}
-                      transition={{
-                        type: "spring",
-                        damping: 12,
-                        stiffness: 220,
-                      }}
-                      className="absolute left-1/2 top-1/2"
-                    >
-                      <TargetIcon color={`#999`} />
-                    </motion.div>
-                  </>
+                {!expandInput && (
+                  <motion.div
+                    exit={{ scale: 0 }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-fit h-fit"
+                  >
+                    <Avatar
+                      className=""
+                      imageSrc={user.image}
+                      altText={`${user.username}'s avatar`}
+                      width={24}
+                      height={24}
+                      user={user}
+                    />
+                  </motion.div>
                 )}
+                {/* Target Nothing */}
+                {!activePage.sound &&
+                  !activePage.artifact &&
+                  expandInput &&
+                  !inputValue && (
+                    <>
+                      <motion.div
+                        exit={{ scale: 0, x: "-50%", y: "-50%" }}
+                        initial={{ scale: 0, x: "-50%", y: "-50%" }}
+                        animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                        className="absolute center-x center-y z-10"
+                      >
+                        <TargetIndexIcon />
+                      </motion.div>
+
+                      <motion.div
+                        exit={{
+                          scale: 0.5,
+                          opacity: 0.5,
+                          x: "-50%",
+                          y: "-50%",
+                        }}
+                        initial={{
+                          scale: 0.5,
+                          opacity: 1,
+                          x: "-50%",
+                          y: "-50%",
+                        }}
+                        animate={{ scale: 1, x: "-50%", y: "-50%" }}
+                        transition={{
+                          type: "spring",
+                          damping: 16,
+                          stiffness: 80,
+                        }}
+                        className="absolute left-1/2 top-1/2 bg-gray3 rounded-full w-6 h-6"
+                      />
+                    </>
+                  )}
 
                 {/* Target Search Result */}
                 {inputValue && (
@@ -292,29 +235,32 @@ const Nav = () => {
                       exit={{ scale: 0, x: "-50%", y: "-50%" }}
                       initial={{ scale: 0, x: "-50%", y: "-50%" }}
                       animate={{ scale: 1, x: "-50%", y: "-50%" }}
-                      className="absolute left-1/2 top-1/2"
+                      className="absolute left-1/2 top-1/2 z-10"
                     >
-                      <TargetGoIcon color="#999" />
+                      <TargetGoIcon />
                     </motion.div>
 
                     <motion.div
-                      exit={{ scale: 0.5, opacity: 0.5, x: "-50%", y: "-50%" }}
+                      exit={{
+                        scale: 0.75,
+                        opacity: 0.75,
+                        x: "-50%",
+                        y: "-50%",
+                      }}
                       initial={{
-                        scale: 0.5,
+                        scale: 0.75,
                         opacity: 1,
                         x: "-50%",
                         y: "-50%",
                       }}
                       animate={{ scale: 1, x: "-50%", y: "-50%" }}
-                      className="absolute left-1/2 top-1/2"
                       transition={{
                         type: "spring",
-                        damping: 12,
-                        stiffness: 220,
+                        damping: 10,
+                        stiffness: 80,
                       }}
-                    >
-                      <TargetIcon color={`#999`} />
-                    </motion.div>
+                      className="absolute left-1/2 top-1/2 bg-gray3 rounded-full w-6 h-6"
+                    />
                   </>
                 )}
 
@@ -325,29 +271,32 @@ const Nav = () => {
                       exit={{ scale: 0, x: "-50%", y: "-50%" }}
                       initial={{ scale: 0, x: "-50%", y: "-50%" }}
                       animate={{ scale: 1, x: "-50%", y: "-50%" }}
-                      className="absolute left-1/2 top-1/2"
+                      className="absolute left-1/2 top-1/2 z-10"
                     >
-                      <TargetAddIcon color="#999" />
+                      <TargetAddIcon color="#FFF" />
                     </motion.div>
 
                     <motion.div
-                      exit={{ scale: 0.5, opacity: 0.5, x: "-50%", y: "-50%" }}
-                      initial={{
+                      exit={{
                         scale: 0.5,
+                        opacity: 0.5,
+                        x: "-50%",
+                        y: "-50%",
+                      }}
+                      initial={{
+                        scale: 0.75,
                         opacity: 1,
                         x: "-50%",
                         y: "-50%",
                       }}
                       animate={{ scale: 1, x: "-50%", y: "-50%" }}
-                      className="absolute left-1/2 top-1/2"
                       transition={{
                         type: "spring",
-                        damping: 12,
-                        stiffness: 220,
+                        damping: 16,
+                        stiffness: 80,
                       }}
-                    >
-                      <TargetIcon color={`#999`} />
-                    </motion.div>
+                      className="absolute left-1/2 top-1/2 bg-gray3 rounded-full w-6 h-6"
+                    />
                   </>
                 )}
 
@@ -358,29 +307,32 @@ const Nav = () => {
                       exit={{ scale: 0, x: "-50%", y: "-50%" }}
                       initial={{ scale: 0, x: "-50%", y: "-50%" }}
                       animate={{ scale: 1, x: "-50%", y: "-50%" }}
-                      className="absolute left-1/2 top-1/2"
+                      className="absolute left-1/2 top-1/2 z-10"
                     >
                       <TargetArtifactIcon />
                     </motion.div>
 
                     <motion.div
-                      exit={{ scale: 0.5, opacity: 0.5, x: "-50%", y: "-50%" }}
-                      initial={{
+                      exit={{
                         scale: 0.5,
+                        opacity: 0.5,
+                        x: "-50%",
+                        y: "-50%",
+                      }}
+                      initial={{
+                        scale: 0.75,
                         opacity: 1,
                         x: "-50%",
                         y: "-50%",
                       }}
                       animate={{ scale: 1, x: "-50%", y: "-50%" }}
-                      className="absolute left-1/2 top-1/2"
                       transition={{
                         type: "spring",
-                        damping: 12,
-                        stiffness: 220,
+                        damping: 16,
+                        stiffness: 80,
                       }}
-                    >
-                      <TargetIcon color={`#999`} />
-                    </motion.div>
+                      className="absolute left-1/2 top-1/2 bg-gray3 rounded-full w-6 h-6"
+                    />
                   </>
                 )}
               </>
@@ -416,45 +368,55 @@ const Nav = () => {
 
     // Textarea
     middle = (
-      <div
-        className={`px-2 pt-[6px] pb-[7px] flex items-center w-full relative`}
-      >
-        {/* Text Area */}
-        <motion.div className={`flex items-center relative w-full`}>
-          <TextareaAutosize
-            id="entryText"
-            className={`bg-transparent text-base outline-none resize-none text-gray5 w-full`}
-            value={expandInput ? inputValue : ""}
-            onChange={(e) => handleInputTextChange(e.target.value)}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            ref={inputRef}
-            onKeyDown={handleKeyDown}
-            minRows={1}
-            maxRows={6}
-            tabIndex={0}
-          />
+      <div className={`p-2 flex items-center w-full relative`}>
+        {/* Input */}
+        <TextareaAutosize
+          id="entryText"
+          className={`bg-transparent text-base outline-none resize-none text-gray5 w-full absolute left-2`}
+          value={expandInput ? inputValue : ""}
+          onChange={(e) => handleInputTextChange(e.target.value)}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          ref={inputRef}
+          onKeyDown={handleKeyDown}
+          minRows={1}
+          maxRows={6}
+          tabIndex={0}
+        />
+        {/* Username */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={
+            expandInput
+              ? { opacity: 0, scale: 0 }
+              : {
+                  opacity: 1,
+                  scale: 1,
+                }
+          }
+          transition={{ duration: 0.2 }}
+          exit={{ opacity: 0, scale: 0 }}
+          className="text-gray5 text-base font-medium origin-center"
+        >
+          {user.username}
         </motion.div>
       </div>
     );
 
     right = (
-      <Avatar
-        className="shadow-shadowKitLow"
-        imageSrc={user.image}
-        altText={`${user.username}'s avatar`}
-        width={26}
-        height={26}
-        user={user}
-      />
+      <div className={`flex items-center min-w-fit`}>
+        <button>
+          <NotificationIcon />
+        </button>
+      </div>
     );
   }
 
   return (
     <motion.div
       variants={widthVariants}
-      animate={expandInput || inputValue ? "expanded" : "collapsed"}
-      className="absolute flex flex-col -bottom-[50px] center-x z-50 -space-y-[34px] overflow-hidden"
+      animate={expandInput ? "expanded" : "collapsed"}
+      className="absolute flex flex-col -bottom-[50px] center-x z-50 -space-y-[42px] overflow-hidden"
     >
       {/* Content */}
       <motion.div
@@ -482,7 +444,7 @@ const Nav = () => {
       <motion.div
         variants={borderVariants}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`flex items-center pl-2 pr-1 py-1 bg-transparent max-h-[34px] justify-between relative`}
+        className={`flex items-center p-2 bg-transparent max-h-[42px] justify-between relative`}
       >
         {left}
         {middle}
@@ -493,85 +455,3 @@ const Nav = () => {
 };
 
 export default Nav;
-
-{
-  /*<AnimatePresence>*/
-}
-{
-  /*  {activeAction !== "none" &&*/
-}
-{
-  /*      activeAction === "reply" &&*/
-}
-{
-  /*      replyParent?.artifact && (*/
-}
-{
-  /*          <motion.button*/
-}
-{
-  /*              exit={{ scale: 0, width: 0 }}*/
-}
-{
-  /*              initial={{ scale: 0, width: 0 }}*/
-}
-{
-  /*              animate={{ scale: 1, width: 18 }}*/
-}
-{
-  /*              onClick={handleNavClick}*/
-}
-{
-  /*              className="w-[18px] h-[18px] relative"*/
-}
-{
-  /*              aria-label="Reply with selected parent"*/
-}
-{
-  /*          >*/
-}
-{
-  /*            <ReplyIcon />*/
-}
-{
-  /*            <Image*/
-}
-{
-  /*                className="absolute top-0 left-0 rounded-full border border-gray6"*/
-}
-{
-  /*                src={*/
-}
-{
-  /*                  replyParent.reply*/
-}
-{
-  /*                      ? replyParent.reply.author.image*/
-}
-{
-  /*                      : replyParent.artifact.author.image*/
-}
-{
-  /*                }*/
-}
-{
-  /*                alt="artwork"*/
-}
-{
-  /*                width={16}*/
-}
-{
-  /*                height={16}*/
-}
-{
-  /*            />*/
-}
-{
-  /*          </motion.button>*/
-}
-{
-  /*      )}*/
-}
-{
-  /*</AnimatePresence>*/
-}
