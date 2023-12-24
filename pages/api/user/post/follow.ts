@@ -5,7 +5,7 @@ import { createNotification } from "@/pages/api/middleware/createNotification";
 import { ActivityType } from "@/types/dbTypes";
 import { setCache } from "@/lib/global/redis";
 import { fetchOrCacheUser } from "@/pages/api/caches/user";
-import { createAggKey } from "@/pages/api/middleware/createAggKey";
+import { createKey } from "@/pages/api/middleware/createKey";
 
 async function updateExistingFollow(existingFollow: any) {
   if (!existingFollow) return;
@@ -108,8 +108,8 @@ export default async function handle(
         data: { followerId, followingId },
       });
       const activity = await createFollowActivity(follow.id, followType);
-      const aggKey = createAggKey(followType, followerId, followingId);
-      await createNotification(followingId, activity.id, aggKey);
+      const key = createKey(followType, followingId);
+      await createNotification(followingId, activity.id, key);
     }
 
     // Update following's data in cache

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createHeartActivity } from "@/pages/api/middleware/createActivity";
-import { createAggKey } from "@/pages/api/middleware/createAggKey";
+import { createKey } from "@/pages/api/middleware/createKey";
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,13 +24,13 @@ export default async function handler(
 
   const activity = await createHeartActivity(newHeart.id);
 
-  const aggKey = createAggKey("heart", artifactId, authorId);
+  const key = createKey("heart", artifactId);
 
   await prisma.notification.create({
     data: {
       recipientId: authorId,
       activityId: activity.id,
-      aggregation_Key: aggKey,
+      key: key,
     },
   });
 

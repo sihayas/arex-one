@@ -1,37 +1,29 @@
 import { ActivityType } from "@prisma/client";
 
-export function createAggKey(
-  type: ActivityType,
-  targetId: string,
-  userId: string,
-): string {
-  let aggregationKey: string;
+export function createKey(type: ActivityType, targetId: string): string {
+  let key: string;
 
   switch (type) {
     case ActivityType.heart:
-      aggregationKey = `heart|${targetId}|${userId}`;
+      key = `heart|${targetId}`;
       break;
     case ActivityType.followed_back:
-      const unfollowingId = targetId;
-      const unfollowerId = userId;
-      aggregationKey = `followed_back|${unfollowingId}|${unfollowerId}`;
+      key = `followed_back|${targetId}`;
       break;
     case ActivityType.followed:
-      const followingId = targetId;
-      const followerId = userId;
-      aggregationKey = `followed|${followerId}|${followingId}`;
+      key = `followed|${targetId}`;
       break;
     case ActivityType.reply:
-      aggregationKey = `reply|${targetId}|${userId}`;
+      key = `reply|${targetId}`;
       break;
     case ActivityType.artifact:
-      aggregationKey = `artifact|${targetId}|${userId}`;
+      key = `artifact|${targetId}`;
       break;
     default:
       throw new Error(`Unsupported activity type: ${type}`);
   }
 
-  return aggregationKey;
+  return key;
 }
 
 // //follow

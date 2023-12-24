@@ -3,6 +3,21 @@ import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { attachSoundData } from "@/lib/apiHelper/feed";
 
+export const followUser = async (followerId: string, followingId: string) => {
+  await axios.post(`/api/user/post/follow`, { followerId, followingId });
+  return { followingAtoB: true };
+};
+
+export const unfollowUser = async (followerId: string, followingId: string) => {
+  await axios.delete(`/api/user/post/unfollow`, {
+    params: {
+      unfollowerId: followerId,
+      unfollowingId: followingId,
+    },
+  });
+  return { followingAtoB: false };
+};
+
 // Get user data, handle follow/unfollow, and fetch favorites
 export const useUserDataQuery = (
   sessionUserId: string | undefined,
@@ -42,7 +57,6 @@ export const useUserDataQuery = (
   return { data, isLoading, isError, followState, handleFollowUnfollow };
 };
 
-// Get user settings
 export const useUserSettingsQuery = (userId: string) => {
   const { data, isLoading, isError } = useQuery(
     ["userSettings", userId],
@@ -59,7 +73,6 @@ export const useUserSettingsQuery = (userId: string) => {
   return { data, isLoading, isError };
 };
 
-// Soundtrack (sound history) handlers
 export const useSoundtrackQuery = (userId: string) => {
   return useInfiniteQuery(
     ["soundtrack", userId],
@@ -87,92 +100,33 @@ export const useSoundtrackQuery = (userId: string) => {
   );
 };
 
-// Following handlers
-export const followUser = async (followerId: string, followingId: string) => {
-  await axios.post(`/api/user/post/follow`, { followerId, followingId });
-  return { followingAtoB: true };
-};
+export const useNotificationsQuery = (userId: string | undefined) => {
+  return useInfiniteQuery(
+    ["notifications", userId],
+    async ({ pageParam = 1 }) => {
+      const { data } = await axios.get(`/api/user/get/notifications`, {
+        params: { userId, page: pageParam, limit: 6 },
+      });
 
-// Unfollowing handlers
-export const unfollowUser = async (followerId: string, followingId: string) => {
-  await axios.delete(`/api/user/post/unfollow`, {
-    params: {
-      unfollowerId: followerId,
-      unfollowingId: followingId,
+      const { notifications, pagination } = data.data;
+
+      if (!notifications || !pagination) {
+        throw new Error("Unexpected server response structure");
+      }
+
+      // const mergedData = await attachSoundData(notifications);
+
+      console.log("notifications", notifications);
+      return { data: notifications, pagination };
     },
-  });
-  return { followingAtoB: false };
+    {
+      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
+      enabled: !!userId,
+      refetchOnWindowFocus: false,
+    },
+  );
 };
 
-// Notifications handlers
-// export const useNotificationsQuery = (userId: string | undefined) => {
-//   const {
-//     data: notifications,
-//     isLoading,
-//     isError,
-//   } = useQuery(
-//     ["notifications", userId],
-//     async () => {
-//       const url = `/apiHelper/user/get/notifications`;
-//       const response = await axios.get(url, {
-//         params: {
-//           userId,
-//         },
-//       });
-//
-//       // If notifications exist, attach sound data to each notification
-//       if (response.data) {
-//         // Initialize appleIds and fetchedMapping
-//         let appleIds: { songs: string[]; albums: string[] } = {
-//           songs: [],
-//           albums: [],
-//         };
-//         const fetchedMapping: { [key: string]: AlbumData | SongData } = {};
-//
-//         // Loop through notifications to populate appleIds
-//         response.data.forEach((notif: extendedNotification) => {
-//           if (notif.soundAppleId) {
-//             const { id, type } = notif.soundAppleId;
-//             appleIds[type === "song" ? "songs" : "albums"].push(id);
-//           }
-//         });
-//
-//         // Fetch sounds by types and enhance notifications with fetched data
-//         const fetchedSounds = await fetchSoundsByTypes(appleIds);
-//         // Populate fetchedMapping with fetched data
-//         fetchedSounds.forEach(
-//           (item: AlbumData | SongData) => (fetchedMapping[item.id] = item),
-//         );
-//
-//         // Merge notifications with fetched data
-//         const mergedNotifications = response.data.map(
-//           (notif: extendedNotification) => {
-//             if (notif.soundAppleId) {
-//               const { id } = notif.soundAppleId;
-//               // If id exists, add fetched data to notification
-//               if (id) {
-//                 notif.fetchedSound = fetchedMapping[id];
-//               }
-//             }
-//             return notif;
-//           },
-//         );
-//
-//         // Return the enhanced notifications
-//         return mergedNotifications;
-//       }
-//
-//       return response.data;
-//     },
-//     {
-//       enabled: !!userId,
-//     },
-//   );
-//
-//   return { data: notifications, isLoading, isError };
-// };
-
-// Edit essential handler
 export const changeEssential = async (
   userId: string,
   prevEssentialId: string | null,
@@ -189,7 +143,6 @@ export const changeEssential = async (
   return response;
 };
 
-// Toggle settings handler
 export const toggleSetting = async (
   userId: string,
   settingKey:
@@ -205,7 +158,6 @@ export const toggleSetting = async (
   return response;
 };
 
-// Change bio handler
 export const changeBio = async (userId: string, bio: string) => {
   const url = `/api/user/post/changeBio`;
   const response = await axios.post(url, {

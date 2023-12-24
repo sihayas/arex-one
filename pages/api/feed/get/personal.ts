@@ -15,7 +15,6 @@ export default async function handle(
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 6;
 
-  // Validation
   if (
     !userId ||
     isNaN(page) ||

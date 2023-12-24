@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createReplyActivity } from "@/pages/api/middleware/createActivity";
 import { createNotification } from "@/pages/api/middleware/createNotification";
-import { createAggKey } from "@/pages/api/middleware/createAggKey";
+import { createKey } from "@/pages/api/middleware/createKey";
 import { ActivityType } from "@prisma/client";
 import { ReplyType } from "@/types/dbTypes";
 
@@ -26,8 +26,8 @@ async function notifyReplyChain(
 
     if (!notifiedUsers.has(reply.authorId) && reply.authorId !== userId) {
       notifiedUsers.add(reply.authorId);
-      const aggKey = createAggKey(ActivityType.reply, reply.id, reply.authorId);
-      await createNotification(reply.authorId, activityId, aggKey);
+      const key = createKey(ActivityType.reply, reply.id);
+      await createNotification(reply.authorId, activityId, key);
     }
 
     currentReplyId = reply.replyToId ?? null;
@@ -71,26 +71,18 @@ export default async function handle(
     const activity = await createReplyActivity(createdReply.id);
 
     // Notify the artifact author
-    const aggKey = createAggKey(ActivityType.reply, createdReply.id, userId);
-    await createNotification(artifactAuthorId, activity.id, aggKey);
+    const key = createKey(ActivityType.reply, createdReply.id);
+    await createNotification(artifactAuthorId, activity.id, key);
 
     // Notify the replyParent's
     if (replyingToId) {
       //Notify the first reply ancestor
-      const aggKey = createAggKey(
-        ActivityType.reply,
-        createdReply.id,
-        replyingToId,
-      );
-      await createNotification(replyingToId, activity.id, aggKey);
+      const key = createKey(ActivityType.reply, createdReply.id);
+      await createNotification(replyingToId, activity.id, key);
       // Notify the second reply ancestor
       if (replyingToReplyId) {
-        const aggKey = createAggKey(
-          ActivityType.reply,
-          createdReply.id,
-          replyingToReplyId,
-        );
-        await createNotification(replyingToReplyId, activity.id, aggKey);
+        const key = createKey(ActivityType.reply, createdReply.id);
+        await createNotification(replyingToReplyId, activity.id, key);
         // Check if there's more replies in the chain
         await notifyReplyChain(replyingToReplyId, userId, activity.id);
       }

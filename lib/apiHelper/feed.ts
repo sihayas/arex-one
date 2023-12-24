@@ -2,7 +2,6 @@ import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import { useInterfaceContext } from "@/context/InterfaceContext";
 
 export const useFeedQuery = (userId: string, type: string, limit = 6) => {
   let url;
@@ -54,7 +53,7 @@ const useGenericFeedQuery = (
   );
 };
 
-function extractArtifact(activity: Activity) {
+export function extractArtifact(activity: Activity) {
   return activity.type === ActivityType.Artifact
     ? activity.artifact
     : activity.type === ActivityType.ReplyType

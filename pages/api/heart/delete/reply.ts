@@ -28,11 +28,11 @@ export default async function handler(
     });
 
     if (existingActivity) {
-      const aggregationKey = `heart|${replyId}|${authorId}`;
-      // Unnotify users in the reply chain and delete the notification
+      const key = `heart|${replyId}`;
+      // Un-notify users in the reply chain and delete the notification
       await prisma.notification.deleteMany({
         where: {
-          aggregation_Key: aggregationKey,
+          key,
           recipientId: authorId,
           activityId: existingActivity.id,
         },

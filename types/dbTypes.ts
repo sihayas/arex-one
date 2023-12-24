@@ -214,6 +214,6 @@ export interface Notification {
   recipientId: string;
   activity: Activity;
   activityId: string;
-  aggregation_Key?: string;
+  key?: string;
   isDeleted: boolean;
 }

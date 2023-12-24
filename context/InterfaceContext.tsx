@@ -5,11 +5,11 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { SelectedSound } from "@/context/SoundContext";
 import { UserType, Artifact } from "@/types/dbTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { AlbumData, SongData } from "@/types/appleTypes";
+import { useNotificationsQuery } from "@/lib/apiHelper/user";
 
 export type Page = {
   key: string;
@@ -86,12 +86,12 @@ export const InterfaceContextProvider = ({
     "personal" | "bloom" | "recent" | null
   >(null);
 
-  // Prepare the user and session states
   const [user, setUser] = useState<UserType | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const supabaseClient = useSupabaseClient();
 
   useEffect(() => {
+    // Initialize User
     let currentSessionId: string | null | undefined = null;
 
     const setData = async (session: Session | null) => {
@@ -101,7 +101,6 @@ export const InterfaceContextProvider = ({
       if (session) {
         setSession(session);
 
-        // Get the user profile details from the database
         try {
           const { data: userData, error: fetchError } = await supabaseClient
             .from("User")
@@ -112,6 +111,8 @@ export const InterfaceContextProvider = ({
           if (fetchError) throw fetchError;
           setUser(userData);
           setActiveFeed("personal");
+
+          console.log("User data fetched successfully:", userData);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -137,6 +138,26 @@ export const InterfaceContextProvider = ({
       listener?.subscription.unsubscribe();
     };
   }, [supabaseClient]);
+
+  const { data: notifications, refetch } = useNotificationsQuery(user?.id);
+
+  useEffect(() => {
+    if (notifications) {
+      // const unseenNotifications = notifications.filter(
+      //   (notification) => !notification.seen,
+      // );
+      // if (unseenNotifications.length) {
+      //   setIsVisible(true);
+      // }
+      // const updatedUser = {
+      //   ...user,
+      //   notifications.notifications,
+      // };
+
+      console.log("notifications", notifications);
+      // setUser(updatedUser);
+    }
+  }, [notifications]);
 
   // Initialize the user page upon session and user initialization
   useEffect(() => {
@@ -186,7 +207,6 @@ export const InterfaceContextProvider = ({
     };
   }, [pages, navigateBack]);
 
-  // Render the provider with the context value
   return (
     <InterfaceContext.Provider
       value={{

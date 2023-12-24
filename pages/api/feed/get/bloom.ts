@@ -32,7 +32,7 @@ export default async function handle(
     const activities = await Promise.all(
       bloomingActivities.map(async (id) => {
         // Check cache for activity
-        const cacheKey = `activity:data:${id}`;
+        const cacheKey = `activity:${id}:data`;
         let activityData = await getCache(cacheKey);
 
         if (!activityData) {

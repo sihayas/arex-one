@@ -22,7 +22,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
         return (
           <Fragment key={`essential-${i}`}>
             <Image
-              onClick={() => handleSelectSound(sound, artwork)}
+              onClick={() => handleSelectSound(sound)}
               className={`rounded-2xl shadow-shadowKitMedium`}
               src={artwork}
               alt={`artwork`}

@@ -54,7 +54,14 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         height={42}
         user={artifact.author}
       />
-
+      {/* Stars */}
+      <Heart
+        handleHeartClick={handleHeartClick}
+        hearted={hearted}
+        className="absolute -top-7 -left-[7px]"
+        heartCount={heartCount}
+        replyCount={artifact._count.replies}
+      />
       {/* Content Inner / Card */}
       <motion.div
         onClick={handleEntryClick}
@@ -66,14 +73,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         }}
         className={`flex flex-col rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
-        {/* Stars */}
-        <Heart
-          handleHeartClick={handleHeartClick}
-          hearted={hearted}
-          className="absolute -top-7 -left-[7px]"
-          heartCount={heartCount}
-          replyCount={artifact._count.replies}
-        />
         <div
           className={`absolute top-8 center-x flex items-center p-2 pr-2.5 bg-white rounded-xl w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
         >

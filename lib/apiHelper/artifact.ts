@@ -1,5 +1,4 @@
 import axios from "axios";
-import { ReplyParent } from "@/context/Threadcrumbs";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 export const useRepliesQuery = (
@@ -35,7 +34,7 @@ export const useRepliesQuery = (
   );
 
 export const addReply = async (
-  replyParent: ReplyParent,
+  replyParent: any,
   text: string,
   userId: string,
 ) => {

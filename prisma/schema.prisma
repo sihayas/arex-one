@@ -7,8 +7,7 @@ datasource db {
   relationMode = "prisma"
 }
 
-//Personal
-model Personal {
+model User {
   id            String           @id @default(cuid())
   email         String           @unique
   username      String           @unique
@@ -264,7 +263,7 @@ model Notification {
   activity        Activity @relation(fields: [activityId], references: [id])
   activityId      String
 
-  aggregation_Key String?
+  key             String?
   isDeleted       Boolean  @default(false) @map(name: "is_deleted")
 
   @@index([recipientId])

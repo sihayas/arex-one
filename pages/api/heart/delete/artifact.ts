@@ -32,11 +32,11 @@ export default async function handler(
       .json({ success: false, message: "No activity found to unheart" });
   }
 
-  const aggregationKey = `heart|${artifactId}|${authorId}`;
+  const key = `heart|${artifactId}`;
   await prisma.$transaction([
     prisma.notification.deleteMany({
       where: {
-        aggregation_Key: aggregationKey,
+        key,
         recipientId: authorId,
         activityId: existingActivity.id,
       },
