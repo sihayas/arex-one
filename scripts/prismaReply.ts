@@ -1,5 +1,5 @@
-// const { PrismaClient } = require("@prisma/client");
 // const { ActivityType } = require("@prisma/client");
+// const { PrismaClient } = require("@prisma/client");
 //
 // const prisma = new PrismaClient();
 //
@@ -8,8 +8,12 @@
 //     "clo9niaj40000x0wxbqv7eaz8",
 //     "clo9niamr0002x0wxovs4ou1h",
 //     "clo9pqf580000x0nj0zlk0wul",
+//     "clo9pqf8d0002x0njpmlokud4",
+//     "clo9pqfa80004x0njkcg273x4",
+//     "clo9pqfc50006x0nj4zkk13j9",
+//     "clo9pqfe20008x0nj77xucxzm",
 //   ];
-//   const recordId = "clodcje5z000qczoc3vdnfohy";
+//   const artifactId = "clodcje5z000qczoc3vdnfohy";
 //   const authorId = "5cab3874-5c32-4554-b004-4a3ff919c539";
 //   let rootReplyId = null;
 //   let lastReplyId = null;
@@ -19,7 +23,7 @@
 //       const newReply = (await prisma.reply.create({
 //         data: {
 //           authorId: userIds[i],
-//           recordId,
+//           artifactId,
 //           replyToId: lastReplyId,
 //           content: `This is a reply from user ${userIds[i]}`,
 //         },
