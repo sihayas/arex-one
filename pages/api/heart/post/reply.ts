@@ -1,9 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { ActivityType } from "@prisma/client";
+import { createHeartActivity } from "@/pages/api/middleware/createActivity";
+import { createKey } from "@/pages/api/middleware/createKey";
 
 type Data = {
   success: boolean;
+  message: string;
 };
 
 export default async function handler(
@@ -12,43 +15,30 @@ export default async function handler(
 ) {
   const { replyId, userId, authorId } = req.body;
 
-  const existingHeart = await prisma.heart.findFirst({
-    where: {
-      authorId: userId,
-      replyId,
+  if (
+    authorId === userId ||
+    (await prisma.heart.findFirst({ where: { authorId: userId, replyId } }))
+  ) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid heart operation" });
+  }
+
+  const newHeart = await prisma.heart.create({
+    data: { authorId: userId, replyId },
+  });
+
+  const activity = await createHeartActivity(newHeart.id);
+
+  const key = createKey("heart", replyId);
+
+  await prisma.notification.create({
+    data: {
+      key: key,
+      recipientId: authorId,
+      activityId: activity.id,
     },
   });
 
-  if (existingHeart) {
-    const existingActivity = await prisma.activity.findFirst({
-      where: {
-        type: ActivityType.heart,
-        referenceId: existingHeart.id,
-      },
-    });
-
-    if (existingActivity) {
-      const key = `heart|${replyId}}`;
-      // Unnotify users in the reply chain and delete the notification
-      await prisma.notification.deleteMany({
-        where: {
-          key,
-          recipientId: authorId,
-          activityId: existingActivity.id,
-        },
-      });
-
-      // Delete the activity
-      await prisma.activity.delete({
-        where: { id: existingActivity.id },
-      });
-    }
-
-    // Delete the heart
-    await prisma.heart.delete({
-      where: { id: existingHeart.id },
-    });
-  }
-
-  res.status(200).json({ success: true });
+  res.status(200).json({ success: true, message: "Hearted successfully." });
 }

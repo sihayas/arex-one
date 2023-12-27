@@ -28,6 +28,8 @@ async function fetchOrCacheRoots(ids: string[]): Promise<ReplyType[]> {
         id: true,
         author: { select: { id: true, username: true, image: true } },
         text: true,
+        replyToId: true,
+        rootId: true,
       },
     });
 

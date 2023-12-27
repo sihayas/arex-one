@@ -101,26 +101,42 @@ export const useSoundtrackQuery = (userId: string) => {
 };
 
 export const useNotificationsQuery = (userId: string | undefined) => {
-  return useInfiniteQuery(
+  return useQuery(
     ["notifications", userId],
-    async ({ pageParam = 1 }) => {
+    async () => {
       const { data } = await axios.get(`/api/user/get/notifications`, {
-        params: { userId, page: pageParam, limit: 6 },
+        params: { userId },
       });
 
-      const { notifications, pagination } = data.data;
-
-      if (!notifications || !pagination) {
+      const { notifications } = data.data;
+      if (!notifications) {
         throw new Error("Unexpected server response structure");
       }
 
-      // const mergedData = await attachSoundData(notifications);
+      // Collect first activities and directly attach sound data
+      const firstActivities = Object.values(notifications).reduce(
+        (acc, group) => {
+          if (group.notifications.length > 0) {
+            acc.push(group.notifications[0].activity);
+          }
+          return acc;
+        },
+        [],
+      );
 
-      console.log("notifications", notifications);
-      return { data: notifications, pagination };
+      const updatedActivities = await attachSoundData(firstActivities);
+
+      // Directly reattach updated activities to their respective notifications
+      let updateIndex = 0;
+      for (const group of Object.values(notifications)) {
+        if (group.notifications.length > 0) {
+          group.notifications[0].activity = updatedActivities[updateIndex++];
+        }
+      }
+
+      return { data: notifications };
     },
     {
-      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       enabled: !!userId,
       refetchOnWindowFocus: false,
     },

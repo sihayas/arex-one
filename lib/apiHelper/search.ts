@@ -3,7 +3,7 @@ import { useSoundContext } from "@/context/SoundContext";
 import { useNavContext } from "@/context/NavContext";
 
 const GetSearchResults = (searchQuery: string) => {
-  const { inputValue } = useNavContext();
+  const { inputValue, activeAction } = useNavContext();
   const { selectedFormSound } = useSoundContext();
   const { data, isInitialLoading, isFetching, error } = useQuery(
     ["albums", searchQuery],
@@ -12,7 +12,7 @@ const GetSearchResults = (searchQuery: string) => {
         res.json(),
       ),
     {
-      enabled: !selectedFormSound && !!inputValue,
+      enabled: !selectedFormSound && !!inputValue && activeAction === "none",
       retry: false,
       refetchOnWindowFocus: false,
     },

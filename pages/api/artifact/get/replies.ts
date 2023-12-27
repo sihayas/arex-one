@@ -28,7 +28,7 @@ export default async function handle(
 
   try {
     const whereClause = artifactId
-      ? { artifactId, rootId: null }
+      ? { artifactId, replyToId: null }
       : replyId
       ? { replyToId: replyId }
       : {};

@@ -53,13 +53,14 @@ const useGenericFeedQuery = (
   );
 };
 
+// Helper function to extract artifact from activity
 export function extractArtifact(activity: Activity) {
   return activity.type === ActivityType.Artifact
     ? activity.artifact
     : activity.type === ActivityType.ReplyType
     ? activity.reply?.artifact
     : activity.type === ActivityType.Heart
-    ? activity.heart?.artifact
+    ? activity.heart?.artifact || activity.heart?.reply?.artifact
     : null;
 }
 

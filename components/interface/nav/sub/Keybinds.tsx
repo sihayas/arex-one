@@ -8,7 +8,7 @@ export const Keybinds = (
   handleInputTextChange: (value: string) => void,
   handleReplySubmit: () => void,
 ) => {
-  const { replyParent, setReplyParent } = useThreadcrumb();
+  const { replyTarget, setReplyTarget } = useThreadcrumb();
   const { pages } = useInterfaceContext();
   const {
     inputValue,
@@ -46,7 +46,7 @@ export const Keybinds = (
       e.key === "Enter" &&
       (e.metaKey || e.ctrlKey) &&
       inputRef.current === document.activeElement &&
-      replyParent
+      replyTarget
     ) {
       handleReplySubmit();
     }
@@ -58,7 +58,7 @@ export const Keybinds = (
       window.history.pushState(null, "");
     }
 
-    // Wipe selectedFormSound and replyParent
+    // Wipe selectedFormSound and replyTarget
     else if (
       e.key === "Backspace" &&
       inputValue === "" &&
@@ -66,7 +66,7 @@ export const Keybinds = (
     ) {
       e.preventDefault();
       setSelectedFormSound(null);
-      setReplyParent(null);
+      setReplyTarget(null);
       setInputValue(storedInputValue);
       setStoredInputValue("");
       inputRef?.current?.focus();
@@ -79,7 +79,7 @@ export const Keybinds = (
       !inputValue
     ) {
       e.preventDefault();
-      const sound = activePage.sound.sound;
+      const sound = activePage.sound;
       setSelectedFormSound(sound);
     }
     // Prepare reply parent
@@ -90,7 +90,7 @@ export const Keybinds = (
       !inputValue
     ) {
       e.preventDefault();
-      setReplyParent(activePage.artifact);
+      setReplyTarget({ artifact: activePage.artifact, reply: null });
     }
   };
 

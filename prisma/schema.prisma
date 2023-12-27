@@ -265,6 +265,10 @@ model Notification {
 
   key             String?
   isDeleted       Boolean  @default(false) @map(name: "is_deleted")
+  isRead          Boolean  @default(false) @map(name: "is_read")
+  createdAt       DateTime @default(now()) @map(name: "created_at")
+  updatedAt       DateTime @updatedAt @map(name: "updated_at")
+
 
   @@index([recipientId])
   @@index([activityId])

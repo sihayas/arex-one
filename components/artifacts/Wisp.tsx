@@ -41,7 +41,7 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
 
   const handleEntryClick = useArtifact(artifact);
   const handleSoundClick = () => {
-    handleSelectSound(sound, artwork);
+    handleSelectSound(sound);
   };
 
   if (!sound) return null;
@@ -116,34 +116,6 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
             {artifact.author.username}
           </p>
 
-          {/*<Heart*/}
-          {/*  handleHeartClick={handleHeartClick}*/}
-          {/*  hearted={hearted}*/}
-          {/*  className="absolute -bottom-1 -right-1"*/}
-          {/*  heartCount={heartCount}*/}
-          {/*  replyCount={artifact._count.replies}*/}
-          {/*/>*/}
-
-          {/* Count */}
-          {heartCount > 0 ||
-            (artifact._count.replies > 0 && (
-              <div
-                className={`absolute -bottom-[25px] right-4 flex items-center gap-1 text-xs bg-white rounded-full p-[6px] font-medium shadow-shadowKitLow`}
-              >
-                <p className={`text-gray4 leading-[9px] text-red`}>
-                  {heartCount}
-                </p>
-                {artifact._count.replies > 0 && (
-                  <>
-                    {heartCount > 0 && <div>&middot;</div>}
-                    <p className={`text-gray4 leading-[9px] text-gray3`}>
-                      {artifact._count.replies}
-                    </p>
-                  </>
-                )}
-              </div>
-            ))}
-
           {/* Bubbles */}
           <div className={`w-3 h-3 absolute -bottom-1 -left-1`}>
             <div
@@ -158,3 +130,25 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
     </motion.div>
   );
 };
+
+{
+  /*<Heart*/
+}
+{
+  /*  handleHeartClick={handleHeartClick}*/
+}
+{
+  /*  hearted={hearted}*/
+}
+{
+  /*  className="absolute -bottom-1 -right-1"*/
+}
+{
+  /*  heartCount={heartCount}*/
+}
+{
+  /*  replyCount={artifact._count.replies}*/
+}
+{
+  /*/>*/
+}

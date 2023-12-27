@@ -6,7 +6,7 @@ interface SignalLinkProps {
   notification: extendedNotification;
 }
 
-const Link = ({ notification }: SignalLinkProps) => {
+const Follow = ({ notification }: SignalLinkProps) => {
   const { users, activity } = notification;
   const isAggregated = users.length > 1;
 
@@ -81,4 +81,4 @@ const Link = ({ notification }: SignalLinkProps) => {
   );
 };
 
-export default Link;
+export default Follow;

@@ -151,7 +151,7 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
         </button>
       </div>
 
-      {/* Signals */}
+      {/* Notifications */}
       <div className="text-gray3 mb-[23px] uppercase">signals</div>
       <div className="flex flex-col items-end gap-4 mb-[64px]">
         {[

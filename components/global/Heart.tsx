@@ -14,22 +14,6 @@ interface HeartButtonProps {
   isEvenLevel?: boolean;
 }
 
-const formatText = (
-  count: number | undefined,
-  singular: string,
-  plural: string,
-) => {
-  if (count === 0) {
-    return null;
-  }
-  return (
-    <>
-      <span className="gray2">{count}</span>&nbsp;
-      {count === 1 ? singular : plural}
-    </>
-  );
-};
-
 const Heart: React.FC<HeartButtonProps> = ({
   handleHeartClick,
   hearted,

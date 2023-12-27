@@ -13,17 +13,3 @@ export async function createNotification(
     },
   });
 }
-
-export async function deleteNotification(
-  recepientId: string,
-  activityId: string,
-  key: string,
-): Promise<void> {
-  await prisma.notification.deleteMany({
-    where: {
-      recipientId: recepientId,
-      activityId: activityId,
-      key: key,
-    },
-  });
-}

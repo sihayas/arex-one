@@ -16,6 +16,7 @@ export default async function handler(
     where: {
       authorId: userId,
       replyId,
+      isDeleted: false,
     },
   });
 
@@ -28,25 +29,32 @@ export default async function handler(
     });
 
     if (existingActivity) {
+      // Delete all notifications related to this activity
       const key = `heart|${replyId}`;
-      // Un-notify users in the reply chain and delete the notification
-      await prisma.notification.deleteMany({
+      await prisma.notification.updateMany({
         where: {
           key,
           recipientId: authorId,
           activityId: existingActivity.id,
         },
+        data: {
+          isDeleted: true,
+        },
       });
 
-      // Delete the activity
-      await prisma.activity.delete({
+      await prisma.activity.update({
         where: { id: existingActivity.id },
+        data: {
+          isDeleted: true, // Assuming 'isDeleted' field exists
+        },
       });
     }
 
-    // Delete the heart
-    await prisma.heart.delete({
+    await prisma.heart.update({
       where: { id: existingHeart.id },
+      data: {
+        isDeleted: true, // Assuming 'isDeleted' field exists
+      },
     });
   }
 

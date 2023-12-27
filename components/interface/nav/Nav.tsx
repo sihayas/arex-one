@@ -22,9 +22,10 @@ import { addReply } from "@/lib/apiHelper/artifact";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
+import Notifications from "@/components/interface/nav/sub/Notifications";
 
 const Nav = () => {
-  const { replyParent } = useThreadcrumb();
+  const { replyTarget } = useThreadcrumb();
   const { user, pages } = useInterfaceContext();
   const {
     inputValue,
@@ -64,7 +65,7 @@ const Nav = () => {
         : activeAction === "notifications"
         ? 610 // notifications
         : 42,
-      x: activeAction === "notifications" ? -152 : 0,
+      x: activeAction === "notifications" ? -200 : 0,
       transition: {
         type: "spring",
         damping: 32,
@@ -89,7 +90,7 @@ const Nav = () => {
       },
     },
     expanded: {
-      width: activeAction !== "notifications" ? 384 : 192,
+      width: activeAction !== "notifications" ? 384 : 240,
       borderRadius: 18,
       transition: {
         type: "spring",
@@ -166,10 +167,10 @@ const Nav = () => {
   }, [setExpandInput, setActiveAction]);
 
   const handleReplySubmit = () => {
-    if (!replyParent || !inputValue || !user?.id) return;
+    if (!replyTarget || !inputValue || !user?.id) return;
 
     toast.promise(
-      addReply(replyParent, inputValue, user?.id).then(() => {
+      addReply(replyTarget, inputValue, user?.id).then(() => {
         setInputValue("");
       }),
       {
@@ -186,12 +187,12 @@ const Nav = () => {
   useEffect(() => {
     if (selectedFormSound) {
       setActiveAction("form");
-    } else if (replyParent) {
+    } else if (replyTarget) {
       setActiveAction("reply");
     } else {
       setActiveAction("none");
     }
-  }, [selectedFormSound, setActiveAction, replyParent]);
+  }, [selectedFormSound, setActiveAction, replyTarget]);
 
   if (!user) return null;
 
@@ -203,19 +204,17 @@ const Nav = () => {
     >
       {/* Content */}
       <motion.div
-        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#E5E5E5]/90 rounded-2xl -z-10`}
+        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#E5E5E5] rounded-3xl -z-10 shadow-2xl`}
         variants={containerVariants}
         animate={expandInput ? "expanded" : "collapsed"}
       >
-        {/* If no selected form sound render search results */}
-        {selectedFormSound && expandInput ? (
-          <Form />
-        ) : (
-          !selectedFormSound &&
-          inputValue &&
-          expandInput && <RenderResults searchData={data} />
+        {activeAction === "form" && expandInput && <Form />}
+        {activeAction === "none" && inputValue && expandInput && (
+          <RenderResults searchData={data} />
         )}
+        {activeAction === "notifications" && expandInput && <Notifications />}
       </motion.div>
+
       {/* Bar */}
       <motion.div
         animate={expandInput ? "expanded" : "collapsed"}

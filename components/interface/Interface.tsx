@@ -162,12 +162,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         { [dimension]: newDimension.get() },
         {
           type: "spring",
-          stiffness: 500,
-          damping: 60,
-          mass: 2,
-          velocity: 10,
-          restSpeed: 0.5,
-          restDelta: 0.5,
+          stiffness: 240,
+          damping: 40,
+          // mass: 2,
+          // velocity: 10,
+          // restSpeed: 0.5,
+          // restDelta: 0.5,
         },
       );
     };

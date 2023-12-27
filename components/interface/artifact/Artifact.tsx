@@ -26,7 +26,7 @@ const scaleEntryConfig = { damping: 20, stiffness: 160 };
 export const Artifact = () => {
   const user = useUser();
   const { pages, scrollContainerRef } = useInterfaceContext();
-  const { setReplyParent } = useThreadcrumb();
+  const { setReplyTarget } = useThreadcrumb();
   const { handleSelectSound } = useSound();
 
   const [isOpen, setIsOpen] = useState(false);

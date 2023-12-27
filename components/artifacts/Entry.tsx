@@ -69,7 +69,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         style={{
           width: 336,
           height: 432,
-          rotate: -3,
         }}
         className={`flex flex-col rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
@@ -97,10 +96,10 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           style={{
             background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
           }}
-          className="absolute bottom-0 w-full h-4/5 pointer-events-none"
+          className="absolute bottom-0 w-full h-[60%] pointer-events-none"
         />
         <div
-          className={`absolute px-8 text-base text-white drop-shadow font-semibold line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
+          className={`absolute px-8 text-base text-white drop-shadow font-medium line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
         >
           {artifact.content?.text}
         </div>
@@ -121,7 +120,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute rounded-full left-[52px] w-[384px] h-[538px] -z-10`}
+        className={`absolute left-[52px] w-[336px] h-[432px] -z-10`}
       />
     </div>
   );

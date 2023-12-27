@@ -25,7 +25,7 @@ interface ReplyProps {
 
 export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const user = useUser();
-  const { setReplyParent, replyParent } = useThreadcrumb();
+  const { setReplyTarget, replyTarget } = useThreadcrumb();
   const { pages } = useInterfaceContext();
   const [showChildReplies, setShowChildReplies] = useState<boolean>(false);
 
@@ -34,21 +34,23 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
 
   const handleReplyParent = useCallback(() => {
     const artifact = activePage.artifact;
-    setReplyParent({ artifact, reply });
-  }, [reply, setReplyParent]);
+    if (artifact) {
+      setReplyTarget({ artifact, reply });
+    }
+  }, [reply, setReplyTarget, activePage.artifact]);
 
   const handleLoadReplies = useCallback(() => {
     setShowChildReplies(true);
   }, []);
 
-  const apiUrl = reply.heartedByUser
+  const url = reply.heartedByUser
     ? "/api/heart/delete/reply"
     : "/api/heart/post/reply";
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     reply.heartedByUser,
     reply._count.hearts,
-    "/api/heart/post/reply",
+    url,
     "replyId",
     reply.id,
     reply.author.id,
@@ -135,10 +137,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
               onClick={handleReplyParent}
               animate={{
                 color:
-                  replyParent === reply
+                  replyTarget?.reply === reply
                     ? "rgba(60, 60, 67, 0.9)"
                     : "rgba(60, 60, 67, 0.6)",
-                scale: replyParent === reply ? 1.01 : 1,
+                scale: replyTarget?.reply === reply ? 1.01 : 1,
               }}
               transition={{ duration: 0.24 }}
               className={`${maxWidth} text-sm break-words cursor-pointer`}

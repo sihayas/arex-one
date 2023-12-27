@@ -44,6 +44,8 @@ export type InterfaceContext = {
   >;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  notifs: any[];
+  setNotifs: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 // Define the props for the InterfaceProvider component
@@ -88,6 +90,7 @@ export const InterfaceContextProvider = ({
 
   const [user, setUser] = useState<UserType | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [notifs, setNotifs] = useState<any[]>([]);
   const supabaseClient = useSupabaseClient();
 
   useEffect(() => {
@@ -111,8 +114,6 @@ export const InterfaceContextProvider = ({
           if (fetchError) throw fetchError;
           setUser(userData);
           setActiveFeed("personal");
-
-          console.log("User data fetched successfully:", userData);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -139,23 +140,11 @@ export const InterfaceContextProvider = ({
     };
   }, [supabaseClient]);
 
-  const { data: notifications, refetch } = useNotificationsQuery(user?.id);
+  const { data: notifications } = useNotificationsQuery(user?.id);
 
   useEffect(() => {
     if (notifications) {
-      // const unseenNotifications = notifications.filter(
-      //   (notification) => !notification.seen,
-      // );
-      // if (unseenNotifications.length) {
-      //   setIsVisible(true);
-      // }
-      // const updatedUser = {
-      //   ...user,
-      //   notifications.notifications,
-      // };
-
-      console.log("notifications", notifications);
-      // setUser(updatedUser);
+      setNotifs(notifications.data);
     }
   }, [notifications]);
 
@@ -181,13 +170,8 @@ export const InterfaceContextProvider = ({
       if (prevPages.length <= 1) {
         return prevPages;
       }
-
-      // Make a shallow copy of the pages array
       const newPages = [...prevPages];
-
-      // Pop the last page off the array
       newPages.pop();
-
       return newPages;
     });
   }, []);
@@ -224,6 +208,8 @@ export const InterfaceContextProvider = ({
         setActiveFeed,
         isLoading,
         setIsLoading,
+        notifs,
+        setNotifs,
       }}
     >
       {children}

@@ -2,6 +2,8 @@ import Image from "next/image";
 import React from "react";
 
 import { motion } from "framer-motion";
+import { HeartIcon } from "@/components/icons/Heart";
+import Avatar from "@/components/global/Avatar";
 
 const Heart = ({ notificationsGroup }: any) => {
   const notifications = notificationsGroup.notifications.slice(0, 4);
@@ -9,18 +11,26 @@ const Heart = ({ notificationsGroup }: any) => {
   const remainingCount =
     notificationsGroup.count > 4 ? notificationsGroup.count - 3 : 0;
 
-  // Directly use notifications[0] when needed
-  const artworkUrl =
+  const url =
     notifications[0].activity.heart.artifact?.appleData.attributes.artwork
       .url ||
-    notifications[0].activity.heart.reply?.appleData.attributes.artwork.url;
+    notifications[0].activity.heart.reply?.artifact.appleData.attributes.artwork
+      .url;
 
-  const artwork = artworkUrl.replace("{w}", "280").replace("{h}", "280");
+  const artwork = url.replace("{w}", "280").replace("{h}", "280");
+
+  const reply = notifications[0].activity.heart.reply;
 
   return (
-    <div className={`flex items-center w-[208px] h-[128px] gap-4`}>
-      {/* Users */}
-      <div className={`flex flex-col items-center`}>
+    <div
+      className={`flex items-center flex-wrap w-[208px] min-h-[128px] gap-4 relative`}
+    >
+      <motion.div
+        style={{
+          paddingBottom: reply ? 68 : 0,
+        }}
+        className={`flex flex-col items-center z-10`}
+      >
         <div className="bg-[#F4F4F4] rounded-max relative w-[96px] h-[96px] flex justify-center items-center">
           {notifications.map((notification: any, index: number) => {
             const { image, id } = notification.activity.heart.author;
@@ -42,27 +52,54 @@ const Heart = ({ notificationsGroup }: any) => {
             );
           })}
           {remainingCount > 0 && (
-            <div className="absolute bottom-6 right-3 text-xs leading-[8px] text-white bg-gray3 rounded-full w-[26px] h-[26px] flex items-center justify-center font-bold">
+            <div className="absolute top-6 left-3 text-xs leading-[8px] text-white bg-gray3 rounded-full w-[26px] h-[26px] flex items-center justify-center font-bold">
               {remainingCount}
             </div>
           )}
+          <HeartIcon className={`absolute top-0 left-0`} />
         </div>
         <div className="text-sm leading-[9px] text-gray2 font-medium mt-2">
           {notifications[0].activity.heart.author.username}
         </div>
-        {notificationsGroup.count > 1 && (
-          <div className="text-xs leading-[8px] text-gray2 tracking-tight mt-[7px] font-medium">
-            & {notificationsGroup.count - 1} others
+
+        {reply && (
+          <div className={`absolute -bottom-1.5 left-0 flex items-end w-full`}>
+            <Avatar
+              className={`h-6 border border-silver`}
+              imageSrc={reply.author.image}
+              altText={`${reply.author.username}'s avatar`}
+              user={reply.author}
+              width={24}
+              height={24}
+            />
+            <div
+              className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[172px] w-fit mb-3 ml-3`}
+            >
+              <div
+                className={`break-words line-clamp-2 w-full text-sm text-gray5 cursor-pointer`}
+              >
+                {reply.text}
+              </div>
+
+              {/* Bubbles */}
+              <div className={`w-3 h-3 absolute -bottom-1 -left-1`}>
+                <div
+                  className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
+                />
+                <div
+                  className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
+                />
+              </div>
+            </div>
           </div>
         )}
-      </div>
-      {/* Art */}
+      </motion.div>
+      {/* Art / Reply */}
       <motion.div
-        className={`min-w-[86px] h-[112px] rounded-xl overflow-hidden relative shadow-notificationCard`}
-        style={{ x: 5, rotate: 3 }}
+        className={`min-w-[86px] h-[112px] rounded-2xl overflow-hidden relative ml-[5px] rotate-3`}
       >
         <Image
-          className={`cursor-pointer`}
+          className={`cursor-pointer rounded-2xl`}
           src={artwork}
           alt={`Artwork`}
           loading="lazy"
@@ -98,13 +135,13 @@ const getPositionClasses = (index: number, count: number) => {
 
     case 4:
       if (index === 0)
-        return { positionClasses: "top-4 left-3", width: 36, height: 36 };
+        return { positionClasses: "right-3 bottom-4", width: 36, height: 36 };
       if (index === 1)
-        return { positionClasses: "left-6 bottom-2", width: 32, height: 32 };
+        return { positionClasses: "top-2 right-6", width: 32, height: 32 };
       if (index === 2)
-        return { positionClasses: "top-3 right-4", width: 28, height: 28 };
+        return { positionClasses: "left-4 bottom-3", width: 28, height: 28 };
       return {
-        positionClasses: "right-3 bottom-6",
+        positionClasses: "top-6 left-3",
         width: 26,
         height: 26,
       };

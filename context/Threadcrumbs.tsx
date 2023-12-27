@@ -5,21 +5,22 @@ type ThreadcrumbProviderType = {
   children: React.ReactNode;
 };
 
-// Define the context type
+export type ReplyTargetType = {
+  artifact: Artifact;
+  reply: ReplyType;
+} | null;
+
 export type ThreadcrumbContextType = {
   threadcrumbs: string[];
   addToThreadcrumbs: (id: string) => void;
   removeLastThreadcrumb: () => void;
   resetThreadcrumbs: () => void;
   removeUpToId: (id: string) => void;
-  replyParent: Artifact | ReplyType | null;
-  setReplyParent: React.Dispatch<
-    React.SetStateAction<Artifact | ReplyType | null>
-  >;
+  replyTarget: ReplyTargetType;
+  setReplyTarget: React.Dispatch<React.SetStateAction<ReplyTargetType>>;
   setThreadcrumbs: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-// Create the context with a default empty object
 export const ThreadcrumbContext = createContext<ThreadcrumbContextType | null>(
   null,
 );
@@ -36,9 +37,7 @@ export const useThreadcrumb = () => {
 // Create a provider component
 export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
   const [threadcrumbs, setThreadcrumbs] = useState<string[]>([]);
-  const [replyParent, setReplyParent] = useState<Artifact | ReplyType | null>(
-    null,
-  );
+  const [replyTarget, setReplyTarget] = useState<ReplyTargetType>(null);
 
   const addToThreadcrumbs = (id: string) => {
     const newThreadcrumbs = [...threadcrumbs, id];
@@ -64,10 +63,6 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
     setThreadcrumbs([]);
   };
 
-  useEffect(() => {
-    console.log(replyParent);
-  }, [replyParent]);
-
   return (
     <ThreadcrumbContext.Provider
       value={{
@@ -76,8 +71,8 @@ export const ThreadcrumbProvider = ({ children }: ThreadcrumbProviderType) => {
         removeLastThreadcrumb,
         removeUpToId,
         resetThreadcrumbs,
-        replyParent,
-        setReplyParent,
+        replyTarget,
+        setReplyTarget,
         setThreadcrumbs,
       }}
     >

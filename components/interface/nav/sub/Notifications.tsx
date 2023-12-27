@@ -1,53 +1,42 @@
-// import { useNotificationsQuery } from "@/lib/apiHelper/userAPI";
-import Heart from "./signals/Heart";
-import Reply from "./signals/Reply";
-import Link from "./signals/Link";
+import Heart from "@/components/interface/nav/sub/notification/Heart";
+import Reply from "@/components/interface/nav/sub/notification/Reply";
+import Follow from "@/components/interface/nav/sub/notification/Follow";
 import { Notification, UserType } from "@/types/dbTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData, SongData } from "@/types/appleTypes";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
-export interface extendedNotification extends Notification {
-  soundAppleId: { type: string; id: string };
-  fetchedSound: SongData | AlbumData;
-  users: UserType[];
-}
+const Notifications = () => {
+  const { notifs } = useInterfaceContext();
 
-// Signals component
-const Signals = () => {
-  const user = useUser();
-  const userId = user?.id;
-
-  // Fetch notifications for the user
-  // const { data: fetchedNotifications, isLoading } =
-  //   useNotificationsQuery(userId);
-
-  // console.log(fetchedNotifications);
-
+  console.log(notifs);
   return (
-    <div className={`flex flex-col w-full gap-8`}>
-      {/*{isLoading ? (*/}
-      {/*  <div>Loading...</div>*/}
-      {/*) : (*/}
-      {/*  fetchedNotifications.map(*/}
-      {/*    (notification: extendedNotification, index: number) => {*/}
-      {/*      const notificationType =*/}
-      {/*        notification.aggregation_Key?.split("|")[0];*/}
-
-      {/*      switch (notificationType) {*/}
-      {/*        case "HEART":*/}
-      {/*          return <Heart key={index} notification={notification} />;*/}
-      {/*        case "REPLY":*/}
-      {/*          return <Reply key={index} notification={notification} />;*/}
-      {/*        case "FOLLOWED":*/}
-      {/*          return <Link key={index} notification={notification} />;*/}
-      {/*        default:*/}
-      {/*          return <div key={index}>n.a</div>;*/}
-      {/*      }*/}
-      {/*    },*/}
-      {/*  )*/}
-      {/*)}*/}
+    <div className={`flex flex-col w-full gap-8 p-4`}>
+      {Object.entries(notifs).map(([key, notificationGroup], index) => {
+        const notificationType = key.split("|")[0].toUpperCase();
+        switch (notificationType) {
+          case "HEART":
+            return (
+              <>
+                <Heart key={key} notificationsGroup={notificationGroup} />
+                <div className="w-full h-[1.5px] bg-silver rounded-full" />
+              </>
+            );
+          case "REPLY":
+            return (
+              <>
+                <Reply key={key} notificationsGroup={notificationGroup} />
+                <div className="w-full h-[1.5px] bg-silver rounded-full" />
+              </>
+            );
+          // case "FOLLOWED":
+          //   return <Follow key={key} notification={notificationGroup} />;
+          default:
+            return <div key={key}>n.a</div>;
+        }
+      })}
     </div>
   );
 };
 
-export default Signals;
+export default Notifications;
