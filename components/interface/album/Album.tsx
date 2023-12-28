@@ -111,7 +111,7 @@ const Album = () => {
         />
       </motion.div>
       <motion.div
-        className={`absolute z-50 pointer-events-none right-0 top-0 flex items-center justify-center drop-shadow`}
+        className={`absolute z-50 pointer-events-none right-0 top-0 flex items-center justify-center`}
         style={{
           x: xDial,
           y: yDial,
@@ -119,7 +119,8 @@ const Album = () => {
           transformOrigin: "bottom right",
         }}
       >
-        <Dial ratings={[4, 8900, 2445, 5000000, 500]} />
+        {/*<Dial ratings={[4, 8900, 2445, 5000000, 500]} />*/}
+        <Dial />
       </motion.div>
       {/* Entries */}
       <RenderArtifacts

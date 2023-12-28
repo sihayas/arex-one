@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const Dial = () => {
-  const strokeWidth = 4;
+  const strokeWidth = 3;
   const dotRadius = 1.5;
-  const radius = 30;
+  const radius = 30.5;
   const viewBoxSize = radius * 2 + strokeWidth;
   const circumference = 2 * Math.PI * radius;
 
@@ -34,7 +34,7 @@ const Dial = () => {
   };
 
   const calculateDotPosition = (rating: number) => {
-    const offsetAngle = 36; // 10% of circumference - 10 rating increments
+    const offsetAngle = 16;
     const angle = (rating / maxRating) * 360 - 90 + offsetAngle;
     const angleRad = (Math.PI / 180) * angle;
     const x = Math.cos(angleRad) * radius + radius + strokeWidth / 2;
@@ -45,9 +45,8 @@ const Dial = () => {
   const segmentLength = calculateStrokeLength(currentRating);
   const dotPosition = calculateDotPosition(currentRating);
 
-  // Subtract to make spacing for background segment length
-  let backgroundSegmentLength = circumference - segmentLength - 38;
-  backgroundSegmentLength = Math.max(backgroundSegmentLength, 0);
+  const backgroundSegmentLength = circumference - segmentLength - 16;
+
   return (
     <svg
       width={viewBoxSize}
@@ -62,10 +61,13 @@ const Dial = () => {
         fill="none"
         stroke="#FFF"
         strokeWidth={strokeWidth}
-        // rotate the white dash
-        strokeDashoffset={circumference / 4 - 9.5}
+        strokeDasharray={`${backgroundSegmentLength} ${
+          circumference - backgroundSegmentLength
+        }`}
+        strokeDashoffset={circumference / 4 - 8}
         strokeLinecap="round"
         initial={{
+          strokeDasharray: `${dotRadius * 2} ${circumference}`,
           transform: "scaleX(-1)",
         }}
         animate={{
@@ -73,30 +75,33 @@ const Dial = () => {
             circumference - backgroundSegmentLength
           }`,
         }}
-        style={{}}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       />
       {/* Colored Segment (Rating Dash) */}
-      <motion.circle
-        cx={viewBoxSize / 2}
-        cy={viewBoxSize / 2}
-        r={radius}
-        fill="none"
-        stroke="#002FA7"
-        strokeWidth={strokeWidth}
-        strokeDashoffset={circumference / 4 - 9.5}
-        strokeLinecap="round"
-        animate={{
-          strokeDasharray: `${segmentLength} ${circumference - segmentLength}`,
-        }}
-        transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      />
+      {/*<motion.circle*/}
+      {/*  cx={viewBoxSize / 2}*/}
+      {/*  cy={viewBoxSize / 2}*/}
+      {/*  r={radius}*/}
+      {/*  fill="none"*/}
+      {/*  stroke="#FF3319"*/}
+      {/*  strokeWidth={strokeWidth}*/}
+      {/*  strokeDasharray={`${segmentLength} ${circumference - segmentLength}`}*/}
+      {/*  strokeDashoffset={circumference / 4}*/}
+      {/*  strokeLinecap="round"*/}
+      {/*  initial={{*/}
+      {/*    strokeDasharray: `${dotRadius * 2} ${circumference}`,*/}
+      {/*  }}*/}
+      {/*  animate={{*/}
+      {/*    strokeDasharray: `${segmentLength} ${circumference - segmentLength}`,*/}
+      {/*  }}*/}
+      {/*  transition={{ type: "spring", stiffness: 100, damping: 20 }}*/}
+      {/*/>*/}
       {/* Dot */}
       <motion.circle
         cx={dotPosition.x}
         cy={dotPosition.y}
         r={dotRadius}
-        fill="#CCC"
+        fill="#999"
         initial={{
           cx: viewBoxSize / 2,
           cy: strokeWidth / 2 + dotRadius,
@@ -111,7 +116,7 @@ const Dial = () => {
         cx={viewBoxSize / 2}
         cy={strokeWidth / 2}
         r={dotRadius}
-        fill="#CCC"
+        fill="#999"
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       />
     </svg>
