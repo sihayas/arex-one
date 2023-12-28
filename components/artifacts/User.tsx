@@ -7,12 +7,7 @@ import Heart from "@/components/global/Heart";
 import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
 interface NewAProps {

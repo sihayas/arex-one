@@ -7,7 +7,7 @@ type ThreadcrumbProviderType = {
 
 export type ReplyTargetType = {
   artifact: Artifact;
-  reply: ReplyType;
+  reply: ReplyType | null;
 } | null;
 
 export type ThreadcrumbContextType = {

@@ -59,7 +59,6 @@ export default async function handle(
   }
 
   try {
-    // Step 1: Create the reply
     const createdReply = await prisma.reply.create({
       data: {
         author: { connect: { id: userId } },

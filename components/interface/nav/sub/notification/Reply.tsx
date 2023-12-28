@@ -2,7 +2,6 @@ import Image from "next/image";
 import React from "react";
 
 import { motion } from "framer-motion";
-import { HeartIcon } from "@/components/icons/Heart";
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -11,13 +10,12 @@ const Reply = ({ notificationsGroup }: any) => {
   const { user } = useInterfaceContext();
   const reply = notifications[0].activity.reply;
   const isReplyTo = reply.replyTo;
-  console.log(reply);
 
   const url = reply.artifact?.appleData.attributes.artwork.url;
   const artwork = url ? url.replace("{w}", "280").replace("{h}", "280") : null;
 
   return isReplyTo && user ? (
-    <div className={`flex flex-col gap-2`}>
+    <div className={`flex flex-col`}>
       {/* Parent */}
       <div className={`flex items-end justify-end min-w-full`}>
         <div

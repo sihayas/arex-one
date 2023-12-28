@@ -116,7 +116,9 @@ export const useNotificationsQuery = (userId: string | undefined) => {
       // Collect first activities and directly attach sound data
       const firstActivities = Object.values(notifications).reduce(
         (acc, group) => {
+          //@ts-ignore
           if (group.notifications.length > 0) {
+            //@ts-ignore
             acc.push(group.notifications[0].activity);
           }
           return acc;
@@ -124,12 +126,15 @@ export const useNotificationsQuery = (userId: string | undefined) => {
         [],
       );
 
+      //@ts-ignore
       const updatedActivities = await attachSoundData(firstActivities);
 
       // Directly reattach updated activities to their respective notifications
       let updateIndex = 0;
       for (const group of Object.values(notifications)) {
+        //@ts-ignore
         if (group.notifications.length > 0) {
+          //@ts-ignore
           group.notifications[0].activity = updatedActivities[updateIndex++];
         }
       }
@@ -150,13 +155,12 @@ export const changeEssential = async (
   rank: number,
 ) => {
   const url = `/api/user/post/changeEssential`;
-  const response = await axios.post(url, {
+  return axios.post(url, {
     userId,
     prevEssentialId,
     appleId,
     rank,
   });
-  return response;
 };
 
 export const toggleSetting = async (
@@ -167,18 +171,16 @@ export const toggleSetting = async (
     | "heartNotifications",
 ) => {
   const url = `/api/user/post/toggleSetting`;
-  const response = await axios.post(url, {
+  return axios.post(url, {
     userId,
     settingKey,
   });
-  return response;
 };
 
 export const changeBio = async (userId: string, bio: string) => {
   const url = `/api/user/post/changeBio`;
-  const response = await axios.post(url, {
+  return axios.post(url, {
     userId,
     bio,
   });
-  return response;
 };

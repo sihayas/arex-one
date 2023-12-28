@@ -58,7 +58,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -top-7 -left-[7px]"
+        className="absolute -top-[28px] left-[46px]"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />
@@ -99,7 +99,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           className="absolute bottom-0 w-full h-[60%] pointer-events-none"
         />
         <div
-          className={`absolute px-8 text-base text-white drop-shadow font-medium line-clamp-6 bottom-[26px] pointer-events-none will-change-transform`}
+          className={`absolute px-8 text-base text-white font-medium line-clamp-4 bottom-[26px] pointer-events-none will-change-transform`}
         >
           {artifact.content?.text}
         </div>
