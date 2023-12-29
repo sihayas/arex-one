@@ -61,7 +61,7 @@ const Nav = () => {
         : activeAction === "none" && inputValue
         ? 432 // search
         : activeAction === "form"
-        ? 370 // form
+        ? 420 // form
         : activeAction === "notifications"
         ? 610 // notifications
         : 42,
@@ -204,7 +204,7 @@ const Nav = () => {
     >
       {/* Content */}
       <motion.div
-        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#E5E5E5] rounded-3xl -z-10 shadow-2xl`}
+        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#E5E5E5]/80 rounded-3xl -z-10`}
         variants={containerVariants}
         animate={expandInput ? "expanded" : "collapsed"}
       >

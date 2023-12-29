@@ -5,13 +5,15 @@ import { toast } from "sonner";
 import { postEntry } from "@/lib/apiHelper/form";
 import { useSoundContext } from "@/context/SoundContext";
 
-import Dial from "./items/Dial";
+// import Dial from "./items/Dial";
+
+import RatingDial from "@/components/interface/nav/sub/items/RatingDial";
 import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
 import Stars from "@/components/global/Stars";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Form = () => {
   const { user } = useInterfaceContext();
@@ -100,8 +102,8 @@ const Form = () => {
   };
 
   const artwork = selectedFormSound.attributes.artwork.url
-    .replace("{w}", "1200")
-    .replace("{h}", "1200");
+    .replace("{w}", "780")
+    .replace("{h}", "780");
   const name = selectedFormSound.attributes.name;
   const artist = selectedFormSound.attributes.artistName;
 
@@ -119,7 +121,7 @@ const Form = () => {
           scale: 1,
           // rotateX: 0,
           // rotateY: 0,
-          rotateZ: -3,
+          rotateZ: -2,
           opacity: 1,
           filter: "blur(0px)",
         }}
@@ -130,7 +132,7 @@ const Form = () => {
           mass: 2,
           delay: 0.24,
         }}
-        className={`flex flex-col rounded-3xl bg-white relative w-[224px] h-[288px] shadow-miniCard will-change-transform overflow-hidden origin-center`}
+        className={`flex flex-col rounded-3xl bg-white relative w-[322px] h-[322px] shadow-miniCard will-change-transform overflow-hidden origin-center`}
         style={{ perspective: 1000 }}
       >
         <Image
@@ -142,6 +144,23 @@ const Form = () => {
           style={{ objectFit: "cover" }}
           fill={true}
         />
+
+        <div className={`absolute top-0 left-0 p-4`}>
+          <RatingDial setRatingValue={handleRatingChange} />
+          <AnimatePresence>
+            <motion.div
+              initial={{
+                scale: 0.75,
+                opacity: 0,
+                filter: "blur(8px)",
+              }}
+              className={`font-serif text-2xl text-white leading-[16px] absolute center-x center-y`}
+            >
+              {rating}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
         <div
           className={`absolute bottom-0 left-0 flex flex-col p-4 drop-shadow`}
         >
@@ -153,8 +172,6 @@ const Form = () => {
           </h4>
         </div>
       </motion.div>
-      <Dial setRatingValue={handleRatingChange} />
-      {/*<NewDial />*/}
     </form>
   );
 };

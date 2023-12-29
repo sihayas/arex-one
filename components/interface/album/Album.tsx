@@ -9,8 +9,8 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { SongData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
-// import Dial from "@/components/interface/album/sub/Dial";
-import Dial from "@/components/global/RatingDial";
+import Dial from "@/components/interface/album/sub/Dial";
+// import Dial from "@/components/global/RatingDial";
 
 const springConfig = { damping: 28, stiffness: 180 };
 const scaleArtConfig = { damping: 20, stiffness: 122 };
@@ -119,8 +119,8 @@ const Album = () => {
           transformOrigin: "bottom right",
         }}
       >
-        {/*<Dial ratings={[4, 8900, 2445, 5000000, 500]} />*/}
-        <Dial />
+        <Dial ratings={[4, 8900, 2445, 5000000, 500]} />
+        {/*<Dial />*/}
       </motion.div>
       {/* Entries */}
       <RenderArtifacts

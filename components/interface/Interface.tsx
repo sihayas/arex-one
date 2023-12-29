@@ -59,6 +59,16 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   // Dimensions for pages
   const { base, target } = GetDimensions(activePageName);
 
+  const [contentScope, animateContent] = useAnimate();
+
+  const setRefs = (element) => {
+    contentScope.current = element;
+
+    if (scrollContainerRef) {
+      scrollContainerRef.current = element;
+    }
+  };
+
   // Window ref
   const [scope, animate] = useAnimate();
   // Root ref
@@ -112,24 +122,23 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
-  // useEffect(() => {
-  //   const blurContent = async () => {
-  //     await animate(
-  //       scope.current,
-  //       {
-  //         filter: expandInput ? "blur(12px)" : "blur(0px)",
-  //         scale: expandInput ? 0.86 : 1,
-  //       },
-  //       {
-  //         type: "spring",
-  //         stiffness: 240,
-  //         damping: 18,
-  //       },
-  //     );
-  //   };
-  //
-  //   blurContent();
-  // }, [animate, scope, expandInput]);
+  useEffect(() => {
+    const blurContent = async () => {
+      await animateContent(
+        contentScope.current,
+        {
+          filter: expandInput ? "blur(4px)" : "blur(0px)",
+        },
+        {
+          type: "spring",
+          stiffness: 240,
+          damping: 18,
+        },
+      );
+    };
+
+    blurContent();
+  }, [animateContent, contentScope, expandInput]);
 
   // Animate shape-shifting the portal on scroll & page change & bounce
   useEffect(() => {
@@ -164,10 +173,6 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           type: "spring",
           stiffness: 240,
           damping: 40,
-          // mass: 2,
-          // velocity: 10,
-          // restSpeed: 0.5,
-          // restDelta: 0.5,
         },
       );
     };
@@ -205,9 +210,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         ref={scope}
       >
         {/* Base layout / Static dimensions for a page */}
-        <div
+        <motion.div
           id={`cmdk-scroll`}
-          ref={scrollContainerRef}
+          ref={setRefs}
           className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-full`}
           style={{
             width: `${target.width}px`,
@@ -217,7 +222,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
           <AnimatePresence>
             <ActiveComponent />
           </AnimatePresence>
-        </div>
+        </motion.div>
         <Nav />
       </Command>
     </motion.div>

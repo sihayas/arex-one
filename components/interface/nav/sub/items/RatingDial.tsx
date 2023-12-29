@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { useNavContext } from "@/context/NavContext";
 
-interface EntryDialProps {
-  rating: number;
+interface DialProps {
+  setRatingValue: (rating: number) => void;
 }
 
-const EntryDial = ({ rating }: EntryDialProps) => {
+const RatingDial = ({ setRatingValue }: DialProps) => {
   const { inputRef } = useNavContext();
   const dialRef = useRef<SVGSVGElement>(null);
   const strokeWidth = 4;
@@ -15,32 +15,57 @@ const EntryDial = ({ rating }: EntryDialProps) => {
   const viewBoxSize = radius * 2 + strokeWidth;
   const circumference = 2 * Math.PI * radius;
 
+  const ratingIncrement = 0.5;
   const maxRating = 5;
 
-  const [currentRating, setCurrentRating] = useState(rating);
+  const [currentRating, setCurrentRating] = useState(0);
   const colors = ["#FFF", "#FF3319", "#FFFF00", "#A6FF47", "#4733ff"];
   const [currentColor, setCurrentColor] = useState(colors[0]);
+
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent) => {
+      const activeElement = document.activeElement;
+      const isInputEmpty = inputRef.current?.value === "";
+
+      if (
+        (activeElement === inputRef.current && isInputEmpty) ||
+        activeElement === dialRef.current
+      ) {
+        if (e.key === "ArrowUp" && currentRating < maxRating) {
+          setCurrentRating(currentRating + ratingIncrement);
+        } else if (e.key === "ArrowDown" && currentRating > 0) {
+          setCurrentRating(currentRating - ratingIncrement);
+        }
+      }
+    },
+    [currentRating, inputRef],
+  );
+
+  useEffect(() => {
+    setRatingValue(currentRating);
+  }, [currentRating, setRatingValue]);
 
   useEffect(() => {
     const colorIndex = Math.min(Math.floor(currentRating), colors.length - 1);
     setCurrentColor(colors[colorIndex]);
   }, [colors, currentRating]);
 
-  const calculateStrokeLength = (rating: number) => {
-    return (rating / maxRating) * circumference;
-  };
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress as any);
+    return () => window.removeEventListener("keydown", handleKeyPress as any);
+  }, [currentRating, inputRef, handleKeyPress]);
 
-  const calculateDotPosition = (rating: number) => {
-    const offsetAngle = 36; // 10% of circumference - 10 rating increments
-    const angle = (rating / maxRating) * 360 - 90 + offsetAngle;
-    const angleRad = (Math.PI / 180) * angle;
-    const x = Math.cos(angleRad) * radius + radius + strokeWidth / 2;
-    const y = Math.sin(angleRad) * radius + radius + strokeWidth / 2;
-    return { x, y };
-  };
-
-  const segmentLength = calculateStrokeLength(currentRating);
-  const dotPosition = calculateDotPosition(currentRating);
+  const segmentLength = calculateStrokeLength(
+    currentRating,
+    maxRating,
+    circumference,
+  );
+  const dotPosition = calculateDotPosition(
+    currentRating,
+    maxRating,
+    radius,
+    strokeWidth,
+  );
 
   // Subtract to make spacing for background segment length
   let backgroundSegmentLength = circumference - segmentLength - 38;
@@ -118,4 +143,26 @@ const EntryDial = ({ rating }: EntryDialProps) => {
   );
 };
 
-export default EntryDial;
+export default RatingDial;
+
+export const calculateDotPosition = (
+  rating: number,
+  maxRating: number,
+  radius: number,
+  strokeWidth: number,
+) => {
+  const offsetAngle = 36; // 10% of circumference - 10 rating increments
+  const angle = (rating / maxRating) * 360 - 90 + offsetAngle;
+  const angleRad = (Math.PI / 180) * angle;
+  const x = Math.cos(angleRad) * radius + radius + strokeWidth / 2;
+  const y = Math.sin(angleRad) * radius + radius + strokeWidth / 2;
+  return { x, y };
+};
+
+export const calculateStrokeLength = (
+  rating: number,
+  maxRating: number,
+  circumference: number,
+) => {
+  return (rating / maxRating) * circumference;
+};

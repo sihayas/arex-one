@@ -5,11 +5,11 @@ import { useArtifact, useSound } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
-import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import EntryDial from "@/components/global/EntryDial";
 
 interface NewAProps {
   artifact: ArtifactExtended;
@@ -72,12 +72,12 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         }}
         className={`flex flex-col rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
-        <div
-          className={`absolute top-8 center-x flex items-center p-2 pr-2.5 bg-white rounded-xl w-max max-w-[272px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
-        >
-          <Stars rating={artifact.content?.rating} />
-          <div className={`text-base text-[#000] font-bold line-clamp-1`}>
-            {sound.attributes.name}
+        <div className={`absolute top-0 left-0 z-10 p-2 drop-shadow-md`}>
+          <EntryDial rating={artifact.content!.rating!} />
+          <div
+            className={`font-serif text-[32px] leading-[21px] text-white center-x center-y absolute`}
+          >
+            {artifact.content!.rating}
           </div>
         </div>
 
@@ -99,7 +99,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           className="absolute bottom-0 w-full h-[60%] pointer-events-none"
         />
         <div
-          className={`absolute px-8 text-base text-white font-medium line-clamp-4 bottom-[26px] pointer-events-none will-change-transform`}
+          className={`absolute px-8 text-base text-white font-semibold   line-clamp-4 bottom-[26px] pointer-events-none will-change-transform`}
         >
           {artifact.content?.text}
         </div>
