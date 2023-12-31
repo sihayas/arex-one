@@ -18,7 +18,6 @@ export const useRepliesQuery = (
         : { replyId, userId, page: pageParam, limit: 6 };
 
       const { data } = await axios.get(url, { params });
-      console.log("test", data);
 
       const { replies, pagination } = data.data;
 
@@ -31,6 +30,8 @@ export const useRepliesQuery = (
     {
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
     },
   );
 

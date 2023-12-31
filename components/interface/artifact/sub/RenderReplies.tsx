@@ -1,8 +1,8 @@
 import { LayoutGroup } from "framer-motion";
-import Reply from "./Reply";
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/apiHelper/artifact";
 import React from "react";
+import RootReply from "@/components/interface/artifact/sub/RootReply";
 
 type RenderRepliesProps = {
   userId: string;
@@ -15,20 +15,15 @@ function RenderReplies({ userId, artifactId }: RenderRepliesProps) {
 
   const replies = data ? data.pages.flatMap((page) => page.data) : [];
 
+  // Add layoutgroup to the 2nd fragment
   return (
     <>
       {replies && replies.length > 0 ? (
-        <LayoutGroup>
+        <>
           {replies.map((reply: ReplyType, index: number) => (
-            <Reply
-              key={reply.id}
-              reply={reply}
-              level={0}
-              isChild={false}
-              index={index}
-            />
+            <RootReply key={reply.id} reply={reply} index={index} />
           ))}
-        </LayoutGroup>
+        </>
       ) : (
         <div className="text-xs text-[#CCC]">seems quiet</div>
       )}

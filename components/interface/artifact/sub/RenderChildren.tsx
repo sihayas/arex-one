@@ -1,6 +1,5 @@
 import React from "react";
 import Reply from "@/components/interface/artifact/sub/Reply";
-import { useQuery } from "@tanstack/react-query";
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/apiHelper/artifact";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -9,10 +8,14 @@ import { motion } from "framer-motion";
 type RenderChildrenProps = {
   parentReplyId: string;
   level: number;
+  isChild: boolean;
 };
 
-// RenderReplies component
-function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
+function RenderChildren({
+  level,
+  parentReplyId,
+  isChild,
+}: RenderChildrenProps) {
   const user = useUser();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -22,7 +25,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
 
   // The layout prop preserves the LayoutGroup functionality of animating the container to expand/contract when replies are loaded or unloaded.
   return (
-    <motion.div layout="position" className="flex flex-col w-full mb-8">
+    <div className="flex flex-col w-full pb-8">
       {replies && replies.length > 0 ? (
         replies.map((childReply: ReplyType, index: number) => {
           return (
@@ -31,7 +34,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
               key={childReply.id}
               reply={childReply}
               level={level}
-              isChild={true}
+              isChild={isChild}
             />
           );
         })
@@ -49,7 +52,7 @@ function RenderChildren({ level, parentReplyId }: RenderChildrenProps) {
           )}
         </button>
       )}
-    </motion.div>
+    </div>
   );
 }
 

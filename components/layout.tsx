@@ -89,7 +89,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         >
           {/*  Blur Backdrop */}
           <div
-            className={`absolute top-0 left-0 w-screen h-screen bg-white/50 backdrop-blur-[124px] pointer-events-none z-0`}
+            className={`absolute top-0 left-0 w-screen h-screen bg-white/20 backdrop-blur-[80px] pointer-events-none z-0`}
           ></div>
           {/* Ambien */}
           <motion.div

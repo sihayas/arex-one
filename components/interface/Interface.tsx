@@ -39,8 +39,8 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 512, height: maxHeight },
     },
     artifact: {
-      base: { width: 384, height: 570 },
-      target: { width: 480, height: maxHeight },
+      base: { width: 480, height: 576 },
+      target: { width: 544, height: maxHeight },
     },
   };
 
@@ -61,7 +61,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
 
   const [contentScope, animateContent] = useAnimate();
 
-  const setRefs = (element) => {
+  const setRefs = (element: HTMLDivElement | null) => {
+    //@ts-ignore
     contentScope.current = element;
 
     if (scrollContainerRef) {
@@ -95,20 +96,20 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         x: "-50%",
         y: "-50%",
         opacity: isVisible ? 1 : 0,
-        scale: isVisible ? 1 : 0.9,
+        scale: isVisible ? 1 : 1.5,
         visibility: isVisible ? "visible" : "hidden",
       };
       const transitionConfig = {
         scale: {
           type: "spring" as const,
-          mass: 0.75,
+          mass: 1,
           stiffness: 180,
           damping: 22,
           delay: isVisible ? 0.15 : 0,
         },
         opacity: {
           type: "spring" as const,
-          mass: 0.75,
+          mass: 1,
           stiffness: 180,
           damping: 22,
           delay: isVisible ? 0.15 : 0,
@@ -200,7 +201,12 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
   ]);
 
   return (
-    <motion.div ref={rootScope} id={`cmdk`} className={`cmdk rounded-full`}>
+    <motion.div
+      transformTemplate={template}
+      ref={rootScope}
+      id={`cmdk`}
+      className={`cmdk rounded-full`}
+    >
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
@@ -227,4 +233,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       </Command>
     </motion.div>
   );
+}
+
+function template({ x, y, scale }: { x: number; y: number; scale: number }) {
+  // Assuming x and y are percentages and scale is a unitless number
+  return `translateX(${x}) translateY(${y}) scale(${scale})`;
 }

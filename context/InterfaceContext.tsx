@@ -89,18 +89,33 @@ export const InterfaceContextProvider = ({
   >(null);
 
   const [user, setUser] = useState<UserType | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSessionRaw] = useState<Session | null>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
   const supabaseClient = useSupabaseClient();
 
+  const sessionRef = useRef(session);
+
+  const setSession = useCallback(
+    (newSession: Session | null) => {
+      /**
+       * Prevent forced redraw on tab focus:
+       * [onAuthStateChange (SIGNED\_IN event) Fired everytime I change Chrome Tab or refocus on tab . · Issue #7250 · supabase/supabase](https://github.com/supabase/supabase/issues/7250)
+       */
+      if (JSON.stringify(sessionRef.current) === JSON.stringify(newSession)) {
+        console.debug("SupabaseBrowserAuthManager: no update, the same");
+        return;
+      }
+
+      console.debug("SupabaseBrowserAuthManager: update, new session");
+
+      sessionRef.current = newSession;
+      setSession(newSession);
+    },
+    [setSessionRaw],
+  );
+
   useEffect(() => {
-    // Initialize User
-    let currentSessionId: string | null | undefined = null;
-
     const setData = async (session: Session | null) => {
-      if (session?.user?.id === currentSessionId) return;
-      currentSessionId = session?.user?.id;
-
       if (session) {
         setSession(session);
 
@@ -143,6 +158,12 @@ export const InterfaceContextProvider = ({
   const { data: notifications } = useNotificationsQuery(user?.id);
 
   useEffect(() => {
+    if (scrollContainerRef.current) {
+      console.log(scrollContainerRef.current);
+    }
+  }, [scrollContainerRef]);
+
+  useEffect(() => {
     if (notifications) {
       setNotifs(notifications.data);
     }
@@ -164,7 +185,7 @@ export const InterfaceContextProvider = ({
     }
   }, [pages.length, user]);
 
-  // Function to navigate back in the history
+  // Navigate back in the history
   const navigateBack = useCallback(() => {
     setPages((prevPages) => {
       if (prevPages.length <= 1) {
@@ -176,7 +197,7 @@ export const InterfaceContextProvider = ({
     });
   }, []);
 
-  // Function to store pages in web browser history
+  // Store pages in web browser history
   useEffect(() => {
     const handlePopState = () => {
       if (pages.length > 1) {

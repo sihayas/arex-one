@@ -144,6 +144,7 @@ export const useNotificationsQuery = (userId: string | undefined) => {
     {
       enabled: !!userId,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     },
   );
 };

@@ -10,6 +10,7 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
+import { BlurDiv } from "@/components/global/Blur";
 
 interface NewAProps {
   artifact: ArtifactExtended;
@@ -72,7 +73,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         }}
         className={`flex flex-col rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
-        <div className={`absolute top-0 left-0 z-10 p-2 drop-shadow-md`}>
+        <div className={`absolute top-0 left-0 z-10 p-2`}>
           <EntryDial rating={artifact.content!.rating!} />
           <div
             className={`font-serif text-[32px] leading-[21px] text-white center-x center-y absolute`}
@@ -89,9 +90,9 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           quality={100}
           style={{ objectFit: "cover" }}
           fill={true}
-          // onClick={handleSoundClick}
         />
         {/* Gradient */}
+
         <div
           style={{
             background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
@@ -126,21 +127,144 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   );
 };
 
-// {heartCount > 0 ||
-// (artifact._count.replies > 0 && (
-//     <div
-//         className={`absolute -bottom-[25px] right-4 flex items-center gap-1 text-xs bg-white rounded-full p-[6px] font-medium shadow-shadowKitLow`}
-//     >
-//       <p className={`text-gray4 leading-[9px] text-red`}>
-//         {heartCount}
-//       </p>
-//       {artifact._count.replies > 0 && (
-//           <>
-//             {heartCount > 0 && <div>&middot;</div>}
-//             <p className={`text-gray4 leading-[9px] text-gray3`}>
-//               {artifact._count.replies}
-//             </p>
-//           </>
-//       )}
-//     </div>
-// ))}
+{
+  /*<div*/
+}
+{
+  /*  className={`pointer-events-none absolute bottom-0 left-0 w-full h-1/2 z-0`}*/
+}
+{
+  /*>*/
+}
+{
+  /*  <div className={`w-full h-full relative`}>*/
+}
+{
+  /*    <BlurDiv*/
+}
+{
+  /*      zIndex={1}*/
+}
+{
+  /*      blurValue={0.25}*/
+}
+{
+  /*      gradientStops="rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 12.5%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0) 37.5%"*/
+}
+{
+  /*    />*/
+}
+{
+  /*    <BlurDiv*/
+}
+{
+  /*      zIndex={2}*/
+}
+{
+  /*      blurValue={0.5}*/
+}
+{
+  /*      gradientStops="rgba(0, 0, 0, 0) 12.5%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 1) 37.5%, rgba(0, 0, 0, 0) 50%"*/
+}
+{
+  /*    />*/
+}
+{
+  /*    <BlurDiv*/
+}
+{
+  /*      zIndex={3}*/
+}
+{
+  /*      blurValue={0.75}*/
+}
+{
+  /*      gradientStops="rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 1) 37.5%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 62.5%"*/
+}
+{
+  /*    />*/
+}
+{
+  /*    <BlurDiv*/
+}
+{
+  /*      zIndex={4}*/
+}
+{
+  /*      blurValue={1}*/
+}
+{
+  /*      gradientStops="rgba(0, 0, 0, 0) 37.5%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 62.5%, rgba(0, 0, 0, 0) 75%"*/
+}
+{
+  /*    />*/
+}
+{
+  /*    <BlurDiv*/
+}
+{
+  /*      zIndex={5}*/
+}
+{
+  /*      blurValue={1.25}*/
+}
+{
+  /*      gradientStops="rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 62.5%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 87.5%"*/
+}
+{
+  /*    />*/
+}
+{
+  /*    <BlurDiv*/
+}
+{
+  /*      zIndex={6}*/
+}
+{
+  /*      blurValue={1.5}*/
+}
+{
+  /*      gradientStops="rgba(0, 0, 0, 0) 62.5%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 1) 87.5%, rgba(0, 0, 0, 0) 100%"*/
+}
+{
+  /*    />*/
+}
+{
+  /*    <BlurDiv*/
+}
+{
+  /*      zIndex={7}*/
+}
+{
+  /*      blurValue={2}*/
+}
+{
+  /*      gradientStops="rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 1) 87.5%, rgba(0, 0, 0, 1) 100%"*/
+}
+{
+  /*    />*/
+}
+{
+  /*    <BlurDiv*/
+}
+{
+  /*      zIndex={8}*/
+}
+{
+  /*      blurValue={2.5}*/
+}
+{
+  /*      gradientStops="rgba(0, 0, 0, 0) 87.5%, rgba(0, 0, 0, 1) 100%"*/
+}
+{
+  /*      className="bg-mauve-light-2 dark:bg-mauve-dark-2"*/
+}
+{
+  /*    />*/
+}
+{
+  /*  </div>*/
+}
+{
+  /*</div>*/
+}
