@@ -21,11 +21,11 @@ const App = ({
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <SessionContextProvider
-      supabaseClient={supabaseClient}
-      initialSession={pageProps.initialSession}
-    >
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
+      >
         <InterfaceContextProvider>
           <NavProvider>
             <SoundDetailsProvider>
@@ -36,9 +36,9 @@ const App = ({
           </NavProvider>
         </InterfaceContextProvider>
         <Toaster />
-        {/* <ReactQueryDevtools /> */}
-      </QueryClientProvider>
-    </SessionContextProvider>
+      </SessionContextProvider>
+      {/* <ReactQueryDevtools /> */}
+    </QueryClientProvider>
   );
 };
 

@@ -5,7 +5,7 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyType } from "@/types/dbTypes";
 
 import RenderChildren from "@/components/interface/artifact/sub/RenderChildren";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useUser } from "@supabase/auth-helpers-react";
 import Avatar from "@/components/global/Avatar";
@@ -25,6 +25,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
   const [showChildReplies, setShowChildReplies] = useState<boolean>(false);
 
   const activePage = pages[pages.length - 1];
+  const replyCount = reply._count ? reply._count.replies : 0;
 
   const handleReplyParent = useCallback(() => {
     const artifact = activePage.artifact;
@@ -50,8 +51,6 @@ export default function RootReply({ reply, index }: ReplyProps) {
     reply.author.id,
     user?.id,
   );
-
-  console.log("rendered root");
 
   return (
     <motion.div
@@ -111,43 +110,54 @@ export default function RootReply({ reply, index }: ReplyProps) {
       </div>
 
       {/* Attribution & Collapse Dot */}
-      <div className={`flex gap-3.5 mt-1.5`}>
-        <div
-          className={`flex flex-col items-center cursor-pointer h-full w-[9px]`}
-        >
-          <motion.div
-            animate={{
-              backgroundColor: showChildReplies ? "#CCC" : "transparent",
-              border: showChildReplies ? "none" : "1.5px solid #CCC",
-            }}
-            whileHover={{
-              scale: 1.25,
-              backgroundColor: showChildReplies ? "transparent" : "#000",
-              border: showChildReplies ? "1.5px solid black" : "none",
-            }}
-            onClick={() => setShowChildReplies((prev) => !prev)}
-            className={`w-[9px] h-[9px] rounded-full cursor-pointer`}
-          />
-
-          {showChildReplies && (
-            <Line color={"#CCC"} className={`flex flex-grow !w-[1.5px]`} />
-          )}
-        </div>
-
-        <div className={`flex flex-col`}>
-          <div className={`text-sm leading-[9px] text-gray2 font-medium`}>
-            {reply.author.username}
+      {replyCount > 0 && (
+        <div className={`flex gap-3.5 mt-1.5`}>
+          {/* Collapse */}
+          <div
+            className={`flex flex-col items-center cursor-pointer h-full min-w-[9px]`}
+          >
+            {!showChildReplies ? (
+              <motion.div
+                whileHover={{
+                  scale: 1.25,
+                  opacity: 1,
+                }}
+                onClick={() => setShowChildReplies((prev) => !prev)}
+                className={`w-[9px] h-[9px] rounded-full cursor-pointer bg-black opacity-50`}
+              />
+            ) : (
+              <motion.button
+                whileHover={{
+                  width: 4.5,
+                  opacity: 1,
+                }}
+                initial={{
+                  width: 2.5,
+                }}
+                exit={{
+                  height: 0,
+                }}
+                onClick={() => setShowChildReplies((prev) => !prev)}
+                className={`flex flex-grow rounded-max h-full bg-gray3 opacity-50`}
+              />
+            )}
           </div>
-          {showChildReplies && (
-            <RenderChildren
-              key={uuidv4()}
-              parentReplyId={reply.id}
-              level={1}
-              isChild={true}
-            />
-          )}
+
+          {/* Replies & Username */}
+          <div className={`flex flex-col`}>
+            <div className={`text-sm leading-[9px] text-gray2 font-medium`}>
+              {reply.author.username}
+            </div>
+            {showChildReplies && (
+              <RenderChildren
+                parentReplyId={reply.id}
+                level={1}
+                isChild={true}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </motion.div>
   );
 }
@@ -158,14 +168,17 @@ const Line: React.FC<{
   color?: string;
   className?: string;
   horizontal?: boolean;
+  onClick?: () => void;
 }> = ({
   height = "1px",
   width = "100%",
   color = "rgba(0, 0, 0, 0.1)",
   className = "",
   horizontal = false,
+  onClick,
 }) => (
   <div
+    onClick={onClick}
     style={{
       ...(horizontal ? { width: height, height: width } : { height, width }),
       backgroundColor: color,

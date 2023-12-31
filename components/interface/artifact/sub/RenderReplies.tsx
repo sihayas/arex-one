@@ -1,8 +1,8 @@
-import { LayoutGroup } from "framer-motion";
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/apiHelper/artifact";
 import React from "react";
 import RootReply from "@/components/interface/artifact/sub/RootReply";
+import { LayoutGroup } from "framer-motion";
 
 type RenderRepliesProps = {
   userId: string;
@@ -21,7 +21,7 @@ function RenderReplies({ userId, artifactId }: RenderRepliesProps) {
       {replies && replies.length > 0 ? (
         <>
           {replies.map((reply: ReplyType, index: number) => (
-            <RootReply key={reply.id} reply={reply} index={index} />
+            <RootReply key={reply.id} index={index} reply={reply} />
           ))}
         </>
       ) : (

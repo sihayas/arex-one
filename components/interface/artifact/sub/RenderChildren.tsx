@@ -3,7 +3,6 @@ import Reply from "@/components/interface/artifact/sub/Reply";
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/apiHelper/artifact";
 import { useUser } from "@supabase/auth-helpers-react";
-import { motion } from "framer-motion";
 
 type RenderChildrenProps = {
   parentReplyId: string;
@@ -30,8 +29,8 @@ function RenderChildren({
         replies.map((childReply: ReplyType, index: number) => {
           return (
             <Reply
-              index={index}
               key={childReply.id}
+              index={index}
               reply={childReply}
               level={level}
               isChild={isChild}

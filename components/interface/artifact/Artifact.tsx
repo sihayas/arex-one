@@ -63,8 +63,6 @@ export const Artifact = () => {
     .replace("{w}", "1200")
     .replace("{h}", "1200");
 
-  console.log("Render Artifact");
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -121,9 +119,9 @@ export const Artifact = () => {
         </motion.div>
       </motion.div>
 
-      <motion.div className={`flex flex-col p-8 h-full relative`}>
+      <div className={`flex flex-col p-8 h-full relative`}>
         <RenderReplies userId={user!.id} artifactId={artifactExtended.id} />
-      </motion.div>
+      </div>
     </motion.div>
   );
 };

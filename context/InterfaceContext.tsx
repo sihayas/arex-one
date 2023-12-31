@@ -116,6 +116,7 @@ export const InterfaceContextProvider = ({
 
   useEffect(() => {
     const setData = async (session: Session | null) => {
+      console.debug("Auth state changed:", { event, session });
       if (session) {
         setSession(session);
 
