@@ -11,7 +11,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   const { handleSelectSound } = useSound();
   return (
     <div
-      className={`w-max flex flex-col items-center m-8 rounded-[16px] mt-auto shadow-essentials overflow-hidden outline outline-silver outline-1`}
+      className={`w-max flex flex-col items-center m-8 rounded-[16px] mt-auto shadow-shadowKitLow overflow-hidden outline outline-silver outline-1`}
     >
       {essentials.map((essential, i) => {
         const sound = essential.appleData;

@@ -37,7 +37,7 @@ module.exports = {
       },
       fontFamily: {
         baskerville: ["Baskerville", "serif"],
-        serif: ["Times New Roman", "serif"],
+        serif: ["Baskerville", "serif"],
         sfRounded: ["SF Pro Rounded", "sans-serif"],
       },
       fontSize: {

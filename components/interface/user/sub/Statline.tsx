@@ -1,18 +1,31 @@
 import React, { useRef } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from "framer-motion";
+import { UserType } from "@/types/dbTypes";
 
-const springConfig = {
-  stiffness: 200,
+const lineConfig = {
+  stiffness: 280,
   damping: 20,
 };
 
-interface StatlineProps {}
+const scaleConfig = {
+  stiffness: 200,
+  damping: 14,
+};
 
-const Statline = ({}: StatlineProps) => {
+interface StatlineProps {
+  userData: any;
+}
+
+const Statline = ({ userData }: StatlineProps) => {
   const scrollContainer = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: scrollContainer });
 
-  const scaleSoundsOut = useTransform(scrollYProgress, [0, 0.25], [1, 0.75]);
   const opacitySoundsOut = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
   const blurSoundsOut = useTransform(scrollYProgress, (value) => {
     const maxBlur = 4;
@@ -20,28 +33,18 @@ const Statline = ({}: StatlineProps) => {
     return `blur(${blur}px)`;
   });
 
-  const scaleEntriesIn = useTransform(
-    scrollYProgress,
-    [0.25, 0.5, 0.75],
-    [0.75, 1, 0.75],
-  );
   const opacityEntriesIn = useTransform(
     scrollYProgress,
     [0.25, 0.5, 0.75],
     [0, 1, 0],
   );
+
   const blurEntriesOut = useTransform(scrollYProgress, (value) => {
     const maxBlur = 4;
     let normalizedValue = (value - 0.5) * 4;
     const blur = Math.max(0, Math.min(1, normalizedValue)) * maxBlur;
     return `blur(${blur}px)`;
   });
-
-  const scaleWispsIn = useTransform(
-    scrollYProgress,
-    [0.75, 1, 1.25],
-    [0.75, 1, 0.75],
-  );
 
   const opacityWispsIn = useTransform(
     scrollYProgress,
@@ -53,22 +56,22 @@ const Statline = ({}: StatlineProps) => {
   const topLineHeightOutput = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    [16, 57, 98],
+    [16, 56, 88],
   );
   const dotYPositionOutput = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    [24, 64, 106],
+    [24, 64, 96],
   );
   const bottomLineHeightOutput = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    [335, 294, 253],
+    [336, 296, 264],
   );
 
-  const topLineHeight = useSpring(topLineHeightOutput, springConfig);
-  const dotYPosition = useSpring(dotYPositionOutput, springConfig);
-  const bottomLineHeight = useSpring(bottomLineHeightOutput, springConfig);
+  const topLineHeight = useSpring(topLineHeightOutput, lineConfig);
+  const dotYPosition = useSpring(dotYPositionOutput, lineConfig);
+  const bottomLineHeight = useSpring(bottomLineHeightOutput, lineConfig);
 
   return (
     <motion.div
@@ -77,6 +80,14 @@ const Statline = ({}: StatlineProps) => {
     >
       {/* Statline */}
       <div className={`fixed pointer-events-none w-[80px] h-[376px]`}>
+        {/* Data */}
+        <div
+          className={`absolute top-6 right-12 flex flex-col gap-[29px] text-base leading-[11px] items-end font-medium tracking-tighter`}
+        >
+          <motion.div>{userData.soundCount}</motion.div>
+          <motion.div>{userData._count.artifact}</motion.div>
+        </div>
+
         {/*  Top Line */}
         <motion.div
           className={`center-x`}
@@ -93,8 +104,8 @@ const Statline = ({}: StatlineProps) => {
         <motion.div
           style={{
             background: "#000",
-            width: "10px",
-            height: "10px",
+            width: "8px",
+            height: "8px",
             borderRadius: "50%",
             translateY: dotYPosition,
             translateX: "-50%",
@@ -105,42 +116,46 @@ const Statline = ({}: StatlineProps) => {
         >
           {/* Indicator Text */}
           <div
-            className={`absolute text-sm leading-[9px] left-[17px] tracking-tight`}
+            className={`absolute text-sm leading-[9px] left-[13px] tracking-tighter center-y`}
           >
             <motion.p
               style={{
-                scale: scaleSoundsOut,
                 filter: blurSoundsOut,
                 opacity: opacitySoundsOut,
                 transformOrigin: "bottom",
                 position: "absolute",
+                top: "50%",
+                translateY: "-50%",
               }}
             >
               sounds
             </motion.p>
             <motion.p
               style={{
-                scale: scaleEntriesIn,
                 filter: blurEntriesOut,
                 opacity: opacityEntriesIn,
                 transformOrigin: "bottom",
                 position: "absolute",
+                top: "50%",
+                translateY: "-50%",
               }}
             >
               entries
             </motion.p>
             <motion.p
               style={{
-                scale: scaleWispsIn,
                 opacity: opacityWispsIn,
                 transformOrigin: "bottom",
                 position: "absolute",
+                top: "50%",
+                translateY: "-50%",
               }}
             >
               wisps
             </motion.p>
           </div>
         </motion.div>
+        {/* Bottom Line */}
         <motion.div
           className={`center-x`}
           style={{
@@ -153,6 +168,9 @@ const Statline = ({}: StatlineProps) => {
           }}
         />
       </div>
+
+      {/* Stats  */}
+
       <section className={`snap-center min-w-full min-h-full `}></section>
       <section className={`snap-center min-w-full min-h-full`}></section>
       <section className={`snap-center min-w-full min-h-full`}></section>

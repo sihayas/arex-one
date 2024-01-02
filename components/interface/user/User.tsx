@@ -60,7 +60,7 @@ const User = () => {
         style={{
           scale: scaleCard,
           x: xCard,
-          y: yCard,
+          // y: yCard,
           width: widthCard,
           height: 528,
           borderRadius: borderCard,
@@ -98,7 +98,7 @@ const User = () => {
           </div>
 
           {/*  Filter Line */}
-          <Statline />
+          <Statline userData={userData} />
         </div>
 
         <Essentials essentials={userData.essentials} />

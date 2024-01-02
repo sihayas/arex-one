@@ -210,7 +210,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`flex items-start justify-center bg-white rounded-full outline outline-silver outline-1 relative overflow-hidden`}
+        className={`flex items-start justify-center bg-white rounded-full outline outline-silver outline-1 relative overflow-hidden shadow-shadowKitHigh`}
         shouldFilter={false}
         loop
         ref={scope}
