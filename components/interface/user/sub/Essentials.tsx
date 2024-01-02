@@ -11,43 +11,43 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   const { handleSelectSound } = useSound();
   return (
     <div
-      className={`w-max flex flex-col items-center p-8 pr-0 pb-[88px] gap-4`}
+      className={`w-max flex flex-col items-center m-8 rounded-[16px] mt-auto shadow-essentials overflow-hidden outline outline-silver outline-1`}
     >
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const color = sound.attributes.artwork.bgColor;
         const artwork = sound.attributes.artwork.url
-          .replace("{w}", "400")
-          .replace("{h}", "400");
+          .replace("{w}", "320")
+          .replace("{h}", "320");
+        let style = {
+          backgroundColor: `#${color}`,
+          width: `192px`,
+          height: `192px`,
+          position: "absolute",
+          borderRadius: "50%",
+        };
+        if (i === 0) {
+          style = { ...style, top: "128px", left: "32px" };
+        } else if (i === 1) {
+          style = { ...style, bottom: "120px", right: "32px" };
+        } else if (i === 2) {
+          style = { ...style, bottom: "32px", left: "32px" };
+        }
         return (
           <Fragment key={`essential-${i}`}>
             <Image
               onClick={() => handleSelectSound(sound)}
-              className={`rounded-2xl shadow-shadowKitMedium`}
               src={artwork}
               alt={`artwork`}
               loading="lazy"
               quality={100}
-              width={152}
-              height={152}
+              width={128}
+              height={128}
             />
-            <div
-              style={{
-                backgroundColor: `#${color}`,
-                width: `152px`,
-                height: `152px`,
-                top: `${32 + i * (152 + 16)}px`,
-              }}
-              className="absolute left-8 -z-20 rounded-max"
-            />
+            {/*<div style={style} className="-z-20" />*/}
           </Fragment>
         );
       })}
-      <div
-        className={`absolute center-y left-[176px] text-xs text-gray2 leading-[9px] font-medium z-10 -rotate-90 tracking-tight`}
-      >
-        essentials
-      </div>
     </div>
   );
 };

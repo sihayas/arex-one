@@ -46,7 +46,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <div className={`flex items-end gap-2.5 relative group w-[468px] group`}>
+    <div className={`flex items-end gap-2.5 relative group w-[388px] group`}>
       <Avatar
         className={`h-[42px] border border-silver`}
         imageSrc={artifact.author.image}

@@ -95,7 +95,7 @@ export const Artifact = () => {
             maxHeight: maxHeight,
             width: 480,
           }}
-          className={`flex flex-col bg-white p-6 rounded-[20px] shadow-shadowKitHigh will-change-transform overflow-scroll relative scrollbar-none`}
+          className={`flex flex-col bg-white p-6 rounded-[24px] shadow-shadowKitHigh will-change-transform overflow-scroll relative scrollbar-none`}
         >
           {/* Top */}
           <div className={`flex items-center`}>

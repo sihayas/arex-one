@@ -3,14 +3,12 @@ import React, { useState, useCallback } from "react";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { ReplyType } from "@/types/dbTypes";
-import Dash from "@/components/global/Dash";
 
 import RenderChildren from "@/components/interface/artifact/sub/RenderChildren";
 import { motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useUser } from "@supabase/auth-helpers-react";
 import Avatar from "@/components/global/Avatar";
-import { v4 as uuidv4 } from "uuid";
 import Heart from "@/components/global/Heart";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -36,10 +34,6 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
       setReplyTarget({ artifact, reply });
     }
   }, [reply, setReplyTarget, activePage.artifact]);
-
-  const handleLoadReplies = useCallback(() => {
-    setShowChildReplies(true);
-  }, []);
 
   const url = reply.heartedByUser
     ? "/api/heart/delete/reply"
@@ -238,66 +232,6 @@ const Line: React.FC<{
     className={className}
   />
 );
-
-// {replyCount > 0 && (
-//     <div
-//         className={`min-h-[16px] flex flex-col relative w-full ${reverseAlignment}`}
-//     >
-//       {/* Create chain baseline for children fetched / Button to expand
-//        & collapse */}
-//       {showChildReplies ? (
-//           <div
-//               className={`absolute flex flex-col cursor-pointer h-full w-8 pt-1 items-center`}
-//           >
-//             <motion.div
-//                 whileHover={{ scale: 1.25, backgroundColor: "rgb(255,94,0)" }}
-//                 onClick={() => {
-//                   setShowChildReplies(false);
-//                 }}
-//                 className="min-w-[8px] min-h-[8px] rounded-full bg-[#e5e5e6] cursor-pointer z-30"
-//             />
-//             <Dash
-//                 className={"flex flex-grow ml-auto mr-auto mb-8"}
-//                 color={"#e5e5e6"}
-//             />
-//           </div>
-//       ) : (
-//           // Show curved stat-line if replies exist
-//           <div
-//               onClick={handleLoadReplies}
-//               className={`flex items-end w-fit cursor-pointer group gap-1 ${flexDirection}`}
-//           >
-//             <StatLineIcon color={"#CCC"} className={`${reverseStatLine}`} />
-//             {reply.replies?.map((childReply, index) => (
-//                 <Image
-//                     key={index}
-//                     className={`outline outline-2 outline-white rounded-full transition-all ${
-//                         index !== 0 && "-ml-2"
-//                     }`}
-//                     src={
-//                         childReply.author.image ||
-//                         "/public/images/default-avatar.png"
-//                     }
-//                     alt={`${childReply.author.username}'s avatar`}
-//                     width={16}
-//                     height={16}
-//                 />
-//             ))}
-//             <div className={`pl-2 text-xs text-gray2 leading-[16px]`}>
-//               {replyCount}
-//             </div>
-//           </div>
-//       )}
-//
-//       {showChildReplies && (
-//           <RenderChildren
-//               key={uuidv4()}
-//               parentReplyId={reply.id}
-//               level={level + 1}
-//           />
-//       )}
-//     </div>
-// )}
 
 // <Heart
 //     handleHeartClick={handleHeartClick}

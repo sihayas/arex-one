@@ -33,7 +33,7 @@ export const User: React.FC<NewAProps> = ({
   const scrollRange = [0, 0.5, 1];
 
   const scaleValues = [0.875, 1, 0.875];
-  const rotateValues = isEven ? [-2, 0, -2] : [2, 0, 2];
+  const rotateValues = isEven ? [2, 0, -2] : [-2, 0, 2];
   const zIndexValues = [0, 1, 0];
 
   const scale = useTransform(scrollYProgress, scrollRange, scaleValues);
@@ -76,7 +76,7 @@ export const User: React.FC<NewAProps> = ({
           scale: scale,
           zIndex: zIndex,
         }}
-        className={`flex flex-col rounded-3xl relative w-[223px] min-h-[288px] will-change-transform overflow-hidden shadow-miniCard`}
+        className={`flex flex-col rounded-3xl relative w-[224px] min-h-[288px] will-change-transform overflow-hidden shadow-miniCard`}
       >
         {/* Stars */}
         <Heart
@@ -86,14 +86,6 @@ export const User: React.FC<NewAProps> = ({
           heartCount={heartCount}
           replyCount={artifact._count.replies}
         />
-        <div
-          className={`absolute top-6 center-x flex items-center p-2 pr-2.5 bg-white rounded-xl w-max max-w-[175px] z-10 gap-2 shadow-shadowKitMedium max-h-8`}
-        >
-          <Stars rating={artifact.content?.rating} />
-          <div className={`text-sm text-[#000] font-bold line-clamp-1`}>
-            {sound.attributes.name}
-          </div>
-        </div>
 
         <Image
           className={`cursor-pointer`}
@@ -112,7 +104,7 @@ export const User: React.FC<NewAProps> = ({
           className="absolute bottom-0 w-full h-4/5 pointer-events-none"
         />
         <div
-          className={`absolute px-6 text-sm text-white font-semibold line-clamp-6 bottom-[18px] pointer-events-none will-change-transform`}
+          className={`absolute px-6 text-sm text-white font-semibold line-clamp-3 bottom-[18px] pointer-events-none will-change-transform`}
         >
           {artifact.content?.text}
         </div>

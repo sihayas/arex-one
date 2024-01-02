@@ -31,8 +31,8 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 416, height: 608 },
-      target: { width: 640, height: 608 },
+      base: { width: 352, height: 528 },
+      target: { width: 352, height: 528 },
     },
     album: {
       base: { width: 576, height: 576 },
@@ -229,7 +229,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             <ActiveComponent />
           </AnimatePresence>
         </motion.div>
-        <Nav />
+        {/*<Nav />*/}
       </Command>
     </motion.div>
   );
