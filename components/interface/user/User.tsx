@@ -24,7 +24,7 @@ const User = () => {
   const scaleCardKeyframes = useTransform(scrollY, [0, 1], [1, 0.948]);
   const scaleCard = useSpring(scaleCardKeyframes, scaleEntryConfig);
 
-  const widthCardKeyframes = useTransform(scrollY, [0, 1], [352, 144]);
+  const widthCardKeyframes = useTransform(scrollY, [0, 1], [656, 144]);
   const widthCard = useSpring(widthCardKeyframes, scaleEntryConfig);
 
   const xCardKeyframes = useTransform(scrollY, [0, 1], [0, 9]);
@@ -62,59 +62,58 @@ const User = () => {
           x: xCard,
           // y: yCard,
           width: widthCard,
-          height: 528,
           borderRadius: borderCard,
         }}
-        className={`flex justify-between overflow-hidden z-0 will-change-transform top-0 left-0 bg-black/10 `}
+        className={`pl-8 pb-8 flex justify-between overflow-hidden z-0 will-change-transform top-0 left-0 min-h-full`}
       >
-        {/*<div*/}
-        {/*  className={`absolute bg-black/10 w-full h-full top-0 left-0 backdrop-blur-2xl overflow-visible -z-10`}*/}
-        {/*/>*/}
+        <div
+          className={`absolute bg-black/5 w-full h-full top-0 left-0 backdrop-blur-2xl overflow-visible -z-10`}
+        />
 
-        <div className={`flex flex-col p-8 z-0 gap-2`}>
-          {/* Avatar */}
-          <div className={`flex items-center flex-row-reverse gap-4 relative`}>
-            <Image
-              className={`rounded-max`}
-              src={userData.image}
-              alt={`${userData.name}'s avatar`}
-              width={80}
-              height={80}
-            />
+        <Statline userData={userData} />
 
-            <motion.div
-              className={`absolute center-y text-base text-gray4 leading-[11px] font-semibold w-max left-24 tracking-tight`}
+        <div className={`ml-2 mt-auto gap-4 relative`}>
+          <Image
+            className={`rounded-max shadow-shadowKitHigh`}
+            src={userData.image}
+            alt={`${userData.name}'s avatar`}
+            width={64}
+            height={64}
+          />
+          <div
+            className={`absolute flex flex-col center-y left-[72px] w-max gap-3`}
+          >
+            <div
+              className={`font-medium tracking-tight text-base leading-[11px] text-gray2`}
             >
               {userData.username}
-            </motion.div>
-            {/*<motion.div className={`absolute left-12 top-0`}>*/}
-            {/*  <div*/}
-            {/*    className={`bg-white rounded-[15px] py-1.5 px-[9px] text-sm w-max text-center`}*/}
-            {/*  >*/}
-            {/*    {userData.bio}*/}
-            {/*  </div>*/}
-            {/*  <TailIcon className={`absolute left-2 -translate-y-[2px]`} />*/}
-            {/*</motion.div>*/}
+            </div>
           </div>
-
-          {/*  Filter Line */}
-          <Statline userData={userData} />
         </div>
 
         <Essentials essentials={userData.essentials} />
       </motion.div>
       {/* Soundtrack History */}
-      <motion.div
-        style={{
-          opacity: opacitySoundtrack,
-          zIndex: zSoundtrackKeyframes,
-          overflow: "visible",
-        }}
-      >
-        <Soundtrack userId={user.id} />
-      </motion.div>
+      {/*<motion.div*/}
+      {/*  style={{*/}
+      {/*    opacity: opacitySoundtrack,*/}
+      {/*    zIndex: zSoundtrackKeyframes,*/}
+      {/*    overflow: "visible",*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <Soundtrack userId={user.id} />*/}
+      {/*</motion.div>*/}
     </motion.div>
   );
 };
 
 export default User;
+
+// {/*<motion.div className={`absolute left-12 top-0`}>*/}
+// {/*  <div*/}
+// {/*    className={`bg-white rounded-[15px] py-1.5 px-[9px] text-sm w-max text-center`}*/}
+// {/*  >*/}
+// {/*    {userData.bio}*/}
+// {/*  </div>*/}
+// {/*  <TailIcon className={`absolute left-2 -translate-y-[2px]`} />*/}
+// {/*</motion.div>*/}

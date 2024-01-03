@@ -31,8 +31,8 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 352, height: 528 },
-      target: { width: 352, height: 528 },
+      base: { width: 656, height: 384 },
+      target: { width: 656, height: 384 },
     },
     album: {
       base: { width: 576, height: 576 },
@@ -210,7 +210,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`flex items-start justify-center bg-white rounded-full outline outline-silver outline-1 relative overflow-hidden shadow-shadowKitHigh`}
+        className={`flex items-start justify-center bg-white rounded-full relative overflow-hidden shadow-shadowKitHigh`}
         shouldFilter={false}
         loop
         ref={scope}

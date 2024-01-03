@@ -1,12 +1,5 @@
 import React, { useRef } from "react";
-import {
-  motion,
-  useScroll,
-  useSpring,
-  useTransform,
-  useVelocity,
-} from "framer-motion";
-import { UserType } from "@/types/dbTypes";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
 const lineConfig = {
   stiffness: 280,
@@ -26,31 +19,20 @@ const Statline = ({ userData }: StatlineProps) => {
   const scrollContainer = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: scrollContainer });
 
-  const opacitySoundsOut = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
-  const blurSoundsOut = useTransform(scrollYProgress, (value) => {
-    const maxBlur = 4;
-    const blur = Math.min(value / 0.25, 1) * maxBlur;
-    return `blur(${blur}px)`;
-  });
-
-  const opacityEntriesIn = useTransform(
-    scrollYProgress,
-    [0.25, 0.5, 0.75],
-    [0, 1, 0],
-  );
-
-  const blurEntriesOut = useTransform(scrollYProgress, (value) => {
-    const maxBlur = 4;
-    let normalizedValue = (value - 0.5) * 4;
-    const blur = Math.max(0, Math.min(1, normalizedValue)) * maxBlur;
-    return `blur(${blur}px)`;
-  });
-
-  const opacityWispsIn = useTransform(
-    scrollYProgress,
-    [0.75, 1, 1.25],
-    [0, 1, 0],
-  );
+  // const blurSoundsOut = useTransform(scrollYProgress, (value) => {
+  //   const maxBlur = 4;
+  //   const blur = Math.min(value / 0.25, 1) * maxBlur;
+  //   return `blur(${blur}px)`;
+  // });
+  //
+  //
+  //
+  // const blurEntriesOut = useTransform(scrollYProgress, (value) => {
+  //   const maxBlur = 4;
+  //   let normalizedValue = (value - 0.5) * 4;
+  //   const blur = Math.max(0, Math.min(1, normalizedValue)) * maxBlur;
+  //   return `blur(${blur}px)`;
+  // });
 
   // Line transitions
   const topLineHeightOutput = useTransform(
@@ -66,7 +48,7 @@ const Statline = ({ userData }: StatlineProps) => {
   const bottomLineHeightOutput = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    [336, 296, 264],
+    [280, 240, 208],
   );
 
   const topLineHeight = useSpring(topLineHeightOutput, lineConfig);
@@ -76,15 +58,20 @@ const Statline = ({ userData }: StatlineProps) => {
   return (
     <motion.div
       ref={scrollContainer}
-      className="flex flex-col w-full h-full overflow-y-scroll snap-y snap-mandatory relative scrollbar-none"
+      className="flex flex-col w-[8px] h-[384px] overflow-y-scroll snap-y snap-mandatory relative scrollbar-none justify-center"
     >
       {/* Statline */}
-      <div className={`fixed pointer-events-none w-[80px] h-[376px]`}>
+      <div className={`fixed pointer-events-none w-[8px] h-[320px]`}>
         {/* Data */}
         <div
-          className={`absolute top-6 right-12 flex flex-col gap-[29px] text-base leading-[11px] items-end font-medium tracking-tighter`}
+          className={`absolute top-6 left-4 flex flex-col gap-[29px] text-base font-medium tracking-tighter`}
         >
-          <motion.div>{userData.soundCount}</motion.div>
+          <motion.div className={`relative flex justify-start gap-1`}>
+            <motion.p className={`leading-[11px]`}>
+              {userData.soundCount}
+            </motion.p>
+            <motion.p className={`text-xs leading-[8px]`}>sounds</motion.p>
+          </motion.div>
           <motion.div>{userData._count.artifact}</motion.div>
         </div>
 
@@ -113,48 +100,7 @@ const Statline = ({ userData }: StatlineProps) => {
             top: 0,
             left: "50%",
           }}
-        >
-          {/* Indicator Text */}
-          <div
-            className={`absolute text-sm leading-[9px] left-[13px] tracking-tighter center-y`}
-          >
-            <motion.p
-              style={{
-                filter: blurSoundsOut,
-                opacity: opacitySoundsOut,
-                transformOrigin: "bottom",
-                position: "absolute",
-                top: "50%",
-                translateY: "-50%",
-              }}
-            >
-              sounds
-            </motion.p>
-            <motion.p
-              style={{
-                filter: blurEntriesOut,
-                opacity: opacityEntriesIn,
-                transformOrigin: "bottom",
-                position: "absolute",
-                top: "50%",
-                translateY: "-50%",
-              }}
-            >
-              entries
-            </motion.p>
-            <motion.p
-              style={{
-                opacity: opacityWispsIn,
-                transformOrigin: "bottom",
-                position: "absolute",
-                top: "50%",
-                translateY: "-50%",
-              }}
-            >
-              wisps
-            </motion.p>
-          </div>
-        </motion.div>
+        ></motion.div>
         {/* Bottom Line */}
         <motion.div
           className={`center-x`}

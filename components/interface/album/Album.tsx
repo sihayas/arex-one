@@ -10,6 +10,7 @@ import { SongData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import Dial from "@/components/interface/album/sub/Dial";
+import { createPortal } from "react-dom";
 // import Dial from "@/components/global/RatingDial";
 
 const springConfig = { damping: 28, stiffness: 180 };
@@ -29,6 +30,7 @@ const Album = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const { selectedSound } = useSoundContext();
   const { scrollContainerRef } = useInterfaceContext();
+  const cmdk = document.getElementById("cmdk-inner") as HTMLDivElement;
 
   const [sortOrder, setSortOrder] = useState<
     "newest" | "highlights" | "positive" | "critical"
@@ -91,25 +93,37 @@ const Album = () => {
       exit={{ opacity: 0 }}
       className="w-full min-h-full mt-[1px]"
     >
-      <motion.div
-        style={{
-          x: xArt,
-          y: yArt,
-          scale: scaleArt,
-          borderRadius,
-        }}
-        className="absolute pointer-events-none overflow-hidden z-50 right-0 top-0 shadow-shadowKitHigh"
-      >
-        <Image
-          src={artwork}
-          alt={`${name}'s artwork`}
-          width={576}
-          height={576}
-          quality={100}
-          draggable="false"
-          onDragStart={(e) => e.preventDefault()}
-        />
-      </motion.div>
+      {cmdk &&
+        createPortal(
+          <motion.div
+            style={{
+              x: xArt,
+              y: yArt,
+              scale: scaleArt,
+              borderRadius,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              damping: 20,
+              stiffness: 200,
+            }}
+            className="absolute pointer-events-none overflow-hidden z-40 right-0 top-0 shadow-shadowKitHigh"
+          >
+            <Image
+              src={artwork}
+              alt={`${name}'s artwork`}
+              width={576}
+              height={576}
+              quality={100}
+              draggable="false"
+              onDragStart={(e) => e.preventDefault()}
+            />
+          </motion.div>,
+          cmdk,
+        )}
+
       <motion.div
         className={`absolute z-50 pointer-events-none right-0 top-0 flex items-center justify-center`}
         style={{
@@ -120,7 +134,6 @@ const Album = () => {
         }}
       >
         <Dial ratings={[4, 8900, 2445, 5000000, 500]} />
-        {/*<Dial />*/}
       </motion.div>
       {/* Entries */}
       <RenderArtifacts
