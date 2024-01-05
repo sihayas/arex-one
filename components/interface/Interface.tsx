@@ -32,7 +32,7 @@ export const GetDimensions = (pageName: PageName) => {
   const dimensions = {
     user: {
       base: { width: 656, height: 384 },
-      target: { width: 656, height: 384 },
+      target: { width: 656, height: 656 },
     },
     album: {
       base: { width: 576, height: 576 },
@@ -48,16 +48,13 @@ export const GetDimensions = (pageName: PageName) => {
 };
 
 export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
-  const { pages, scrollContainerRef } = useInterfaceContext();
+  const { pages, scrollContainerRef, activePage } = useInterfaceContext();
   const { expandInput } = useNavContext();
 
-  // Page Tracker
-  const activePage: Page = pages[pages.length - 1];
   const activePageName: PageName = activePage.name as PageName;
   const ActiveComponent = componentMap[activePageName];
 
-  // Dimensions for pages
-  const { base, target } = GetDimensions(activePageName);
+  const { base, target } = GetDimensions(activePageName); // Dimensions
 
   const [contentScope, animateContent] = useAnimate();
 
@@ -70,10 +67,9 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     }
   };
 
-  // Window ref
-  const [scope, animate] = useAnimate();
-  // Root ref
-  const [rootScope, animateRoot] = useAnimate();
+  const [rootScope, animateRoot] = useAnimate(); // Root
+
+  const [scope, animate] = useAnimate(); // Window
 
   // Shift width and height of shape-shifter/window while scrolling
   const { scrollY } = useScroll({ container: scrollContainerRef });
@@ -123,6 +119,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
+  // Animate content blur
   useEffect(() => {
     const blurContent = async () => {
       await animateContent(
@@ -141,7 +138,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     blurContent();
   }, [animateContent, contentScope, expandInput]);
 
-  // Animate shape-shifting the portal on scroll & page change & bounce
+  // Animate portal dimensions on scroll & page change & bounce
   useEffect(() => {
     // Bounce and shift dimensions on page change
     const sequence = async () => {
@@ -200,9 +197,52 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
     activePageName,
   ]);
 
+  // Animate portal dimensions to target if isOpen in activePage is set to true
+  useEffect(() => {
+    const animateToTarget = async () => {
+      const animationConfig = {
+        width: target.width,
+        height: target.height,
+      };
+      const transitionConfig = {
+        type: "spring" as const,
+        stiffness: 240,
+        damping: 40,
+      };
+      await animate(scope.current, animationConfig, transitionConfig);
+    };
+
+    const animateToBase = async () => {
+      const animationConfig = {
+        width: base.width,
+        height: base.height,
+      };
+      const transitionConfig = {
+        type: "spring" as const,
+        stiffness: 240,
+        damping: 40,
+      };
+      await animate(scope.current, animationConfig, transitionConfig);
+    };
+
+    if (activePage.isOpen) {
+      animateToTarget();
+    } else {
+      animateToBase();
+    }
+  }, [
+    animate,
+    scope,
+    activePage.isOpen,
+    target.height,
+    target.width,
+    base.width,
+    base.height,
+  ]);
+
   return (
     <motion.div
-      transformTemplate={template}
+      transformTemplate={template} // Prevent translateZ from being applied
       ref={rootScope}
       id={`cmdk`}
       className={`cmdk rounded-full`}

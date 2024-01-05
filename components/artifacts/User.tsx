@@ -10,13 +10,13 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
-interface NewAProps {
+interface UserProps {
   artifact: ArtifactExtended;
   containerRef: React.RefObject<HTMLElement>;
   index: number;
 }
 
-export const User: React.FC<NewAProps> = ({
+export const User: React.FC<UserProps> = ({
   artifact,
   containerRef,
   index,
@@ -33,7 +33,7 @@ export const User: React.FC<NewAProps> = ({
   const scrollRange = [0, 0.5, 1];
 
   const scaleValues = [0.875, 1, 0.875];
-  const rotateValues = isEven ? [2, 0, -2] : [-2, 0, 2];
+  const rotateValues = isEven ? [2, 0, -2] : [2, 0, 2];
   const zIndexValues = [0, 1, 0];
 
   const scale = useTransform(scrollYProgress, scrollRange, scaleValues);
@@ -64,7 +64,7 @@ export const User: React.FC<NewAProps> = ({
 
   return (
     <section
-      style={{ marginTop: index > 0 ? "-32px" : "0" }}
+      style={{ marginTop: index > 0 ? "-56px" : "16px" }}
       className={`w-full min-h-fit flex snap-center`}
     >
       <motion.div
@@ -76,7 +76,7 @@ export const User: React.FC<NewAProps> = ({
           scale: scale,
           zIndex: zIndex,
         }}
-        className={`flex flex-col rounded-3xl relative w-[224px] min-h-[288px] will-change-transform overflow-hidden shadow-miniCard`}
+        className={`flex flex-col rounded-3xl relative w-[240px] min-h-[304px] will-change-transform overflow-hidden shadow-miniCard`}
       >
         {/* Stars */}
         <Heart

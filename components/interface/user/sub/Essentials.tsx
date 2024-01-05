@@ -11,7 +11,7 @@ interface EssentialsProps {
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   const { handleSelectSound } = useSound();
   return (
-    <div className={`ml-auto w-max flex flex-col items-center m-8 -space-y-14`}>
+    <div className={`ml-auto w-max flex flex-col items-center -space-y-14`}>
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const color = sound.attributes.artwork.bgColor;
@@ -27,11 +27,14 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
           borderRadius: "50%",
         };
         if (i === 0) {
+          //@ts-ignore
           style = { ...style, top: "88px", right: "32px" };
         } else if (i === 1) {
-          style = { ...style, bottom: "120px", right: "120px" };
+          //@ts-ignore
+          style = { ...style, top: "176px", right: "136px" };
         } else if (i === 2) {
-          style = { ...style, bottom: "32px", right: "32px" };
+          //@ts-ignore
+          style = { ...style, bottom: "264px", right: "32px" };
         }
         const rotationClass = i % 2 === 0 ? "rotate-2" : "-rotate-2";
 
@@ -39,7 +42,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
           <Fragment key={`essential-${i}`}>
             <Image
               className={`rounded-3xl shadow-shadowKitHigh ${rotationClass} ${
-                i === 1 ? "-translate-x-[88px]" : ""
+                i === 1 ? "-translate-x-[104px]" : ""
               }`}
               onClick={() => handleSelectSound(sound)}
               src={artwork}
@@ -49,6 +52,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
               width={144}
               height={144}
             />
+            {/* @ts-ignore */}
             <motion.div style={style} className="-z-20" />
           </Fragment>
         );

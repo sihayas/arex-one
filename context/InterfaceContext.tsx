@@ -15,14 +15,15 @@ export type Page = {
   key: string;
   name: string;
   color: string;
-  sound?: AlbumData | SongData;
-  user?: UserType;
-  artifact?: Artifact;
-  scrollPosition: number;
   dimensions: {
     width: number;
     height: number;
   };
+  scrollPosition: number;
+  user?: UserType;
+  sound?: AlbumData | SongData;
+  artifact?: Artifact;
+  isOpen: boolean;
 };
 
 export type PageName = "album" | "user" | "artifact";
@@ -38,14 +39,12 @@ export type InterfaceContext = {
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   session: Session | null;
   setSession: React.Dispatch<React.SetStateAction<any>>;
-  activeFeed: "personal" | "bloom" | "recent" | null;
-  setActiveFeed: React.Dispatch<
-    React.SetStateAction<"personal" | "bloom" | "recent" | null>
-  >;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   notifs: any[];
   setNotifs: React.Dispatch<React.SetStateAction<any[]>>;
+  activePage: Page;
+  setActivePage: React.Dispatch<React.SetStateAction<Page>>;
 };
 
 // Define the props for the InterfaceProvider component
@@ -82,11 +81,15 @@ export const InterfaceContextProvider = ({
 
   // Initialize the pages array
   const [pages, setPages] = useState<Page[]>([]);
+  const [activePage, setActivePage] = React.useState<Page>(
+    pages[pages.length - 1],
+  );
 
-  // Initialize the feed stack
-  const [activeFeed, setActiveFeed] = useState<
-    "personal" | "bloom" | "recent" | null
-  >(null);
+  useEffect(() => {
+    const newActivePage = pages[pages.length - 1];
+    setActivePage(newActivePage);
+    console.log("active page changed", newActivePage);
+  }, [pages]);
 
   const [user, setUser] = useState<UserType | null>(null);
   const [session, setSessionRaw] = useState<Session | null>(null);
@@ -102,11 +105,11 @@ export const InterfaceContextProvider = ({
        * [onAuthStateChange (SIGNED\_IN event) Fired everytime I change Chrome Tab or refocus on tab . · Issue #7250 · supabase/supabase](https://github.com/supabase/supabase/issues/7250)
        */
       if (JSON.stringify(sessionRef.current) === JSON.stringify(newSession)) {
-        console.debug("SupabaseBrowserAuthManager: no update, the same");
+        // console.debug("SupabaseBrowserAuthManager: no update, the same");
         return;
       }
 
-      console.debug("SupabaseBrowserAuthManager: update, new session");
+      // console.debug("SupabaseBrowserAuthManager: update, new session");
 
       sessionRef.current = newSession;
       setSession(newSession);
@@ -116,7 +119,7 @@ export const InterfaceContextProvider = ({
 
   useEffect(() => {
     const setData = async (session: Session | null) => {
-      console.debug("Auth state changed:", { event, session });
+      // console.debug("Auth state changed:", { event, session });
       if (session) {
         setSession(session);
 
@@ -129,7 +132,6 @@ export const InterfaceContextProvider = ({
 
           if (fetchError) throw fetchError;
           setUser(userData);
-          setActiveFeed("personal");
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -181,6 +183,7 @@ export const InterfaceContextProvider = ({
           dimensions: { width: 656, height: 384 },
           scrollPosition: 0,
           color: "CCC",
+          isOpen: false,
         },
       ]);
     }
@@ -226,12 +229,12 @@ export const InterfaceContextProvider = ({
         setUser,
         session,
         setSession,
-        activeFeed,
-        setActiveFeed,
         isLoading,
         setIsLoading,
         notifs,
         setNotifs,
+        activePage,
+        setActivePage,
       }}
     >
       {children}

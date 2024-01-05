@@ -1,6 +1,6 @@
 import Layout from "../components/layout";
 import Head from "next/head";
-import React from "react";
+import React, { useEffect } from "react";
 import Dash from "@/components/global/Dash";
 import { motion } from "framer-motion";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
@@ -8,11 +8,13 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import Stream from "@/components/Stream";
 
+type Feed = "personal" | "bloom" | "recent" | null;
 export default function Home() {
-  const { activeFeed, user, pages, isVisible } = useInterfaceContext();
+  const { user } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const supabaseClient = useSupabaseClient();
-  const activePage: Page = pages[pages.length - 1];
+
+  const [activeFeed, setActiveFeed] = React.useState<Feed>("personal");
 
   if (!user) {
     return (

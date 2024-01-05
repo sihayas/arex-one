@@ -153,9 +153,9 @@ model Artifact {
   replies     Reply[]
   content     Content?
 
-  isDeleted   Boolean   @default(false) @map(name: "is_deleted")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  isDeleted   Boolean     @default(false) @map(name: "is_deleted")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   activities  Activity[]  @relation("ActivityArtifact")
 
   @@index([authorId])
@@ -229,24 +229,24 @@ model Reply {
 
 
 
-model Activity {
-  id            String          @id @default(cuid())
-  type          ActivityType
-  referenceId   String
-  createdAt     DateTime        @default(now()) @map(name: "created_at")
-  updatedAt     DateTime        @updatedAt @map(name: "updated_at")
+  model Activity {
+    id            String          @id @default(cuid())
+    type          ActivityType
+    referenceId   String
+    createdAt     DateTime        @default(now()) @map(name: "created_at")
+    updatedAt     DateTime        @updatedAt @map(name: "updated_at")
 
-  // Polymorphic relations
-  artifact      Artifact?      @relation("ActivityArtifact", fields: [referenceId], references: [id], map: "activity_artifact_id")
-  heart         Heart?         @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "activity_heart_id")
-  follow        Follows?       @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "activity_follow_id")
-  reply         Reply?         @relation("ActivityReply",   fields: [referenceId], references: [id], map: "activity_reply_id")
+    // Polymorphic relations
+    artifact      Artifact?      @relation("ActivityArtifact", fields: [referenceId], references: [id], map: "activity_artifact_id")
+    heart         Heart?         @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "activity_heart_id")
+    follow        Follows?       @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "activity_follow_id")
+    reply         Reply?         @relation("ActivityReply",   fields: [referenceId], references: [id], map: "activity_reply_id")
 
-  isDeleted     Boolean         @default(false) @map(name: "is_deleted")
-  notifications Notification[]
+    isDeleted     Boolean         @default(false) @map(name: "is_deleted")
+    notifications Notification[]
 
-  @@index([referenceId])
-}
+    @@index([referenceId])
+  }
 
 enum ActivityType {
   artifact

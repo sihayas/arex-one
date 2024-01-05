@@ -7,12 +7,10 @@ import { motion, useAnimate } from "framer-motion";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const user = useUser();
-  const { isVisible, setIsVisible, pages } = useInterfaceContext();
+  const { isVisible, setIsVisible, pages, activePage } = useInterfaceContext();
   const { inputRef } = useNavContext();
   const mainContentRef = useRef<HTMLElement>(null);
   const [scope, animate] = useAnimate();
-
-  const activePage: Page = pages[pages.length - 1];
 
   useEffect(() => {
     const animateMainContent = async () => {
@@ -81,7 +79,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       {/* Interface */}
-      {user && pages.length > 0 && (
+      {user && activePage && (
         <motion.div
           animate={{
             opacity: isVisible ? 1 : 0,

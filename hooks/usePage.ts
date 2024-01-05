@@ -26,6 +26,7 @@ export const useArtifact = (artifact: Artifact) => {
         scrollPosition: 0,
         artifact: artifact,
         color: artifact.appleData.attributes.artwork.bgColor,
+        isOpen: false,
       },
     ]);
     setThreadcrumbs([artifact.id]);
@@ -44,9 +45,10 @@ export const useUser = (author: UserType) => {
         key: uuidv4(),
         name: "user",
         user: author,
-        dimensions: { width: 656, height: 384 },
+        dimensions: { width: 656, height: 656 },
         scrollPosition: 0,
         color: "CCC",
+        isOpen: false,
       },
     ]);
     setIsVisible(true);
@@ -72,6 +74,7 @@ export const useSound = () => {
         },
         scrollPosition: 0,
         color: sound.attributes.artwork.bgColor,
+        isOpen: false,
       },
     ]);
     setIsVisible(true);

@@ -23,35 +23,6 @@ async function enrichEssentialsWithAlbumData(essentials: Essential[]) {
   }));
 }
 
-async function enrichArtifactsWithSoundData(artifacts: Artifact[]) {
-  if (artifacts.length === 0) {
-    return artifacts;
-  }
-
-  // Separate the ids by type
-  const idTypes = { albums: [], songs: [] };
-  artifacts.forEach((artifact) => {
-    // @ts-ignore
-    idTypes[artifact.sound.type].push(artifact.sound.appleId);
-  });
-
-  // Fetch data for both types
-  const responseData = await fetchAndCacheSoundsByTypes(idTypes);
-
-  // Function to map sound data
-  // @ts-ignore
-  const mapSoundData = (artifact, appleData) => ({
-    ...artifact,
-    appleData: appleData.get(artifact.sound.appleId),
-  });
-
-  // Enrich artifacts with sound data
-  return artifacts.map((artifact) => {
-    const type = artifact.sound.type;
-    return mapSoundData(artifact, responseData[type]);
-  });
-}
-
 async function countUniqueAlbumsAndTracks(
   userId: string,
 ): Promise<{ soundCount: number }> {
@@ -95,10 +66,6 @@ export default async function handle(
     // Attach album data to essentials
     pageUserData.essentials = await enrichEssentialsWithAlbumData(
       pageUserData.essentials,
-    );
-
-    pageUserData.artifact = await enrichArtifactsWithSoundData(
-      pageUserData.artifact,
     );
 
     const { soundCount } = await countUniqueAlbumsAndTracks(pageUserId);

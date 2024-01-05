@@ -2,6 +2,8 @@ import axios from "axios";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { attachSoundData } from "@/lib/apiHelper/feed";
+import { Artifact } from "@/types/dbTypes";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
 export const followUser = async (followerId: string, followingId: string) => {
   await axios.post(`/api/user/post/follow`, { followerId, followingId });
@@ -73,11 +75,11 @@ export const useUserSettingsQuery = (userId: string) => {
   return { data, isLoading, isError };
 };
 
-export const useSoundtrackQuery = (userId: string) => {
+export const useEntriesQuery = (userId: string) => {
   return useInfiniteQuery(
-    ["soundtrack", userId],
+    ["entries", userId],
     async ({ pageParam = 1 }) => {
-      const url = `/api/user/get/soundtrack`;
+      const url = `/api/user/get/entries`;
       const { data } = await axios.get(url, {
         params: {
           userId,
@@ -89,6 +91,35 @@ export const useSoundtrackQuery = (userId: string) => {
       const { activities, pagination } = data.data;
 
       const mergedData = await attachSoundData(activities);
+
+      return { data: mergedData, pagination };
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
+      enabled: !!userId,
+      refetchOnWindowFocus: false,
+    },
+  );
+};
+
+export const useSoundsQuery = (userId: string) => {
+  return useInfiniteQuery(
+    ["sounds", userId],
+    async ({ pageParam = 1 }) => {
+      const url = `/api/user/get/sounds`;
+      const { data } = await axios.get(url, {
+        params: {
+          userId,
+          page: pageParam,
+          limit: 8,
+        },
+      });
+
+      const { artifacts, pagination } = data.data;
+
+      console.log("artifacts", artifacts);
+
+      const mergedData = await attachSoundDataToArtifacts(artifacts);
 
       return { data: mergedData, pagination };
     },
@@ -184,4 +215,38 @@ export const changeBio = async (userId: string, bio: string) => {
     userId,
     bio,
   });
+};
+
+export const attachSoundDataToArtifacts = async (artifacts: Artifact[]) => {
+  const albumIds: string[] = [];
+  const songIds: string[] = [];
+
+  // Loop through each artifact to collect album and song IDs
+  artifacts.forEach((artifact) => {
+    const { type, appleId } = artifact.sound;
+    if (type === "albums") albumIds.push(appleId);
+    else if (type === "songs") songIds.push(appleId);
+  });
+
+  // Fetch album and track data
+  const idTypes = { albums: albumIds, songs: songIds };
+  const response = await axios.get(`/api/caches/sounds`, {
+    params: { idTypes: JSON.stringify(idTypes) },
+  });
+  const { albums, songs } = response.data;
+
+  // Create maps for albums and tracks
+  const albumMap = new Map(albums.map((album: AlbumData) => [album.id, album]));
+  const songMap = new Map(songs.map((song: SongData) => [song.id, song]));
+
+  // Attach album and track data to artifacts
+  artifacts.forEach((artifact) => {
+    const { type, appleId } = artifact.sound;
+    if (type === "albums")
+      artifact.appleData = albumMap.get(appleId) as AlbumData;
+    else if (type === "songs")
+      artifact.appleData = songMap.get(appleId) as SongData;
+  });
+
+  return artifacts;
 };

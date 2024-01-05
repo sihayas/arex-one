@@ -1,23 +1,27 @@
 import React, { useEffect, useRef } from "react";
-import { useSoundtrackQuery } from "@/lib/apiHelper/user";
+import { useEntriesQuery } from "@/lib/apiHelper/user";
 import { useMotionValueEvent, useScroll, motion } from "framer-motion";
-import { useInterfaceContext } from "@/context/InterfaceContext";
 import { User } from "@/components/artifacts/User";
 import { ArtifactExtended } from "@/types/globalTypes";
 
-const Soundtrack = ({ userId }: { userId: string }) => {
+const Entries = ({ userId }: { userId: string }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
+  const { scrollYProgress } = useScroll({
+    container: containerRef,
+  });
+
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSoundtrackQuery(userId);
+    useEntriesQuery(userId);
 
   const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
 
   if (!data) return;
+
   return (
     <div
       ref={containerRef}
-      className={`absolute right-0 top-0 flex flex-col items-center w-[352px] h-[608px] overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none `}
+      className={`pl-[208px] absolute right-0 top-0 flex flex-col items-center w-full h-full overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none`}
     >
       {allActivities.map((activity, index) => {
         if (!activity.artifact) return null;
@@ -35,4 +39,4 @@ const Soundtrack = ({ userId }: { userId: string }) => {
   );
 };
 
-export default Soundtrack;
+export default Entries;

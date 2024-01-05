@@ -22,20 +22,6 @@ async function fetchOrCacheUser(userId: string) {
             where: { isDeleted: false },
             select: { followerId: true },
           },
-          artifact: {
-            where: { isDeleted: false, type: "entry" },
-            orderBy: { createdAt: "desc" },
-            take: 5,
-            select: {
-              id: true,
-              sound: { select: { appleId: true, type: true } },
-              content: {
-                select: {
-                  rating: true,
-                },
-              },
-            },
-          },
           username: true,
           id: true,
           image: true,
