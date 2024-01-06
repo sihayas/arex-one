@@ -14,6 +14,19 @@ const Sounds = ({ userId }: { userId: string }) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSoundsQuery(userId);
 
+  useMotionValueEvent(scrollYProgress, "change", async () => {
+    const progress = scrollYProgress.get();
+
+    if (progress > 0.9 && hasNextPage && !isFetchingNextPage) {
+      try {
+        await fetchNextPage();
+      } catch (error) {
+        console.error("Error fetching next page:", error);
+      } finally {
+      }
+    }
+  });
+
   const artifacts = data ? data.pages.flatMap((page) => page.data) : [];
 
   if (!data) return;

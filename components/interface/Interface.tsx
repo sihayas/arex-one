@@ -269,7 +269,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
             <ActiveComponent />
           </AnimatePresence>
         </motion.div>
-        {/*<Nav />*/}
+        <Nav />
       </Command>
     </motion.div>
   );

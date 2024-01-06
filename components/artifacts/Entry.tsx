@@ -68,17 +68,18 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         onClick={handleEntryClick}
         transition={{ type: "spring", stiffness: 180, damping: 18 }}
         style={{
-          width: 336,
-          height: 432,
+          width: 288,
+          height: 368,
         }}
         className={`flex flex-col rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden`}
       >
         <div className={`absolute top-0 left-0 z-10 p-2`}>
-          <EntryDial rating={artifact.content!.rating!} />
+          {/*<EntryDial rating={artifact.content!.rating!} />*/}
           <div
-            className={`font-serif text-[32px] leading-[21px] text-white center-x center-y absolute`}
+            className={`font-semibold text-xs text-gray3 left-8 top-8 absolute w-max`}
           >
-            {artifact.content!.rating}
+            {/*{artifact.content!.rating}*/}
+            RX ENTRY
           </div>
         </div>
 
@@ -97,10 +98,10 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           style={{
             background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
           }}
-          className="absolute bottom-0 w-full h-[60%] pointer-events-none"
+          className="absolute bottom-0 w-full h-full pointer-events-none"
         />
         <div
-          className={`absolute px-8 text-base text-white font-semibold   line-clamp-4 bottom-[26px] pointer-events-none will-change-transform`}
+          className={`absolute px-8 text-base text-white font-bold line-clamp-4 bottom-[26px] pointer-events-none will-change-transform`}
         >
           {artifact.content?.text}
         </div>
@@ -121,7 +122,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute left-[52px] w-[336px] h-[432px] -z-10`}
+        className={`absolute left-[52px] w-[288px] h-[368px] -z-10`}
       />
     </div>
   );

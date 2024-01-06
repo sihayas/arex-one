@@ -22,7 +22,6 @@ export const Sound: React.FC<SoundProps> = ({
   containerRef,
   index,
 }) => {
-  const user = useUser();
   const isEven = index % 2 === 0;
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
