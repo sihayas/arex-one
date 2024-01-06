@@ -1,37 +1,36 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { useNavContext } from "@/context/NavContext";
 
 interface EntryDialProps {
   rating: number;
 }
 
 const EntryDial = ({ rating }: EntryDialProps) => {
-  const { inputRef } = useNavContext();
   const dialRef = useRef<SVGSVGElement>(null);
-  const strokeWidth = 4;
-  const dotRadius = 1.5;
-  const radius = 30;
-  const viewBoxSize = radius * 2 + strokeWidth;
+  const strokeWidth = 2;
+  const dotRadius = 1;
+
+  const totalSize = 32;
+  const radius = (totalSize - strokeWidth) / 2;
+
+  const viewBoxSize = totalSize; // adjusted viewBox size
   const circumference = 2 * Math.PI * radius;
 
   const maxRating = 5;
-
-  const [currentRating, setCurrentRating] = useState(rating);
-  const colors = ["#FFF", "#FF3319", "#FFFF00", "#A6FF47", "#4733ff"];
+  const colors = ["#000", "#000", "#000", "#000", "#000"];
   const [currentColor, setCurrentColor] = useState(colors[0]);
 
   useEffect(() => {
-    const colorIndex = Math.min(Math.floor(currentRating), colors.length - 1);
+    const colorIndex = Math.min(Math.floor(rating), colors.length - 1);
     setCurrentColor(colors[colorIndex]);
-  }, [colors, currentRating]);
+  }, [colors, rating]);
 
   const calculateStrokeLength = (rating: number) => {
     return (rating / maxRating) * circumference;
   };
 
   const calculateDotPosition = (rating: number) => {
-    const offsetAngle = 36; // 10% of circumference - 10 rating increments
+    const offsetAngle = 36;
     const angle = (rating / maxRating) * 360 - 90 + offsetAngle;
     const angleRad = (Math.PI / 180) * angle;
     const x = Math.cos(angleRad) * radius + radius + strokeWidth / 2;
@@ -39,11 +38,10 @@ const EntryDial = ({ rating }: EntryDialProps) => {
     return { x, y };
   };
 
-  const segmentLength = calculateStrokeLength(currentRating);
-  const dotPosition = calculateDotPosition(currentRating);
+  const segmentLength = calculateStrokeLength(rating);
+  const dotPosition = calculateDotPosition(rating);
 
-  // Subtract to make spacing for background segment length
-  let backgroundSegmentLength = circumference - segmentLength - 38;
+  let backgroundSegmentLength = circumference - segmentLength - 18;
   backgroundSegmentLength = Math.max(backgroundSegmentLength, 0);
 
   return (
@@ -59,10 +57,10 @@ const EntryDial = ({ rating }: EntryDialProps) => {
         cy={viewBoxSize / 2}
         r={radius}
         fill="none"
-        stroke="#FFF"
+        stroke="#CCC"
         strokeWidth={strokeWidth}
         // rotate the white dash
-        strokeDashoffset={circumference / 4 - 9.5}
+        strokeDashoffset={circumference / 4 - 4}
         strokeLinecap="round"
         initial={{
           transform: "scaleX(-1)",
@@ -83,7 +81,7 @@ const EntryDial = ({ rating }: EntryDialProps) => {
         fill="none"
         stroke={currentColor}
         strokeWidth={strokeWidth}
-        strokeDashoffset={circumference / 4 - 9.5}
+        strokeDashoffset={circumference / 4 - 5}
         strokeLinecap="round"
         animate={{
           stroke: currentColor,

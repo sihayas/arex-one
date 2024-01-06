@@ -30,6 +30,8 @@ module.exports = {
           "0px 2px 4px 0px rgba(0, 0, 0, 0.10), 0px 7px 7px 0px rgba(0, 0, 0, 0.09), 0px 16px 10px 0px rgba(0, 0, 0, 0.05), 0px 28px 11px 0px rgba(0, 0, 0, 0.01), 0px 44px 12px 0px rgba(0, 0, 0, 0.00);",
         essentials:
           "0px 11px 24px 0px rgba(0, 0, 0, 0.10), 0px 43px 43px 0px rgba(0, 0, 0, 0.09), 0px 97px 58px 0px rgba(0, 0, 0, 0.05), 0px 173px 69px 0px rgba(0, 0, 0, 0.01), 0px 271px 76px 0px rgba(0, 0, 0, 0.00)",
+        cardArt:
+          "0px -4px 9px 0px rgba(0, 0, 0, 0.10), 0px -16px 16px 0px rgba(0, 0, 0, 0.09), 0px -35px 21px 0px rgba(0, 0, 0, 0.05), 0px -63px 25px 0px rgba(0, 0, 0, 0.01), 0px -98px 27px 0px rgba(0, 0, 0, 0.00)",
       },
       borderRadius: {
         full: "32px",

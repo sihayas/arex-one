@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact, useSound } from "@/hooks/usePage";
@@ -19,11 +19,22 @@ interface NewAProps {
 export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const user = useUser();
   const { handleSelectSound } = useSound();
+  const [hoverContent, setHoverContent] = useState(false);
+
+  const variants = {
+    initial: { translateY: 64 },
+    hover: {
+      translateY: 0,
+    },
+    hoverContent: {
+      translateY: 272,
+    },
+  };
 
   const sound = artifact.appleData;
   const artwork = sound.attributes.artwork.url
-    .replace("{w}", "1148")
-    .replace("{h}", "1148");
+    .replace("{w}", "720")
+    .replace("{h}", "720");
   const color = sound.attributes.artwork.bgColor;
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
@@ -66,52 +77,67 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       {/* Content Inner / Card */}
       <motion.div
         onClick={handleEntryClick}
-        transition={{ type: "spring", stiffness: 180, damping: 18 }}
         style={{
           width: 288,
           height: 368,
         }}
-        className={`flex flex-col rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden`}
+        className={`flex flex-col p-6 rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white`}
       >
-        <div className={`absolute top-0 left-0 z-10 p-2`}>
-          {/*<EntryDial rating={artifact.content!.rating!} />*/}
-          <div
-            className={`font-semibold text-xs text-gray3 left-8 top-8 absolute w-max`}
-          >
-            {/*{artifact.content!.rating}*/}
-            RX ENTRY
+        {/* Content Container */}
+        <motion.div
+          onHoverStart={() => setHoverContent(true)}
+          onHoverEnd={() => setHoverContent(false)}
+          className={`flex flex-col gap-6`}
+        >
+          <div className={`flex items-center justify-between w-full`}>
+            <div className={`relative`}>
+              <EntryDial rating={artifact.content!.rating!} />
+              <div
+                className={`font-serif text-base leading-[11px] font-semibold text-black center-x center-y absolute`}
+              >
+                {artifact.content!.rating}
+              </div>
+            </div>
+
+            <div className={`flex flex-col items-end gap-3`}>
+              <div className={`text-sm text-gray2 leading-[9px]`}>
+                {sound.attributes.artistName}
+              </div>
+              <div
+                className={`font-semibold text-base text-black leading-[11px]`}
+              >
+                {sound.attributes.name}
+              </div>
+            </div>
           </div>
-        </div>
 
-        <Image
-          className={`cursor-pointer `}
-          src={artwork}
-          alt={`artwork`}
-          loading="lazy"
-          quality={100}
-          style={{ objectFit: "cover" }}
-          fill={true}
-        />
-        {/* Gradient */}
+          <div className={`text-base text-black line-clamp-[12]`}>
+            {artifact.content?.text}
+          </div>
+        </motion.div>
 
-        <div
-          style={{
-            background: `linear-gradient(to top, #${color}, rgba(0,0,0,0)`,
+        {/* Artwork */}
+        <motion.div
+          className="cursor-pointer absolute bottom-0 left-0 rounded-2xl shadow-cardArt overflow-hidden"
+          variants={variants}
+          animate={hoverContent ? "hoverContent" : "initial"}
+          whileHover="hover"
+          transition={{
+            type: "spring",
+            stiffness: 357,
+            damping: 26,
+            mass: 1.5,
           }}
-          className="absolute bottom-0 w-full h-full pointer-events-none"
-        />
-        <div
-          className={`absolute px-8 text-base text-white font-bold line-clamp-4 bottom-[26px] pointer-events-none will-change-transform`}
         >
-          {artifact.content?.text}
-        </div>
-
-        {/* Name */}
-        <p
-          className={`absolute -bottom-[13px] left-2 text-[#000] font-medium text-xs leading-[9px]`}
-        >
-          {artifact.author.username}
-        </p>
+          <Image
+            src={artwork}
+            alt={`artwork`}
+            loading="lazy"
+            quality={100}
+            width={288}
+            height={288}
+          />
+        </motion.div>
       </motion.div>
 
       {/* Ambien */}
@@ -127,145 +153,3 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     </div>
   );
 };
-
-{
-  /*<div*/
-}
-{
-  /*  className={`pointer-events-none absolute bottom-0 left-0 w-full h-1/2 z-0`}*/
-}
-{
-  /*>*/
-}
-{
-  /*  <div className={`w-full h-full relative`}>*/
-}
-{
-  /*    <BlurDiv*/
-}
-{
-  /*      zIndex={1}*/
-}
-{
-  /*      blurValue={0.25}*/
-}
-{
-  /*      gradientStops="rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 12.5%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0) 37.5%"*/
-}
-{
-  /*    />*/
-}
-{
-  /*    <BlurDiv*/
-}
-{
-  /*      zIndex={2}*/
-}
-{
-  /*      blurValue={0.5}*/
-}
-{
-  /*      gradientStops="rgba(0, 0, 0, 0) 12.5%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 1) 37.5%, rgba(0, 0, 0, 0) 50%"*/
-}
-{
-  /*    />*/
-}
-{
-  /*    <BlurDiv*/
-}
-{
-  /*      zIndex={3}*/
-}
-{
-  /*      blurValue={0.75}*/
-}
-{
-  /*      gradientStops="rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 1) 37.5%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 62.5%"*/
-}
-{
-  /*    />*/
-}
-{
-  /*    <BlurDiv*/
-}
-{
-  /*      zIndex={4}*/
-}
-{
-  /*      blurValue={1}*/
-}
-{
-  /*      gradientStops="rgba(0, 0, 0, 0) 37.5%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 62.5%, rgba(0, 0, 0, 0) 75%"*/
-}
-{
-  /*    />*/
-}
-{
-  /*    <BlurDiv*/
-}
-{
-  /*      zIndex={5}*/
-}
-{
-  /*      blurValue={1.25}*/
-}
-{
-  /*      gradientStops="rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 62.5%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 87.5%"*/
-}
-{
-  /*    />*/
-}
-{
-  /*    <BlurDiv*/
-}
-{
-  /*      zIndex={6}*/
-}
-{
-  /*      blurValue={1.5}*/
-}
-{
-  /*      gradientStops="rgba(0, 0, 0, 0) 62.5%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 1) 87.5%, rgba(0, 0, 0, 0) 100%"*/
-}
-{
-  /*    />*/
-}
-{
-  /*    <BlurDiv*/
-}
-{
-  /*      zIndex={7}*/
-}
-{
-  /*      blurValue={2}*/
-}
-{
-  /*      gradientStops="rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 1) 87.5%, rgba(0, 0, 0, 1) 100%"*/
-}
-{
-  /*    />*/
-}
-{
-  /*    <BlurDiv*/
-}
-{
-  /*      zIndex={8}*/
-}
-{
-  /*      blurValue={2.5}*/
-}
-{
-  /*      gradientStops="rgba(0, 0, 0, 0) 87.5%, rgba(0, 0, 0, 1) 100%"*/
-}
-{
-  /*      className="bg-mauve-light-2 dark:bg-mauve-dark-2"*/
-}
-{
-  /*    />*/
-}
-{
-  /*  </div>*/
-}
-{
-  /*</div>*/
-}

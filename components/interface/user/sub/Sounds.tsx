@@ -34,7 +34,7 @@ const Sounds = ({ userId }: { userId: string }) => {
   return (
     <div
       ref={containerRef}
-      className={`pl-[208px] absolute right-0 top-0 flex flex-col items-center w-full h-full overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none`}
+      className={`pl-[208px] gap-8 absolute left-0 top-0 flex flex-wrap w-full h-full overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none`}
     >
       {artifacts.map((artifact, index) => {
         const artifactExtended = artifact as ArtifactExtended;
