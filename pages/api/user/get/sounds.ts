@@ -18,16 +18,19 @@ export default async function getUniqueAlbumsByUserId(
   try {
     const artifacts = await prisma.artifact.findMany({
       where: {
-        AND: [
-          { authorId: userId }, // Artifacts created by the user
-          { type: "entry" }, // Artifacts of type 'entry'
-        ],
+        AND: [{ authorId: userId }, { type: "entry" }],
       },
       select: {
         sound: {
           select: {
             appleId: true,
             type: true,
+          },
+        },
+        content: {
+          select: {
+            rating: true,
+            id: true,
           },
         },
       },

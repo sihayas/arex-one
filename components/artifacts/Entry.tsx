@@ -22,12 +22,14 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const [hoverContent, setHoverContent] = useState(false);
 
   const variants = {
-    initial: { translateY: 64 },
+    initial: { translateY: 64, borderRadius: 16 },
     hover: {
       translateY: 0,
+      borderRadius: 24,
     },
     hoverContent: {
       translateY: 272,
+      borderRadius: 8,
     },
   };
 
@@ -57,7 +59,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <div className={`flex items-end gap-2.5 relative group w-[388px] group`}>
+    <div className={`flex items-start gap-2.5 relative group w-[388px] group`}>
       <Avatar
         className={`h-[42px] border border-silver`}
         imageSrc={artifact.author.image}
@@ -76,7 +78,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       />
       {/* Content Inner / Card */}
       <motion.div
-        onClick={handleEntryClick}
         style={{
           width: 288,
           height: 368,
@@ -87,9 +88,10 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         <motion.div
           onHoverStart={() => setHoverContent(true)}
           onHoverEnd={() => setHoverContent(false)}
-          className={`flex flex-col gap-6`}
+          className={`flex flex-col gap-[18px]`}
+          onClick={handleEntryClick}
         >
-          <div className={`flex items-center justify-between w-full`}>
+          <div className={`flex items-center gap-4 justify-between w-full`}>
             <div className={`relative`}>
               <EntryDial rating={artifact.content!.rating!} />
               <div
@@ -99,12 +101,12 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
               </div>
             </div>
 
-            <div className={`flex flex-col items-end gap-3`}>
+            <div className={`flex flex-col items-end gap-2`}>
               <div className={`text-sm text-gray2 leading-[9px]`}>
                 {sound.attributes.artistName}
               </div>
               <div
-                className={`font-semibold text-base text-black leading-[11px]`}
+                className={`font-semibold text-base text-black leading-[11px] line-clamp-1`}
               >
                 {sound.attributes.name}
               </div>
@@ -114,20 +116,23 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           <div className={`text-base text-black line-clamp-[12]`}>
             {artifact.content?.text}
           </div>
+
+          <div></div>
         </motion.div>
 
         {/* Artwork */}
         <motion.div
-          className="cursor-pointer absolute bottom-0 left-0 rounded-2xl shadow-cardArt overflow-hidden"
+          className="cursor-pointer absolute bottom-0 left-0 shadow-cardArt overflow-hidden"
           variants={variants}
           animate={hoverContent ? "hoverContent" : "initial"}
           whileHover="hover"
           transition={{
             type: "spring",
             stiffness: 357,
-            damping: 26,
+            damping: 38,
             mass: 1.5,
           }}
+          onClick={handleSoundClick}
         >
           <Image
             src={artwork}

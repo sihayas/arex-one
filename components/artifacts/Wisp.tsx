@@ -11,12 +11,13 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 
 import Image from "next/image";
+import EntryDial from "@/components/global/EntryDial";
 
-interface NewWProps {
+interface WispProps {
   artifact: ArtifactExtended;
 }
 
-export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
+export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   const user = useUser();
   const { handleSelectSound } = useSound();
 
@@ -47,108 +48,91 @@ export const Wisp: React.FC<NewWProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <motion.div className="flex flex-col gap-4 w-[438px]">
-      {/* Artwork Capsule */}
-      <div
-        onClick={handleSoundClick}
-        className={`flex items-center gap-4 w-[468px] h-fit relative ml-[54px]`}
-      >
-        <div className={`p-2 bg-[#F4F4F4]/50  rounded-[24px]`}>
+    <div className={`flex items-start gap-2.5 relative group w-[388px] group`}>
+      <Avatar
+        className={`h-[42px] border border-silver`}
+        imageSrc={artifact.author.image}
+        altText={`${artifact.author.username}'s avatar`}
+        width={42}
+        height={42}
+        user={artifact.author}
+      />
+      {/* Stars */}
+      <Heart
+        handleHeartClick={handleHeartClick}
+        hearted={hearted}
+        className="absolute -top-[28px] left-[46px]"
+        heartCount={heartCount}
+        replyCount={artifact._count.replies}
+      />
+      {/* Content Inner / Card */}
+      <motion.div className="flex flex-col gap-4 w-[240px] h-[316px] bg-white p-6 shadow-shadowKitHigh rounded-3xl">
+        <div className={`flex items-end justify-between gap-1.5`}>
+          <div className={`flex flex-col gap-2`}>
+            <p className={`text-gray2 text-sm leading-[9px]`}>
+              {sound.attributes.artistName}
+            </p>
+            <p className={`text-gray2 text-base font-semibold`}>
+              {sound.attributes.name}
+            </p>
+          </div>
           <Image
             className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
             src={artwork}
             alt={`artwork`}
             loading="lazy"
             quality={100}
-            width={128}
-            height={128}
+            width={72}
+            height={72}
           />
         </div>
 
-        {/* Names */}
-        <div className={`flex flex-col gap-1`}>
-          <p className={`text-[#000] font-medium text-base  w-[162px]`}>
-            {sound.attributes.name}
-          </p>
-          <p className={`text-[#000] font text-sm  min-w-[162px]`}>
-            {sound.attributes.artistName}
-          </p>
-        </div>
-        {/* Blur Color */}
         <div
-          style={{
-            background: `#${color}`,
-            backgroundRepeat: "repeat, no-repeat",
-          }}
-          className={`absolute left-0 top-0 w-full h-full -z-10 rounded-full`}
-        />
-      </div>
-
-      {/* Attribution & Content */}
-      <div className={`flex items-end w-full z-10 mix-blend-multiply`}>
-        {/* Avatar*/}
-        <Avatar
-          className={`h-[42px] border border-silver`}
-          imageSrc={artifact.author.image}
-          altText={`${artifact.author.username}'s avatar`}
-          width={42}
-          height={42}
-          user={artifact.author}
-        />
-        <div className={`flex flex-col gap-2`}></div>
-
-        {/* Rating, content & bubbles */}
-        <div
-          className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[384px] w-fit mb-3 ml-3`}
+          onClick={handleEntryClick}
+          className={`break-words line-clamp-[8] w-full text-base text-gray2 `}
         >
-          {/* Content */}
-          <div
-            onClick={handleEntryClick}
-            className={`break-words line-clamp-6 w-full text-base text-gray5 cursor-pointer`}
-          >
-            {artifact.content?.text}
-          </div>
-
-          {/* Name */}
-          <p
-            className={`absolute -bottom-[13px] left-2 text-gray2 font-medium text-xs leading-[9px]`}
-          >
-            {artifact.author.username}
-          </p>
-
-          {/* Bubbles */}
-          <div className={`w-3 h-3 absolute -bottom-1 -left-1`}>
-            <div
-              className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
-            />
-            <div
-              className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
-            />
-          </div>
+          {artifact.content?.text}
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+      {/* Ambien */}
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        style={{
+          background: `#${color}`,
+          backgroundRepeat: "repeat, no-repeat",
+        }}
+        className={`absolute left-[52px] w-[240px] h-[316px] -z-10`}
+      />
+    </div>
   );
 };
 
-{
-  /*<Heart*/
-}
-{
-  /*  handleHeartClick={handleHeartClick}*/
-}
-{
-  /*  hearted={hearted}*/
-}
-{
-  /*  className="absolute -bottom-1 -right-1"*/
-}
-{
-  /*  heartCount={heartCount}*/
-}
-{
-  /*  replyCount={artifact._count.replies}*/
-}
-{
-  /*/>*/
-}
+// <motion.div className="flex flex-col gap-4 w-[240px] h-[316px] bg-white p-6 shadow-shadowKitHigh rounded-3xl">
+//     <div className={`flex items-end justify-between gap-1.5`}>
+//         <div className={`flex flex-col gap-2`}>
+//             <p className={`text-gray2 text-sm leading-[9px]`}>
+//                 {sound.attributes.artistName}
+//             </p>
+//             <p className={`text-gray2 text-base font-semibold`}>
+//                 {sound.attributes.name}
+//             </p>
+//         </div>
+//         <Image
+//             className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
+//             src={artwork}
+//             alt={`artwork`}
+//             loading="lazy"
+//             quality={100}
+//             width={72}
+//             height={72}
+//         />
+//     </div>
+//
+//     <div
+//         onClick={handleEntryClick}
+//         className={`break-words line-clamp-[8] w-full text-base text-gray2 `}
+//     >
+//         {artifact.content?.text}
+//     </div>
+// </motion.div>

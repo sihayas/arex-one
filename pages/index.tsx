@@ -63,7 +63,7 @@ export default function Home() {
         >
           {/*  Blur Backdrop */}
           <div
-            className={`absolute top-0 center-x w-full h-full bg-white/0 backdrop-blur-[60px] pointer-events-none z-0`}
+            className={`absolute top-0 center-x w-full h-full bg-white/40 backdrop-blur-[72px] pointer-events-none z-0`}
           ></div>
 
           {activeFeed === "bloom" ? (

@@ -24,7 +24,6 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
           width: `144px`,
           height: `144px`,
           position: "absolute",
-          borderRadius: "50%",
         };
         if (i === 0) {
           //@ts-ignore
