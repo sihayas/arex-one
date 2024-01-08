@@ -7,10 +7,10 @@ import Essentials from "@/components/interface/user/sub/Essentials";
 import Settings from "@/components/interface/user/sub/Settings";
 import { SettingsIcon, TailIcon } from "@/components/icons";
 import FollowButton from "./sub/components/Link";
-import Soundtrack from "@/components/interface/user/sub/Entries";
 import Sideline from "@/components/interface/user/sub/Sideline";
 import Entries from "@/components/interface/user/sub/Entries";
 import Sounds from "@/components/interface/user/sub/Sounds";
+import Wisps from "@/components/interface/user/sub/Wisps";
 
 export type Section = "essentials" | "sounds" | "entries" | "wisps";
 
@@ -73,6 +73,7 @@ const User = () => {
             )}
             {activeSection === "entries" && <Entries userId={user.id} />}
             {activeSection === "sounds" && <Sounds userId={user.id} />}
+            {activeSection === "wisps" && <Wisps userId={user.id} />}
           </motion.div>
         </AnimatePresence>
       </motion.div>

@@ -21,10 +21,7 @@ export default async function getUniqueAlbumsByUserId(
 
   try {
     const activities = await prisma.activity.findMany({
-      where: {
-        artifact: { authorId: userId, type: "entry" },
-        type: "artifact",
-      },
+      where: { artifact: { authorId: userId, type: "wisp" }, type: "artifact" },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit + 1,

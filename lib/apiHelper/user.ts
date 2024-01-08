@@ -117,9 +117,34 @@ export const useSoundsQuery = (userId: string) => {
 
       const { artifacts, pagination } = data.data;
 
-      console.log("artifacts", artifacts);
-
       const mergedData = await attachSoundDataToArtifacts(artifacts);
+
+      return { data: mergedData, pagination };
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
+      enabled: !!userId,
+      refetchOnWindowFocus: false,
+    },
+  );
+};
+
+export const useWispsQuery = (userId: string) => {
+  return useInfiniteQuery(
+    ["wisps", userId],
+    async ({ pageParam = 1 }) => {
+      const url = `/api/user/get/wisps`;
+      const { data } = await axios.get(url, {
+        params: {
+          userId,
+          page: pageParam,
+          limit: 8,
+        },
+      });
+
+      const { activities, pagination } = data.data;
+
+      const mergedData = await attachSoundData(activities);
 
       return { data: mergedData, pagination };
     },
