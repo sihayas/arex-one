@@ -7,10 +7,12 @@ import {
   useTransform,
 } from "framer-motion";
 import { Section } from "@/components/interface/user/User";
+import Image from "next/image";
 
 const lineConfig = {
-  stiffness: 280,
+  stiffness: 400,
   damping: 20,
+  mass: 0.1,
 };
 
 interface StatlineProps {
@@ -52,17 +54,17 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
   const topLineHeightOutput = useTransform(
     scrollYProgress,
     [0, 0.33, 0.66, 0.99],
-    [16, 56, 96, 136],
+    [20, 100, 169, 236],
   );
   const dotYPositionOutput = useTransform(
     scrollYProgress,
     [0, 0.33, 0.66, 0.99],
-    [24, 64, 104, 144],
+    [28, 108, 177, 244],
   );
   const bottomLineHeightOutput = useTransform(
     scrollYProgress,
     [0, 0.33, 0.66, 0.99],
-    [280, 240, 200, 160],
+    [276, 196, 127, 60],
   );
 
   const topLineHeight = useSpring(topLineHeightOutput, lineConfig);
@@ -72,7 +74,7 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
   return (
     <motion.div
       ref={scrollContainer}
-      className="flex flex-col w-[8px] h-[320px] overflow-y-auto snap-y snap-mandatory relative scrollbar-none"
+      className="flex flex-col w-full h-[320px] overflow-y-auto snap-y snap-mandatory relative scrollbar-none z-50"
     >
       <Section
         title={"essentials"}
@@ -98,34 +100,80 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
       {/* Sideline */}
       <div className={`fixed pointer-events-none w-[8px] h-[320px]`}>
         {/* Data */}
-        <div
-          className={`absolute top-[22.5px] left-4 flex flex-col gap-[29px] text-base font-medium tracking-tighter`}
-        >
-          <motion.div className={`relative flex justify-start gap-1`}>
-            <motion.p className={`leading-[11px]`}>RX</motion.p>
-            <motion.p className={`text-xs leading-[8px]`}>essentials</motion.p>
-          </motion.div>
+        <div className={`absolute left-4 flex flex-col gap-8`}>
+          <Image
+            className={`rounded-max shadow-shadowKitHigh`}
+            src={userData.image}
+            alt={`${userData.name}'s avatar`}
+            width={64}
+            height={64}
+          />
 
-          <motion.div className={`relative flex justify-start gap-1`}>
-            <motion.p className={`leading-[11px]`}>
-              {userData.soundCount}
-            </motion.p>
-            <motion.p className={`text-xs leading-[8px]`}>sounds</motion.p>
-          </motion.div>
+          {/* Sounds */}
+          <div className={`flex items-center gap-4`}>
+            <div
+              className={`bg-white rounded-[6px] shadow-shadowKitLow w-8 h-8 z-10 outline outline-silver outline-1 `}
+            />
+            <div
+              className={`bg-white rounded w-6 h-6 -ml-9 outline outline-1 outline-silver`}
+            />
+            <motion.div
+              className={`flex items-center gap-1 text-black bg-[#E5E5E5] rounded-full p-2`}
+            >
+              <motion.p
+                className={`text-base font-medium leading-[11px] text-black`}
+              >
+                {userData.soundCount}
+              </motion.p>
+              <motion.p className={`text-base leading-[11px] text-black`}>
+                sounds
+              </motion.p>
+            </motion.div>
+          </div>
 
-          <motion.div className={`relative flex justify-start gap-1`}>
-            <motion.p className={`leading-[11px]`}>
-              {userData._count.artifact}
-            </motion.p>
-            <motion.p className={`text-xs leading-[8px]`}>entries</motion.p>
-          </motion.div>
+          {/* Entries */}
+          <div className={`flex items-center gap-4`}>
+            <div
+              className={`bg-white rounded-lg shadow-shadowKitLow w-8 h-[42px] z-10 outline outline-silver outline-1 `}
+            />
+            <div
+              className={`bg-white rounded-lg w-8 h-[42px] -ml-[44px] -translate-y-1 outline outline-silver outline-1 rotate-[4deg]`}
+            />
+            <motion.div
+              className={`flex items-center gap-1 text-black bg-[#E5E5E5] rounded-full p-2`}
+            >
+              <motion.p
+                className={`text-base font-medium leading-[11px] text-black`}
+              >
+                {userData._count.artifact}
+              </motion.p>
+              <motion.p className={`text-base leading-[11px] text-black`}>
+                entries
+              </motion.p>
+            </motion.div>
+          </div>
 
-          <motion.div className={`relative flex justify-start gap-1`}>
-            <motion.p className={`leading-[11px]`}>
-              {userData._count.artifact}
-            </motion.p>
-            <motion.p className={`text-xs leading-[8px]`}>wisps</motion.p>
-          </motion.div>
+          {/* Wisps */}
+          <div className={`flex items-center gap-4`}>
+            <div
+              className={`bg-white rounded-[6px] shadow-shadowKitLow w-[38px] h-[24px] z-10 outline outline-silver outline-1 `}
+            />
+            <div
+              className={`bg-white rounded-[6px] w-[30px] h-[24px] -ml-[50px] -translate-y-1 outline outline-silver outline-1 `}
+            />
+            <motion.div
+              className={`ml-[1px] flex items-center gap-1 text-black bg-[#E5E5E5] rounded-full p-2`}
+            >
+              <motion.p
+                className={`text-base leading-[11px] text-black font-medium`}
+              >
+                {userData._count.artifact}
+              </motion.p>
+              <motion.p className={`text-base leading-[11px] text-black`}>
+                wisps
+              </motion.p>
+            </motion.div>
+          </div>
         </div>
 
         {/*  Top Line */}

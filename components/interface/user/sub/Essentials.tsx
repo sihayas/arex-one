@@ -40,7 +40,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
         return (
           <Fragment key={`essential-${i}`}>
             <Image
-              className={`rounded-3xl shadow-shadowKitHigh ${rotationClass} ${
+              className={`rounded-3xl shadow-shadowKitHigh outline outline-silver outline-1 ${rotationClass} ${
                 i === 1 ? "-translate-x-[104px]" : ""
               }`}
               onClick={() => handleSelectSound(sound)}

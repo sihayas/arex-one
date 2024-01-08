@@ -60,48 +60,6 @@ const User = () => {
           setActiveSection={setActiveSection}
         />
 
-        {/* Footer */}
-        <div className={`ml-2 mt-auto gap-4 relative`}>
-          <Image
-            className={`rounded-max shadow-shadowKitHigh`}
-            src={userData.image}
-            alt={`${userData.name}'s avatar`}
-            width={64}
-            height={64}
-          />
-          <AnimatePresence>
-            {activeSection === "essentials" && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <div
-                  className={`absolute bg-white px-3 py-1.5 w-max max-w-[180px] left-16 bottom-16 rounded-2xl overflow-visible drop-shadow-xl`}
-                >
-                  <motion.div className={`text-xs break-words text-gray5`}>
-                    {userData.bio}
-                  </motion.div>
-
-                  <div className={`w-3 h-3 absolute -left-1 -bottom-1`}>
-                    <div
-                      className={`bg-white w-2 h-2 absolute top-0 right-0 rounded-full`}
-                    />
-                    <div
-                      className={`bg-white w-1 h-1 absolute bottom-0 left -0 rounded-full`}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className={`absolute center-y left-[74px] w-max font-medium tracking-tight text-base leading-[11px] text-gray2`}
-                >
-                  {userData.username}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
         <AnimatePresence>
           <motion.div
             key={activeSection}
@@ -132,3 +90,96 @@ export default User;
 // {/*  </div>*/}
 // {/*  <TailIcon className={`absolute left-2 -translate-y-[2px]`} />*/}
 // {/*</motion.div>*/}
+
+{
+  /*<AnimatePresence>*/
+}
+{
+  /*  {activeSection === "essentials" && (*/
+}
+{
+  /*      <motion.div*/
+}
+{
+  /*          initial={{ opacity: 0 }}*/
+}
+{
+  /*          animate={{ opacity: 1 }}*/
+}
+{
+  /*          exit={{ opacity: 0 }}*/
+}
+{
+  /*      >*/
+}
+{
+  /*        <div*/
+}
+{
+  /*            className={`absolute bg-white px-3 py-1.5 w-max max-w-[180px] left-16 bottom-16 rounded-2xl overflow-visible drop-shadow-xl`}*/
+}
+{
+  /*        >*/
+}
+{
+  /*          <motion.div className={`text-xs break-words text-gray5`}>*/
+}
+{
+  /*            {userData.bio}*/
+}
+{
+  /*          </motion.div>*/
+}
+
+{
+  /*          <div className={`w-3 h-3 absolute -left-1 -bottom-1`}>*/
+}
+{
+  /*            <div*/
+}
+{
+  /*                className={`bg-white w-2 h-2 absolute top-0 right-0 rounded-full`}*/
+}
+{
+  /*            />*/
+}
+{
+  /*            <div*/
+}
+{
+  /*                className={`bg-white w-1 h-1 absolute bottom-0 left -0 rounded-full`}*/
+}
+{
+  /*            />*/
+}
+{
+  /*          </div>*/
+}
+{
+  /*        </div>*/
+}
+
+{
+  /*        <div*/
+}
+{
+  /*            className={`absolute center-y left-[74px] w-max font-medium tracking-tight text-base leading-[11px] text-gray2`}*/
+}
+{
+  /*        >*/
+}
+{
+  /*          {userData.username}*/
+}
+{
+  /*        </div>*/
+}
+{
+  /*      </motion.div>*/
+}
+{
+  /*  )}*/
+}
+{
+  /*</AnimatePresence>*/
+}

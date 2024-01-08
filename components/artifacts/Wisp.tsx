@@ -48,7 +48,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <div className={`flex items-start gap-2.5 relative group w-[388px] group`}>
+    <div className={`flex items-end gap-2.5 relative w-[356px] h-fit`}>
       <Avatar
         className={`h-[42px] border border-silver`}
         imageSrc={artifact.author.image}
@@ -57,27 +57,25 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         height={42}
         user={artifact.author}
       />
-      {/* Stars */}
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -top-[28px] left-[46px]"
+        className=".mix-blend-darker absolute -top-[28px] left-[46px] mix-blend-multiply"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />
       {/* Content Inner / Card */}
-      <motion.div className="flex flex-col gap-4 w-[240px] h-[316px] bg-white p-6 shadow-shadowKitHigh rounded-3xl">
-        <div className={`flex items-end justify-between gap-1.5`}>
-          <div className={`flex flex-col gap-2`}>
-            <p className={`text-gray2 text-sm leading-[9px]`}>
-              {sound.attributes.artistName}
-            </p>
-            <p className={`text-gray2 text-base font-semibold`}>
-              {sound.attributes.name}
-            </p>
-          </div>
+      <motion.div className="flex flex-col gap-2 w-[304px] bg-white p-4 shadow-shadowKitHigh rounded-full outline outline-silver outline-1">
+        <div
+          onClick={handleEntryClick}
+          className={`break-words line-clamp-[8] w-full text-base text-black `}
+        >
+          {artifact.content?.text}
+        </div>
+        <div className={`w-[304px] bg-silver h-0.5 -translate-x-4 mt-2`}></div>
+        <div className={`flex items-center gap-4`}>
           <Image
-            className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
+            className={`cursor-pointer rounded-2xl shadow-notificationCard`}
             src={artwork}
             alt={`artwork`}
             loading="lazy"
@@ -85,25 +83,25 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             width={72}
             height={72}
           />
+          <div className={`flex flex-col`}>
+            <p className={`text-black text-sm`}>
+              {sound.attributes.artistName}
+            </p>
+            <p className={`text-black text-base font-medium`}>
+              {sound.attributes.name}
+            </p>
+          </div>
         </div>
-
-        <div
-          onClick={handleEntryClick}
-          className={`break-words line-clamp-[8] w-full text-base text-gray2 `}
-        >
-          {artifact.content?.text}
-        </div>
+        {/* Ambien */}
+        <motion.div
+          style={{
+            background: `#${color}`,
+            backgroundRepeat: "repeat, no-repeat",
+            width: "calc(100% - 52px)",
+          }}
+          className={`absolute left-[52px] bottom-0 w-full h-full -z-10`}
+        />
       </motion.div>
-      {/* Ambien */}
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        style={{
-          background: `#${color}`,
-          backgroundRepeat: "repeat, no-repeat",
-        }}
-        className={`absolute left-[52px] w-[240px] h-[316px] -z-10`}
-      />
     </div>
   );
 };

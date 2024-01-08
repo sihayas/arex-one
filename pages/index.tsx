@@ -87,13 +87,13 @@ export default function Home() {
           ) : null}
 
           <Image
-            className={`rounded-full z-20 -translate-x-[174px] absolute shadow-shadowKitMedium`}
+            className={`rounded-full z-20 -translate-x-[157px] absolute shadow-shadowKitMedium`}
             src={user?.image}
             alt={`${user?.username}'s avatar`}
             width={42}
             height={42}
           />
-          <Dash className="absolute z-10 -translate-x-[174px]" />
+          <Dash className="absolute z-10 -translate-x-[157px]" />
         </motion.div>
       )}
 

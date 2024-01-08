@@ -16,12 +16,25 @@ const Entries = ({ userId }: { userId: string }) => {
 
   const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
 
+  useMotionValueEvent(scrollYProgress, "change", async () => {
+    const progress = scrollYProgress.get();
+
+    if (progress > 0.9 && hasNextPage && !isFetchingNextPage) {
+      try {
+        await fetchNextPage();
+      } catch (error) {
+        console.error("Error fetching next page:", error);
+      } finally {
+      }
+    }
+  });
+
   if (!data) return;
 
   return (
     <div
       ref={containerRef}
-      className={`pl-[208px] absolute right-0 top-0 flex flex-col items-center w-full h-full overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none`}
+      className={`pl-[144px] absolute right-0 top-0 flex flex-wrap gap-8 w-full h-full overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none`}
     >
       {allActivities.map((activity, index) => {
         if (!activity.artifact) return null;

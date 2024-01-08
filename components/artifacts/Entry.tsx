@@ -22,13 +22,13 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const [hoverContent, setHoverContent] = useState(false);
 
   const variants = {
-    initial: { translateY: 64, borderRadius: 16 },
+    initial: { translateY: 72, borderRadius: 16 },
     hover: {
       translateY: 0,
       borderRadius: 24,
     },
     hoverContent: {
-      translateY: 272,
+      translateY: 288,
       borderRadius: 8,
     },
   };
@@ -59,7 +59,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   if (!sound) return null;
 
   return (
-    <div className={`flex items-start gap-2.5 relative group w-[388px] group`}>
+    <div className={`flex items-end gap-2.5 relative group w-[356px] group`}>
       <Avatar
         className={`h-[42px] border border-silver`}
         imageSrc={artifact.author.image}
@@ -72,17 +72,17 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -top-[28px] left-[46px]"
+        className="absolute -top-[28px] left-[46px] mix-blend-multiply"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />
       {/* Content Inner / Card */}
       <motion.div
         style={{
-          width: 288,
-          height: 368,
+          width: 304,
+          height: 384,
         }}
-        className={`flex flex-col p-6 rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white`}
+        className={`flex flex-col p-6 rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white outline outline-silver outline-1`}
       >
         {/* Content Container */}
         <motion.div
@@ -97,17 +97,15 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
               <div
                 className={`font-serif text-base leading-[11px] font-semibold text-black center-x center-y absolute`}
               >
-                {artifact.content!.rating}
+                {/*{artifact.content!.rating}*/}
               </div>
             </div>
 
-            <div className={`flex flex-col items-end gap-2`}>
-              <div className={`text-sm text-gray2 leading-[9px]`}>
+            <div className={`flex flex-col items-end`}>
+              <div className={`text-sm text-gray2 line-clamp-1`}>
                 {sound.attributes.artistName}
               </div>
-              <div
-                className={`font-semibold text-base text-black leading-[11px] line-clamp-1`}
-              >
+              <div className={`font-medium text-base text-black line-clamp-1`}>
                 {sound.attributes.name}
               </div>
             </div>
@@ -139,8 +137,8 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
             alt={`artwork`}
             loading="lazy"
             quality={100}
-            width={288}
-            height={288}
+            width={304}
+            height={304}
           />
         </motion.div>
       </motion.div>
