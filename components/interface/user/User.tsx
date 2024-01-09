@@ -1,11 +1,8 @@
 import React, { useEffect } from "react";
-import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useUserDataQuery } from "@/lib/apiHelper/user";
 import Essentials from "@/components/interface/user/sub/Essentials";
-import Settings from "@/components/interface/user/sub/Settings";
-import { SettingsIcon, TailIcon } from "@/components/icons";
 import FollowButton from "./sub/components/Link";
 import Sideline from "@/components/interface/user/sub/Sideline";
 import Entries from "@/components/interface/user/sub/Entries";
@@ -15,7 +12,7 @@ import Wisps from "@/components/interface/user/sub/Wisps";
 export type Section = "essentials" | "sounds" | "entries" | "wisps";
 
 const User = () => {
-  const { user, activePage, setActivePage } = useInterfaceContext();
+  const { user, activePage, setActivePage, pages } = useInterfaceContext();
   const [activeSection, setActiveSection] =
     React.useState<Section>("essentials");
 
@@ -26,6 +23,7 @@ const User = () => {
 
   const { userData } = data || {};
 
+  // If the active section is not essentials, open the page
   useEffect(() => {
     const newIsOpenValue = activeSection !== "essentials";
 
@@ -34,6 +32,7 @@ const User = () => {
       isOpen: newIsOpenValue,
     };
 
+    pages[pages.length - 1].isOpen = newIsOpenValue;
     setActivePage(updatedActivePage);
   }, [activeSection, setActivePage]);
 
@@ -51,7 +50,7 @@ const User = () => {
         className={`p-8 flex justify-between overflow-hidden z-0 will-change-transform top-0 left-0 min-h-full w-full`}
       >
         <div
-          className={`absolute bg-black/5 w-full h-full top-0 left-0 backdrop-blur-2xl overflow-visible -z-10`}
+          className={`absolute bg-[#F4F4F4]/50 w-full h-full top-0 left-0 backdrop-blur-2xl overflow-visible -z-10`}
         />
 
         <Sideline

@@ -39,12 +39,7 @@ const Sounds = ({ userId }: { userId: string }) => {
       {artifacts.map((artifact, index) => {
         const artifactExtended = artifact as ArtifactExtended;
         return (
-          <Sound
-            artifact={artifactExtended}
-            key={artifact.id}
-            containerRef={containerRef}
-            index={index}
-          />
+          <Sound artifact={artifactExtended} key={artifact.id} index={index} />
         );
       })}
     </div>

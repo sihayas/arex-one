@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact } from "@/hooks/usePage";
@@ -9,37 +9,20 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { BlurDiv } from "@/components/global/Blur";
 import EntryDial from "@/components/global/EntryDial";
 
 interface SoundProps {
   artifact: ArtifactExtended;
-  containerRef: React.RefObject<HTMLElement>;
   index: number;
 }
 
-export const Sound: React.FC<SoundProps> = ({
-  artifact,
-  containerRef,
-  index,
-}) => {
-  const isEven = index % 2 === 0;
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    container: containerRef,
-    target: ref,
-    offset: ["center end", "center start"],
-  });
-
+export const Sound: React.FC<SoundProps> = ({ artifact, index }) => {
   const sound = artifact.appleData;
   const artwork = sound.attributes.artwork.url
     .replace("{w}", "480")
     .replace("{h}", "480");
   const name = sound.attributes.name;
   const artist = sound.attributes.artistName;
-  const color = sound.attributes.artwork.bgColor;
-
-  if (!sound) return null;
 
   return (
     <motion.div
@@ -79,13 +62,6 @@ export const Sound: React.FC<SoundProps> = ({
           height={192}
         />
       </div>
-
-      <motion.div
-        style={{
-          backgroundColor: `#${color}`,
-        }}
-        className="-z-20 w-full h-1/2 absolute center-x bottom-0"
-      />
     </motion.div>
   );
 };

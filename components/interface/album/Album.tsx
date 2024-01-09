@@ -7,30 +7,26 @@ import RenderArtifacts from "./sub/RenderArtifacts";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
 import { SongData } from "@/types/appleTypes";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
 
 import Dial from "@/components/interface/album/sub/Dial";
 import { createPortal } from "react-dom";
+import { GetDimensions } from "@/components/interface/Interface";
 // import Dial from "@/components/global/RatingDial";
 
 const springConfig = { damping: 28, stiffness: 180 };
 const scaleArtConfig = { damping: 20, stiffness: 122 };
 const xArtConfig = { damping: 20, stiffness: 160 };
-const yArtConfig = { damping: 20, stiffness: 180 };
-
-const Y_ART_BASELINE = 230;
-const Y_ART_PADDING = 16;
-const Y_ART_DIAL_OFFSET = 16;
-
-const X_ART_BASELINE = 234;
-const X_ART_PADDING = 16;
-const X_ART_DIAL_OFFSET = 18;
+const yArtConfig = { damping: 20, stiffness: 100 };
 
 const Album = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const { selectedSound } = useSoundContext();
-  const { scrollContainerRef } = useInterfaceContext();
-  const cmdk = document.getElementById("cmdk-inner") as HTMLDivElement;
+  const { scrollContainerRef, activePage } = useInterfaceContext();
+
+  const activePageName: PageName = activePage.name as PageName;
+
+  const { base, target } = GetDimensions(activePageName);
 
   const [sortOrder, setSortOrder] = useState<
     "newest" | "highlights" | "positive" | "critical"
@@ -44,28 +40,32 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  const xArtOffset = X_ART_BASELINE - X_ART_PADDING - X_ART_DIAL_OFFSET;
-  const xArtKeyframes = useTransform(scrollY, [0, 1], [0, xArtOffset]);
-  const xArt = useSpring(xArtKeyframes, xArtConfig);
+  const ALIGN_WITH_WINDOW = target.height - 432;
 
-  // 230 to align with top of container 184
-  const yArtOffset = Y_ART_BASELINE - Y_ART_PADDING - Y_ART_DIAL_OFFSET;
-  const yArtKeyframes = useTransform(scrollY, [0, 1], [0, -yArtOffset]);
+  const xArtKeyframes = useTransform(scrollY, [0, 1], [0, 16]);
+  const yArtKeyframes = useTransform(
+    scrollY,
+    [0, 1],
+    [-ALIGN_WITH_WINDOW, -16],
+  );
+  const scaleArtKeyframes = useTransform(scrollY, [0, 1], [1, 0.1389]);
+
+  const xDialKeyframes = useTransform(scrollY, [0, 1], [0, 0]);
+  const yDialKeyframes = useTransform(
+    scrollY,
+    [0, 1],
+    [-ALIGN_WITH_WINDOW - 0, 0],
+  );
+  const scaleDialKeyframes = useTransform(scrollY, [0, 1], [1, 0.5]);
+  const borderKeyframes = useTransform(scrollY, [0, 1], [32, 96]);
+
   const yArt = useSpring(yArtKeyframes, yArtConfig);
-
-  const scaleArtKeyframes = useTransform(scrollY, [0, 1], [1, 0.0833]);
+  const xArt = useSpring(xArtKeyframes, xArtConfig);
   const scaleArt = useSpring(scaleArtKeyframes, scaleArtConfig);
 
-  const xDialKeyframes = useTransform(scrollY, [0, 1], [-208, -16]);
-  const xDial = useSpring(xDialKeyframes, springConfig);
-
-  const yDialKeyframes = useTransform(scrollY, [0, 1], [208, -64]);
-  const yDial = useSpring(yDialKeyframes, springConfig);
-
-  const scaleDialKeyframes = useTransform(scrollY, [0, 1], [1, 0.5]);
-  const scaleDial = useSpring(scaleDialKeyframes, springConfig);
-
-  const borderKeyframes = useTransform(scrollY, [0, 1], [32, 124]);
+  const xDial = useSpring(xDialKeyframes, xArtConfig);
+  const yDial = useSpring(yDialKeyframes, yArtConfig);
+  const scaleDial = useSpring(scaleDialKeyframes, scaleArtConfig);
   const borderRadius = useSpring(borderKeyframes, {
     damping: 36,
     stiffness: 400,
@@ -75,9 +75,10 @@ const Album = () => {
 
   let albumId;
   const artwork = selectedSound.attributes.artwork.url
-    .replace("{w}", "1200")
-    .replace("{h}", "1200");
+    .replace("{w}", "800")
+    .replace("{h}", "800");
   const name = selectedSound.attributes.name;
+  const artist = selectedSound.attributes.artistName;
 
   if (selectedSound.type === "albums") {
     albumId = selectedSound.id;
@@ -91,59 +92,58 @@ const Album = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-full mt-[1px]"
+      className="w-full min-h-full mt-[1px] relative"
     >
-      {cmdk &&
-        createPortal(
-          <motion.div
-            style={{
-              x: xArt,
-              y: yArt,
-              scale: scaleArt,
-              borderRadius,
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              damping: 20,
-              stiffness: 200,
-            }}
-            className="absolute pointer-events-none overflow-hidden z-40 right-0 top-0 shadow-shadowKitHigh"
-          >
-            <Image
-              src={artwork}
-              alt={`${name}'s artwork`}
-              width={576}
-              height={576}
-              quality={100}
-              draggable="false"
-              onDragStart={(e) => e.preventDefault()}
-            />
-          </motion.div>,
-          cmdk,
-        )}
-
-      <motion.div
-        className={`absolute z-50 pointer-events-none right-0 top-0 flex items-center justify-center`}
-        style={{
-          x: xDial,
-          y: yDial,
-          scale: scaleDial,
-          transformOrigin: "bottom right",
-        }}
-      >
-        <Dial ratings={[4, 8900, 2445, 5000000, 500]} />
-      </motion.div>
-      {/* Entries */}
       <RenderArtifacts
         soundId={albumId}
         sortOrder={sortOrder}
         isOpen={isOpen}
       />
-      {/*<div className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 outline outline-silver outline-1 rounded-full">*/}
-      {/*  <Sort onSortOrderChange={handleSortOrderChange} />*/}
-      {/*</div>*/}
+
+      {/* Art */}
+      <motion.div
+        style={{
+          borderRadius,
+          scale: scaleArt,
+          y: yArt,
+          x: xArt,
+        }}
+        className="absolute overflow-hidden z-40 left-0 bottom-0 origin-bottom-left shadow-miniCard"
+      >
+        <Image
+          src={artwork}
+          alt={`${name}'s artwork`}
+          width={432}
+          height={432}
+          quality={100}
+          draggable="false"
+          onDragStart={(e) => e.preventDefault()}
+        />
+      </motion.div>
+
+      {/* Dial */}
+      <motion.div
+        className={`absolute z-50 right-0 bottom-0 flex items-center justify-center origin-bottom-right p-2`}
+        style={{
+          x: xDial,
+          y: yDial,
+          scale: scaleDial,
+        }}
+      >
+        <Dial ratings={[4, 8900, 2445, 5000000, 500]} />
+      </motion.div>
+
+      {/* Titles */}
+      <motion.div
+        className={`absolute z-5 center-x bottom-4 rounded-2xl p-4 flex flex-col gap-2 bg-white items-center justify-center origin-bottom shadow-shadowKitHigh`}
+      >
+        <p className={`text-black font-bold text-base leading-[11px]`}>
+          {name}
+        </p>
+        <p className={`text-gray2 font-medium text-sm leading-[9px]`}>
+          {artist}
+        </p>
+      </motion.div>
     </motion.div>
   );
 };

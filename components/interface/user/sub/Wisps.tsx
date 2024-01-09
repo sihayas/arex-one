@@ -27,18 +27,17 @@ const Wisps = ({ userId }: { userId: string }) => {
     }
   });
 
-  const wisps = data ? data.pages.flatMap((page) => page.data) : [];
-
-  if (!data) return;
+  const activities = data ? data.pages.flatMap((page) => page.data) : [];
 
   return (
     <div
       ref={containerRef}
       className={`pl-[144px] gap-8 absolute left-0 top-0 flex flex-wrap w-full h-full overflow-y-auto snap-y snap-mandatory p-4 pt-8 scrollbar-none`}
     >
-      {wisps.map((artifact, index) => {
-        const artifactExtended = artifact as ArtifactExtended;
-        return <Wisp artifact={artifactExtended} key={artifact.id} />;
+      {activities.map((activity, index) => {
+        if (!activity.artifact) return null;
+        const artifact = activity.artifact as ArtifactExtended;
+        return <Wisp artifact={artifact} key={artifact.id} />;
       })}
     </div>
   );

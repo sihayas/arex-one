@@ -6,7 +6,6 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 import { v4 as uuidv4 } from "uuid";
 import { Artifact, UserType } from "@/types/dbTypes";
 
-// Handle RecordFeed Click
 export const useArtifact = (artifact: Artifact) => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();
@@ -20,8 +19,8 @@ export const useArtifact = (artifact: Artifact) => {
         name: "artifact",
         threadcrumbs: [artifact.id],
         dimensions: {
-          width: 480,
-          height: 576,
+          width: 528,
+          height: 400,
         },
         scrollPosition: 0,
         artifact: artifact,
@@ -34,7 +33,6 @@ export const useArtifact = (artifact: Artifact) => {
   };
 };
 
-// Handle Personal Click
 export const useUser = (author: UserType) => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
@@ -55,7 +53,6 @@ export const useUser = (author: UserType) => {
   };
 };
 
-// Handle Sound Click
 export const useSound = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setSelectedSound } = useSoundContext();
@@ -69,8 +66,8 @@ export const useSound = () => {
         name: "album",
         sound: sound,
         dimensions: {
-          width: 576,
-          height: 832,
+          width: 432,
+          height: 432,
         },
         scrollPosition: 0,
         color: sound.attributes.artwork.bgColor,

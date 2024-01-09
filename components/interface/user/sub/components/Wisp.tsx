@@ -21,8 +21,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   const user = useUser();
   const { handleSelectSound } = useSound();
 
-  console.log("received artifact", artifact);
-  const sound = artifact.artifact.appleData;
+  const sound = artifact.appleData;
   const artwork = sound.attributes.artwork.url
     .replace("{w}", "320")
     .replace("{h}", "320");
@@ -72,7 +71,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         onClick={handleEntryClick}
         className={`bg-white p-3 break-words line-clamp-[8] w-full text-sm text-gray2 `}
       >
-        {artifact.artifact.content?.text}
+        {artifact.content?.text}
       </div>
     </motion.div>
   );

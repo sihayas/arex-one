@@ -10,6 +10,8 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
+import RatingDial from "@/components/interface/nav/sub/items/RatingDial";
+import EntryDial from "@/components/global/EntryDial";
 
 const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
   const { selectedSound } = useSoundContext();
@@ -38,23 +40,20 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
     <>
       {/* Rating & Attribution */}
       <div
-        className={`absolute center-x -top-[23px] py-1 px-[5px] flex items-center gap-2 bg-white shadow-shadowKitMedium rounded-full`}
+        className={`p-2 flex items-center gap-2 bg-white shadow-shadowKitLow rounded-full rounded-t-none rounded-b-2xl`}
       >
-        <div
-          className={`flex items-center justify-center p-2 outline outline-silver outline-1 rounded-full w-max`}
-        >
-          <Stars rating={artifact.content?.rating} />
-        </div>
+        {/* @ts-ignore */}
+        <EntryDial rating={artifact.content!.rating} />
 
-        <div className={`text-sm leading-[10px] text-[#000] font-bold`}>
+        <div className={`text-base leading-[10px] text-black font-semibold`}>
           {artifact.author.username}
         </div>
         <Avatar
-          className={`h-[30px]`}
+          className={`border border-silver`}
           imageSrc={artifact.author.image}
           altText={`${artifact.author.username}'s avatar`}
-          width={30}
-          height={30}
+          width={32}
+          height={32}
           user={artifact.author}
         />
       </div>
@@ -62,7 +61,7 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
       {/* Content */}
       <div
         onClick={handleEntryClick}
-        className={`break-words line-clamp-6 w-full text-base text-center text-gray5 leading-normal font-medium cursor-pointer z-10`}
+        className={`break-words line-clamp-6 w-full text-base text-center text-gray5 font-medium cursor-pointer`}
       >
         {artifact.content?.text}
       </div>

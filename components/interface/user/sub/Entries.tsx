@@ -14,7 +14,7 @@ const Entries = ({ userId }: { userId: string }) => {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useEntriesQuery(userId);
 
-  const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
+  const activities = data ? data.pages.flatMap((page) => page.data) : [];
 
   useMotionValueEvent(scrollYProgress, "change", async () => {
     const progress = scrollYProgress.get();
@@ -29,14 +29,12 @@ const Entries = ({ userId }: { userId: string }) => {
     }
   });
 
-  if (!data) return;
-
   return (
     <div
       ref={containerRef}
       className={`pl-[144px] absolute right-0 top-0 flex flex-wrap gap-8 w-full h-full overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none`}
     >
-      {allActivities.map((activity, index) => {
+      {activities.map((activity, index) => {
         if (!activity.artifact) return null;
         const artifact = activity.artifact as ArtifactExtended;
         return (

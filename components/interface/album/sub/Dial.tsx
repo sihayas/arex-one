@@ -8,10 +8,10 @@ type DialProps = {
 const Dial: React.FC<DialProps> = ({ ratings }) => {
   const strokeWidth = 8;
   const dotRadius = 1.5;
-  const radius = 76;
+  const radius = 72;
 
   const circumference = 2 * Math.PI * radius;
-  const viewBoxSize = radius * 2 + strokeWidth; // for big dot add dotR * 2
+  const viewBoxSize = radius * 2 + (strokeWidth + 16); // for big dot add dotR * 2
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
   const colors = ["#CCC", "#FF3319", "#FFFF00", "#A6FF47", "#4733ff"];
@@ -21,8 +21,8 @@ const Dial: React.FC<DialProps> = ({ ratings }) => {
 
   // Change this to adjust spacing between segments
   const gap = strokeWidth * 2;
-  const incrementFactor = (gap / 4) * 4 + 8; // Increment by 4 relative to
-  // base gap of 8
+  // Increment by 4 relative to base gap of 8
+  const incrementFactor = (gap / 4) * 4 + 8;
   const totalGap = ratings.length * gap;
   const createGapSpace = excessStroke + totalGap;
   const usableCircumference = circumference - createGapSpace;
@@ -65,11 +65,16 @@ const Dial: React.FC<DialProps> = ({ ratings }) => {
     return { x, y };
   };
 
+  const hoverStrokeWidth = strokeWidth * 1.5;
+
   return (
-    <svg
+    <motion.svg
       width={viewBoxSize}
       height={viewBoxSize}
       viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+      whileHover={{
+        scale: 1.1,
+      }}
     >
       {ratings.map((rating, index) => {
         const strokeDasharray = calculateStrokeDashArray(rating);
@@ -81,6 +86,7 @@ const Dial: React.FC<DialProps> = ({ ratings }) => {
         return (
           <Fragment key={index}>
             <motion.circle
+              className={`cursor-pointer`}
               cx={viewBoxSize / 2}
               cy={viewBoxSize / 2}
               r={radius}
@@ -96,7 +102,10 @@ const Dial: React.FC<DialProps> = ({ ratings }) => {
                 strokeDasharray: strokeDasharray,
                 strokeDashoffset: strokeDashoffset,
               }}
-              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+              whileHover={{
+                strokeWidth: hoverStrokeWidth,
+              }}
+              transition={{ type: "spring", stiffness: 160, damping: 10 }}
             />
             <motion.circle
               cx={dotPosition.x}
@@ -116,7 +125,7 @@ const Dial: React.FC<DialProps> = ({ ratings }) => {
           </Fragment>
         );
       })}
-    </svg>
+    </motion.svg>
   );
 };
 

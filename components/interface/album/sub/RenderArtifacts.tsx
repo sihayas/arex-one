@@ -38,15 +38,13 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useArtifactsQuery(soundId, userId, sortOrder);
 
-  const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
+  const activities = data ? data.pages.flatMap((page) => page.data) : [];
 
-  const itemCount = hasNextPage
-    ? allActivities.length + 1
-    : allActivities.length;
+  const itemCount = hasNextPage ? activities.length + 1 : activities.length;
 
   // Helper to check if item is loaded -> for infinite scroll
   const isItemLoaded = (index: number) => {
-    const loaded = !hasNextPage || index < allActivities.length;
+    const loaded = !hasNextPage || index < activities.length;
     return loaded;
   };
 
@@ -78,13 +76,13 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
       }
     }, [index]);
 
-    const activity = allActivities[index];
+    const activity = activities[index];
     const artifact = activity.artifact as ArtifactExtended;
 
     return (
       <div
         ref={rowRef}
-        className={`flex flex-col bg-[#F4F4F4] items-center justify-center relative w-full px-6 pt-[18px] pb-[19px] rounded-[32px]`}
+        className={`flex flex-col bg-[#E5E5E5] items-center justify-center relative w-full px-6 pb-[19px] rounded-full gap-3`}
       >
         <Album artifact={artifact} />
       </div>
@@ -104,11 +102,8 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
     >
       {({ onItemsRendered, ref }) => (
         <List
-          style={{
-            pointerEvents: isOpen ? "auto" : "none",
-          }}
           height={target.height}
-          itemCount={allActivities.length}
+          itemCount={activities.length}
           itemSize={getRowHeight}
           onItemsRendered={onItemsRendered}
           ref={(listInstance) => {

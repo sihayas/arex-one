@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Page, useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 
 import { Command } from "cmdk";
@@ -35,19 +35,19 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 656, height: 656 },
     },
     album: {
-      base: { width: 576, height: 576 },
+      base: { width: 432, height: 432 },
       target: { width: 512, height: maxHeight },
     },
     artifact: {
-      base: { width: 480, height: 576 },
-      target: { width: 544, height: maxHeight },
+      base: { width: 528, height: 400 },
+      target: { width: 560, height: maxHeight },
     },
   };
 
   return dimensions[pageName];
 };
 
-export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
+export function Interface({ isVisible }: { isVisible: boolean }) {
   const { pages, scrollContainerRef, activePage } = useInterfaceContext();
   const { expandInput } = useNavContext();
 
@@ -92,7 +92,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
         x: "-50%",
         y: "-50%",
         opacity: isVisible ? 1 : 0,
-        scale: isVisible ? 1 : 1.5,
+        scale: isVisible ? 1 : 0.97,
         visibility: isVisible ? "visible" : "hidden",
       };
       const transitionConfig = {
@@ -125,7 +125,8 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       await animateContent(
         contentScope.current,
         {
-          filter: expandInput ? "blur(4px)" : "blur(0px)",
+          filter: expandInput ? "brightness(.75)" : "brightness(1)",
+          opacity: expandInput ? 0.5 : 1,
         },
         {
           type: "spring",
@@ -250,7 +251,7 @@ export function Interface({ isVisible }: { isVisible: boolean }): JSX.Element {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`flex items-start justify-center bg-white rounded-full relative overflow-hidden shadow-shadowKitHigh`}
+        className={`flex items-start justify-center bg-[#F4F4F4]/75 rounded-full relative shadow-shadowKitHigh overflow-hidden`}
         shouldFilter={false}
         loop
         ref={scope}

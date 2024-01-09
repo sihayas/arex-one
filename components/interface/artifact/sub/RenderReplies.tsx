@@ -18,14 +18,16 @@ function RenderReplies({ userId, artifactId }: RenderRepliesProps) {
   // Add layoutgroup to the 2nd fragment
   return (
     <>
-      {replies && replies.length > 0 ? (
+      {replies.length > 0 ? (
         <>
           {replies.map((reply: ReplyType, index: number) => (
             <RootReply key={reply.id} index={index} reply={reply} />
           ))}
         </>
       ) : (
-        <div className="text-xs text-[#CCC]">seems quiet</div>
+        <div className="text-action text-sm font-medium uppercase">
+          unchained
+        </div>
       )}
 
       {/* End */}

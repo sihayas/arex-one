@@ -56,8 +56,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     handleSelectSound(sound);
   };
 
-  if (!sound) return null;
-
   return (
     <div className={`flex items-end gap-2.5 relative group w-[356px] group`}>
       <Avatar

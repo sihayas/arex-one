@@ -34,6 +34,8 @@ module.exports = {
           "0px -4px 9px 0px rgba(0, 0, 0, 0.10), 0px -16px 16px 0px rgba(0, 0, 0, 0.09), 0px -35px 21px 0px rgba(0, 0, 0, 0.05), 0px -63px 25px 0px rgba(0, 0, 0, 0.01), 0px -98px 27px 0px rgba(0, 0, 0, 0.00)",
         cardArtMini:
           "0px -1px 1px 0px rgba(0, 0, 0, 0.10), 0px -2px 2px 0px rgba(0, 0, 0, 0.09), 0px -5px 3px 0px rgba(0, 0, 0, 0.05), 0px -9px 4px 0px rgba(0, 0, 0, 0.01), 0px -15px 4px 0px rgba(0, 0, 0, 0.00)",
+        cartArtArtifact:
+          "6px 0px 13px 0px rgba(0, 0, 0, 0.10), 23px 2px 23px 0px rgba(0, 0, 0, 0.09), 52px 4px 31px 0px rgba(0, 0, 0, 0.05), 92px 7px 37px 0px rgba(0, 0, 0, 0.01), 143px 11px 40px 0px rgba(0, 0, 0, 0.00)",
       },
       borderRadius: {
         full: "32px",
