@@ -4,7 +4,6 @@ import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact } from "@/hooks/usePage";
 
 import Heart from "@/components/global/Heart";
-import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useTransform } from "framer-motion";

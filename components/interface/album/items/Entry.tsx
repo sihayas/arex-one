@@ -4,16 +4,14 @@ import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
-import Stars from "@/components/global/Stars";
 import { useSoundContext } from "@/context/SoundContext";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { useUser } from "@supabase/auth-helpers-react";
 import { AlbumData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
-import RatingDial from "@/components/interface/nav/sub/items/RatingDial";
 import EntryDial from "@/components/global/EntryDial";
 
-const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
+const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
   const { selectedSound } = useSoundContext();
   const user = useUser();
 
@@ -31,10 +29,6 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
     ...artifact,
     appleData: selectedSound as AlbumData,
   });
-
-  if (!selectedSound) {
-    return null;
-  }
 
   return (
     <>
@@ -77,4 +71,4 @@ const Album = ({ artifact }: { artifact: ArtifactExtended }) => {
   );
 };
 
-export default Album;
+export default Entry;

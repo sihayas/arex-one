@@ -16,7 +16,7 @@ import {
 import { useSound } from "@/hooks/usePage";
 import useHandleHeartClick from "@/hooks/useHeart";
 import Avatar from "@/components/global/Avatar";
-import RenderReplies from "@/components/interface/artifact/sub/RenderReplies";
+import Replies from "@/components/interface/artifact/render/Replies";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { GetDimensions } from "@/components/interface/Interface";
 
@@ -194,7 +194,7 @@ export const Artifact = () => {
         style={{ opacity: showChains }}
         className={`flex flex-col p-8 relative`}
       >
-        <RenderReplies userId={user!.id} artifactId={artifactExtended.id} />
+        <Replies userId={user!.id} artifactId={artifactExtended.id} />
       </motion.div>
     </motion.div>
   );

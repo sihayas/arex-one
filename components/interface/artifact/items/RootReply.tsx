@@ -4,7 +4,7 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { ReplyType } from "@/types/dbTypes";
 
-import RenderChildren from "@/components/interface/artifact/sub/RenderChildren";
+import Children from "@/components/interface/artifact/render/Children";
 import { AnimatePresence, motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -149,11 +149,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
               {reply.author.username}
             </div>
             {showChildReplies && (
-              <RenderChildren
-                parentReplyId={reply.id}
-                level={1}
-                isChild={true}
-              />
+              <Children parentReplyId={reply.id} level={1} isChild={true} />
             )}
           </div>
         </div>

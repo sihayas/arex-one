@@ -1,17 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import { VariableSizeList as List } from "react-window";
 import { useArtifactsQuery } from "@/lib/apiHelper/album";
-import Album from "@/components/artifacts/Album";
+import Entry from "@/components/interface/album/items/Entry";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useMotionValueEvent, useScroll } from "framer-motion";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { GetDimensions } from "@/components/interface/Interface";
 import { PageName, Page } from "@/context/InterfaceContext";
 import InfiniteLoader from "react-window-infinite-loader";
+import { SortOrder } from "@/components/interface/album/Album";
 
 interface RenderArtifactsProps {
   soundId: string;
-  sortOrder: "newest" | "highlights" | "positive" | "critical";
+  sortOrder: SortOrder;
   isOpen: boolean;
 }
 
@@ -19,10 +19,9 @@ const DEFAULT_HEIGHT = 80;
 const BASE_GAP = 24;
 const GAP = 16;
 
-const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
+const Artifacts: React.FC<RenderArtifactsProps> = ({
   soundId,
   sortOrder = "newest",
-  isOpen,
 }) => {
   const { user, pages } = useInterfaceContext();
   const userId = user?.id;
@@ -48,11 +47,11 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
     return loaded;
   };
 
-  // If we're already fetching more items, return empty callback
+  // If we're already fetching more search, return empty callback
   const loadMoreItems = isFetchingNextPage
     ? () => {}
     : () => {
-        console.log("Loading more items");
+        console.log("Loading more search");
         return fetchNextPage();
       };
 
@@ -84,7 +83,7 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
         ref={rowRef}
         className={`flex flex-col bg-[#E5E5E5] items-center justify-center relative w-full px-6 pb-[19px] rounded-full gap-3`}
       >
-        <Album artifact={artifact} />
+        <Entry artifact={artifact} />
       </div>
     );
   };
@@ -112,6 +111,7 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
             listRef.current = listInstance;
           }}
           width={target.width}
+          className={`mask`}
         >
           {({ index, style }) => (
             <div
@@ -133,4 +133,4 @@ const RenderArtifacts: React.FC<RenderArtifactsProps> = ({
   );
 };
 
-export default RenderArtifacts;
+export default Artifacts;

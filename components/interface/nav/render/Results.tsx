@@ -2,8 +2,8 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { Command, useCommandState } from "cmdk";
 
-import UserItem from "./items/User";
-import Sound from "./items/Sound";
+import UserItem from "@/components/interface/nav/items/search/User";
+import Sound from "@/components/interface/nav/items/search/Sound";
 import { UserType } from "@/types/dbTypes";
 import { useEffect, useState } from "react";
 import { LayoutGroup, motion } from "framer-motion";
@@ -12,7 +12,7 @@ interface SearchProps {
   searchData: any;
 }
 
-const RenderResults = ({ searchData }: SearchProps) => {
+const Results = ({ searchData }: SearchProps) => {
   // For tracking the active search item
   const active = useCommandState((state) => state.value);
 
@@ -41,7 +41,7 @@ const RenderResults = ({ searchData }: SearchProps) => {
                 {active === item.id && (
                   <motion.span
                     layoutId="bubble"
-                    className="absolute inset-0 bg-white m-2 shadow-shadowKitHigh -z-10"
+                    className="absolute inset-0 bg-silver m-2 shadow-shadowKitLow -z-10"
                     style={{ borderRadius: 16 }}
                     transition={{
                       type: "spring",
@@ -62,4 +62,4 @@ const RenderResults = ({ searchData }: SearchProps) => {
   );
 };
 
-export default RenderResults;
+export default Results;

@@ -8,10 +8,10 @@ type DialProps = {
 const Dial: React.FC<DialProps> = ({ ratings }) => {
   const strokeWidth = 8;
   const dotRadius = 1.5;
-  const radius = 72;
+  const radius = 56;
 
   const circumference = 2 * Math.PI * radius;
-  const viewBoxSize = radius * 2 + (strokeWidth + 16); // for big dot add dotR * 2
+  const viewBoxSize = radius * 2 + (strokeWidth + 32); // for big dot add dotR * 2
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
   const colors = ["#CCC", "#FF3319", "#FFFF00", "#A6FF47", "#4733ff"];
@@ -23,6 +23,7 @@ const Dial: React.FC<DialProps> = ({ ratings }) => {
   const gap = strokeWidth * 2;
   // Increment by 4 relative to base gap of 8
   const incrementFactor = (gap / 4) * 4 + 8;
+
   const totalGap = ratings.length * gap;
   const createGapSpace = excessStroke + totalGap;
   const usableCircumference = circumference - createGapSpace;
@@ -73,7 +74,7 @@ const Dial: React.FC<DialProps> = ({ ratings }) => {
       height={viewBoxSize}
       viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
       whileHover={{
-        scale: 1.1,
+        scale: 2.6,
       }}
     >
       {ratings.map((rating, index) => {

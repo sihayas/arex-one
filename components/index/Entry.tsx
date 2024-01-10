@@ -66,7 +66,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         height={42}
         user={artifact.author}
       />
-      {/* Stars */}
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
@@ -86,7 +85,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         <motion.div
           onHoverStart={() => setHoverContent(true)}
           onHoverEnd={() => setHoverContent(false)}
-          className={`flex flex-col gap-[18px]`}
+          className={`flex flex-col gap-[18px] cursor-pointer `}
           onClick={handleEntryClick}
         >
           <div className={`flex items-center gap-4 justify-between w-full`}>

@@ -1,10 +1,10 @@
-import React from "react";
-import { useWispsQuery } from "@/lib/apiHelper/user";
+import React, { useEffect, useRef } from "react";
+import { useEntriesQuery } from "@/lib/apiHelper/user";
 import { useMotionValueEvent, useScroll, motion } from "framer-motion";
+import { Entry } from "@/components/interface/user/items/Entry";
 import { ArtifactExtended } from "@/types/globalTypes";
-import { Wisp } from "@/components/interface/user/sub/components/Wisp";
 
-const Wisps = ({ userId }: { userId: string }) => {
+const Entries = ({ userId }: { userId: string }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -12,7 +12,9 @@ const Wisps = ({ userId }: { userId: string }) => {
   });
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useWispsQuery(userId);
+    useEntriesQuery(userId);
+
+  const activities = data ? data.pages.flatMap((page) => page.data) : [];
 
   useMotionValueEvent(scrollYProgress, "change", async () => {
     const progress = scrollYProgress.get();
@@ -27,20 +29,25 @@ const Wisps = ({ userId }: { userId: string }) => {
     }
   });
 
-  const activities = data ? data.pages.flatMap((page) => page.data) : [];
-
   return (
     <div
       ref={containerRef}
-      className={`pl-[144px] gap-8 absolute left-0 top-0 flex flex-wrap w-full h-full overflow-y-auto snap-y snap-mandatory p-4 pt-8 scrollbar-none`}
+      className={`pl-[144px] absolute right-0 top-0 flex flex-wrap gap-8 w-full h-full overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none`}
     >
       {activities.map((activity, index) => {
         if (!activity.artifact) return null;
         const artifact = activity.artifact as ArtifactExtended;
-        return <Wisp artifact={artifact} key={artifact.id} />;
+        return (
+          <Entry
+            artifact={artifact}
+            key={activity.id}
+            containerRef={containerRef}
+            index={index}
+          />
+        );
       })}
     </div>
   );
 };
 
-export default Wisps;
+export default Entries;

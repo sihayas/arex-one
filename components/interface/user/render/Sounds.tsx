@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { useSoundsQuery } from "@/lib/apiHelper/user";
-import { useMotionValueEvent, useScroll, motion } from "framer-motion";
-import { Sound } from "@/components/interface/user/sub/components/Sound";
+import { useMotionValueEvent, useScroll } from "framer-motion";
+import { Sound } from "@/components/interface/user/items/Sound";
 import { ArtifactExtended } from "@/types/globalTypes";
 
 const Sounds = ({ userId }: { userId: string }) => {
@@ -28,8 +28,6 @@ const Sounds = ({ userId }: { userId: string }) => {
   });
 
   const artifacts = data ? data.pages.flatMap((page) => page.data) : [];
-
-  if (!data) return;
 
   return (
     <div

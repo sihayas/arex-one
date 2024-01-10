@@ -3,8 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { ReplyType } from "@/types/dbTypes";
-
-import RenderChildren from "@/components/interface/artifact/sub/RenderChildren";
+import Children from "@/components/interface/artifact/render/Children";
 import { motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -52,7 +51,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   // Styles
   const isEvenLevel = level % 2 === 0;
   const flexDirection = isEvenLevel ? "flex-row" : "flex-row-reverse";
-  const reverseAlignment = isEvenLevel ? "items-start" : "items-end";
+  const reverseAlignment = isEvenLevel ? "search-start" : "search-end";
   const bubblePosition = isEvenLevel
     ? "-bottom-1 -left-1"
     : "-bottom-1 -right-1 transform scale-x-[-1]";
@@ -60,7 +59,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const dashLinePosition = isEvenLevel ? "left-0" : "right-0";
 
   // Layout prop is what dictates animating the container to expand/contract when
-  // replies are loaded or unloaded. The parent/root is in RenderReplies.tsx
+  // replies are loaded or unloaded. The parent/root is in Replies.tsx
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
@@ -200,7 +199,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         )}
 
         {showChildReplies && (
-          <RenderChildren
+          <Children
             parentReplyId={reply.id}
             level={level + 1}
             isChild={false}

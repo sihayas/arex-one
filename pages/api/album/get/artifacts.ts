@@ -14,11 +14,10 @@ export default async function handle(
   const soundId = Array.isArray(req.query.soundId)
     ? req.query.soundId.join(",")
     : req.query.soundId;
-  const userId =
-    typeof req.query.userId === "string" ? req.query.userId : undefined;
-  const type = typeof req.query.type === "string" ? req.query.type : undefined;
+  const userId = req.query.userId;
+  const type = req.query.type;
 
-  if (!soundId || !userId) {
+  if (!soundId || typeof userId !== "string") {
     return res
       .status(400)
       .json({ error: "Sound ID and Personal ID are required." });
@@ -31,7 +30,7 @@ export default async function handle(
   const end = start + limit;
 
   try {
-    let activities = [];
+    let activities;
     let hasMorePages: boolean;
 
     if (sort === "newest") {

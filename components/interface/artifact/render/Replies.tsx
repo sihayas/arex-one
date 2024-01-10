@@ -1,7 +1,7 @@
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/apiHelper/artifact";
 import React from "react";
-import RootReply from "@/components/interface/artifact/sub/RootReply";
+import RootReply from "@/components/interface/artifact/items/RootReply";
 import { LayoutGroup } from "framer-motion";
 
 type RenderRepliesProps = {
@@ -9,7 +9,7 @@ type RenderRepliesProps = {
   artifactId: string;
 };
 
-function RenderReplies({ userId, artifactId }: RenderRepliesProps) {
+function Replies({ userId, artifactId }: RenderRepliesProps) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useRepliesQuery(userId, artifactId);
 
@@ -44,4 +44,4 @@ function RenderReplies({ userId, artifactId }: RenderRepliesProps) {
   );
 }
 
-export default RenderReplies;
+export default Replies;

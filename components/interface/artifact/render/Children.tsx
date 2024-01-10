@@ -1,5 +1,5 @@
 import React from "react";
-import Reply from "@/components/interface/artifact/sub/Reply";
+import Reply from "@/components/interface/artifact/items/Reply";
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/apiHelper/artifact";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -10,11 +10,7 @@ type RenderChildrenProps = {
   isChild: boolean;
 };
 
-function RenderChildren({
-  level,
-  parentReplyId,
-  isChild,
-}: RenderChildrenProps) {
+function Children({ level, parentReplyId, isChild }: RenderChildrenProps) {
   const user = useUser();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -55,4 +51,4 @@ function RenderChildren({
   );
 }
 
-export default RenderChildren;
+export default Children;

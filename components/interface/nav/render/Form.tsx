@@ -5,14 +5,13 @@ import { toast } from "sonner";
 import { postEntry } from "@/lib/apiHelper/form";
 import { useSoundContext } from "@/context/SoundContext";
 
-// import Dial from "./items/Dial";
+// import Dial from "./search/Dial";
 
-import RatingDial from "@/components/interface/nav/sub/items/RatingDial";
+import RatingDial from "@/components/interface/nav/items/search/RatingDial";
 import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
-import Stars from "@/components/global/Stars";
 import { AnimatePresence, motion } from "framer-motion";
 
 const Form = () => {

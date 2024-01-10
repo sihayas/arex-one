@@ -4,8 +4,8 @@ import GetSearchResults from "@/lib/apiHelper/search";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
 
-import RenderResults from "./sub/RenderResults";
-import Form from "./sub/Form";
+import Results from "./render/Results";
+import Form from "./render/Form";
 import {
   TargetBackIcon,
   TargetIndexIcon,
@@ -22,7 +22,7 @@ import { addReply } from "@/lib/apiHelper/artifact";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
-import Notifications from "@/components/interface/nav/sub/Notifications";
+import Notifications from "@/components/interface/nav/render/Notifications";
 
 const Nav = () => {
   const { replyTarget } = useThreadcrumb();
@@ -210,7 +210,7 @@ const Nav = () => {
       >
         {activeAction === "form" && expandInput && <Form />}
         {activeAction === "none" && inputValue && expandInput && (
-          <RenderResults searchData={data} />
+          <Results searchData={data} />
         )}
         {activeAction === "notifications" && expandInput && <Notifications />}
       </motion.div>

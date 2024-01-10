@@ -8,7 +8,7 @@ export const useArtifactsQuery = (
   sort: string,
 ) =>
   useInfiniteQuery(
-    ["artifacts", soundId],
+    ["artifacts", soundId, sort],
     async ({ pageParam = 1 }) => {
       const url = `/api/album/get/artifacts`;
       const { data } = await axios.get(url, {

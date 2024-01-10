@@ -1,5 +1,5 @@
 import { ActivityType, UserType } from "@/types/dbTypes";
-import { extendedNotification } from "../Notifications";
+import { extendedNotification } from "../../render/Notifications";
 import Avatar from "@/components/global/Avatar";
 
 interface SignalLinkProps {

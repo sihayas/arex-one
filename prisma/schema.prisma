@@ -7,7 +7,7 @@ datasource db {
   relationMode = "prisma"
 }
 
-model User {
+model Entry {
   id            String           @id @default(cuid())
   email         String           @unique
   username      String           @unique

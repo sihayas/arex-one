@@ -5,7 +5,6 @@ import { useArtifact, useSound } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
-import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
@@ -78,7 +77,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
 };
 
 // <motion.div className="flex flex-col gap-4 w-[240px] h-[316px] bg-white p-6 shadow-shadowKitHigh rounded-3xl">
-//     <div className={`flex items-end justify-between gap-1.5`}>
+//     <div className={`flex search-end justify-between gap-1.5`}>
 //         <div className={`flex flex-col gap-2`}>
 //             <p className={`text-gray2 text-sm leading-[9px]`}>
 //                 {sound.attributes.artistName}

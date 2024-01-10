@@ -2,12 +2,11 @@ import React, { useEffect } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useUserDataQuery } from "@/lib/apiHelper/user";
-import Essentials from "@/components/interface/user/sub/Essentials";
-import FollowButton from "./sub/components/Link";
+import Essentials from "@/components/interface/user/render/Essentials";
 import Sideline from "@/components/interface/user/sub/Sideline";
-import Entries from "@/components/interface/user/sub/Entries";
-import Sounds from "@/components/interface/user/sub/Sounds";
-import Wisps from "@/components/interface/user/sub/Wisps";
+import Entries from "@/components/interface/user/render/Entries";
+import Sounds from "@/components/interface/user/render/Sounds";
+import Wisps from "@/components/interface/user/render/Wisps";
 
 export type Section = "essentials" | "sounds" | "entries" | "wisps";
 

@@ -1,12 +1,12 @@
 import Layout from "../components/layout";
 import Head from "next/head";
-import React, { useEffect } from "react";
+import React from "react";
 import Dash from "@/components/global/Dash";
 import { motion } from "framer-motion";
-import { Page, useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
-import Stream from "@/components/Stream";
+import RenderArtifacts from "@/components/index/RenderArtifacts";
 
 type Feed = "personal" | "bloom" | "recent" | null;
 export default function Home() {
@@ -67,19 +67,19 @@ export default function Home() {
           ></div>
 
           {activeFeed === "bloom" ? (
-            <Stream
+            <RenderArtifacts
               userId={user.id}
               scrollContainerRef={scrollContainerRef}
               type={"bloom"}
             />
           ) : activeFeed === "personal" ? (
-            <Stream
+            <RenderArtifacts
               userId={user.id}
               scrollContainerRef={scrollContainerRef}
               type={"personal"}
             />
           ) : activeFeed === "recent" ? (
-            <Stream
+            <RenderArtifacts
               userId={user.id}
               scrollContainerRef={scrollContainerRef}
               type={"recent"}

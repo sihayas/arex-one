@@ -4,7 +4,6 @@ import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact, useSound } from "@/hooks/usePage";
 
 import Heart from "@/components/global/Heart";
-import Stars from "@/components/global/Stars";
 import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -17,7 +16,7 @@ interface UserProps {
   index: number;
 }
 
-export const User: React.FC<UserProps> = ({
+export const Entry: React.FC<UserProps> = ({
   artifact,
   containerRef,
   index,

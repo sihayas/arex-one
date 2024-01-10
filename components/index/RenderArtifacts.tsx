@@ -4,10 +4,10 @@ import React, { Fragment } from "react";
 import { AnimatePresence, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { Entry } from "@/components/artifacts/Entry";
-import { Wisp } from "@/components/artifacts/Wisp";
+import { Entry } from "@/components/index/Entry";
+import { Wisp } from "@/components/index/Wisp";
 
-const Stream = ({
+const RenderArtifacts = ({
   userId,
   scrollContainerRef,
   type,
@@ -59,7 +59,7 @@ const Stream = ({
   );
 };
 
-export default Stream;
+export default RenderArtifacts;
 
 // {allActivities.map((activity: Activity, i) => (
 //     <Fragment key={activity.id}>

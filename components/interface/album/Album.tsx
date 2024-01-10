@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { useSoundContext } from "@/context/SoundContext";
 
-import RenderArtifacts from "./sub/RenderArtifacts";
+import Artifacts from "./render/Artifacts";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
 import { SongData } from "@/types/appleTypes";
@@ -12,25 +12,26 @@ import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
 import Dial from "@/components/interface/album/sub/Dial";
 import { createPortal } from "react-dom";
 import { GetDimensions } from "@/components/interface/Interface";
-// import Dial from "@/components/global/RatingDial";
+import Sort from "@/components/interface/album/sub/Sort";
 
-const springConfig = { damping: 28, stiffness: 180 };
 const scaleArtConfig = { damping: 20, stiffness: 122 };
 const xArtConfig = { damping: 20, stiffness: 160 };
 const yArtConfig = { damping: 20, stiffness: 100 };
 
+export type SortOrder = "newest" | "ablaze" | "positive" | "critical";
+
 const Album = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
   const { selectedSound } = useSoundContext();
   const { scrollContainerRef, activePage } = useInterfaceContext();
+  const [isOpen, setIsOpen] = React.useState(false);
 
+  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+  const [range, setRange] = useState<number>(1);
+
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const activePageName: PageName = activePage.name as PageName;
 
-  const { base, target } = GetDimensions(activePageName);
-
-  const [sortOrder, setSortOrder] = useState<
-    "newest" | "highlights" | "positive" | "critical"
-  >("newest");
+  const { target } = GetDimensions(activePageName);
 
   const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
     setSortOrder(newSortOrder);
@@ -40,22 +41,16 @@ const Album = () => {
     container: scrollContainerRef,
   });
 
-  const ALIGN_WITH_WINDOW = target.height - 432;
+  const ALIGN_WINDOW = target.height - 432;
 
+  // Art Transformations
   const xArtKeyframes = useTransform(scrollY, [0, 1], [0, 16]);
-  const yArtKeyframes = useTransform(
-    scrollY,
-    [0, 1],
-    [-ALIGN_WITH_WINDOW, -16],
-  );
+  const yArtKeyframes = useTransform(scrollY, [0, 1], [-ALIGN_WINDOW, -16]);
   const scaleArtKeyframes = useTransform(scrollY, [0, 1], [1, 0.1389]);
 
-  const xDialKeyframes = useTransform(scrollY, [0, 1], [0, 0]);
-  const yDialKeyframes = useTransform(
-    scrollY,
-    [0, 1],
-    [-ALIGN_WITH_WINDOW - 0, 0],
-  );
+  // Dial Transformations
+  const xDialKeyframes = useTransform(scrollY, [0, 1], [0, -8]);
+  const yDialKeyframes = useTransform(scrollY, [0, 1], [0, -8]);
   const scaleDialKeyframes = useTransform(scrollY, [0, 1], [1, 0.5]);
   const borderKeyframes = useTransform(scrollY, [0, 1], [32, 96]);
 
@@ -94,11 +89,7 @@ const Album = () => {
       exit={{ opacity: 0 }}
       className="w-full min-h-full mt-[1px] relative"
     >
-      <RenderArtifacts
-        soundId={albumId}
-        sortOrder={sortOrder}
-        isOpen={isOpen}
-      />
+      <Artifacts soundId={albumId} sortOrder={sortOrder} isOpen={isOpen} />
 
       {/* Art */}
       <motion.div
@@ -121,18 +112,6 @@ const Album = () => {
         />
       </motion.div>
 
-      {/* Dial */}
-      <motion.div
-        className={`absolute z-50 right-0 bottom-0 flex items-center justify-center origin-bottom-right p-2`}
-        style={{
-          x: xDial,
-          y: yDial,
-          scale: scaleDial,
-        }}
-      >
-        <Dial ratings={[4, 8900, 2445, 5000000, 500]} />
-      </motion.div>
-
       {/* Titles */}
       <motion.div
         className={`absolute z-5 center-x bottom-4 rounded-2xl p-4 flex flex-col gap-2 bg-white items-center justify-center origin-bottom shadow-shadowKitHigh`}
@@ -144,6 +123,27 @@ const Album = () => {
           {artist}
         </p>
       </motion.div>
+
+      {/* Sort */}
+      <div className={`absolute bottom-8 right-[92px]`}>
+        <Sort onSortOrderChange={handleSortOrderChange} />
+      </div>
+
+      {/* Dial */}
+      {cmdk &&
+        createPortal(
+          <motion.div
+            className={`absolute z-50 right-0 bottom-0 flex items-center justify-center origin-bottom-right`}
+            style={{
+              x: xDial,
+              y: yDial,
+              scale: scaleDial,
+            }}
+          >
+            <Dial ratings={[4, 8900, 2445, 5000000, 500]} />
+          </motion.div>,
+          cmdk,
+        )}
     </motion.div>
   );
 };
