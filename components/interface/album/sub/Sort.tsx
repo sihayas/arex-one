@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { PositiveIcon, NegativeIcon, FireIcon } from "@/components/icons";
+import {
+  PositiveIcon,
+  NegativeIcon,
+  FireIcon,
+  LeafIcon,
+  StarlightIcon,
+  FlowerIcon,
+} from "@/components/icons";
 import { SortOrder } from "@/components/interface/album/Album";
 
 type SortProps = {
@@ -19,10 +26,10 @@ const Sort = ({ onSortOrderChange }: SortProps) => {
     setCurrentSortOrder((prev) => {
       switch (prev) {
         case "newest":
-          return "ablaze";
-        case "ablaze":
-          return "positive";
-        case "positive":
+          return "starlight";
+        case "starlight":
+          return "appraisal";
+        case "appraisal":
           return "critical";
         default:
           return "newest";
@@ -36,31 +43,43 @@ const Sort = ({ onSortOrderChange }: SortProps) => {
       whileHover={{
         scale: 1.25,
       }}
-      className="p-2 cursor-pointer origin-center w-8 h-8 outline outline-1 outline-silver drop-shadow rounded-full "
+      className="p-2 cursor-pointer origin-center w-8 h-8 outline outline-1.5 outline-silver drop-shadow rounded-full "
     >
-      <motion.div
-        className="absolute"
-        animate={{
-          scale: currentSortOrder === "critical" ? 1 : 0,
-          opacity: currentSortOrder === "critical" ? 1 : 0,
-        }}
-      >
-        <NegativeIcon color={"#000"} />
-      </motion.div>
-      <motion.div
-        className="absolute"
-        animate={{
-          scale: currentSortOrder === "positive" ? 1 : 0,
-          opacity: currentSortOrder === "positive" ? 1 : 0,
-        }}
-      >
-        <PositiveIcon color={"#000"} />
-      </motion.div>
       <motion.div
         className="absolute"
         animate={{
           scale: currentSortOrder === "newest" ? 1 : 0,
           opacity: currentSortOrder === "newest" ? 1 : 0,
+        }}
+      >
+        <LeafIcon color={"#000"} />
+      </motion.div>
+
+      <motion.div
+        className="absolute"
+        animate={{
+          scale: currentSortOrder === "starlight" ? 1 : 0,
+          opacity: currentSortOrder === "starlight" ? 1 : 0,
+        }}
+      >
+        <StarlightIcon color={"#000"} />
+      </motion.div>
+
+      <motion.div
+        className="absolute"
+        animate={{
+          scale: currentSortOrder === "appraisal" ? 1 : 0,
+          opacity: currentSortOrder === "appraisal" ? 1 : 0,
+        }}
+      >
+        <FlowerIcon color={"#000"} />
+      </motion.div>
+
+      <motion.div
+        className="absolute"
+        animate={{
+          scale: currentSortOrder === "critical" ? 1 : 0,
+          opacity: currentSortOrder === "critical" ? 1 : 0,
         }}
       >
         <FireIcon color={"#000"} />

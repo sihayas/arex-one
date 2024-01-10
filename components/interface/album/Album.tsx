@@ -18,7 +18,7 @@ const scaleArtConfig = { damping: 20, stiffness: 122 };
 const xArtConfig = { damping: 20, stiffness: 160 };
 const yArtConfig = { damping: 20, stiffness: 100 };
 
-export type SortOrder = "newest" | "ablaze" | "positive" | "critical";
+export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
 const Album = () => {
   const { selectedSound } = useSoundContext();
