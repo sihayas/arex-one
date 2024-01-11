@@ -10,7 +10,6 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 
 import Image from "next/image";
-import EntryDial from "@/components/global/EntryDial";
 
 interface WispProps {
   artifact: ArtifactExtended;
@@ -24,7 +23,6 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   const artwork = sound.attributes.artwork.url
     .replace("{w}", "320")
     .replace("{h}", "320");
-  const color = sound.attributes.artwork.bgColor;
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
@@ -43,8 +41,6 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   const handleSoundClick = () => {
     handleSelectSound(sound);
   };
-
-  if (!sound) return null;
 
   return (
     <div className={`flex items-end gap-2.5 relative w-[356px] h-fit`}>
@@ -74,6 +70,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             quality={100}
             width={48}
             height={48}
+            onClick={handleSoundClick}
           />
           <div className={`flex flex-col`}>
             <p className={`text-gray2 text-sm`}>
@@ -94,7 +91,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         {/* Ambien */}
         <motion.div
           style={{
-            background: `#${color}`,
+            background: `#FFF`,
             backgroundRepeat: "repeat, no-repeat",
             width: "calc(100% - 52px)",
           }}

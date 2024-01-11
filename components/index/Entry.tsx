@@ -79,24 +79,19 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           width: 304,
           height: 384,
         }}
-        className={`flex flex-col p-6 rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white outline outline-silver outline-1`}
+        className={`flex flex-col rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white outline outline-silver outline-1`}
       >
         {/* Content Container */}
         <motion.div
           onHoverStart={() => setHoverContent(true)}
           onHoverEnd={() => setHoverContent(false)}
-          className={`flex flex-col gap-[18px] cursor-pointer `}
+          className={`flex flex-col gap-[18px] cursor-pointer p-4`}
           onClick={handleEntryClick}
         >
-          <div className={`flex items-center gap-4 justify-between w-full`}>
-            <div className={`relative`}>
-              <EntryDial rating={artifact.content!.rating!} />
-              <div
-                className={`font-serif text-base leading-[11px] font-semibold text-black center-x center-y absolute`}
-              >
-                {/*{artifact.content!.rating}*/}
-              </div>
-            </div>
+          <div
+            className={`flex items-center gap-4 justify-between w-full pr-2`}
+          >
+            <EntryDial rating={artifact.content!.rating!} />
 
             <div className={`flex flex-col items-end`}>
               <div className={`text-sm text-gray2 line-clamp-1`}>
@@ -108,7 +103,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
             </div>
           </div>
 
-          <div className={`text-base text-black line-clamp-[12]`}>
+          <div className={`text-base text-black line-clamp-[12] p-2 pt-0`}>
             {artifact.content?.text}
           </div>
 

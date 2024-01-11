@@ -59,7 +59,7 @@ export const Artifact = () => {
   });
 
   const variants = {
-    initial: { translateX: -200 },
+    initial: { translateX: -200, borderTopRightRadius: "16px" },
     hoverContent: {
       translateX: -200,
     },
@@ -118,28 +118,34 @@ export const Artifact = () => {
           rotate: rotateCard,
           y: yCard,
         }}
-        className={`flex flex-col pl-[128px] rounded-3xl rounded-l-2xl relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white outline outline-silver outline-1 `}
+        className={`flex flex-col pl-[104px] rounded-3xl rounded-l-2xl relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white outline outline-silver outline-1 `}
       >
         {/* Content Container */}
         <motion.div
           onHoverStart={() => setHoverContent(true)}
           onHoverEnd={() => setHoverContent(false)}
-          className={`flex flex-col gap-[18px] overflow-scroll p-6 pl-0 scrollbar-none`}
+          className={`flex flex-col gap-[18px] overflow-scroll p-6 pt-4 pl-0 scrollbar-none`}
         >
-          <div className={`flex items-center gap-4 justify-between w-full`}>
-            <div className={`flex flex-col`}>
-              <div className={`text-sm text-gray2 line-clamp-1`}>
+          <div
+            className={`pl-4 flex items-center gap-4 justify-between w-full`}
+          >
+            <EntryDial rating={artifact.content!.rating!} />
+
+            <div className={`flex flex-col items-end`}>
+              <div className={`text-sm text-gray2 line-clamp-1 leading-[13px]`}>
                 {sound.attributes.artistName}
               </div>
-              <div className={`font-medium text-base text-black line-clamp-1`}>
+              <div
+                className={`font-medium text-base text-black line-clamp-1 leading-[23px]`}
+              >
                 {sound.attributes.name}
               </div>
             </div>
-
-            <EntryDial rating={artifact.content!.rating!} />
           </div>
 
-          <div className={`text-base text-black`}>{artifact.content?.text}</div>
+          <div className={`text-base text-black pl-6`}>
+            {artifact.content?.text}
+          </div>
 
           <div
             className={`absolute bottom-6 right-6 flex items-center w-max gap-2`}
@@ -160,7 +166,7 @@ export const Artifact = () => {
 
         {/* Artwork */}
         <motion.div
-          className="cursor-pointer absolute top-0 left-0 shadow-cartArtArtifact overflow-hidden"
+          className="cursor-pointer absolute top-0 left-0 shadow-cartArtArtifact overflow-hidden rounded-2xl"
           variants={variants}
           animate={hoverContent ? "hoverContent" : "isOpen"}
           transition={artworkConfig}
