@@ -81,7 +81,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     return (
       <div
         ref={rowRef}
-        className={`flex flex-col bg-[#E5E5E5] items-center justify-center relative w-full px-6 pb-[19px] rounded-full gap-3`}
+        className={`flex flex-col bg-[#F4F4F4] relative w-full px-6 pt-6 pb-[19px] rounded-full gap-3 outline outline-1 outline-silver`}
       >
         <Entry artifact={artifact} />
       </div>

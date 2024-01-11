@@ -32,26 +32,11 @@ const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
 
   return (
     <>
-      {/* Rating & Attribution */}
       <div
-        className={`p-2 flex items-center gap-2 bg-white shadow-shadowKitLow rounded-full rounded-t-none rounded-b-2xl`}
+        className={`absolute -top-4 -left-4 bg-[#F4F4F4] rounded-max shadow-shadowKitMedium`}
       >
-        {/* @ts-ignore */}
         <EntryDial rating={artifact.content!.rating} />
-
-        <div className={`text-base leading-[10px] text-black font-semibold`}>
-          {artifact.author.username}
-        </div>
-        <Avatar
-          className={`border border-silver`}
-          imageSrc={artifact.author.image}
-          altText={`${artifact.author.username}'s avatar`}
-          width={32}
-          height={32}
-          user={artifact.author}
-        />
       </div>
-
       {/* Content */}
       <div
         onClick={handleEntryClick}
@@ -60,10 +45,24 @@ const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
         {artifact.content?.text}
       </div>
 
+      <div className={`flex items-center gap-2 -ml-2 -mb-1`}>
+        <Avatar
+          className={`border border-silver`}
+          imageSrc={artifact.author.image}
+          altText={`${artifact.author.username}'s avatar`}
+          width={32}
+          height={32}
+          user={artifact.author}
+        />
+        <div className={`text-base leading-[10px] text-black font-semibold`}>
+          {artifact.author.username}
+        </div>
+      </div>
+
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -top-[28px] -left-[7px]"
+        className="absolute -top-[28px] right-[7px]"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />

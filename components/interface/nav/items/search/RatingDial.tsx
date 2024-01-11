@@ -6,6 +6,31 @@ interface DialProps {
   setRatingValue: (rating: number) => void;
 }
 
+export const calculateDotPosition = (
+  rating: number,
+  maxRating: number,
+  radius: number,
+  strokeWidth: number,
+) => {
+  // 10% of circumference - 10 rating increments
+  const offsetAngle = 36;
+  // Don't travel the entire circle to prevent dot overlap
+  const circumference = 360 - 36;
+  const angle = (rating / maxRating) * circumference - 90 + offsetAngle;
+  const angleRad = (Math.PI / 180) * angle;
+  const x = Math.cos(angleRad) * radius + radius + strokeWidth / 2;
+  const y = Math.sin(angleRad) * radius + radius + strokeWidth / 2;
+  return { x, y };
+};
+
+export const calculateStrokeLength = (
+  rating: number,
+  maxRating: number,
+  circumference: number,
+) => {
+  return (rating / maxRating) * circumference;
+};
+
 const RatingDial = ({ setRatingValue }: DialProps) => {
   const { inputRef } = useNavContext();
   const dialRef = useRef<SVGSVGElement>(null);
@@ -14,13 +39,12 @@ const RatingDial = ({ setRatingValue }: DialProps) => {
   const radius = 30;
   const viewBoxSize = radius * 2 + strokeWidth;
   const circumference = 2 * Math.PI * radius;
+  const finalCircumference = circumference - 18; // So the stroke doesnt overlap
 
   const ratingIncrement = 0.5;
   const maxRating = 5;
 
   const [currentRating, setCurrentRating] = useState(0);
-  const colors = ["#FFF", "#FF3319", "#FFFF00", "#A6FF47", "#4733ff"];
-  const [currentColor, setCurrentColor] = useState(colors[0]);
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent) => {
@@ -46,11 +70,6 @@ const RatingDial = ({ setRatingValue }: DialProps) => {
   }, [currentRating, setRatingValue]);
 
   useEffect(() => {
-    const colorIndex = Math.min(Math.floor(currentRating), colors.length - 1);
-    setCurrentColor(colors[colorIndex]);
-  }, [colors, currentRating]);
-
-  useEffect(() => {
     window.addEventListener("keydown", handleKeyPress as any);
     return () => window.removeEventListener("keydown", handleKeyPress as any);
   }, [currentRating, inputRef, handleKeyPress]);
@@ -58,7 +77,7 @@ const RatingDial = ({ setRatingValue }: DialProps) => {
   const segmentLength = calculateStrokeLength(
     currentRating,
     maxRating,
-    circumference,
+    finalCircumference,
   );
   const dotPosition = calculateDotPosition(
     currentRating,
@@ -84,7 +103,7 @@ const RatingDial = ({ setRatingValue }: DialProps) => {
         cy={viewBoxSize / 2}
         r={radius}
         fill="none"
-        stroke="#FFF"
+        stroke="rgba(0,0,0,0.1)"
         strokeWidth={strokeWidth}
         // rotate the white dash
         strokeDashoffset={circumference / 4 - 9.5}
@@ -106,12 +125,11 @@ const RatingDial = ({ setRatingValue }: DialProps) => {
         cy={viewBoxSize / 2}
         r={radius}
         fill="none"
-        stroke={currentColor}
         strokeWidth={strokeWidth}
         strokeDashoffset={circumference / 4 - 9.5}
         strokeLinecap="round"
         animate={{
-          stroke: currentColor,
+          stroke: "#FFF",
           strokeDasharray: `${segmentLength} ${circumference - segmentLength}`,
         }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -144,25 +162,3 @@ const RatingDial = ({ setRatingValue }: DialProps) => {
 };
 
 export default RatingDial;
-
-export const calculateDotPosition = (
-  rating: number,
-  maxRating: number,
-  radius: number,
-  strokeWidth: number,
-) => {
-  const offsetAngle = 36; // 10% of circumference - 10 rating increments
-  const angle = (rating / maxRating) * 360 - 90 + offsetAngle;
-  const angleRad = (Math.PI / 180) * angle;
-  const x = Math.cos(angleRad) * radius + radius + strokeWidth / 2;
-  const y = Math.sin(angleRad) * radius + radius + strokeWidth / 2;
-  return { x, y };
-};
-
-export const calculateStrokeLength = (
-  rating: number,
-  maxRating: number,
-  circumference: number,
-) => {
-  return (rating / maxRating) * circumference;
-};

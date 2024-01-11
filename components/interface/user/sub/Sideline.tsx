@@ -117,9 +117,7 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
             <div
               className={`bg-white rounded w-6 h-6 -ml-9 outline outline-1 outline-silver`}
             />
-            <motion.div
-              className={`flex items-center gap-1 text-black bg-[#E5E5E5] rounded-full p-2`}
-            >
+            <motion.div className={`flex items-center gap-1`}>
               <motion.p
                 className={`text-base font-medium leading-[11px] text-black`}
               >
@@ -139,9 +137,7 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
             <div
               className={`bg-white rounded-lg w-8 h-[42px] -ml-[44px] -translate-y-1 outline outline-silver outline-1 rotate-[4deg]`}
             />
-            <motion.div
-              className={`flex items-center gap-1 text-black bg-[#E5E5E5] rounded-full p-2`}
-            >
+            <motion.div className={`flex items-center gap-1`}>
               <motion.p
                 className={`text-base font-medium leading-[11px] text-black`}
               >
@@ -161,9 +157,7 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
             <div
               className={`bg-white rounded-[6px] w-[30px] h-[24px] -ml-[50px] -translate-y-1 outline outline-silver outline-1 `}
             />
-            <motion.div
-              className={`ml-[1px] flex items-center gap-1 text-black bg-[#E5E5E5] rounded-full p-2`}
-            >
+            <motion.div className={`ml-[2px] flex items-center gap-1`}>
               <motion.p
                 className={`text-base leading-[11px] text-black font-medium`}
               >

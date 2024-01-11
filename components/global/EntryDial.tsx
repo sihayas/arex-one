@@ -30,6 +30,29 @@ const starComponents = {
   5: FiveStar,
 };
 
+const calculateDotPosition = (
+  rating: number,
+  maxRating: number,
+  radius: number,
+  strokeWidth: number,
+) => {
+  const offsetAngle = 36;
+  const circumference = 360 - 36;
+  const angle = (rating / maxRating) * circumference - 90 + offsetAngle;
+  const angleRad = (Math.PI / 180) * angle;
+  const x = Math.cos(angleRad) * radius + radius + strokeWidth / 2;
+  const y = Math.sin(angleRad) * radius + radius + strokeWidth / 2;
+  return { x, y };
+};
+
+const calculateStrokeLength = (
+  rating: number,
+  maxRating: number,
+  circumference: number,
+) => {
+  return (rating / maxRating) * circumference;
+};
+
 const EntryDial = ({ rating }: EntryDialProps) => {
   const dialRef = useRef<SVGSVGElement>(null);
   const strokeWidth = 2;
@@ -38,40 +61,31 @@ const EntryDial = ({ rating }: EntryDialProps) => {
   const totalSize = 48;
   const radius = (totalSize - strokeWidth) / 2;
 
-  const viewBoxSize = totalSize; // adjusted viewBox size
+  const viewBoxSize = totalSize;
   const circumference = 2 * Math.PI * radius;
+  const finalCircumference = circumference - 9;
 
   const maxRating = 5;
-  const colors = ["#000", "#000", "#000", "#000", "#000"];
-  const [currentColor, setCurrentColor] = useState(colors[0]);
-
-  useEffect(() => {
-    const colorIndex = Math.min(Math.floor(rating), colors.length - 1);
-    setCurrentColor(colors[colorIndex]);
-  }, [colors, rating]);
-
-  const calculateStrokeLength = (rating: number) => {
-    return (rating / maxRating) * circumference;
-  };
-
-  const calculateDotPosition = (rating: number) => {
-    const offsetAngle = 24;
-    const angle = (rating / maxRating) * 360 - 90 + offsetAngle;
-    const angleRad = (Math.PI / 180) * angle;
-    const x = Math.cos(angleRad) * radius + radius + strokeWidth / 2;
-    const y = Math.sin(angleRad) * radius + radius + strokeWidth / 2;
-    return { x, y };
-  };
 
   const getStarComponent = () => {
+    //@ts-ignore
     const StarComponent = starComponents[Math.ceil(rating * 2) / 2];
     return StarComponent ? <StarComponent /> : null;
   };
 
-  const segmentLength = calculateStrokeLength(rating);
-  const dotPosition = calculateDotPosition(rating);
+  const segmentLength = calculateStrokeLength(
+    rating,
+    maxRating,
+    finalCircumference,
+  );
+  const dotPosition = calculateDotPosition(
+    rating,
+    maxRating,
+    radius,
+    strokeWidth,
+  );
 
-  let backgroundSegmentLength = circumference - segmentLength - 18;
+  let backgroundSegmentLength = circumference - segmentLength - 20;
   backgroundSegmentLength = Math.max(backgroundSegmentLength, 0);
 
   return (
@@ -99,7 +113,7 @@ const EntryDial = ({ rating }: EntryDialProps) => {
           cy={viewBoxSize / 2}
           r={radius}
           fill="none"
-          stroke="#CCC"
+          stroke="rgba(0,0,0,0.1)"
           strokeWidth={strokeWidth}
           // rotate the unfilled dash
           strokeDashoffset={circumference / 4 - 4}
@@ -120,12 +134,11 @@ const EntryDial = ({ rating }: EntryDialProps) => {
           cy={viewBoxSize / 2}
           r={radius}
           fill="none"
-          stroke={currentColor}
           strokeWidth={strokeWidth}
-          strokeDashoffset={circumference / 4 - 5}
+          strokeDashoffset={circumference / 4 - 4}
           strokeLinecap="round"
           animate={{
-            stroke: currentColor,
+            stroke: "#000",
             strokeDasharray: `${segmentLength} ${
               circumference - segmentLength
             }`,
