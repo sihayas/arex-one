@@ -93,11 +93,13 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           >
             <EntryDial rating={artifact.content!.rating!} />
 
-            <div className={`flex flex-col items-end`}>
-              <div className={`text-sm text-gray2 line-clamp-1`}>
+            <div className={`flex flex-col items-end gap-0.5`}>
+              <div className={`text-sm text-gray2 line-clamp-1 leading-tight`}>
                 {sound.attributes.artistName}
               </div>
-              <div className={`font-medium text-base text-black line-clamp-1`}>
+              <div
+                className={`font-medium text-base text-black line-clamp-1 leading-normal`}
+              >
                 {sound.attributes.name}
               </div>
             </div>

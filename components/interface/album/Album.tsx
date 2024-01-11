@@ -114,12 +114,14 @@ const Album = () => {
 
       {/* Titles */}
       <motion.div
-        className={`absolute z-5 center-x bottom-4 rounded-2xl p-4 flex flex-col gap-2 bg-white items-center justify-center origin-bottom shadow-shadowKitHigh`}
+        className={`absolute center-x bottom-4 rounded-2xl p-4 flex flex-col gap-2 bg-white items-center justify-center origin-bottom shadow-shadowKitHigh`}
       >
         <p className={`text-black font-bold text-base leading-[11px]`}>
           {name}
         </p>
-        <p className={`text-gray2 font-medium text-sm leading-[9px]`}>
+        <p
+          className={`text-gray2 font-medium text-sm leading-[9px] line-clamp-1`}
+        >
           {artist}
         </p>
       </motion.div>

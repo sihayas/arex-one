@@ -251,7 +251,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`flex items-start justify-center bg-[#F4F4F4]/75 rounded-full relative shadow-shadowKitHigh overflow-hidden`}
+        className={`flex items-start justify-center bg-[#F4F4F4]/80 rounded-full relative shadow-shadowKitHigh overflow-hidden`}
         shouldFilter={false}
         loop
         ref={scope}

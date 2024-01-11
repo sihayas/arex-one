@@ -126,17 +126,18 @@ export const Artifact = () => {
           onHoverEnd={() => setHoverContent(false)}
           className={`flex flex-col gap-[18px] overflow-scroll p-6 pt-4 pl-0 scrollbar-none`}
         >
+          {/* Header */}
           <div
             className={`pl-4 flex items-center gap-4 justify-between w-full`}
           >
             <EntryDial rating={artifact.content!.rating!} />
 
-            <div className={`flex flex-col items-end`}>
-              <div className={`text-sm text-gray2 line-clamp-1 leading-[13px]`}>
+            <div className={`flex flex-col items-end gap-0.5`}>
+              <div className={`text-sm text-gray2 line-clamp-1 leading-tight`}>
                 {sound.attributes.artistName}
               </div>
               <div
-                className={`font-medium text-base text-black line-clamp-1 leading-[23px]`}
+                className={`font-medium text-base text-black line-clamp-1 leading-normal`}
               >
                 {sound.attributes.name}
               </div>

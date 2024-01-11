@@ -35,7 +35,7 @@ const EntryDial = ({ rating }: EntryDialProps) => {
   const strokeWidth = 2;
   const dotRadius = 1;
 
-  const totalSize = 44;
+  const totalSize = 48;
   const radius = (totalSize - strokeWidth) / 2;
 
   const viewBoxSize = totalSize; // adjusted viewBox size
@@ -55,7 +55,7 @@ const EntryDial = ({ rating }: EntryDialProps) => {
   };
 
   const calculateDotPosition = (rating: number) => {
-    const offsetAngle = 30;
+    const offsetAngle = 24;
     const angle = (rating / maxRating) * 360 - 90 + offsetAngle;
     const angleRad = (Math.PI / 180) * angle;
     const x = Math.cos(angleRad) * radius + radius + strokeWidth / 2;
@@ -71,7 +71,7 @@ const EntryDial = ({ rating }: EntryDialProps) => {
   const segmentLength = calculateStrokeLength(rating);
   const dotPosition = calculateDotPosition(rating);
 
-  let backgroundSegmentLength = circumference - segmentLength - 20;
+  let backgroundSegmentLength = circumference - segmentLength - 18;
   backgroundSegmentLength = Math.max(backgroundSegmentLength, 0);
 
   return (
