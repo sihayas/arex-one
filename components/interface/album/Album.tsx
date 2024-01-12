@@ -10,61 +10,64 @@ import { SongData } from "@/types/appleTypes";
 import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
 
 import Dial from "@/components/interface/album/sub/Dial";
+import DialMini from "@/components/interface/album/sub/DialMini";
 import { createPortal } from "react-dom";
 import { GetDimensions } from "@/components/interface/Interface";
 import Sort from "@/components/interface/album/sub/Sort";
 
-const scaleArtConfig = { damping: 20, stiffness: 122 };
-const xArtConfig = { damping: 20, stiffness: 160 };
-const yArtConfig = { damping: 20, stiffness: 100 };
+const scaleConfig = { damping: 20, stiffness: 122 };
+const xConfig = { damping: 20, stiffness: 160 };
+const yConfig = { damping: 20, stiffness: 100 };
+const generalConfig = { damping: 36, stiffness: 400 };
 
 export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
 const Album = () => {
-  const { selectedSound } = useSoundContext();
   const { scrollContainerRef, activePage } = useInterfaceContext();
-  const [isOpen, setIsOpen] = React.useState(false);
+  const { selectedSound } = useSoundContext();
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
-  const [range, setRange] = useState<number>(1);
 
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const activePageName: PageName = activePage.name as PageName;
 
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+  });
   const { target } = GetDimensions(activePageName);
 
   const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
     setSortOrder(newSortOrder);
   };
 
-  const { scrollY } = useScroll({
-    container: scrollContainerRef,
-  });
-
-  const ALIGN_WINDOW = target.height - 432;
-
   // Art Transformations
-  const xArtKeyframes = useTransform(scrollY, [0, 1], [0, 16]);
-  const yArtKeyframes = useTransform(scrollY, [0, 1], [-ALIGN_WINDOW, -16]);
-  const scaleArtKeyframes = useTransform(scrollY, [0, 1], [1, 0.1389]);
+  const xArtKF = useTransform(scrollY, [0, 1], [0, 16]);
+  const yArtKF = useTransform(scrollY, [0, 1], [-(target.height - 432), -16]);
+  const scaleArtKF = useTransform(scrollY, [0, 1], [1, 0.1389]);
+  const borderKF = useTransform(scrollY, [0, 1], [32, 96]);
+
+  const yArt = useSpring(yArtKF, yConfig);
+  const xArt = useSpring(xArtKF, xConfig);
+  const scaleArt = useSpring(scaleArtKF, scaleConfig);
+  const borderRad = useSpring(borderKF, generalConfig);
 
   // Dial Transformations
-  const xDialKeyframes = useTransform(scrollY, [0, 1], [0, -8]);
-  const yDialKeyframes = useTransform(scrollY, [0, 1], [0, -8]);
-  const scaleDialKeyframes = useTransform(scrollY, [0, 1], [1, 0.5]);
-  const borderKeyframes = useTransform(scrollY, [0, 1], [32, 96]);
+  const xDialKF = useTransform(scrollY, [0, 1], [48, -16]);
+  const yDialKF = useTransform(scrollY, [0, 1], [48, -16]);
+  const scaleDialKF = useTransform(scrollY, [0, 1], [1, 0.25]);
+  const hideDialKF = useTransform(scrollY, [0, 1], [1, 0]);
 
-  const yArt = useSpring(yArtKeyframes, yArtConfig);
-  const xArt = useSpring(xArtKeyframes, xArtConfig);
-  const scaleArt = useSpring(scaleArtKeyframes, scaleArtConfig);
+  const xDial = useSpring(xDialKF, xConfig);
+  const yDial = useSpring(yDialKF, yConfig);
+  const scaleDial = useSpring(scaleDialKF, scaleConfig);
+  const hideDial = useSpring(hideDialKF, generalConfig);
 
-  const xDial = useSpring(xDialKeyframes, xArtConfig);
-  const yDial = useSpring(yDialKeyframes, yArtConfig);
-  const scaleDial = useSpring(scaleDialKeyframes, scaleArtConfig);
-  const borderRadius = useSpring(borderKeyframes, {
-    damping: 36,
-    stiffness: 400,
-  });
+  // Mini Dial Transformations
+  const showMiniKF = useTransform(scrollY, [0, 1], [0, 1]);
+  const scaleMiniKF = useTransform(scrollY, [0, 1], [1, 4]);
+
+  const showMini = useSpring(showMiniKF, generalConfig);
+  const scaleMiniText = useSpring(scaleMiniKF, generalConfig);
 
   if (!selectedSound) return;
 
@@ -89,12 +92,12 @@ const Album = () => {
       exit={{ opacity: 0 }}
       className="w-full min-h-full mt-[1px] relative"
     >
-      <Artifacts soundId={albumId} sortOrder={sortOrder} isOpen={isOpen} />
+      <Artifacts soundId={albumId} sortOrder={sortOrder} />
 
       {/* Art */}
       <motion.div
         style={{
-          borderRadius,
+          borderRadius: borderRad,
           scale: scaleArt,
           y: yArt,
           x: xArt,
@@ -134,16 +137,43 @@ const Album = () => {
       {/* Dial */}
       {cmdk &&
         createPortal(
-          <motion.div
-            className={`absolute z-50 right-0 bottom-0 flex items-center justify-center origin-bottom-right`}
-            style={{
-              x: xDial,
-              y: yDial,
-              scale: scaleDial,
-            }}
-          >
-            <Dial ratings={[4, 8900, 2445, 5000000, 500]} />
-          </motion.div>,
+          <>
+            <motion.div
+              className={`absolute z-50 right-0 bottom-0 flex items-center justify-center origin-bottom-right will-change-transform`}
+              style={{
+                x: xDial,
+                y: yDial,
+                scale: scaleDial,
+                opacity: hideDial,
+              }}
+            >
+              <Dial ratings={[4, 8900, 2445, 5000000, 500]} average={3.8} />
+            </motion.div>
+
+            <motion.div
+              className={`absolute z-50 right-0 bottom-0 flex items-center justify-center origin-bottom-right will-change-transform`}
+              style={{
+                x: xDial,
+                y: yDial,
+                scale: scaleDial,
+                opacity: showMini,
+              }}
+            >
+              <DialMini ratings={[4, 8900, 2445, 5000000, 500]} />
+              <motion.div
+                style={{
+                  scale: scaleMiniText,
+                  left: "50%",
+                  bottom: "50%",
+                  x: "-50%",
+                  y: "-50%",
+                }}
+                className={`absolute pointer-events-none center-x center-y flex flex-col items-center justify-center text-center gap-4 text-black`}
+              >
+                <p className={`text-2xl font-serif leading-[16px]`}>3.8</p>
+              </motion.div>
+            </motion.div>
+          </>,
           cmdk,
         )}
     </motion.div>

@@ -33,9 +33,12 @@ const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
   return (
     <>
       <div
-        className={`absolute -top-4 -left-4 bg-[#F4F4F4] rounded-max shadow-shadowKitMedium`}
+        className={`absolute -top-4 -left-4 bg-[#F4F4F4] rounded-max shadow-shadowKitMedium w-[42px] h-[42px]`}
       >
-        <EntryDial rating={artifact.content!.rating} />
+        <div className={`absolute center-x center-y`}>
+          {/* @ts-ignore */}
+          <EntryDial rating={artifact.content!.rating} />
+        </div>
       </div>
       {/* Content */}
       <div

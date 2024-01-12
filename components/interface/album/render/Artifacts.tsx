@@ -12,7 +12,6 @@ import { SortOrder } from "@/components/interface/album/Album";
 interface RenderArtifactsProps {
   soundId: string;
   sortOrder: SortOrder;
-  isOpen: boolean;
 }
 
 const DEFAULT_HEIGHT = 80;

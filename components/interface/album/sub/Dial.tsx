@@ -3,18 +3,47 @@ import { motion } from "framer-motion";
 
 type DialProps = {
   ratings: number[];
+  average: number;
 };
 
-const Dial: React.FC<DialProps> = ({ ratings }) => {
+const dialVariants = {
+  initial: {
+    scale: 1,
+  },
+  hover: {
+    scale: 2.889,
+  },
+};
+
+const textVariants = {
+  initial: {
+    x: "-50%",
+    y: "-50%",
+    left: "50%",
+    top: "50%",
+  },
+  hover: {
+    scale: 2,
+    x: "-50%",
+    y: "-50%",
+    left: "50%",
+    top: "50%",
+  },
+};
+
+const Dial: React.FC<DialProps> = ({ ratings, average }) => {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const total = ratings.reduce((sum, count) => sum + count, 0).toLocaleString();
   const strokeWidth = 8;
   const dotRadius = 1.5;
-  const radius = 56;
+  const radius = 116;
 
   const circumference = 2 * Math.PI * radius;
-  const viewBoxSize = radius * 2 + (strokeWidth + 32); // for big dot add dotR * 2
+  const viewBoxSize = radius * 2 + strokeWidth; // 32 = padding
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
-  const colors = ["#CCC", "#FF3319", "#FFFF00", "#A6FF47", "#4733ff"];
+  const colors = ["#000", "#000", "#000", "#000", "#000"];
 
   // Account for excess stroke created by the linecap rounding
   const excessStroke = 40;
@@ -69,64 +98,76 @@ const Dial: React.FC<DialProps> = ({ ratings }) => {
   const hoverStrokeWidth = strokeWidth * 1.5;
 
   return (
-    <motion.svg
-      width={viewBoxSize}
-      height={viewBoxSize}
-      viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
-      whileHover={{
-        scale: 2.6,
-      }}
-    >
-      {ratings.map((rating, index) => {
-        const strokeDasharray = calculateStrokeDashArray(rating);
-        const strokeDashoffset = calculateSegmentOffset(index);
-        const dotOffset = calculateDotOffset(index);
-        const segmentLength = calculateStrokeLength(rating);
-        const dotPosition = calculateDotPosition(segmentLength, dotOffset);
+    <motion.div className={`relative`}>
+      <motion.svg
+        width={viewBoxSize}
+        height={viewBoxSize}
+        viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+        variants={dialVariants}
+        animate={isHovered ? "hover" : "initial"}
+        whileHover="hover"
+        overflow={`visible`}
+      >
+        {ratings.map((rating, index) => {
+          const strokeDasharray = calculateStrokeDashArray(rating);
+          const strokeDashoffset = calculateSegmentOffset(index);
+          const segmentLength = calculateStrokeLength(rating);
 
-        return (
-          <Fragment key={index}>
-            <motion.circle
-              className={`cursor-pointer`}
-              cx={viewBoxSize / 2}
-              cy={viewBoxSize / 2}
-              r={radius}
-              fill="none"
-              stroke={colors[index % colors.length]}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              initial={{
-                strokeDasharray: "0 1",
-                strokeDashoffset: 0,
-              }}
-              animate={{
-                strokeDasharray: strokeDasharray,
-                strokeDashoffset: strokeDashoffset,
-              }}
-              whileHover={{
-                strokeWidth: hoverStrokeWidth,
-              }}
-              transition={{ type: "spring", stiffness: 160, damping: 10 }}
-            />
-            <motion.circle
-              cx={dotPosition.x}
-              cy={dotPosition.y}
-              r={dotRadius}
-              fill={`#999`}
-              initial={{
-                cx: viewBoxSize / 2,
-                cy: viewBoxSize / 2,
-              }}
-              animate={{
-                cx: dotPosition.x,
-                cy: dotPosition.y,
-              }}
-              transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            />
-          </Fragment>
-        );
-      })}
-    </motion.svg>
+          const dotOffset = calculateDotOffset(index);
+          const dotPosition = calculateDotPosition(segmentLength, dotOffset);
+
+          return (
+            <Fragment key={index}>
+              <motion.circle
+                className={`cursor-pointer`}
+                cx={viewBoxSize / 2}
+                cy={viewBoxSize / 2}
+                r={radius}
+                fill="none"
+                stroke={colors[index % colors.length]}
+                strokeWidth={strokeWidth}
+                strokeLinecap="round"
+                initial={{
+                  strokeDasharray: "0 1",
+                  strokeDashoffset: 0,
+                }}
+                animate={{
+                  strokeDasharray: strokeDasharray,
+                  strokeDashoffset: strokeDashoffset,
+                }}
+                whileHover={{
+                  strokeWidth: hoverStrokeWidth,
+                }}
+                transition={{ type: "spring", stiffness: 160, damping: 10 }}
+              />
+              <motion.circle
+                cx={dotPosition.x}
+                cy={dotPosition.y}
+                r={dotRadius}
+                fill={`#999`}
+                initial={{
+                  cx: viewBoxSize / 2,
+                  cy: viewBoxSize / 2,
+                }}
+                animate={{
+                  cx: dotPosition.x,
+                  cy: dotPosition.y,
+                }}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+              />
+            </Fragment>
+          );
+        })}
+      </motion.svg>
+
+      <motion.div
+        className={`absolute center-x center-y flex flex-col items-center justify-center text-center gap-2 text-black`}
+      >
+        <p className={`text-[64px] font-serif leading-[43px]`}>{average}</p>
+        <hr className={`w-4 border-[1px] border-gray4 rounded-full`} />
+        <p className={`text-[15px] leading-[11px] font-bold`}>{total}</p>
+      </motion.div>
+    </motion.div>
   );
 };
 
