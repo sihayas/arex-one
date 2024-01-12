@@ -14,13 +14,15 @@ export default async function handle(
   const soundId = Array.isArray(req.query.soundId)
     ? req.query.soundId.join(",")
     : req.query.soundId;
+  const range = Array.isArray(req.query.range)
+    ? req.query.range[0]
+    : req.query.range;
   const userId = req.query.userId;
-  const type = req.query.type;
 
   if (!soundId || typeof userId !== "string") {
     return res
       .status(400)
-      .json({ error: "Sound ID and Personal ID are required." });
+      .json({ error: "Sound ID and User ID are required." });
   }
 
   const sort = req.query.sort || "newest";
@@ -37,7 +39,18 @@ export default async function handle(
       activities = await prisma.activity.findMany({
         where: {
           type: "artifact",
-          artifact: { type: "entry", sound: { appleId: soundId } },
+          artifact: {
+            type: "entry",
+            sound: { appleId: soundId },
+            ...(range !== undefined && {
+              content: {
+                rating: {
+                  gte: parseInt(range, 10) + 0.5,
+                  lt: parseInt(range, 10) + 1.5,
+                },
+              },
+            }),
+          },
         },
         orderBy: { createdAt: "desc" },
         skip: start,
@@ -56,14 +69,29 @@ export default async function handle(
       hasMorePages = activities.length > limit;
     } else {
       const rankedActivities = await client.zrevrange(
-        `sound:${type}:${soundId}:${sort}:score`,
+        `sound:${soundId}:${sort}:score`,
         start,
         end,
       );
       hasMorePages = rankedActivities.length > limit;
 
       activities = await prisma.activity.findMany({
-        where: { id: { in: rankedActivities } },
+        where: {
+          id: { in: rankedActivities },
+          type: "artifact",
+          artifact: {
+            type: "entry",
+            sound: { appleId: soundId },
+            ...(range !== undefined && {
+              content: {
+                rating: {
+                  gte: parseInt(range, 10) + 0.5,
+                  lt: parseInt(range, 10) + 1.5,
+                },
+              },
+            }),
+          },
+        },
         select: {
           id: true,
           artifact: {
@@ -79,6 +107,7 @@ export default async function handle(
 
     if (hasMorePages) activities.pop();
 
+    // Cache/fetch activities
     const activityIds = activities.map((activity) => activity.id);
     const detailedActivityData = await fetchOrCacheActivities(activityIds);
 

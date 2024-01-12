@@ -12,6 +12,7 @@ import { SortOrder } from "@/components/interface/album/Album";
 interface RenderArtifactsProps {
   soundId: string;
   sortOrder: SortOrder;
+  range: number | null;
 }
 
 const DEFAULT_HEIGHT = 80;
@@ -21,6 +22,7 @@ const GAP = 16;
 const Artifacts: React.FC<RenderArtifactsProps> = ({
   soundId,
   sortOrder = "newest",
+  range = null,
 }) => {
   const { user, pages } = useInterfaceContext();
   const userId = user?.id;
@@ -34,7 +36,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   const rowHeights = useRef<{ [key: number]: number }>({});
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useArtifactsQuery(soundId, userId, sortOrder);
+    useArtifactsQuery(soundId, userId, sortOrder, range);
 
   const activities = data ? data.pages.flatMap((page) => page.data) : [];
 

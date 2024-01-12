@@ -15,25 +15,7 @@ const dialVariants = {
   },
 };
 
-const textVariants = {
-  initial: {
-    x: "-50%",
-    y: "-50%",
-    left: "50%",
-    top: "50%",
-  },
-  hover: {
-    scale: 2,
-    x: "-50%",
-    y: "-50%",
-    left: "50%",
-    top: "50%",
-  },
-};
-
 const Dial: React.FC<DialProps> = ({ ratings, average }) => {
-  const [isHovered, setIsHovered] = React.useState(false);
-
   const total = ratings.reduce((sum, count) => sum + count, 0).toLocaleString();
   const strokeWidth = 8;
   const dotRadius = 1.5;
@@ -43,7 +25,7 @@ const Dial: React.FC<DialProps> = ({ ratings, average }) => {
   const viewBoxSize = radius * 2 + strokeWidth; // 32 = padding
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
-  const colors = ["#000", "#000", "#000", "#000", "#000"];
+  const colors = ["#FFF", "#FFF", "#FFF", "#FFF", "#FFF"];
 
   // Account for excess stroke created by the linecap rounding
   const excessStroke = 40;
@@ -104,8 +86,6 @@ const Dial: React.FC<DialProps> = ({ ratings, average }) => {
         height={viewBoxSize}
         viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
         variants={dialVariants}
-        animate={isHovered ? "hover" : "initial"}
-        whileHover="hover"
         overflow={`visible`}
       >
         {ratings.map((rating, index) => {
@@ -161,10 +141,10 @@ const Dial: React.FC<DialProps> = ({ ratings, average }) => {
       </motion.svg>
 
       <motion.div
-        className={`absolute center-x center-y flex flex-col items-center justify-center text-center gap-2 text-black`}
+        className={`absolute center-x center-y flex flex-col items-center justify-center text-center gap-2 text-white`}
       >
         <p className={`text-[64px] font-serif leading-[43px]`}>{average}</p>
-        <hr className={`w-4 border-[1px] border-gray4 rounded-full`} />
+        <hr className={`w-4 border-[1px] border-white rounded-full`} />
         <p className={`text-[15px] leading-[11px] font-bold`}>{total}</p>
       </motion.div>
     </motion.div>
