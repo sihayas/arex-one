@@ -29,21 +29,12 @@ export default function Home() {
             pardon our appearance while facade work in progress...
           </div>
 
-          <button
-            onClick={async () => {
-              const { data, error } = await supabaseClient.auth.signInWithOAuth(
-                {
-                  provider: "google",
-                },
-              );
-              {
-                error ? console.log(error) : console.log(data);
-              }
-            }}
+          <a
             className="col-span-5 col-start-2 uppercase row-start-9 text-xs text-gray2 tracking-widest "
+            href="/login/apple"
           >
-            connect
-          </button>
+            Sign in with Apple
+          </a>
         </div>
       </Layout>
     );

@@ -1,30 +1,21 @@
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { verifyRequestOrigin } from "lucia";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(req: NextRequest) {
-  // We need to create a response and hand it to the supabase client to be able to modify the response headers.
-  const res = NextResponse.next();
-  // Create authenticated Supabase Client.
-  const supabase = createMiddlewareClient({ req, res });
-  // Check if we have a session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  // Check auth condition
-  if (session?.user.email?.endsWith("@gmail.com")) {
-    // Authentication successful, forward request to protected route.
-    return res;
+export async function middleware(request: NextRequest): Promise<NextResponse> {
+  if (request.method === "GET") {
+    return NextResponse.next();
   }
-
-  // Auth condition not met, redirect to home page.
-  const redirectUrl = req.nextUrl.clone();
-  redirectUrl.pathname = "/";
-  redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname);
-  return NextResponse.redirect(redirectUrl);
+  const originHeader = request.headers.get("Origin");
+  const hostHeader = request.headers.get("Host");
+  if (
+    !originHeader ||
+    !hostHeader ||
+    !verifyRequestOrigin(originHeader, [hostHeader])
+  ) {
+    return new NextResponse(null, {
+      status: 403,
+    });
+  }
+  return NextResponse.next();
 }
-
-export const config = {
-  matcher: "/middleware-protected/:path*",
-};

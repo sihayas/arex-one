@@ -31,6 +31,26 @@ model User {
   replies       Reply[]
   hearts        Heart[]
   settings      Settings?
+
+  apple_id      Int?          @unique
+  sessions      Session[]
+  oauthAccounts OauthAccount[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model OauthAccount {
+  providerId     String
+  providerUserId String
+  userId         String
+  user           User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  @@id([providerId, providerUserId])
 }
 
 model Settings {

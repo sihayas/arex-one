@@ -13,6 +13,9 @@
     "prismaReply": "ts-node-transpile-only scripts/prismaReply.ts"
   },
   "dependencies": {
+    "@lucia-auth/adapter-mysql": "^3.0.0-beta.7",
+    "@lucia-auth/adapter-prisma": "^4.0.0-beta.9",
+    "@planetscale/database": "^1.13.0",
     "@prisma/client": "^5.4.2",
     "@supabase/auth-helpers-nextjs": "^0.8.1",
     "@supabase/auth-helpers-react": "^0.4.2",
@@ -26,6 +29,7 @@
     "@types/react-window": "^1.8.5",
     "@types/react-window-infinite-loader": "^1.0.9",
     "@types/uuid": "^9.0.3",
+    "arctic": "^0.10.3",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "cmdk": "^0.2.0",
