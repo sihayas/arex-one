@@ -64,12 +64,12 @@ input {
 }
 
 .mask {
-  -webkit-mask-image: linear-gradient(to top,
-  transparent 0%,
-  rgba(0, 0, 0, 0.2) 5%,
-  rgba(0, 0, 0, 0.4) 10%,
-  rgba(0, 0, 0, 0.6) 15%,
-  black 20%);
+  /*-webkit-mask-image: linear-gradient(to top,*/
+  /*transparent 0%,*/
+  /*rgba(0, 0, 0, 0.2) 5%,*/
+  /*rgba(0, 0, 0, 0.4) 10%,*/
+  /*rgba(0, 0, 0, 0.6) 15%,*/
+  /*black 20%);*/
   mask-image: linear-gradient(to top,
   transparent 0%,
   rgba(0, 0, 0, 0.2) 5%,
