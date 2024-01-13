@@ -1,9 +1,6 @@
 import Heart from "@/components/interface/nav/items/notification/Heart";
 import Reply from "@/components/interface/nav/items/notification/Reply";
-import Follow from "@/components/interface/nav/items/notification/Follow";
-import { Notification, UserType } from "@/types/dbTypes";
-import { useUser } from "@supabase/auth-helpers-react";
-import { AlbumData, SongData } from "@/types/appleTypes";
+// import Follow from "@/components/interface/nav/items/notification/Follow";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 const Notifications = () => {
