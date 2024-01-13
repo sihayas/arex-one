@@ -6,7 +6,7 @@ export const useArtifactsQuery = (
   soundId: string,
   userId: string | undefined,
   sort: string,
-  range: number | undefined,
+  range: number | null,
 ) =>
   useInfiniteQuery(
     ["artifacts", soundId, sort, range],

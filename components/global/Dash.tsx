@@ -4,7 +4,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 
 const Dash = ({
   width = "2px",
-  color = "rgba(0, 0, 0, 0.05)",
+  color = "rgba(0, 0, 0, 0.1)",
   className = "",
   dotSize = "1",
   spaceBetween = "8",

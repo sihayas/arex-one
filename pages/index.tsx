@@ -63,8 +63,8 @@ export default function Home() {
         >
           {/*  Blur Backdrop */}
           <div
-            className={`absolute top-0 center-x w-full h-full bg-white/40 backdrop-blur-[72px] pointer-events-none z-0`}
-          ></div>
+            className={`absolute top-0 center-x w-full h-full bg-white/5 backdrop-blur-[72px] pointer-events-none z-0`}
+          />
 
           {activeFeed === "bloom" ? (
             <RenderArtifacts
@@ -93,7 +93,7 @@ export default function Home() {
             width={42}
             height={42}
           />
-          <Dash className="absolute z-10 -translate-x-[157px]" />
+          <Dash className="absolute z-0 -translate-x-[157px]" />
         </motion.div>
       )}
 

@@ -59,7 +59,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   return (
     <div className={`flex items-end gap-2.5 relative group w-[356px] group`}>
       <Avatar
-        className={`h-[42px] border border-silver`}
+        className={`h-[42px] border border-silver z-10`}
         imageSrc={artifact.author.image}
         altText={`${artifact.author.username}'s avatar`}
         width={42}
@@ -145,7 +145,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute left-[52px] w-[288px] h-[368px] -z-10`}
+        className={`absolute left-[52px] w-[304px] h-[384px] -z-10`}
       />
     </div>
   );
