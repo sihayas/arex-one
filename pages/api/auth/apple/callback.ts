@@ -26,10 +26,10 @@ export default async function handler(
   }
 
   try {
-    // Validate and return Apple tokens
+    console.log("Validating Apple Authorization Code");
     const tokens = await apple.validateAuthorizationCode(code);
 
-    // Using the access token, retrieve the user's details
+    console.log("Retrieving user's details from Apple");
     const appleUserResponse = await fetch(
       "https://appleid.apple.com/auth/token",
       {
@@ -40,8 +40,9 @@ export default async function handler(
     );
 
     const appleUser: AppleUser = await appleUserResponse.json();
+    console.log("Apple User Details:", appleUser);
 
-    // Check if the user already exists in the database via sub
+    console.log("Checking if the user exists in the database");
     const existingUser = await prisma.user.findFirst({
       where: {
         apple_id: appleUser.sub,
@@ -49,7 +50,9 @@ export default async function handler(
     });
 
     if (existingUser) {
+      console.log("Existing user found, creating session");
       const session = await lucia.createSession(existingUser.id, {});
+      console.log("Session created, setting cookie and redirecting to home");
       return res
         .appendHeader(
           "Set-Cookie",
@@ -58,6 +61,7 @@ export default async function handler(
         .redirect("/");
     }
 
+    console.log("No existing user, creating new user");
     const userId = generateId(15);
     const defaultImageUrl = await uploadDefaultImage();
 
@@ -71,7 +75,11 @@ export default async function handler(
       },
     });
 
+    console.log("New user created, initiating session");
     const session = await lucia.createSession(userId, {});
+    console.log(
+      "Session created for new user, setting cookie and redirecting to home",
+    );
     return res
       .appendHeader(
         "Set-Cookie",
@@ -79,9 +87,9 @@ export default async function handler(
       )
       .redirect("/");
   } catch (e) {
-    // the specific error message depends on the provider
+    console.error("Error during Apple Sign In process", e);
     if (e instanceof OAuth2RequestError) {
-      // invalid code
+      console.error("OAuth2 Request Error - Invalid Code", e);
       return new Response(null, {
         status: 400,
       });
