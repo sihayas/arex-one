@@ -45,7 +45,8 @@ const credentials: AppleCredentials = {
   certificate,
 };
 
-export const apple = new Apple(credentials, "voir.space");
+const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
+export const apple = new Apple(credentials, redirectURI);
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
