@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import Image from "next/image";
 import RenderArtifacts from "@/components/index/RenderArtifacts";
+import Link from "next/link";
 
 type Feed = "personal" | "bloom" | "recent" | null;
 export default function Home() {
@@ -27,12 +28,12 @@ export default function Home() {
             pardon our appearance while facade work in progress...
           </div>
 
-          <a
+          <Link
             className="col-span-5 col-start-2 uppercase row-start-9 text-xs text-gray2 tracking-widest "
             href="/api/auth/apple"
           >
             Sign in with Apple
-          </a>
+          </Link>
         </div>
       </Layout>
     );
