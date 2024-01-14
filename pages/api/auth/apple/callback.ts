@@ -19,8 +19,32 @@ export default async function handler(
   const state = req.query.state?.toString() ?? null;
   const storedState = req.cookies.apple_oauth_state ?? null;
 
-  if (!code || !state || !storedState || state !== storedState) {
-    console.log("something", code, state, storedState);
+  // Log each variable to see their values
+  console.log("Code from query:", code);
+  console.log("State from query:", state);
+  console.log("Stored state from cookies:", storedState);
+
+  // Check each condition separately and log
+  if (!code) {
+    console.log("Code is missing");
+    res.status(400).end();
+    return;
+  }
+
+  if (!state) {
+    console.log("State is missing");
+    res.status(400).end();
+    return;
+  }
+
+  if (!storedState) {
+    console.log("Stored state is missing");
+    res.status(400).end();
+    return;
+  }
+
+  if (state !== storedState) {
+    console.log("State mismatch:", state, "does not equal", storedState);
     res.status(400).end();
     return;
   }
