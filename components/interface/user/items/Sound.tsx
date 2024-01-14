@@ -1,12 +1,7 @@
 import React from "react";
 
-import useHandleHeartClick from "@/hooks/useHeart";
-import { useArtifact } from "@/hooks/usePage";
-
-import Heart from "@/components/global/Heart";
-import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
 

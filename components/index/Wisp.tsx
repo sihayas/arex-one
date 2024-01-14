@@ -5,18 +5,19 @@ import { useArtifact, useSound } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
-import { useUser } from "@supabase/auth-helpers-react";
+
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 
 import Image from "next/image";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 interface WispProps {
   artifact: ArtifactExtended;
 }
 
 export const Wisp: React.FC<WispProps> = ({ artifact }) => {
-  const user = useUser();
+  const { user } = useInterfaceContext();
   const { handleSelectSound } = useSound();
 
   const sound = artifact.appleData;

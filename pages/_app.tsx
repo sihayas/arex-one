@@ -8,35 +8,22 @@ import { SoundDetailsProvider } from "@/context/SoundContext";
 import { Toaster } from "sonner";
 import { InterfaceContextProvider } from "@/context/InterfaceContext";
 import { NavProvider } from "@/context/NavContext";
-import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 
-const App = ({
-  Component,
-  pageProps,
-}: AppProps<{
-  initialSession: Session;
-}>) => {
-  const [supabaseClient] = useState(() => createPagesBrowserClient());
+const App = ({ Component, pageProps }: AppProps<{}>) => {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionContextProvider
-        supabaseClient={supabaseClient}
-        initialSession={pageProps.initialSession}
-      >
-        <InterfaceContextProvider>
-          <NavProvider>
-            <SoundDetailsProvider>
-              <ThreadcrumbProvider>
-                <Component {...pageProps} />
-              </ThreadcrumbProvider>
-            </SoundDetailsProvider>
-          </NavProvider>
-        </InterfaceContextProvider>
-        <Toaster />
-      </SessionContextProvider>
+      <InterfaceContextProvider>
+        <NavProvider>
+          <SoundDetailsProvider>
+            <ThreadcrumbProvider>
+              <Component {...pageProps} />
+            </ThreadcrumbProvider>
+          </SoundDetailsProvider>
+        </NavProvider>
+      </InterfaceContextProvider>
+      <Toaster />
       {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   );

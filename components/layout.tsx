@@ -2,11 +2,11 @@ import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useRef } from "react";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
-import { useUser } from "@supabase/auth-helpers-react";
+
 import { motion, useAnimate } from "framer-motion";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const user = useUser();
+  const { user } = useInterfaceContext();
   const { isVisible, setIsVisible, pages, activePage } = useInterfaceContext();
   const { inputRef } = useNavContext();
   const mainContentRef = useRef<HTMLElement>(null);

@@ -7,9 +7,9 @@ import React, {
 } from "react";
 import { UserType, Artifact } from "@/types/dbTypes";
 import { v4 as uuidv4 } from "uuid";
-import { Session, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { useNotificationsQuery } from "@/lib/apiHelper/user";
+import { Session } from "lucia";
 
 export type Page = {
   key: string;
@@ -94,69 +94,68 @@ export const InterfaceContextProvider = ({
   const [user, setUser] = useState<UserType | null>(null);
   const [session, setSessionRaw] = useState<Session | null>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
-  const supabaseClient = useSupabaseClient();
 
   const sessionRef = useRef(session);
 
-  const setSession = useCallback(
-    (newSession: Session | null) => {
-      /**
-       * Prevent forced redraw on tab focus:
-       * [onAuthStateChange (SIGNED\_IN event) Fired everytime I change Chrome Tab or refocus on tab . · Issue #7250 · supabase/supabase](https://github.com/supabase/supabase/issues/7250)
-       */
-      if (JSON.stringify(sessionRef.current) === JSON.stringify(newSession)) {
-        // console.debug("SupabaseBrowserAuthManager: no update, the same");
-        return;
-      }
+  // const setSession = useCallback(
+  //   (newSession: Session | null) => {
+  //     /**
+  //      * Prevent forced redraw on tab focus:
+  //      * [onAuthStateChange (SIGNED\_IN event) Fired everytime I change Chrome Tab or refocus on tab . · Issue #7250 · supabase/supabase](https://github.com/supabase/supabase/issues/7250)
+  //      */
+  //     if (JSON.stringify(sessionRef.current) === JSON.stringify(newSession)) {
+  //       // console.debug("SupabaseBrowserAuthManager: no update, the same");
+  //       return;
+  //     }
+  //
+  //     // console.debug("SupabaseBrowserAuthManager: update, new session");
+  //
+  //     sessionRef.current = newSession;
+  //     setSession(newSession);
+  //   },
+  //   [setSessionRaw],
+  // );
 
-      // console.debug("SupabaseBrowserAuthManager: update, new session");
-
-      sessionRef.current = newSession;
-      setSession(newSession);
-    },
-    [setSessionRaw],
-  );
-
-  useEffect(() => {
-    const setData = async (session: Session | null) => {
-      // console.debug("Auth state changed:", { event, session });
-      if (session) {
-        setSession(session);
-
-        try {
-          const { data: userData, error: fetchError } = await supabaseClient
-            .from("User")
-            .select("*")
-            .eq("email", session.user.email)
-            .single();
-
-          if (fetchError) throw fetchError;
-          setUser(userData);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      } else {
-        setUser(null);
-        setSession(null);
-      }
-    };
-
-    // Listen for changes to authentication
-    const { data: listener } = supabaseClient.auth.onAuthStateChange(
-      (event, session) => {
-        setData(session);
-      },
-    );
-
-    // Initial call to set data
-    supabaseClient.auth.getSession().then(({ data: { session } }) => {
-      setData(session);
-    });
-
-    return () => {
-      listener?.subscription.unsubscribe();
-    };
-  }, [supabaseClient]);
+  // useEffect(() => {
+  //   const setData = async (session: Session | null) => {
+  //     // console.debug("Auth state changed:", { event, session });
+  //     if (session) {
+  //       setSession(session);
+  //
+  //       try {
+  //         const { data: userData, error: fetchError } = await supabaseClient
+  //           .from("User")
+  //           .select("*")
+  //           .eq("email", session.user.email)
+  //           .single();
+  //
+  //         if (fetchError) throw fetchError;
+  //         setUser(userData);
+  //       } catch (error) {
+  //         console.error("Error fetching user data:", error);
+  //       }
+  //     } else {
+  //       setUser(null);
+  //       setSession(null);
+  //     }
+  //   };
+  //
+  //   // Listen for changes to authentication
+  //   const { data: listener } = supabaseClient.auth.onAuthStateChange(
+  //     (event, session) => {
+  //       setData(session);
+  //     },
+  //   );
+  //
+  //   // Initial call to set data
+  //   supabaseClient.auth.getSession().then(({ data: { session } }) => {
+  //     setData(session);
+  //   });
+  //
+  //   return () => {
+  //     listener?.subscription.unsubscribe();
+  //   };
+  // }, [supabaseClient]);
 
   const { data: notifications } = useNotificationsQuery(user?.id);
 
@@ -228,7 +227,7 @@ export const InterfaceContextProvider = ({
         user,
         setUser,
         session,
-        setSession,
+        setSession: setSessionRaw,
         isLoading,
         setIsLoading,
         notifs,

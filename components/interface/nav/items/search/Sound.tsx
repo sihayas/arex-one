@@ -5,10 +5,10 @@ import { useSoundContext } from "@/context/SoundContext";
 import { useNavContext } from "@/context/NavContext";
 import { useSound } from "@/hooks/usePage";
 import { changeEssential } from "@/lib/apiHelper/user";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
-  const user = useUser();
+  const { user } = useInterfaceContext();
 
   const { handleSelectSound } = useSound();
   const {

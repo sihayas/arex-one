@@ -6,14 +6,15 @@ import { useArtifact } from "@/hooks/usePage";
 import Avatar from "@/components/global/Avatar";
 import { useSoundContext } from "@/context/SoundContext";
 import { ArtifactExtended } from "@/types/globalTypes";
-import { useUser } from "@supabase/auth-helpers-react";
+
 import { AlbumData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
 import EntryDial from "@/components/global/EntryDial";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
   const { selectedSound } = useSoundContext();
-  const user = useUser();
+  const { user } = useInterfaceContext();
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     artifact.heartedByUser,

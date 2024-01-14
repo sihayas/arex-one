@@ -6,7 +6,7 @@ import { ReplyType } from "@/types/dbTypes";
 import Children from "@/components/interface/artifact/render/Children";
 import { motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
-import { useUser } from "@supabase/auth-helpers-react";
+
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
 import { useInterfaceContext } from "@/context/InterfaceContext";
@@ -19,7 +19,7 @@ interface ReplyProps {
 }
 
 export default function Reply({ reply, level, isChild, index }: ReplyProps) {
-  const user = useUser();
+  const { user } = useInterfaceContext();
   const { setReplyTarget, replyTarget } = useThreadcrumb();
   const { pages } = useInterfaceContext();
   const [showChildReplies, setShowChildReplies] = useState<boolean>(false);

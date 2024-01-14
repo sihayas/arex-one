@@ -4,11 +4,11 @@ import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact, useSound } from "@/hooks/usePage";
 
 import Heart from "@/components/global/Heart";
-import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 interface UserProps {
   artifact: ArtifactExtended;
@@ -21,7 +21,7 @@ export const Entry: React.FC<UserProps> = ({
   containerRef,
   index,
 }) => {
-  const user = useUser();
+  const { user } = useInterfaceContext();
 
   const { handleSelectSound } = useSound();
   const [hoverContent, setHoverContent] = useState(false);

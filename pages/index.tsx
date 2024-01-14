@@ -4,7 +4,6 @@ import React from "react";
 import Dash from "@/components/global/Dash";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import RenderArtifacts from "@/components/index/RenderArtifacts";
 
@@ -12,7 +11,6 @@ type Feed = "personal" | "bloom" | "recent" | null;
 export default function Home() {
   const { user } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-  const supabaseClient = useSupabaseClient();
 
   const [activeFeed, setActiveFeed] = React.useState<Feed>("personal");
 
@@ -89,12 +87,7 @@ export default function Home() {
       )}
 
       {/* DISCONNECT */}
-      <button
-        className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"
-        onClick={async () => {
-          const { error } = await supabaseClient.auth.signOut();
-        }}
-      >
+      <button className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50">
         CONNECTED
       </button>
     </Layout>

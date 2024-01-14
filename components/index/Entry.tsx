@@ -5,20 +5,20 @@ import { useArtifact, useSound } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
-import { useUser } from "@supabase/auth-helpers-react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
 import { BlurDiv } from "@/components/global/Blur";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 interface NewAProps {
   artifact: ArtifactExtended;
 }
 
 export const Entry: React.FC<NewAProps> = ({ artifact }) => {
-  const user = useUser();
   const { handleSelectSound } = useSound();
+  const { user } = useInterfaceContext();
   const [hoverContent, setHoverContent] = useState(false);
 
   const variants = {

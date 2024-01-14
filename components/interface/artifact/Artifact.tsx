@@ -5,7 +5,6 @@ import {
   useInterfaceContext,
 } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { useUser } from "@supabase/auth-helpers-react";
 import {
   motion,
   useMotionValueEvent,
@@ -34,7 +33,7 @@ const artworkConfig = {
 };
 
 export const Artifact = () => {
-  const user = useUser();
+  const { user } = useInterfaceContext();
   const { pages, scrollContainerRef, activePage, setActivePage } =
     useInterfaceContext();
   const { handleSelectSound } = useSound();

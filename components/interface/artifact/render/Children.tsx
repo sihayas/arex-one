@@ -2,7 +2,7 @@ import React from "react";
 import Reply from "@/components/interface/artifact/items/Reply";
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/apiHelper/artifact";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 type RenderChildrenProps = {
   parentReplyId: string;
@@ -11,7 +11,7 @@ type RenderChildrenProps = {
 };
 
 function Children({ level, parentReplyId, isChild }: RenderChildrenProps) {
-  const user = useUser();
+  const { user } = useInterfaceContext();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useRepliesQuery(user!.id, undefined, parentReplyId);
