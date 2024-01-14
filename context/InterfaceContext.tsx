@@ -98,16 +98,16 @@ export const InterfaceContextProvider = ({
   const [session, setSession] = useState<Session | null>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
 
-  const { data, isError } = useUserAndSessionQuery();
+  // const { data, isError } = useUserAndSessionQuery();
 
-  useEffect(() => {
-    if (data) {
-      setUser(data.user);
-      setSession(data.session);
-      console.log("user and session set");
-      console.log(data);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setUser(data.user);
+  //     setSession(data.session);
+  //     console.log("user and session set");
+  //     console.log(data);
+  //   }
+  // }, [data]);
 
   const { data: notifications } = useNotificationsQuery(user?.id);
 

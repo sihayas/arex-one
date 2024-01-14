@@ -26,10 +26,10 @@ export default async function handler(
   }
 
   try {
-    console.log("Validating Apple Authorization Code");
+    // Validate and return Apple tokens
     const tokens = await apple.validateAuthorizationCode(code);
 
-    console.log("Retrieving user's details from Apple");
+    // Using the access token, retrieve the user's details
     const appleUserResponse = await fetch(
       "https://appleid.apple.com/auth/token",
       {
@@ -40,9 +40,8 @@ export default async function handler(
     );
 
     const appleUser: AppleUser = await appleUserResponse.json();
-    console.log("Apple User Details:", appleUser);
 
-    console.log("Checking if the user exists in the database");
+    // Check if the user already exists in the database via sub
     const existingUser = await prisma.user.findFirst({
       where: {
         apple_id: appleUser.sub,
@@ -50,9 +49,7 @@ export default async function handler(
     });
 
     if (existingUser) {
-      console.log("Existing user found, creating session");
       const session = await lucia.createSession(existingUser.id, {});
-      console.log("Session created, setting cookie and redirecting to home");
       return res
         .appendHeader(
           "Set-Cookie",
@@ -61,7 +58,6 @@ export default async function handler(
         .redirect("/");
     }
 
-    console.log("No existing user, creating new user");
     const userId = generateId(15);
     const defaultImageUrl = await uploadDefaultImage();
 
@@ -75,11 +71,7 @@ export default async function handler(
       },
     });
 
-    console.log("New user created, initiating session");
     const session = await lucia.createSession(userId, {});
-    console.log(
-      "Session created for new user, setting cookie and redirecting to home",
-    );
     return res
       .appendHeader(
         "Set-Cookie",
@@ -87,9 +79,9 @@ export default async function handler(
       )
       .redirect("/");
   } catch (e) {
-    console.error("Error during Apple Sign In process", e);
+    // the specific error message depends on the provider
     if (e instanceof OAuth2RequestError) {
-      console.error("OAuth2 Request Error - Invalid Code", e);
+      // invalid code
       return new Response(null, {
         status: 400,
       });
