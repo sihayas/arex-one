@@ -1,4 +1,4 @@
-import { Lucia } from "lucia";
+import { Lucia, Session, User } from "lucia";
 import { webcrypto } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
@@ -6,22 +6,20 @@ import { Apple } from "arctic";
 import type { AppleCredentials } from "arctic";
 import fs from "fs";
 import path from "path";
+import type { IncomingMessage, ServerResponse } from "http";
 
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
-  }
-  interface DatabaseUserAttributes {
-    apple_email: string;
-    username: string;
+    DatabaseUserAttributes: DatabaseUserAttributes;
   }
 }
 
-interface DatabaseSessionAttributes {
-  ip_country: string;
-}
 interface DatabaseUserAttributes {
+  id: string;
+  apple_id: number;
   username: string;
+  image: string;
 }
 
 globalThis.crypto = webcrypto as Crypto;
@@ -58,11 +56,41 @@ export const lucia = new Lucia(adapter, {
       domain: "voir.space",
     },
   },
+  getUserAttributes: (attributes) => {
+    return {
+      // attributes has the type of DatabaseUserAttributes
+      id: attributes.id,
+      appleId: attributes.apple_id,
+      username: attributes.username,
+      image: attributes.image,
+    };
+  },
 });
 
-// IMPORTANT!
-declare module "lucia" {
-  interface Register {
-    Lucia: typeof lucia;
+// Middleware to validate the session cookie on every request
+export async function validateRequest(
+  req: IncomingMessage,
+  res: ServerResponse,
+): Promise<{ user: User; session: Session } | { user: null; session: null }> {
+  const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
+  if (!sessionId) {
+    return {
+      user: null,
+      session: null,
+    };
   }
+  const result = await lucia.validateSession(sessionId);
+  if (result.session && result.session.fresh) {
+    res.appendHeader(
+      "Set-Cookie",
+      lucia.createSessionCookie(result.session.id).serialize(),
+    );
+  }
+  if (!result.session) {
+    res.appendHeader(
+      "Set-Cookie",
+      lucia.createBlankSessionCookie().serialize(),
+    );
+  }
+  return result;
 }
