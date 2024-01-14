@@ -10,7 +10,7 @@ datasource db {
 
 model User {
   id            String           @id @default(cuid())
-  email         String           @unique
+  email         String?          @unique
   username      String           @unique
   bio           String?          @db.VarChar(50)
   image         String
@@ -32,7 +32,7 @@ model User {
   hearts        Heart[]
   settings      Settings?
 
-  apple_id      Int?          @unique
+  apple_id      String?          @unique
   sessions      Session[]
   oauthAccounts OauthAccount[]
 }

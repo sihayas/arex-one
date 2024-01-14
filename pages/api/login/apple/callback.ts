@@ -1,8 +1,10 @@
-import { apple, lucia } from "@/lib/auth";
+import { apple, lucia } from "@/lib/global/auth";
 import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
 
 import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "@/lib/global/prisma";
+import { uploadDefaultImage } from "@/lib/azureBlobUtils";
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,18 +26,27 @@ export default async function handler(
   }
 
   try {
+    // Validate and return Apple tokens
     const tokens = await apple.validateAuthorizationCode(code);
-    const appleUserResponse = await fetch("https://api.apple.com/user", {
-      headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
+
+    // Using the access token, retrieve the user's details
+    const appleUserResponse = await fetch(
+      "https://appleid.apple.com/auth/token",
+      {
+        headers: {
+          Authorization: `Bearer ${tokens.accessToken}`,
+        },
       },
-    });
+    );
+
     const appleUser: AppleUser = await appleUserResponse.json();
 
-    const existingUser = await db
-      .table("user")
-      .where("github_id", "=", githubUser.id)
-      .get();
+    // Check if the user already exists in the database via sub
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        apple_id: appleUser.sub,
+      },
+    });
 
     if (existingUser) {
       const session = await lucia.createSession(existingUser.id, {});
@@ -48,11 +59,18 @@ export default async function handler(
     }
 
     const userId = generateId(15);
-    await db.table("user").insert({
-      id: userId,
-      github_id: githubUser.id,
-      username: githubUser.login,
+    const defaultImageUrl = await uploadDefaultImage();
+
+    await prisma.user.create({
+      data: {
+        id: userId,
+        apple_id: appleUser.sub,
+        username: "Apple User",
+        email: appleUser.email,
+        image: defaultImageUrl,
+      },
     });
+
     const session = await lucia.createSession(userId, {});
     return res
       .appendHeader(

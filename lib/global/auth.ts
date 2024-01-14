@@ -12,7 +12,7 @@ declare module "lucia" {
     Lucia: typeof lucia;
   }
   interface DatabaseUserAttributes {
-    apple_id: number;
+    apple_email: string;
     username: string;
   }
 }
@@ -52,7 +52,7 @@ export const lucia = new Lucia(adapter, {
     attributes: {
       secure: true,
       sameSite: "strict",
-      domain: "example.com",
+      domain: "voir.space",
     },
   },
 });

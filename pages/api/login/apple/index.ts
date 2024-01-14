@@ -1,4 +1,4 @@
-import { apple } from "@/lib/auth";
+import { apple } from "@/lib/global/auth";
 import { generateState } from "arctic";
 import { serializeCookie } from "oslo/cookie";
 
