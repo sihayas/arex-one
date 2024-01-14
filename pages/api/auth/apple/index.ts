@@ -20,7 +20,7 @@ export default async function handler(
     const url: URL = await apple.createAuthorizationURL(state, {
       scopes: ["name", "email"],
     });
-    url.searchParams.set("response_mode", "query");
+    url.searchParams.set("response_mode", "form_post");
 
     res
       .appendHeader(
