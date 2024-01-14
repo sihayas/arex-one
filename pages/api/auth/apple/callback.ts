@@ -81,10 +81,9 @@ export default async function handler(
   } catch (e) {
     // the specific error message depends on the provider
     if (e instanceof OAuth2RequestError) {
+      const { message, description, request } = e;
       // invalid code
-      return new Response(null, {
-        status: 400,
-      });
+      console.error(message, description, request);
     }
     res.status(500).end();
     return;
