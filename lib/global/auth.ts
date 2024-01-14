@@ -43,6 +43,7 @@ const credentials: AppleCredentials = {
   certificate,
 };
 
+//
 const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
 export const apple = new Apple(credentials, redirectURI);
 
