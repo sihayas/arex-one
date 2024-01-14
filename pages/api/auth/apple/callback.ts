@@ -17,7 +17,7 @@ export default async function handler(
 
   const code = req.query.code?.toString() ?? null;
   const state = req.query.state?.toString() ?? null;
-  const storedState = req.cookies.github_oauth_state ?? null;
+  const storedState = req.cookies.apple_oauth_state ?? null;
 
   if (!code || !state || !storedState || state !== storedState) {
     console.log(code, state, storedState);
