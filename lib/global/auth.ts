@@ -43,7 +43,6 @@ const credentials: AppleCredentials = {
   certificate,
 };
 
-//
 const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
 export const apple = new Apple(credentials, redirectURI);
 
@@ -59,7 +58,6 @@ export const lucia = new Lucia(adapter, {
   },
   getUserAttributes: (attributes) => {
     return {
-      // attributes has the type of DatabaseUserAttributes
       id: attributes.id,
       appleId: attributes.apple_id,
       username: attributes.username,

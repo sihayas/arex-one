@@ -20,7 +20,7 @@ export default async function handler(
   const storedState = req.cookies.github_oauth_state ?? null;
 
   if (!code || !state || !storedState || state !== storedState) {
-    console.log("failed callback", code, state, storedState);
+    console.log(code, state, storedState);
     res.status(400).end();
     return;
   }
