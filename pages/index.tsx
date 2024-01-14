@@ -29,7 +29,7 @@ export default function Home() {
 
           <a
             className="col-span-5 col-start-2 uppercase row-start-9 text-xs text-gray2 tracking-widest "
-            href="auth/apple"
+            href="/api/auth/apple"
           >
             Sign in with Apple
           </a>
