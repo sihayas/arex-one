@@ -8,10 +8,7 @@ import React, {
 import { UserType, Artifact } from "@/types/dbTypes";
 import { v4 as uuidv4 } from "uuid";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import {
-  useNotificationsQuery,
-  useUserAndSessionQuery,
-} from "@/lib/apiHelper/user";
+
 import { Session } from "lucia";
 
 export type Page = {
