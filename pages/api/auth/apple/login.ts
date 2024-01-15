@@ -22,22 +22,25 @@ export default async function handler(
     });
     url.searchParams.set("response_mode", "form_post");
 
-    res
-      .appendHeader(
-        "Set-Cookie",
-        serializeCookie("apple_oauth_state", state, {
-          path: "/",
-          secure: process.env.NODE_ENV === "production",
-          httpOnly: true,
-          maxAge: 60 * 10,
-          sameSite: "lax",
-        }),
-      )
-      .redirect(url.toString());
+    // Generate the cookie string
+    const cookieString = serializeCookie("apple_oauth_state", state, {
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 60 * 10,
+      sameSite: "lax",
+    });
+
+    // Log the cookie string
+    console.log("Setting cookie:", cookieString);
+
+    res.appendHeader("Set-Cookie", cookieString);
 
     // Log the state and the URL
     console.log("Generated state:", state);
     console.log("Redirect URL:", url.toString());
+
+    res.redirect(url.toString());
   } catch (error) {
     // Log the error for debugging
     console.error("Error in /api/auth/apple handler:", error);
