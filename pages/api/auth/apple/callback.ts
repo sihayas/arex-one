@@ -1,7 +1,6 @@
 import { apple, lucia } from "@/lib/global/auth";
 import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
-import { cookies } from "next/headers";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
@@ -40,8 +39,8 @@ export default async function handler(
 
   // Cross-check the state from the request body with the stored cookie/state
 
-  const cookieStore = cookies();
-  const storedState = cookieStore.get("apple_oauth_state");
+  console.log("Request itself:", req);
+  const storedState = req.cookies.apple_oauth_state ?? null;
 
   // Log each variable to see their values
   console.log("Code from form data:", code);
