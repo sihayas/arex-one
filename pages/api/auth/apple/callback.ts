@@ -34,19 +34,9 @@ export default async function handler(
     return;
   }
 
-  const protocol = "https";
-  const host = req.headers.host;
-  const fullPath = `${protocol}://${host}${req.url}`;
-
-  // Parse the request body (Apple sends it as a form post)
-  const url = new URL(fullPath);
-
   // On first login, Apple sends the user's data as JSON in the request body
-  const userJSON = url.searchParams.get("user") ?? null;
+  const { user: userJSON, code, state } = req.body;
 
-  // Validation variables
-  const code = url.searchParams.get("code");
-  const state = url.searchParams.get("state");
   const storedState = req.cookies.apple_oauth_state ?? null;
 
   // Log each variable to see their values
