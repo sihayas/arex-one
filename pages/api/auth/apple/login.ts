@@ -33,7 +33,6 @@ export default async function handler(
 
     // Log the cookie string
     console.log("Setting cookie:", cookieString);
-
     res.appendHeader("Set-Cookie", cookieString);
 
     // Log the state and the URL
