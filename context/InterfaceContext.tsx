@@ -109,19 +109,19 @@ export const InterfaceContextProvider = ({
   //   }
   // }, [data]);
 
-  const { data: notifications } = useNotificationsQuery(user?.id);
+  // const { data: notifications } = useNotificationsQuery(user?.id);
 
   useEffect(() => {
     if (scrollContainerRef.current) {
       console.log(scrollContainerRef.current);
     }
   }, [scrollContainerRef]);
-
-  useEffect(() => {
-    if (notifications) {
-      setNotifs(notifications.data);
-    }
-  }, [notifications]);
+  //
+  // useEffect(() => {
+  //   if (notifications) {
+  //     setNotifs(notifications.data);
+  //   }
+  // }, [notifications]);
 
   // Initialize the user page upon session and user initialization
   useEffect(() => {
