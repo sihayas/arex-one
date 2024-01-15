@@ -34,6 +34,8 @@ export default async function handler(
     return;
   }
 
+  console.log("received request", req);
+
   // Parse the request body (Apple sends it as a form post)
   const url = new URL(req.url);
 
