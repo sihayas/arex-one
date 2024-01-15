@@ -34,6 +34,10 @@ export default async function handler(
         }),
       )
       .redirect(url.toString());
+
+    // Log the state and the URL
+    console.log("Generated state:", state);
+    console.log("Redirect URL:", url.toString());
   } catch (error) {
     // Log the error for debugging
     console.error("Error in /api/auth/apple handler:", error);

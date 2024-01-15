@@ -40,6 +40,8 @@ export default async function handler(
   console.log("req.body:", req.body);
   console.log("req.cookies:", req.cookies);
 
+  // Cross-check the state from the request body with the stored cookie/state
+
   const storedState = req.cookies.apple_oauth_state ?? null;
 
   // Log each variable to see their values
