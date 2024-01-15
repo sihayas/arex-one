@@ -1,6 +1,7 @@
 import { apple, lucia } from "@/lib/global/auth";
 import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
+import { cookies } from "next/headers";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
@@ -37,12 +38,10 @@ export default async function handler(
   // On first login, Apple sends the user's data as JSON in the request body
   const { user: userJSON, code, state } = req.body;
 
-  console.log("req.body:", req.body);
-  console.log("req.cookies:", req.cookies);
-
   // Cross-check the state from the request body with the stored cookie/state
 
-  const storedState = req.cookies.apple_oauth_state ?? null;
+  const cookieStore = cookies();
+  const storedState = cookieStore.get("apple_oauth_state");
 
   // Log each variable to see their values
   console.log("Code from form data:", code);
