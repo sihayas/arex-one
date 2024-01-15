@@ -66,15 +66,14 @@ export default async function handler(
 
   try {
     // Validate and return Apple tokens
-    const tokens = await apple.validateAuthorizationCode(code.toString());
+    const tokens = await apple.validateAuthorizationCode(code);
 
-    let firstName, lastName, email;
+    let name, email;
     // Parse user JSON if present
     if (typeof userJSON === "string") {
       const user = JSON.parse(userJSON);
-      firstName = user.name.firstName;
-      lastName = user.name.lastName;
       email = user.email;
+      name = user.name;
     }
 
     let existingUser = await prisma.user.findFirst({
@@ -98,7 +97,7 @@ export default async function handler(
       data: {
         id: userId,
         apple_id: tokens.idToken,
-        username: `${firstName} ${lastName}`,
+        username: `${name ?? "Apple User"}`,
         email: email,
         image: defaultImageUrl,
       },
