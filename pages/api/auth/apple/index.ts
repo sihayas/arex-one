@@ -20,6 +20,7 @@ export default async function handler(
     const url: URL = await apple.createAuthorizationURL(state);
     // url.searchParams.set("response_mode", "form_post");
 
+    console.log(state, "State generated and stored in cookie");
     res
       .appendHeader(
         "Set-Cookie",
