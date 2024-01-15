@@ -26,16 +26,18 @@ export default async function handler(
 
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
-    x.appendHeader(
-      "Set-Cookie",
-      serializeCookie("apple_oauth_state", state, {
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-        maxAge: 60 * 10,
-        sameSite: "lax",
-      }),
-    ).redirect(url.toString());
+    res
+      .appendHeader(
+        "Set-Cookie",
+        serializeCookie("apple_oauth_state", state, {
+          path: "/",
+          secure: process.env.NODE_ENV === "production",
+          httpOnly: true,
+          maxAge: 60 * 10,
+          sameSite: "lax",
+        }),
+      )
+      .redirect(url.toString());
   } catch (error) {
     // Log the error for debugging
     console.error("Error in /api/auth/apple handler:", error);
