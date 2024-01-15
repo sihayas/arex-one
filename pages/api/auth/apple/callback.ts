@@ -39,7 +39,7 @@ export default async function handler(
 
   // Cross-check the state from the request body with the stored cookie/state
   // @ts-ignore
-  const storedState = req.cookies.get("apple_oauth_state")?.value;
+  const storedState = req.cookies("apple_oauth_state")?.value;
 
   // Log each variable to see their values
   console.log("Code from form data:", code);
