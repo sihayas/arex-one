@@ -5,23 +5,12 @@ import { generateId } from "lucia";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { uploadDefaultImage } from "@/lib/azureBlobUtils";
-import { parse } from "querystring";
-
-async function bufferRequestBody(req: NextApiRequest): Promise<Buffer> {
-  const chunks: Uint8Array[] = [];
-  for await (const chunk of req) {
-    chunks.push(chunk);
-  }
-  return Buffer.concat(chunks);
-}
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  console.log("Request method:", req.method);
-
-  if (req.method !== "POST") {
+  if (req.method !== "GET") {
     res.status(404).end();
     return;
   }
