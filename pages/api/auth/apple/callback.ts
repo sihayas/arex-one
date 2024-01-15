@@ -10,18 +10,21 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  if (req.method !== "GET") {
+  if (req.method !== "POST") {
     res.status(404).end();
     return;
   }
 
-  const code = req.query.code?.toString() ?? null;
-  const state = req.query.state?.toString() ?? null;
+  // Extract code and state from the form data
+  const formData = await req.formData();
+  const code = formData.get("code")?.toString() ?? null;
+  const state = formData.get("state")?.toString() ?? null;
   const storedState = req.cookies.apple_oauth_state ?? null;
+  const userJSON = formData.get("user");
 
   // Log each variable to see their values
-  console.log("Code from query:", code);
-  console.log("State from query:", state);
+  console.log("Code from form data:", code);
+  console.log("State from form data:", state);
   console.log("Stored state from cookies:", storedState);
 
   // Check each condition separately and log
@@ -51,25 +54,19 @@ export default async function handler(
 
   try {
     // Validate and return Apple tokens
-    const tokens = await apple.validateAuthorizationCode(code);
+    const tokens = await apple.validateAuthorizationCode(code.toString());
 
-    // Using the access token, retrieve the user's details
-    const appleUserResponse = await fetch(
-      "https://appleid.apple.com/auth/token",
-      {
-        headers: {
-          Authorization: `Bearer ${tokens.accessToken}`,
-        },
-      },
-    );
+    let firstName, lastName, email;
+    // Parse user JSON if present
+    if (typeof userJSON === "string") {
+      const user = JSON.parse(userJSON);
+      firstName = user.name.firstName;
+      lastName = user.name.lastName;
+      email = user.email;
+    }
 
-    const appleUser: AppleUser = await appleUserResponse.json();
-
-    // Check if the user already exists in the database via sub
-    const existingUser = await prisma.user.findFirst({
-      where: {
-        apple_id: appleUser.sub,
-      },
+    let existingUser = await prisma.user.findFirst({
+      where: { apple_id: tokens.idToken },
     });
 
     if (existingUser) {
@@ -88,9 +85,9 @@ export default async function handler(
     await prisma.user.create({
       data: {
         id: userId,
-        apple_id: appleUser.sub,
-        username: "Apple User",
-        email: appleUser.email,
+        apple_id: tokens.idToken,
+        username: `${firstName} ${lastName}`,
+        email: email,
         image: defaultImageUrl,
       },
     });
