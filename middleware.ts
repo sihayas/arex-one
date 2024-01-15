@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (
     !originHeader ||
     !hostHeader ||
-    !verifyRequestOrigin(originHeader, [hostHeader])
+    !verifyRequestOrigin(originHeader, [hostHeader, "voir.space"])
   ) {
     return new NextResponse(null, {
       status: 403,

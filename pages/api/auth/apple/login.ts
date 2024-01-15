@@ -24,8 +24,6 @@ export default async function handler(
 
     console.log("State:", state);
 
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
     res
       .appendHeader(
         "Set-Cookie",
