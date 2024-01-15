@@ -37,6 +37,9 @@ export default async function handler(
   // On first login, Apple sends the user's data as JSON in the request body
   const { user: userJSON, code, state } = req.body;
 
+  console.log("req.body:", req.body);
+  console.log("req.cookies:", req.cookies);
+
   const storedState = req.cookies.apple_oauth_state ?? null;
 
   // Log each variable to see their values
