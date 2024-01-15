@@ -32,12 +32,10 @@ const certificatePath = path.join(
   process.env.APPLE_CERT_PATH ?? "",
 );
 
-console.log("Loading Apple Certificate...");
 const certificate = process.env.APPLE_CERT_BASE64
   ? Buffer.from(process.env.APPLE_CERT_BASE64, "base64").toString("utf-8")
   : fs.readFileSync(certificatePath, "utf-8");
 
-console.log("Setting up Apple Credentials...");
 const credentials: AppleCredentials = {
   clientId: process.env.APPLE_CLIENT_ID ?? "",
   teamId: process.env.APPLE_TEAM_ID ?? "",
@@ -45,13 +43,8 @@ const credentials: AppleCredentials = {
   certificate,
 };
 
-console.log("Configuring Redirect URI...");
 const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
-
-console.log("Creating Apple instance...");
 export const apple = new Apple(credentials, redirectURI);
-
-console.log("Configuring Lucia...");
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
