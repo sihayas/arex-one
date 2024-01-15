@@ -10,10 +10,23 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  // if (req.method !== "POST") {
-  //   res.status(405).end("Method Not Allowed");
-  //   return;
-  // }
+  // Handle OPTIONS request for CORS Preflight
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", "https://voir.space");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization",
+    );
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.status(204).end();
+    return;
+  }
+
+  if (req.method !== "POST") {
+    res.status(405).end("Method Not Allowed");
+    return;
+  }
 
   if (typeof req.url !== "string") {
     console.error("req.url is undefined");
