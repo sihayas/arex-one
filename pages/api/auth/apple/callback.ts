@@ -37,27 +37,9 @@ export default async function handler(
   // On first login, Apple sends the user's data as JSON in the request body
   const { user: userJSON, code, state } = req.body;
 
-  const parseCookies = (cookieString: string | undefined) => {
-    const cookies = {};
-    if (cookieString) {
-      const items = cookieString.split(";");
-      items.forEach((item) => {
-        const [key, value] = item.split("=");
-        //@ts-ignore
-        cookies[key.trim()] = decodeURIComponent(value.trim());
-      });
-    }
-    return cookies;
-  };
-
   // Cross-check the state from the request body with the stored cookie/state
-  const cookieString = req.headers.cookie;
-  // Parse the cookies
-  const cookies = parseCookies(cookieString);
-
-  // Get the apple_oauth_state cookie value
-  //@ts-ignore
-  const storedState = cookies.apple_oauth_state;
+  // @ts-ignore
+  const storedState = req.cookies.get("apple_oauth_state")?.value;
 
   // Log each variable to see their values
   console.log("Code from form data:", code);
