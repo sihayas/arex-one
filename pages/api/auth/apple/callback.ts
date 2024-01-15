@@ -5,6 +5,15 @@ import { generateId } from "lucia";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { uploadDefaultImage } from "@/lib/azureBlobUtils";
+import { parse } from "querystring";
+
+async function bufferRequestBody(req: NextApiRequest): Promise<Buffer> {
+  const chunks: Uint8Array[] = [];
+  for await (const chunk of req) {
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,17 +24,20 @@ export default async function handler(
     return;
   }
 
-  // Extract code and state from the form data
-  const formData = await req.formData();
-  const code = formData.get("code")?.toString() ?? null;
-  const state = formData.get("state")?.toString() ?? null;
+  const buffer = await bufferRequestBody(req);
+
+  const formData = parse(buffer.toString());
+
+  const code = formData.code?.toString() ?? null;
+  const state = formData.state?.toString() ?? null;
   const storedState = req.cookies.apple_oauth_state ?? null;
-  const userJSON = formData.get("user");
+  const userJSON = formData.user ? JSON.parse(formData.user.toString()) : null;
 
   // Log each variable to see their values
   console.log("Code from form data:", code);
   console.log("State from form data:", state);
   console.log("Stored state from cookies:", storedState);
+  console.log("User JSON:", userJSON);
 
   // Check each condition separately and log
   if (!code) {
