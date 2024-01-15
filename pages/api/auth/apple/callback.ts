@@ -19,19 +19,29 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  console.log("Request method:", req.method);
+
   if (req.method !== "POST") {
     res.status(404).end();
     return;
   }
 
-  const buffer = await bufferRequestBody(req);
+  if (typeof req.url !== "string") {
+    console.error("req.url is undefined");
+    res.status(500).end();
+    return;
+  }
 
-  const formData = parse(buffer.toString());
+  // Parse the request body (Apple sends it as a form post)
+  const url = new URL(req.url);
 
-  const code = formData.code?.toString() ?? null;
-  const state = formData.state?.toString() ?? null;
+  // On first login, Apple sends the user's data as JSON in the request body
+  const userJSON = url.searchParams.get("user") ?? null;
+
+  // Validation variables
+  const code = url.searchParams.get("code");
+  const state = url.searchParams.get("state");
   const storedState = req.cookies.apple_oauth_state ?? null;
-  const userJSON = formData.user ? JSON.parse(formData.user.toString()) : null;
 
   // Log each variable to see their values
   console.log("Code from form data:", code);
@@ -69,8 +79,8 @@ export default async function handler(
     const tokens = await apple.validateAuthorizationCode(code);
 
     let name, email;
-    // Parse user JSON if present
-    if (typeof userJSON === "string") {
+    // Parse user JSON if present/first login
+    if (userJSON) {
       const user = JSON.parse(userJSON);
       email = user.email;
       name = user.name;
