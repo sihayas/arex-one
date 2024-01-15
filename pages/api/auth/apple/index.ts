@@ -22,6 +22,8 @@ export default async function handler(
     });
     url.searchParams.set("response_mode", "form_post");
 
+    console.log("State:", state);
+
     res
       .appendHeader(
         "Set-Cookie",
