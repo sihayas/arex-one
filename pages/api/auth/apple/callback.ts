@@ -34,12 +34,12 @@ export default async function handler(
     return;
   }
 
-  console.log("Request Method:", req.method);
-  console.log("Request URL:", req.url);
-  console.log("Request Headers:", req.headers);
+  const protocol = "https";
+  const host = req.headers.host;
+  const fullPath = `${protocol}://${host}${req.url}`;
 
   // Parse the request body (Apple sends it as a form post)
-  const url = new URL(req.url);
+  const url = new URL(fullPath);
 
   // On first login, Apple sends the user's data as JSON in the request body
   const userJSON = url.searchParams.get("user") ?? null;
