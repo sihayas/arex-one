@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import { Section } from "@/components/interface/user/User";
 import Image from "next/image";
+import Avatar from "@/components/global/Avatar";
 
 const lineConfig = {
   stiffness: 400,
@@ -101,12 +102,13 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
       <div className={`fixed pointer-events-none w-[8px] h-[320px]`}>
         {/* Data */}
         <div className={`absolute left-4 flex flex-col gap-8`}>
-          <Image
-            className={`rounded-max shadow-shadowKitHigh`}
-            src={userData.image}
-            alt={`${userData.name}'s avatar`}
+          <Avatar
+            className="rounded-max shadow-shadowKitHigh"
+            imageSrc={userData.image}
+            altText={`avatar`}
             width={64}
             height={64}
+            user={userData}
           />
 
           {/* Sounds */}
