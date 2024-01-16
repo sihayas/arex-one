@@ -5,10 +5,11 @@ import { generateId } from "lucia";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { uploadDefaultImage } from "@/lib/azureBlobUtils";
+import { parseJWT } from "oslo/dist/jwt";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   // Handle OPTIONS request for CORS Preflight
   if (req.method === "OPTIONS") {
@@ -16,7 +17,7 @@ export default async function handler(
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
+      "Content-Type, Authorization",
     );
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.status(204).end();
@@ -83,14 +84,19 @@ export default async function handler(
     let email;
 
     // Parse user JSON if present/first login
-    if (userJSON) {
-      console.log("Parsing user JSON:", userJSON);
+    if (tokens) {
+      const jwt = parseJWT(tokens.idToken);
+      console.log("Parsed JWT:", jwt);
+
       const user = JSON.parse(userJSON);
+      console.log("Parsed user JSON:", userJSON);
+
       email = user.email;
       firstName = user.name.firstName;
       lastName = user.name.lastName;
+
       console.log(
-        `Parsed user details - Email: ${email}, First Name: ${firstName}, Last Name: ${lastName}`
+        `Parsed user details - Email: ${email}, First Name: ${firstName}, Last Name: ${lastName}`,
       );
     }
 
@@ -106,7 +112,7 @@ export default async function handler(
       return res
         .appendHeader(
           "Set-Cookie",
-          lucia.createSessionCookie(session.id).serialize()
+          lucia.createSessionCookie(session.id).serialize(),
         )
         .redirect("/");
     } else {
@@ -135,7 +141,7 @@ export default async function handler(
     return res
       .appendHeader(
         "Set-Cookie",
-        lucia.createSessionCookie(session.id).serialize()
+        lucia.createSessionCookie(session.id).serialize(),
       )
       .redirect("/");
   } catch (e) {
