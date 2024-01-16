@@ -76,13 +76,17 @@ export async function validateRequest(
       session: null,
     };
   }
+
   const result = await lucia.validateSession(sessionId);
+
+  // Re-set the session on every response
   if (result.session && result.session.fresh) {
     res.appendHeader(
       "Set-Cookie",
       lucia.createSessionCookie(result.session.id).serialize(),
     );
   }
+
   if (!result.session) {
     res.appendHeader(
       "Set-Cookie",

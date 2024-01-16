@@ -90,10 +90,12 @@ export default function Home() {
         </motion.div>
       )}
 
-      {/* DISCONNECT */}
-      <button className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50">
-        CONNECTED
-      </button>
+      <Link
+        className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"
+        href="/api/oauth/apple/logout"
+      >
+        Disconnect
+      </Link>
     </Layout>
   );
 }

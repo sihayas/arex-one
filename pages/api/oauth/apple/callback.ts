@@ -35,8 +35,8 @@ export default async function handler(
     return;
   }
 
-  // On first login, Apple sends the user's data as JSON in the request body
-  const { user: userJSON, code, state } = req.body;
+  // On first login, Apple sends the user's data as JSON in the request body (also user
+  const { code, state } = req.body;
 
   // Cross-check the state from the request body with the stored cookie/state
   const storedState = req.cookies.apple_oauth_state;
@@ -108,17 +108,3 @@ export default async function handler(
     return;
   }
 }
-
-type AppleUser = {
-  email?: string;
-  email_verified?: boolean;
-  sub: string;
-};
-
-//
-// const user = JSON.parse(userJSON);
-// console.log("Parsed user JSON:", userJSON);
-//
-// email = user.email;
-// firstName = user.name.firstName;
-// lastName = user.name.lastName;
