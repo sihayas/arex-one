@@ -7,6 +7,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import Image from "next/image";
 import RenderArtifacts from "@/components/index/RenderArtifacts";
 import Link from "next/link";
+import Avatar from "@/components/global/Avatar";
 
 type Feed = "personal" | "bloom" | "recent" | null;
 export default function Home() {
@@ -76,13 +77,15 @@ export default function Home() {
             />
           ) : null}
 
-          <Image
-            className={`rounded-full z-20 -translate-x-[157px] absolute shadow-shadowKitMedium`}
-            src={user?.image}
-            alt={`${user?.username}'s avatar`}
+          <Avatar
+            className="rounded-full z-20 -translate-x-[157px] absolute shadow-shadowKitMedium"
+            imageSrc={user.image}
+            altText={`avatar`}
             width={42}
             height={42}
+            user={user}
           />
+
           <Dash className="absolute z-0 -translate-x-[157px]" />
         </motion.div>
       )}
