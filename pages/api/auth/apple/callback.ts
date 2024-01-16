@@ -41,12 +41,6 @@ export default async function handler(
   // Cross-check the state from the request body with the stored cookie/state
   const storedState = req.cookies.apple_oauth_state;
 
-  // Log each variable to see their values
-  console.log("Code from form data:", code);
-  console.log("State from form data:", state);
-  console.log("Stored state from cookies:", storedState);
-  console.log("User JSON:", userJSON);
-
   // Check each condition separately and log
   if (!code) {
     console.log("Code is missing");
@@ -77,25 +71,33 @@ export default async function handler(
     const tokens = await apple.validateAuthorizationCode(code);
     console.log("Tokens received:", tokens);
 
-    let parsedToken;
+    let payload;
 
     // Parse user JSON if present/first login
     if (tokens) {
-      parsedToken = parseJWT(tokens.idToken);
-      console.log("Parsed JWT:", parsedToken);
+      const jwt = parseJWT(tokens.idToken);
+
+      if (!jwt) {
+        console.log("Failed to parse JWT");
+        res.status(400).end();
+        return;
+      }
+
+      payload = jwt.payload;
+      console.log("Parsed JWT payload:", payload);
     }
 
-    if (!parsedToken) {
-      console.log("Parsed token is missing");
+    if (!payload) {
+      console.log("Payload is missing");
       res.status(400).end();
       return;
     }
 
     //@ts-ignore
-    console.log("Checking for existing user with Apple ID:", parsedToken.sub);
+    console.log("Checking for existing user with Apple ID:", payload.sub);
     let existingUser = await prisma.user.findFirst({
       //@ts-ignore
-      where: { apple_id: parsedToken.sub },
+      where: { apple_id: payload.sub },
     });
 
     if (existingUser) {
@@ -115,6 +117,7 @@ export default async function handler(
 
     const userId = generateId(15);
     console.log("Generated new user ID:", userId);
+
     const defaultImageUrl = await uploadDefaultImage();
     console.log("Default image URL:", defaultImageUrl);
 
@@ -123,7 +126,7 @@ export default async function handler(
       data: {
         id: userId,
         //@ts-ignore
-        apple_id: parsedToken.sub,
+        apple_id: payload.sub,
         username: `user-${userId}`,
         image: defaultImageUrl,
       },
