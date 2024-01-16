@@ -6,7 +6,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   try {
     if (req.method !== "GET") {
@@ -28,7 +28,7 @@ export default async function handler(
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 60 * 10,
-      sameSite: "lax",
+      sameSite: "none",
     });
 
     // Log the cookie string
