@@ -7,7 +7,7 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 
 export const useUserAndSessionQuery = () => {
   return useQuery(["userAndSession"], async () => {
-    const response = await axios.get("/api/auth/me");
+    const response = await axios.get("/api/oauth/me");
     return response.data;
   });
 };
