@@ -5,7 +5,7 @@ import { generateId } from "lucia";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { uploadDefaultImage } from "@/lib/azureBlobUtils";
-import { parseJWT } from "oslo/dist/jwt";
+import { parseJWT } from "oslo/jwt";
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,7 +39,6 @@ export default async function handler(
   const { user: userJSON, code, state } = req.body;
 
   // Cross-check the state from the request body with the stored cookie/state
-  // @ts-ignore
   const storedState = req.cookies.apple_oauth_state;
 
   // Log each variable to see their values
@@ -76,38 +75,33 @@ export default async function handler(
   try {
     // Validate and return Apple tokens
     const tokens = await apple.validateAuthorizationCode(code);
-
     console.log("Tokens received:", tokens);
 
-    let firstName;
-    let lastName;
-    let email;
+    let parsedToken;
 
     // Parse user JSON if present/first login
     if (tokens) {
-      const jwt = parseJWT(tokens.idToken);
-      console.log("Parsed JWT:", jwt);
-
-      const user = JSON.parse(userJSON);
-      console.log("Parsed user JSON:", userJSON);
-
-      email = user.email;
-      firstName = user.name.firstName;
-      lastName = user.name.lastName;
-
-      console.log(
-        `Parsed user details - Email: ${email}, First Name: ${firstName}, Last Name: ${lastName}`,
-      );
+      parsedToken = parseJWT(tokens.idToken);
+      console.log("Parsed JWT:", parsedToken);
     }
 
-    console.log("Checking for existing user with Apple ID:", tokens.idToken);
+    if (!parsedToken) {
+      console.log("Parsed token is missing");
+      res.status(400).end();
+      return;
+    }
+
+    //@ts-ignore
+    console.log("Checking for existing user with Apple ID:", parsedToken.sub);
     let existingUser = await prisma.user.findFirst({
-      where: { apple_id: tokens.idToken },
+      //@ts-ignore
+      where: { apple_id: parsedToken.sub },
     });
 
     if (existingUser) {
       console.log("Existing user found:", existingUser);
       const session = await lucia.createSession(existingUser.id, {});
+
       console.log("Session created for existing user:", session);
       return res
         .appendHeader(
@@ -128,15 +122,16 @@ export default async function handler(
     await prisma.user.create({
       data: {
         id: userId,
-        apple_id: tokens.idToken,
-        username: `${firstName ?? "Apple User"}`,
-        email: email,
+        //@ts-ignore
+        apple_id: parsedToken.sub,
+        username: `user-${userId}`,
         image: defaultImageUrl,
       },
     });
 
     console.log("New user created, creating session.");
     const session = await lucia.createSession(userId, {});
+
     console.log("Session created for new user:", session);
     return res
       .appendHeader(
@@ -161,3 +156,11 @@ type AppleUser = {
   email_verified?: boolean;
   sub: string;
 };
+
+//
+// const user = JSON.parse(userJSON);
+// console.log("Parsed user JSON:", userJSON);
+//
+// email = user.email;
+// firstName = user.name.firstName;
+// lastName = user.name.lastName;
