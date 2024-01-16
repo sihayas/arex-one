@@ -41,112 +41,67 @@ export default async function handler(
   // Cross-check the state from the request body with the stored cookie/state
   const storedState = req.cookies.apple_oauth_state;
 
-  // Check each condition separately and log
-  if (!code) {
-    console.log("Code is missing");
-    res.status(400).end();
-    return;
-  }
-
-  if (!state) {
-    console.log("State is missing");
-    res.status(400).end();
-    return;
-  }
-
-  if (!storedState) {
-    console.log("Stored state is missing");
-    res.status(400).end();
-    return;
-  }
-
-  if (state !== storedState) {
-    console.log("State mismatch:", state, "does not equal", storedState);
-    res.status(400).end();
+  if (!code || !state || !storedState || state !== storedState) {
+    console.error("Invalid request parameters");
+    res.status(400).end("Invalid request parameters");
     return;
   }
 
   try {
     // Validate and return Apple tokens
     const tokens = await apple.validateAuthorizationCode(code);
-    console.log("Tokens received:", tokens);
-
-    let payload;
-
-    // Parse user JSON if present/first login
-    if (tokens) {
-      const jwt = parseJWT(tokens.idToken);
-
-      if (!jwt) {
-        console.log("Failed to parse JWT");
-        res.status(400).end();
-        return;
-      }
-
-      payload = jwt.payload;
-      console.log("Parsed JWT payload:", payload);
-    }
-
-    if (!payload) {
-      console.log("Payload is missing");
+    if (!tokens) {
+      console.log("Failed to validate authorization code");
       res.status(400).end();
       return;
     }
 
-    //@ts-ignore
-    console.log("Checking for existing user with Apple ID:", payload.sub);
-    let existingUser = await prisma.user.findFirst({
-      //@ts-ignore
+    const jwt = parseJWT(tokens.idToken);
+    if (!jwt || !jwt.payload) {
+      console.error("Invalid JWT");
+      res.status(400).end("Invalid JWT");
+      return;
+    }
+
+    const payload = jwt.payload;
+
+    // Check for existing user
+    const existingUser = await prisma.user.findFirst({
+      // @ts-ignore
       where: { apple_id: payload.sub },
     });
 
+    let session;
     if (existingUser) {
-      console.log("Existing user found:", existingUser);
-      const session = await lucia.createSession(existingUser.id, {});
-
-      console.log("Session created for existing user:", session);
-      return res
-        .appendHeader(
-          "Set-Cookie",
-          lucia.createSessionCookie(session.id).serialize(),
-        )
-        .redirect("/");
+      console.log("Existing user found, creating new session.");
+      session = await lucia.createSession(existingUser.id, {});
     } else {
       console.log("No existing user found, creating new user.");
+      const userId = generateId(15);
+      const defaultImageUrl = await uploadDefaultImage();
+      await prisma.user.create({
+        data: {
+          id: userId,
+          // @ts-ignore
+          apple_id: payload.sub,
+          username: `user-${userId}`,
+          image: defaultImageUrl,
+        },
+      });
+
+      session = await lucia.createSession(userId, {});
     }
 
-    const userId = generateId(15);
-    console.log("Generated new user ID:", userId);
-
-    const defaultImageUrl = await uploadDefaultImage();
-    console.log("Default image URL:", defaultImageUrl);
-
-    console.log("Creating new user in database.");
-    await prisma.user.create({
-      data: {
-        id: userId,
-        //@ts-ignore
-        apple_id: payload.sub,
-        username: `user-${userId}`,
-        image: defaultImageUrl,
-      },
-    });
-
-    console.log("New user created, creating session.");
-    const session = await lucia.createSession(userId, {});
-
-    console.log("Session created for new user:", session);
-    return res
+    // Set session cookie and redirect
+    res
       .appendHeader(
         "Set-Cookie",
         lucia.createSessionCookie(session.id).serialize(),
       )
       .redirect("/");
   } catch (e) {
-    // the specific error message depends on the provider
     if (e instanceof OAuth2RequestError) {
       const { message, description, request } = e;
-      // invalid code
       console.error(message, description, request);
     }
     res.status(500).end();
