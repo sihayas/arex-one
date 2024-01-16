@@ -6,7 +6,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method !== "GET") {
@@ -36,7 +36,7 @@ export default async function handler(
     res.redirect(url.toString());
   } catch (error) {
     // Log the error for debugging
-    console.error("Error in /api/auth/apple handler:", error);
+    console.error("Error in /api/oauth/apple handler:", error);
 
     // Send a generic 500 Internal Server Error response
     res.status(500).end("Internal Server Error");

@@ -15,6 +15,5 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  // Return the user's data and session info
   res.json({ user, session });
 }

@@ -31,7 +31,7 @@ export default function Home() {
 
           <Link
             className="col-span-5 col-start-2 uppercase row-start-9 text-xs text-gray2 tracking-widest "
-            href="/api/auth/apple/login"
+            href="/api/oauth/apple/login"
           >
             Sign in with Apple
           </Link>
