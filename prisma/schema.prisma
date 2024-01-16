@@ -185,7 +185,7 @@ model Artifact {
 
 model Content {
   id         String   @id @default(cuid())
-  text       String
+  text       String   @db.LongText
 
   rating     Float?
   loved      Boolean?  @default(false)
