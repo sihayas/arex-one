@@ -53,6 +53,7 @@ const Avatar: React.FC<UserAvatarProps> = ({
       width={width}
       quality={quality}
       style={style}
+      unoptimized={true}
     />
   );
 };
