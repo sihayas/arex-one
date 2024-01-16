@@ -15,6 +15,7 @@ const nextConfig = {
       "media.tenor.com",
       "wallpapers-clan.com",
       "voirmedia.blob.core.windows.net",
+      "voir.space",
     ],
   },
 };
