@@ -5,7 +5,7 @@ import { UserType } from "@/types/dbTypes";
 
 interface UserAvatarProps {
   user: UserType;
-  imageSrc: string | undefined;
+  imageSrc: string;
   altText: string;
   height?: number;
   width?: number;
@@ -27,6 +27,7 @@ const Avatar: React.FC<UserAvatarProps> = ({
   onClick,
 }) => {
   const handleUserClick = useUser(user);
+  const url = getBlobUrlWithSas(imageSrc);
   if (!imageSrc) {
     return (
       <div
@@ -46,7 +47,7 @@ const Avatar: React.FC<UserAvatarProps> = ({
     <Image
       onClick={onClick ? onClick : handleUserClick}
       className={`rounded-full ${className} aspect-square cursor-pointer`}
-      src={imageSrc}
+      src={url}
       alt={altText}
       height={height}
       width={width}
@@ -57,3 +58,8 @@ const Avatar: React.FC<UserAvatarProps> = ({
 };
 
 export default Avatar;
+
+export function getBlobUrlWithSas(blobUrl: string) {
+  const sasToken = process.env.AZURE_SAS_TOKEN;
+  return `${blobUrl}?${sasToken}`;
+}
