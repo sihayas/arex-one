@@ -17,6 +17,7 @@ const nextConfig = {
       "voirmedia.blob.core.windows.net",
       "voir.space",
     ],
+    unoptimized: true,
   },
 };
 
