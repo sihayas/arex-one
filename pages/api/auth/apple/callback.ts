@@ -8,7 +8,7 @@ import { uploadDefaultImage } from "@/lib/azureBlobUtils";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   // Handle OPTIONS request for CORS Preflight
   if (req.method === "OPTIONS") {
@@ -16,7 +16,7 @@ export default async function handler(
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "Content-Type, Authorization",
+      "Content-Type, Authorization"
     );
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.status(204).end();
@@ -39,7 +39,7 @@ export default async function handler(
 
   // Cross-check the state from the request body with the stored cookie/state
   // @ts-ignore
-  const storedState = req.cookies.get("apple_oauth_state");
+  const storedState = req.cookies.apple_oauth_state;
 
   // Log each variable to see their values
   console.log("Code from form data:", code);
@@ -93,7 +93,7 @@ export default async function handler(
       return res
         .appendHeader(
           "Set-Cookie",
-          lucia.createSessionCookie(session.id).serialize(),
+          lucia.createSessionCookie(session.id).serialize()
         )
         .redirect("/");
     }
@@ -115,7 +115,7 @@ export default async function handler(
     return res
       .appendHeader(
         "Set-Cookie",
-        lucia.createSessionCookie(session.id).serialize(),
+        lucia.createSessionCookie(session.id).serialize()
       )
       .redirect("/");
   } catch (e) {
