@@ -26,7 +26,8 @@ export default async function handler(
     await lucia.invalidateSession(session.id);
 
     const sessionCookie = lucia.createBlankSessionCookie();
-    res.appendHeader("Set-Cookie", sessionCookie.serialize()).redirect("/");
+    res.appendHeader("Set-Cookie", sessionCookie.serialize());
+    res.status(200).json({ message: "Successfully logged out" });
   } catch (error) {
     console.error("Error in sign-out handler:", error);
     res.status(500).end("Internal Server Error");

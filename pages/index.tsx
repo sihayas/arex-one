@@ -16,6 +16,17 @@ export default function Home() {
 
   const [activeFeed, setActiveFeed] = React.useState<Feed>("personal");
 
+  const handleLogout = async () => {
+    // Make a POST request to the logout API endpoint
+    const response = await fetch("/api/oauth/apple/logout", {
+      method: "POST",
+    });
+    // Handle the response, e.g., redirect to the homepage
+    if (response.ok) {
+      window.location.href = "/";
+    }
+  };
+
   if (!user) {
     return (
       <Layout>
@@ -90,12 +101,12 @@ export default function Home() {
         </motion.div>
       )}
 
-      <Link
+      <button
         className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"
-        href="/api/oauth/apple/logout"
+        onClick={handleLogout}
       >
         Disconnect
-      </Link>
+      </button>
     </Layout>
   );
 }
