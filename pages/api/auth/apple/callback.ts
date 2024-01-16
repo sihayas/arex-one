@@ -76,42 +76,62 @@ export default async function handler(
     // Validate and return Apple tokens
     const tokens = await apple.validateAuthorizationCode(code);
 
-    let name, email;
+    console.log("Tokens received:", tokens);
+
+    let firstName;
+    let lastName;
+    let email;
+
     // Parse user JSON if present/first login
     if (userJSON) {
+      console.log("Parsing user JSON:", userJSON);
       const user = JSON.parse(userJSON);
       email = user.email;
-      name = user.name;
+      firstName = user.name.firstName;
+      lastName = user.name.lastName;
+      console.log(
+        `Parsed user details - Email: ${email}, First Name: ${firstName}, Last Name: ${lastName}`
+      );
     }
 
+    console.log("Checking for existing user with Apple ID:", tokens.idToken);
     let existingUser = await prisma.user.findFirst({
       where: { apple_id: tokens.idToken },
     });
 
     if (existingUser) {
+      console.log("Existing user found:", existingUser);
       const session = await lucia.createSession(existingUser.id, {});
+      console.log("Session created for existing user:", session);
       return res
         .appendHeader(
           "Set-Cookie",
           lucia.createSessionCookie(session.id).serialize()
         )
         .redirect("/");
+    } else {
+      console.log("No existing user found, creating new user.");
     }
 
     const userId = generateId(15);
+    console.log("Generated new user ID:", userId);
     const defaultImageUrl = await uploadDefaultImage();
+    console.log("Default image URL:", defaultImageUrl);
 
+    console.log("Creating new user in database.");
     await prisma.user.create({
       data: {
         id: userId,
         apple_id: tokens.idToken,
-        username: `${name ?? "Apple User"}`,
+        username: `${firstName ?? "Apple User"}`,
         email: email,
         image: defaultImageUrl,
       },
     });
 
+    console.log("New user created, creating session.");
     const session = await lucia.createSession(userId, {});
+    console.log("Session created for new user:", session);
     return res
       .appendHeader(
         "Set-Cookie",

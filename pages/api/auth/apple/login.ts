@@ -31,14 +31,8 @@ export default async function handler(
       sameSite: "none",
     });
 
-    // Log the cookie string
-    console.log("Setting cookie:", cookieString);
+    // Attach the cookie to the response
     res.appendHeader("Set-Cookie", cookieString);
-
-    // Log the state and the URL
-    console.log("Generated state:", state);
-    console.log("Redirect URL:", url.toString());
-
     res.redirect(url.toString());
   } catch (error) {
     // Log the error for debugging
