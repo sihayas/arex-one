@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { Session } from "lucia";
+import { useUserAndSessionQuery } from "@/lib/apiHelper/user";
 
 export type Page = {
   key: string;
@@ -47,12 +48,10 @@ export type InterfaceContext = {
   setActivePage: React.Dispatch<React.SetStateAction<Page>>;
 };
 
-// Define the props for the InterfaceProvider component
 type InterfaceContextProviderProps = {
   children: React.ReactNode;
 };
 
-// Create the context, initialized as undefined
 export const InterfaceContext = React.createContext<
   InterfaceContext | undefined
 >(undefined);
@@ -95,16 +94,16 @@ export const InterfaceContextProvider = ({
   const [session, setSession] = useState<Session | null>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
 
-  // const { data, isError } = useUserAndSessionQuery();
+  const { data, isError } = useUserAndSessionQuery();
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setUser(data.user);
-  //     setSession(data.session);
-  //     console.log("user and session set");
-  //     console.log(data);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data) {
+      setUser(data.user);
+      setSession(data.session);
+      console.log("user and session set");
+      console.log(data);
+    }
+  }, [data]);
 
   // const { data: notifications } = useNotificationsQuery(user?.id);
 

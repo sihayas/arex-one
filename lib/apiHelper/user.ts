@@ -5,12 +5,12 @@ import { attachSoundData } from "@/lib/apiHelper/feed";
 import { Artifact } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
-// export const useUserAndSessionQuery = () => {
-//   return useQuery(["userAndSession"], async () => {
-//     const response = await axios.get("/api/auth/me");
-//     return response.data;
-//   });
-// };
+export const useUserAndSessionQuery = () => {
+  return useQuery(["userAndSession"], async () => {
+    const response = await axios.get("/api/auth/me");
+    return response.data;
+  });
+};
 
 export const followUser = async (followerId: string, followingId: string) => {
   await axios.post(`/api/user/post/follow`, { followerId, followingId });
