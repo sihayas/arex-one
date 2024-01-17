@@ -4,7 +4,6 @@ import React from "react";
 import Dash from "@/components/global/Dash";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import Image from "next/image";
 import RenderArtifacts from "@/components/index/RenderArtifacts";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
