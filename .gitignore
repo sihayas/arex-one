@@ -16,6 +16,9 @@
 # production
 /build
 
+# development
+/certificates
+
 # misc
 /archive
 .DS_Store

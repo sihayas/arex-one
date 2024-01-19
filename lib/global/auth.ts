@@ -32,7 +32,8 @@ const certificatePath = path.join(
   process.env.APPLE_CERT_PATH ?? "",
 );
 
-const certificate = process.env.APPLE_CERT ?? "";
+const certificate =
+  process.env.APPLE_CERT ?? fs.readFileSync(certificatePath, "utf-8");
 
 const credentials: AppleCredentials = {
   clientId: process.env.APPLE_CLIENT_ID ?? "",
