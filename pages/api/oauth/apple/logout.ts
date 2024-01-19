@@ -1,8 +1,5 @@
 import { lucia, validateRequest } from "@/lib/global/auth";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { serializeCookie } from "oslo/cookie";
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 
 export default async function handler(
   req: NextApiRequest,

@@ -8,6 +8,35 @@ import { SoundDetailsProvider } from "@/context/SoundContext";
 import { Toaster } from "sonner";
 import { InterfaceContextProvider } from "@/context/InterfaceContext";
 import { NavProvider } from "@/context/NavContext";
+import localFont from "next/font/local";
+
+const garamond12 = localFont({
+  src: [
+    {
+      path: "../public/fonts/EBGaramond12-Regular.ttf",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/EBGaramond12-Italic.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-garamond12",
+});
+
+const garamond08 = localFont({
+  src: [
+    {
+      path: "../public/fonts/EBGaramond08-Regular.ttf",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/EBGaramond08-Italic.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-garamond08",
+});
 
 const App = ({ Component, pageProps }: AppProps<{}>) => {
   const [queryClient] = useState(() => new QueryClient());
@@ -18,7 +47,9 @@ const App = ({ Component, pageProps }: AppProps<{}>) => {
         <NavProvider>
           <SoundDetailsProvider>
             <ThreadcrumbProvider>
-              <Component {...pageProps} />
+              <main className={`${garamond12.variable}`}>
+                <Component {...pageProps} />
+              </main>
             </ThreadcrumbProvider>
           </SoundDetailsProvider>
         </NavProvider>

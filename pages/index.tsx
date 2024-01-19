@@ -7,8 +7,10 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import RenderArtifacts from "@/components/index/RenderArtifacts";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
+import { AppleIcon } from "@/components/icons";
 
 type Feed = "personal" | "bloom" | "recent" | null;
+
 export default function Home() {
   const { user } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
@@ -30,21 +32,98 @@ export default function Home() {
     return (
       <Layout>
         <Head>
-          <title>[redacted]</title>
+          <title>VOIR</title>
         </Head>
-        <div className="m-8 grid h-screen w-screen gap-8 grid-cols-17 grid-rows-11">
-          <div className="col-start-1 row-start-1 text-[34px]">VOIR</div>
+        <div className="h-screen w-screen flex">
+          <div className={`w-[448px] h-full p-16 home-container`}>
+            <p
+              className={`col-span-3 row-span-1 font-semibold text-[22px] tracking-tighter leading-[16px`}
+            >
+              Voir
+            </p>
 
-          <div className="col-span-4 col-start-2 uppercase row-start-1 text-sm tracking-widest text-red animate-pulse duration-500">
-            pardon our appearance while facade work in progress...
+            <div
+              className={`row-start-3 row-span-2 col-span-full flex items-center gap-1 -ml-12`}
+            >
+              <Link
+                href="/api/oauth/apple/login"
+                className={`bg-white rounded-max min-w-[2rem] h-8 relative shadow-shadowKitHigh`}
+              >
+                <AppleIcon className={`absolute center-y center-x`} />
+              </Link>
+              <div className={`bg-gray3 rounded-full min-w-[2px] h-0.5`} />
+              <div className={`bg-gray3 rounded-full min-w-[2px] h-0.5`} />
+              <div className={`bg-gray3 rounded-full min-w-[2px] h-0.5`} />
+              <div className={`bg-gray3 rounded-full w-full h-0.5`} />
+            </div>
+
+            <>
+              <p
+                className={`row-start-6 col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                In this haven of harmonies
+              </p>
+              <p
+                className={`ml-auto row-start-[8] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                interaction is a delicate dance
+              </p>
+
+              <p
+                className={`ml-4 row-start-[10] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                of digits across screens
+              </p>
+
+              <p
+                className={`ml-8 row-start-[12] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                a silent symphony shared
+              </p>
+
+              <p
+                className={`row-start-[14] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                Users
+              </p>
+
+              <p
+                className={`row-start-[16] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                as intertwined melodies
+              </p>
+
+              <p
+                className={`ml-16 row-start-[18] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                resonate in a silent pact
+              </p>
+
+              <p
+                className={`ml-16 row-start-[20] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                bound by the unseen thread of rhythm
+              </p>
+
+              <p
+                className={`ml-auto row-start-[22] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                Here
+              </p>
+
+              <p
+                className={`ml-[111px] row-start-[24] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                a song sent is a soul’s whisper
+              </p>
+
+              <p
+                className={`ml-5 row-start-[26] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+              >
+                a shared pulse within the vast digital expanse
+              </p>
+            </>
           </div>
-
-          <Link
-            className="col-span-5 col-start-2 uppercase row-start-9 text-xs text-gray2 tracking-widest "
-            href="/api/oauth/apple/login"
-          >
-            Sign in with Apple
-          </Link>
         </div>
       </Layout>
     );

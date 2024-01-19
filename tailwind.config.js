@@ -44,11 +44,14 @@ module.exports = {
         baskerville: ["Baskerville", "serif"],
         serif: ["Baskerville", "serif"],
         sfRounded: ["SF Pro Rounded", "sans-serif"],
+        garamond12: [`var(--font-garamond12)`],
+        garamond08: [`var(--font-garamond08)`],
       },
       fontSize: {
         xs: ["11px", "125%"],
         sm: ["13px", "125%"],
         base: ["15px", "150%"],
+        lg: ["17px", "150%"],
       },
       colors: {
         gray: "#585858",
@@ -77,21 +80,6 @@ module.exports = {
         9: "9",
         10: "10",
         11: "11",
-      },
-      gridTemplateColumns: {
-        17: "repeat(17, minmax(0, 1fr))",
-        feed: `repeat(12, 32px)`,
-        "tab-cols": "8px auto",
-      },
-      gridColumnGap: {
-        feed: "32px",
-      },
-      gridTemplateRows: {
-        11: "repeat(11, minmax(0, 1fr))",
-        feed: `repeat(17, 32px)`,
-      },
-      gridRowGap: {
-        feed: "32px",
       },
       transitionProperty: {
         opacity: "opacity",

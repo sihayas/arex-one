@@ -205,7 +205,7 @@ model Heart {
   replyId    String?
 
   author     User        @relation(fields: [authorId], references: [id])
-  artifact   Artifact?     @relation(fields: [artifactId], references: [id])
+  artifact   Artifact?   @relation(fields: [artifactId], references: [id])
   reply      Reply?      @relation(fields: [replyId], references: [id])
   activities Activity[]  @relation("ActivityHeart")
 

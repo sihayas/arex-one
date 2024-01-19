@@ -14,6 +14,28 @@
   }
 }
 
+@font-face {
+  font-family: "EB Garamond 12";
+  font-style: normal;
+    src: url("../public/fonts/EBGaramond12-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "EB Garamond 12";
+  font-style: italic;
+    src: url("../public/fonts/EBGaramond12-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "EB Garamond 08";
+  font-style: normal;
+    src: url("../public/fonts/EBGaramond08-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "EB Garamond 08";
+  font-style: italic;
+  src: url("../public/fonts/EBGaramond08-Italic.ttf") format("truetype");
+}
 
 :root {
   --size: 1500;
@@ -78,11 +100,17 @@ input {
   black 20%);
 }
 
-
-
 .translate-z {
   transform: translateZ(0);
 }
+
+.home-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(16px, 1fr));
+  gap: 0px;
+}
+
 
 
 
