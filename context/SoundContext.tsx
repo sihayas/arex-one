@@ -58,8 +58,8 @@ export const SoundDetailsProvider = ({
   // Initialize MusicKit
   useEffect(() => {
     document.addEventListener("musickitloaded", () => {
-      setMusicKit(window.MusicKit.getInstance());
-      console.log("MusicKit loaded", window.MusicKit);
+      setMusicKit(window.MusicKit);
+      // console.log("MusicKit loaded", window.MusicKit);
     });
   }, []);
 

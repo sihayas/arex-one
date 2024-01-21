@@ -8,6 +8,7 @@ import RenderArtifacts from "@/components/index/RenderArtifacts";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
 import { AppleIcon } from "@/components/icons";
+import { Slider } from "@/components/global/Slider";
 
 type Feed = "personal" | "bloom" | "recent" | null;
 
@@ -178,6 +179,9 @@ export default function Home() {
           <Dash className="absolute z-0 -translate-x-[157px]" />
         </motion.div>
       )}
+
+      {/* Slider */}
+      <Slider />
 
       <button
         className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"

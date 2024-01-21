@@ -4,9 +4,15 @@ import {
   useTransform,
   motion,
   MotionConfig,
+  useMotionValueEvent,
 } from "framer-motion";
+import useMeasure from "react-use-measure";
+import { useSoundContext } from "@/context/SoundContext";
 
 export const Slider = () => {
+  // const { musicKit } = useSoundContext();
+  // let music = MusicKit.getInstance();
+
   let initialHeight = 4;
   let height = 12;
   let buffer = 12;
@@ -22,19 +28,48 @@ export const Slider = () => {
   let [progressState, setProgressState] = useState(roundedProgress.get());
   let state = panning ? "panning" : hovered ? "hovered" : "idle";
 
+  useMotionValueEvent(roundedProgress, "change", (latest) => {
+    setProgressState(latest);
+  });
+
+  // Update progress to match current playback progress
   useEffect(() => {
-    roundedProgress.onChange((v) => setProgressState(v));
-  }, [roundedProgress]);
+    if (MusicKit) {
+      const music = MusicKit.getInstance();
+
+      // Directly define the event handler inside the useEffect hook.
+      const handleProgressChange = () => {
+        console.log(MusicKit);
+        console.log("Player state:", MusicKit.Events);
+        console.log("Player state:", music.currentPlaybackProgress);
+        console.log("Player state:", music.isPlaying);
+        console.log("Player state:", music.currentPlaybackDuration);
+        console.log("Player state:", music.currentPlaybackTime);
+        console.log("Player state:", music.currentPlaybackTimeRemaining);
+      };
+
+      music.addEventListener(
+        MusicKit.Events.playbackProgressDidChange,
+        handleProgressChange,
+      );
+
+      // Cleanup function to remove the event listener
+      return () => {
+        music.removeEventListener(
+          MusicKit.Events.playbackProgressDidChange,
+          handleProgressChange,
+        );
+      };
+    }
+  }, []); // Removed progress from dependencies since it's not used here.
 
   return (
     <MotionConfig transition={transition}>
-      <div className="flex items-center justify-center h-full max-h-[800px] py-16">
-        <div className="w-[375px] h-full bg-gray-800 rounded-2xl flex flex-col justify-center px-4">
-          <p className="text-center text-sm font-medium mt-8">
-            iOS 16 Slider demo
-          </p>
+      <div className="absolute flex items-center justify-center p-8 bg-gray2 z-10">
+        <div className="w-[375px] h-full bg-gray-800 rounded-2xl flex flex-col justify-center">
           <div className="flex flex-1 flex-col items-center justify-center">
             <div className="flex items-center justify-center w-full">
+              {/*  Icon here */}
               <motion.div
                 initial={false}
                 animate={{
@@ -83,6 +118,7 @@ export const Slider = () => {
                   />
                 </motion.div>
               </motion.div>
+              {/*  Icon Here */}
               <motion.div
                 initial={false}
                 animate={{
