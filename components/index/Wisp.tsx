@@ -11,6 +11,8 @@ import { motion } from "framer-motion";
 
 import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import { WispIcon } from "@/components/icons";
+import { useSoundContext } from "@/context/SoundContext";
 
 interface WispProps {
   artifact: ArtifactExtended;
@@ -18,12 +20,17 @@ interface WispProps {
 
 export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   const { user } = useInterfaceContext();
-  const { handleSelectSound } = useSound();
+  // const { handleSelectSound } = useSound();
+  const { playContent } = useSoundContext();
 
   const sound = artifact.appleData;
   const artwork = sound.attributes.artwork.url
-    .replace("{w}", "320")
-    .replace("{h}", "320");
+    .replace("{w}", "120")
+    .replace("{h}", "120");
+  const color = sound.attributes.artwork.bgColor;
+  const artist = sound.attributes.artistName;
+  const name = sound.attributes.name;
+
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
@@ -38,96 +45,89 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
     user?.id,
   );
 
-  const handleEntryClick = useArtifact(artifact);
-  const handleSoundClick = () => {
-    handleSelectSound(sound);
+  const handleSoundClick = async () => {
+    playContent(sound.id, sound.type);
   };
 
   return (
     <div className={`flex items-end gap-2.5 relative w-[356px] h-fit`}>
       <Avatar
-        className={`h-[42px] border border-silver`}
+        className={`h-[42px] border border-silver z-10`}
         imageSrc={artifact.author.image}
         altText={`${artifact.author.username}'s avatar`}
         width={42}
         height={42}
         user={artifact.author}
       />
-      <Heart
-        handleHeartClick={handleHeartClick}
-        hearted={hearted}
-        className=".mix-blend-darker absolute -top-[28px] left-[46px] mix-blend-multiply"
-        heartCount={heartCount}
-        replyCount={artifact._count.replies}
-      />
-      {/* Content Inner / Card */}
-      <motion.div className="flex flex-col w-[304px] shadow-shadowKitHigh rounded-3xl rounded-bl-lg outline outline-silver outline-1 overflow-hidden">
-        <div className={`flex items-center gap-2 bg-[#F4F4F4]/75 p-4`}>
-          <Image
-            className={`cursor-pointer rounded-xl shadow-shadowKitLow`}
-            src={artwork}
-            alt={`artwork`}
-            loading="lazy"
-            quality={100}
-            width={48}
-            height={48}
-            onClick={handleSoundClick}
-          />
-          <div className={`flex flex-col`}>
-            <p className={`text-gray2 text-sm`}>
-              {sound.attributes.artistName}
-            </p>
-            <p className={`text-gray2 text-base font-medium`}>
-              {sound.attributes.name}
+
+      {/* Cloud / Content */}
+      <motion.div className="flex flex-col w-[304px] pb-2">
+        <div
+          className={`w-[304px] h-[222px] relative flex flex-col gap-4 items-center`}
+        >
+          <WispIcon className={`absolute top-0 left-0`} />
+
+          <div
+            className={`w-[152px] flex items-center gap-2 z-10 pt-[30px] relative`}
+          >
+            <div
+              style={{
+                background: `#${color}`,
+                backgroundRepeat: "repeat, no-repeat",
+                width: 40,
+                height: 40,
+                position: "absolute",
+                left: 0,
+                top: 30,
+                zIndex: -10,
+                filter: `blur(20px)`,
+              }}
+            />
+            <Image
+              src={artwork}
+              alt={`${sound.attributes.name} artwork`}
+              width={40}
+              height={40}
+              className={`rounded-lg shadow-shadowKitMedium outline outline-silver outline-1`}
+            />
+
+            <div className={`flex flex-col`}>
+              <p className={`text-xs text-gray2 max-w-[88px] line-clamp-1`}>
+                {artist}
+              </p>
+              <p
+                className={`text-sm text-gray4 max-w-[104px] line-clamp-1 font-medium`}
+              >
+                {name}
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={`w-[232px] h-[88px] flex items-center justify-center z-10`}
+          >
+            <p
+              className={`break-words line-clamp-4 text-base text-gray4 text-center font-medium`}
+            >
+              {artifact.content?.text}
             </p>
           </div>
         </div>
-
         <div
-          onClick={handleEntryClick}
-          className={`bg-white p-6 break-words line-clamp-[8] w-full text-base text-gray2 `}
-        >
-          {artifact.content?.text}
-        </div>
-        {/* Ambien */}
-        <motion.div
-          style={{
-            background: `#FFF`,
-            backgroundRepeat: "repeat, no-repeat",
-            width: "calc(100% - 52px)",
-          }}
-          className={`absolute left-[52px] bottom-0 w-full h-full -z-10`}
+          onClick={handleSoundClick}
+          className={`w-[36px] h-[36px] bg-[#F4F4F4] rounded-max ml-8 -mb-2 cursor-pointer`}
         />
+        <div className={`w-[16px] h-[16px] bg-[#F4F4F4] rounded-max`} />
+        {/* Ambien */}
+        {/*<motion.div*/}
+        {/*  style={{*/}
+        {/*    background: `#FFF`,*/}
+        {/*    backgroundRepeat: "repeat, no-repeat",*/}
+        {/*    width: "calc(100% - 52px)",*/}
+        {/*  }}*/}
+        {/*  className={`absolute left-[52px] bottom-0 w-full h-full -z-10`}*/}
+        {/*/>*/}
       </motion.div>
     </div>
   );
 };
-
-// <motion.div className="flex flex-col gap-4 w-[240px] h-[316px] bg-white p-6 shadow-shadowKitHigh rounded-3xl">
-//     <div className={`flex search-end justify-between gap-1.5`}>
-//         <div className={`flex flex-col gap-2`}>
-//             <p className={`text-gray2 text-sm leading-[9px]`}>
-//                 {sound.attributes.artistName}
-//             </p>
-//             <p className={`text-gray2 text-base font-semibold`}>
-//                 {sound.attributes.name}
-//             </p>
-//         </div>
-//         <Image
-//             className={`cursor-pointer rounded-[16px] shadow-shadowKitLow`}
-//             src={artwork}
-//             alt={`artwork`}
-//             loading="lazy"
-//             quality={100}
-//             width={72}
-//             height={72}
-//         />
-//     </div>
-//
-//     <div
-//         onClick={handleEntryClick}
-//         className={`break-words line-clamp-[8] w-full text-base text-gray2 `}
-//     >
-//         {artifact.content?.text}
-//     </div>
-// </motion.div>

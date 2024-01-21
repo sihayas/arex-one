@@ -84,16 +84,17 @@ export const InterfaceContextProvider = ({
     pages[pages.length - 1],
   );
 
+  // Track the active page
   useEffect(() => {
     const newActivePage = pages[pages.length - 1];
     setActivePage(newActivePage);
-    console.log("active page changed", newActivePage);
   }, [pages]);
 
   const [user, setUser] = useState<UserType | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
 
+  // Initialize the user and session
   const { data, isError } = useUserAndSessionQuery();
 
   useEffect(() => {
@@ -104,8 +105,6 @@ export const InterfaceContextProvider = ({
       console.log(data);
     }
   }, [data]);
-
-  // const { data: notifications } = useNotificationsQuery(user?.id);
 
   useEffect(() => {
     if (scrollContainerRef.current) {

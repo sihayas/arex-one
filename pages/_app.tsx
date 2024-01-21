@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import "styles/cmdk.css";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ThreadcrumbProvider } from "@/context/Threadcrumbs";
 import { SoundDetailsProvider } from "@/context/SoundContext";
 import { Toaster } from "sonner";
@@ -24,22 +24,28 @@ const garamond12 = localFont({
   variable: "--font-garamond12",
 });
 
-const garamond08 = localFont({
-  src: [
-    {
-      path: "../public/fonts/EBGaramond08-Regular.ttf",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/EBGaramond08-Italic.ttf",
-      style: "italic",
-    },
-  ],
-  variable: "--font-garamond08",
-});
-
 const App = ({ Component, pageProps }: AppProps<{}>) => {
   const [queryClient] = useState(() => new QueryClient());
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://js-cdn.music.apple.com/musickit/v3/musickit.js";
+    script.async = true;
+    script.onload = () => {
+      window.MusicKit.configure({
+        developerToken: process.env.NEXT_PUBLIC_MUSICKIT_TOKEN,
+        app: {
+          name: "Voir",
+          build: "0001",
+        },
+      });
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

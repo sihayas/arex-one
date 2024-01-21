@@ -9,8 +9,8 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
-import { BlurDiv } from "@/components/global/Blur";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useSoundContext } from "@/context/SoundContext";
 
 interface NewAProps {
   artifact: ArtifactExtended;
@@ -18,6 +18,7 @@ interface NewAProps {
 
 export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const { handleSelectSound } = useSound();
+  const { playContent } = useSoundContext();
   const { user } = useInterfaceContext();
   const [hoverContent, setHoverContent] = useState(false);
 
@@ -52,9 +53,15 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     user?.id,
   );
   const handleEntryClick = useArtifact(artifact);
+
   const handleSoundClick = async () => {
-    handleSelectSound(sound);
+    playContent(sound.id, sound.type);
   };
+
+  // const handleSoundClick = async () => {
+  //     handleSelectSound(sound);
+  // };
+  //
 
   return (
     <div className={`flex items-end gap-2.5 relative group w-[356px] group`}>

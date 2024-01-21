@@ -7,7 +7,7 @@ import { motion, useAnimate } from "framer-motion";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user } = useInterfaceContext();
-  const { isVisible, setIsVisible, pages, activePage } = useInterfaceContext();
+  const { isVisible, setIsVisible, activePage } = useInterfaceContext();
   const { inputRef } = useNavContext();
   const mainContentRef = useRef<HTMLElement>(null);
   const [scope, animate] = useAnimate();

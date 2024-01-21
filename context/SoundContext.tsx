@@ -1,11 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
-interface SelectedFormSound {
-  sound: AlbumData | SongData;
-  artworkUrl: string;
-}
-
 // Form can either be for a song or an album. Interface sound can only be an
 // album obviously
 
@@ -22,6 +17,9 @@ export type SoundContextType = {
   setRank: React.Dispatch<React.SetStateAction<number>>;
   prevEssentialId: string;
   setPrevEssentialId: React.Dispatch<React.SetStateAction<string>>;
+  musicKit: any;
+  setMusicKit: React.Dispatch<React.SetStateAction<any>>;
+  playContent: (contentId: string, contentType: string) => void;
 };
 
 type SoundContextProviderProps = {
@@ -55,6 +53,30 @@ export const SoundDetailsProvider = ({
   const [prevEssentialId, setPrevEssentialId] = useState("");
   const [rank, setRank] = useState(0);
 
+  const [musicKit, setMusicKit] = useState<any>(null);
+
+  // Initialize MusicKit
+  useEffect(() => {
+    document.addEventListener("musickitloaded", () => {
+      setMusicKit(window.MusicKit.getInstance());
+      console.log("MusicKit loaded", window.MusicKit);
+    });
+  }, []);
+
+  const playContent = async (contentId: string, contentType: string) => {
+    try {
+      const music = MusicKit.getInstance();
+      await music.authorize();
+
+      const queueOptions =
+        contentType === "songs" ? { song: contentId } : { album: contentId };
+      await music.setQueue(queueOptions);
+      await music.play();
+    } catch (error) {
+      console.error(`Error playing ${contentType}:`, error);
+    }
+  };
+
   return (
     <SoundContext.Provider
       value={{
@@ -66,6 +88,9 @@ export const SoundDetailsProvider = ({
         setPrevEssentialId,
         rank,
         setRank,
+        musicKit,
+        setMusicKit,
+        playContent,
       }}
     >
       {children}

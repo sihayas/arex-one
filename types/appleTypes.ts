@@ -9,6 +9,8 @@ export interface AlbumData {
 export interface AlbumAttributes {
   artistName: string;
   artwork: {
+    width: number;
+    height: number;
     bgColor: string;
     textColor1: string;
     textColor2: string;
@@ -65,6 +67,8 @@ export interface SongAttributes {
   albumName: string;
   artistName: string;
   artwork: {
+    width: number;
+    height: number;
     bgColor: string;
     textColor1: string;
     textColor2: string;
