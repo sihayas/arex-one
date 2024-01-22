@@ -17,8 +17,6 @@ export type SoundContextType = {
   setRank: React.Dispatch<React.SetStateAction<number>>;
   prevEssentialId: string;
   setPrevEssentialId: React.Dispatch<React.SetStateAction<string>>;
-  musicKit: any;
-  setMusicKit: React.Dispatch<React.SetStateAction<any>>;
   playContent: (contentId: string, contentType: string) => void;
 };
 
@@ -53,14 +51,9 @@ export const SoundDetailsProvider = ({
   const [prevEssentialId, setPrevEssentialId] = useState("");
   const [rank, setRank] = useState(0);
 
-  const [musicKit, setMusicKit] = useState<any>(null);
-
   // Initialize MusicKit
   useEffect(() => {
-    document.addEventListener("musickitloaded", () => {
-      setMusicKit(window.MusicKit);
-      // console.log("MusicKit loaded", window.MusicKit);
-    });
+    document.addEventListener("musickitloaded", () => {});
   }, []);
 
   const playContent = async (contentId: string, contentType: string) => {
@@ -88,8 +81,6 @@ export const SoundDetailsProvider = ({
         setPrevEssentialId,
         rank,
         setRank,
-        musicKit,
-        setMusicKit,
         playContent,
       }}
     >

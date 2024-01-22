@@ -5,70 +5,102 @@ import {
   motion,
   MotionConfig,
   useMotionValueEvent,
+  useSpring,
 } from "framer-motion";
 import useMeasure from "react-use-measure";
-import { useSoundContext } from "@/context/SoundContext";
 
 export const Slider = () => {
-  // const { musicKit } = useSoundContext();
-  // let music = MusicKit.getInstance();
+  let currentPlaybackTime;
+  const initialHeight = 4;
+  const height = 12;
+  const buffer = 12;
+  const [ref, bounds] = useMeasure();
+  const [hovered, setHovered] = useState(false);
+  const [panning, setPanning] = useState(false);
+  const [seeking, setSeeking] = useState(false);
 
-  let initialHeight = 4;
-  let height = 12;
-  let buffer = 12;
-  let [ref, bounds] = useMeasure();
-  let [hovered, setHovered] = useState(false);
-  let [panning, setPanning] = useState(false);
-  let progress = useMotionValue(0.5);
-  let width = useTransform(progress, (v) => `${v * 100}%`);
-  let roundedProgress = useTransform(
-    progress,
-    (v) => `${roundTo(v * 100, 0)}%`,
-  );
-  let [progressState, setProgressState] = useState(roundedProgress.get());
-  let state = panning ? "panning" : hovered ? "hovered" : "idle";
+  const music = MusicKit.getInstance();
 
-  useMotionValueEvent(roundedProgress, "change", (latest) => {
-    setProgressState(latest);
-  });
+  const totalDuration = music.currentPlaybackDuration;
+  const progress = useMotionValue(0);
+  const width = useTransform(progress, (v) => (v / totalDuration) * 100 + "%");
 
-  // Update progress to match current playback progress
+  // For the current progress/time label
+  const [progressText, setProgressText] = useState("");
+  const state = panning ? "panning" : hovered ? "hovered" : "idle";
+
+  //@ts-ignore
+  const handlePan = (event, info) => {
+    setPanning(true);
+
+    // Calculate the delta in seconds instead of a percentage
+    let deltaInSeconds = (info.delta.x / bounds.width) * totalDuration;
+    let newTimeInSeconds = clamp(
+      progress.get() + deltaInSeconds,
+      0,
+      totalDuration,
+    );
+    progress.set(newTimeInSeconds);
+
+    // Format and update the current time
+    const formattedTime = MusicKit.formatMediaTime(newTimeInSeconds, ":");
+    setProgressText(formattedTime);
+  };
+
+  const handlePanEnd = () => {
+    setSeeking(true);
+    setPanning(false);
+    const newTimeInSeconds = progress.get();
+    music.seekToTime(newTimeInSeconds);
+  };
+
   useEffect(() => {
-    if (MusicKit) {
-      const music = MusicKit.getInstance();
+    const music = MusicKit.getInstance();
 
-      // Directly define the event handler inside the useEffect hook.
-      const handleProgressChange = () => {
-        console.log(MusicKit);
-        console.log("Player state:", MusicKit.Events);
-        console.log("Player state:", music.currentPlaybackProgress);
-        console.log("Player state:", music.isPlaying);
-        console.log("Player state:", music.currentPlaybackDuration);
-        console.log("Player state:", music.currentPlaybackTime);
-        console.log("Player state:", music.currentPlaybackTimeRemaining);
-      };
+    const handlePlaybackTimeDidChange = () => {
+      const isSeeking = music.playbackState === MusicKit.PlaybackStates.seeking;
+      const isPlaying = music.playbackState === MusicKit.PlaybackStates.playing;
 
-      music.addEventListener(
-        MusicKit.Events.playbackProgressDidChange,
-        handleProgressChange,
+      if (isSeeking) {
+        setSeeking(true);
+      } else if (isPlaying) {
+        setSeeking(false);
+      }
+
+      // Don't update progress if we're panning
+      if (panning || seeking) return;
+
+      // Update progress slider
+      progress.set(music.currentPlaybackTime);
+
+      // Update progress text
+      const currentPlaybackTime = MusicKit.formatMediaTime(
+        music.currentPlaybackTime,
+        ":",
       );
+      setProgressText(currentPlaybackTime);
+    };
 
-      // Cleanup function to remove the event listener
-      return () => {
-        music.removeEventListener(
-          MusicKit.Events.playbackProgressDidChange,
-          handleProgressChange,
-        );
-      };
-    }
-  }, []); // Removed progress from dependencies since it's not used here.
+    music.addEventListener(
+      MusicKit.Events.playbackTimeDidChange,
+      handlePlaybackTimeDidChange,
+    );
+
+    return () => {
+      music.removeEventListener(
+        MusicKit.Events.playbackTimeDidChange,
+        handlePlaybackTimeDidChange,
+      );
+    };
+  }, [progress, panning, seeking]);
 
   return (
     <MotionConfig transition={transition}>
       <div className="absolute flex items-center justify-center p-8 bg-gray2 z-10">
         <div className="w-[375px] h-full bg-gray-800 rounded-2xl flex flex-col justify-center">
+          {/* Main Container */}
           <div className="flex flex-1 flex-col items-center justify-center">
-            <div className="flex items-center justify-center w-full">
+            <div className="flex items-center justify-center w-full cursor-pointer">
               {/*  Icon here */}
               <motion.div
                 initial={false}
@@ -83,15 +115,11 @@ export const Slider = () => {
               {/* Slider */}
               <motion.div
                 animate={state}
-                onPanStart={() => setPanning(true)}
-                onPanEnd={() => setPanning(false)}
                 onPointerEnter={() => setHovered(true)}
                 onPointerLeave={() => setHovered(false)}
-                onPan={(event, info) => {
-                  let deltaInPercent = info.delta.x / bounds.width;
-                  let newPercent = clamp(progress.get() + deltaInPercent, 0, 1);
-                  progress.set(newPercent);
-                }}
+                onPanStart={() => setPanning(true)}
+                onPan={handlePan}
+                onPanEnd={handlePanEnd}
                 style={{ height: height + buffer }}
                 className="flex items-center justify-center relative touch-none grow-0"
                 variants={{
@@ -128,7 +156,9 @@ export const Slider = () => {
                       : "rgb(120,113,108)",
                 }}
                 className="flex justify-end shrink-0 w-6"
-              ></motion.div>
+              >
+                {currentPlaybackTime}
+              </motion.div>
             </div>
             {/* Label */}
             <motion.div
@@ -139,7 +169,7 @@ export const Slider = () => {
               }}
               className={`select-none mt-4 text-center text-sm font-semibold tabular-nums`}
             >
-              {progressState}
+              {progressText}
             </motion.div>
           </div>
         </div>
@@ -152,7 +182,3 @@ let transition = { type: "spring", bounce: 0, duration: 0.3 };
 
 let clamp = (num: number, min: number, max: number) =>
   Math.max(Math.min(num, max), min);
-
-function roundTo(number: number, decimals: number): number {
-  return Math.round(number * Math.pow(10, decimals)) / Math.pow(10, decimals);
-}

@@ -63,26 +63,13 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
       {/* Cloud / Content */}
       <motion.div className="flex flex-col w-[304px] pb-2">
         <div
-          className={`w-[304px] h-[222px] relative flex flex-col gap-4 items-center`}
+          className={`w-[304px] h-[222px] relative flex flex-col gap-4 items-center drop-shadow-xl`}
         >
           <WispIcon className={`absolute top-0 left-0`} />
 
           <div
             className={`w-[152px] flex items-center gap-2 z-10 pt-[30px] relative`}
           >
-            <div
-              style={{
-                background: `#${color}`,
-                backgroundRepeat: "repeat, no-repeat",
-                width: 40,
-                height: 40,
-                position: "absolute",
-                left: 0,
-                top: 30,
-                zIndex: -10,
-                filter: `blur(20px)`,
-              }}
-            />
             <Image
               src={artwork}
               alt={`${sound.attributes.name} artwork`}
@@ -115,18 +102,20 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         </div>
         <div
           onClick={handleSoundClick}
-          className={`w-[36px] h-[36px] bg-[#F4F4F4] rounded-max ml-8 -mb-2 cursor-pointer`}
+          className={`w-[36px] h-[36px] bg-white rounded-max ml-8 -mb-2 cursor-pointer shadow-shadowKitMedium`}
         />
-        <div className={`w-[16px] h-[16px] bg-[#F4F4F4] rounded-max`} />
-        {/* Ambien */}
-        {/*<motion.div*/}
-        {/*  style={{*/}
-        {/*    background: `#FFF`,*/}
-        {/*    backgroundRepeat: "repeat, no-repeat",*/}
-        {/*    width: "calc(100% - 52px)",*/}
-        {/*  }}*/}
-        {/*  className={`absolute left-[52px] bottom-0 w-full h-full -z-10`}*/}
-        {/*/>*/}
+        <div
+          className={`w-[16px] h-[16px] bg-white rounded-max shadow-shadowKitLow`}
+        />
+        {/*Ambien*/}
+        <motion.div
+          style={{
+            background: `#${color}`,
+            backgroundRepeat: "repeat, no-repeat",
+            width: "calc(100% - 52px)",
+          }}
+          className={`absolute left-[52px] bottom-0 w-full h-full -z-10`}
+        />
       </motion.div>
     </div>
   );
