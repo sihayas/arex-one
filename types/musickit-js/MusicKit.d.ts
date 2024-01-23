@@ -28,6 +28,19 @@ declare namespace MusicKit {
     version?: string | undefined;
   }
 
+  const PlaybackStates: {
+    none: 0;
+    loading: 1;
+    playing: 2;
+    paused: 3;
+    stopped: 4;
+    ended: 5;
+    seeking: 6;
+    waiting: 7;
+    stalled: 8;
+    completed: 9;
+  };
+
   interface FormattedPlaybackDuration {
     hours: number;
     minutes: number;

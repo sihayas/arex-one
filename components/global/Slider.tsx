@@ -1,50 +1,53 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   useMotionValue,
   useTransform,
   motion,
   MotionConfig,
-  useMotionValueEvent,
-  useSpring,
+  PanInfo,
+  AnimatePresence,
 } from "framer-motion";
 import useMeasure from "react-use-measure";
+import Artwork = MusicKit.Artwork;
+import Image from "next/image";
 
 export const Slider = () => {
-  let currentPlaybackTime;
-  const initialHeight = 4;
+  const music = MusicKit.getInstance();
+  const mediaItem = music.nowPlayingItem;
+
+  let artwork = useRef("");
+
+  const initialHeight = 6;
   const height = 12;
   const buffer = 12;
   const [ref, bounds] = useMeasure();
+
   const [hovered, setHovered] = useState(false);
   const [panning, setPanning] = useState(false);
   const [seeking, setSeeking] = useState(false);
+  const state = panning ? "panning" : hovered ? "hovered" : "idle";
 
-  const music = MusicKit.getInstance();
+  const [currentTime, setCurrentTime] = useState("");
+  const [remainingTime, setRemainingTime] = useState("");
 
   const totalDuration = music.currentPlaybackDuration;
   const progress = useMotionValue(0);
   const width = useTransform(progress, (v) => (v / totalDuration) * 100 + "%");
 
-  // For the current progress/time label
-  const [progressText, setProgressText] = useState("");
-  const state = panning ? "panning" : hovered ? "hovered" : "idle";
-
-  //@ts-ignore
-  const handlePan = (event, info) => {
+  const handlePan = (event: PointerEvent, info: PanInfo) => {
     setPanning(true);
 
-    // Calculate the delta in seconds instead of a percentage
-    let deltaInSeconds = (info.delta.x / bounds.width) * totalDuration;
-    let newTimeInSeconds = clamp(
-      progress.get() + deltaInSeconds,
-      0,
-      totalDuration,
-    );
-    progress.set(newTimeInSeconds);
+    // Calculate the delta in seconds
+    let delta = (info.delta.x / bounds.width) * totalDuration;
+    let newTime = clamp(progress.get() + delta, 0, totalDuration);
+    progress.set(newTime);
 
     // Format and update the current time
-    const formattedTime = MusicKit.formatMediaTime(newTimeInSeconds, ":");
-    setProgressText(formattedTime);
+    setCurrentTime(MusicKit.formatMediaTime(newTime, ":"));
+
+    // Format and update the remaining time
+    const remainingTime = totalDuration - newTime;
+    setRemainingTime(MusicKit.formatMediaTime(remainingTime, ":"));
   };
 
   const handlePanEnd = () => {
@@ -54,31 +57,33 @@ export const Slider = () => {
     music.seekToTime(newTimeInSeconds);
   };
 
+  // Update the progress bar when the playback time changes
   useEffect(() => {
-    const music = MusicKit.getInstance();
-
     const handlePlaybackTimeDidChange = () => {
       const isSeeking = music.playbackState === MusicKit.PlaybackStates.seeking;
       const isPlaying = music.playbackState === MusicKit.PlaybackStates.playing;
 
+      // Prevent the progress bar from updating while seeking + rubber-banding
       if (isSeeking) {
         setSeeking(true);
       } else if (isPlaying) {
         setSeeking(false);
       }
-
-      // Don't update progress if we're panning
       if (panning || seeking) return;
 
-      // Update progress slider
+      // Continue updating the progress bar
       progress.set(music.currentPlaybackTime);
 
-      // Update progress text
-      const currentPlaybackTime = MusicKit.formatMediaTime(
+      // Update remaining times
+      const currentTime = MusicKit.formatMediaTime(
         music.currentPlaybackTime,
         ":",
       );
-      setProgressText(currentPlaybackTime);
+      setCurrentTime(currentTime);
+
+      const remainingTime =
+        music.currentPlaybackDuration - music.currentPlaybackTime;
+      setRemainingTime(MusicKit.formatMediaTime(remainingTime, ":"));
     };
 
     music.addEventListener(
@@ -92,84 +97,96 @@ export const Slider = () => {
         handlePlaybackTimeDidChange,
       );
     };
-  }, [progress, panning, seeking]);
+  }, [progress, panning, seeking, music]);
+
+  useEffect(() => {
+    if (mediaItem) {
+      console.log(mediaItem);
+      artwork.current = MusicKit.formatArtworkURL(
+        mediaItem.attributes.artwork,
+        80,
+        80,
+      );
+    }
+  }, [mediaItem]);
 
   return (
     <MotionConfig transition={transition}>
-      <div className="absolute flex items-center justify-center p-8 bg-gray2 z-10">
-        <div className="w-[375px] h-full bg-gray-800 rounded-2xl flex flex-col justify-center">
+      <div className="absolute bottom-16 bg-[#E5E5E5] rounded-2xl z-10 shadow-shadowKitHigh">
+        <div className="w-[356px] h-12 rounded-2xl flex p-2">
+          <AnimatePresence>
+            <motion.div
+              className={`min-w-[32px] min-h-[32px]`}
+              initial={{ opacity: 0, scale: 0.25 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.25 }}
+              key={artwork.current}
+            >
+              <Image
+                className={`rounded-max outline outline-1 outline-silver`}
+                src={artwork.current}
+                alt={`artwork`}
+                width={32}
+                height={32}
+                quality={100}
+              />
+            </motion.div>
+          </AnimatePresence>
           {/* Main Container */}
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <div className="flex items-center justify-center w-full cursor-pointer">
-              {/*  Icon here */}
-              <motion.div
-                initial={false}
-                animate={{
-                  color:
-                    hovered || panning
-                      ? "rgb(255,255,255)"
-                      : "rgb(120,113,108)",
-                }}
-                className="flex justify-start shrink-0 w-6"
-              ></motion.div>
-              {/* Slider */}
-              <motion.div
-                animate={state}
-                onPointerEnter={() => setHovered(true)}
-                onPointerLeave={() => setHovered(false)}
-                onPanStart={() => setPanning(true)}
-                onPan={handlePan}
-                onPanEnd={handlePanEnd}
-                style={{ height: height + buffer }}
-                className="flex items-center justify-center relative touch-none grow-0"
-                variants={{
-                  idle: { width: "calc(95% - 48px)" },
-                  hovered: { width: "calc(100% - 48px)" },
-                  panning: { width: "calc(100% - 48px)" },
-                }}
-                initial={false}
-                ref={ref}
-              >
-                <motion.div
-                  initial={false}
-                  variants={{
-                    idle: { height: initialHeight },
-                    hovered: { height },
-                    panning: { height },
-                  }}
-                  className="relative rounded-full overflow-hidden w-full"
-                >
-                  <div className="h-full bg-white/20" />
-                  <motion.div
-                    style={{ width }}
-                    className="bg-white absolute w-[20%] inset-0"
-                  />
-                </motion.div>
-              </motion.div>
-              {/*  Icon Here */}
-              <motion.div
-                initial={false}
-                animate={{
-                  color:
-                    hovered || panning
-                      ? "rgb(255,255,255)"
-                      : "rgb(120,113,108)",
-                }}
-                className="flex justify-end shrink-0 w-6"
-              >
-                {currentPlaybackTime}
-              </motion.div>
-            </div>
-            {/* Label */}
+          <div className="flex items-center justify-center w-full cursor-pointer p-2">
+            {/*  Left Text */}
             <motion.div
               initial={false}
               animate={{
-                color:
-                  hovered || panning ? "rgb(255,255,255)" : "rgb(120,113,108)",
+                color: hovered || panning ? "#000" : "#999",
               }}
-              className={`select-none mt-4 text-center text-sm font-semibold tabular-nums`}
+              className="flex justify-start shrink-0 w-[34px] text-sm font-semibold "
             >
-              {progressText}
+              {currentTime}
+            </motion.div>
+            {/* Slider */}
+            <motion.div
+              animate={state}
+              onPointerEnter={() => setHovered(true)}
+              onPointerLeave={() => setHovered(false)}
+              onPanStart={() => setPanning(true)}
+              onPan={handlePan}
+              onPanEnd={handlePanEnd}
+              style={{ height: height + buffer }}
+              className="flex items-center justify-center relative touch-none grow-0"
+              variants={{
+                idle: { width: "calc(95% - 64px)" },
+                hovered: { width: "calc(100% - 64px)" },
+                panning: { width: "calc(100% - 64px)" },
+              }}
+              initial={false}
+              ref={ref}
+            >
+              <motion.div
+                initial={false}
+                variants={{
+                  idle: { height: initialHeight },
+                  hovered: { height },
+                  panning: { height },
+                }}
+                className="relative rounded-lg overflow-hidden w-full"
+              >
+                <div className="h-full bg-silver" />
+                <motion.div
+                  style={{ width }}
+                  className="bg-gray3 absolute w-[20%] inset-0"
+                />
+              </motion.div>
+            </motion.div>
+            {/*  Right Text */}
+            <motion.div
+              initial={false}
+              animate={{
+                color: hovered || panning ? "#000" : "#999",
+              }}
+              className="flex justify-end shrink-0 w-[34px] text-sm font-semibold "
+            >
+              {remainingTime}
             </motion.div>
           </div>
         </div>
@@ -178,7 +195,27 @@ export const Slider = () => {
   );
 };
 
-let transition = { type: "spring", bounce: 0, duration: 0.3 };
+let transition = { type: "spring", bounce: 0, duration: 0.4 };
 
 let clamp = (num: number, min: number, max: number) =>
   Math.max(Math.min(num, max), min);
+
+// <motion.div
+//     initial={false}
+//     animate={{
+//       color: hovered || panning ? "#000" : "#999",
+//     }}
+//     className="flex justify-start shrink-0 w-[34px] text-sm font-semibold "
+// >
+//   {currentTime}
+// </motion.div>
+
+// <motion.div
+//     initial={false}
+//     animate={{
+//       color: hovered || panning ? "#000" : "#999",
+//     }}
+//     className="flex justify-end shrink-0 w-[34px] text-sm font-semibold "
+// >
+//   {remainingTime}
+// </motion.div>
