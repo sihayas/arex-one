@@ -138,7 +138,7 @@ const EntryDial = ({ rating }: EntryDialProps) => {
           strokeDashoffset={circumference / 4 - 4}
           strokeLinecap="round"
           animate={{
-            stroke: "#000",
+            stroke: "rgba(60, 60, 67, 0.9)",
             strokeDasharray: `${segmentLength} ${
               circumference - segmentLength
             }`,

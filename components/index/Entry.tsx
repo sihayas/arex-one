@@ -108,19 +108,19 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           <div className={`flex items-center gap-4 w-full pr-2`}>
             <EntryDial rating={artifact.content!.rating!} />
 
-            <div className={`flex flex-col gap-0.5`}>
-              <div className={`text-sm text-gray2 line-clamp-1 leading-tight`}>
+            <div className={`flex flex-col`}>
+              <div className={`text-sm text-gray5 line-clamp-1`}>
                 {sound.attributes.artistName}
               </div>
               <div
-                className={`font-medium text-base text-black line-clamp-1 leading-normal`}
+                className={`font-semibold text-base text-gray4 line-clamp-1`}
               >
                 {sound.attributes.name}
               </div>
             </div>
           </div>
 
-          <div className={`text-base text-black line-clamp-[10] pt-0`}>
+          <div className={`text-base text-gray4 line-clamp-[10] pt-0`}>
             {artifact.content?.text}
           </div>
 
