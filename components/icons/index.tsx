@@ -18,41 +18,6 @@ export function LoveIcon({ ...props }) {
   );
 }
 
-export function PositiveIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={16}
-      height={16}
-      fill="none"
-      {...props}
-      className={props.className}
-    >
-      <path
-        fill="#999"
-        fillRule="evenodd"
-        d="M9 7h5v2H9v5H7V9H2V7h5V2h2v5Z"
-        clipRule="evenodd"
-      />
-    </svg>
-  );
-}
-
-export function NegativeIcon({ ...props }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={16}
-      height={16}
-      fill="none"
-      {...props}
-      className={props.className}
-    >
-      <path fill="#999" d="M14 7H2v2h12V7Z" />
-    </svg>
-  );
-}
-
 export function SettingsIcon({ ...props }) {
   return (
     <svg
@@ -550,6 +515,7 @@ export function FiveStar({ ...props }) {
   );
 }
 
+// Sign In Button
 export function AppleIcon({ ...props }) {
   return (
     <svg
@@ -568,6 +534,7 @@ export function AppleIcon({ ...props }) {
   );
 }
 
+// Wisp Cloud
 export function WispIcon({ ...props }) {
   return (
     <svg
@@ -581,6 +548,55 @@ export function WispIcon({ ...props }) {
       <path
         fill="#FFF"
         d="M226.131 183.692c-11.196 21.453-31.696 35.607-55.861 37.976-20.089 1.965-39.335-4.869-54.354-18.481a.495.495 0 0 0-.562-.096c-3.709 1.529-6.248 2.515-7.619 2.958-18.316 5.944-36.372 5.69-54.168-.76C22.947 194.196 1.83 165.3.124 133.049c-.858-16.174 2.727-31.293 10.757-45.358 8.337-14.603 20.831-25.88 37.486-33.833a.763.763 0 0 0 .431-.52c13.093-50.5 72.373-69.933 112.873-37.237.197.16.416.197.658.11 42.247-15.523 86.467 10.627 93.942 54.492a.55.55 0 0 0 .438.452c13.489 2.807 24.621 9.342 33.395 19.604 26.338 30.806 13.566 78.437-24.234 92.509-12.968 4.829-26.059 4.909-39.273.239a.37.37 0 0 0-.264.005.395.395 0 0 0-.202.18Z"
+      />
+    </svg>
+  );
+}
+
+// Play Button
+export function PlayIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={16}
+      height={16}
+      fill="none"
+      className={props.className}
+      style={{ fill: "currentColor" }}
+      {...props}
+    >
+      <path d="m5.418.339 9.573 5.898c.31.19.564.452.74.76.177.308.269.653.269 1.003 0 .35-.092.695-.268 1.003-.177.308-.431.57-.74.76l-9.574 5.898a2.31 2.31 0 0 1-2.262.084 2.168 2.168 0 0 1-.845-.773A2.022 2.022 0 0 1 2 13.898V2.102c0-.378.107-.75.31-1.074.204-.325.497-.592.847-.773a2.31 2.31 0 0 1 2.261.084Z" />
+    </svg>
+  );
+}
+
+export function PauseIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={16}
+      height={16}
+      style={{ fill: "currentColor" }}
+      {...props}
+    >
+      <path d="M2.681.562c.777-.776 1.971-.746 2.714.074.4.441.6.986.6 1.634C6 6.115 6 9.923 6 13.694c0 .27-.03.515-.093.735-.267.956-1.075 1.606-1.964 1.57-.902-.037-1.658-.723-1.88-1.704a3.141 3.141 0 0 1-.063-.69c.01-3.843.01-7.544.002-11.103-.001-.353.02-.62.06-.801.105-.452.311-.832.62-1.139ZM10 2.25C10 .263 12.14-.75 13.404.653c.396.44.595.995.595 1.665v11.409c0 1.262-.893 2.302-2.043 2.273-.913-.023-1.683-.725-1.9-1.72-.037-.173-.056-.44-.056-.802.002-3.8.002-7.542 0-11.226Z" />
+    </svg>
+  );
+}
+
+export function NextTrackIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={16}
+      height={16}
+      {...props}
+      style={{ fill: "currentColor" }}
+    >
+      <path
+        fillRule="evenodd"
+        d="M15.211 6.918 9.36 3.313a1.412 1.412 0 0 0-1.383-.051c-.214.11-.392.273-.517.472-.124.199-.19.426-.19.657V6.4L2.26 3.313a1.412 1.412 0 0 0-1.383-.051c-.214.11-.393.273-.518.472-.124.199-.19.426-.19.657v7.21c0 .232.066.46.19.658.125.199.304.362.517.472a1.412 1.412 0 0 0 1.383-.05L7.27 9.592v2.009c0 .231.066.458.19.657.125.199.303.362.517.472a1.412 1.412 0 0 0 1.383-.05l5.852-3.607c.19-.116.345-.276.453-.464a1.234 1.234 0 0 0 0-1.227 1.313 1.313 0 0 0-.453-.465Z"
+        clipRule="evenodd"
       />
     </svg>
   );

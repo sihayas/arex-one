@@ -63,27 +63,32 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
       {/* Cloud / Content */}
       <motion.div className="flex flex-col w-[304px] pb-2">
         <div
-          className={`w-[304px] h-[222px] relative flex flex-col gap-4 items-center drop-shadow-xl`}
+          className={`w-[304px] h-[222px] relative flex flex-col gap-4 items-center drop-shadow-shadowKitLow`}
         >
           <WispIcon className={`absolute top-0 left-0`} />
 
           <div
-            className={`w-[152px] flex items-center gap-2 z-10 pt-[30px] relative`}
+            className={`w-[152px] flex items-center gap-2 z-10 pt-6 relative`}
           >
-            <Image
-              src={artwork}
-              alt={`${sound.attributes.name} artwork`}
-              width={40}
-              height={40}
-              className={`rounded-lg shadow-shadowKitMedium outline outline-silver outline-1`}
-            />
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              initial={{ borderRadius: 9999 }}
+              className={`shadow-shadowKitMedium outline outline-silver outline-1 overflow-hidden cursor-pointer`}
+            >
+              <Image
+                src={artwork}
+                alt={`${sound.attributes.name} artwork`}
+                width={48}
+                height={48}
+              />
+            </motion.div>
 
             <div className={`flex flex-col`}>
-              <p className={`text-xs text-gray2 max-w-[88px] line-clamp-1`}>
+              <p className={`text-sm text-gray2 max-w-[90px] line-clamp-1`}>
                 {artist}
               </p>
               <p
-                className={`text-sm text-gray4 max-w-[104px] line-clamp-1 font-medium`}
+                className={`text-base text-gray4 max-w-[106px] line-clamp-1 font-semibold`}
               >
                 {name}
               </p>
@@ -102,10 +107,10 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         </div>
         <div
           onClick={handleSoundClick}
-          className={`w-[36px] h-[36px] bg-white rounded-max ml-8 -mb-2 cursor-pointer shadow-shadowKitMedium`}
+          className={`w-[36px] h-[36px] bg-white rounded-max ml-8 -mb-2 cursor-pointer border border-silver`}
         />
         <div
-          className={`w-[16px] h-[16px] bg-white rounded-max shadow-shadowKitLow`}
+          className={`w-[16px] h-[16px] bg-white rounded-max border border-silver`}
         />
         {/*Ambien*/}
         <motion.div

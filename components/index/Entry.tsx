@@ -23,14 +23,14 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const [hoverContent, setHoverContent] = useState(false);
 
   const variants = {
-    initial: { translateY: 72, borderRadius: 16 },
+    initial: { translateY: 64, borderRadius: 16 },
     hover: {
       translateY: 0,
-      borderRadius: 24,
+      borderRadius: 32,
     },
     hoverContent: {
-      translateY: 288,
-      borderRadius: 8,
+      translateY: 246,
+      borderRadius: 24,
     },
   };
 
@@ -63,8 +63,17 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   // };
   //
 
+  const maskStyle = {
+    maskImage: "url('/images/entry_mask.svg')",
+    maskSize: "cover",
+    maskRepeat: "no-repeat",
+    WebkitMaskImage: "url('/images/entry_mask.svg')",
+    WebkitMaskSize: "cover",
+    WebkitMaskRepeat: "no-repeat",
+  };
+
   return (
-    <div className={`flex items-end gap-2.5 relative group w-[356px] group`}>
+    <div className={`flex gap-2.5 relative group w-[356px] group`}>
       <Avatar
         className={`h-[42px] border border-silver z-10`}
         imageSrc={artifact.author.image}
@@ -85,22 +94,21 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         style={{
           width: 304,
           height: 384,
+          ...maskStyle,
         }}
-        className={`flex flex-col rounded-full relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white outline outline-silver outline-1`}
+        className={`flex flex-col relative will-change-transform bg-white`}
       >
         {/* Content Container */}
         <motion.div
           onHoverStart={() => setHoverContent(true)}
           onHoverEnd={() => setHoverContent(false)}
-          className={`flex flex-col gap-[18px] cursor-pointer p-4`}
+          className={`flex flex-col gap-2.5 cursor-pointer p-6 w-full h-full bg-white`}
           onClick={handleEntryClick}
         >
-          <div
-            className={`flex items-center gap-4 justify-between w-full pr-2`}
-          >
+          <div className={`flex items-center gap-4 w-full pr-2`}>
             <EntryDial rating={artifact.content!.rating!} />
 
-            <div className={`flex flex-col items-end gap-0.5`}>
+            <div className={`flex flex-col gap-0.5`}>
               <div className={`text-sm text-gray2 line-clamp-1 leading-tight`}>
                 {sound.attributes.artistName}
               </div>
@@ -112,7 +120,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
             </div>
           </div>
 
-          <div className={`text-base text-black line-clamp-[12] p-2 pt-0`}>
+          <div className={`text-base text-black line-clamp-[10] pt-0`}>
             {artifact.content?.text}
           </div>
 
@@ -121,7 +129,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
 
         {/* Artwork */}
         <motion.div
-          className="cursor-pointer absolute bottom-0 left-0 shadow-cardArt overflow-hidden"
+          className="cursor-pointer absolute bottom-0 left-0 overflow-hidden"
           variants={variants}
           animate={hoverContent ? "hoverContent" : "initial"}
           whileHover="hover"

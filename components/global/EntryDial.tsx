@@ -58,7 +58,7 @@ const EntryDial = ({ rating }: EntryDialProps) => {
   const strokeWidth = 3;
   const dotRadius = 1;
 
-  const totalSize = 48;
+  const totalSize = 40;
   const radius = (totalSize - strokeWidth) / 2;
 
   const viewBoxSize = totalSize;

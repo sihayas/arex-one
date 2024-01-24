@@ -180,7 +180,6 @@ export default function Home() {
         </motion.div>
       )}
 
-      {/* Slider */}
       <Slider />
 
       <button

@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  PositiveIcon,
-  NegativeIcon,
   FireIcon,
   LeafIcon,
   StarlightIcon,
