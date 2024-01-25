@@ -4,7 +4,7 @@ import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact, useSound } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
-import Heart from "@/components/glob  al/Heart";
+import Heart from "@/components/global/Heart";
 
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
@@ -63,7 +63,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
       {/* Cloud / Content */}
       <motion.div className="flex flex-col w-[304px] pb-2">
         <div
-          className={`w-[304px] h-[222px] relative flex flex-col gap-[11px] items-center drop-shadow-shadowKitLow`}
+          className={`w-[304px] h-[222px] relative flex flex-col gap-[11px] items-center cloud-shadow`}
         >
           <WispIcon className={`absolute top-0 left-0`} />
 

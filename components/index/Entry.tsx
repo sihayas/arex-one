@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact, useSound } from "@/hooks/usePage";
@@ -11,6 +11,7 @@ import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useSoundContext } from "@/context/SoundContext";
+import { MaskCardBottom } from "@/components/icons";
 
 interface NewAProps {
   artifact: ArtifactExtended;
@@ -64,10 +65,10 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   //
 
   const maskStyle = {
-    maskImage: "url('/images/entry_mask.svg')",
+    maskImage: "url('/images/mask_card_bottom.svg')",
     maskSize: "cover",
     maskRepeat: "no-repeat",
-    WebkitMaskImage: "url('/images/entry_mask.svg')",
+    WebkitMaskImage: "url('/images/mask_card_bottom.svg')",
     WebkitMaskSize: "cover",
     WebkitMaskRepeat: "no-repeat",
   };
@@ -82,75 +83,54 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         height={42}
         user={artifact.author}
       />
-      <Heart
-        handleHeartClick={handleHeartClick}
-        hearted={hearted}
-        className="absolute -top-[28px] left-[46px] mix-blend-multiply"
-        heartCount={heartCount}
-        replyCount={artifact._count.replies}
-      />
+
       {/* Content Inner / Card */}
       <motion.div
         style={{
           width: 304,
-          height: 384,
+          height: 400,
           ...maskStyle,
         }}
-        className={`flex flex-col relative will-change-transform bg-white`}
+        className={`flex flex-col will-change-transform bg-white relative z-10`}
       >
         {/* Content Container */}
-        <motion.div
-          onHoverStart={() => setHoverContent(true)}
-          onHoverEnd={() => setHoverContent(false)}
-          className={`flex flex-col gap-2.5 cursor-pointer p-6 w-full h-full bg-white`}
-          onClick={handleEntryClick}
-        >
-          <div className={`flex items-center gap-4 w-full pr-2`}>
+        <motion.div className={`flex`} onClick={handleEntryClick}>
+          <div className={`p-6`}>
             <EntryDial rating={artifact.content!.rating!} />
-
-            <div className={`flex flex-col`}>
-              <div className={`text-sm text-gray5 line-clamp-1`}>
-                {sound.attributes.artistName}
-              </div>
-              <div
-                className={`font-semibold text-base text-gray4 line-clamp-1`}
-              >
-                {sound.attributes.name}
-              </div>
-            </div>
           </div>
-
-          <div className={`text-base text-gray4 line-clamp-[10] pt-0`}>
-            {artifact.content?.text}
-          </div>
-
-          <div></div>
-        </motion.div>
-
-        {/* Artwork */}
-        <motion.div
-          className="cursor-pointer absolute bottom-0 left-0 overflow-hidden"
-          variants={variants}
-          animate={hoverContent ? "hoverContent" : "initial"}
-          whileHover="hover"
-          transition={{
-            type: "spring",
-            stiffness: 357,
-            damping: 38,
-            mass: 1.5,
-          }}
-          onClick={handleSoundClick}
-        >
           <Image
+            className={`rounded-bl-[20px] outline outline-1 outline-silver`}
             src={artwork}
             alt={`artwork`}
             loading="lazy"
             quality={100}
-            width={304}
-            height={304}
+            width={216}
+            height={216}
           />
         </motion.div>
+        <div className={`flex flex-col px-6 pt-3`}>
+          <div className={`text-sm text-gray5 line-clamp-1`}>
+            {sound.attributes.artistName}
+          </div>
+          <div className={`font-semibold text-base text-gray4 line-clamp-1`}>
+            {sound.attributes.name}
+          </div>
+        </div>
+        <div className={`text-base text-gray4 line-clamp-[10] px-6`}>
+          {artifact.content?.text}
+        </div>
+
+        <motion.div
+          style={{
+            background: `linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 62.37%, #FFF 100%)`,
+          }}
+          className={`absolute bottom-0 left-0 w-full h-12`}
+        />
       </motion.div>
+
+      <div className={`absolute bottom-0 right-0 cloud-shadow`}>
+        <MaskCardBottom />
+      </div>
 
       {/* Ambien */}
       <motion.div
@@ -160,7 +140,15 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute left-[52px] w-[304px] h-[384px] -z-10`}
+        className={`absolute left-[52px] w-[304px] h-[400px] -z-10`}
+      />
+
+      <Heart
+        handleHeartClick={handleHeartClick}
+        hearted={hearted}
+        className="absolute -top-[28px] left-[46px] mix-blend-multiply"
+        heartCount={heartCount}
+        replyCount={artifact._count.replies}
       />
     </div>
   );
