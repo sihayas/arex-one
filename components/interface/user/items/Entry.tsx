@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useSound } from "@/hooks/usePage";
@@ -9,7 +9,7 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { MaskCardBottom, MaskCardTop } from "@/components/icons";
+import { MaskCardTop } from "@/components/icons";
 
 interface UserProps {
   artifact: ArtifactExtended;

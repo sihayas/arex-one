@@ -1,12 +1,9 @@
 import React, { useEffect } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useUserDataQuery } from "@/lib/apiHelper/user";
 import Essentials from "@/components/interface/user/render/Essentials";
-import Sideline from "@/components/interface/user/sub/Sideline";
 import Entries from "@/components/interface/user/render/Entries";
-import Sounds from "@/components/interface/user/render/Sounds";
-import Wisps from "@/components/interface/user/render/Wisps";
 import Avatar from "@/components/global/Avatar";
 
 export type Section = "essentials" | "sounds" | "entries" | "wisps";
