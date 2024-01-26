@@ -11,7 +11,7 @@ import useMeasure from "react-use-measure";
 import Image from "next/image";
 import { NextTrackIcon, PauseIcon, PlayIcon } from "@/components/icons";
 
-export const Slider = () => {
+export const Player = () => {
   const music = MusicKit.getInstance();
   const mediaItem = music.nowPlayingItem;
   const [ref, bounds] = useMeasure();

@@ -1,14 +1,14 @@
 import Layout from "../components/layout";
 import Head from "next/head";
 import React from "react";
-import Dash from "@/components/global/Dash";
+import Dash from "@/components/index/Dash";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import RenderArtifacts from "@/components/index/RenderArtifacts";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
 import { AppleIcon } from "@/components/icons";
-import { Slider } from "@/components/global/Slider";
+import { Player } from "@/components/global/Player";
 
 type Feed = "personal" | "bloom" | "recent" | null;
 
@@ -140,7 +140,7 @@ export default function Home() {
       {activeFeed && (
         <motion.div
           ref={scrollContainerRef}
-          className={`flex flex-col items-center pt-16 px-8 gap-32 max-h-screen w-full overflow-scroll scrollbar-none`}
+          className={`flex flex-col items-center pt-16 px-8 pb-32 gap-32 max-h-screen w-full overflow-scroll scrollbar-none`}
         >
           {/*  Blur Backdrop */}
           <div
@@ -180,7 +180,7 @@ export default function Home() {
         </motion.div>
       )}
 
-      <Slider />
+      <Player />
 
       <button
         className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"

@@ -1,48 +1,88 @@
 import React, { useRef, useState } from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
-import { useArtifact, useSound } from "@/hooks/usePage";
+import { useSound } from "@/hooks/usePage";
 
 import Heart from "@/components/global/Heart";
 import { ArtifactExtended } from "@/types/globalTypes";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import { MaskCardBottom, MaskCardTop } from "@/components/icons";
 
 interface UserProps {
   artifact: ArtifactExtended;
-  containerRef: React.RefObject<HTMLElement>;
   index: number;
 }
 
-export const Entry: React.FC<UserProps> = ({
-  artifact,
-  containerRef,
-  index,
-}) => {
-  const { user } = useInterfaceContext();
+const springConfig = {
+  damping: 34,
+  stiffness: 224,
+};
 
+export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
+  const { user, scrollContainerRef } = useInterfaceContext();
   const { handleSelectSound } = useSound();
-  const [hoverContent, setHoverContent] = useState(false);
 
-  const variants = {
-    initial: { translateY: 50, borderRadius: 16 },
-    hover: {
-      translateY: 0,
-      borderRadius: 24,
-    },
-    hoverContent: {
-      translateY: 288,
-      borderRadius: 8,
-    },
-  };
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+  });
+
+  const scale = useSpring(
+    useTransform(scrollY, [0, 24], [0.84, 1]),
+    springConfig,
+  );
+
+  // First card translations
+  const yZero = useSpring(
+    useTransform(scrollY, [0, 24], [-256, 0]),
+    springConfig,
+  );
+
+  // Second card translations
+  const xOne = useSpring(
+    useTransform(scrollY, [0, 24], [-312, 0]),
+    springConfig,
+  );
+  const yOne = useSpring(
+    useTransform(scrollY, [0, 24], [-256, 0]),
+    springConfig,
+  );
+  const rotateOne = useSpring(
+    useTransform(scrollY, [0, 24], [12, 0]),
+    springConfig,
+  );
+
+  // Third card translations
+  const xTwo = useSpring(useTransform(scrollY, [0, 24], [40, 0]), springConfig);
+  const yTwo = useSpring(
+    useTransform(scrollY, [0, 24], [-640, 0]),
+    springConfig,
+  );
+  const rotateTwo = useSpring(
+    useTransform(scrollY, [0, 24], [21, 0]),
+    springConfig,
+  );
+
+  // Fourth card translations
+  const xThree = useSpring(
+    useTransform(scrollY, [0, 24], [-248, 0]),
+    springConfig,
+  );
+  const yThree = useSpring(
+    useTransform(scrollY, [0, 24], [-608, 0]),
+    springConfig,
+  );
+  const rotateThree = useSpring(
+    useTransform(scrollY, [0, 24], [28, 0]),
+    springConfig,
+  );
 
   const sound = artifact.appleData;
   const artwork = sound.attributes.artwork.url
     .replace("{w}", "560")
     .replace("{h}", "560");
-  const color = sound.attributes.artwork.bgColor;
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
@@ -56,75 +96,111 @@ export const Entry: React.FC<UserProps> = ({
     artifact.author.id,
     user?.id,
   );
-  const handleEntryClick = useArtifact(artifact);
 
   const handleSoundClick = async () => {
     handleSelectSound(sound);
   };
 
+  const maskStyle = {
+    maskImage: "url('/images/mask_card_top.svg')",
+    maskSize: "cover",
+    maskRepeat: "no-repeat",
+    WebkitMaskImage: "url('/images/mask_card_top.svg')",
+    WebkitMaskSize: "cover",
+    WebkitMaskRepeat: "no-repeat",
+  };
+
   return (
     <motion.div
       style={{
-        width: 224,
-        height: 288,
+        y:
+          index === 0
+            ? yZero
+            : index === 1
+            ? yOne
+            : index === 2
+            ? yTwo
+            : index === 3
+            ? yThree
+            : 0,
+        x:
+          index === 0
+            ? 0
+            : index === 1
+            ? xOne
+            : index === 2
+            ? xTwo
+            : index === 3
+            ? xThree
+            : 0,
+        rotate:
+          index === 0
+            ? 0
+            : index === 1
+            ? rotateOne
+            : index === 2
+            ? rotateTwo
+            : index === 3
+            ? rotateThree
+            : 0,
+        scale: index < 4 ? scale : 1,
+        zIndex: index === 0 ? 10 : index === 1 ? 9 : index === 2 ? 8 : 7,
+        transformOrigin: index === 0 ? "top left" : "center center",
       }}
-      className={`flex flex-col p-4 rounded-3xl relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white outline outline-silver outline-1`}
+      className={`relative`}
     >
-      {/* Content Container */}
       <motion.div
-        onHoverStart={() => setHoverContent(true)}
-        onHoverEnd={() => setHoverContent(false)}
-        className={`flex flex-col gap-4`}
-        onClick={handleEntryClick}
+        style={{
+          width: 304,
+          height: 400,
+          ...maskStyle,
+        }}
+        className={`flex flex-col will-change-transform bg-white relative z-10`}
       >
-        <div className={`flex items-center gap-4 justify-between w-full`}>
-          <div className={`relative`}>
-            <EntryDial rating={artifact.content!.rating!} />
-            <div
-              className={`font-serif text-base leading-[11px] font-semibold text-black center-x center-y absolute`}
-            >
-              {/*{artifact.content!.rating}*/}
-            </div>
-          </div>
+        {/* Content Container */}
+        <div
+          className={`flex items-center gap-3 justify-between w-full px-6 py-7`}
+        >
+          <EntryDial rating={artifact.content!.rating!} />
 
           <div className={`flex flex-col items-end`}>
-            <div className={`text-xs text-gray2 line-clamp-1`}>
+            <div className={`text-sm text-gray2 line-clamp-1`}>
               {sound.attributes.artistName}
             </div>
-            <div className={`font-medium text-sm text-black line-clamp-1`}>
+            <div className={`font-medium text-base text-black line-clamp-1`}>
               {sound.attributes.name}
             </div>
           </div>
         </div>
 
-        <div className={`text-sm text-black line-clamp-[12]`}>
-          {artifact.content?.text}
-        </div>
+        {/* Artwork */}
+        <motion.div onClick={handleSoundClick}>
+          <Image
+            src={artwork}
+            alt={`artwork`}
+            loading="lazy"
+            quality={100}
+            width={304}
+            height={304}
+          />
+        </motion.div>
       </motion.div>
 
-      {/* Artwork */}
-      <motion.div
-        className="cursor-pointer absolute bottom-0 left-0 shadow-cardArt overflow-hidden"
-        variants={variants}
-        animate={hoverContent ? "hoverContent" : "initial"}
-        whileHover="hover"
-        transition={{
-          type: "spring",
-          stiffness: 357,
-          damping: 38,
-          mass: 1.5,
-        }}
-        onClick={handleSoundClick}
+      <div
+        // style={{
+        //   filter:
+        //     index === 1
+        //       ? "drop-shadow(0px 0px 16px rgba(0, 0, 0, 0.08))"
+        //       : "none",
+        // }}
+        className={`absolute bottom-0 right-0 z-0`}
       >
-        <Image
-          src={artwork}
-          alt={`artwork`}
-          loading="lazy"
-          quality={100}
-          width={224}
-          height={224}
-        />
-      </motion.div>
+        <MaskCardTop />
+      </div>
     </motion.div>
   );
 };
+
+// <div className={`text-sm text-black line-clamp-[12]`}>
+//   {artifact.content?.text}
+// </div>

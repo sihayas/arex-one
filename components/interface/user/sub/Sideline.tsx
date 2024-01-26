@@ -52,25 +52,13 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
   const scrollContainer = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: scrollContainer });
 
-  const topLineHeightOutput = useTransform(
-    scrollYProgress,
-    [0, 0.33, 0.66, 0.99],
-    [20, 100, 169, 236],
-  );
   const dotYPositionOutput = useTransform(
     scrollYProgress,
     [0, 0.33, 0.66, 0.99],
     [28, 108, 177, 244],
   );
-  const bottomLineHeightOutput = useTransform(
-    scrollYProgress,
-    [0, 0.33, 0.66, 0.99],
-    [276, 196, 127, 60],
-  );
 
-  const topLineHeight = useSpring(topLineHeightOutput, lineConfig);
   const dotYPosition = useSpring(dotYPositionOutput, lineConfig);
-  const bottomLineHeight = useSpring(bottomLineHeightOutput, lineConfig);
 
   return (
     <motion.div
@@ -172,18 +160,6 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
           </div>
         </div>
 
-        {/*  Top Line */}
-        <motion.div
-          className={`center-x`}
-          style={{
-            background: "rgba(0,0,0,0.1)",
-            width: "4px",
-            height: topLineHeight,
-            borderRadius: "4px",
-            position: "absolute",
-            top: 0,
-          }}
-        />
         {/*  Dot  */}
         <motion.div
           style={{
@@ -198,18 +174,6 @@ const Sideline = ({ userData, setActiveSection }: StatlineProps) => {
             left: "50%",
           }}
         ></motion.div>
-        {/* Bottom Line */}
-        <motion.div
-          className={`center-x`}
-          style={{
-            background: "rgba(0,0,0,0.1)",
-            width: "4px",
-            height: bottomLineHeight,
-            position: "absolute",
-            borderRadius: "4px",
-            bottom: 0,
-          }}
-        />
       </div>
     </motion.div>
   );

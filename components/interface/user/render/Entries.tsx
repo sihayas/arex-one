@@ -30,21 +30,11 @@ const Entries = ({ userId }: { userId: string }) => {
   });
 
   return (
-    <div
-      ref={containerRef}
-      className={`pl-[144px] absolute right-0 top-0 flex flex-wrap gap-8 w-full h-full overflow-y-auto snap-y snap-mandatory p-4 scrollbar-none`}
-    >
+    <div className={`flex flex-wrap gap-4 p-8 `}>
       {activities.map((activity, index) => {
         if (!activity.artifact) return null;
         const artifact = activity.artifact as ArtifactExtended;
-        return (
-          <Entry
-            artifact={artifact}
-            key={activity.id}
-            containerRef={containerRef}
-            index={index}
-          />
-        );
+        return <Entry artifact={artifact} key={activity.id} index={index} />;
       })}
     </div>
   );

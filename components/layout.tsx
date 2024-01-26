@@ -2,7 +2,7 @@ import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useRef } from "react";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
-import { Slider } from "@/components/global/Slider";
+import { Player } from "@/components/global/Player";
 
 import { motion, useAnimate } from "framer-motion";
 

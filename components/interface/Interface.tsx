@@ -31,8 +31,8 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 656, height: 384 },
-      target: { width: 656, height: 656 },
+      base: { width: 688, height: 384 },
+      target: { width: 688, height: maxHeight },
     },
     album: {
       base: { width: 432, height: 432 },
@@ -228,8 +228,10 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
     if (activePage.isOpen) {
       animateToTarget();
+      console.log("animate to target");
     } else {
       animateToBase();
+      console.log("animate to base");
     }
   }, [
     animate,
@@ -263,7 +265,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-full`}
           style={{
             width: `${target.width}px`,
-            height: `${target.height}px`,
+            height: `100vh`,
           }}
         >
           <AnimatePresence>

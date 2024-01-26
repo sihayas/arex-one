@@ -99,7 +99,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             className={`w-[232px] h-[88px] flex items-center justify-center z-10`}
           >
             <p
-              className={`break-words line-clamp-4 text-base text-gray4 text-center font-medium`}
+              className={`break-words line-clamp-4 text-base text-gray4 text-center`}
             >
               {artifact.content?.text}
             </p>

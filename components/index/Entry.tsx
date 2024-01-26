@@ -21,24 +21,11 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const { handleSelectSound } = useSound();
   const { playContent } = useSoundContext();
   const { user } = useInterfaceContext();
-  const [hoverContent, setHoverContent] = useState(false);
-
-  const variants = {
-    initial: { translateY: 64, borderRadius: 16 },
-    hover: {
-      translateY: 0,
-      borderRadius: 32,
-    },
-    hoverContent: {
-      translateY: 246,
-      borderRadius: 24,
-    },
-  };
 
   const sound = artifact.appleData;
   const artwork = sound.attributes.artwork.url
-    .replace("{w}", "720")
-    .replace("{h}", "720");
+    .replace("{w}", "540")
+    .replace("{h}", "540");
   const color = sound.attributes.artwork.bgColor;
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
@@ -108,7 +95,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
             height={216}
           />
         </motion.div>
-        <div className={`flex flex-col px-6 pt-3`}>
+        <div className={`flex flex-col px-6 pt-[20px] pb-[18px]`}>
           <div className={`text-sm text-gray5 line-clamp-1`}>
             {sound.attributes.artistName}
           </div>
@@ -122,7 +109,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
 
         <motion.div
           style={{
-            background: `linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 62.37%, #FFF 100%)`,
+            background: `linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, rgba(255, 255, 255, 0.68) 56.5%, #FFF 100%)`,
           }}
           className={`absolute bottom-0 left-0 w-full h-12`}
         />

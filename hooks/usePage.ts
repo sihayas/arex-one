@@ -43,7 +43,7 @@ export const useUser = (author: UserType) => {
         key: uuidv4(),
         name: "user",
         user: author,
-        dimensions: { width: 656, height: 656 },
+        dimensions: { width: 688, height: 688 },
         scrollPosition: 0,
         color: "CCC",
         isOpen: false,

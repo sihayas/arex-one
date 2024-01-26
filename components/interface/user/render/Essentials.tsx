@@ -11,7 +11,7 @@ interface EssentialsProps {
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   const { handleSelectSound } = useSound();
   return (
-    <div className={`ml-auto w-max flex flex-col items-center -space-y-14`}>
+    <div className={`ml-auto w-max flex flex-col items-center -space-y-14 p-8`}>
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const color = sound.attributes.artwork.bgColor;
@@ -33,9 +33,9 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
           style = { ...style, top: "176px", right: "136px" };
         } else if (i === 2) {
           //@ts-ignore
-          style = { ...style, bottom: "264px", right: "32px" };
+          style = { ...style, bottom: "264px", right: "32px", rotate: "2deg" };
         }
-        const rotationClass = i % 2 === 0 ? "rotate-2" : "-rotate-2";
+        const rotationClass = i === 0 ? "rotate-2" : i === 2 ? "-rotate-2" : "";
 
         return (
           <Fragment key={`essential-${i}`}>
