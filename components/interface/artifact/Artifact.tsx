@@ -107,7 +107,7 @@ export const Artifact = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full min-h-full mt-[1px] p-8 flex flex-col items-center"
+      className="mt-[1px] flex min-h-full w-full flex-col items-center p-8"
     >
       {/* Content Inner / Card */}
       <motion.div
@@ -117,44 +117,44 @@ export const Artifact = () => {
           rotate: rotateCard,
           y: yCard,
         }}
-        className={`flex flex-col pl-[104px] rounded-3xl rounded-l-2xl relative shadow-shadowKitHigh will-change-transform overflow-hidden bg-white outline outline-silver outline-1 `}
+        className={`shadow-shadowKitHigh outline-silver relative flex flex-col overflow-hidden rounded-3xl rounded-l-2xl bg-white pl-[104px] outline outline-1 will-change-transform `}
       >
         {/* Content Container */}
         <motion.div
           onHoverStart={() => setHoverContent(true)}
           onHoverEnd={() => setHoverContent(false)}
-          className={`flex flex-col gap-[18px] overflow-scroll p-6 pt-4 pl-0 scrollbar-none`}
+          className={`scrollbar-none flex flex-col gap-[18px] overflow-scroll p-6 pl-0 pt-4`}
         >
           {/* Header */}
           <div
-            className={`pl-4 flex items-center gap-4 justify-between w-full`}
+            className={`flex w-full items-center justify-between gap-4 pl-4`}
           >
             <EntryDial rating={artifact.content!.rating!} />
 
             <div className={`flex flex-col items-end gap-0.5`}>
-              <div className={`text-sm text-gray2 line-clamp-1 leading-tight`}>
+              <div className={`text-gray2 line-clamp-1 text-sm leading-tight`}>
                 {sound.attributes.artistName}
               </div>
               <div
-                className={`font-medium text-base text-black line-clamp-1 leading-normal`}
+                className={`line-clamp-1 text-base font-medium leading-normal text-black`}
               >
                 {sound.attributes.name}
               </div>
             </div>
           </div>
 
-          <div className={`text-base text-black pl-6`}>
+          <div className={`pl-6 text-base text-black`}>
             {artifact.content?.text}
           </div>
 
           <div
-            className={`absolute bottom-6 right-6 flex items-center w-max gap-2`}
+            className={`absolute bottom-6 right-6 flex w-max items-center gap-2`}
           >
             <p className={`text-base font-medium`}>
               {artifact.author.username}
             </p>
             <Avatar
-              className={`border border-silver`}
+              className={`border-silver border`}
               imageSrc={artifact.author.image}
               altText={`${artifact.author.username}'s avatar`}
               width={32}
@@ -166,14 +166,14 @@ export const Artifact = () => {
 
         {/* Artwork */}
         <motion.div
-          className="cursor-pointer absolute top-0 left-0 shadow-cartArtArtifact overflow-hidden rounded-2xl"
+          className="shadow-cartArtArtifact absolute left-0 top-0 cursor-pointer overflow-hidden rounded-2xl"
           variants={variants}
           animate={hoverContent ? "hoverContent" : "isOpen"}
           transition={artworkConfig}
           onClick={handleSoundClick}
         >
           <p
-            className={`absolute top-6 right-6 text-white text-xl font-bold  `}
+            className={`absolute right-6 top-6 text-xl font-bold text-white  `}
           >
             RX
           </p>
@@ -190,7 +190,7 @@ export const Artifact = () => {
 
       <motion.div
         style={{ opacity: hideCard }}
-        className={`absolute top-[360px] text-gray2 font-semibold text-sm uppercase`}
+        className={`text-gray2 absolute top-[360px] text-sm font-semibold uppercase`}
       >
         {artifactExtended._count.hearts} hearts &middot;{" "}
         {artifactExtended._count.replies} chains
@@ -198,7 +198,7 @@ export const Artifact = () => {
 
       <motion.div
         style={{ opacity: showChains }}
-        className={`flex flex-col p-8 relative`}
+        className={`relative flex flex-col p-8`}
       >
         <Replies userId={user!.id} artifactId={artifactExtended.id} />
       </motion.div>

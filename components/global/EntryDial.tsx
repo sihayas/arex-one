@@ -55,10 +55,10 @@ const calculateStrokeLength = (
 
 const EntryDial = ({ rating }: EntryDialProps) => {
   const dialRef = useRef<SVGSVGElement>(null);
-  const strokeWidth = 3;
+  const strokeWidth = 1.5;
   const dotRadius = 1;
 
-  const totalSize = 40;
+  const totalSize = 32;
   const radius = (totalSize - strokeWidth) / 2;
 
   const viewBoxSize = totalSize;
@@ -97,7 +97,7 @@ const EntryDial = ({ rating }: EntryDialProps) => {
       }}
     >
       {/* Stars */}
-      <div className={`absolute w-[18px] h-[18px] center-x center-y`}>
+      <div className={`absolute w-[14px] h-[14px] center-x center-y`}>
         {getStarComponent()}
       </div>
       <svg
@@ -138,7 +138,7 @@ const EntryDial = ({ rating }: EntryDialProps) => {
           strokeDashoffset={circumference / 4 - 4}
           strokeLinecap="round"
           animate={{
-            stroke: "rgba(60, 60, 67, 0.9)",
+            stroke: "#000",
             strokeDasharray: `${segmentLength} ${
               circumference - segmentLength
             }`,
