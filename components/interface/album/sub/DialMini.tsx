@@ -209,7 +209,7 @@ const DialMini: React.FC<DialMiniProps> = ({ ratings, onRangeChange }) => {
         {hoveredIndex !== null && (
           <motion.div
             key={hoveredIndex}
-            className={`absolute flex items-center justify-center text-center gap-2 pointer-events-none text-black font-serif text-xl leading-[13px] font-semibold will-change-transform`}
+            className={`absolute flex items-center justify-center text-center gap-2 pointer-events-none text-black font-serif text-xl leading-[13px] will-change-transform`}
             variants={textVariants}
             initial={`initial`}
             animate={`animate`}
@@ -238,7 +238,7 @@ const DialMini: React.FC<DialMiniProps> = ({ ratings, onRangeChange }) => {
             animate={{ opacity: 1, scale: 4 }}
             exit={{ opacity: 0, scale: 0 }}
             transition={springTextConfig}
-            className={`absolute pointer-events-none flex flex-col items-center justify-center text-center gap-4 text-xl font-serif leading-[13px] text-black font-semibold will-change-transform`}
+            className={`absolute pointer-events-none flex flex-col items-center justify-center text-center gap-4 text-xl font-serif leading-[13px] text-black will-change-transform`}
           >
             3.8
           </motion.div>

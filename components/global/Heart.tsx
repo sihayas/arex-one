@@ -10,8 +10,6 @@ interface HeartButtonProps {
   className?: string;
   heartCount?: number;
   replyCount?: number;
-  isReply?: boolean;
-  isEvenLevel?: boolean;
 }
 
 const Heart: React.FC<HeartButtonProps> = ({
@@ -20,30 +18,30 @@ const Heart: React.FC<HeartButtonProps> = ({
   className,
   heartCount,
   replyCount,
-  isReply = false,
-  isEvenLevel = true,
 }) => {
-  const [heartColor, setHeartColor] = useState(hearted ? "#FFF" : "#CCC");
-  const [bubbleColor, setBubbleColor] = useState(hearted ? "#FF4DC9" : "#FFF");
+  const [heartColor, setHeartColor] = useState(hearted ? "#FFF" : "#FFF");
+  const [bubbleColor, setBubbleColor] = useState(hearted ? "#FF4DC9" : "#CCC");
   const controls = useAnimation();
 
   useEffect(() => {
-    setHeartColor(hearted ? "#FFF" : "#CCC");
+    setHeartColor(hearted ? "#FFF" : "#FFF");
   }, [hearted]);
 
-  // Change curve color
   const handleMouseEnter = () => {
-    controls.start("hover");
+    controls.start("hover").catch((error) => {
+      // console.error("Hover animation failed", error);
+    });
   };
 
-  // Change curve color
   const handleMouseLeave = () => {
-    controls.start("initial");
+    controls.start("initial").catch((error) => {
+      // console.error("Hover animation failed", error);
+    });
   };
 
   return (
     <motion.button
-      className={`${className} flex gap-1`}
+      className={`${className} flex gap-1 p-2 -m-2`}
       onClick={(event) => {
         handleHeartClick(event);
         event.stopPropagation();
@@ -81,11 +79,14 @@ const Heart: React.FC<HeartButtonProps> = ({
           </motion.div>
         </div>
 
+        {/* Tiny / Interaction Bubble*/}
         <motion.div
-          initial={{ scale: 2 }}
+          initial={{
+            scale: 2,
+          }}
           style={{
             backgroundColor: bubbleColor,
-            x: 7,
+            x: 8,
             width: 4,
             height: 4,
             borderRadius: 4,
@@ -98,34 +99,15 @@ const Heart: React.FC<HeartButtonProps> = ({
       </div>
 
       <div
-        className={`bg-[#F4F4F4] flex items-center text-gray2 rounded-full px-1.5 py-[3px] mt-1`}
+        className={`bg-[#F4F4F4] flex items-center text-gray2 rounded-full px-2 py-1`}
       >
-        <p className={`font-medium text-xs leading-[9px]`}>{heartCount}</p>
+        <p className={`font-medium text-sm leading-[9px]`}>{heartCount}</p>
         <div className={`w-0.5 h-0.5 bg-gray3 mx-1 rounded-full`} />
         <ChainIcon />
-        <p className={`font-medium text-xs leading-[9px] ml-2`}>{replyCount}</p>
+        <p className={`font-medium text-sm ml-2 leading-[9px]`}>{replyCount}</p>
       </div>
     </motion.button>
   );
 };
 
 export default Heart;
-
-// const renderCounts = () => {
-//   if (isReply) {
-//     return formatText(heartCount, "Heart", "Hearts");
-//   } else if (heartCount && replyCount) {
-//     return (
-//         <>
-//           {formatText(replyCount, "Chain", "Chains")}
-//           &middot;
-//           {formatText(heartCount, "Heart", "Hearts")}
-//         </>
-//     );
-//   } else if (heartCount) {
-//     return formatText(heartCount, "Heart", "Hearts");
-//   } else if (replyCount) {
-//     return formatText(replyCount, "Chain", "Chains");
-//   }
-//   return null;
-// };

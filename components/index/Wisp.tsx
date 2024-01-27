@@ -1,16 +1,14 @@
 import React from "react";
 
-import useHandleHeartClick from "@/hooks/useHeart";
-import { useArtifact, useSound } from "@/hooks/usePage";
+// import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
-import Heart from "@/components/global/Heart";
 
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 
 import Image from "next/image";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+// import { useInterfaceContext } from "@/context/InterfaceContext";
 import { WispIcon } from "@/components/icons";
 import { useSoundContext } from "@/context/SoundContext";
 
@@ -19,7 +17,7 @@ interface WispProps {
 }
 
 export const Wisp: React.FC<WispProps> = ({ artifact }) => {
-  const { user } = useInterfaceContext();
+  // const { user } = useInterfaceContext();
   // const { handleSelectSound } = useSound();
   const { playContent } = useSoundContext();
 
@@ -31,19 +29,19 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   const artist = sound.attributes.artistName;
   const name = sound.attributes.name;
 
-  const apiUrl = artifact.heartedByUser
-    ? "/api/heart/delete/artifact"
-    : "/api/heart/post/artifact";
+  // const apiUrl = artifact.heartedByUser
+  //   ? "/api/heart/delete/artifact"
+  //   : "/api/heart/post/artifact";
 
-  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    artifact.heartedByUser,
-    artifact._count.hearts,
-    apiUrl,
-    "artifactId",
-    artifact.id,
-    artifact.author.id,
-    user?.id,
-  );
+  // const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+  //   artifact.heartedByUser,
+  //   artifact._count.hearts,
+  //   apiUrl,
+  //   "artifactId",
+  //   artifact.id,
+  //   artifact.author.id,
+  //   user?.id,
+  // );
 
   const handleSoundClick = async () => {
     playContent(sound.id, sound.type);

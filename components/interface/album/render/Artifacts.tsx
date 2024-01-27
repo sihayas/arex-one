@@ -26,6 +26,8 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
 }) => {
   const { user, pages } = useInterfaceContext();
   const userId = user?.id;
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useArtifactsQuery(soundId, userId, sortOrder, range);
 
   const activePage: Page = pages[pages.length - 1];
   const activePageName: PageName = activePage.name as PageName;
@@ -35,17 +37,13 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   const listRef = useRef<List>(null);
   const rowHeights = useRef<{ [key: number]: number }>({});
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useArtifactsQuery(soundId, userId, sortOrder, range);
-
   const activities = data ? data.pages.flatMap((page) => page.data) : [];
 
   const itemCount = hasNextPage ? activities.length + 1 : activities.length;
 
   // Helper to check if item is loaded -> for infinite scroll
   const isItemLoaded = (index: number) => {
-    const loaded = !hasNextPage || index < activities.length;
-    return loaded;
+    return !hasNextPage || index < activities.length;
   };
 
   // If we're already fetching more search, return empty callback
@@ -112,7 +110,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
             listRef.current = listInstance;
           }}
           width={target.width}
-          className={`mask`}
+          className={`mask z-20`}
         >
           {({ index, style }) => (
             <div

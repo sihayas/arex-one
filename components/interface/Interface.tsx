@@ -265,14 +265,14 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-full`}
           style={{
             width: `${target.width}px`,
-            height: `100vh`,
+            height: `${target.height}px`,
           }}
         >
           <AnimatePresence>
             <ActiveComponent />
           </AnimatePresence>
         </motion.div>
-        <Nav />
+        {/*<Nav />*/}
       </Command>
     </motion.div>
   );

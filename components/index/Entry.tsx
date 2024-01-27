@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useArtifact } from "@/hooks/usePage";
@@ -6,14 +6,8 @@ import { useArtifact } from "@/hooks/usePage";
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
 import { ArtifactExtended } from "@/types/globalTypes";
-import {
-  motion,
-  useAnimation,
-  useMotionValueEvent,
-  useScroll,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import EntryDial from "@/components/global/EntryDial";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import {
   FiveStar,
@@ -171,7 +165,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -top-[28px] left-[46px] mix-blend-multiply"
+        className="absolute -top-[26px] left-[46px] mix-blend-multiply z-10"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />

@@ -23,19 +23,17 @@ const generalConfig = { damping: 36, stiffness: 400 };
 export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
 const Album = () => {
-  const { scrollContainerRef, activePage } = useInterfaceContext();
+  const { scrollContainerRef } = useInterfaceContext();
   const { selectedSound } = useSoundContext();
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [range, setRange] = useState<number | null>(null);
 
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
-  const activePageName: PageName = activePage.name as PageName;
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
   });
-  const { target } = GetDimensions(activePageName);
 
   const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
     setSortOrder(newSortOrder);
@@ -45,37 +43,35 @@ const Album = () => {
     setRange(newRange);
   };
 
-  useEffect(() => {
-    if (range === null) return;
-    console.log(range);
-  }, [range]);
-
   // Art Transformations
-  const xArtKF = useTransform(scrollY, [0, 1], [0, 16]);
-  const yArtKF = useTransform(scrollY, [0, 1], [-(target.height - 432), -16]);
-  const scaleArtKF = useTransform(scrollY, [0, 1], [1, 0.1389]);
-  const borderKF = useTransform(scrollY, [0, 1], [32, 96]);
-
-  const yArt = useSpring(yArtKF, yConfig);
-  const xArt = useSpring(xArtKF, xConfig);
-  const scaleArt = useSpring(scaleArtKF, scaleConfig);
-  const borderRad = useSpring(borderKF, generalConfig);
+  const yArt = useSpring(useTransform(scrollY, [0, 1], [0, -16]), yConfig);
+  const xArt = useSpring(useTransform(scrollY, [0, 1], [0, 16]), xConfig);
+  const scaleArt = useSpring(
+    useTransform(scrollY, [0, 1], [1, 0.1389]),
+    scaleConfig,
+  );
+  const borderRad = useSpring(
+    useTransform(scrollY, [0, 1], [32, 96]),
+    generalConfig,
+  );
 
   // Dial Transformations
-  const xDialKF = useTransform(scrollY, [0, 1], [48, -16]);
-  const yDialKF = useTransform(scrollY, [0, 1], [48, -16]);
-  const scaleDialKF = useTransform(scrollY, [0, 1], [1, 0.25]);
-  const hideDialKF = useTransform(scrollY, [0, 1], [1, 0]);
-
-  const xDial = useSpring(xDialKF, xConfig);
-  const yDial = useSpring(yDialKF, yConfig);
-  const scaleDial = useSpring(scaleDialKF, scaleConfig);
-  const hideDial = useSpring(hideDialKF, generalConfig);
+  const xDial = useSpring(useTransform(scrollY, [0, 1], [48, -16]), xConfig);
+  const yDial = useSpring(useTransform(scrollY, [0, 1], [48, -16]), yConfig);
+  const scaleDial = useSpring(
+    useTransform(scrollY, [0, 1], [1, 0.25]),
+    scaleConfig,
+  );
+  const hideDial = useSpring(
+    useTransform(scrollY, [0, 1], [1, 0]),
+    generalConfig,
+  );
 
   // Mini Dial Transformations
-  const showMiniKF = useTransform(scrollY, [0, 1], [0, 1]);
-
-  const showMini = useSpring(showMiniKF, generalConfig);
+  const showMini = useSpring(
+    useTransform(scrollY, [0, 1], [0, 1]),
+    generalConfig,
+  );
 
   if (!selectedSound) return;
 
@@ -94,9 +90,10 @@ const Album = () => {
   }
 
   return (
-    <motion.div className="w-full min-h-full mt-[1px] relative">
-      <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
-
+    <>
+      <div className={`mt-6`}>
+        <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
+      </div>
       {/* Art */}
       <motion.div
         style={{
@@ -105,7 +102,7 @@ const Album = () => {
           y: yArt,
           x: xArt,
         }}
-        className="absolute overflow-hidden z-40 left-0 bottom-0 origin-bottom-left shadow-miniCard"
+        className="absolute overflow-hidden z-40 left-0 bottom-0 origin-bottom-left shadow-miniCard pointer-events-none"
       >
         <Image
           src={artwork}
@@ -172,7 +169,7 @@ const Album = () => {
           </>,
           cmdk,
         )}
-    </motion.div>
+    </>
   );
 };
 

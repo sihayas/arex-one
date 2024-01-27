@@ -11,6 +11,7 @@ import { AlbumData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
 import EntryDial from "@/components/global/EntryDial";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import { getStarComponent } from "@/components/index/Entry";
 
 const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
   const { selectedSound } = useSoundContext();
@@ -34,17 +35,14 @@ const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
   return (
     <>
       <div
-        className={`absolute -top-4 -left-4 bg-[#F4F4F4] rounded-max shadow-shadowKitMedium w-[42px] h-[42px]`}
+        className={`absolute -bottom-3 -left-3 flex items-center justify-center bg-[#F4F4F4] rounded-max shadow-shadowKitMedium p-3`}
       >
-        <div className={`absolute center-x center-y`}>
-          {/* @ts-ignore */}
-          <EntryDial rating={artifact.content!.rating} />
-        </div>
+        {getStarComponent(artifact.content!.rating!)}
       </div>
       {/* Content */}
       <div
         onClick={handleEntryClick}
-        className={`break-words line-clamp-6 w-full text-base text-center text-gray5 font-medium cursor-pointer`}
+        className={`break-words line-clamp-6 w-full text-base text-center text-black cursor-pointer`}
       >
         {artifact.content?.text}
       </div>
@@ -66,7 +64,7 @@ const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -top-[28px] right-[7px]"
+        className="absolute -top-[30px] -left-[8px]"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />
