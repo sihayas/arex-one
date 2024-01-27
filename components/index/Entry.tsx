@@ -55,7 +55,8 @@ const starComponents = {
   5: FiveStar,
 };
 
-const getStarComponent = (rating: number) => {
+export const getStarComponent = (rating: number) => {
+  //@ts-ignore
   const StarComponent = starComponents[Math.ceil(rating * 2) / 2];
   return StarComponent ? <StarComponent /> : null;
 };
@@ -63,8 +64,6 @@ const getStarComponent = (rating: number) => {
 export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const { user } = useInterfaceContext();
   const containerRef = useRef<HTMLDivElement>(null);
-  const controls = useAnimation();
-  const [rotate, setRotate] = React.useState(false);
 
   const sound = artifact.appleData;
   const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 540, 540);
@@ -73,21 +72,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
-
-  const { scrollY } = useScroll({
-    container: containerRef,
-  });
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    console.log(latest);
-  });
-
-  // const scale = useSpring(useTransform(scrollY, [432, 400], [1, 1.1]), {
-  //   stiffness: 300,
-  //   damping: 30,
-  // });
-
-  // Flip as we scroll;
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     artifact.heartedByUser,
@@ -98,6 +82,8 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     artifact.author.id,
     user?.id,
   );
+
+  const handleEntryClick = useArtifact(artifact);
 
   return (
     <div
@@ -122,16 +108,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         ref={containerRef}
         className={`flex flex-col will-change-transform bg-white relative z-10`}
       >
-        {/* Content Container */}
-        <div
-          className={`absolute bottom-0 left-0 p-4 flex items-center gap-2 z-50`}
-        >
-          {getStarComponent(artifact.content!.rating)}
-
-          <div className={`font-semibold text-base text-black line-clamp-1`}>
-            {sound.attributes.name}
-          </div>
-        </div>
         <Image
           src={artwork}
           alt={`artwork`}
@@ -141,13 +117,30 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           height={304}
         />
 
-        <div className={`text-base text-black px-6 pt-2.5 `}>
+        <motion.div
+          onClick={handleEntryClick}
+          className={`text-base text-black px-6 pt-2.5 cursor-pointer `}
+        >
           {artifact.content?.text}
+        </motion.div>
+
+        <div
+          className={`absolute bottom-0 left-0 py-3 px-6 flex items-center gap-2 z-50`}
+        >
+          {getStarComponent(artifact.content!.rating!)}
+          <div className={`font-semibold text-base text-black line-clamp-1`}>
+            {sound.attributes.name}
+          </div>
+          <div className={`-mx-1 text-gray3`}>&middot;</div>
+          <div className={` text-base text-gray2 line-clamp-1`}>
+            {sound.attributes.artistName}
+          </div>
         </div>
+
         <motion.div
           style={{
             background: `linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 24%, #FFF 55.32%)`,
-            height: "3rem",
+            height: "50px",
             position: "absolute",
             bottom: 0,
             left: 0,

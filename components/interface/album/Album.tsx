@@ -94,12 +94,7 @@ const Album = () => {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="w-full min-h-full mt-[1px] relative"
-    >
+    <motion.div className="w-full min-h-full mt-[1px] relative">
       <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
 
       {/* Art */}

@@ -55,10 +55,10 @@ const calculateStrokeLength = (
 
 const EntryDial = ({ rating }: EntryDialProps) => {
   const dialRef = useRef<SVGSVGElement>(null);
-  const strokeWidth = 2.5;
+  const strokeWidth = 4;
   const dotRadius = 1;
 
-  const totalSize = 32;
+  const totalSize = 112;
   const radius = (totalSize - strokeWidth) / 2;
 
   const viewBoxSize = totalSize;
