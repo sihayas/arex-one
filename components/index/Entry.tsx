@@ -58,7 +58,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   //   damping: 30,
   // });
 
-  // Flip as we scroll
+  // Flip as we scroll;
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     artifact.heartedByUser,
