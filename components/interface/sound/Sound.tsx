@@ -18,7 +18,6 @@ import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
 import Dial from "@/components/interface/sound/sub/Dial";
 import DialMini from "@/components/interface/sound/sub/DialMini";
 import { createPortal } from "react-dom";
-import { GetDimensions } from "@/components/interface/Interface";
 import Sort from "@/components/interface/sound/sub/Sort";
 
 const scaleConfig = { damping: 20, stiffness: 122 };
@@ -32,6 +31,7 @@ const Sound = () => {
   const { scrollContainerRef, activePage, pages, setActivePage } =
     useInterfaceContext();
   const { selectedSound } = useSoundContext();
+  const isOpen = activePage.isOpen;
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [range, setRange] = useState<number | null>(null);
@@ -84,31 +84,34 @@ const Sound = () => {
     generalConfig,
   );
 
-  if (!selectedSound) return;
-
   const artwork = MusicKit.formatArtworkURL(
-    selectedSound.attributes.artwork,
+    selectedSound!.attributes.artwork,
     800,
     800,
   );
-  const name = selectedSound.attributes.name;
-  const artist = selectedSound.attributes.artistName;
+  const name = selectedSound!.attributes.name;
+  const artist = selectedSound!.attributes.artistName;
 
   const albumId =
-    selectedSound.type === "albums"
-      ? selectedSound.id
+    selectedSound!.type === "albums"
+      ? selectedSound!.id
       : (selectedSound as SongData).relationships.albums.data[0].id;
 
   return (
     <>
-      {/* Art Ghost Placaeholder */}
-
+      {/* Art Ghost Placeholder */}
       <div className={`min-w-[432px] min-h-[432px] snap-start`} />
       <div className={`mt-1`}>
         <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
       </div>
       {/* Art */}
       <motion.div
+        initial={{
+          borderRadius: isOpen ? 96 : 32,
+          scale: isOpen ? 0.1389 : 1,
+          y: isOpen ? -16 : 0,
+          x: isOpen ? 16 : 0,
+        }}
         style={{
           borderRadius: borderRad,
           scale: scaleArt,
@@ -160,6 +163,12 @@ const Sound = () => {
                 scale: scaleDial,
                 opacity: hideDial,
               }}
+              initial={{
+                x: isOpen ? -16 : 48,
+                y: isOpen ? -16 : 48,
+                scale: isOpen ? 0.25 : 1,
+                opacity: isOpen ? 0 : 1,
+              }}
             >
               <Dial ratings={[4, 8900, 2445, 500, 500]} average={3.8} />
             </motion.div>
@@ -172,6 +181,12 @@ const Sound = () => {
                 y: yDial,
                 scale: scaleDial,
                 opacity: showMini,
+              }}
+              initial={{
+                x: isOpen ? -16 : 48,
+                y: isOpen ? -16 : 48,
+                scale: isOpen ? 0.25 : 1,
+                opacity: isOpen ? 1 : 0,
               }}
             >
               <DialMini

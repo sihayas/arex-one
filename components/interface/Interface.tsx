@@ -141,7 +141,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
   // Animate portal dimensions on scroll & page change & bounce
   useEffect(() => {
-    // Bounce and shift dimensions on page change
+    const isOpen = activePage.isOpen;
+    // Animate dimensions on page change & bounce
     const sequence = async () => {
       // Scale down
       await animate(
@@ -155,8 +156,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         scope.current,
         {
           scale: [0.95, 1],
-          width: `${base.width}px`,
-          height: `${base.height}px`,
+          width: isOpen ? `${target.width}px` : `${base.width}px`,
+          height: isOpen ? `${target.height}px` : `${base.height}px`,
         },
         { type: "spring", stiffness: 400, damping: 40 },
       );
@@ -191,11 +192,14 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     animate,
     base.height,
     base.width,
+    target.height,
+    target.width,
     newHeight,
     newWidth,
     scope,
     pages,
     activePageName,
+    activePage.isOpen,
   ]);
 
   // Animate portal dimensions to target if isOpen in activePage is set to true

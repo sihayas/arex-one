@@ -35,8 +35,6 @@ export const Artifact = () => {
   const { activePage } = useInterfaceContext();
   const { handleSelectSound } = useSound();
 
-  const [hoverContent, setHoverContent] = useState(false);
-
   // const lastIsOpenRef = useRef<boolean | null>(null);
 
   // useMotionValueEvent(scrollY, "change", (latest) => {
@@ -56,16 +54,6 @@ export const Artifact = () => {
     () => activePage.artifact as ArtifactExtended,
     [activePage],
   );
-
-  // const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-  //   artifactExtended.heartedByUser,
-  //   artifactExtended._count.hearts,
-  //   "/api/heart/post/artifact",
-  //   "artifactId",
-  //   artifactExtended.id,
-  //   artifactExtended.authorId,
-  //   user?.id,
-  // );
 
   const sound = artifactExtended.appleData;
   const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 520, 520);
@@ -136,13 +124,12 @@ export const Artifact = () => {
 
 export default Artifact;
 
-// <motion.div
-//     className={`text-gray2 absolute top-[360px] text-sm font-semibold uppercase`}
-// >
-//   {artifactExtended._count.hearts} hearts &middot;{" "}
-//   {artifactExtended._count.replies} chains
-// </motion.div>
-//
-// <motion.div className={`relative flex flex-col p-8`}>
-//   <Replies userId={user!.id} artifactId={artifactExtended.id}/>
-// </motion.div>
+// const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+//   artifactExtended.heartedByUser,
+//   artifactExtended._count.hearts,
+//   "/api/heart/post/artifact",
+//   "artifactId",
+//   artifactExtended.id,
+//   artifactExtended.authorId,
+//   user?.id,
+// );
