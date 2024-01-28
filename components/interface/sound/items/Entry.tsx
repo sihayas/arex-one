@@ -11,7 +11,7 @@ import { AlbumData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
 import EntryDial from "@/components/global/EntryDial";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { getStarComponent } from "@/components/index/Entry";
+import { getStarComponent } from "@/components/index/items/Entry";
 
 const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
   const { selectedSound } = useSoundContext();

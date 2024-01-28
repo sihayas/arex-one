@@ -1,10 +1,10 @@
 import Layout from "../components/layout";
 import Head from "next/head";
 import React from "react";
-import Dash from "@/components/index/Dash";
+import Dash from "@/components/index/items/Dash";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import RenderArtifacts from "@/components/index/RenderArtifacts";
+import Artifacts from "@/components/index/render/Artifacts";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
 import { AppleIcon } from "@/components/icons";
@@ -148,19 +148,19 @@ export default function Home() {
           />
 
           {activeFeed === "bloom" ? (
-            <RenderArtifacts
+            <Artifacts
               userId={user.id}
               scrollContainerRef={scrollContainerRef}
               type={"bloom"}
             />
           ) : activeFeed === "personal" ? (
-            <RenderArtifacts
+            <Artifacts
               userId={user.id}
               scrollContainerRef={scrollContainerRef}
               type={"personal"}
             />
           ) : activeFeed === "recent" ? (
-            <RenderArtifacts
+            <Artifacts
               userId={user.id}
               scrollContainerRef={scrollContainerRef}
               type={"recent"}

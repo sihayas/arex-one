@@ -34,6 +34,7 @@ export const useUser = (author: UserType) => {
   const { setPages, setIsVisible, scrollContainerRef } = useInterfaceContext();
 
   return () => {
+    setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
       {
@@ -45,8 +46,8 @@ export const useUser = (author: UserType) => {
         isOpen: false,
       },
     ]);
-    setIsVisible(true);
     scrollContainerRef.current?.scrollTo(0, 0);
+    window.history.pushState(null, "");
   };
 };
 
@@ -55,9 +56,7 @@ export const useSound = () => {
   const { setSelectedSound } = useSoundContext();
 
   const handleSelectSound = (sound: AlbumData | SongData) => {
-    setSelectedSound(sound);
-    scrollContainerRef.current?.scrollTo(0, 0);
-
+    setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
       {
@@ -69,7 +68,9 @@ export const useSound = () => {
         isOpen: false,
       },
     ]);
-    setIsVisible(true);
+    setSelectedSound(sound);
+    scrollContainerRef.current?.scrollTo(0, 0);
+    window.history.pushState(null, "");
   };
 
   return { handleSelectSound };

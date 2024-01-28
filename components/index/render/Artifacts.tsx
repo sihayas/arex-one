@@ -4,10 +4,10 @@ import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { Entry } from "@/components/index/Entry";
-import { Wisp } from "@/components/index/Wisp";
+import { Entry } from "@/components/index/items/Entry";
+import { Wisp } from "@/components/index/items/Wisp";
 
-const RenderArtifacts = ({
+const Artifacts = ({
   userId,
   scrollContainerRef,
   type,
@@ -18,8 +18,10 @@ const RenderArtifacts = ({
 }) => {
   const { setIsLoading } = useInterfaceContext();
 
-  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useFeedQuery(userId, type);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeedQuery(
+    userId,
+    type,
+  );
 
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,
@@ -59,7 +61,7 @@ const RenderArtifacts = ({
   );
 };
 
-export default RenderArtifacts;
+export default Artifacts;
 
 // {allActivities.map((activity: Activity, i) => (
 //     <Fragment key={activity.id}>
