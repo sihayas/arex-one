@@ -17,7 +17,6 @@ export const useArtifact = (artifact: Artifact) => {
       {
         name: "artifact",
         threadcrumbs: [artifact.id],
-        dimensions: { width: 528, height: 748 },
         scrollPosition: 0,
         artifact: artifact,
         color: sound.attributes.artwork.bgColor,
@@ -40,7 +39,6 @@ export const useUser = (author: UserType) => {
       {
         name: "user",
         user: author,
-        dimensions: { width: 688, height: 688 },
         scrollPosition: 0,
         color: "CCC",
         isOpen: false,
@@ -62,7 +60,6 @@ export const useSound = () => {
       {
         name: "sound",
         sound: sound,
-        dimensions: { width: 432, height: 432 },
         scrollPosition: 0,
         color: sound.attributes.artwork.bgColor,
         isOpen: false,

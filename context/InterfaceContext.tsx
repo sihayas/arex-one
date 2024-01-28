@@ -14,10 +14,6 @@ import { useUserAndSessionQuery } from "@/lib/apiHelper/user";
 export type Page = {
   name: string;
   color: string;
-  dimensions: {
-    width: number;
-    height: number;
-  };
   scrollPosition: number;
   user?: UserType;
   sound?: AlbumData | SongData;
@@ -109,7 +105,6 @@ export const InterfaceContextProvider = ({
         {
           name: "user",
           user: user,
-          dimensions: { width: 688, height: 384 },
           scrollPosition: 0,
           color: "CCC",
           isOpen: false,

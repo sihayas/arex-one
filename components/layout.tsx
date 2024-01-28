@@ -94,8 +94,8 @@ export default function Layout({ children }: { children: ReactNode }) {
           <motion.div
             style={{
               backgroundColor: `#${activePage.color}`,
-              width: `${activePage.dimensions.width}px`,
-              height: `${activePage.dimensions.height}px`,
+              // width: `${activePage.dimensions.width}px`,
+              // height: `${activePage.dimensions.height}px`,
             }}
             className="absolute center-x center-y -z-10 rounded-max"
           />
