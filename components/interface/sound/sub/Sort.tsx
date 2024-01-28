@@ -6,7 +6,7 @@ import {
   StarlightIcon,
   FlowerIcon,
 } from "@/components/icons";
-import { SortOrder } from "@/components/interface/album/Album";
+import { SortOrder } from "@/components/interface/sound/Sound";
 
 type SortProps = {
   onSortOrderChange: (newSortOrder: SortOrder) => void;

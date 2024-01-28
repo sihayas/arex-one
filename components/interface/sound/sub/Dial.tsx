@@ -25,7 +25,7 @@ const Dial: React.FC<DialProps> = ({ ratings, average }) => {
   const viewBoxSize = radius * 2 + strokeWidth; // 32 = padding
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
-  const colors = ["#FFF", "#FFF", "#FFF", "#FFF", "#FFF"];
+  const colors = ["#FFF", "#F20000", "#FFF639", "#7AFF00", "#0000FF"];
 
   // Account for excess stroke created by the linecap rounding
   const excessStroke = 40;

@@ -3,7 +3,6 @@ import React from "react";
 import useHandleHeartClick from "@/hooks/useHeart";
 import { useSound } from "@/hooks/usePage";
 
-import Heart from "@/components/global/Heart";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
@@ -80,9 +79,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   );
 
   const sound = artifact.appleData;
-  const artwork = sound.attributes.artwork.url
-    .replace("{w}", "560")
-    .replace("{h}", "560");
+  const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 560, 560);
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
@@ -185,18 +182,6 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           />
         </motion.div>
       </motion.div>
-
-      <div
-        // style={{
-        //   filter:
-        //     index === 1
-        //       ? "drop-shadow(0px 0px 16px rgba(0, 0, 0, 0.08))"
-        //       : "none",
-        // }}
-        className={`absolute bottom-0 right-0 z-0`}
-      >
-        <MaskCardTop />
-      </div>
     </motion.div>
   );
 };

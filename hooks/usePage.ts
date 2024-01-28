@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Artifact, UserType } from "@/types/dbTypes";
 
 export const useArtifact = (artifact: Artifact) => {
-  const { setPages, setIsVisible } = useInterfaceContext();
+  const { setPages, setIsVisible, scrollContainerRef } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();
 
   return () => {
@@ -18,10 +18,7 @@ export const useArtifact = (artifact: Artifact) => {
         key: uuidv4(),
         name: "artifact",
         threadcrumbs: [artifact.id],
-        dimensions: {
-          width: 528,
-          height: 400,
-        },
+        dimensions: { width: 528, height: 748 },
         scrollPosition: 0,
         artifact: artifact,
         color: artifact.appleData.attributes.artwork.bgColor,
@@ -29,12 +26,13 @@ export const useArtifact = (artifact: Artifact) => {
       },
     ]);
     setThreadcrumbs([artifact.id]);
+    scrollContainerRef.current?.scrollTo(0, 0);
     window.history.pushState(null, "");
   };
 };
 
 export const useUser = (author: UserType) => {
-  const { setPages, setIsVisible } = useInterfaceContext();
+  const { setPages, setIsVisible, scrollContainerRef } = useInterfaceContext();
 
   return () => {
     setPages((prevPages) => [
@@ -50,25 +48,25 @@ export const useUser = (author: UserType) => {
       },
     ]);
     setIsVisible(true);
+    scrollContainerRef.current?.scrollTo(0, 0);
   };
 };
 
 export const useSound = () => {
-  const { setPages, setIsVisible } = useInterfaceContext();
+  const { setPages, setIsVisible, scrollContainerRef } = useInterfaceContext();
   const { setSelectedSound } = useSoundContext();
 
   const handleSelectSound = (sound: AlbumData | SongData) => {
     setSelectedSound(sound);
+    scrollContainerRef.current?.scrollTo(0, 0);
+
     setPages((prevPages) => [
       ...prevPages,
       {
         key: uuidv4(),
-        name: "album",
+        name: "sound",
         sound: sound,
-        dimensions: {
-          width: 432,
-          height: 432,
-        },
+        dimensions: { width: 432, height: 432 },
         scrollPosition: 0,
         color: sound.attributes.artwork.bgColor,
         isOpen: false,

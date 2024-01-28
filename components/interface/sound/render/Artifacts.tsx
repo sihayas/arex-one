@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { VariableSizeList as List } from "react-window";
 import { useArtifactsQuery } from "@/lib/apiHelper/album";
-import Entry from "@/components/interface/album/items/Entry";
+import Entry from "@/components/interface/sound/items/Entry";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { GetDimensions } from "@/components/interface/Interface";
-import { PageName, Page } from "@/context/InterfaceContext";
+import { PageName } from "@/context/InterfaceContext";
 import InfiniteLoader from "react-window-infinite-loader";
-import { SortOrder } from "@/components/interface/album/Album";
+import { SortOrder } from "@/components/interface/sound/Sound";
 
 interface RenderArtifactsProps {
   soundId: string;
@@ -24,12 +24,10 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   sortOrder = "newest",
   range = null,
 }) => {
-  const { user, pages } = useInterfaceContext();
-  const userId = user?.id;
+  const { user, pages, activePage, setPages } = useInterfaceContext();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useArtifactsQuery(soundId, userId, sortOrder, range);
+    useArtifactsQuery(soundId, user?.id, sortOrder, range);
 
-  const activePage: Page = pages[pages.length - 1];
   const activePageName: PageName = activePage.name as PageName;
   const { target } = GetDimensions(activePageName);
 
@@ -62,7 +60,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     rowHeights.current = { ...rowHeights.current, [index]: size };
   };
 
-  // Calculate row height
+  // Create a row
   const Row = ({ index }: { index: number }) => {
     const rowRef = useRef<HTMLDivElement>(null);
 
@@ -87,9 +85,22 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     );
   };
 
-  // Helper to get row height
+  // Helper for row height
   const getRowHeight = (index: number) =>
     rowHeights.current[index] || DEFAULT_HEIGHT;
+
+  // Get cumulative height of rows / store scroll position
+  const getCumulativeHeight = (rowIndex: number) => {
+    let totalHeight = 0;
+    Object.keys(rowHeights.current).forEach((key) => {
+      const numericKey = parseInt(key);
+      if (!isNaN(numericKey) && numericKey < rowIndex) {
+        totalHeight += rowHeights.current[numericKey] || 0; // Type assertion here
+      }
+    });
+    console.log("initial scroll offset", totalHeight);
+    return totalHeight;
+  };
 
   return (
     <InfiniteLoader
@@ -100,17 +111,23 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     >
       {({ onItemsRendered, ref }) => (
         <List
+          initialScrollOffset={activePage.scrollPosition}
           height={target.height}
           itemCount={activities.length}
           itemSize={getRowHeight}
-          onItemsRendered={onItemsRendered}
+          onItemsRendered={({ visibleStartIndex }) => {
+            // if (visibleStartIndex !== 0 && pages.length > 0) {
+            //   pages[pages.length - 1].scrollPosition =
+            //     getCumulativeHeight(visibleStartIndex);
+            // }
+          }}
           ref={(listInstance) => {
             ref(listInstance);
             //@ts-ignore
             listRef.current = listInstance;
           }}
           width={target.width}
-          className={`mask z-20`}
+          className={`mask`}
         >
           {({ index, style }) => (
             <div

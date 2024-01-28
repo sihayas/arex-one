@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import { useSoundContext } from "@/context/SoundContext";
 
 import Artifacts from "./render/Artifacts";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
 import { SongData } from "@/types/appleTypes";
 import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
 
-import Dial from "@/components/interface/album/sub/Dial";
-import DialMini from "@/components/interface/album/sub/DialMini";
+import Dial from "@/components/interface/sound/sub/Dial";
+import DialMini from "@/components/interface/sound/sub/DialMini";
 import { createPortal } from "react-dom";
 import { GetDimensions } from "@/components/interface/Interface";
-import Sort from "@/components/interface/album/sub/Sort";
+import Sort from "@/components/interface/sound/sub/Sort";
 
 const scaleConfig = { damping: 20, stiffness: 122 };
 const xConfig = { damping: 20, stiffness: 160 };
@@ -22,8 +28,9 @@ const generalConfig = { damping: 36, stiffness: 400 };
 
 export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
-const Album = () => {
-  const { scrollContainerRef } = useInterfaceContext();
+const Sound = () => {
+  const { scrollContainerRef, activePage, pages, setActivePage } =
+    useInterfaceContext();
   const { selectedSound } = useSoundContext();
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
@@ -33,6 +40,10 @@ const Album = () => {
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
+  });
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    pages[pages.length - 1].isOpen = latest >= 1;
   });
 
   const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
@@ -75,23 +86,25 @@ const Album = () => {
 
   if (!selectedSound) return;
 
-  let albumId;
-  const artwork = selectedSound.attributes.artwork.url
-    .replace("{w}", "800")
-    .replace("{h}", "800");
+  const artwork = MusicKit.formatArtworkURL(
+    selectedSound.attributes.artwork,
+    800,
+    800,
+  );
   const name = selectedSound.attributes.name;
   const artist = selectedSound.attributes.artistName;
 
-  if (selectedSound.type === "albums") {
-    albumId = selectedSound.id;
-  } else {
-    const song = selectedSound as SongData;
-    albumId = song.relationships.albums.data[0].id;
-  }
+  const albumId =
+    selectedSound.type === "albums"
+      ? selectedSound.id
+      : (selectedSound as SongData).relationships.albums.data[0].id;
 
   return (
     <>
-      <div className={`mt-6`}>
+      {/* Art Ghost Placaeholder */}
+
+      <div className={`min-w-[432px] min-h-[432px] snap-start`} />
+      <div className={`mt-1`}>
         <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
       </div>
       {/* Art */}
@@ -173,4 +186,4 @@ const Album = () => {
   );
 };
 
-export default Album;
+export default Sound;

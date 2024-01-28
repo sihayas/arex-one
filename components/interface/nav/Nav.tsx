@@ -204,7 +204,7 @@ const Nav = () => {
     >
       {/* Content */}
       <motion.div
-        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#E5E5E5]/80 rounded-3xl -z-10`}
+        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#F4F4F4]/80 outline outline-1 outline-silver rounded-3xl -z-10`}
         variants={containerVariants}
         animate={expandInput ? "expanded" : "collapsed"}
       >
@@ -218,21 +218,18 @@ const Nav = () => {
       {/* Bar */}
       <motion.div
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`flex items-center p-2 bg-transparent max-h-[40px] justify-between relative`}
+        className={`flex items-center p-2 pl-1.5 bg-transparent max-h-[40px] justify-between relative`}
       >
         {/* Left */}
         <>
           <button
             onClick={handleNavClick}
-            className={`px-[7px] py-1 mr-2 bg-gray3 rounded-full flex items-center justify-center`}
+            className={`px-3 py-2 mr-2 bg-[#E5E5E5] rounded-full flex items-center justify-center`}
           >
             <NotificationIcon color={`#7AFF00`} />
           </button>
           {/* Target Container */}
-          <motion.button
-            className={`min-w-[24px] h-[24px] relative`}
-            whileHover={{ scale: 1.1 }}
-          >
+          <motion.button className={` relative`} whileHover={{ scale: 1.1 }}>
             {/* Target */}
             <AnimatePresence>
               {activeAction === "none" && (
@@ -242,14 +239,14 @@ const Nav = () => {
                       exit={{ scale: 0 }}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="w-fit h-fit"
+                      className="w-max h-max"
                     >
                       <Avatar
                         className=""
                         imageSrc={user.image}
                         altText={`${user.username}'s avatar`}
-                        width={24}
-                        height={24}
+                        width={32}
+                        height={32}
                         user={user}
                       />
                     </motion.div>

@@ -27,7 +27,7 @@ export type Page = {
   isOpen: boolean;
 };
 
-export type PageName = "album" | "user" | "artifact";
+export type PageName = "sound" | "user" | "artifact";
 
 export type InterfaceContext = {
   isVisible: boolean;
@@ -90,12 +90,12 @@ export const InterfaceContextProvider = ({
     setActivePage(newActivePage);
   }, [pages]);
 
+  // Initialize the user and session
   const [user, setUser] = useState<UserType | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
 
-  // Initialize the user and session
-  const { data, isError } = useUserAndSessionQuery();
+  const { data } = useUserAndSessionQuery();
 
   useEffect(() => {
     if (data) {
@@ -106,19 +106,7 @@ export const InterfaceContextProvider = ({
     }
   }, [data]);
 
-  useEffect(() => {
-    if (scrollContainerRef.current) {
-      console.log(scrollContainerRef.current);
-    }
-  }, [scrollContainerRef]);
-  //
-  // useEffect(() => {
-  //   if (notifications) {
-  //     setNotifs(notifications.data);
-  //   }
-  // }, [notifications]);
-
-  // Initialize the user page upon session and user initialization
+  // Initialize the interface
   useEffect(() => {
     if (!pages.length && user) {
       setPages([

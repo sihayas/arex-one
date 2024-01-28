@@ -120,7 +120,7 @@ model Sound {
   attributes  Attributes @relation(fields: [attributesId], references:[id])
   attributesId String
 
-  // Self relation for Album
+  // Self relation for Sound
   albumId      String?
   album        Sound?      @relation("AlbumSongs", fields: [albumId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   Songs        Sound[]     @relation("AlbumSongs")

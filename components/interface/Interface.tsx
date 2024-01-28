@@ -5,7 +5,7 @@ import { useNavContext } from "@/context/NavContext";
 import { Command } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
 
-import Album from "@/components/interface/album/Album";
+import Sound from "@/components/interface/sound/Sound";
 import Artifact from "@/components/interface/artifact/Artifact";
 import User from "@/components/interface/user/User";
 
@@ -20,7 +20,7 @@ import {
 import { PageName } from "@/context/InterfaceContext";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
-  album: Album,
+  sound: Sound,
   artifact: Artifact,
   user: User,
 };
@@ -34,7 +34,7 @@ export const GetDimensions = (pageName: PageName) => {
       base: { width: 688, height: 384 },
       target: { width: 688, height: maxHeight },
     },
-    album: {
+    sound: {
       base: { width: 432, height: 432 },
       target: { width: 512, height: maxHeight },
     },
@@ -199,49 +199,49 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   ]);
 
   // Animate portal dimensions to target if isOpen in activePage is set to true
-  useEffect(() => {
-    const animateToTarget = async () => {
-      const animationConfig = {
-        width: target.width,
-        height: target.height,
-      };
-      const transitionConfig = {
-        type: "spring" as const,
-        stiffness: 240,
-        damping: 40,
-      };
-      await animate(scope.current, animationConfig, transitionConfig);
-    };
-
-    const animateToBase = async () => {
-      const animationConfig = {
-        width: base.width,
-        height: base.height,
-      };
-      const transitionConfig = {
-        type: "spring" as const,
-        stiffness: 240,
-        damping: 40,
-      };
-      await animate(scope.current, animationConfig, transitionConfig);
-    };
-
-    if (activePage.isOpen) {
-      animateToTarget();
-      console.log("animate to target");
-    } else {
-      animateToBase();
-      console.log("animate to base");
-    }
-  }, [
-    animate,
-    scope,
-    activePage.isOpen,
-    target.height,
-    target.width,
-    base.width,
-    base.height,
-  ]);
+  // useEffect(() => {
+  //   const animateToTarget = async () => {
+  //     const animationConfig = {
+  //       width: target.width,
+  //       height: target.height,
+  //     };
+  //     const transitionConfig = {
+  //       type: "spring" as const,
+  //       stiffness: 240,
+  //       damping: 40,
+  //     };
+  //     await animate(scope.current, animationConfig, transitionConfig);
+  //   };
+  //
+  //   const animateToBase = async () => {
+  //     const animationConfig = {
+  //       width: base.width,
+  //       height: base.height,
+  //     };
+  //     const transitionConfig = {
+  //       type: "spring" as const,
+  //       stiffness: 240,
+  //       damping: 40,
+  //     };
+  //     await animate(scope.current, animationConfig, transitionConfig);
+  //   };
+  //
+  //   if (activePage.isOpen) {
+  //     animateToTarget();
+  //     console.log("animate to target");
+  //   } else {
+  //     animateToBase();
+  //     console.log("animate to base");
+  //   }
+  // }, [
+  //   animate,
+  //   scope,
+  //   activePage.isOpen,
+  //   target.height,
+  //   target.width,
+  //   base.width,
+  //   base.height,
+  // ]);
 
   return (
     <motion.div
@@ -262,7 +262,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         <motion.div
           id={`cmdk-scroll`}
           ref={setRefs}
-          className={`flex flex-col items-center overflow-y-scroll w-full h-full scrollbar-none rounded-full`}
+          className={`flex flex-col items-center overflow-y-scroll scrollbar-none rounded-full snap-mandatory snap-y`}
           style={{
             width: `${target.width}px`,
             height: `${target.height}px`,
@@ -272,7 +272,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
             <ActiveComponent />
           </AnimatePresence>
         </motion.div>
-        {/*<Nav />*/}
+        <Nav />
       </Command>
     </motion.div>
   );
