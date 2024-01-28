@@ -6,14 +6,12 @@ import React, {
   useRef,
 } from "react";
 import { UserType, Artifact } from "@/types/dbTypes";
-import { v4 as uuidv4 } from "uuid";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { Session } from "lucia";
 import { useUserAndSessionQuery } from "@/lib/apiHelper/user";
 
 export type Page = {
-  key: string;
   name: string;
   color: string;
   dimensions: {
@@ -101,8 +99,6 @@ export const InterfaceContextProvider = ({
     if (data) {
       setUser(data.user);
       setSession(data.session);
-      console.log("user and session set");
-      console.log(data);
     }
   }, [data]);
 
@@ -111,7 +107,6 @@ export const InterfaceContextProvider = ({
     if (!pages.length && user) {
       setPages([
         {
-          key: uuidv4(),
           name: "user",
           user: user,
           dimensions: { width: 688, height: 384 },
@@ -140,7 +135,6 @@ export const InterfaceContextProvider = ({
     const handlePopState = () => {
       if (pages.length > 1) {
         navigateBack();
-      } else {
       }
     };
 

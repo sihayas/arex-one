@@ -3,25 +3,24 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useSoundContext } from "@/context/SoundContext";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
-import { v4 as uuidv4 } from "uuid";
 import { Artifact, UserType } from "@/types/dbTypes";
 
 export const useArtifact = (artifact: Artifact) => {
   const { setPages, setIsVisible, scrollContainerRef } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();
+  const sound = artifact.appleData;
 
   return () => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
       {
-        key: uuidv4(),
         name: "artifact",
         threadcrumbs: [artifact.id],
         dimensions: { width: 528, height: 748 },
         scrollPosition: 0,
         artifact: artifact,
-        color: artifact.appleData.attributes.artwork.bgColor,
+        color: sound.attributes.artwork.bgColor,
         isOpen: false,
       },
     ]);
@@ -38,7 +37,6 @@ export const useUser = (author: UserType) => {
     setPages((prevPages) => [
       ...prevPages,
       {
-        key: uuidv4(),
         name: "user",
         user: author,
         dimensions: { width: 688, height: 688 },
@@ -63,7 +61,6 @@ export const useSound = () => {
     setPages((prevPages) => [
       ...prevPages,
       {
-        key: uuidv4(),
         name: "sound",
         sound: sound,
         dimensions: { width: 432, height: 432 },

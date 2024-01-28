@@ -132,10 +132,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           <div className={`font-semibold text-base text-black line-clamp-1`}>
             {sound.attributes.name}
           </div>
-          <div className={`-mx-1 text-gray3`}>&middot;</div>
-          <div className={` text-base text-gray2 line-clamp-1`}>
-            {sound.attributes.artistName}
-          </div>
         </div>
 
         <motion.div

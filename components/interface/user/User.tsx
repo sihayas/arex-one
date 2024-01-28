@@ -37,8 +37,6 @@ const User = () => {
       isOpen: newIsOpenValue,
     };
 
-    console.log("updatedActivePage", updatedActivePage);
-
     pages[pages.length - 1].isOpen = newIsOpenValue;
     setActivePage(updatedActivePage);
   }, [activeSection, setActivePage]);
