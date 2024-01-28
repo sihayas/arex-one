@@ -100,10 +100,8 @@ const Sound = () => {
   return (
     <>
       {/* Art Ghost Placeholder */}
-      <div className={`min-w-[432px] min-h-[432px] snap-start`} />
-      <div className={`mt-1`}>
-        <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
-      </div>
+      <div className={`min-w-[432px] min-h-[432px]`} />
+      <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
       {/* Art */}
       <motion.div
         initial={{

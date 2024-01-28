@@ -10,6 +10,7 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { Session } from "lucia";
 import { useUserAndSessionQuery } from "@/lib/apiHelper/user";
+import { StateSnapshot } from "react-virtuoso";
 
 export type Page = {
   name: string;
@@ -18,7 +19,11 @@ export type Page = {
   user?: UserType;
   sound?: {
     sound: SongData | AlbumData;
-    rowHeights: { [key: number]: number };
+    snapshot?: {
+      // To retain scroll position
+      state: StateSnapshot;
+      key: number;
+    };
   };
   artifact?: Artifact;
   isOpen: boolean;
