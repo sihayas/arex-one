@@ -29,17 +29,9 @@ const User = () => {
   const { userData } = data || {};
 
   // If the active section is not essentials, open the page
-  useEffect(() => {
-    const newIsOpenValue = activeSection !== "essentials";
-
-    const updatedActivePage = {
-      ...activePage,
-      isOpen: newIsOpenValue,
-    };
-
-    pages[pages.length - 1].isOpen = newIsOpenValue;
-    setActivePage(updatedActivePage);
-  }, [activeSection, setActivePage]);
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    pages[pages.length - 1].isOpen = latest >= 1;
+  });
 
   if (!user || isLoading || isError) return <div>log in</div>;
 

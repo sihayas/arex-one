@@ -59,7 +59,7 @@ export const useSound = () => {
       ...prevPages,
       {
         name: "sound",
-        sound: sound,
+        sound: { sound, rowHeights: [] },
         scrollPosition: 0,
         color: sound.attributes.artwork.bgColor,
         isOpen: false,

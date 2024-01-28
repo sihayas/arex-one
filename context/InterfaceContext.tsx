@@ -16,7 +16,10 @@ export type Page = {
   color: string;
   scrollPosition: number;
   user?: UserType;
-  sound?: AlbumData | SongData;
+  sound?: {
+    sound: SongData | AlbumData;
+    rowHeights: { [key: number]: number };
+  };
   artifact?: Artifact;
   isOpen: boolean;
 };

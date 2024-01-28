@@ -1,10 +1,11 @@
 import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useRef } from "react";
-import { Page, useInterfaceContext } from "@/context/InterfaceContext";
+import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 import { Player } from "@/components/global/Player";
 
 import { motion, useAnimate } from "framer-motion";
+import { GetDimensions } from "./interface/Interface";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user } = useInterfaceContext();
@@ -93,9 +94,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           {/* Ambien */}
           <motion.div
             style={{
-              backgroundColor: `#${activePage.color}`,
-              // width: `${activePage.dimensions.width}px`,
-              // height: `${activePage.dimensions.height}px`,
+              backgroundColor: `#${activePage?.color}`,
+              width: `400px`,
+              height: `400px`,
             }}
             className="absolute center-x center-y -z-10 rounded-max"
           />

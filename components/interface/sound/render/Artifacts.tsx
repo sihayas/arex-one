@@ -8,6 +8,7 @@ import { GetDimensions } from "@/components/interface/Interface";
 import { PageName } from "@/context/InterfaceContext";
 import InfiniteLoader from "react-window-infinite-loader";
 import { SortOrder } from "@/components/interface/sound/Sound";
+import { motion } from "framer-motion";
 
 interface RenderArtifactsProps {
   soundId: string;
@@ -27,9 +28,9 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   const { user, pages, activePage, setPages } = useInterfaceContext();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useArtifactsQuery(soundId, user?.id, sortOrder, range);
+  const rowPositionRef = useRef<number>(0);
 
-  const activePageName: PageName = activePage.name as PageName;
-  const { target } = GetDimensions(activePageName);
+  const { target } = GetDimensions(activePage.name as PageName);
 
   // Helps calculate item height/size
   const listRef = useRef<List>(null);
@@ -60,6 +61,12 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     rowHeights.current = { ...rowHeights.current, [index]: size };
   };
 
+  // Store scroll position on row click
+  const handleRowClick = () => {
+    pages[pages.length - 1].scrollPosition = rowPositionRef.current;
+    console.log("storing scroll position", rowPositionRef.current);
+  };
+
   // Create a row
   const Row = ({ index }: { index: number }) => {
     const rowRef = useRef<HTMLDivElement>(null);
@@ -76,12 +83,13 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     const artifact = activity.artifact as ArtifactExtended;
 
     return (
-      <div
+      <motion.div
         ref={rowRef}
+        onClick={handleRowClick}
         className={`flex flex-col bg-[#F4F4F4] relative w-full px-6 pt-6 pb-[19px] rounded-full gap-3 outline outline-1 outline-silver`}
       >
         <Entry artifact={artifact} />
-      </div>
+      </motion.div>
     );
   };
 
@@ -92,12 +100,14 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   // Get cumulative height of rows / store scroll position
   const getCumulativeHeight = (rowIndex: number) => {
     let totalHeight = 0;
+
     Object.keys(rowHeights.current).forEach((key) => {
       const numericKey = parseInt(key);
       if (!isNaN(numericKey) && numericKey < rowIndex) {
         totalHeight += rowHeights.current[numericKey] || 0; // Type assertion here
       }
     });
+
     console.log("initial scroll offset", totalHeight);
     return totalHeight;
   };
@@ -116,10 +126,10 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
           itemCount={activities.length}
           itemSize={getRowHeight}
           onItemsRendered={({ visibleStartIndex }) => {
-            // if (visibleStartIndex !== 0 && pages.length > 0) {
-            //   pages[pages.length - 1].scrollPosition =
-            //     getCumulativeHeight(visibleStartIndex);
-            // }
+            if (visibleStartIndex !== 0 && pages.length > 0) {
+              rowPositionRef.current = getCumulativeHeight(visibleStartIndex);
+              console.log("setting scroll position", rowPositionRef.current);
+            }
           }}
           ref={(listInstance) => {
             ref(listInstance);
