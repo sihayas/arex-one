@@ -59,8 +59,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   const [contentScope, animateContent] = useAnimate();
 
   const setRefs = (element: HTMLDivElement | null) => {
-    //@ts-ignore
-    contentScope.current = element;
+    (contentScope as React.MutableRefObject<HTMLDivElement | null>).current =
+      element;
 
     if (scrollContainerRef) {
       scrollContainerRef.current = element;
@@ -87,7 +87,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
   // Animate portal visibility
   useEffect(() => {
-    const animateParent = async () => {
+    const animateParent = () => {
       const animationConfig = {
         x: "-50%",
         y: "-50%",
@@ -114,15 +114,15 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           delay: isVisible ? 0 : 0.15,
         },
       };
-      await animateRoot(rootScope.current, animationConfig, transitionConfig);
+      animateRoot(rootScope.current, animationConfig, transitionConfig);
     };
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
   // Animate content blur
   useEffect(() => {
-    const blurContent = async () => {
-      await animateContent(
+    const blurContent = () => {
+      animateContent(
         contentScope.current,
         {
           filter: expandInput ? "brightness(.75)" : "brightness(1)",
@@ -139,20 +139,20 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     blurContent();
   }, [animateContent, contentScope, expandInput]);
 
-  // Animate portal dimensions on scroll & page change & bounce
+  // Animate portal dimensions & bounce
   useEffect(() => {
     const isOpen = activePage.isOpen;
     // Animate dimensions on page change & bounce
-    const sequence = async () => {
+    const sequence = () => {
       // Scale down
-      await animate(
+      animate(
         scope.current,
         { scale: 0.95 },
         { type: "spring", stiffness: 800, damping: 40 },
       );
 
       // Bounce up and shift
-      await animate(
+      animate(
         scope.current,
         {
           scale: [0.95, 1],
@@ -202,51 +202,6 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     activePage.isOpen,
   ]);
 
-  // Animate portal dimensions to target if isOpen in activePage is set to true
-  // useEffect(() => {
-  //   const animateToTarget = async () => {
-  //     const animationConfig = {
-  //       width: target.width,
-  //       height: target.height,
-  //     };
-  //     const transitionConfig = {
-  //       type: "spring" as const,
-  //       stiffness: 240,
-  //       damping: 40,
-  //     };
-  //     await animate(scope.current, animationConfig, transitionConfig);
-  //   };
-  //
-  //   const animateToBase = async () => {
-  //     const animationConfig = {
-  //       width: base.width,
-  //       height: base.height,
-  //     };
-  //     const transitionConfig = {
-  //       type: "spring" as const,
-  //       stiffness: 240,
-  //       damping: 40,
-  //     };
-  //     await animate(scope.current, animationConfig, transitionConfig);
-  //   };
-  //
-  //   if (activePage.isOpen) {
-  //     animateToTarget();
-  //     console.log("animate to target");
-  //   } else {
-  //     animateToBase();
-  //     console.log("animate to base");
-  //   }
-  // }, [
-  //   animate,
-  //   scope,
-  //   activePage.isOpen,
-  //   target.height,
-  //   target.width,
-  //   base.width,
-  //   base.height,
-  // ]);
-
   return (
     <motion.div
       transformTemplate={template} // Prevent translateZ from being applied
@@ -283,6 +238,6 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 }
 
 function template({ x, y, scale }: { x: number; y: number; scale: number }) {
-  // Assuming x and y are percentages and scale is a unitless number
+  // Assuming x and y are percentages and scale is a unit-less number
   return `translateX(${x}) translateY(${y}) scale(${scale})`;
 }

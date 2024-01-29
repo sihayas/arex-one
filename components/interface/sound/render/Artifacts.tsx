@@ -1,14 +1,10 @@
-import React, { useEffect, useRef } from "react";
-import { VariableSizeList as List } from "react-window";
+import React from "react";
 import { useArtifactsQuery } from "@/lib/apiHelper/album";
 import Entry from "@/components/interface/sound/items/Entry";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { ArtifactExtended } from "@/types/globalTypes";
 import { GetDimensions } from "@/components/interface/Interface";
 import { PageName } from "@/context/InterfaceContext";
-import InfiniteLoader from "react-window-infinite-loader";
 import { SortOrder } from "@/components/interface/sound/Sound";
-import { motion } from "framer-motion";
 import { Virtuoso, StateSnapshot, VirtuosoHandle } from "react-virtuoso";
 
 interface RenderArtifactsProps {
@@ -22,9 +18,13 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   sortOrder = "newest",
   range = null,
 }) => {
-  const { user, pages, activePage, setPages } = useInterfaceContext();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useArtifactsQuery(soundId, user?.id, sortOrder, range);
+  const { user, activePage } = useInterfaceContext();
+  const { data, fetchNextPage, hasNextPage } = useArtifactsQuery(
+    soundId,
+    user?.id,
+    sortOrder,
+    range,
+  );
 
   const ref = React.useRef<VirtuosoHandle>(null);
   const state = React.useRef<StateSnapshot | undefined>(
@@ -36,19 +36,31 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
 
   const activities = data ? data.pages.flatMap((page) => page.data) : [];
 
-  // const itemCount = hasNextPage ? activities.length + 1 : activities.length;
+  const handleEndReached = () => {
+    if (hasNextPage) {
+      fetchNextPage()
+        .then(() => {
+          // Handle successful fetch
+        })
+        .catch((error) => {
+          // Handle any errors that occur during fetch
+          console.error("Error fetching next page:", error);
+        });
+    }
+  };
 
   return (
-    <div className={`mt-1 h-max w-full`}>
+    <div className={`mt-1 h-max w-full snap-start mask`}>
       <Virtuoso
         key={key}
         ref={ref}
+        className={`scrollbar-none`}
         style={{ height: target.height }}
         data={activities}
         overscan={200}
         restoreStateFrom={state.current}
         computeItemKey={(key: number) => `item-${key.toString()}`}
-        endReached={hasNextPage ? fetchNextPage : undefined}
+        endReached={handleEndReached}
         itemContent={(index, activity) => (
           <div
             onClick={() => {
@@ -59,37 +71,20 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
                 };
               });
             }}
-            className={`p-8`}
+            className={`p-8 pb-4`}
           >
-            <div
-              className={`flex flex-col bg-[#F4F4F4] relative w-full px-6 pt-6 pb-[19px] rounded-full gap-3 outline outline-1 outline-silver`}
-            >
-              <Entry artifact={activity.artifact} />
-            </div>
+            <Entry artifact={activity.artifact} />
           </div>
         )}
-        components={{
-          Footer: () => isFetchingNextPage && <div>Loading more...</div>,
-          EmptyPlaceholder: () => <div>No artifacts available</div>,
-        }}
+        components={
+          {
+            // Footer: () => isFetchingNextPage && <div>Loading more...</div>,
+            // EmptyPlaceholder: () => <div>No artifacts available</div>,
+          }
+        }
       />
     </div>
   );
 };
 
 export default Artifacts;
-
-// const Row = ({ index }: { index: number }) => {
-//   const activity = activities[index];
-//   const artifact = activity.artifact as ArtifactExtended;
-//
-//   return (
-//     <motion.div
-//       ref={rowRef}
-//       onClick={handleRowClick}
-//       className={`flex flex-col bg-[#F4F4F4] relative w-full px-6 pt-6 pb-[19px] rounded-full gap-3 outline outline-1 outline-silver`}
-//     >
-//       <Entry artifact={artifact} />
-//     </motion.div>
-//   );
-// };

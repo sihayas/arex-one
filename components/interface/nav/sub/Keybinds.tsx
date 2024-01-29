@@ -80,7 +80,7 @@ export const Keybinds = (
     ) {
       e.preventDefault();
       const sound = activePage.sound;
-      setSelectedFormSound(sound);
+      setSelectedFormSound(sound.sound);
     }
     // Prepare reply parent
     else if (

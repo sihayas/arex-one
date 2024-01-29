@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 import { useSoundContext } from "@/context/SoundContext";
@@ -13,7 +13,7 @@ import {
 } from "framer-motion";
 
 import { SongData } from "@/types/appleTypes";
-import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import Dial from "@/components/interface/sound/sub/Dial";
 import DialMini from "@/components/interface/sound/sub/DialMini";
@@ -97,10 +97,12 @@ const Sound = () => {
       ? selectedSound!.id
       : (selectedSound as SongData).relationships.albums.data[0].id;
 
+  const snap = activePage.isOpen ? "" : "snap-start";
+
   return (
     <>
       {/* Art Ghost Placeholder */}
-      <div className={`min-w-[432px] min-h-[432px]`} />
+      <div className={`min-w-[432px] min-h-[432px] ${snap}`} />
       <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
       {/* Art */}
       <motion.div

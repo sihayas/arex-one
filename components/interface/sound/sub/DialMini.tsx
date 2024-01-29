@@ -209,7 +209,7 @@ const DialMini: React.FC<DialMiniProps> = ({ ratings, onRangeChange }) => {
         {hoveredIndex !== null && (
           <motion.div
             key={hoveredIndex}
-            className={`absolute flex items-center justify-center text-center gap-2 pointer-events-none text-black font-serif text-xl leading-[13px] will-change-transform`}
+            className={`absolute flex items-center justify-center text-center gap-2 pointer-events-none text-black text-base will-change-transform`}
             variants={textVariants}
             initial={`initial`}
             animate={`animate`}
@@ -217,11 +217,6 @@ const DialMini: React.FC<DialMiniProps> = ({ ratings, onRangeChange }) => {
             transition={springTextConfig}
           >
             {ratings[hoveredIndex]}
-            {hoveredIndex === 0 && <OneStar />}
-            {hoveredIndex === 1 && <TwoStar />}
-            {hoveredIndex === 2 && <ThreeStar />}
-            {hoveredIndex === 3 && <FourStar />}
-            {hoveredIndex === 4 && <FiveStar />}
           </motion.div>
         )}
 

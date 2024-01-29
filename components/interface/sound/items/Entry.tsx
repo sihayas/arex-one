@@ -33,9 +33,11 @@ const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
   });
 
   return (
-    <>
+    <div
+      className={`flex flex-col bg-[#F4F4F4] relative w-full px-6 pt-[18px] pb-4 rounded-full gap-2.5 outline outline-1 outline-silver`}
+    >
       <div
-        className={`absolute -bottom-3 -left-3 flex items-center justify-center bg-[#F4F4F4] rounded-max shadow-shadowKitMedium p-3`}
+        className={`absolute -top-3 -left-3 flex items-center justify-center bg-[#F4F4F4] rounded-max shadow-shadowKitMedium p-3`}
       >
         {getStarComponent(artifact.content!.rating!)}
       </div>
@@ -47,7 +49,7 @@ const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
         {artifact.content?.text}
       </div>
 
-      <div className={`flex items-center gap-2 -ml-2 -mb-1`}>
+      <div className={`flex items-center gap-2 -mx-2`}>
         <Avatar
           className={`border border-silver`}
           imageSrc={artifact.author.image}
@@ -61,14 +63,14 @@ const Entry = ({ artifact }: { artifact: ArtifactExtended }) => {
         </div>
       </div>
 
-      <Heart
-        handleHeartClick={handleHeartClick}
-        hearted={hearted}
-        className="absolute -top-[30px] -left-[8px]"
-        heartCount={heartCount}
-        replyCount={artifact._count.replies}
-      />
-    </>
+      {/*<Heart*/}
+      {/*  handleHeartClick={handleHeartClick}*/}
+      {/*  hearted={hearted}*/}
+      {/*  className="absolute -top-[30px] -left-[8px]"*/}
+      {/*  heartCount={heartCount}*/}
+      {/*  replyCount={artifact._count.replies}*/}
+      {/*/>*/}
+    </div>
   );
 };
 
