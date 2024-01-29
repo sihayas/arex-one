@@ -32,23 +32,14 @@ const artworkConfig = {
 };
 
 export const Artifact = () => {
-  const { activePage } = useInterfaceContext();
+  const { activePage, scrollContainerRef, pages } = useInterfaceContext();
   const { handleSelectSound } = useSound();
 
-  // const lastIsOpenRef = useRef<boolean | null>(null);
+  const { scrollY } = useScroll({ container: scrollContainerRef });
 
-  // useMotionValueEvent(scrollY, "change", (latest) => {
-  //   const isOpen = latest >= 1;
-  //   if (isOpen !== lastIsOpenRef.current) {
-  //     const updatedActivePage = {
-  //       ...activePage,
-  //       isOpen: isOpen,
-  //     };
-  //     pages[pages.length - 1].isOpen = false;
-  //     setActivePage(updatedActivePage);
-  //     lastIsOpenRef.current = isOpen;
-  //   }
-  // });
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    pages[pages.length - 1].isOpen = latest >= 1;
+  });
 
   const artifactExtended = useMemo(
     () => activePage.artifact as ArtifactExtended,
@@ -67,7 +58,7 @@ export const Artifact = () => {
   return (
     <>
       <motion.div
-        className={`flex items-end pt-8 gap-12 rotate-3 -z-10`}
+        className={`flex items-end pt-8 gap-12 rotate-3`}
         transition={artworkConfig}
       >
         <div className={`-rotate-6`}>
@@ -86,7 +77,7 @@ export const Artifact = () => {
       </motion.div>
 
       <div
-        className={`-mt-8 flex flex-col gap-[18px] bg-white shadow-shadowKitHigh p-6 mx-8 outline outline-silver outline-1 rounded-3xl`}
+        className={`-mt-8 flex flex-col gap-[18px] bg-white shadow-shadowKitHigh p-6 mx-8 outline outline-silver outline-1 rounded-3xl z-10`}
       >
         <div
           className={`flex w-full items-center justify-between max-h-[32px]`}

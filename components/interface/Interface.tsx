@@ -54,22 +54,10 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   const activePageName: PageName = activePage.name as PageName;
   const ActiveComponent = componentMap[activePageName];
 
-  const { base, target } = GetDimensions(activePageName); // Dimensions
-
-  const [contentScope, animateContent] = useAnimate();
-
-  const setRefs = (element: HTMLDivElement | null) => {
-    (contentScope as React.MutableRefObject<HTMLDivElement | null>).current =
-      element;
-
-    if (scrollContainerRef) {
-      scrollContainerRef.current = element;
-    }
-  };
-
-  const [rootScope, animateRoot] = useAnimate(); // Root
+  const { base, target } = GetDimensions(activePageName);
 
   const [scope, animate] = useAnimate(); // Window
+  const [rootScope, animateRoot] = useAnimate(); // Root
 
   // Shift width and height of shape-shifter/window while scrolling
   const { scrollY } = useScroll({ container: scrollContainerRef });
@@ -87,7 +75,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
   // Animate portal visibility
   useEffect(() => {
-    const animateParent = () => {
+    const animateParent = async () => {
       const animationConfig = {
         x: "-50%",
         y: "-50%",
@@ -114,36 +102,17 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           delay: isVisible ? 0 : 0.15,
         },
       };
-      animateRoot(rootScope.current, animationConfig, transitionConfig);
+      await animateRoot(rootScope.current, animationConfig, transitionConfig);
     };
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
-  // Animate content blur
+  // Animate portal dimensions & bounce on page change
   useEffect(() => {
-    const blurContent = () => {
-      animateContent(
-        contentScope.current,
-        {
-          filter: expandInput ? "brightness(.75)" : "brightness(1)",
-          opacity: expandInput ? 0.5 : 1,
-        },
-        {
-          type: "spring",
-          stiffness: 240,
-          damping: 18,
-        },
-      );
-    };
+    const { base, target } = GetDimensions(activePage.name as PageName);
 
-    blurContent();
-  }, [animateContent, contentScope, expandInput]);
-
-  // Animate portal dimensions & bounce
-  useEffect(() => {
-    const isOpen = activePage.isOpen;
-    // Animate dimensions on page change & bounce
-    const sequence = () => {
+    // Page change shapeshift & bounce
+    const shapeShift = async () => {
       // Scale down
       animate(
         scope.current,
@@ -156,15 +125,30 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         scope.current,
         {
           scale: [0.95, 1],
-          width: isOpen ? `${target.width}px` : `${base.width}px`,
-          height: isOpen ? `${target.height}px` : `${base.height}px`,
+          width: activePage.isOpen ? `${target.width}px` : `${base.width}px`,
+          height: activePage.isOpen ? `${target.height}px` : `${base.height}px`,
         },
         { type: "spring", stiffness: 400, damping: 40 },
       );
-    };
-    sequence();
 
-    // Animate dimensions on page ~scroll~, listens for changes via unsub
+      console.log("animating to the following dimensions:", {
+        width: activePage.isOpen ? `${target.width}px` : `${base.width}px`,
+        height: activePage.isOpen ? `${target.height}px` : `${base.height}px`,
+      });
+    };
+    shapeShift();
+  }, [
+    animate,
+    base.height,
+    base.width,
+    target.height,
+    target.width,
+    scope,
+    activePage,
+  ]);
+
+  // Animate page dimensions while scrolling
+  useEffect(() => {
     const shiftDimension = (dimension: string, newDimension: MotionValue) => {
       animate(
         scope.current,
@@ -185,26 +169,14 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     );
 
     return () => {
-      unsubHeight();
       unsubWidth();
+      unsubHeight();
     };
-  }, [
-    animate,
-    base.height,
-    base.width,
-    target.height,
-    target.width,
-    newHeight,
-    newWidth,
-    scope,
-    pages,
-    activePageName,
-    activePage.isOpen,
-  ]);
+  }, [animate, newWidth, newHeight, scope]);
 
   return (
     <motion.div
-      transformTemplate={template} // Prevent translateZ from being applied
+      // transformTemplate={template} // Prevent translateZ from being applied
       ref={rootScope}
       id={`cmdk`}
       className={`cmdk rounded-full`}
@@ -220,10 +192,10 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         {/* Base layout / Static dimensions for a page */}
         <motion.div
           id={`cmdk-scroll`}
-          ref={setRefs}
+          ref={scrollContainerRef}
           className={`flex flex-col items-center overflow-y-scroll scrollbar-none rounded-full snap-mandatory snap-y`}
           style={{
-            width: `${target.width}px`,
+            minWidth: `${target.width}px`,
             height: `${target.height}px`,
           }}
         >
@@ -237,7 +209,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   );
 }
 
-function template({ x, y, scale }: { x: number; y: number; scale: number }) {
-  // Assuming x and y are percentages and scale is a unit-less number
-  return `translateX(${x}) translateY(${y}) scale(${scale})`;
-}
+// function template({ x, y, scale }: { x: number; y: number; scale: number }) {
+//   // Assuming x and y are percentages and scale is a unit-less number
+//   return `translateX(${x}) translateY(${y}) scale(${scale})`;
+// }

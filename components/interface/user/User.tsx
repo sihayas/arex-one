@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useUserDataQuery } from "@/lib/apiHelper/user";
@@ -9,29 +9,25 @@ import Avatar from "@/components/global/Avatar";
 export type Section = "essentials" | "sounds" | "entries" | "wisps";
 
 const User = () => {
-  const { user, activePage, setActivePage, pages, scrollContainerRef } =
-    useInterfaceContext();
+  const { user, activePage, pages, scrollContainerRef } = useInterfaceContext();
   const [activeSection, setActiveSection] =
     React.useState<Section>("essentials");
+
+  const pageUser = activePage.user;
+  const { data, isLoading, isError, followState, handleFollowUnfollow } =
+    useUserDataQuery(user?.id, pageUser?.id);
 
   const { scrollY } = useScroll({ container: scrollContainerRef });
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 1) {
       setActiveSection("sounds");
+      pages[pages.length - 1].isOpen = true;
+    } else {
+      setActiveSection("essentials");
     }
   });
 
-  const pageUser = activePage.user;
-
-  const { data, isLoading, isError, followState, handleFollowUnfollow } =
-    useUserDataQuery(user?.id, pageUser?.id);
-
   const { userData } = data || {};
-
-  // If the active section is not essentials, open the page
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    pages[pages.length - 1].isOpen = latest >= 1;
-  });
 
   if (!user || isLoading || isError) return <div>log in</div>;
 

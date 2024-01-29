@@ -38,9 +38,7 @@ const Sound = () => {
 
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
-  const { scrollY } = useScroll({
-    container: scrollContainerRef,
-  });
+  const { scrollY } = useScroll({ container: scrollContainerRef });
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;

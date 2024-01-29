@@ -23,7 +23,7 @@ export const useArtifact = (artifact: Artifact) => {
         isOpen: false,
       },
     ]);
-    setThreadcrumbs([artifact.id]);
+    // setThreadcrumbs([artifact.id]);
     scrollContainerRef.current?.scrollTo(0, 0);
     window.history.pushState(null, "");
   };
