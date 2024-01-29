@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { useSoundContext } from "@/context/SoundContext";
@@ -28,8 +28,7 @@ const generalConfig = { damping: 36, stiffness: 400 };
 export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
 const Sound = () => {
-  const { scrollContainerRef, activePage, pages, setActivePage } =
-    useInterfaceContext();
+  const { scrollContainerRef, activePage, pages } = useInterfaceContext();
   const { selectedSound } = useSoundContext();
   const isOpen = activePage.isOpen;
 
@@ -38,7 +37,10 @@ const Sound = () => {
 
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
-  const { scrollY } = useScroll({ container: scrollContainerRef });
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+    layoutEffect: false,
+  });
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;
@@ -96,6 +98,10 @@ const Sound = () => {
       : (selectedSound as SongData).relationships.albums.data[0].id;
 
   const snap = activePage.isOpen ? "" : "snap-start";
+
+  useEffect(() => {
+    !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
+  }, []);
 
   return (
     <>

@@ -42,7 +42,7 @@ export default async function handler(
   const storedState = req.cookies.apple_oauth_state;
 
   if (!code || !state || !storedState || state !== storedState) {
-    console.error("Invalid request parameters");
+    console.error("Invalid request parameters", code, state, storedState);
     res.status(400).end("Invalid request parameters");
     return;
   }

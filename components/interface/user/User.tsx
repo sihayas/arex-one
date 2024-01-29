@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useUserDataQuery } from "@/lib/apiHelper/user";
@@ -17,7 +17,11 @@ const User = () => {
   const { data, isLoading, isError, followState, handleFollowUnfollow } =
     useUserDataQuery(user?.id, pageUser?.id);
 
-  const { scrollY } = useScroll({ container: scrollContainerRef });
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+    layoutEffect: false,
+  });
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 1) {
       setActiveSection("sounds");
@@ -28,6 +32,10 @@ const User = () => {
   });
 
   const { userData } = data || {};
+
+  useEffect(() => {
+    !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
+  }, []);
 
   if (!user || isLoading || isError) return <div>log in</div>;
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Page,
   PageName,
@@ -35,7 +35,10 @@ export const Artifact = () => {
   const { activePage, scrollContainerRef, pages } = useInterfaceContext();
   const { handleSelectSound } = useSound();
 
-  const { scrollY } = useScroll({ container: scrollContainerRef });
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+    layoutEffect: false,
+  });
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;
@@ -54,6 +57,13 @@ export const Artifact = () => {
   };
 
   const artifact = artifactExtended;
+
+  // Scroll to top on mount
+  useEffect(() => {
+    if (!activePage.isOpen && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo(0, 0);
+    }
+  }, []);
 
   return (
     <>

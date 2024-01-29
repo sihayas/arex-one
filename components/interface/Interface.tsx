@@ -24,6 +24,7 @@ const componentMap: Record<PageName, React.ComponentType<any>> = {
   artifact: Artifact,
   user: User,
 };
+
 // Calculate & set base dimensions and target dimensions for the window per page
 export const GetDimensions = (pageName: PageName) => {
   const viewportHeight = window.innerHeight;
@@ -48,7 +49,7 @@ export const GetDimensions = (pageName: PageName) => {
 };
 
 export function Interface({ isVisible }: { isVisible: boolean }) {
-  const { pages, scrollContainerRef, activePage } = useInterfaceContext();
+  const { scrollContainerRef, activePage } = useInterfaceContext();
   const { expandInput } = useNavContext();
 
   const activePageName: PageName = activePage.name as PageName;
@@ -60,7 +61,10 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   const [rootScope, animateRoot] = useAnimate(); // Root
 
   // Shift width and height of shape-shifter/window while scrolling
-  const { scrollY } = useScroll({ container: scrollContainerRef });
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+    layoutEffect: false,
+  });
   const maxScroll = 1;
   const newWidth = useTransform(
     scrollY,
@@ -75,7 +79,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
   // Animate portal visibility
   useEffect(() => {
-    const animateParent = async () => {
+    const animateParent = () => {
       const animationConfig = {
         x: "-50%",
         y: "-50%",
@@ -102,7 +106,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           delay: isVisible ? 0 : 0.15,
         },
       };
-      await animateRoot(rootScope.current, animationConfig, transitionConfig);
+      animateRoot(rootScope.current, animationConfig, transitionConfig);
     };
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
@@ -112,7 +116,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     const { base, target } = GetDimensions(activePage.name as PageName);
 
     // Page change shapeshift & bounce
-    const shapeShift = async () => {
+    const shapeShift = () => {
       // Scale down
       animate(
         scope.current,
@@ -131,10 +135,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         { type: "spring", stiffness: 400, damping: 40 },
       );
 
-      console.log("animating to the following dimensions:", {
-        width: activePage.isOpen ? `${target.width}px` : `${base.width}px`,
-        height: activePage.isOpen ? `${target.height}px` : `${base.height}px`,
-      });
+      console.log("activePage.isOpen", activePage.isOpen);
     };
     shapeShift();
   }, [
@@ -199,9 +200,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
             height: `${target.height}px`,
           }}
         >
-          <AnimatePresence>
-            <ActiveComponent />
-          </AnimatePresence>
+          <ActiveComponent key={activePage.key} />
         </motion.div>
         <Nav />
       </Command>

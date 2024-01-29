@@ -59,6 +59,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const { user } = useInterfaceContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const { handleSelectSound } = useSound();
+  const { handleSelectArtifact } = useArtifact();
 
   const sound = artifact.appleData;
   const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 540, 540);
@@ -77,12 +78,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     artifact.author.id,
     user?.id,
   );
-
-  const handleEntryClick = useArtifact(artifact);
-
-  const handleSoundClick = async () => {
-    handleSelectSound(sound);
-  };
 
   return (
     <div
@@ -108,7 +103,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         className={`flex flex-col will-change-transform bg-white relative z-10`}
       >
         <Image
-          onClick={handleSoundClick}
+          onClick={() => handleSelectSound(sound)}
           className={`cursor-pointer`}
           src={artwork}
           alt={`artwork`}
@@ -119,7 +114,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         />
 
         <motion.div
-          onClick={handleEntryClick}
+          onClick={() => handleSelectArtifact(artifact)}
           className={`text-base text-black px-6 pt-2.5 cursor-pointer `}
         >
           {artifact.content?.text}

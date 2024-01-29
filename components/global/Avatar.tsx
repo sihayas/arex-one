@@ -26,7 +26,8 @@ const Avatar: React.FC<UserAvatarProps> = ({
   style,
   onClick,
 }) => {
-  const handleUserClick = useUser(user);
+  const { handleSelectUser } = useUser();
+
   if (!imageSrc) {
     return (
       <div
@@ -44,7 +45,7 @@ const Avatar: React.FC<UserAvatarProps> = ({
   }
   return (
     <Image
-      onClick={onClick ? onClick : handleUserClick}
+      onClick={() => handleSelectUser(user)}
       className={`rounded-full ${className} cursor-pointer`}
       src={imageSrc}
       alt={altText}

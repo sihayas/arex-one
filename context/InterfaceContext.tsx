@@ -13,6 +13,7 @@ import { useUserAndSessionQuery } from "@/lib/apiHelper/user";
 import { StateSnapshot } from "react-virtuoso";
 
 export type Page = {
+  key: string;
   name: string;
   color: string;
   scrollPosition: number;
@@ -111,6 +112,7 @@ export const InterfaceContextProvider = ({
     if (!pages.length && user) {
       setPages([
         {
+          key: user.id,
           name: "user",
           user: user,
           scrollPosition: 0,
