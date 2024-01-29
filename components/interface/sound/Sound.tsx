@@ -55,12 +55,14 @@ const Sound = () => {
   };
 
   // Art Transformations
+  const artWidth = -base.width / 2;
   const xArt = useSpring(
-    useTransform(scrollY, [0, 1], [-base.width / 2, -240]),
+    useTransform(scrollY, [0, 1], [artWidth, -240]),
     xConfig,
   );
+  const artHeight = -base.height / 2;
   const yArt = useSpring(
-    useTransform(scrollY, [0, 1], [-base.height / 2, 26]),
+    useTransform(scrollY, [0, 1], [artHeight, 26]),
     yConfig,
   );
   const scaleArt = useSpring(
@@ -112,12 +114,12 @@ const Sound = () => {
       <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
       {/* Art */}
       <motion.div
-        // initial={{
-        //   borderRadius: isOpen ? 96 : 32,
-        //   scale: isOpen ? 0.1389 : 1,
-        //   y: isOpen ? -16 : 0,
-        //   x: isOpen ? 16 : 0,
-        // }}
+        initial={{
+          borderRadius: isOpen ? 96 : 32,
+          scale: isOpen ? 0.1389 : 1,
+          x: isOpen ? -240 : artHeight,
+          y: isOpen ? 26 : artWidth,
+        }}
         style={{
           borderRadius: borderRad,
           scale: scaleArt,
