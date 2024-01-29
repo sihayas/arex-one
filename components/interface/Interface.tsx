@@ -10,7 +10,6 @@ import Artifact from "@/components/interface/artifact/Artifact";
 import User from "@/components/interface/user/User";
 
 import {
-  AnimatePresence,
   motion,
   useAnimate,
   useScroll,

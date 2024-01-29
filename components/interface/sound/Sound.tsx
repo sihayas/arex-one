@@ -29,8 +29,8 @@ export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
 const Sound = () => {
   const { scrollContainerRef, activePage, pages } = useInterfaceContext();
-  const { selectedSound } = useSoundContext();
   const isOpen = activePage.isOpen;
+  const sound = activePage.sound!.sound;
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [range, setRange] = useState<number | null>(null);
@@ -84,18 +84,14 @@ const Sound = () => {
     generalConfig,
   );
 
-  const artwork = MusicKit.formatArtworkURL(
-    selectedSound!.attributes.artwork,
-    800,
-    800,
-  );
-  const name = selectedSound!.attributes.name;
-  const artist = selectedSound!.attributes.artistName;
+  const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 800, 800);
+  const name = sound.attributes.name;
+  const artist = sound.attributes.artistName;
 
   const albumId =
-    selectedSound!.type === "albums"
-      ? selectedSound!.id
-      : (selectedSound as SongData).relationships.albums.data[0].id;
+    sound.type === "albums"
+      ? sound.id
+      : (sound as SongData).relationships.albums.data[0].id;
 
   const snap = activePage.isOpen ? "" : "snap-start";
 
