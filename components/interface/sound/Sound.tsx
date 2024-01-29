@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-import { useSoundContext } from "@/context/SoundContext";
-
 import Artifacts from "./render/Artifacts";
 import {
   motion,
@@ -13,12 +11,13 @@ import {
 } from "framer-motion";
 
 import { SongData } from "@/types/appleTypes";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
 
 import Dial from "@/components/interface/sound/sub/Dial";
 import DialMini from "@/components/interface/sound/sub/DialMini";
 import { createPortal } from "react-dom";
 import Sort from "@/components/interface/sound/sub/Sort";
+import { GetDimensions } from "@/components/interface/Interface";
 
 const scaleConfig = { damping: 20, stiffness: 122 };
 const xConfig = { damping: 20, stiffness: 160 };
@@ -29,6 +28,7 @@ export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
 const Sound = () => {
   const { scrollContainerRef, activePage, pages } = useInterfaceContext();
+  const { base, target } = GetDimensions(activePage.name as PageName);
   const isOpen = activePage.isOpen;
   const sound = activePage.sound!.sound;
 
@@ -55,8 +55,14 @@ const Sound = () => {
   };
 
   // Art Transformations
-  const yArt = useSpring(useTransform(scrollY, [0, 1], [0, -16]), yConfig);
-  const xArt = useSpring(useTransform(scrollY, [0, 1], [0, 16]), xConfig);
+  const xArt = useSpring(
+    useTransform(scrollY, [0, 1], [-base.width / 2, -240]),
+    xConfig,
+  );
+  const yArt = useSpring(
+    useTransform(scrollY, [0, 1], [-base.height / 2, 26]),
+    yConfig,
+  );
   const scaleArt = useSpring(
     useTransform(scrollY, [0, 1], [1, 0.1389]),
     scaleConfig,
@@ -106,19 +112,19 @@ const Sound = () => {
       <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
       {/* Art */}
       <motion.div
-        initial={{
-          borderRadius: isOpen ? 96 : 32,
-          scale: isOpen ? 0.1389 : 1,
-          y: isOpen ? -16 : 0,
-          x: isOpen ? 16 : 0,
-        }}
+        // initial={{
+        //   borderRadius: isOpen ? 96 : 32,
+        //   scale: isOpen ? 0.1389 : 1,
+        //   y: isOpen ? -16 : 0,
+        //   x: isOpen ? 16 : 0,
+        // }}
         style={{
           borderRadius: borderRad,
           scale: scaleArt,
           y: yArt,
           x: xArt,
         }}
-        className="absolute overflow-hidden z-40 left-0 bottom-0 origin-bottom-left shadow-miniCard pointer-events-none"
+        className="absolute overflow-hidden z-40 left-1/2 top-1/2 shadow-miniCard pointer-events-none min-w-[432px] min-h-[432px] origin-bottom-left"
       >
         <Image
           src={artwork}
@@ -156,7 +162,7 @@ const Sound = () => {
           <>
             {/* Big Dial */}
             <motion.div
-              className={`absolute right-0 bottom-0 flex items-center justify-center origin-bottom-right will-change-transform drop-shadow-xl`}
+              className={`absolute right-0 bottom-0 flex items-center justify-center origin-bottom-right will-change-transform drop-shadow-xl z-50`}
               style={{
                 x: xDial,
                 y: yDial,
