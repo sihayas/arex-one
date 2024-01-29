@@ -9,6 +9,7 @@ import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { MaskCardTop } from "@/components/icons";
+import { getStarComponent } from "@/components/index/items/Entry";
 
 interface UserProps {
   artifact: ArtifactExtended;
@@ -84,25 +85,15 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
 
-  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    artifact.heartedByUser,
-    artifact._count.hearts,
-    apiUrl,
-    "artifactId",
-    artifact.id,
-    artifact.author.id,
-    user?.id,
-  );
-
   const handleSoundClick = async () => {
     handleSelectSound(sound);
   };
 
   const maskStyle = {
-    maskImage: "url('/images/mask_card_top.svg')",
+    maskImage: "url('/images/mask_card_top_outlined.svg')",
     maskSize: "cover",
     maskRepeat: "no-repeat",
-    WebkitMaskImage: "url('/images/mask_card_top.svg')",
+    WebkitMaskImage: "url('/images/mask_card_top_outlined.svg')",
     WebkitMaskSize: "cover",
     WebkitMaskRepeat: "no-repeat",
   };
@@ -149,7 +140,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
       <motion.div
         style={{
           width: 304,
-          height: 400,
+          height: 432,
           ...maskStyle,
         }}
         className={`flex flex-col will-change-transform bg-white relative z-10`}
@@ -158,7 +149,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
         <div
           className={`flex items-center gap-3 justify-between w-full px-6 py-7`}
         >
-          <EntryDial rating={artifact.content!.rating!} />
+          {getStarComponent(artifact.content!.rating!)}
 
           <div className={`flex flex-col items-end`}>
             <div className={`text-sm text-gray2 line-clamp-1`}>
@@ -185,7 +176,12 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     </motion.div>
   );
 };
-
-// <div className={`text-sm text-black line-clamp-[12]`}>
-//   {artifact.content?.text}
-// </div>
+// const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+//     artifact.heartedByUser,
+//     artifact._count.hearts,
+//     apiUrl,
+//     "artifactId",
+//     artifact.id,
+//     artifact.author.id,
+//     user?.id,
+// );
