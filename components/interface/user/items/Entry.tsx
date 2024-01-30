@@ -8,7 +8,7 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { MaskCardTop, MaskCardTopOutlined } from "@/components/icons";
+import { MaskCardTop, MaskCardBottomOutlined } from "@/components/icons";
 import { getStarComponent } from "@/components/index/items/Entry";
 
 interface UserProps {
@@ -21,8 +21,17 @@ const springConfig = {
   stiffness: 224,
 };
 
+const maskStyle = {
+  maskImage: "url('/images/mask_card_bottom_outlined.svg')",
+  maskSize: "cover",
+  maskRepeat: "no-repeat",
+  WebkitMaskImage: "url('/images/mask_card_bottom_outlined.svg')",
+  WebkitMaskSize: "cover",
+  WebkitMaskRepeat: "no-repeat",
+};
+
 export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
-  const { user, scrollContainerRef } = useInterfaceContext();
+  const { scrollContainerRef } = useInterfaceContext();
   const { handleSelectSound } = useSound();
 
   const { scrollY } = useScroll({
@@ -35,7 +44,6 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   );
 
   // First card translations
-
   const xZero = useSpring(
     useTransform(scrollY, [0, 24], [128, 0]),
     springConfig,
@@ -78,15 +86,6 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     handleSelectSound(sound);
   };
 
-  const maskStyle = {
-    maskImage: "url('/images/mask_card_top_outlined.svg')",
-    maskSize: "cover",
-    maskRepeat: "no-repeat",
-    WebkitMaskImage: "url('/images/mask_card_top_outlined.svg')",
-    WebkitMaskSize: "cover",
-    WebkitMaskRepeat: "no-repeat",
-  };
-
   return (
     <motion.div
       style={{
@@ -119,7 +118,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           <div className="rounded-max mr-auto bg-[#F4F4F4] p-3">
             {getStarComponent(artifact.content!.rating!)}
           </div>
-          <div className={`flex w-full flex-col items-end pt-2`}>
+          <div className={`flex w-full flex-col items-end`}>
             <Image
               className="border-silver shadow-shadowKitHigh rounded-[17px] border"
               onClick={handleSoundClick}
@@ -150,7 +149,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
       <div
         className={`cloud-shadow absolute bottom-0 right-0 h-[432px] w-[304px]`}
       >
-        <MaskCardTopOutlined />
+        <MaskCardBottomOutlined />
       </div>
     </motion.div>
   );

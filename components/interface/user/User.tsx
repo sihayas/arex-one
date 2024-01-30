@@ -49,7 +49,7 @@ const User = () => {
           height={64}
           user={userData}
         />
-        <p className={`text-xl font-semibold leading-[15px]`}>
+        <p className={`text-xl font-semibold leading-[15px] tracking-tighter`}>
           {userData.username}
         </p>
       </div>
