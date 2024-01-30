@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { useEntriesQuery } from "@/lib/apiHelper/user";
 import { useMotionValueEvent, useScroll, motion } from "framer-motion";
 import { Entry } from "@/components/interface/user/items/Entry";
@@ -32,7 +32,7 @@ const Entries = ({ userId }: { userId: string }) => {
   });
 
   return (
-    <div className={`flex flex-wrap gap-4 p-8 `}>
+    <div className={`flex w-full flex-col -space-y-4 p-10`}>
       {activities.map((activity, index) => {
         if (!activity.artifact) return null;
         const artifact = activity.artifact as ArtifactExtended;

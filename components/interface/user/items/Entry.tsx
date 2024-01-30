@@ -1,14 +1,12 @@
 import React from "react";
 
-import useHandleHeartClick from "@/hooks/useHeart";
 import { useSound } from "@/hooks/usePage";
 
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
-import EntryDial from "@/components/global/EntryDial";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { MaskCardTop, MaskCardBottomOutlined } from "@/components/icons";
+import { MaskCardBottomOutlined } from "@/components/icons";
 import { getStarComponent } from "@/components/index/items/Entry";
 
 interface UserProps {
@@ -38,41 +36,47 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     container: scrollContainerRef,
   });
 
+  const isEven = index % 2 === 0;
+  const rotate = isEven ? -2 : 2;
+
   const scale = useSpring(
     useTransform(scrollY, [0, 24], [0.84, 1]),
     springConfig,
   );
 
   // First card translations
-  const xZero = useSpring(
-    useTransform(scrollY, [0, 24], [128, 0]),
+  const xZero = useSpring(useTransform(scrollY, [0, 24], [0, 0]), springConfig);
+  const yZero = useSpring(
+    useTransform(scrollY, [0, 24], [-36, 0]),
     springConfig,
   );
-
-  const yZero = useSpring(useTransform(scrollY, [0, 24], [0, 0]), springConfig);
+  const rotateZero = useSpring(
+    useTransform(scrollY, [0, 24], [0, rotate]),
+    springConfig,
+  );
 
   // Second card translations
   const xOne = useSpring(
-    useTransform(scrollY, [0, 24], [-184, 0]),
+    useTransform(scrollY, [0, 24], [-80, 0]),
     springConfig,
   );
-  const yOne = useSpring(useTransform(scrollY, [0, 24], [0, 0]), springConfig);
+  const yOne = useSpring(
+    useTransform(scrollY, [0, 24], [-420, 0]),
+    springConfig,
+  );
   const rotateOne = useSpring(
-    useTransform(scrollY, [0, 24], [12, 0]),
+    useTransform(scrollY, [0, 24], [12, rotate]),
     springConfig,
   );
 
   // Third card translations
-  const xTwo = useSpring(
-    useTransform(scrollY, [0, 24], [168, 0]),
-    springConfig,
-  );
+  const xTwo = useSpring(useTransform(scrollY, [0, 24], [64, 0]), springConfig);
   const yTwo = useSpring(
-    useTransform(scrollY, [0, 24], [-416, 0]),
+    useTransform(scrollY, [0, 24], [-760, 0]),
     springConfig,
   );
   const rotateTwo = useSpring(
-    useTransform(scrollY, [0, 24], [21, 0]),
+    useTransform(scrollY, [0, 24], [21, rotate]),
     springConfig,
   );
 
@@ -91,19 +95,11 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
       style={{
         y: index === 0 ? yZero : index === 1 ? yOne : index === 2 ? yTwo : 0,
         x: index === 0 ? xZero : index === 1 ? xOne : index === 2 ? xTwo : 0,
-        rotate:
-          index === 0
-            ? 0
-            : index === 1
-              ? rotateOne
-              : index === 2
-                ? rotateTwo
-                : 0,
         scale: index < 4 ? scale : 1,
-        zIndex: index === 0 ? 10 : index === 1 ? 9 : index === 2 ? 8 : 7,
-        transformOrigin: index === 0 ? "top left" : "center center",
+        zIndex: 10 - index,
+        rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : rotateTwo,
       }}
-      className={`relative`}
+      className={`relative ${isEven ? "mr-auto" : "ml-auto"}`}
     >
       <motion.div
         style={{
