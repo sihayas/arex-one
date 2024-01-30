@@ -7,19 +7,28 @@ import { prisma } from "@/lib/global/prisma";
 import { uploadDefaultImage } from "@/lib/azureBlobUtils";
 import { parseJWT } from "oslo/jwt";
 
+const allowedOrigins = [
+  "https://voir.space",
+  "https://dev.voir.space:3000",
+  "https://dev.voir.space",
+];
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  const origin = req.headers.origin;
   // Handle OPTIONS request for CORS Preflight
   if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", "https://voir.space");
-    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization",
-    );
-    res.setHeader("Access-Control-Allow-Credentials", "true");
+    if (origin && allowedOrigins.includes(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization",
+      );
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+    }
     res.status(204).end();
     return;
   }
@@ -42,7 +51,12 @@ export default async function handler(
   const storedState = req.cookies.apple_oauth_state;
 
   if (!code || !state || !storedState || state !== storedState) {
-    console.error("Invalid request parameters", code, state, storedState);
+    console.error("Invalid request parameters. Details:", {
+      code: code ? "Received" : "Missing",
+      state: state ? "Received" : "Missing",
+      storedState: storedState ? "Received" : "Missing",
+      stateMatch: state === storedState ? "Match" : "Mismatch",
+    });
     res.status(400).end("Invalid request parameters");
     return;
   }

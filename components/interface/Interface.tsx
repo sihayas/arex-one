@@ -31,7 +31,7 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 688, height: 384 },
+      base: { width: 432, height: 656 },
       target: { width: 688, height: maxHeight },
     },
     sound: {
@@ -119,7 +119,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       // Scale down
       animate(
         scope.current,
-        { scale: 0.95 },
+        { scale: 0.9 },
         { type: "spring", stiffness: 800, damping: 40 },
       );
 
@@ -127,7 +127,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       animate(
         scope.current,
         {
-          scale: [0.95, 1],
+          scale: [0.9, 1],
           width: activePage.isOpen ? `${target.width}px` : `${base.width}px`,
           height: activePage.isOpen ? `${target.height}px` : `${base.height}px`,
         },
@@ -184,7 +184,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`flex items-start justify-center bg-[#F4F4F4]/80 rounded-full relative shadow-shadowKitHigh overflow-hidden`}
+        className={`shadow-shadowKitHigh relative flex items-start justify-center overflow-hidden rounded-full bg-[#F4F4F4]/80`}
         shouldFilter={false}
         loop
         ref={scope}
@@ -193,7 +193,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         <motion.div
           id={`cmdk-scroll`}
           ref={scrollContainerRef}
-          className={`flex flex-col items-center overflow-y-scroll scrollbar-none rounded-full snap-mandatory snap-y`}
+          className={`scrollbar-none flex snap-y snap-mandatory flex-col items-center overflow-y-scroll rounded-full`}
           style={{
             minWidth: `${target.width}px`,
             height: `${target.height}px`,

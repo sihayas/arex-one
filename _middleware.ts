@@ -15,6 +15,8 @@ export async function _middleware(request: NextRequest): Promise<NextResponse> {
       hostHeader,
       "voir.space",
       "www.voir.space",
+      "dev.voir.space:3000",
+      "dev.voir.space",
     ])
   ) {
     return new NextResponse(null, {

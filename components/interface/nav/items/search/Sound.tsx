@@ -3,14 +3,12 @@ import { Command } from "cmdk";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { useSoundContext } from "@/context/SoundContext";
 import { useNavContext } from "@/context/NavContext";
-import { useSound } from "@/hooks/usePage";
 import { changeEssential } from "@/lib/apiHelper/user";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const { user } = useInterfaceContext();
 
-  const { handleSelectSound } = useSound();
   const {
     prevEssentialId,
     setPrevEssentialId,
@@ -69,12 +67,12 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
     <Command.Item
       value={sound.id}
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full p-4 will-change-transform flex w-full items-center gap-4 z-10"
+      className="z-10 flex w-full items-center gap-4 p-4 will-change-transform"
       onSelect={() => onSelect(sound.id)}
     >
       <Image
         id={sound.id}
-        className="rounded-lg border border-silver"
+        className="border-silver rounded-lg border"
         src={artwork}
         alt={`${sound.attributes.name} artwork`}
         width={38}
@@ -83,7 +81,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       />
 
       <div className="flex flex-col justify-center overflow-hidden">
-        <div className="flex items-center text-sm gap-1 text-gray">
+        <div className="text-gray flex items-center gap-1 text-sm">
           <div className={`line-clamp-1`}>{artistName}</div>
           {song && (
             <>
@@ -92,7 +90,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
             </>
           )}
         </div>
-        <div className="text-base text-black line-clamp-1 font-medium">
+        <div className="line-clamp-1 text-base font-medium text-black">
           {sound.attributes.name}
         </div>
       </div>
@@ -100,5 +98,4 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   );
 };
 
-// Export Sound component
 export default Sound;

@@ -11,7 +11,7 @@ interface EssentialsProps {
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   const { handleSelectSound } = useSound();
   return (
-    <div className={`ml-auto w-max flex flex-col items-center -space-y-14 p-8`}>
+    <div className={`w-max flex items-center p-8 -space-x-8`}>
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const color = sound.attributes.artwork.bgColor;
@@ -27,21 +27,21 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
         };
         if (i === 0) {
           //@ts-ignore
-          style = { ...style, top: "88px", right: "32px" };
+          style = { ...style, top: "88px", left: "32px" };
         } else if (i === 1) {
           //@ts-ignore
-          style = { ...style, top: "176px", right: "136px" };
+          style = { ...style, top: "128px", right: "140px" };
         } else if (i === 2) {
           //@ts-ignore
-          style = { ...style, bottom: "264px", right: "32px", rotate: "2deg" };
+          style = { ...style, top: "32px", right: "32px", rotate: "2deg" };
         }
-        const rotationClass = i === 0 ? "rotate-2" : i === 2 ? "-rotate-2" : "";
+        const rotationClass = i === 0 ? "-rotate-3" : i === 2 ? "rotate-3" : "";
 
         return (
           <Fragment key={`essential-${i}`}>
             <Image
               className={`rounded-3xl shadow-shadowKitHigh outline outline-silver outline-1 ${rotationClass} ${
-                i === 1 ? "-translate-x-[104px]" : ""
+                i === 1 ? "translate-y-[88px] z-10" : ""
               }`}
               onClick={() => handleSelectSound(sound)}
               src={artwork}

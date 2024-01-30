@@ -10,8 +10,6 @@ export type Section = "essentials" | "sounds" | "entries" | "wisps";
 
 const User = () => {
   const { user, activePage, pages, scrollContainerRef } = useInterfaceContext();
-  const [activeSection, setActiveSection] =
-    React.useState<Section>("essentials");
 
   const pageUser = activePage.user;
   const { data, isLoading, isError, followState, handleFollowUnfollow } =
@@ -23,12 +21,7 @@ const User = () => {
   });
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 1) {
-      setActiveSection("sounds");
-      pages[pages.length - 1].isOpen = true;
-    } else {
-      setActiveSection("essentials");
-    }
+    pages[pages.length - 1].isOpen = latest >= 1;
   });
 
   const { userData } = data || {};
@@ -42,23 +35,23 @@ const User = () => {
   return (
     <>
       <div
-        className={`absolute bg-[#F4F4F4]/50 w-full h-full top-0 left-0 backdrop-blur-2xl overflow-visible -z-10 pointer-events-none`}
+        className={`pointer-events-none absolute left-0 top-0 -z-10 h-full w-full overflow-visible bg-[#F4F4F4]/50 backdrop-blur-2xl`}
       />
 
-      <div className={`flex items-start justify-between w-full`}>
-        <div className={`flex items-center gap-4 z-10 p-8`}>
-          <Avatar
-            className="rounded-max border border-silver"
-            imageSrc={userData.image}
-            altText={`avatar`}
-            width={64}
-            height={64}
-            user={userData}
-          />
-          <p className={`text-xl leading-[15px]`}>{userData.username}</p>
-        </div>
+      <Essentials essentials={userData.essentials} />
 
-        <Essentials essentials={userData.essentials} />
+      <div className={`mt-[88px] flex flex-col items-center gap-2`}>
+        <Avatar
+          className="rounded-max border-silver border"
+          imageSrc={userData.image}
+          altText={`avatar`}
+          width={64}
+          height={64}
+          user={userData}
+        />
+        <p className={`text-xl font-semibold leading-[15px]`}>
+          {userData.username}
+        </p>
       </div>
 
       <Entries userId={user.id} />

@@ -81,10 +81,10 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
 
   return (
     <div
-      className={`flex items-end gap-2.5 relative group w-[356px] group over`}
+      className={`over group group relative flex w-[356px] items-end gap-2.5`}
     >
       <Avatar
-        className={`h-[42px] border border-silver z-10`}
+        className={`border-silver z-10 h-[42px] border`}
         imageSrc={artifact.author.image}
         altText={`${artifact.author.username}'s avatar`}
         width={42}
@@ -100,7 +100,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           ...maskStyle,
         }}
         ref={containerRef}
-        className={`flex flex-col will-change-transform bg-white relative z-10`}
+        className={`relative z-10 flex flex-col bg-white will-change-transform`}
       >
         <Image
           onClick={() => handleSelectSound(sound)}
@@ -115,16 +115,16 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
 
         <motion.div
           onClick={() => handleSelectArtifact(artifact)}
-          className={`text-base text-black px-6 pt-2.5 cursor-pointer `}
+          className={`cursor-pointer px-6 pt-2.5 text-base text-black `}
         >
           {artifact.content?.text}
         </motion.div>
 
         <div
-          className={`absolute bottom-0 left-0 py-3 px-6 flex items-center gap-2 z-50`}
+          className={`absolute bottom-0 left-0 z-50 flex items-center gap-2 px-6 py-3`}
         >
-          {getStarComponent(artifact.content!.rating!)}
-          <div className={`font-semibold text-base text-black line-clamp-1`}>
+          {/* {getStarComponent(artifact.content!.rating!)} */}
+          <div className={`line-clamp-1 text-base font-semibold text-black`}>
             {sound.attributes.name}
           </div>
         </div>
@@ -144,7 +144,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       </motion.div>
 
       <div
-        className={`absolute bottom-0 right-0 w-[304px] h-[432px] cloud-shadow`}
+        className={`cloud-shadow absolute bottom-0 right-0 h-[432px] w-[304px]`}
       >
         <MaskCardTopOutlined />
       </div>
@@ -157,13 +157,13 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute left-[52px] w-[304px] h-[400px] -z-10`}
+        className={`absolute left-[52px] -z-10 h-[400px] w-[304px]`}
       />
 
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -top-[26px] left-[46px] mix-blend-multiply z-10"
+        className="absolute -top-[26px] left-[46px] z-10 mix-blend-multiply"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />
