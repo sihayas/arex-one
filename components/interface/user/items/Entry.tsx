@@ -121,8 +121,8 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
               src={artwork}
               alt={`artwork`}
               quality={100}
-              width={184}
-              height={184}
+              width={192}
+              height={192}
             />
 
             <div className={`text-gray2 line-clamp-1 pt-3 text-end text-sm`}>
@@ -137,7 +137,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
         </div>
 
         {/* Text */}
-        <div className="`text-base line-clamp-6 px-6 text-black">
+        <div className="`text-base line-clamp-5 px-6 text-black">
           {artifact.content?.text}
         </div>
       </motion.div>
