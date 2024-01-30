@@ -121,8 +121,8 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
               src={artwork}
               alt={`artwork`}
               quality={100}
-              width={168}
-              height={168}
+              width={184}
+              height={184}
             />
 
             <div className={`text-gray2 line-clamp-1 pt-3 text-end text-sm`}>

@@ -40,7 +40,9 @@ const User = () => {
 
       <Essentials essentials={userData.essentials} />
 
-      <div className={`mt-[88px] flex flex-col items-center gap-2`}>
+      <div
+        className={`sticky top-8 z-10 mt-[88px] flex flex-col items-center gap-2`}
+      >
         <Avatar
           className="rounded-max border-silver border"
           imageSrc={userData.image}
@@ -49,9 +51,13 @@ const User = () => {
           height={64}
           user={userData}
         />
-        <p className={`text-xl font-semibold leading-[15px] tracking-tighter`}>
-          {userData.username}
-        </p>
+        {!activePage.isOpen && (
+          <p
+            className={`text-xl font-semibold leading-[15px] tracking-tighter`}
+          >
+            {userData.username}
+          </p>
+        )}
       </div>
 
       <Entries userId={user.id} />
