@@ -8,7 +8,6 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 
 import Image from "next/image";
-// import { useInterfaceContext } from "@/context/InterfaceContext";
 import { WispIcon } from "@/components/icons";
 import { useSoundContext } from "@/context/SoundContext";
 
@@ -18,7 +17,6 @@ interface WispProps {
 
 export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   // const { user } = useInterfaceContext();
-  // const { handleSelectSound } = useSound();
   const { playContent } = useSoundContext();
 
   const sound = artifact.appleData;
@@ -48,9 +46,9 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   };
 
   return (
-    <div className={`flex items-end gap-2.5 relative w-[356px] h-fit`}>
+    <div className={`relative flex h-fit w-[356px] items-end gap-2.5`}>
       <Avatar
-        className={`h-[42px] border border-silver z-10`}
+        className={`border-silver z-10 h-[42px] border`}
         imageSrc={artifact.author.image}
         altText={`${artifact.author.username}'s avatar`}
         width={42}
@@ -59,19 +57,19 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
       />
 
       {/* Cloud / Content */}
-      <motion.div className="flex flex-col w-[304px] pb-2">
+      <motion.div className="flex w-[304px] flex-col pb-2">
         <div
-          className={`w-[304px] h-[222px] relative flex flex-col gap-[11px] items-center cloud-shadow`}
+          className={`cloud-shadow relative flex h-[222px] w-[304px] flex-col items-center gap-[11px]`}
         >
-          <WispIcon className={`absolute top-0 left-0`} />
+          <WispIcon className={`absolute left-0 top-0`} />
 
           <div
-            className={`w-[152px] flex items-center gap-2 z-10 pt-6 relative`}
+            className={`relative z-10 flex w-[152px] items-center gap-2 pt-6`}
           >
             <motion.div
               whileHover={{ scale: 1.1 }}
               initial={{ borderRadius: 9999 }}
-              className={`shadow-shadowKitMedium outline outline-silver outline-1 overflow-hidden cursor-pointer`}
+              className={`shadow-shadowKitMedium outline-silver cursor-pointer overflow-hidden outline outline-1`}
             >
               <Image
                 src={artwork}
@@ -82,11 +80,11 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             </motion.div>
 
             <div className={`flex flex-col`}>
-              <p className={`text-sm text-gray5 max-w-[90px] line-clamp-1`}>
+              <p className={`text-gray5 line-clamp-1 max-w-[90px] text-sm`}>
                 {artist}
               </p>
               <p
-                className={`text-base text-gray4 max-w-[106px] line-clamp-1 font-semibold`}
+                className={`text-gray4 line-clamp-1 max-w-[106px] text-base font-semibold`}
               >
                 {name}
               </p>
@@ -94,10 +92,10 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
           </div>
 
           <div
-            className={`w-[232px] h-[88px] flex items-center justify-center z-10`}
+            className={`z-10 flex h-[88px] w-[232px] items-center justify-center`}
           >
             <p
-              className={`break-words line-clamp-4 text-base text-gray4 text-center`}
+              className={`text-gray4 line-clamp-4 break-words text-center text-base`}
             >
               {artifact.content?.text}
             </p>
@@ -105,10 +103,10 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         </div>
         <div
           onClick={handleSoundClick}
-          className={`w-[36px] h-[36px] bg-white rounded-max ml-8 -mb-2 cursor-pointer border border-silver`}
+          className={`rounded-max border-silver -mb-2 ml-8 h-[36px] w-[36px] cursor-pointer border bg-white`}
         />
         <div
-          className={`w-[16px] h-[16px] bg-white rounded-max border border-silver`}
+          className={`rounded-max border-silver h-[16px] w-[16px] border bg-white`}
         />
         {/*Ambien*/}
         <motion.div
@@ -117,7 +115,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             backgroundRepeat: "repeat, no-repeat",
             width: "calc(100% - 52px)",
           }}
-          className={`absolute left-[52px] bottom-0 w-full h-full -z-10`}
+          className={`absolute bottom-0 left-[52px] -z-10 h-full w-full`}
         />
       </motion.div>
     </div>

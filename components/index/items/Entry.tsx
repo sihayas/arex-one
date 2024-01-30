@@ -22,6 +22,7 @@ import {
   TwoHalfStar,
   TwoStar,
 } from "@/components/icons";
+import { Art } from "@/components/global/Art";
 
 interface NewAProps {
   artifact: ArtifactExtended;
@@ -58,11 +59,9 @@ export const getStarComponent = (rating: number) => {
 export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const { user } = useInterfaceContext();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { handleSelectSound } = useSound();
   const { handleSelectArtifact } = useArtifact();
 
   const sound = artifact.appleData;
-  const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 540, 540);
   const color = sound.attributes.artwork.bgColor;
 
   const apiUrl = artifact.heartedByUser
@@ -102,16 +101,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         ref={containerRef}
         className={`relative z-10 flex flex-col bg-white will-change-transform`}
       >
-        <Image
-          onClick={() => handleSelectSound(sound)}
-          className={`cursor-pointer`}
-          src={artwork}
-          alt={`artwork`}
-          loading="lazy"
-          quality={100}
-          width={304}
-          height={304}
-        />
+        <Art size={304} sound={sound} />
 
         <motion.div
           onClick={() => handleSelectArtifact(artifact)}

@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { MaskCardBottomOutlined } from "@/components/icons";
 import { getStarComponent } from "@/components/index/items/Entry";
+import { Art } from "@/components/global/Art";
 
 interface UserProps {
   artifact: ArtifactExtended;
@@ -76,19 +77,14 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     springConfig,
   );
   const rotateTwo = useSpring(
-    useTransform(scrollY, [0, 24], [21, rotate]),
+    useTransform(scrollY, [0, 24], [19, rotate]),
     springConfig,
   );
 
   const sound = artifact.appleData;
-  const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 560, 560);
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
-
-  const handleSoundClick = async () => {
-    handleSelectSound(sound);
-  };
 
   return (
     <motion.div
@@ -115,14 +111,10 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
             {getStarComponent(artifact.content!.rating!)}
           </div>
           <div className={`flex w-full flex-col items-end`}>
-            <Image
-              className="border-silver shadow-shadowKitHigh rounded-[17px] border"
-              onClick={handleSoundClick}
-              src={artwork}
-              alt={`artwork`}
-              quality={100}
-              width={192}
-              height={192}
+            <Art
+              size={192}
+              imageClass="border-silver shadow-shadowKitHigh rounded-[17px] border overflow-hidden"
+              sound={sound}
             />
 
             <div className={`text-gray2 line-clamp-1 pt-3 text-end text-sm`}>

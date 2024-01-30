@@ -5,6 +5,7 @@ import { useUserDataQuery } from "@/lib/apiHelper/user";
 import Essentials from "@/components/interface/user/render/Essentials";
 import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
+import { SettingsIcon } from "@/components/icons";
 
 export type Section = "essentials" | "sounds" | "entries" | "wisps";
 
@@ -43,14 +44,25 @@ const User = () => {
       <div
         className={`sticky top-8 z-10 mt-[88px] flex flex-col items-center gap-2`}
       >
-        <Avatar
-          className="rounded-max border-silver border"
-          imageSrc={userData.image}
-          altText={`avatar`}
-          width={64}
-          height={64}
-          user={userData}
-        />
+        <div className="flex items-center gap-8">
+          <div className="flex items-center justify-center rounded-full bg-[#E5E5E5] p-[10px]">
+            <SettingsIcon />
+          </div>
+
+          <Avatar
+            className="rounded-max border-silver border"
+            imageSrc={userData.image}
+            altText={`avatar`}
+            width={64}
+            height={64}
+            user={userData}
+          />
+
+          <div className="shadow-shadowKitLow flex items-center justify-center rounded-full bg-white p-2">
+            <SettingsIcon />
+          </div>
+        </div>
+
         {!activePage.isOpen && (
           <p
             className={`text-xl font-semibold leading-[15px] tracking-tighter`}
