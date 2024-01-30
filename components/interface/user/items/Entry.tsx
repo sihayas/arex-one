@@ -115,7 +115,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
       >
         {/* Metadata */}
         <div className={`flex w-full items-start justify-between p-6 pb-3`}>
-          <div className="rounded-max mr-auto bg-[#F4F4F4] p-3">
+          <div className="rounded-max outline-silver mr-auto bg-[#F4F4F4] p-3 outline outline-1">
             {getStarComponent(artifact.content!.rating!)}
           </div>
           <div className={`flex w-full flex-col items-end`}>

@@ -3,12 +3,14 @@ import { useEntriesQuery } from "@/lib/apiHelper/user";
 import { useMotionValueEvent, useScroll, motion } from "framer-motion";
 import { Entry } from "@/components/interface/user/items/Entry";
 import { ArtifactExtended } from "@/types/globalTypes";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 const Entries = ({ userId }: { userId: string }) => {
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const { scrollContainerRef } = useInterfaceContext();
 
   const { scrollYProgress } = useScroll({
-    container: containerRef,
+    container: scrollContainerRef,
+    layoutEffect: false,
   });
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -19,7 +21,7 @@ const Entries = ({ userId }: { userId: string }) => {
   useMotionValueEvent(scrollYProgress, "change", async () => {
     const progress = scrollYProgress.get();
 
-    if (progress > 0.9 && hasNextPage && !isFetchingNextPage) {
+    if (progress > 0.75 && hasNextPage && !isFetchingNextPage) {
       try {
         await fetchNextPage();
       } catch (error) {
