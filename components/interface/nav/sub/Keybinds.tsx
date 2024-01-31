@@ -54,6 +54,7 @@ export const Keybinds = (
     else if (e.key === "Enter" && selectedFormSound && inputValue === "") {
       e.preventDefault();
       handleSelectSound(selectedFormSound);
+      setSelectedFormSound(null);
       inputRef?.current?.blur();
       window.history.pushState(null, "");
     }

@@ -13,11 +13,13 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import Heart from "@/components/global/Heart";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSound } from "@/hooks/usePage";
 
 const Form = () => {
   const { user } = useInterfaceContext();
   const { selectedFormSound, setSelectedFormSound } = useSoundContext();
   const { inputRef, inputValue, setInputValue } = useNavContext();
+  const { handleSelectSound } = useSound();
 
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
@@ -106,6 +108,11 @@ const Form = () => {
   const name = selectedFormSound.attributes.name;
   const artist = selectedFormSound.attributes.artistName;
 
+  // handle sound clikc and prevent default
+  const handleSoundClick = (event: React.MouseEvent<HTMLImageElement>) => {
+    event.preventDefault();
+    handleSelectSound(selectedFormSound);
+  };
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={`flex p-8`}>
       <motion.div
@@ -131,11 +138,12 @@ const Form = () => {
           mass: 2,
           delay: 0.24,
         }}
-        className={`flex flex-col rounded-3xl bg-white relative w-[322px] h-[322px] shadow-miniCard will-change-transform overflow-hidden origin-center`}
+        className={`shadow-miniCard relative flex h-[322px] w-[322px] origin-center flex-col overflow-hidden rounded-3xl bg-white will-change-transform`}
         style={{ perspective: 1000 }}
       >
         <Image
-          className={`cursor-pointer `}
+          onClick={handleSoundClick}
+          className={`cursor-pointer`}
           src={artwork}
           alt={`${name} artwork`}
           loading="lazy"
@@ -144,7 +152,7 @@ const Form = () => {
           fill={true}
         />
 
-        <div className={`absolute top-0 left-0 p-4`}>
+        <div className={`absolute left-0 top-0 p-4`}>
           <RatingDial setRatingValue={handleRatingChange} />
           <AnimatePresence>
             <motion.div
@@ -153,7 +161,7 @@ const Form = () => {
                 opacity: 0,
                 filter: "blur(8px)",
               }}
-              className={`font-serif text-2xl text-white leading-[16px] absolute center-x center-y`}
+              className={`center-x center-y absolute font-serif text-2xl leading-[16px] text-white`}
             >
               {rating}
             </motion.div>
@@ -163,10 +171,10 @@ const Form = () => {
         <div
           className={`absolute bottom-0 left-0 flex flex-col p-4 drop-shadow`}
         >
-          <h3 className={`text-base font-bold text-white line-clamp-1`}>
+          <h3 className={`line-clamp-1 text-base font-bold text-white`}>
             {name}
           </h3>
-          <h4 className={`text-base font-medium text-white line-clamp-1`}>
+          <h4 className={`line-clamp-1 text-base font-medium text-white`}>
             {artist}
           </h4>
         </div>

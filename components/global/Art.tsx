@@ -15,8 +15,8 @@ type Props = {
 
 const artConfig = {
   type: "spring",
-  damping: 10,
-  stiffness: 120,
+  damping: 14,
+  stiffness: 180,
   mass: 1,
   restDelta: 0.01,
   restSpeed: 0.01,
@@ -56,7 +56,7 @@ export const Art = ({ sound, size, imageClass, containerClass }: Props) => {
     <motion.div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`relative cursor-pointer ${containerClass}`}
+      className={`relative cursor-pointer overflow-hidden ${containerClass}`}
     >
       <motion.div
         className={`${imageClass}`}
@@ -80,7 +80,7 @@ export const Art = ({ sound, size, imageClass, containerClass }: Props) => {
         whileTap={{ scale: 0.9 }}
         animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0 }}
         transition={buttonConfig}
-        className="item-center absolute bottom-0 left-0 flex justify-center rounded-full bg-[#E5E5E5] p-3"
+        className="item-center absolute bottom-2 left-2 z-50 flex justify-center rounded-full bg-[#E5E5E5] p-3"
         onClick={handlePlayContent}
         aria-label="Play"
       >

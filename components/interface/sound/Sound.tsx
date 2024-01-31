@@ -110,7 +110,7 @@ const Sound = () => {
   return (
     <>
       {/* Art Ghost Placeholder */}
-      <div className={`min-w-[432px] min-h-[432px] ${snap}`} />
+      <div className={`min-h-[432px] min-w-[432px] ${snap}`} />
       <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
       {/* Art */}
       <motion.div
@@ -126,7 +126,7 @@ const Sound = () => {
           y: yArt,
           x: xArt,
         }}
-        className="absolute overflow-hidden z-40 left-1/2 top-1/2 shadow-miniCard pointer-events-none min-w-[432px] min-h-[432px] origin-bottom-left"
+        className="shadow-miniCard pointer-events-none absolute left-1/2 top-1/2 z-40 min-h-[432px] min-w-[432px] origin-bottom-left overflow-hidden"
       >
         <Image
           src={artwork}
@@ -141,13 +141,13 @@ const Sound = () => {
 
       {/* Titles */}
       <motion.div
-        className={`absolute center-x bottom-4 rounded-2xl p-4 flex flex-col gap-2 bg-white items-center justify-center origin-bottom shadow-shadowKitHigh`}
+        className={`center-x shadow-shadowKitHigh absolute bottom-4 flex origin-bottom flex-col items-center justify-center gap-2 rounded-2xl bg-white p-4`}
       >
-        <p className={`text-black font-bold text-base leading-[11px]`}>
+        <p className={`text-base font-bold leading-[11px] text-black`}>
           {name}
         </p>
         <p
-          className={`text-gray2 font-medium text-sm leading-[9px] line-clamp-1`}
+          className={`text-gray2 line-clamp-1 text-sm font-medium leading-[9px]`}
         >
           {artist}
         </p>
@@ -164,7 +164,7 @@ const Sound = () => {
           <>
             {/* Big Dial */}
             <motion.div
-              className={`absolute right-0 bottom-0 flex items-center justify-center origin-bottom-right will-change-transform drop-shadow-xl z-50`}
+              className={`absolute bottom-0 right-0 z-50 flex origin-bottom-right items-center justify-center drop-shadow-xl will-change-transform`}
               style={{
                 x: xDial,
                 y: yDial,
@@ -183,7 +183,7 @@ const Sound = () => {
 
             {/* Mini Dial */}
             <motion.div
-              className={`absolute right-0 bottom-0 flex items-center justify-center origin-bottom-right will-change-transform`}
+              className={`absolute bottom-0 right-0 flex origin-bottom-right items-center justify-center will-change-transform`}
               style={{
                 x: xDial,
                 y: yDial,

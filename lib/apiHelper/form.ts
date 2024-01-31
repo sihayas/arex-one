@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AlbumData, SongData, TrackData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
 export const postEntry = async (submissionData: {
   text: string;

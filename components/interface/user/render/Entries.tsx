@@ -1,6 +1,6 @@
 import React from "react";
 import { useEntriesQuery } from "@/lib/apiHelper/user";
-import { useMotionValueEvent, useScroll, motion } from "framer-motion";
+import { useMotionValueEvent, useScroll } from "framer-motion";
 import { Entry } from "@/components/interface/user/items/Entry";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";

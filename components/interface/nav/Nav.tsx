@@ -7,12 +7,14 @@ import TextareaAutosize from "react-textarea-autosize";
 import Results from "./render/Results";
 import Form from "./render/Form";
 import {
-  TargetBackIcon,
   TargetIndexIcon,
   TargetAddIcon,
   TargetGoIcon,
   TargetArtifactIcon,
   NotificationIcon,
+  AmperesandIcon,
+  TargetFormIcon,
+  TargetCommandIcon,
 } from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
 import Avatar from "@/components/global/Avatar";
@@ -59,20 +61,20 @@ const Nav = () => {
       height: !expandInput
         ? 42 // base
         : activeAction === "none" && inputValue
-        ? 432 // search
-        : activeAction === "form"
-        ? 420 // form
-        : activeAction === "notifications"
-        ? 610 // notifications
-        : 42,
-      x: activeAction === "notifications" ? -200 : 0,
+          ? 432 // search
+          : activeAction === "form"
+            ? 420 // form
+            : activeAction === "notifications"
+              ? 610 // notifications
+              : 42,
+      x: activeAction === "notifications" ? -196 : 0,
       transition: {
         type: "spring",
         damping: 32,
         stiffness: 280,
         x: {
           type: "spring",
-          stiffness: 140,
+          stiffness: 180,
           damping: 20,
         },
       },
@@ -94,33 +96,8 @@ const Nav = () => {
       borderRadius: 18,
       transition: {
         type: "spring",
-        damping: 21,
-        stiffness: 300,
-      },
-    },
-  };
-
-  const targetVariants = {
-    exit: {
-      scale: 0.75,
-      opacity: 0.75,
-      x: "-50%",
-      y: "-50%",
-    },
-    initial: {
-      scale: 0.75,
-      opacity: 1,
-      x: "-50%",
-      y: "-50%",
-    },
-    animate: {
-      scale: 1,
-      x: "-50%",
-      y: "-50%",
-      transition: {
-        type: "spring",
-        damping: 20,
-        stiffness: 160,
+        damping: 30,
+        stiffness: 380,
       },
     },
   };
@@ -128,18 +105,12 @@ const Nav = () => {
   const iconVariants = {
     exit: {
       scale: 0,
-      x: "-50%",
-      y: "-50%",
     },
     initial: {
       scale: 0,
-      x: "-50%",
-      y: "-50%",
     },
     animate: {
       scale: 1,
-      x: "-50%",
-      y: "-50%",
     },
   };
 
@@ -161,7 +132,7 @@ const Nav = () => {
   const onFocus = useCallback(() => {
     setExpandInput(true);
   }, [setExpandInput]);
-  const handleNavClick = useCallback(() => {
+  const handleNotificationsClick = useCallback(() => {
     setExpandInput(true);
     setActiveAction("notifications");
   }, [setExpandInput, setActiveAction]);
@@ -200,11 +171,11 @@ const Nav = () => {
     <motion.div
       variants={widthVariants}
       animate={expandInput ? "expanded" : "collapsed"}
-      className="absolute flex flex-col -bottom-[50px] center-x z-50 -space-y-[42px]"
+      className="center-x absolute -bottom-[50px] z-50 flex flex-col -space-y-[42px]"
     >
       {/* Content */}
       <motion.div
-        className={`flex flex-col relative w-full overflow-scroll scrollbar-none bg-[#F4F4F4]/80 outline outline-1 outline-silver rounded-3xl -z-10`}
+        className={`scrollbar-none outline-silver relative -z-10 flex w-full flex-col overflow-scroll rounded-3xl bg-[#F4F4F4]/80 outline outline-1`}
         variants={containerVariants}
         animate={expandInput ? "expanded" : "collapsed"}
       >
@@ -218,31 +189,34 @@ const Nav = () => {
       {/* Bar */}
       <motion.div
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`flex items-center p-2 pl-1.5 bg-transparent max-h-[40px] justify-between relative`}
+        className={`relative flex max-h-[40px] items-center justify-between bg-transparent p-2 px-1.5`}
       >
-        {/* Left */}
+        {/* Left, Notification Button, Target/Action Icon */}
         <>
           <button
-            onClick={handleNavClick}
-            className={`px-3 py-2 mr-2 bg-[#E5E5E5] rounded-full flex items-center justify-center`}
+            onClick={handleNotificationsClick}
+            className={`mr-2 flex items-center justify-center rounded-full bg-[#E5E5E5] px-3 py-2`}
           >
-            <NotificationIcon color={`#7AFF00`} />
+            <NotificationIcon />
           </button>
           {/* Target Container */}
-          <motion.button className={` relative`} whileHover={{ scale: 1.1 }}>
+          <motion.button
+            className={`relative flex items-center justify-center`}
+            whileHover={{ scale: 1.1 }}
+          >
             {/* Target */}
             <AnimatePresence>
               {activeAction === "none" && (
                 <>
                   {!expandInput && (
                     <motion.div
-                      exit={{ scale: 0 }}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="w-max h-max"
+                      exit="exit"
+                      initial="initial"
+                      animate="animate"
+                      className="h-max w-max"
                     >
                       <Avatar
-                        className=""
+                        className="border-silver border"
                         imageSrc={user.image}
                         altText={`${user.username}'s avatar`}
                         width={32}
@@ -251,128 +225,95 @@ const Nav = () => {
                       />
                     </motion.div>
                   )}
+
                   {/* Target Nothing */}
                   {!activePage.sound &&
                     !activePage.artifact &&
                     expandInput &&
                     !inputValue && (
-                      <>
-                        <motion.div
-                          exit="exit"
-                          initial="initial"
-                          animate="animate"
-                          variants={iconVariants}
-                          className="absolute center-x center-y z-10"
-                        >
-                          <TargetIndexIcon />
-                        </motion.div>
-
-                        <motion.div
-                          exit="exit"
-                          initial="initial"
-                          animate="animate"
-                          variants={targetVariants}
-                          className="absolute left-1/2 top-1/2 bg-gray2 rounded-full w-6 h-6"
-                        />
-                      </>
+                      <motion.div
+                        exit="exit"
+                        initial="initial"
+                        animate="animate"
+                        variants={iconVariants}
+                      >
+                        <TargetIndexIcon />
+                      </motion.div>
                     )}
 
                   {/* Target Search Result */}
                   {inputValue && expandInput && (
-                    <>
-                      <motion.div
-                        exit="exit"
-                        initial="initial"
-                        animate="animate"
-                        variants={iconVariants}
-                        className="absolute center-x center-y z-10"
-                      >
-                        <TargetGoIcon />
-                      </motion.div>
-
-                      <motion.div
-                        exit="exit"
-                        initial="initial"
-                        animate="animate"
-                        variants={targetVariants}
-                        className="absolute left-1/2 top-1/2 bg-gray2 rounded-full w-6 h-6"
-                      />
-                    </>
+                    <motion.div
+                      exit="exit"
+                      initial="initial"
+                      animate="animate"
+                      variants={iconVariants}
+                    >
+                      <TargetGoIcon />
+                    </motion.div>
                   )}
 
-                  {/* Target Sound */}
+                  {/* Target, Active Page is Sound */}
                   {!inputValue && activePage.sound && expandInput && (
-                    <>
-                      <motion.div
-                        exit="exit"
-                        initial="initial"
-                        animate="animate"
-                        variants={iconVariants}
-                        className="absolute center-x center-y z-10"
-                      >
-                        <TargetAddIcon color="#FFF" />
-                      </motion.div>
-
-                      <motion.div
-                        exit="exit"
-                        initial="initial"
-                        animate="animate"
-                        variants={targetVariants}
-                        className="absolute left-1/2 top-1/2 bg-gray2 rounded-full w-6 h-6"
-                      />
-                    </>
+                    <motion.div
+                      exit="exit"
+                      initial="initial"
+                      animate="animate"
+                      variants={iconVariants}
+                    >
+                      <TargetAddIcon color="#FFF" />
+                    </motion.div>
                   )}
 
-                  {/* Target Artifact */}
+                  {/* Target, Active Page is Artifact */}
                   {!inputValue && activePage.artifact && expandInput && (
-                    <>
-                      <motion.div
-                        exit="exit"
-                        initial="initial"
-                        animate="animate"
-                        variants={iconVariants}
-                        className="absolute center-x center-y z-10"
-                      >
-                        <TargetArtifactIcon />
-                      </motion.div>
-
-                      <motion.div
-                        exit="exit"
-                        initial="initial"
-                        animate="animate"
-                        variants={targetVariants}
-                        className="absolute left-1/2 top-1/2 bg-gray2 rounded-full w-6 h-6"
-                      />
-                    </>
+                    <motion.div
+                      exit="exit"
+                      initial="initial"
+                      animate="animate"
+                      variants={iconVariants}
+                      className="center-x center-y absolute z-10"
+                    >
+                      <TargetArtifactIcon />
+                    </motion.div>
                   )}
                 </>
               )}
             </AnimatePresence>
 
-            {/* Target Back Wrapper */}
+            {/* Target Active Action is Form, No Input Value, Icon */}
             <AnimatePresence>
-              {activeAction !== "none" &&
-                !inputValue &&
-                activeAction !== "notifications" && (
+              {activeAction === "form" &&
+                expandInput &&
+                (!inputValue ? (
                   <motion.div
                     exit="exit"
                     initial="initial"
                     animate="animate"
                     variants={iconVariants}
-                    className="absolute center-x center-y z-10"
                   >
-                    <TargetBackIcon color={`#999`} />
+                    <TargetFormIcon color={`#999`} />
                   </motion.div>
-                )}
+                ) : (
+                  <motion.div
+                    exit="exit"
+                    initial="initial"
+                    animate="animate"
+                    variants={iconVariants}
+                  >
+                    <TargetCommandIcon color={`#999`} />
+                  </motion.div>
+                ))}
             </AnimatePresence>
           </motion.button>
         </>
-        {/* Right */}
-        <div className={`p-2 pr-0 flex items-center w-full relative`}>
+
+        {/* Right, Text Input */}
+        <div className={`relative flex w-full items-center p-2 pr-0`}>
           {/* Input */}
           <TextareaAutosize
             id="entryText"
-            className={`bg-transparent text-base outline-none resize-none text-gray5 w-full absolute left-2`}
+            className={`absolute left-2 w-full resize-none bg-transparent text-base text-black outline-none ${!expandInput && "pointer-events-none"}`}
             value={expandInput ? inputValue : ""}
             onChange={(e) => handleInputTextChange(e.target.value)}
             onBlur={onBlur}
@@ -383,8 +324,9 @@ const Nav = () => {
             maxRows={6}
             tabIndex={0}
           />
-          {/* Username */}
+          {/* Discover & */}
           <motion.div
+            whileHover={{ scale: 0.75 }}
             initial={{ opacity: 0 }}
             animate={
               expandInput
@@ -396,9 +338,14 @@ const Nav = () => {
             }
             transition={{ duration: 0.2 }}
             exit={{ opacity: 0, scale: 0 }}
-            className="text-black text-base origin-center leading-[11px]"
+            className="origin-center cursor-pointer"
+            onClick={() => setExpandInput((prev) => !prev)}
           >
-            RX
+            <button
+              className={`flex items-center justify-center rounded-full bg-[#E5E5E5] p-2`}
+            >
+              <AmperesandIcon />
+            </button>
           </motion.div>
         </div>
       </motion.div>

@@ -17,6 +17,7 @@ import {
   MotionValue,
 } from "framer-motion";
 import { PageName } from "@/context/InterfaceContext";
+import { createPortal } from "react-dom";
 
 const componentMap: Record<PageName, React.ComponentType<any>> = {
   sound: Sound,
@@ -49,7 +50,8 @@ export const GetDimensions = (pageName: PageName) => {
 
 export function Interface({ isVisible }: { isVisible: boolean }) {
   const { scrollContainerRef, activePage } = useInterfaceContext();
-  const { expandInput } = useNavContext();
+  const { expandInput, inputValue, activeAction } = useNavContext();
+  const cmdkPortal = document.getElementById("cmdk");
 
   const activePageName: PageName = activePage.name as PageName;
   const ActiveComponent = componentMap[activePageName];
@@ -174,6 +176,36 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     };
   }, [animate, newWidth, newHeight, scope]);
 
+  // Animate portal shadow when input is expanded
+  useEffect(() => {
+    const animateShadow = () => {
+      const animationConfig = {
+        boxShadow: !expandInput
+          ? "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)"
+          : "0px 0px 0px 0px rgba(0,0,0,0.0), 0px 0px 0px 0px rgba(0,0,0,0.0)",
+        scale: !expandInput ? 1 : 0.96,
+      };
+      const transitionConfig = {
+        boxShadow: {
+          type: "spring" as const,
+          mass: 1,
+          stiffness: 180,
+          damping: 22,
+          delay: expandInput ? 0.15 : 0,
+        },
+        scale: {
+          type: "spring" as const,
+          mass: 1,
+          stiffness: 240,
+          damping: 22,
+          delay: expandInput ? 0.0 : 0.15,
+        },
+      };
+      animate(scope.current, animationConfig, transitionConfig);
+    };
+    animateShadow();
+  }, [expandInput, animate, scope]);
+
   return (
     <motion.div
       // transformTemplate={template} // Prevent translateZ from being applied
@@ -184,7 +216,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`shadow-shadowKitHigh relative flex items-start justify-center overflow-hidden rounded-full bg-[#F4F4F4]/80`}
+        className={`relative flex items-start justify-center overflow-auto rounded-full bg-[#F4F4F4]/80`}
         shouldFilter={false}
         loop
         ref={scope}
@@ -201,7 +233,9 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         >
           <ActiveComponent key={activePage.key} />
         </motion.div>
-        <Nav />
+
+        {/* Dial */}
+        {cmdkPortal && createPortal(<Nav />, cmdkPortal)}
       </Command>
     </motion.div>
   );

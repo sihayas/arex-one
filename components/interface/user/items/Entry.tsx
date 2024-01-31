@@ -1,10 +1,7 @@
 import React from "react";
 
-import { useSound } from "@/hooks/usePage";
-
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { MaskCardBottomOutlined } from "@/components/icons";
 import { getStarComponent } from "@/components/index/items/Entry";
@@ -31,7 +28,6 @@ const maskStyle = {
 
 export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   const { scrollContainerRef } = useInterfaceContext();
-  const { handleSelectSound } = useSound();
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -46,7 +42,10 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   );
 
   // First card translations
-  const xZero = useSpring(useTransform(scrollY, [0, 24], [0, 0]), springConfig);
+  const xZero = useSpring(
+    useTransform(scrollY, [0, 24], [112, 0]),
+    springConfig,
+  );
   const yZero = useSpring(
     useTransform(scrollY, [0, 24], [-36, 0]),
     springConfig,
@@ -58,7 +57,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
 
   // Second card translations
   const xOne = useSpring(
-    useTransform(scrollY, [0, 24], [-80, 0]),
+    useTransform(scrollY, [0, 24], [-32, 0]),
     springConfig,
   );
   const yOne = useSpring(
@@ -66,18 +65,18 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     springConfig,
   );
   const rotateOne = useSpring(
-    useTransform(scrollY, [0, 24], [12, rotate]),
+    useTransform(scrollY, [0, 24], [-12, rotate]),
     springConfig,
   );
 
   // Third card translations
-  const xTwo = useSpring(useTransform(scrollY, [0, 24], [64, 0]), springConfig);
+  const xTwo = useSpring(useTransform(scrollY, [0, 24], [48, 0]), springConfig);
   const yTwo = useSpring(
     useTransform(scrollY, [0, 24], [-760, 0]),
     springConfig,
   );
   const rotateTwo = useSpring(
-    useTransform(scrollY, [0, 24], [19, rotate]),
+    useTransform(scrollY, [0, 24], [-19, rotate]),
     springConfig,
   );
 
@@ -113,7 +112,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           <div className={`flex w-full flex-col items-end`}>
             <Art
               size={192}
-              imageClass="border-silver shadow-shadowKitHigh rounded-[17px] border overflow-hidden"
+              containerClass="border-silver shadow-shadowKitHigh rounded-[17px] border overflow-hidden"
               sound={sound}
             />
 

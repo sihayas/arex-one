@@ -31,45 +31,61 @@ const User = () => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
   }, []);
 
+  console.log(data);
+
   if (!user || isLoading || isError) return <div>log in</div>;
 
   return (
     <>
-      <div
-        className={`pointer-events-none absolute left-0 top-0 -z-10 h-full w-full overflow-visible bg-[#F4F4F4]/50 backdrop-blur-2xl`}
-      />
-
       <Essentials essentials={userData.essentials} />
 
       <div
-        className={`sticky top-8 z-10 mt-[88px] flex flex-col items-center gap-2`}
+        className={`sticky top-8 z-10 mt-8 flex w-full flex-col items-center gap-2 px-16`}
       >
-        <div className="flex items-center gap-8">
-          <div className="flex items-center justify-center rounded-full bg-[#E5E5E5] p-[10px]">
-            <SettingsIcon />
+        <div className="flex w-full items-center justify-between">
+          <div className="flex flex-col">
+            <p className="text-gray2 text-base font-medium tracking-tighter">
+              Sounds
+            </p>
+            <p className="text-gray2 text-base font-bold tracking-tighter">
+              42
+            </p>
+
+            <p className="text-gray2 pt-[18px] text-base font-medium tracking-tighter">
+              Entries
+            </p>
+            <p className="text-gray2 text-base font-bold tracking-tighter">
+              {userData._count.artifact}
+            </p>
+
+            <p className="text-gray2 pt-[18px] text-base font-medium tracking-tighter">
+              Links
+            </p>
+            <p className="text-gray2 text-base font-bold tracking-tighter">
+              {userData._count.followedBy}
+            </p>
           </div>
 
-          <Avatar
-            className="rounded-max border-silver border"
-            imageSrc={userData.image}
-            altText={`avatar`}
-            width={64}
-            height={64}
-            user={userData}
-          />
+          <div className="center-x center-y absolute">
+            <Avatar
+              className="rounded-max border-silver min-h-[80px] min-w-[80px] border"
+              imageSrc={userData.image}
+              altText={`avatar`}
+              width={80}
+              height={80}
+              user={userData}
+            />
+            <p
+              className={`text-gray2 center-x absolute bottom-[-20px] text-xl font-semibold leading-[15px] tracking-tighter`}
+            >
+              {userData.username}
+            </p>
+          </div>
 
-          <div className="shadow-shadowKitLow flex items-center justify-center rounded-full bg-white p-2">
+          <div className="shadow-shadowKitLow flex items-center justify-center rounded-full bg-white p-2 opacity-0">
             <SettingsIcon />
           </div>
         </div>
-
-        {!activePage.isOpen && (
-          <p
-            className={`text-xl font-semibold leading-[15px] tracking-tighter`}
-          >
-            {userData.username}
-          </p>
-        )}
       </div>
 
       <Entries userId={user.id} />

@@ -23,6 +23,7 @@ import Heart from "@/components/global/Heart";
 
 import Image from "next/image";
 import EntryDial from "@/components/global/EntryDial";
+import { getStarComponent } from "@/components/index/items/Entry";
 
 const artworkConfig = {
   type: "spring",
@@ -68,14 +69,11 @@ export const Artifact = () => {
   return (
     <>
       <motion.div
-        className={`flex items-end pt-8 gap-12 rotate-3`}
+        className={`z-10 mr-auto flex -rotate-3 items-end gap-12 px-16 pt-8`}
         transition={artworkConfig}
       >
-        <div className={`-rotate-6`}>
-          <EntryDial rating={artifact.content!.rating!} />
-        </div>
         <Image
-          className={`cursor-pointer rounded-3xl border border-silver -z-10`}
+          className={`border-silver -z-10 cursor-pointer rounded-3xl border`}
           onClick={handleSoundClick}
           src={artwork}
           alt={`artwork`}
@@ -87,22 +85,24 @@ export const Artifact = () => {
       </motion.div>
 
       <div
-        className={`-mt-8 flex flex-col gap-[18px] bg-white shadow-shadowKitHigh p-6 mx-8 outline outline-silver outline-1 rounded-3xl z-10`}
+        className={`shadow-shadowKitHigh outline-silver z-10 mx-8 -mt-8 flex flex-col gap-[18px] rounded-3xl bg-white p-6 outline outline-1`}
       >
-        <div
-          className={`flex w-full items-center justify-between max-h-[32px]`}
-        >
-          <div className={`flex flex-col`}>
+        <div className={`flex max-h-[32px] w-full items-center`}>
+          <div className="rounded-max outline-silver bg-[#F4F4F4] p-3 outline outline-1">
+            {getStarComponent(artifact.content!.rating!)}
+          </div>
+
+          <div className={`ml-4 flex flex-col`}>
             <p className={`text-gray2 line-clamp-1 text-sm`}>
               {sound.attributes.artistName}
             </p>
-            <p className={`text-black line-clamp-1 text-base font-semibold`}>
+            <p className={`line-clamp-1 text-base font-semibold text-black`}>
               {sound.attributes.name}
             </p>
           </div>
 
-          <div className={`flex w-max items-center gap-2`}>
-            <p className={`text-base font-medium text-end`}>
+          <div className={`ml-auto flex w-max items-center gap-2`}>
+            <p className={`text-end text-base font-medium`}>
               {artifact.author.username}
             </p>
             <Avatar
@@ -118,7 +118,7 @@ export const Artifact = () => {
         <div className={`text-base text-black`}>{artifact.content?.text}</div>
       </div>
 
-      <div className={`min-w-full min-h-full`}></div>
+      <div className={`min-h-full min-w-full`}></div>
     </>
   );
 };

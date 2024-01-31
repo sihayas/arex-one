@@ -1,23 +1,18 @@
 import React, { Fragment } from "react";
 import { Essential } from "@/types/dbTypes";
-import Image from "next/image";
-import { useSound } from "@/hooks/usePage";
 import { motion } from "framer-motion";
+import { Art } from "@/components/global/Art";
 
 interface EssentialsProps {
   essentials: Essential[];
 }
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
-  const { handleSelectSound } = useSound();
   return (
-    <div className={`w-max flex items-center p-8 -space-x-8`}>
+    <div className={`flex w-max items-center -space-x-8 p-8`}>
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const color = sound.attributes.artwork.bgColor;
-        const artwork = sound.attributes.artwork.url
-          .replace("{w}", "320")
-          .replace("{h}", "320");
 
         let style = {
           backgroundColor: `#${color}`,
@@ -39,20 +34,16 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
 
         return (
           <Fragment key={`essential-${i}`}>
-            <Image
-              className={`rounded-3xl shadow-shadowKitHigh outline outline-silver outline-1 ${rotationClass} ${
+            <Art
+              size={144}
+              containerClass={`rounded-3xl shadow-shadowKitHigh outline outline-silver outline-1 ${rotationClass} ${
                 i === 1 ? "translate-y-[88px] z-10" : ""
               }`}
-              onClick={() => handleSelectSound(sound)}
-              src={artwork}
-              alt={`artwork`}
-              loading="lazy"
-              quality={100}
-              width={144}
-              height={144}
+              sound={sound}
             />
+
             {/* @ts-ignore */}
-            <motion.div style={style} className="-z-20" />
+            {/* <motion.div style={style} className="-z-20" /> */}
           </Fragment>
         );
       })}

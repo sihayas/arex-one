@@ -7,7 +7,6 @@ import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import {
   FiveStar,
@@ -58,8 +57,8 @@ export const getStarComponent = (rating: number) => {
 
 export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const { user } = useInterfaceContext();
-  const containerRef = useRef<HTMLDivElement>(null);
   const { handleSelectArtifact } = useArtifact();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const sound = artifact.appleData;
   const color = sound.attributes.artwork.bgColor;
@@ -105,7 +104,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
 
         <motion.div
           onClick={() => handleSelectArtifact(artifact)}
-          className={`cursor-pointer px-6 pt-2.5 text-base text-black `}
+          className={`line-clamp-4 cursor-pointer px-6 pt-2.5 text-base text-black`}
         >
           {artifact.content?.text}
         </motion.div>
