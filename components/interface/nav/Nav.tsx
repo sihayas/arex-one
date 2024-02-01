@@ -56,6 +56,8 @@ const Nav = () => {
 
   const containerVariants = {
     collapsed: {
+      boxShadow:
+        "0px 0px 0px 0px rgba(0,0,0,0.0), 0px 0px 0px 0px rgba(0,0,0,0.0)",
       height: 43,
       x: 0,
       transition: {
@@ -70,6 +72,8 @@ const Nav = () => {
       },
     },
     expanded: {
+      boxShadow:
+        "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
       height: !expandInput
         ? 42 // base
         : activeAction === "none" && inputValue
@@ -89,6 +93,13 @@ const Nav = () => {
           stiffness: 180,
           damping: 20,
         },
+        boxShadow: {
+          type: "spring" as const,
+          mass: 1,
+          stiffness: 180,
+          damping: 22,
+          delay: expandInput ? 0 : 0.15,
+        },
       },
     },
   };
@@ -106,6 +117,25 @@ const Nav = () => {
     expanded: {
       width: activeAction !== "notifications" ? 384 : 320,
       borderRadius: 18,
+      transition: {
+        type: "spring",
+        damping: 30,
+        stiffness: 380,
+      },
+    },
+  };
+
+  const contentVariants = {
+    collapsed: {
+      opacity: 0,
+      transition: {
+        type: "spring",
+        damping: 28,
+        stiffness: 220,
+      },
+    },
+    expanded: {
+      opacity: 1,
       transition: {
         type: "spring",
         damping: 30,

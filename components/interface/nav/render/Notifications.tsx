@@ -6,10 +6,8 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 const Notifications = () => {
   const { notifs } = useInterfaceContext();
 
-  console.log("notifs", notifs);
-
   return (
-    <div className={`flex w-full flex-col gap-8 p-6`}>
+    <div className={`absolute flex w-full flex-col gap-8 p-6`}>
       {Object.entries(notifs).map(([key, notificationGroup], index) => {
         const notificationType = key.split("|")[0].toUpperCase();
         switch (notificationType) {

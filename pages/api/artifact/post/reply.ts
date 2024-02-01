@@ -25,6 +25,7 @@ async function notifyReplyChain(
 
     if (!reply) break;
 
+    // If already notified, skip. If replying to their own reply, skip
     if (!notifiedUsers.has(reply.authorId) && reply.authorId !== userId) {
       notifiedUsers.add(reply.authorId);
       await createNotification(reply.authorId, activityId, key);
@@ -53,7 +54,6 @@ export default async function handle(
     userId,
   } = req.body;
 
-  console.log("req.body", req.body);
   if (!userId || (!artifactId && !artifactAuthorId) || !text) {
     return res.status(400).json({ error: "Required parameters are missing." });
   }
