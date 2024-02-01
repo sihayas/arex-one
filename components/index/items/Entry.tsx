@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
-import { useArtifact, useSound } from "@/hooks/usePage";
+import { useArtifact } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";

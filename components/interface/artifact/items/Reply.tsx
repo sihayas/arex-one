@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
-import Heart from "@/components/global/Heart";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 interface ReplyProps {
@@ -51,7 +50,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   // Styles
   const isEvenLevel = level % 2 === 0;
   const flexDirection = isEvenLevel ? "flex-row" : "flex-row-reverse";
-  const reverseAlignment = isEvenLevel ? "search-start" : "search-end";
+  const reverseAlignment = isEvenLevel ? "items-start" : "items-end";
   const bubblePosition = isEvenLevel
     ? "-bottom-1 -left-1"
     : "-bottom-1 -right-1 transform scale-x-[-1]";
@@ -86,14 +85,14 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         originX: !isEvenLevel ? 1 : 0,
         willChange: "opacity, scale, transform",
       }}
-      className={`flex flex-col w-full pt-4 h-fit relative`}
+      className={`relative flex h-fit w-full flex-col pt-4`}
     >
       {/* Main Reply */}
-      <div className={`flex gap-3 w-full items-end ${flexDirection}`}>
+      <div className={`flex w-full items-end gap-3 ${flexDirection}`}>
         {/* Avatar & Collapse*/}
-        <div className={`relative min-w-[32px] min-h-[32px] `}>
+        <div className={`relative min-h-[32px] min-w-[32px] `}>
           <Avatar
-            className="rounded-full border border-gray3"
+            className="border-gray3 rounded-full border"
             imageSrc={reply.author.image}
             altText={`${reply.author.username}'s avatar`}
             width={32}
@@ -102,10 +101,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           />
           {/* Collapse Dot */}
           {replyCount > 0 && (
-            <div className={`absolute cursor-pointer center-x -bottom-3 z-10`}>
+            <div className={`center-x absolute -bottom-3 z-10 cursor-pointer`}>
               <motion.div
                 animate={{
-                  backgroundColor: showChildReplies ? "#CCC" : "transparent",
+                  backgroundColor: showChildReplies ? "#CCC" : "rgba(0,0,0,0)",
                   border: showChildReplies ? "none" : "1.5px solid #CCC",
                 }}
                 whileHover={{
@@ -114,7 +113,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
                   border: showChildReplies ? "1.5px solid black" : "none",
                 }}
                 onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`w-[9px] h-[9px] rounded-full`}
+                className={`h-[9px] w-[9px] rounded-full`}
               />
             </div>
           )}
@@ -122,10 +121,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
 
         {/* Attribution & Content */}
         <div
-          className={`flex flex-col gap-[3px] w-full ${reverseAlignment} relative`}
+          className={`flex w-full flex-col gap-[3px] ${reverseAlignment} relative`}
         >
           <div
-            className={`relative bg-[#F4F4F4] px-3 py-1.5 w-fit rounded-2xl overflow-visible ${
+            className={`relative w-fit overflow-visible rounded-2xl bg-white px-3 py-1.5 ${
               !isChild && "max-w-[380px]"
             }`}
           >
@@ -134,31 +133,28 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
               whileHover={{ color: "rgba(0,0,0,1)" }}
               onClick={handleReplyParent}
               animate={{
-                color:
-                  replyTarget?.reply === reply
-                    ? "rgba(60, 60, 67, 0.9)"
-                    : "rgba(60, 60, 67, 0.6)",
+                color: replyTarget?.reply === reply ? "#FFF" : "#000",
                 scale: replyTarget?.reply === reply ? 1.01 : 1,
               }}
               transition={{ duration: 0.24 }}
-              className={`text-base break-words cursor-pointer`}
+              className={`cursor-pointer break-words text-base`}
             >
               {reply.text}
             </motion.div>
 
             {/* Bubbles */}
-            <div className={`w-3 h-3 absolute ${bubblePosition}`}>
+            <div className={`absolute h-3 w-3 ${bubblePosition}`}>
               <div
-                className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
               />
               <div
-                className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
+                className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
               />
             </div>
           </div>
 
           <div
-            className={`font-medium text-sm text-gray2 leading-[9px] translate-y-[3px]`}
+            className={`text-gray2 translate-y-[3px] text-sm font-medium leading-[9px]`}
           >
             {reply.author.username}
           </div>
@@ -167,7 +163,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           {!isChild && (
             <Line
               color={"#CCC"}
-              className={`!w-[2px] rounded h-full absolute ${fillLinePosition}
+              className={`absolute h-full !w-[2px] rounded ${fillLinePosition}
            `}
             />
           )}
@@ -175,10 +171,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
       </div>
 
       {/* Render Dash & Child Replies */}
-      <div className={`flex flex-col mt-1.5 w-full ${flexDirection} relative`}>
+      <div className={`mt-1.5 flex w-full flex-col ${flexDirection} relative`}>
         {showChildReplies && (
           <div
-            className={`absolute w-8 flex items-center justify-center h-full ${dashLinePosition}`}
+            className={`absolute flex h-full w-8 items-center justify-center ${dashLinePosition}`}
           >
             <svg
               style={{ width: 2, height: "100%" }}

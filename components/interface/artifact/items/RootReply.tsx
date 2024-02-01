@@ -5,11 +5,10 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyType } from "@/types/dbTypes";
 
 import Children from "@/components/interface/artifact/render/Children";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
-import { v4 as uuidv4 } from "uuid";
 import Heart from "@/components/global/Heart";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -27,16 +26,14 @@ export default function RootReply({ reply, index }: ReplyProps) {
   const activePage = pages[pages.length - 1];
   const replyCount = reply._count ? reply._count.replies : 0;
 
+  console.log(reply, "reply");
+
   const handleReplyParent = useCallback(() => {
     const artifact = activePage.artifact;
     if (artifact) {
       setReplyTarget({ artifact, reply });
     }
   }, [reply, setReplyTarget, activePage.artifact]);
-
-  const handleLoadReplies = useCallback(() => {
-    setShowChildReplies(true);
-  }, []);
 
   const url = reply.heartedByUser
     ? "/api/heart/delete/reply"
@@ -81,7 +78,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
     >
       {/* Main Reply */}
       <div
-        className={`flex items-center gap-2 rounded-[20px] bg-[#E5E5E5] p-2 pr-2.5`}
+        className={`outline-silver flex items-center gap-2 rounded-[20px] bg-white p-2 pr-2.5 outline outline-1`}
       >
         <Avatar
           className="border-silver h-8 w-8 rounded-full border"
@@ -96,10 +93,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
           whileHover={{ color: "rgba(0,0,0,1)" }}
           onClick={handleReplyParent}
           animate={{
-            color:
-              replyTarget?.reply === reply
-                ? "rgba(60, 60, 67, 0.9)"
-                : "rgba(60, 60, 67, 0.6)",
+            color: replyTarget?.reply === reply ? "#FFF" : "#000",
             scale: replyTarget?.reply === reply ? 1.01 : 1,
           }}
           transition={{ duration: 0.24 }}
@@ -111,10 +105,10 @@ export default function RootReply({ reply, index }: ReplyProps) {
 
       {/* Attribution & Collapse Dot */}
       {replyCount > 0 && (
-        <div className={`mt-1.5 flex gap-3.5`}>
+        <div className={`mt-1.5 flex w-full gap-3.5`}>
           {/* Collapse */}
           <div
-            className={`flex h-full min-w-[9px] cursor-pointer flex-col items-center`}
+            className={`flex min-w-[9px] cursor-pointer flex-col items-center`}
           >
             {!showChildReplies ? (
               <motion.div
@@ -138,13 +132,13 @@ export default function RootReply({ reply, index }: ReplyProps) {
                   height: 0,
                 }}
                 onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`rounded-max bg-gray3 flex h-full flex-grow opacity-50`}
+                className={`rounded-max flex-grow bg-black`}
               />
             )}
           </div>
 
           {/* Replies & Username */}
-          <div className={`flex flex-col`}>
+          <div className={`flex w-full flex-col`}>
             <div className={`text-gray2 text-sm font-medium leading-[9px]`}>
               {reply.author.username}
             </div>

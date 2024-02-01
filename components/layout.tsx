@@ -5,6 +5,22 @@ import { useNavContext } from "@/context/NavContext";
 
 import { motion, useAnimate } from "framer-motion";
 
+const opacityConfig = {
+  type: "spring" as const,
+  mass: 0.75,
+  stiffness: 200,
+  damping: 22,
+  delay: 0.15,
+};
+
+const scaleConfig = {
+  type: "spring" as const,
+  mass: 0.75,
+  stiffness: 200,
+  damping: 22,
+  delay: 0.15,
+};
+
 export default function Layout({ children }: { children: ReactNode }) {
   const { user } = useInterfaceContext();
   const { isVisible, setIsVisible, activePage } = useInterfaceContext();
@@ -20,20 +36,8 @@ export default function Layout({ children }: { children: ReactNode }) {
         visibility: isVisible ? "hidden" : "visible",
       };
       const transitionConfig = {
-        scale: {
-          type: "spring" as const,
-          mass: 0.75,
-          stiffness: 200,
-          damping: 22,
-          delay: isVisible ? 0 : 0.15,
-        },
-        opacity: {
-          type: "spring" as const,
-          mass: 0.75,
-          stiffness: 200,
-          damping: 22,
-          delay: isVisible ? 0 : 0.15,
-        },
+        scale: scaleConfig,
+        opacity: opacityConfig,
         visibility: {
           delay: 0.15,
         },
@@ -88,18 +92,18 @@ export default function Layout({ children }: { children: ReactNode }) {
           }}
         >
           {/*  Blur Backdrop */}
-          {/*<div*/}
-          {/*  className={`absolute top-0 left-0 w-screen h-screen bg-white/20 backdrop-blur-[80px] pointer-events-none z-0`}*/}
-          {/*></div>*/}
+          <div
+            className={`pointer-events-none absolute left-0 top-0 z-0 h-screen w-screen bg-white/20 backdrop-blur-[80px]`}
+          ></div>
           {/* Ambien */}
-          {/*<motion.div*/}
-          {/*  style={{*/}
-          {/*    backgroundColor: `#${activePage?.color}`,*/}
-          {/*    width: `400px`,*/}
-          {/*    height: `400px`,*/}
-          {/*  }}*/}
-          {/*  className="absolute center-x center-y -z-10 rounded-max"*/}
-          {/*/>*/}
+          <motion.div
+            style={{
+              backgroundColor: `#${activePage?.color}`,
+              width: `400px`,
+              height: `400px`,
+            }}
+            className="center-x center-y rounded-max absolute -z-10"
+          />
           <Interface isVisible={isVisible} />
         </motion.div>
       )}

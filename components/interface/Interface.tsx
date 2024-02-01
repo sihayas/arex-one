@@ -135,8 +135,6 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         },
         { type: "spring", stiffness: 400, damping: 40 },
       );
-
-      console.log("activePage.isOpen", activePage.isOpen);
     };
     shapeShift();
   }, [

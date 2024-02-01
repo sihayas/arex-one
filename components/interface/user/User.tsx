@@ -31,8 +31,6 @@ const User = () => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
   }, []);
 
-  console.log(data);
-
   if (!user || isLoading || isError) return <div>log in</div>;
 
   return (

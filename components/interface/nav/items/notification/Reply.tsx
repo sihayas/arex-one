@@ -8,7 +8,6 @@ const Reply = ({ notificationsGroup }: any) => {
   const notifications = notificationsGroup.notifications;
   const { user } = useInterfaceContext();
   const reply = notifications[0].activity.reply;
-  const isReplyTo = reply.replyTo;
 
   const url = reply.artifact?.appleData.attributes.artwork.url;
   const artwork = url ? url.replace("{w}", "280").replace("{h}", "280") : null;
@@ -16,12 +15,12 @@ const Reply = ({ notificationsGroup }: any) => {
   const name =
     notificationsGroup.notifications[0].activity.reply.author.username;
 
-  return isReplyTo && user ? (
-    <div className={`flex flex-col`}>
+  return reply.replyTo && user ? (
+    <div className={`flex flex-col gap-4`}>
       {/* Parent */}
       <div className={`flex min-w-full items-end justify-end`}>
         <div
-          className={`relative mb-3 mr-3 w-fit max-w-[172px] rounded-[18px] bg-[#F4F4F4] px-[10px] pb-[7px] pt-[6px]`}
+          className={`relative mb-3 mr-3 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
         >
           <div
             className={`text-gray5 line-clamp-2 w-full cursor-pointer break-words text-sm`}
@@ -29,20 +28,24 @@ const Reply = ({ notificationsGroup }: any) => {
             {reply.replyTo.text}
           </div>
 
+          <div className="text-gray2 absolute -bottom-5 right-4 text-sm">
+            {reply.replyTo.author.username}
+          </div>
+
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -right-1 h-3 w-3`}>
             <div
-              className={`absolute left-0 top-0 h-2 w-2 rounded-full bg-[#F4F4F4]`}
+              className={`absolute left-0 top-0 h-2 w-2 rounded-full bg-white`}
             />
             <div
-              className={`absolute bottom-0 right-0 h-1 w-1 rounded-full bg-[#F4F4F4]`}
+              className={`absolute bottom-0 right-0 h-1 w-1 rounded-full bg-white`}
             />
           </div>
         </div>
 
         <Avatar
           className={`border-silver h-6 border`}
-          imageSrc={user.image}
+          imageSrc={reply.replyTo.author.image}
           altText={`${user.username}'s avatar`}
           user={user}
           width={24}
@@ -50,31 +53,35 @@ const Reply = ({ notificationsGroup }: any) => {
         />
       </div>
       {/* Reply */}
-      <div className={`flex w-full items-end`}>
+      <div className={`flex w-full items-end drop-shadow-lg`}>
         <Avatar
-          className={`border-silver h-6 border`}
+          className={`border-silver h-8 border`}
           imageSrc={reply.author.image}
           altText={`${reply.author.username}'s avatar`}
           user={reply.author}
-          width={24}
-          height={24}
+          width={32}
+          height={32}
         />
         <div
-          className={`relative mb-3 ml-3 w-fit max-w-[172px] rounded-[18px] bg-[#F4F4F4] px-[10px] pb-[7px] pt-[6px]`}
+          className={`relative mb-3 ml-3 w-fit  rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
         >
           <div
-            className={`text-gray5 line-clamp-6 w-full cursor-pointer break-words text-sm`}
+            className={`line-clamp-6 w-full cursor-pointer break-words text-base text-black`}
           >
             {reply.text}
+          </div>
+
+          <div className="text-gray2 absolute -bottom-6 left-4 text-base">
+            {reply.author.username}
           </div>
 
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
             <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#F4F4F4]`}
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
             />
             <div
-              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-[#F4F4F4]`}
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
             />
           </div>
         </div>
@@ -106,7 +113,7 @@ const Reply = ({ notificationsGroup }: any) => {
       </div>
 
       {/* Reply */}
-      <div className={`flex w-full items-end`}>
+      <div className={`flex w-full items-end drop-shadow-lg`}>
         <Avatar
           className={`border-silver h-8 border`}
           imageSrc={reply.author.image}

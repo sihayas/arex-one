@@ -146,6 +146,12 @@ export default async function handler(
                       // },
                       // Get the text of the reply its replying to
                       text: true,
+                      author: {
+                        select: {
+                          image: true,
+                          username: true,
+                        },
+                      },
                     },
                   },
                 },

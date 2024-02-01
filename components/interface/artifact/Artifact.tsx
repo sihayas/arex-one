@@ -1,28 +1,14 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Page,
-  PageName,
-  useInterfaceContext,
-} from "@/context/InterfaceContext";
+import React, { useEffect, useMemo } from "react";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
 import useHandleHeartClick from "@/hooks/useHeart";
 import Avatar from "@/components/global/Avatar";
 import Replies from "@/components/interface/artifact/render/Replies";
 import { ArtifactExtended } from "@/types/globalTypes";
-import { GetDimensions } from "@/components/interface/Interface";
-
-import Heart from "@/components/global/Heart";
 
 import Image from "next/image";
-import EntryDial from "@/components/global/EntryDial";
 import { getStarComponent } from "@/components/index/items/Entry";
 
 const artworkConfig = {

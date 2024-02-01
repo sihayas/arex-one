@@ -112,7 +112,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           <div className={`flex w-full flex-col items-end`}>
             <Art
               size={192}
-              containerClass="border-silver shadow-shadowKitHigh rounded-[17px] border overflow-hidden"
+              containerClass="shadow-shadowKitHigh rounded-[17px] overflow-hidden outline outline-1 outline-silver"
               sound={sound}
             />
 
