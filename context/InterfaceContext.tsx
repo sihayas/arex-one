@@ -9,7 +9,10 @@ import { UserType, Artifact } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 import { Session } from "lucia";
-import { useUserAndSessionQuery } from "@/lib/apiHelper/user";
+import {
+  useUserAndSessionQuery,
+  useNotificationsQuery,
+} from "@/lib/apiHelper/user";
 import { StateSnapshot } from "react-virtuoso";
 
 export type Page = {
@@ -106,6 +109,15 @@ export const InterfaceContextProvider = ({
       setSession(data.session);
     }
   }, [data]);
+
+  // Fetch notifications
+  const { data: notifData } = useNotificationsQuery(user?.id);
+
+  useEffect(() => {
+    if (notifData) {
+      setNotifs(notifData.data);
+    }
+  }, [notifData]);
 
   // Initialize the interface
   useEffect(() => {

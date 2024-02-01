@@ -7,6 +7,7 @@ import type { AppleCredentials } from "arctic";
 import fs from "fs";
 import path from "path";
 import type { IncomingMessage, ServerResponse } from "http";
+import { Notification } from "@/types/dbTypes";
 
 declare module "lucia" {
   interface Register {
@@ -20,6 +21,7 @@ interface DatabaseUserAttributes {
   apple_id: number;
   username: string;
   image: string;
+  notifications: Notification[];
 }
 
 globalThis.crypto = webcrypto as Crypto;
@@ -61,6 +63,7 @@ export const lucia = new Lucia(adapter, {
       appleId: attributes.apple_id,
       username: attributes.username,
       image: attributes.image,
+      notifications: attributes.notifications,
     };
   },
 });

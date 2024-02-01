@@ -26,6 +26,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
 
+const iconVariants = {
+  exit: {
+    scale: 0,
+  },
+  initial: {
+    scale: 0,
+  },
+  animate: {
+    scale: 1,
+  },
+};
+
 const Nav = () => {
   const { replyTarget } = useThreadcrumb();
   const { user, pages } = useInterfaceContext();
@@ -99,18 +111,6 @@ const Nav = () => {
         damping: 30,
         stiffness: 380,
       },
-    },
-  };
-
-  const iconVariants = {
-    exit: {
-      scale: 0,
-    },
-    initial: {
-      scale: 0,
-    },
-    animate: {
-      scale: 1,
     },
   };
 
@@ -201,31 +201,13 @@ const Nav = () => {
           </button>
           {/* Target Container */}
           <motion.button
-            className={`relative flex items-center justify-center`}
+            className={`relative flex min-h-[28px] min-w-[28px] items-center justify-center`}
             whileHover={{ scale: 1.1 }}
           >
             {/* Target */}
             <AnimatePresence>
               {activeAction === "none" && (
                 <>
-                  {!expandInput && (
-                    <motion.div
-                      exit="exit"
-                      initial="initial"
-                      animate="animate"
-                      className="h-max w-max"
-                    >
-                      <Avatar
-                        className="border-silver border"
-                        imageSrc={user.image}
-                        altText={`${user.username}'s avatar`}
-                        width={32}
-                        height={32}
-                        user={user}
-                      />
-                    </motion.div>
-                  )}
-
                   {/* Target Nothing */}
                   {!activePage.sound &&
                     !activePage.artifact &&
@@ -304,6 +286,26 @@ const Nav = () => {
                     <TargetCommandIcon color={`#999`} />
                   </motion.div>
                 ))}
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {!expandInput && (
+                <motion.div
+                  exit="exit"
+                  initial="initial"
+                  animate="animate"
+                  className="h-max w-max"
+                >
+                  <Avatar
+                    className="border-silver border"
+                    imageSrc={user.image}
+                    altText={`${user.username}'s avatar`}
+                    width={28}
+                    height={28}
+                    user={user}
+                  />
+                </motion.div>
+              )}
             </AnimatePresence>
           </motion.button>
         </>

@@ -1,17 +1,14 @@
 import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode, useRef } from "react";
-import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
-import { Player } from "@/components/global/Player";
 
 import { motion, useAnimate } from "framer-motion";
-import { GetDimensions } from "./interface/Interface";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user } = useInterfaceContext();
   const { isVisible, setIsVisible, activePage } = useInterfaceContext();
   const { inputRef } = useNavContext();
-  const mainContentRef = useRef<HTMLElement>(null);
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
@@ -46,6 +43,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     animateMainContent();
   }, [isVisible, animate, scope]);
 
+  // CMD + K to toggle interface
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
@@ -60,23 +58,25 @@ export default function Layout({ children }: { children: ReactNode }) {
       }
     };
 
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [inputRef, setIsVisible]);
+
+  // Double click to toggle interface
+  useEffect(() => {
     const handleDoubleClick = () => {
       setIsVisible((prevIsVisible) => !prevIsVisible);
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    const mainContentElement = mainContentRef.current;
-    if (mainContentElement) {
-      mainContentElement.addEventListener("dblclick", handleDoubleClick);
-    }
+    document.body.addEventListener("dblclick", handleDoubleClick);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      if (mainContentElement) {
-        mainContentElement.removeEventListener("dblclick", handleDoubleClick);
-      }
+      document.body.removeEventListener("dblclick", handleDoubleClick);
     };
-  }, [setIsVisible, inputRef, mainContentRef]);
+  }, [setIsVisible]);
 
   return (
     <>
@@ -108,7 +108,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main
         ref={scope}
         id="main-content"
-        className={`origin-center flex items-center justify-center`}
+        className={`flex origin-center items-center justify-center`}
       >
         {children}
       </main>
