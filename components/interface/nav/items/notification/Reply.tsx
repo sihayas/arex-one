@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React from "react";
 
-import { motion } from "framer-motion";
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
@@ -14,32 +13,35 @@ const Reply = ({ notificationsGroup }: any) => {
   const url = reply.artifact?.appleData.attributes.artwork.url;
   const artwork = url ? url.replace("{w}", "280").replace("{h}", "280") : null;
 
+  const name =
+    notificationsGroup.notifications[0].activity.reply.author.username;
+
   return isReplyTo && user ? (
     <div className={`flex flex-col`}>
       {/* Parent */}
-      <div className={`flex items-end justify-end min-w-full`}>
+      <div className={`flex min-w-full items-end justify-end`}>
         <div
-          className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[172px] w-fit mb-3 mr-3`}
+          className={`relative mb-3 mr-3 w-fit max-w-[172px] rounded-[18px] bg-[#F4F4F4] px-[10px] pb-[7px] pt-[6px]`}
         >
           <div
-            className={`break-words line-clamp-2 w-full text-sm text-gray5 cursor-pointer`}
+            className={`text-gray5 line-clamp-2 w-full cursor-pointer break-words text-sm`}
           >
             {reply.replyTo.text}
           </div>
 
           {/* Bubbles */}
-          <div className={`w-3 h-3 absolute -bottom-1 -right-1`}>
+          <div className={`absolute -bottom-1 -right-1 h-3 w-3`}>
             <div
-              className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 left-0 rounded-full`}
+              className={`absolute left-0 top-0 h-2 w-2 rounded-full bg-[#F4F4F4]`}
             />
             <div
-              className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 right-0 rounded-full`}
+              className={`absolute bottom-0 right-0 h-1 w-1 rounded-full bg-[#F4F4F4]`}
             />
           </div>
         </div>
 
         <Avatar
-          className={`h-6 border border-silver`}
+          className={`border-silver h-6 border`}
           imageSrc={user.image}
           altText={`${user.username}'s avatar`}
           user={user}
@@ -48,9 +50,9 @@ const Reply = ({ notificationsGroup }: any) => {
         />
       </div>
       {/* Reply */}
-      <div className={`flex items-end w-full`}>
+      <div className={`flex w-full items-end`}>
         <Avatar
-          className={`h-6 border border-silver`}
+          className={`border-silver h-6 border`}
           imageSrc={reply.author.image}
           altText={`${reply.author.username}'s avatar`}
           user={reply.author}
@@ -58,67 +60,77 @@ const Reply = ({ notificationsGroup }: any) => {
           height={24}
         />
         <div
-          className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[172px] w-fit mb-3 ml-3`}
+          className={`relative mb-3 ml-3 w-fit max-w-[172px] rounded-[18px] bg-[#F4F4F4] px-[10px] pb-[7px] pt-[6px]`}
         >
           <div
-            className={`break-words line-clamp-6 w-full text-sm text-gray5 cursor-pointer`}
+            className={`text-gray5 line-clamp-6 w-full cursor-pointer break-words text-sm`}
           >
             {reply.text}
           </div>
 
           {/* Bubbles */}
-          <div className={`w-3 h-3 absolute -bottom-1 -left-1`}>
+          <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
             <div
-              className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#F4F4F4]`}
             />
             <div
-              className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-[#F4F4F4]`}
             />
           </div>
         </div>
       </div>
     </div>
   ) : (
-    <div className={`flex flex-col gap-2`}>
-      <motion.div
-        className={`min-w-[86px] h-[112px] rounded-2xl overflow-hidden relative ml-auto rotate-3`}
-      >
-        <Image
-          className={`cursor-pointer rounded-2xl`}
-          src={artwork}
-          alt={`Artwork`}
-          loading="lazy"
-          quality={100}
-          style={{ objectFit: "cover" }}
-          fill={true}
-        />
-      </motion.div>
+    <div className={`flex flex-col`}>
+      <div className="flex items-end justify-between gap-4">
+        <div className={`pl-14 text-base font-medium text-black`}>
+          {name}{" "}
+          <span style={{ color: "#999", letterSpacing: "-.05em" }}>
+            chained...
+          </span>
+        </div>
+
+        <div
+          className={`shadow-shadowKitLow outline-silver relative -mb-2 mr-6 h-[64px] min-w-[48px] rotate-3 overflow-hidden rounded-xl outline outline-1`}
+        >
+          <Image
+            className="rounded-xl"
+            src={artwork}
+            alt={`Artwork`}
+            loading="lazy"
+            quality={100}
+            style={{ objectFit: "cover" }}
+            fill={true}
+          />
+        </div>
+      </div>
+
       {/* Reply */}
-      <div className={`flex items-end w-full`}>
+      <div className={`flex w-full items-end`}>
         <Avatar
-          className={`h-6 border border-silver`}
+          className={`border-silver h-8 border`}
           imageSrc={reply.author.image}
           altText={`${reply.author.username}'s avatar`}
           user={reply.author}
-          width={24}
-          height={24}
+          width={32}
+          height={32}
         />
         <div
-          className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[172px] w-fit mb-3 ml-3`}
+          className={`relative mb-3 ml-3 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
         >
           <div
-            className={`break-words line-clamp-6 w-full text-sm text-gray5 cursor-pointer`}
+            className={`line-clamp-6 w-full cursor-pointer break-words text-base text-black`}
           >
             {reply.text}
           </div>
 
           {/* Bubbles */}
-          <div className={`w-3 h-3 absolute -bottom-1 -left-1`}>
+          <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
             <div
-              className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
             />
             <div
-              className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
             />
           </div>
         </div>

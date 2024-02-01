@@ -77,14 +77,14 @@ export default function RootReply({ reply, index }: ReplyProps) {
       style={{
         willChange: "opacity, scale, transform",
       }}
-      className={`flex flex-col relative w-full pt-4 h-fit`}
+      className={`relative flex h-fit w-full flex-col pt-4`}
     >
       {/* Main Reply */}
       <div
-        className={`flex items-center bg-[#F4F4F4] p-2 pr-2.5 gap-2 rounded-[20px]`}
+        className={`flex items-center gap-2 rounded-[20px] bg-[#E5E5E5] p-2 pr-2.5`}
       >
         <Avatar
-          className="w-8 h-8 rounded-full border border-silver"
+          className="border-silver h-8 w-8 rounded-full border"
           imageSrc={reply.author.image}
           altText={`${reply.author.username}'s avatar`}
           width={32}
@@ -103,7 +103,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
             scale: replyTarget?.reply === reply ? 1.01 : 1,
           }}
           transition={{ duration: 0.24 }}
-          className={`text-base break-words cursor-pointer`}
+          className={`cursor-pointer break-words text-base`}
         >
           {reply.text}
         </motion.div>
@@ -111,10 +111,10 @@ export default function RootReply({ reply, index }: ReplyProps) {
 
       {/* Attribution & Collapse Dot */}
       {replyCount > 0 && (
-        <div className={`flex gap-3.5 mt-1.5`}>
+        <div className={`mt-1.5 flex gap-3.5`}>
           {/* Collapse */}
           <div
-            className={`flex flex-col items-center cursor-pointer h-full min-w-[9px]`}
+            className={`flex h-full min-w-[9px] cursor-pointer flex-col items-center`}
           >
             {!showChildReplies ? (
               <motion.div
@@ -123,7 +123,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
                   opacity: 1,
                 }}
                 onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`w-[9px] h-[9px] rounded-full cursor-pointer bg-black opacity-50`}
+                className={`h-[9px] w-[9px] cursor-pointer rounded-full bg-black opacity-50`}
               />
             ) : (
               <motion.button
@@ -138,14 +138,14 @@ export default function RootReply({ reply, index }: ReplyProps) {
                   height: 0,
                 }}
                 onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`flex flex-grow rounded-max h-full bg-gray3 opacity-50`}
+                className={`rounded-max bg-gray3 flex h-full flex-grow opacity-50`}
               />
             )}
           </div>
 
           {/* Replies & Username */}
           <div className={`flex flex-col`}>
-            <div className={`text-sm leading-[9px] text-gray2 font-medium`}>
+            <div className={`text-gray2 text-sm font-medium leading-[9px]`}>
               {reply.author.username}
             </div>
             {showChildReplies && (

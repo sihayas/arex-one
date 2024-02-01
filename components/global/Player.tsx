@@ -173,12 +173,12 @@ export const Player = () => {
 
   return (
     <MotionConfig transition={transition}>
-      <div className="absolute center-x bottom-8 bg-[#E5E5E5] rounded-2xl z-10 shadow-shadowKitHigh">
-        <motion.div className="flex w-[402px] h-14 rounded-2xl p-3">
+      <div className="center-x shadow-shadowKitHigh absolute bottom-8 z-10 rounded-2xl bg-[#E5E5E5]">
+        <motion.div className="flex h-14 w-[402px] rounded-2xl p-3">
           {/* Artwork */}
           <AnimatePresence>
             <motion.div
-              className={`min-w-[32px] min-h-[32px] cursor-pointer border border-silver overflow-hidden`}
+              className={`border-silver min-h-[32px] min-w-[32px] cursor-pointer overflow-hidden border`}
               initial={{ opacity: 0, scale: 0.25 }}
               animate={{ opacity: 1, scale: 1, borderRadius: 32 }}
               exit={{ opacity: 0, scale: 0.25 }}
@@ -201,7 +201,7 @@ export const Player = () => {
           <motion.div
             onPointerEnter={() => setHovered(true)}
             onPointerLeave={() => setHovered(false)}
-            className="flex flex-col items-center justify-center w-full cursor-pointer p-2 ml-1"
+            className="ml-1 flex w-full cursor-pointer flex-col items-center justify-center p-2"
           >
             {/*  Right Text */}
             <motion.div
@@ -209,7 +209,7 @@ export const Player = () => {
               animate={{
                 color: hovered || panning ? "#777" : "#999",
               }}
-              className="flex justify-start shrink-0 text-xs font-semibold ml-auto mb-1.5 leading-[8px]"
+              className="mb-1.5 ml-auto flex shrink-0 justify-start text-xs font-semibold leading-[8px]"
             >
               {hovered ? currentTime : artist.current}
             </motion.div>
@@ -220,7 +220,7 @@ export const Player = () => {
               onPan={handlePan}
               onPanEnd={handlePanEnd}
               style={{ height: height + buffer }}
-              className="flex items-center justify-center relative touch-none grow-0 w-full"
+              className="relative flex w-full grow-0 touch-none items-center justify-center"
               initial={false}
               ref={ref}
             >
@@ -231,12 +231,12 @@ export const Player = () => {
                   hovered: { height },
                   panning: { height },
                 }}
-                className="relative rounded-lg overflow-hidden w-full"
+                className="relative w-full overflow-hidden rounded-lg"
               >
                 <div className="h-full bg-[#CCC]" />
                 <motion.div
                   style={{ width, backgroundColor: color }}
-                  className="absolute w-[20%] inset-0"
+                  className="absolute inset-0 w-[20%]"
                 />
               </motion.div>
             </motion.div>
@@ -247,7 +247,7 @@ export const Player = () => {
                 animate={{
                   color: hovered || panning ? "#777" : "#999",
                 }}
-                className="flex justify-end shrink-0 mr-auto text-xs font-semibold leading-[8px] mt-1.5"
+                className="mr-auto mt-1.5 flex shrink-0 justify-end text-xs font-semibold leading-[8px]"
               >
                 {hovered ? remainingTime : name.current}
               </motion.div>
@@ -257,7 +257,7 @@ export const Player = () => {
           <motion.button
             key={playbackState}
             onClick={handlePlayButton}
-            className="flex items-center justify-center p-2 rounded-max min-w-[32px]"
+            className="rounded-max flex min-w-[32px] items-center justify-center p-2"
             whileHover={{
               color: "#666",
               scale: 1.1,
@@ -289,7 +289,7 @@ export const Player = () => {
           {/* Play Button */}
           <motion.button
             onClick={handleNextButton}
-            className="flex items-center justify-center p-2 rounded-max min-w-[32px]"
+            className="rounded-max flex min-w-[32px] items-center justify-center p-2"
             whileHover={{
               color: "#666",
               scale: 1.1,

@@ -109,33 +109,6 @@ export const useEntriesQuery = (userId: string) => {
   );
 };
 
-export const useSoundsQuery = (userId: string) => {
-  return useInfiniteQuery(
-    ["sounds", userId],
-    async ({ pageParam = 1 }) => {
-      const url = `/api/user/get/sounds`;
-      const { data } = await axios.get(url, {
-        params: {
-          userId,
-          page: pageParam,
-          limit: 8,
-        },
-      });
-
-      const { artifacts, pagination } = data.data;
-
-      const mergedData = await attachSoundDataToArtifacts(artifacts);
-
-      return { data: mergedData, pagination };
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
-      enabled: !!userId,
-      refetchOnWindowFocus: false,
-    },
-  );
-};
-
 export const useWispsQuery = (userId: string) => {
   return useInfiniteQuery(
     ["wisps", userId],
@@ -172,6 +145,7 @@ export const useNotificationsQuery = (userId: string | undefined) => {
       });
 
       const { notifications } = data.data;
+
       if (!notifications) {
         throw new Error("Unexpected server response structure");
       }

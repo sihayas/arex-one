@@ -6,9 +6,10 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 const Notifications = () => {
   const { notifs } = useInterfaceContext();
 
-  console.log(notifs);
+  console.log("notifs", notifs);
+
   return (
-    <div className={`flex flex-col w-full gap-8 p-4`}>
+    <div className={`flex w-full flex-col gap-8 p-6`}>
       {Object.entries(notifs).map(([key, notificationGroup], index) => {
         const notificationType = key.split("|")[0].toUpperCase();
         switch (notificationType) {
@@ -16,14 +17,14 @@ const Notifications = () => {
             return (
               <>
                 <Heart key={key} notificationsGroup={notificationGroup} />
-                <div className="w-full h-[1.5px] bg-silver rounded-full" />
+                <div className="bg-silver h-[1.5px] w-full rounded-full" />
               </>
             );
           case "REPLY":
             return (
               <>
                 <Reply key={key} notificationsGroup={notificationGroup} />
-                <div className="w-full h-[1.5px] bg-silver rounded-full" />
+                <div className="bg-silver h-[1.5px] w-full rounded-full" />
               </>
             );
           // case "FOLLOWED":

@@ -33,7 +33,7 @@ const artworkConfig = {
 };
 
 export const Artifact = () => {
-  const { activePage, scrollContainerRef, pages } = useInterfaceContext();
+  const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
   const { handleSelectSound } = useSound();
 
   const { scrollY } = useScroll({
@@ -65,6 +65,8 @@ export const Artifact = () => {
       scrollContainerRef.current.scrollTo(0, 0);
     }
   }, []);
+
+  if (!user) return;
 
   return (
     <>
@@ -118,7 +120,9 @@ export const Artifact = () => {
         <div className={`text-base text-black`}>{artifact.content?.text}</div>
       </div>
 
-      <div className={`min-h-full min-w-full`}></div>
+      <div className={`min-h-full min-w-full p-8`}>
+        <Replies artifactId={artifact.id} userId={user.id} />
+      </div>
     </>
   );
 };

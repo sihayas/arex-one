@@ -79,7 +79,7 @@ const Nav = () => {
             : activeAction === "notifications"
               ? 610 // notifications
               : 42,
-      x: activeAction === "notifications" ? -196 : 0,
+      x: activeAction === "notifications" ? -212 : 0,
       transition: {
         type: "spring",
         damping: 32,
@@ -104,7 +104,7 @@ const Nav = () => {
       },
     },
     expanded: {
-      width: activeAction !== "notifications" ? 384 : 240,
+      width: activeAction !== "notifications" ? 384 : 320,
       borderRadius: 18,
       transition: {
         type: "spring",
@@ -129,9 +129,11 @@ const Nav = () => {
     setExpandInput(false);
     if (activeAction === "notifications") setActiveAction("none");
   }, [setExpandInput, activeAction, setActiveAction]);
+
   const onFocus = useCallback(() => {
     setExpandInput(true);
   }, [setExpandInput]);
+
   const handleNotificationsClick = useCallback(() => {
     setExpandInput(true);
     setActiveAction("notifications");
@@ -175,7 +177,7 @@ const Nav = () => {
     >
       {/* Content */}
       <motion.div
-        className={`scrollbar-none outline-silver relative -z-10 flex w-full flex-col overflow-scroll rounded-3xl bg-[#F4F4F4]/80 outline outline-1`}
+        className={`scrollbar-none outline-silver relative -z-10 flex w-full flex-col overflow-scroll rounded-3xl bg-[#F4F4F4] outline outline-1`}
         variants={containerVariants}
         animate={expandInput ? "expanded" : "collapsed"}
       >
@@ -204,6 +206,27 @@ const Nav = () => {
             className={`relative flex min-h-[28px] min-w-[28px] items-center justify-center`}
             whileHover={{ scale: 1.1 }}
           >
+            {/* Avatar / Default Target */}
+            <AnimatePresence>
+              {!expandInput && (
+                <motion.div
+                  exit="exit"
+                  initial="initial"
+                  animate="animate"
+                  className="h-max w-max"
+                >
+                  <Avatar
+                    className="border-silver border"
+                    imageSrc={user.image}
+                    altText={`${user.username}'s avatar`}
+                    width={28}
+                    height={28}
+                    user={user}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Target */}
             <AnimatePresence>
               {activeAction === "none" && (
@@ -286,26 +309,6 @@ const Nav = () => {
                     <TargetCommandIcon color={`#999`} />
                   </motion.div>
                 ))}
-            </AnimatePresence>
-
-            <AnimatePresence>
-              {!expandInput && (
-                <motion.div
-                  exit="exit"
-                  initial="initial"
-                  animate="animate"
-                  className="h-max w-max"
-                >
-                  <Avatar
-                    className="border-silver border"
-                    imageSrc={user.image}
-                    altText={`${user.username}'s avatar`}
-                    width={28}
-                    height={28}
-                    user={user}
-                  />
-                </motion.div>
-              )}
             </AnimatePresence>
           </motion.button>
         </>

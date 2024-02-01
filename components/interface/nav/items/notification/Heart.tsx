@@ -11,27 +11,56 @@ const Heart = ({ notificationsGroup }: any) => {
   const remainingCount =
     notificationsGroup.count > 4 ? notificationsGroup.count - 3 : 0;
 
-  const url =
-    notifications[0].activity.heart.artifact?.appleData.attributes.artwork
-      .url ||
-    notifications[0].activity.heart.reply?.artifact.appleData.attributes.artwork
-      .url;
+  const sound =
+    notifications[0].activity.heart.artifact?.appleData ||
+    notifications[0].activity.heart.reply?.artifact.appleData;
 
-  const artwork = url.replace("{w}", "280").replace("{h}", "280");
+  const url = MusicKit.formatArtworkURL(
+    sound.attributes.artwork,
+    96 * 2.5,
+    96 * 2.5,
+  );
+
+  const name = notifications[0].activity.heart.author.username;
 
   const reply = notifications[0].activity.heart.reply;
 
   return (
-    <div
-      className={`flex items-center flex-wrap w-[208px] min-h-[128px] gap-4 relative`}
-    >
+    <div className={`relative flex w-full items-center gap-2`}>
+      <HeartIcon className={`absolute -top-1 left-5 z-10 -scale-x-[1]`} />
+
+      {/* Art */}
+      <motion.div
+        className={`shadow-shadowKitLow outline-silver relative h-[64px] min-w-[48px] -rotate-3 overflow-hidden rounded-xl outline outline-1 `}
+      >
+        <Image
+          className="rounded-xl"
+          src={url}
+          alt={`Artwork`}
+          loading="lazy"
+          quality={100}
+          style={{ objectFit: "cover" }}
+          fill={true}
+        />
+      </motion.div>
+
+      {/* Text */}
+      <div className={`flex w-full flex-col`}>
+        <div className={`text-base font-medium text-black`}>{name}</div>
+        <div className={`text-gray2 text-base font-medium tracking-tighter`}>
+          {count > 1 ? `& ${count - 1} more ` : "liked your sound"}
+          {count > 1 && <span style={{ color: "#FF4DC9" }}>hearts!</span>}
+        </div>
+      </div>
+
       <motion.div
         style={{
           paddingBottom: reply ? 68 : 0,
         }}
-        className={`flex flex-col items-center z-10`}
+        className={`z-10 flex flex-col items-center`}
       >
-        <div className="bg-[#F4F4F4] rounded-max relative w-[96px] h-[96px] flex justify-center items-center">
+        {/* Avatar's Container */}
+        <div className="rounded-max border-silver relative flex h-[96px] w-[96px] items-center justify-center border bg-white">
           {notifications.map((notification: any, index: number) => {
             const { image, id } = notification.activity.heart.author;
             const { positionClasses, width, height } = getPositionClasses(
@@ -41,7 +70,7 @@ const Heart = ({ notificationsGroup }: any) => {
             return (
               <Image
                 key={id}
-                className={`absolute ${positionClasses} rounded-max border border-silver overflow-hidden`}
+                className={`absolute ${positionClasses} rounded-max border-silver overflow-hidden border`}
                 src={image}
                 alt={`Author ${id}`}
                 width={width}
@@ -52,20 +81,17 @@ const Heart = ({ notificationsGroup }: any) => {
             );
           })}
           {remainingCount > 0 && (
-            <div className="absolute top-6 left-3 text-xs leading-[8px] text-white bg-gray3 rounded-full w-[26px] h-[26px] flex items-center justify-center font-bold">
+            <div className="bg-gray3 absolute left-3 top-6 flex h-[26px] w-[26px] items-center justify-center rounded-full text-xs font-bold leading-[8px] text-white">
               {remainingCount}
             </div>
           )}
-          <HeartIcon className={`absolute top-0 left-0`} />
-        </div>
-        <div className="text-sm leading-[9px] text-gray2 font-medium mt-2">
-          {notifications[0].activity.heart.author.username}
         </div>
 
+        {/* If Reply Heart */}
         {reply && (
-          <div className={`absolute -bottom-1.5 left-0 flex items-end w-full`}>
+          <div className={`absolute -bottom-1.5 left-0 flex w-full items-end`}>
             <Avatar
-              className={`h-6 border border-silver`}
+              className={`border-silver h-6 border`}
               imageSrc={reply.author.image}
               altText={`${reply.author.username}'s avatar`}
               user={reply.author}
@@ -73,40 +99,26 @@ const Heart = ({ notificationsGroup }: any) => {
               height={24}
             />
             <div
-              className={`bg-[#F4F4F4] rounded-[18px] relative px-[10px] pt-[6px] pb-[7px] max-w-[172px] w-fit mb-3 ml-3`}
+              className={`relative mb-3 ml-3 w-fit max-w-[172px] rounded-[18px] bg-[#F4F4F4] px-[10px] pb-[7px] pt-[6px]`}
             >
               <div
-                className={`break-words line-clamp-2 w-full text-sm text-gray5 cursor-pointer`}
+                className={`text-gray5 line-clamp-2 w-full cursor-pointer break-words text-sm`}
               >
                 {reply.text}
               </div>
 
               {/* Bubbles */}
-              <div className={`w-3 h-3 absolute -bottom-1 -left-1`}>
+              <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
                 <div
-                  className={`bg-[#F4F4F4] w-2 h-2 absolute top-0 right-0 rounded-full`}
+                  className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#F4F4F4]`}
                 />
                 <div
-                  className={`bg-[#F4F4F4] w-1 h-1 absolute bottom-0 left -0 rounded-full`}
+                  className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-[#F4F4F4]`}
                 />
               </div>
             </div>
           </div>
         )}
-      </motion.div>
-      {/* Art / Reply */}
-      <motion.div
-        className={`min-w-[86px] h-[112px] rounded-2xl overflow-hidden relative ml-[5px] rotate-3`}
-      >
-        <Image
-          className={`cursor-pointer rounded-2xl`}
-          src={artwork}
-          alt={`Artwork`}
-          loading="lazy"
-          quality={100}
-          style={{ objectFit: "cover" }}
-          fill={true}
-        />
       </motion.div>
     </div>
   );

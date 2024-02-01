@@ -36,7 +36,7 @@ function Replies({ userId, artifactId }: RenderRepliesProps) {
           {isFetchingNextPage ? (
             "loading"
           ) : (
-            <div className={`text-xs text-gray3 font-bold pt-8`}>more</div>
+            <div className={`text-gray3 pt-8 text-xs font-bold`}>more</div>
           )}
         </button>
       )}
