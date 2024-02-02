@@ -49,7 +49,7 @@ const searchTransition = {
 
 const Nav = () => {
   const { replyTarget } = useThreadcrumb();
-  const { user, pages } = useInterfaceContext();
+  const { user, activePage } = useInterfaceContext();
   const {
     inputValue,
     setInputValue,
@@ -62,17 +62,17 @@ const Nav = () => {
   const { selectedFormSound } = useSoundContext();
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
 
-  const activePage: Page = pages[pages.length - 1];
+  const pageObject = activePage.sound || activePage.artifact;
 
   const contentVariants = {
     collapsed: {
+      x: "-50%",
+      left: "50%",
       width: 124,
       boxShadow:
         "0px 0px 0px 0px rgba(0,0,0,0.0), 0px 0px 0px 0px rgba(0,0,0,0.0)",
       outline: "1px solid rgba(0,0,0,0.05)",
       height: 44,
-      x: "-50%",
-      left: "50%",
       transition: {
         type: "spring",
         damping: 24,
@@ -80,12 +80,12 @@ const Nav = () => {
       },
     },
     expanded: {
+      x: "-50%",
+      left: "50%",
       width: activeAction !== "notifications" ? 384 : 320,
       boxShadow:
         "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
       outline: "1px solid rgba(0,0,0,0.0)",
-      x: "-50%",
-      left: "50%",
       height: !expandInput
         ? 44 // base
         : activeAction === "none" && inputValue
@@ -115,7 +115,7 @@ const Nav = () => {
       },
     },
     expanded: {
-      x: "-50%",
+      x: activeAction !== "notifications" ? -186 : "-50%",
       left: "50%",
       y: -6,
       transition: {
@@ -219,7 +219,7 @@ const Nav = () => {
           {activeAction === "notifications" && expandInput && <Notifications />}
 
           <div
-            className={`flex w-full items-center justify-center bg-transparent p-[11px] pl-16`}
+            className={`flex w-full items-center justify-center bg-transparent p-[11px] pl-[82px]`}
           >
             <TextareaAutosize
               id="entryText"
@@ -260,7 +260,12 @@ const Nav = () => {
           className={`relative flex h-7 w-7 items-center justify-center`}
         >
           <AnimatePresence>
-            {!expandInput && (
+            {/* Avatar */}
+            {(!expandInput ||
+              (expandInput &&
+                !pageObject &&
+                !inputValue &&
+                activeAction === "none")) && (
               <Avatar
                 className="border-silver border"
                 imageSrc={user.image}
@@ -270,19 +275,25 @@ const Nav = () => {
                 user={user}
               />
             )}
-            tr1`qw qw12` {/* User is on a sound page */}
+
+            {/* Form is Active */}
+            {expandInput &&
+              activeAction === "form" &&
+              (inputValue ? <TargetCommandIcon /> : <TargetFormIcon />)}
+
+            {/* User is on a Sound page */}
             {expandInput &&
               activeAction === "none" &&
               activePage.sound &&
               !inputValue && <TargetAddIcon />}
-            {/* Form is active */}
-            {expandInput && activeAction === "form" && !inputValue && (
-              <TargetFormIcon />
-            )}
-            {expandInput && activeAction === "form" && inputValue && (
-              <TargetCommandIcon />
-            )}
-            {expandInput && activeAction === "reply" && <TargetArtifactIcon />}
+
+            {/* User is on an Artifact page */}
+            {expandInput &&
+              activeAction === "none" &&
+              activePage.artifact &&
+              !inputValue && <TargetArtifactIcon />}
+
+            {/* User is on Search results */}
             {expandInput && inputValue && activeAction === "none" && (
               <TargetGoIcon />
             )}
@@ -292,7 +303,7 @@ const Nav = () => {
         {/* Search Icon */}
 
         <motion.button
-          whileHover={{ scale: 1.1 }}
+          whileHover={!expandInput ? { scale: 1.1 } : undefined}
           animate={expandInput ? "exit" : "initial"}
           variants={iconVariants}
           onClick={() => setExpandInput((prev) => !prev)}
