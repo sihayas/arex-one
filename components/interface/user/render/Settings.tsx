@@ -110,13 +110,13 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
   if (!data) return null;
 
   return (
-    <div className="w-full h-full py-8 flex flex-col items-end max-w-[192px] overflow-scroll scrollbar-none text-xs leading-[9px]">
-      <div className="text-gray2 uppercase mb-[23px]">settings</div>
+    <div className="scrollbar-none flex h-full w-full max-w-[192px] flex-col items-end overflow-scroll py-8 text-xs leading-[9px]">
+      <div className="text-gray2 mb-[23px] uppercase">settings</div>
       {/* Essentials */}
       <div className="text-gray3 pb-[23px] uppercase">essentials</div>
-      <div className="flex flex-col gap-4 mb-[64px]">
+      <div className="mb-[64px] flex flex-col gap-4">
         {essentials.map((essential, i) => (
-          <div className={`flex gap-4 relative`} key={essential.id}>
+          <div className={`relative flex gap-4`} key={essential.id}>
             {/*<Artwork*/}
             {/*  className="rounded-xl border border-silver"*/}
             {/*  sound={essential.appleData}*/}
@@ -133,9 +133,9 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
 
       {/* Bio */}
       <div className="text-gray3 pb-[23px] uppercase">bio</div>
-      <div className="mb-[64px] min-w-[160px] min-h-[105px] border-b-[1.5px] border-l-[1.5px] border-silver rounded-bl-2xl relative pl-2 pb-2">
+      <div className="border-silver relative mb-[64px] min-h-[105px] min-w-[160px] rounded-bl-2xl border-b-[1.5px] border-l-[1.5px] pb-2 pl-2">
         <TextareaAutosize
-          className={`w-full min-h-full bg-transparent outline-none resize-none text-gray2 text-end text-xs`}
+          className={`text-gray2 min-h-full w-full resize-none bg-transparent text-end text-xs outline-none`}
           value={bioValue}
           onChange={(e) => handleInputTextChange(e.target.value)}
           maxRows={6}
@@ -144,7 +144,7 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
         />
         <button
           disabled={bio === bioValue}
-          className={`absolute -bottom-9 left-0 p-2 outline outline-silver outline-1 rounded-full shadow-sm`}
+          className={`outline-silver absolute -bottom-9 left-0 rounded-full p-2 shadow-sm outline outline-1`}
           onClick={handleChangeBio}
         >
           <EditIcon color={bio !== bioValue ? "#000" : "#CCC"} />
@@ -153,7 +153,7 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
 
       {/* Notifications */}
       <div className="text-gray3 mb-[23px] uppercase">signals</div>
-      <div className="flex flex-col items-end gap-4 mb-[64px]">
+      <div className="mb-[64px] flex flex-col items-end gap-4">
         {[
           { key: "heartNotifications", label: "Hearts" },
           { key: "replyNotifications", label: "Replies" },
@@ -161,7 +161,7 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
         ].map(({ key, label }) => (
           <button
             key={key}
-            className={`flex items-center gap-2  cursor-pointer text-white  w-fit uppercase`}
+            className={`flex w-fit cursor-pointer  items-center gap-2  uppercase text-white`}
             onClick={() => handleToggleSetting(key as SettingKey)}
             style={{
               color:
@@ -178,7 +178,7 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
                     ? "#A6FF47"
                     : "#CCC",
               }}
-              className={`w-[10px] h-[10px] rounded-full`}
+              className={`h-[10px] w-[10px] rounded-full`}
             ></div>
           </button>
         ))}
@@ -186,17 +186,17 @@ const Settings = ({ userId, essentials, bio }: SettingsProps) => {
 
       {/* Manage Account */}
       <div className=" text-gray3  mb-[23px] uppercase">manage account</div>
-      <div className="flex flex-col items-end gap-3 mb-[23px]  ">
+      <div className="mb-[23px] flex flex-col items-end gap-3  ">
         <div className={`text-action font-medium uppercase `}>archive</div>
         <div className={`text-gray2 text-end`}>Mark your data as deleted.</div>
-        <div className={`text-black text-end`}>Reversible for 30 days.</div>
+        <div className={`text-end text-black`}>Reversible for 30 days.</div>
       </div>
       <div className="flex flex-col items-end gap-3">
         <div className={` text-red font-medium uppercase `}>delete</div>
         <div className={` text-gray2 text-end leading-[10px]`}>
           Wipe all data related to you
         </div>
-        <div className={` text-black text-end leading-[10px]`}>Permanent.</div>
+        <div className={` text-end leading-[10px] text-black`}>Permanent.</div>
       </div>
     </div>
   );
