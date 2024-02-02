@@ -53,7 +53,7 @@ const Reply = ({ notificationsGroup }: any) => {
         />
       </div>
       {/* Reply */}
-      <div className={`flex w-full items-end drop-shadow-lg`}>
+      <div className={`flex w-full items-end`}>
         <Avatar
           className={`border-silver h-8 border`}
           imageSrc={reply.author.image}
@@ -113,7 +113,7 @@ const Reply = ({ notificationsGroup }: any) => {
       </div>
 
       {/* Reply */}
-      <div className={`flex w-full items-end drop-shadow-lg`}>
+      <div className={`flex w-full items-end`}>
         <Avatar
           className={`border-silver h-8 border`}
           imageSrc={reply.author.image}

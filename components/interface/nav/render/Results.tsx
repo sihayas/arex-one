@@ -30,35 +30,39 @@ const Results = ({ searchData }: SearchProps) => {
   ];
 
   return (
-    <Command.List>
-      {allData.map((item, index) => {
-        switch (item.type) {
-          case "albums":
-          case "songs":
-            return (
-              <div key={item.id} className={`relative z-0`}>
-                <Sound sound={item} />
-                {active === item.id && (
-                  <motion.span
-                    layoutId="bubble"
-                    className="absolute inset-0 bg-silver m-2 shadow-shadowKitLow -z-10"
-                    style={{ borderRadius: 16 }}
-                    transition={{
-                      type: "spring",
-                      bounce: 0.2,
-                      duration: 0.6,
-                    }}
-                  />
-                )}
-              </div>
-            );
-          case "users":
-            return <UserItem key={index} user={item} />;
-          default:
-            return null;
-        }
-      })}
-    </Command.List>
+    <div
+      className={`scrollbar-none -z-10 flex w-full flex-col overflow-scroll `}
+    >
+      <Command.List>
+        {allData.map((item, index) => {
+          switch (item.type) {
+            case "albums":
+            case "songs":
+              return (
+                <div key={item.id} className={`relative z-0`}>
+                  <Sound sound={item} />
+                  {active === item.id && (
+                    <motion.span
+                      layoutId="bubble"
+                      className="bg-silver shadow-shadowKitLow absolute inset-0 -z-10 m-2"
+                      style={{ borderRadius: 16 }}
+                      transition={{
+                        type: "spring",
+                        bounce: 0.2,
+                        duration: 0.6,
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            case "users":
+              return <UserItem key={index} user={item} />;
+            default:
+              return null;
+          }
+        })}
+      </Command.List>
+    </div>
   );
 };
 

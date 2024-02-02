@@ -181,7 +181,9 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         boxShadow: !expandInput
           ? "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)"
           : "0px 0px 0px 0px rgba(0,0,0,0.0), 0px 0px 0px 0px rgba(0,0,0,0.0)",
-        scale: !expandInput ? 1 : 0.96,
+        outline: expandInput
+          ? "1px solid rgba(0,0,0,0.05)"
+          : "1px solid rgba(0,0,0,0.0)",
       };
       const transitionConfig = {
         boxShadow: {
@@ -189,14 +191,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           mass: 1,
           stiffness: 180,
           damping: 22,
-          delay: expandInput ? 0.15 : 0,
-        },
-        scale: {
-          type: "spring" as const,
-          mass: 1,
-          stiffness: 240,
-          damping: 22,
-          delay: expandInput ? 0.0 : 0.15,
+          delay: expandInput ? 0 : 0.15,
         },
       };
       animate(scope.current, animationConfig, transitionConfig);
@@ -214,7 +209,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`relative flex items-start justify-center overflow-auto rounded-full bg-[#F4F4F4]/80`}
+        className={`relative flex items-start justify-center overflow-auto rounded-full bg-[#F4F4F4]/80 ${expandInput ? "mix-blend-darken" : ""}`}
         shouldFilter={false}
         loop
         ref={scope}

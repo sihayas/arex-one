@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSoundContext } from "@/context/SoundContext";
 import GetSearchResults from "@/lib/apiHelper/search";
 import { debounce } from "lodash";
@@ -51,95 +51,64 @@ const Nav = () => {
     setActiveAction,
   } = useNavContext();
   const { selectedFormSound } = useSoundContext();
+  const notificationButtonRef = useRef<HTMLButtonElement>(null);
 
   const activePage: Page = pages[pages.length - 1];
 
-  const containerVariants = {
+  const contentVariants = {
     collapsed: {
+      width: 124,
       boxShadow:
         "0px 0px 0px 0px rgba(0,0,0,0.0), 0px 0px 0px 0px rgba(0,0,0,0.0)",
-      height: 43,
+      outline: "1px solid rgba(0,0,0,0.05)",
+      height: 44,
       x: 0,
       transition: {
         type: "spring",
         damping: 24,
         stiffness: 180,
-        x: {
-          type: "spring",
-          stiffness: 140,
-          damping: 18,
-        },
-      },
-    },
-    expanded: {
-      boxShadow:
-        "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
-      height: !expandInput
-        ? 42 // base
-        : activeAction === "none" && inputValue
-          ? 432 // search
-          : activeAction === "form"
-            ? 420 // form
-            : activeAction === "notifications"
-              ? 610 // notifications
-              : 42,
-      x: activeAction === "notifications" ? -212 : 0,
-      transition: {
-        type: "spring",
-        damping: 32,
-        stiffness: 280,
-        x: {
-          type: "spring",
-          stiffness: 180,
-          damping: 20,
-        },
-        boxShadow: {
-          type: "spring" as const,
-          mass: 1,
-          stiffness: 180,
-          damping: 22,
-          delay: expandInput ? 0 : 0.15,
-        },
-      },
-    },
-  };
-
-  const widthVariants = {
-    collapsed: {
-      width: "fit-content",
-      borderRadius: 18,
-      transition: {
-        type: "spring",
-        damping: 28,
-        stiffness: 220,
       },
     },
     expanded: {
       width: activeAction !== "notifications" ? 384 : 320,
-      borderRadius: 18,
+      boxShadow:
+        "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
+      outline: "1px solid rgba(0,0,0,0.0)",
+      height: !expandInput
+        ? 44 // base
+        : activeAction === "none" && inputValue
+          ? 432 // search
+          : activeAction === "form"
+            ? "auto" // form
+            : activeAction === "notifications"
+              ? 610 // notifications
+              : 44,
+      x: activeAction === "notifications" ? -174 : 0,
       transition: {
         type: "spring",
-        damping: 30,
-        stiffness: 380,
+        damping: 32,
+        stiffness: 280,
       },
     },
   };
 
-  const contentVariants = {
+  const barVariants = {
     collapsed: {
-      opacity: 0,
+      x: 8,
+      y: -6,
       transition: {
         type: "spring",
-        damping: 28,
-        stiffness: 220,
+        damping: 24,
+        stiffness: 180,
       },
     },
     expanded: {
-      opacity: 1,
+      x: activeAction === "notifications" ? 108 : 8,
+      y: -6,
       transition: {
         type: "spring",
-        damping: 30,
-        stiffness: 380,
+        damping: 24,
+        stiffness: 180,
       },
     },
   };
@@ -170,10 +139,10 @@ const Nav = () => {
   }, [setExpandInput, setActiveAction]);
 
   const handleReplySubmit = () => {
-    if (!replyTarget || !inputValue || !user?.id) return;
+    if (!replyTarget || !inputValue || !user) return;
 
     toast.promise(
-      addReply(replyTarget, inputValue, user?.id).then(() => {
+      addReply(replyTarget, inputValue, user.id).then(() => {
         setInputValue("");
       }),
       {
@@ -188,27 +157,44 @@ const Nav = () => {
 
   // Active Action
   useEffect(() => {
-    if (selectedFormSound) {
-      setActiveAction("form");
-    } else if (replyTarget) {
-      setActiveAction("reply");
-    } else {
-      setActiveAction("none");
-    }
-  }, [selectedFormSound, setActiveAction, replyTarget]);
+    setActiveAction(
+      selectedFormSound ? "form" : replyTarget ? "reply" : "none",
+    );
+  }, [selectedFormSound, replyTarget, setActiveAction]);
+
+  // Close notifications on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check if the click is outside the button
+      if (
+        notificationButtonRef.current &&
+        !notificationButtonRef.current.contains(event.target)
+      ) {
+        if (activeAction === "notifications") {
+          setExpandInput(false);
+          setActiveAction("none");
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (!user) return null;
 
   return (
     <motion.div
-      variants={widthVariants}
       animate={expandInput ? "expanded" : "collapsed"}
-      className="center-x absolute -bottom-[50px] z-50 flex flex-col -space-y-[42px]"
+      className={`center-x absolute -bottom-[52px] z-50 flex flex-col ${!expandInput && "mix-blend-darken"}`}
     >
-      {/* Content */}
+      {/* Top / Content */}
       <motion.div
-        className={`scrollbar-none outline-silver relative -z-10 flex w-full flex-col overflow-scroll rounded-3xl bg-[#F4F4F4] outline outline-1`}
-        variants={containerVariants}
+        className={`outline-silver relative -z-10 flex w-full flex-col items-end justify-end rounded-3xl bg-[#F4F4F4] outline outline-1`}
+        variants={contentVariants}
         animate={expandInput ? "expanded" : "collapsed"}
       >
         {activeAction === "form" && expandInput && <Form />}
@@ -216,139 +202,13 @@ const Nav = () => {
           <Results searchData={data} />
         )}
         {activeAction === "notifications" && expandInput && <Notifications />}
-      </motion.div>
 
-      {/* Bar */}
-      <motion.div
-        animate={expandInput ? "expanded" : "collapsed"}
-        className={`relative flex max-h-[40px] items-center justify-between bg-transparent p-2 px-1.5`}
-      >
-        {/* Left, Notification Button, Target/Action Icon */}
-        <>
-          <button
-            onClick={handleNotificationsClick}
-            className={`mr-2 flex items-center justify-center rounded-full bg-[#E5E5E5] px-3 py-2`}
-          >
-            <NotificationIcon />
-          </button>
-          {/* Target Container */}
-          <motion.button
-            className={`relative flex min-h-[28px] min-w-[28px] items-center justify-center`}
-            whileHover={{ scale: 1.1 }}
-          >
-            {/* Avatar / Default Target */}
-            <AnimatePresence>
-              {!expandInput && (
-                <motion.div
-                  exit="exit"
-                  initial="initial"
-                  animate="animate"
-                  className="h-max w-max"
-                >
-                  <Avatar
-                    className="border-silver border"
-                    imageSrc={user.image}
-                    altText={`${user.username}'s avatar`}
-                    width={28}
-                    height={28}
-                    user={user}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Target */}
-            <AnimatePresence>
-              {activeAction === "none" && (
-                <>
-                  {/* Target Nothing */}
-                  {!activePage.sound &&
-                    !activePage.artifact &&
-                    expandInput &&
-                    !inputValue && (
-                      <motion.div
-                        exit="exit"
-                        initial="initial"
-                        animate="animate"
-                        variants={iconVariants}
-                      >
-                        <TargetIndexIcon />
-                      </motion.div>
-                    )}
-
-                  {/* Target Search Result */}
-                  {inputValue && expandInput && (
-                    <motion.div
-                      exit="exit"
-                      initial="initial"
-                      animate="animate"
-                      variants={iconVariants}
-                    >
-                      <TargetGoIcon />
-                    </motion.div>
-                  )}
-
-                  {/* Target, Active Page is Sound */}
-                  {!inputValue && activePage.sound && expandInput && (
-                    <motion.div
-                      exit="exit"
-                      initial="initial"
-                      animate="animate"
-                      variants={iconVariants}
-                    >
-                      <TargetAddIcon color="#FFF" />
-                    </motion.div>
-                  )}
-
-                  {/* Target, Active Page is Artifact */}
-                  {!inputValue && activePage.artifact && expandInput && (
-                    <motion.div
-                      exit="exit"
-                      initial="initial"
-                      animate="animate"
-                      variants={iconVariants}
-                      className="center-x center-y absolute z-10"
-                    >
-                      <TargetArtifactIcon />
-                    </motion.div>
-                  )}
-                </>
-              )}
-            </AnimatePresence>
-
-            {/* Target Active Action is Form, No Input Value, Icon */}
-            <AnimatePresence>
-              {activeAction === "form" &&
-                expandInput &&
-                (!inputValue ? (
-                  <motion.div
-                    exit="exit"
-                    initial="initial"
-                    animate="animate"
-                    variants={iconVariants}
-                  >
-                    <TargetFormIcon color={`#999`} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    exit="exit"
-                    initial="initial"
-                    animate="animate"
-                    variants={iconVariants}
-                  >
-                    <TargetCommandIcon color={`#999`} />
-                  </motion.div>
-                ))}
-            </AnimatePresence>
-          </motion.button>
-        </>
-
-        {/* Right, Text Input */}
-        <div className={`relative flex w-full items-center p-2 pr-0`}>
-          {/* Input */}
+        <div
+          className={`flex w-full items-center justify-center bg-transparent p-[11px] pl-16`}
+        >
           <TextareaAutosize
             id="entryText"
-            className={`absolute left-2 w-full resize-none bg-transparent text-base text-black outline-none ${!expandInput && "pointer-events-none"}`}
+            className={`w-full resize-none bg-transparent text-base text-black outline-none ${!expandInput && "pointer-events-none "}`}
             value={expandInput ? inputValue : ""}
             onChange={(e) => handleInputTextChange(e.target.value)}
             onBlur={onBlur}
@@ -357,35 +217,172 @@ const Nav = () => {
             onKeyDown={handleKeyDown}
             minRows={1}
             maxRows={6}
-            tabIndex={0}
           />
-          {/* Discover & */}
-          <motion.div
-            whileHover={{ scale: 0.75 }}
-            initial={{ opacity: 0 }}
-            animate={
-              expandInput
-                ? { opacity: 0, scale: 0 }
-                : {
-                    opacity: 1,
-                    scale: 1,
-                  }
-            }
-            transition={{ duration: 0.2 }}
-            exit={{ opacity: 0, scale: 0 }}
-            className="origin-center cursor-pointer"
-            onClick={() => setExpandInput((prev) => !prev)}
-          >
-            <button
-              className={`flex items-center justify-center rounded-full bg-[#E5E5E5] p-2`}
-            >
-              <AmperesandIcon />
-            </button>
-          </motion.div>
         </div>
+      </motion.div>
+
+      {/* Bottom / Bar */}
+      <motion.div
+        variants={barVariants}
+        animate={expandInput ? "expanded" : "collapsed"}
+        className={`absolute bottom-0 left-0 flex w-fit items-center gap-2 bg-transparent`}
+      >
+        <motion.button
+          whileHover={{
+            scale: 1.1,
+          }}
+          ref={notificationButtonRef}
+          onClick={handleNotificationsClick}
+          className={`flex items-center justify-center rounded-full bg-[#E5E5E5] px-3 py-2`}
+        >
+          <NotificationIcon />
+        </motion.button>
+        {/* Target Container */}
+        <motion.button
+          className={`relative flex items-center justify-center`}
+          whileHover={{ scale: 1.1 }}
+        >
+          {/* Avatar / Default Target */}
+          <AnimatePresence>
+            {!expandInput && (
+              <motion.div
+                exit="exit"
+                initial="initial"
+                animate="animate"
+                className="h-max w-max"
+              >
+                <Avatar
+                  className="border-silver border"
+                  imageSrc={user.image}
+                  altText={`${user.username}'s avatar`}
+                  width={28}
+                  height={28}
+                  user={user}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Target */}
+          <AnimatePresence>
+            {activeAction === "none" && (
+              <>
+                {/* Target Nothing */}
+                {!activePage.sound &&
+                  !activePage.artifact &&
+                  expandInput &&
+                  !inputValue && (
+                    <motion.div
+                      exit="exit"
+                      initial="initial"
+                      animate="animate"
+                      variants={iconVariants}
+                    >
+                      <TargetIndexIcon />
+                    </motion.div>
+                  )}
+
+                {/* Target Search Result */}
+                {inputValue && expandInput && (
+                  <motion.div
+                    exit="exit"
+                    initial="initial"
+                    animate="animate"
+                    variants={iconVariants}
+                  >
+                    <TargetGoIcon />
+                  </motion.div>
+                )}
+
+                {/* Target, Active Page is Sound */}
+                {!inputValue && activePage.sound && expandInput && (
+                  <motion.div
+                    exit="exit"
+                    initial="initial"
+                    animate="animate"
+                    variants={iconVariants}
+                  >
+                    <TargetAddIcon color="#FFF" />
+                  </motion.div>
+                )}
+
+                {/* Target, Active Page is Artifact */}
+                {!inputValue && activePage.artifact && expandInput && (
+                  <motion.div
+                    exit="exit"
+                    initial="initial"
+                    animate="animate"
+                    variants={iconVariants}
+                    className="center-x center-y absolute z-10"
+                  >
+                    <TargetArtifactIcon />
+                  </motion.div>
+                )}
+              </>
+            )}
+          </AnimatePresence>
+
+          {/* Target Active Action is Form, No Input Value, Icon */}
+          <AnimatePresence>
+            {activeAction === "form" &&
+              expandInput &&
+              (!inputValue ? (
+                <motion.div
+                  exit="exit"
+                  initial="initial"
+                  animate="animate"
+                  variants={iconVariants}
+                >
+                  <TargetFormIcon color={`#999`} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  exit="exit"
+                  initial="initial"
+                  animate="animate"
+                  variants={iconVariants}
+                >
+                  <TargetCommandIcon color={`#999`} />
+                </motion.div>
+              ))}
+          </AnimatePresence>
+        </motion.button>
+
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          initial={{ opacity: 0 }}
+          animate={
+            expandInput
+              ? { opacity: 0, scale: 0 }
+              : {
+                  opacity: 1,
+                  scale: 1,
+                }
+          }
+          transition={{ duration: 0.2 }}
+          exit={{ opacity: 0, scale: 0 }}
+          className="origin-center cursor-pointer"
+          onClick={() => setExpandInput((prev) => !prev)}
+        >
+          <button
+            className={`flex items-center justify-center rounded-full bg-[#E5E5E5] p-2`}
+          >
+            <AmperesandIcon />
+          </button>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
 };
 
 export default Nav;
+
+{
+  /* Text Input */
+}
+// <div className={`relative flex w-fit items-center`}>
+//   {/* Input */}
+
+//   {/* Discover & */}
+
+// </div>

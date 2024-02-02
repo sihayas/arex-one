@@ -1,39 +1,39 @@
 .cmdk {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cmdk [cmdk-input] {
-  width: 100%;
-  font-size: 12px;
-  outline: none;
-  color: #333;
-  caret-color: #000;
-  border-radius: 999px;
+    width: 100%;
+    font-size: 12px;
+    outline: none;
+    color: #333;
+    caret-color: #000;
+    border-radius: 999px;
 }
 
 .cmdk [cmdk-input]::placeholder {
-  color: #ccc;
-  font-size: 12px;
+    color: #ccc;
+    font-size: 12px;
 }
 
 .cmdk [cmdk-item] {
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  will-change: transform;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    will-change: transform;
 }
 
 .cmdk [cmdk-item][aria-selected="true"] {
-  opacity: 1;
+    opacity: 1;
 }
 
 .cmdk [cmdk-item]:not([aria-selected="true"]):not(:active) {
-  opacity: 0.65;
+    opacity: 0.65;
 }
 
 /*.cmdk [cmdk-item][aria-disabled="true"] {*/
@@ -47,16 +47,17 @@
 /*}*/
 
 .cmdk [cmdk-list] {
-  width: 100%;
-  overscroll-behavior: contain;
-  scroll-padding-block-end: 40px;
-  border-radius: 32px;
+    width: 100%;
+    overscroll-behavior: contain;
+    scroll-padding-block-end: 40px;
+    border-radius: 32px;
+    minheight: 100%;
 }
 
 .cmdk [cmdk-group-heading] {
-  user-select: none;
-  font-size: 12px;
-  padding: 0 8px;
-  display: flex;
-  align-items: center;
+    user-select: none;
+    font-size: 12px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
 }

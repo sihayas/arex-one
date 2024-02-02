@@ -26,8 +26,8 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const soundType = sound.type;
 
   const artwork = sound.attributes.artwork.url
-    .replace("{w}", "720")
-    .replace("{h}", "720");
+    .replace("{w}", "95")
+    .replace("{h}", "95");
 
   const artistName = sound.attributes.artistName;
 
@@ -72,7 +72,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
     >
       <Image
         id={sound.id}
-        className="border-silver rounded-lg border"
+        className="shadow-shadowKitLow rounded-lg"
         src={artwork}
         alt={`${sound.attributes.name} artwork`}
         width={38}

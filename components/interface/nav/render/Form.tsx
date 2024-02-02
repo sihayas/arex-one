@@ -114,72 +114,74 @@ const Form = () => {
     handleSelectSound(selectedFormSound);
   };
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className={`flex p-8`}>
-      <motion.div
-        initial={{
-          scale: 0.75,
-          // rotateX: -30,
-          // rotateY: -15,
-          opacity: 0,
-          filter: "blur(8px)",
-        }}
-        animate={{
-          scale: 1,
-          // rotateX: 0,
-          // rotateY: 0,
-          rotateZ: -2,
-          opacity: 1,
-          filter: "blur(0px)",
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 48,
-          damping: 12,
-          mass: 2,
-          delay: 0.24,
-        }}
-        className={`shadow-miniCard relative flex h-[322px] w-[322px] origin-center flex-col overflow-hidden rounded-3xl bg-white will-change-transform`}
-        style={{ perspective: 1000 }}
-      >
-        <Image
-          onClick={handleSoundClick}
-          className={`cursor-pointer`}
-          src={artwork}
-          alt={`${name} artwork`}
-          loading="lazy"
-          quality={100}
-          style={{ objectFit: "cover" }}
-          fill={true}
-        />
-
-        <div className={`absolute left-0 top-0 p-4`}>
-          <RatingDial setRatingValue={handleRatingChange} />
-          <AnimatePresence>
-            <motion.div
-              initial={{
-                scale: 0.75,
-                opacity: 0,
-                filter: "blur(8px)",
-              }}
-              className={`center-x center-y absolute font-serif text-2xl leading-[16px] text-white`}
-            >
-              {rating}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div
-          className={`absolute bottom-0 left-0 flex flex-col p-4 drop-shadow`}
+    <div className={`-z-10 flex w-full flex-col overflow-visible `}>
+      <form ref={formRef} onSubmit={handleSubmit} className={`flex p-8`}>
+        <motion.div
+          initial={{
+            scale: 0.75,
+            // rotateX: -30,
+            // rotateY: -15,
+            opacity: 0,
+            filter: "blur(8px)",
+          }}
+          animate={{
+            scale: 1,
+            // rotateX: 0,
+            // rotateY: 0,
+            rotateZ: -2,
+            opacity: 1,
+            filter: "blur(0px)",
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 48,
+            damping: 12,
+            mass: 2,
+            delay: 0.24,
+          }}
+          className={`relative flex h-[322px] w-[322px] origin-center flex-col overflow-hidden rounded-3xl bg-white shadow-2xl will-change-transform`}
+          style={{ perspective: 1000 }}
         >
-          <h3 className={`line-clamp-1 text-base font-bold text-white`}>
-            {name}
-          </h3>
-          <h4 className={`line-clamp-1 text-base font-medium text-white`}>
-            {artist}
-          </h4>
-        </div>
-      </motion.div>
-    </form>
+          <Image
+            onClick={handleSoundClick}
+            className={`cursor-pointer`}
+            src={artwork}
+            alt={`${name} artwork`}
+            loading="lazy"
+            quality={100}
+            style={{ objectFit: "cover" }}
+            fill={true}
+          />
+
+          <div className={`absolute left-0 top-0 p-4`}>
+            <RatingDial setRatingValue={handleRatingChange} />
+            <AnimatePresence>
+              <motion.div
+                initial={{
+                  scale: 0.75,
+                  opacity: 0,
+                  filter: "blur(8px)",
+                }}
+                className={`center-x center-y absolute font-serif text-2xl leading-[16px] text-white`}
+              >
+                {rating}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <div
+            className={`absolute bottom-0 left-0 flex flex-col p-4 drop-shadow`}
+          >
+            <h3 className={`line-clamp-1 text-base font-bold text-white`}>
+              {name}
+            </h3>
+            <h4 className={`line-clamp-1 text-base font-medium text-white`}>
+              {artist}
+            </h4>
+          </div>
+        </motion.div>
+      </form>
+    </div>
   );
 };
 
