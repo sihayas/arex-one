@@ -22,7 +22,6 @@ const Heart = ({ notificationsGroup }: any) => {
   );
 
   const name = notifications[0].activity.heart.author.username;
-
   const reply = notifications[0].activity.heart.reply;
 
   return (
@@ -60,7 +59,7 @@ const Heart = ({ notificationsGroup }: any) => {
         className={`z-10 flex flex-col items-center`}
       >
         {/* Avatar's Container */}
-        <div className="rounded-max border-silver relative flex h-[96px] w-[96px] items-center justify-center border bg-white">
+        <div className="rounded-max border-silver relative flex h-[96px] w-[96px] items-center justify-center border bg-[#E5E5E5]">
           {notifications.map((notification: any, index: number) => {
             const { image, id } = notification.activity.heart.author;
             const { positionClasses, width, height } = getPositionClasses(
@@ -147,13 +146,17 @@ const getPositionClasses = (index: number, count: number) => {
 
     case 4:
       if (index === 0)
-        return { positionClasses: "right-3 bottom-4", width: 36, height: 36 };
+        return { positionClasses: "left-3 top-4", width: 36, height: 36 };
       if (index === 1)
-        return { positionClasses: "top-2 right-6", width: 32, height: 32 };
+        return {
+          positionClasses: "left-[26px] bottom-[10px]",
+          width: 28,
+          height: 28,
+        };
       if (index === 2)
-        return { positionClasses: "left-4 bottom-3", width: 28, height: 28 };
+        return { positionClasses: "top-3 right-4", width: 24, height: 24 };
       return {
-        positionClasses: "top-6 left-3",
+        positionClasses: "right-4 bottom-6",
         width: 26,
         height: 26,
       };

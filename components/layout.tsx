@@ -1,5 +1,5 @@
 import { Interface } from "./interface/Interface";
-import React, { useEffect, ReactNode, useRef } from "react";
+import React, { useEffect, ReactNode } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 
@@ -85,28 +85,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       {/* Interface */}
-      {user && activePage && (
-        <motion.div
-          animate={{
-            opacity: isVisible ? 1 : 0,
-          }}
-        >
-          {/*  Blur Backdrop */}
-          <div
-            className={`pointer-events-none absolute left-0 top-0 z-0 h-screen w-screen bg-white/20 backdrop-blur-[80px]`}
-          ></div>
-          {/* Ambien */}
-          <motion.div
-            style={{
-              backgroundColor: `#${activePage?.color}`,
-              width: `400px`,
-              height: `400px`,
-            }}
-            className="center-x center-y rounded-max absolute -z-10"
-          />
-          <Interface isVisible={isVisible} />
-        </motion.div>
-      )}
+      {user && activePage && <Interface isVisible={isVisible} />}
 
       {/* Feed */}
       <main
@@ -116,8 +95,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         {children}
       </main>
-
-      {/*<Slider />*/}
     </>
   );
 }

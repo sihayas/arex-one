@@ -124,7 +124,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           className={`flex w-full flex-col gap-[3px] ${reverseAlignment} relative`}
         >
           <div
-            className={`relative w-fit overflow-visible rounded-2xl bg-white px-3 py-1.5 ${
+            className={`relative w-fit overflow-visible rounded-2xl bg-[#e5e5e5] px-3 py-1.5 ${
               !isChild && "max-w-[380px]"
             }`}
           >
@@ -145,10 +145,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             {/* Bubbles */}
             <div className={`absolute h-3 w-3 ${bubblePosition}`}>
               <div
-                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#e5e5e5]`}
               />
               <div
-                className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
+                className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-[#e5e5e5]`}
               />
             </div>
           </div>

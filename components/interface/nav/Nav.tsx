@@ -115,7 +115,7 @@ const Nav = () => {
       },
     },
     expanded: {
-      x: isNotifications ? 122 : -186,
+      x: isNotifications ? -154 : -186,
       y: -6,
       left: "50%",
       transition:
@@ -265,14 +265,22 @@ const Nav = () => {
               !pageObject &&
               !inputValue &&
               activeAction === "none")) && (
-            <Avatar
-              className="border-silver border"
-              imageSrc={user.image}
-              altText={`${user.username}'s avatar`}
-              width={28}
-              height={28}
-              user={user}
-            />
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+              >
+                <Avatar
+                  className="border-silver border"
+                  imageSrc={user.image}
+                  altText={`${user.username}'s avatar`}
+                  width={28}
+                  height={28}
+                  user={user}
+                />
+              </motion.div>
+            </AnimatePresence>
           )}
 
           {/* Form is Active */}
@@ -348,18 +356,28 @@ const Nav = () => {
 
         {/* Search Icon */}
 
-        {!expandInput && (
-          <motion.button
-            whileHover={!expandInput ? { scale: 1.1 } : undefined}
-            onClick={() => setExpandInput((prev) => !prev)}
-            className="flex cursor-pointer items-center justify-center rounded-full bg-[#E5E5E5] p-2"
-          >
-            <AmperesandIcon />
-          </motion.button>
-        )}
+        <motion.button
+          whileHover={!expandInput ? { scale: 1.1 } : undefined}
+          animate={expandInput ? "exit" : "initial"}
+          variants={iconVariants}
+          onClick={() => setExpandInput((prev) => !prev)}
+          className="flex cursor-pointer items-center justify-center rounded-full bg-[#E5E5E5] p-2"
+        >
+          <AmperesandIcon />
+        </motion.button>
       </motion.div>
     </>
   );
 };
 
 export default Nav;
+
+{
+  /* Text Input */
+}
+// <div className={`relative flex w-fit items-center`}>
+//   {/* Input */}
+
+//   {/* Discover & */}
+
+// </div>

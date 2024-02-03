@@ -29,6 +29,7 @@ export const Artifact = () => {
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;
+    console.log("latest", latest);
   });
 
   const artifactExtended = useMemo(
@@ -56,58 +57,57 @@ export const Artifact = () => {
 
   return (
     <>
-      <motion.div
-        className={`z-10 mr-auto flex -rotate-3 items-end gap-12 px-16 pt-8`}
-        transition={artworkConfig}
-      >
-        <Image
-          className={`border-silver -z-10 cursor-pointer rounded-3xl border`}
-          onClick={handleSoundClick}
-          src={artwork}
-          alt={`artwork`}
-          loading="lazy"
-          quality={100}
-          width={304}
-          height={304}
-        />
-      </motion.div>
+      <div className="flex">
+        <motion.div
+          className={`min-w-fit h-fit cursor-pointer rounded-3xl rounded-r-none overflow-hidden shadow-shadowKitHigh sticky top-0`}
+          transition={artworkConfig}
+        >
+          <Image
+            onClick={handleSoundClick}
+            src={artwork}
+            alt={`artwork`}
+            loading="lazy"
+            quality={100}
+            width={256}
+            height={256}
+          />
+        </motion.div>
 
-      <div
-        className={`shadow-shadowKitHigh outline-silver z-10 mx-8 -mt-8 flex flex-col gap-[18px] rounded-3xl bg-white p-6 outline outline-1`}
-      >
-        <div className={`flex max-h-[32px] w-full items-center`}>
-          <div className="rounded-max outline-silver bg-[#F4F4F4] p-3 outline outline-1">
-            {getStarComponent(artifact.content!.rating!)}
+        <div className={`flex flex-col gap-[18px] p-8 pb-[100vh]`}>
+          <div className={`flex max-h-[32px] w-full items-center`}>
+            <div className="rounded-max outline-silver bg-white p-3 outline outline-1 -ml-[52px] z-10">
+              {getStarComponent(artifact.content!.rating!)}
+            </div>
+
+            <div className={`ml-3 flex flex-col`}>
+              <p className={`text-gray2 line-clamp-1 text-sm`}>
+                {sound.attributes.artistName}
+              </p>
+              <p className={`line-clamp-1 text-base font-semibold text-black`}>
+                {sound.attributes.name}
+              </p>
+            </div>
+
+            <div className={`ml-auto flex w-max items-center gap-2`}>
+              <p className={`text-end text-base font-medium`}>
+                {artifact.author.username}
+              </p>
+              <Avatar
+                className={`border-silver border`}
+                imageSrc={artifact.author.image}
+                altText={`${artifact.author.username}'s avatar`}
+                width={32}
+                height={32}
+                user={artifact.author}
+              />
+            </div>
           </div>
+          <div className={`text-black text-base`}>{artifact.content?.text}</div>
 
-          <div className={`ml-4 flex flex-col`}>
-            <p className={`text-gray2 line-clamp-1 text-sm`}>
-              {sound.attributes.artistName}
-            </p>
-            <p className={`line-clamp-1 text-base font-semibold text-black`}>
-              {sound.attributes.name}
-            </p>
-          </div>
-
-          <div className={`ml-auto flex w-max items-center gap-2`}>
-            <p className={`text-end text-base font-medium`}>
-              {artifact.author.username}
-            </p>
-            <Avatar
-              className={`border-silver border`}
-              imageSrc={artifact.author.image}
-              altText={`${artifact.author.username}'s avatar`}
-              width={32}
-              height={32}
-              user={artifact.author}
-            />
+          <div className={`min-h-full min-w-full`}>
+            <Replies artifactId={artifact.id} userId={user.id} />
           </div>
         </div>
-        <div className={`text-base text-black`}>{artifact.content?.text}</div>
-      </div>
-
-      <div className={`min-h-full min-w-full p-8`}>
-        <Replies artifactId={artifact.id} userId={user.id} />
       </div>
     </>
   );

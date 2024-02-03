@@ -15,7 +15,7 @@ function Replies({ userId, artifactId }: RenderRepliesProps) {
 
   const replies = data ? data.pages.flatMap((page) => page.data) : [];
 
-  // Add layoutgroup to the 2nd fragment
+  // Add layout group to the 2nd fragment
   return (
     <>
       {replies.length > 0 ? (

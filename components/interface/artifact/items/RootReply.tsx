@@ -78,7 +78,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
     >
       {/* Main Reply */}
       <div
-        className={`outline-silver flex items-center gap-2 rounded-[20px] bg-white p-2 pr-2.5 outline outline-1`}
+        className={`outline-silver flex items-center gap-2 rounded-[20px] p-2 pr-2.5 outline outline-1`}
       >
         <Avatar
           className="border-silver h-8 w-8 rounded-full border"
@@ -93,7 +93,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
           whileHover={{ color: "rgba(0,0,0,1)" }}
           onClick={handleReplyParent}
           animate={{
-            color: replyTarget?.reply === reply ? "#FFF" : "#000",
+            color: replyTarget?.reply === reply ? "#FFF" : "#999",
             scale: replyTarget?.reply === reply ? 1.01 : 1,
           }}
           transition={{ duration: 0.24 }}

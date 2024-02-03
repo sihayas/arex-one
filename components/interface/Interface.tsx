@@ -40,8 +40,8 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 512, height: maxHeight },
     },
     artifact: {
-      base: { width: 528, height: 748 },
-      target: { width: 560, height: maxHeight },
+      base: { width: 720, height: 256 },
+      target: { width: 720, height: maxHeight },
     },
   };
 
@@ -50,7 +50,7 @@ export const GetDimensions = (pageName: PageName) => {
 
 export function Interface({ isVisible }: { isVisible: boolean }) {
   const { scrollContainerRef, activePage } = useInterfaceContext();
-  const { expandInput, inputValue, activeAction } = useNavContext();
+  const { expandInput } = useNavContext();
   const cmdkPortal = document.getElementById("cmdk");
 
   const activePageName: PageName = activePage.name as PageName;
@@ -133,7 +133,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           width: activePage.isOpen ? `${target.width}px` : `${base.width}px`,
           height: activePage.isOpen ? `${target.height}px` : `${base.height}px`,
         },
-        { type: "spring", stiffness: 400, damping: 40 },
+        { type: "spring", stiffness: 800, damping: 62 },
       );
     };
     shapeShift();
@@ -184,15 +184,15 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         outline: expandInput
           ? "1px solid rgba(0,0,0,0.05)"
           : "1px solid rgba(0,0,0,0.0)",
+        scale: expandInput ? 0.98 : 1,
+        filter: expandInput ? "blur(4px)" : "blur(0px)",
       };
       const transitionConfig = {
-        boxShadow: {
-          type: "spring" as const,
-          mass: 1,
-          stiffness: 180,
-          damping: 22,
-          delay: expandInput ? 0 : 0.15,
-        },
+        type: "spring" as const,
+        mass: 1,
+        stiffness: 180,
+        damping: 22,
+        delay: expandInput ? 0 : 0.15,
       };
       animate(scope.current, animationConfig, transitionConfig);
     };
@@ -201,7 +201,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
   return (
     <motion.div
-      // transformTemplate={template} // Prevent translateZ from being applied
+      transformTemplate={template} // Prevent translateZ from being applied
       ref={rootScope}
       id={`cmdk`}
       className={`cmdk rounded-full`}
@@ -209,7 +209,9 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`relative flex items-start justify-center overflow-auto rounded-full bg-[#F4F4F4]/80 ${expandInput ? "mix-blend-darken" : ""}`}
+        className={`relative flex items-start justify-center overflow-auto rounded-full bg-[#F4F4F4]/80 ${
+          expandInput ? "mix-blend-darken" : ""
+        }`}
         shouldFilter={false}
         loop
         ref={scope}
@@ -234,7 +236,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   );
 }
 
-// function template({ x, y, scale }: { x: number; y: number; scale: number }) {
-//   // Assuming x and y are percentages and scale is a unit-less number
-//   return `translateX(${x}) translateY(${y}) scale(${scale})`;
-// }
+function template({ x, y, scale }: { x: number; y: number; scale: number }) {
+  // Assuming x and y are percentages and scale is a unit-less number
+  return `translateX(${x}) translateY(${y}) scale(${scale})`;
+}
