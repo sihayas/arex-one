@@ -98,13 +98,21 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           ...maskStyle,
         }}
         ref={containerRef}
-        className={`relative z-10 flex flex-col bg-white will-change-transform`}
+        className={`relative z-10 flex flex-col   will-change-transform`}
       >
-        <Art size={304} sound={sound} />
+        <div
+          className={`w-full h-[304px] bg-[#F4F4F4] flex items-center justify-center`}
+        >
+          <Art
+            size={240}
+            sound={sound}
+            containerClass={`rounded-2xl shadow-shadowKitHigh`}
+          />
+        </div>
 
         <motion.div
           onClick={() => handleSelectArtifact(artifact)}
-          className={`line-clamp-4 cursor-pointer px-6 pt-2.5 text-base text-black`}
+          className={`line-clamp-4 cursor-pointer px-6 pt-2.5 text-base text-black bg-white`}
         >
           {artifact.content?.text}
         </motion.div>

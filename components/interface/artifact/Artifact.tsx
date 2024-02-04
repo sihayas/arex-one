@@ -1,7 +1,13 @@
 import React, { useEffect, useMemo } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useSound } from "@/hooks/usePage";
 import useHandleHeartClick from "@/hooks/useHeart";
 import Avatar from "@/components/global/Avatar";
@@ -29,7 +35,21 @@ export const Artifact = () => {
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;
-    console.log("latest", latest);
+  });
+
+  const borderRadius = useSpring(useTransform(scrollY, [0, 1], [0, 20]), {
+    stiffness: 400,
+    damping: 40,
+  });
+
+  const scale = useSpring(useTransform(scrollY, [0, 1], [1, 0.78125]), {
+    stiffness: 400,
+    damping: 40,
+  });
+
+  const rotate = useSpring(useTransform(scrollY, [0, 1], [0, -3]), {
+    stiffness: 400,
+    damping: 40,
   });
 
   const artifactExtended = useMemo(
@@ -59,8 +79,12 @@ export const Artifact = () => {
     <>
       <div className="flex">
         <motion.div
-          className={`min-w-fit h-fit cursor-pointer rounded-3xl rounded-r-none overflow-hidden shadow-shadowKitHigh sticky top-0`}
-          transition={artworkConfig}
+          style={{
+            scale,
+            rotate,
+            borderRadius,
+          }}
+          className={`min-w-fit h-fit cursor-pointer overflow-hidden shadow-shadowKitHigh sticky top-0`}
         >
           <Image
             onClick={handleSoundClick}
@@ -73,8 +97,8 @@ export const Artifact = () => {
           />
         </motion.div>
 
-        <div className={`flex flex-col gap-[18px] p-8 pb-[100vh]`}>
-          <div className={`flex max-h-[32px] w-full items-center`}>
+        <div className={`flex flex-col gap-[18px] pb-[100vh]`}>
+          <div className={`p-8 pb-2 flex max-h-[32px] w-full items-center`}>
             <div className="rounded-max outline-silver bg-white p-3 outline outline-1 -ml-[52px] z-10">
               {getStarComponent(artifact.content!.rating!)}
             </div>
@@ -83,7 +107,7 @@ export const Artifact = () => {
               <p className={`text-gray2 line-clamp-1 text-sm`}>
                 {sound.attributes.artistName}
               </p>
-              <p className={`line-clamp-1 text-base font-semibold text-black`}>
+              <p className={`line-clamp-1 text-base text-black font-medium`}>
                 {sound.attributes.name}
               </p>
             </div>
@@ -102,9 +126,11 @@ export const Artifact = () => {
               />
             </div>
           </div>
-          <div className={`text-black text-base`}>{artifact.content?.text}</div>
+          <div className={`p-8 pt-0 text-gray text-base font-medium`}>
+            {artifact.content?.text}
+          </div>
 
-          <div className={`min-h-full min-w-full`}>
+          <div className={`min-h-full min-w-full -ml-2 pr-8`}>
             <Replies artifactId={artifact.id} userId={user.id} />
           </div>
         </div>

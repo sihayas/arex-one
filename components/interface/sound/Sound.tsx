@@ -57,12 +57,12 @@ const Sound = () => {
   // Art Transformations
   const artWidth = -base.width / 2;
   const xArt = useSpring(
-    useTransform(scrollY, [0, 1], [artWidth, -240]),
+    useTransform(scrollY, [0, 1], [artWidth + 32, -240]),
     xConfig,
   );
   const artHeight = -base.height / 2;
   const yArt = useSpring(
-    useTransform(scrollY, [0, 1], [artHeight, 26]),
+    useTransform(scrollY, [0, 1], [artHeight + 32, 26]),
     yConfig,
   );
   const scaleArt = useSpring(
@@ -70,13 +70,13 @@ const Sound = () => {
     scaleConfig,
   );
   const borderRad = useSpring(
-    useTransform(scrollY, [0, 1], [32, 96]),
+    useTransform(scrollY, [0, 1], [24, 96]),
     generalConfig,
   );
 
   // Dial Transformations
-  const xDial = useSpring(useTransform(scrollY, [0, 1], [48, -16]), xConfig);
-  const yDial = useSpring(useTransform(scrollY, [0, 1], [48, -16]), yConfig);
+  const xDial = useSpring(useTransform(scrollY, [0, 1], [16, -16]), xConfig);
+  const yDial = useSpring(useTransform(scrollY, [0, 1], [16, -16]), yConfig);
   const scaleDial = useSpring(
     useTransform(scrollY, [0, 1], [1, 0.25]),
     scaleConfig,
@@ -110,15 +110,15 @@ const Sound = () => {
   return (
     <>
       {/* Art Ghost Placeholder */}
-      <div className={`min-h-[432px] min-w-[432px] ${snap}`} />
+      <div className={`min-h-[496px] min-w-[496px] ${snap}`} />
       <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
       {/* Art */}
       <motion.div
         initial={{
-          borderRadius: isOpen ? 96 : 32,
+          borderRadius: isOpen ? 96 : 16,
           scale: isOpen ? 0.1389 : 1,
-          x: isOpen ? -240 : artHeight,
-          y: isOpen ? 26 : artWidth,
+          x: isOpen ? -240 : artHeight + 32,
+          y: isOpen ? 26 : artWidth + 32,
         }}
         style={{
           borderRadius: borderRad,
@@ -126,7 +126,7 @@ const Sound = () => {
           y: yArt,
           x: xArt,
         }}
-        className="shadow-miniCard pointer-events-none absolute left-1/2 top-1/2 z-40 min-h-[432px] min-w-[432px] origin-bottom-left overflow-hidden"
+        className="shadow-shadowKitHigh pointer-events-none absolute left-1/2 top-1/2 min-h-[432px] min-w-[432px] origin-bottom-left overflow-hidden z-10"
       >
         <Image
           src={artwork}
@@ -141,20 +141,21 @@ const Sound = () => {
 
       {/* Titles */}
       <motion.div
-        className={`center-x shadow-shadowKitHigh absolute bottom-4 flex origin-bottom flex-col items-center justify-center gap-2 rounded-2xl bg-white p-4`}
+        style={{
+          opacity: showMini,
+        }}
+        className={`center-x shadow-shadowKitHigh absolute bottom-4 flex origin-bottom flex-col items-center justify-center rounded-2xl bg-white p-4 z-10`}
       >
-        <p className={`text-base font-bold leading-[11px] text-black`}>
-          {name}
-        </p>
+        <p className={`text-base font-bold text-black text-center`}>{name}</p>
         <p
-          className={`text-gray2 line-clamp-1 text-sm font-medium leading-[9px]`}
+          className={`text-gray2 line-clamp-1 text-sm font-medium text-center`}
         >
           {artist}
         </p>
       </motion.div>
 
       {/* Sort */}
-      <div className={`absolute bottom-8 right-[92px]`}>
+      <div className={`absolute bottom-8 right-[92px] z-0`}>
         <Sort onSortOrderChange={handleSortOrderChange} />
       </div>
 
@@ -164,7 +165,7 @@ const Sound = () => {
           <>
             {/* Big Dial */}
             <motion.div
-              className={`absolute bottom-0 right-0 z-50 flex origin-bottom-right items-center justify-center drop-shadow-xl will-change-transform`}
+              className={`absolute bottom-0 right-0 z-10 flex origin-bottom-right items-center justify-center drop-shadow-xl will-change-transform`}
               style={{
                 x: xDial,
                 y: yDial,
@@ -172,8 +173,8 @@ const Sound = () => {
                 opacity: hideDial,
               }}
               initial={{
-                x: isOpen ? -16 : 48,
-                y: isOpen ? -16 : 48,
+                x: isOpen ? -16 : 16,
+                y: isOpen ? -16 : 16,
                 scale: isOpen ? 0.25 : 1,
                 opacity: isOpen ? 0 : 1,
               }}

@@ -30,12 +30,11 @@ module.exports = {
         max: "9999px",
       },
       colors: {
-        gray: "#585858",
-        gray1: "#777777",
+        gray: "#777777",
         gray2: "#999999",
         gray3: "#CCCCCC",
-        gray4: "rgba(60, 60, 67, 0.9)",
-        gray5: "rgba(60, 60, 67, 0.6)",
+        gray4: "#F4F4F4",
+        gray5: "#F5F5F5",
         silver: "rgba(0, 0, 0, 0.05)",
         action: "rgb(255,94,0)",
         red: "#FF3319",
@@ -61,13 +60,6 @@ module.exports = {
       },
       maskImage: {
         entryMask: "url('/images/entry_mask.svg')",
-      },
-      transitionProperty: {
-        opacity: "opacity",
-      },
-      transitionTimingFunction: {
-        entryPreview: "cubic-bezier(0.45, 0.05, 0.55, 0.95)",
-        renderReplies: "cubic-bezier(0.65, 0.05, 0.36, 1)",
       },
       translate: {
         "3d": "0,0,0",

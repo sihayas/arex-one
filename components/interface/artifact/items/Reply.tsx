@@ -54,7 +54,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const bubblePosition = isEvenLevel
     ? "-bottom-1 -left-1"
     : "-bottom-1 -right-1 transform scale-x-[-1]";
-  const fillLinePosition = isEvenLevel ? "right-[15px]" : "left-[15px]";
+  const fillLinePosition = isEvenLevel ? "right-[14px]" : "left-[15px]";
   const dashLinePosition = isEvenLevel ? "left-0" : "right-0";
 
   // Layout prop is what dictates animating the container to expand/contract when
@@ -104,13 +104,14 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             <div className={`center-x absolute -bottom-3 z-10 cursor-pointer`}>
               <motion.div
                 animate={{
-                  backgroundColor: showChildReplies ? "#CCC" : "rgba(0,0,0,0)",
+                  backgroundColor: showChildReplies
+                    ? "#E9E9E9"
+                    : "rgba(0,0,0,0)",
                   border: showChildReplies ? "none" : "1.5px solid #CCC",
                 }}
                 whileHover={{
-                  scale: 1.25,
-                  backgroundColor: showChildReplies ? "transparent" : "#000",
-                  border: showChildReplies ? "1.5px solid black" : "none",
+                  scale: 1.5,
+                  backgroundColor: showChildReplies ? "#CCC" : "#000",
                 }}
                 onClick={() => setShowChildReplies((prev) => !prev)}
                 className={`h-[9px] w-[9px] rounded-full`}
@@ -124,8 +125,8 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           className={`flex w-full flex-col gap-[3px] ${reverseAlignment} relative`}
         >
           <div
-            className={`relative w-fit overflow-visible rounded-2xl bg-[#e5e5e5] px-3 py-1.5 ${
-              !isChild && "max-w-[380px]"
+            className={`relative w-fit overflow-visible rounded-2xl bg-white outline outline-1 outline-[#E9E9E9] px-3 py-1.5 ${
+              !isChild && "max-w-[332px]"
             }`}
           >
             {/* Content  */}
@@ -143,12 +144,12 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             </motion.div>
 
             {/* Bubbles */}
-            <div className={`absolute h-3 w-3 ${bubblePosition}`}>
+            <div className={`absolute h-3 w-3 -z-10 ${bubblePosition}`}>
               <div
-                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#e5e5e5]`}
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white outline outline-1 outline-[#E9E9E9]`}
               />
               <div
-                className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-[#e5e5e5]`}
+                className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white outline outline-1 outline-[#E9E9E9]`}
               />
             </div>
           </div>
@@ -162,8 +163,8 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           {/* Fill Line | */}
           {!isChild && (
             <Line
-              color={"#CCC"}
-              className={`absolute h-full !w-[2px] rounded ${fillLinePosition}
+              color={"#E9E9E9"}
+              className={`absolute h-[calc(100%+24px)] -translate-y-[12px] !w-[3px] rounded ${fillLinePosition}
            `}
             />
           )}
@@ -177,7 +178,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             className={`absolute flex h-full w-8 items-center justify-center ${dashLinePosition}`}
           >
             <svg
-              style={{ width: 2, height: "100%" }}
+              style={{ width: 3, height: "100%" }}
               preserveAspectRatio="none"
             >
               <motion.line
@@ -185,7 +186,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
                 y1="0"
                 x2="50%"
                 y2="100%"
-                stroke={"rgba(0,0,0,0.1)"}
+                stroke={"#E9E9E9"}
                 strokeWidth={2}
                 strokeDasharray={`${1}, ${8}`}
                 strokeLinecap="round"
@@ -211,17 +212,16 @@ const Line: React.FC<{
   width?: string;
   color?: string;
   className?: string;
-  horizontal?: boolean;
 }> = ({
   width = "1px",
-  height = "100%",
+  height,
   color = "rgba(0, 0, 0, 0.1)",
   className = "",
-  horizontal = false,
 }) => (
   <div
     style={{
-      ...(horizontal ? { width, height } : { height, width }),
+      height,
+      width,
       backgroundColor: color,
     }}
     className={className}

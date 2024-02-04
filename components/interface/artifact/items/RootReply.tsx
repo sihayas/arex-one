@@ -26,8 +26,6 @@ export default function RootReply({ reply, index }: ReplyProps) {
   const activePage = pages[pages.length - 1];
   const replyCount = reply._count ? reply._count.replies : 0;
 
-  console.log(reply, "reply");
-
   const handleReplyParent = useCallback(() => {
     const artifact = activePage.artifact;
     if (artifact) {
@@ -77,9 +75,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
       className={`relative flex h-fit w-full flex-col pt-4`}
     >
       {/* Main Reply */}
-      <div
-        className={`outline-silver flex items-center gap-2 rounded-[20px] p-2 pr-2.5 outline outline-1`}
-      >
+      <div className={`flex gap-2 items-end`}>
         <Avatar
           className="border-silver h-8 w-8 rounded-full border"
           imageSrc={reply.author.image}
@@ -88,29 +84,43 @@ export default function RootReply({ reply, index }: ReplyProps) {
           height={32}
           user={reply.author}
         />
-
-        <motion.div
-          whileHover={{ color: "rgba(0,0,0,1)" }}
-          onClick={handleReplyParent}
-          animate={{
-            color: replyTarget?.reply === reply ? "#FFF" : "#999",
-            scale: replyTarget?.reply === reply ? 1.01 : 1,
-          }}
-          transition={{ duration: 0.24 }}
-          className={`cursor-pointer break-words text-base`}
+        <div
+          className={`relative w-fit overflow-visible rounded-2xl bg-white outline outline-1 outline-[#E9E9E9] px-3 py-1.5 mb-2`}
         >
-          {reply.text}
-        </motion.div>
+          {/* Content  */}
+          <motion.div
+            whileHover={{ color: "rgba(0,0,0,1)" }}
+            onClick={handleReplyParent}
+            animate={{
+              color: replyTarget?.reply === reply ? "#FFF" : "#000",
+              scale: replyTarget?.reply === reply ? 1.01 : 1,
+            }}
+            transition={{ duration: 0.24 }}
+            className={`cursor-pointer break-words text-base`}
+          >
+            {reply.text}
+          </motion.div>
+
+          {/* Bubbles */}
+          <div className={`absolute h-3 w-3 -bottom-1 -left-1 -z-10`}>
+            <div
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white outline outline-1 outline-[#E9E9E9]`}
+            />
+            <div
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full outline outline-1 outline-[#E9E9E9] bg-white`}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Attribution & Collapse Dot */}
       {replyCount > 0 && (
-        <div className={`mt-1.5 flex w-full gap-3.5`}>
-          {/* Collapse */}
+        <div className={`mt-1.5 flex w-full`}>
           <div
-            className={`flex min-w-[9px] cursor-pointer flex-col items-center`}
+            className={`flex min-w-[32px] cursor-pointer flex-col items-center`}
           >
             {!showChildReplies ? (
+              //   Expand
               <motion.div
                 whileHover={{
                   scale: 1.25,
@@ -120,19 +130,23 @@ export default function RootReply({ reply, index }: ReplyProps) {
                 className={`h-[9px] w-[9px] cursor-pointer rounded-full bg-black opacity-50`}
               />
             ) : (
+              //   Collapse
               <motion.button
                 whileHover={{
-                  width: 4.5,
-                  opacity: 1,
+                  width: 6,
+                  backgroundColor: "#999",
                 }}
                 initial={{
-                  width: 2.5,
+                  width: 3,
+                  backgroundColor: "#E9E9E9",
                 }}
-                exit={{
-                  height: 0,
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 20,
                 }}
                 onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`rounded-max flex-grow bg-black`}
+                className={`rounded-max flex-grow `}
               />
             )}
           </div>

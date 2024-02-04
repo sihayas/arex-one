@@ -84,13 +84,13 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
               className={`flex flex-col bg-[#F4F4F4] relative w-full px-6 pt-[18px] pb-4 rounded-full gap-2.5 outline outline-1 outline-silver`}
             >
               <div
-                className={`absolute -top-3 -left-3 flex items-center justify-center bg-[#F4F4F4] rounded-max shadow-shadowKitMedium p-3`}
+                className={`absolute -top-3 -left-3 flex items-center justify-center bg-white rounded-max shadow-shadowKitMedium p-3`}
               >
                 {getStarComponent(activity.artifact.content!.rating!)}
               </div>
               {/* Content */}
               <div
-                className={`break-words line-clamp-6 w-full text-base text-center text-black cursor-pointer`}
+                className={`break-words line-clamp-6 w-full text-base text-center text-gray font-medium cursor-pointer`}
               >
                 {activity.artifact.content?.text}
               </div>

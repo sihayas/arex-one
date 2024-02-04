@@ -118,7 +118,7 @@ const Dial: React.FC<DialProps> = ({ ratings, average }) => {
                 whileHover={{
                   strokeWidth: hoverStrokeWidth,
                 }}
-                transition={{ type: "spring", stiffness: 160, damping: 10 }}
+                transition={{ type: "spring", stiffness: 160, damping: 60 }}
               />
               <motion.circle
                 cx={dotPosition.x}
