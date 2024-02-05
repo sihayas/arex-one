@@ -28,10 +28,15 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
 
   const handleReplyParent = useCallback(() => {
     const artifact = activePage.artifact;
+
     if (artifact) {
-      setReplyTarget({ artifact, reply });
+      if (replyTarget?.reply === reply) {
+        setReplyTarget({ artifact, reply: null });
+      } else {
+        setReplyTarget({ artifact, reply });
+      }
     }
-  }, [reply, setReplyTarget, activePage.artifact]);
+  }, [reply, setReplyTarget, activePage.artifact, replyTarget?.reply]);
 
   const url = reply.heartedByUser
     ? "/api/heart/delete/reply"
@@ -72,7 +77,6 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           restSpeed: 0.01,
           restDelta: 0.01,
         },
-
         layout: {
           type: "spring",
           stiffness: 280,
@@ -92,7 +96,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         {/* Avatar & Collapse*/}
         <div className={`relative min-h-[32px] min-w-[32px] `}>
           <Avatar
-            className="border-gray3 rounded-full border"
+            className="border-silver rounded-full border"
             imageSrc={reply.author.image}
             altText={`${reply.author.username}'s avatar`}
             width={32}
@@ -124,17 +128,24 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         <div
           className={`flex w-full flex-col gap-[3px] ${reverseAlignment} relative`}
         >
-          <div
+          <motion.div
             className={`relative w-fit overflow-visible rounded-2xl bg-white outline outline-1 outline-[#E9E9E9] px-3 py-1.5 ${
               !isChild && "max-w-[332px]"
             }`}
           >
             {/* Content  */}
             <motion.div
-              whileHover={{ color: "rgba(0,0,0,1)" }}
+              whileHover={
+                replyTarget?.reply === reply
+                  ? { scale: 1.01 }
+                  : {
+                      scale: 1.02,
+                      color: "#7AFF00",
+                    }
+              }
               onClick={handleReplyParent}
               animate={{
-                color: replyTarget?.reply === reply ? "#FFF" : "#000",
+                color: replyTarget?.reply === reply ? "#7AFF00" : "#000",
                 scale: replyTarget?.reply === reply ? 1.01 : 1,
               }}
               transition={{ duration: 0.24 }}
@@ -152,7 +163,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
                 className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white outline outline-1 outline-[#E9E9E9]`}
               />
             </div>
-          </div>
+          </motion.div>
 
           <div
             className={`text-gray2 translate-y-[3px] text-sm font-medium leading-[9px]`}
