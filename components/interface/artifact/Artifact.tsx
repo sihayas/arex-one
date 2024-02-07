@@ -42,12 +42,22 @@ export const Artifact = () => {
     damping: 40,
   });
 
-  const scale = useSpring(useTransform(scrollY, [0, 1], [1, 0.78125]), {
+  const scale = useSpring(useTransform(scrollY, [0, 1], [1, 0.625]), {
     stiffness: 400,
     damping: 40,
   });
 
   const rotate = useSpring(useTransform(scrollY, [0, 1], [0, -3]), {
+    stiffness: 400,
+    damping: 40,
+  });
+
+  const x = useSpring(useTransform(scrollY, [0, 1], [0, 32]), {
+    stiffness: 400,
+    damping: 40,
+  });
+
+  const y = useSpring(useTransform(scrollY, [0, 1], [0, 32]), {
     stiffness: 400,
     damping: 40,
   });
@@ -83,8 +93,10 @@ export const Artifact = () => {
             scale,
             rotate,
             borderRadius,
+            x,
+            y,
           }}
-          className={`min-w-fit h-fit cursor-pointer overflow-hidden shadow-shadowKitHigh sticky top-0`}
+          className={`shadow-shadowKitHigh sticky top-0 h-fit min-w-fit origin-top-left cursor-pointer overflow-hidden`}
         >
           <Image
             onClick={handleSoundClick}
@@ -98,8 +110,8 @@ export const Artifact = () => {
         </motion.div>
 
         <div className={`flex flex-col gap-[18px] pb-[100vh]`}>
-          <div className={`p-8 pb-2 flex max-h-[32px] w-full items-center`}>
-            <div className="rounded-max outline-silver bg-white p-3 outline outline-1 -ml-[52px] z-10">
+          <div className={`flex max-h-[32px] w-full items-center p-8 pb-2`}>
+            <div className="rounded-max outline-silver z-10 -ml-[50px] bg-white p-3 outline outline-1">
               {getStarComponent(artifact.content!.rating!)}
             </div>
 
@@ -107,7 +119,7 @@ export const Artifact = () => {
               <p className={`text-gray2 line-clamp-1 text-sm`}>
                 {sound.attributes.artistName}
               </p>
-              <p className={`line-clamp-1 text-base text-black font-medium`}>
+              <p className={`line-clamp-1 text-base font-medium text-black`}>
                 {sound.attributes.name}
               </p>
             </div>
@@ -126,11 +138,11 @@ export const Artifact = () => {
               />
             </div>
           </div>
-          <div className={`p-8 pt-0 text-gray text-base font-medium`}>
+          <div className={`text-gray p-8 pt-0 text-base font-medium`}>
             {artifact.content?.text}
           </div>
 
-          <div className={`min-h-full min-w-full -ml-2 pr-8`}>
+          <div className={`-ml-8 min-h-full min-w-full pr-8`}>
             <Replies artifactId={artifact.id} userId={user.id} />
           </div>
         </div>

@@ -20,7 +20,7 @@ function Children({ level, parentReplyId, isChild }: RenderChildrenProps) {
 
   // The layout prop preserves the LayoutGroup functionality of animating the container to expand/contract when replies are loaded or unloaded.
   return (
-    <div className="flex flex-col w-full pb-8">
+    <>
       {replies && replies.length > 0 ? (
         replies.map((childReply: ReplyType, index: number) => {
           return (
@@ -47,7 +47,7 @@ function Children({ level, parentReplyId, isChild }: RenderChildrenProps) {
           )}
         </button>
       )}
-    </div>
+    </>
   );
 }
 

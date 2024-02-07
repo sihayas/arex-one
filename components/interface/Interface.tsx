@@ -228,7 +228,6 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         >
           <ActiveComponent key={activePage.key} />
         </motion.div>
-
         {/* Dial */}
         {cmdkPortal && createPortal(<Nav />, cmdkPortal)}
       </Command>

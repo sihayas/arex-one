@@ -72,10 +72,10 @@ export default function RootReply({ reply, index }: ReplyProps) {
       style={{
         willChange: "opacity, scale, transform",
       }}
-      className={`relative flex h-fit w-full flex-col pt-4`}
+      className={`relative mt-8 flex h-fit w-full flex-col`}
     >
       {/* Main Reply */}
-      <div className={`flex gap-2 items-end`}>
+      <div className={`flex items-end gap-2`}>
         <Avatar
           className="border-silver h-8 w-8 rounded-full border"
           imageSrc={reply.author.image}
@@ -85,7 +85,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
           user={reply.author}
         />
         <div
-          className={`relative w-fit overflow-visible rounded-2xl bg-white outline outline-1 outline-[#E9E9E9] px-3 py-1.5 mb-2`}
+          className={`relative mb-2 w-full overflow-visible rounded-2xl bg-white px-3 py-1.5`}
         >
           {/* Content  */}
           <motion.div
@@ -102,20 +102,20 @@ export default function RootReply({ reply, index }: ReplyProps) {
           </motion.div>
 
           {/* Bubbles */}
-          <div className={`absolute h-3 w-3 -bottom-1 -left-1 -z-10`}>
+          <div className={`absolute -bottom-1 -left-1 -z-10 h-3 w-3`}>
             <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white outline outline-1 outline-[#E9E9E9]`}
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
             />
             <div
-              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full outline outline-1 outline-[#E9E9E9] bg-white`}
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
             />
           </div>
         </div>
       </div>
 
-      {/* Attribution & Collapse Dot */}
+      {/* Sub Replies & Collapse Dot */}
       {replyCount > 0 && (
-        <div className={`mt-1.5 flex w-full`}>
+        <div className={`flex w-full`}>
           <div
             className={`flex min-w-[32px] cursor-pointer flex-col items-center`}
           >
@@ -137,7 +137,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
                   backgroundColor: "#999",
                 }}
                 initial={{
-                  width: 3,
+                  width: 4,
                   backgroundColor: "#E9E9E9",
                 }}
                 transition={{
@@ -153,9 +153,6 @@ export default function RootReply({ reply, index }: ReplyProps) {
 
           {/* Replies & Username */}
           <div className={`flex w-full flex-col`}>
-            <div className={`text-gray2 text-sm font-medium leading-[9px]`}>
-              {reply.author.username}
-            </div>
             {showChildReplies && (
               <Children parentReplyId={reply.id} level={1} isChild={true} />
             )}
@@ -165,28 +162,3 @@ export default function RootReply({ reply, index }: ReplyProps) {
     </motion.div>
   );
 }
-
-const Line: React.FC<{
-  height?: string;
-  width?: string;
-  color?: string;
-  className?: string;
-  horizontal?: boolean;
-  onClick?: () => void;
-}> = ({
-  height = "1px",
-  width = "100%",
-  color = "rgba(0, 0, 0, 0.1)",
-  className = "",
-  horizontal = false,
-  onClick,
-}) => (
-  <div
-    onClick={onClick}
-    style={{
-      ...(horizontal ? { width: height, height: width } : { height, width }),
-      backgroundColor: color,
-    }}
-    className={className}
-  />
-);
