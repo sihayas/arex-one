@@ -105,9 +105,16 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         >
           {/* Fill Line | */}
           {!isChild && (
-            <Line
-              color={"#CCC"}
-              className={`z-10 h-full !w-1 rounded-t-full`}
+            <div
+              style={{
+                height: "100%",
+                width: "4px",
+                backgroundColor: "#CCC",
+                borderTopLeftRadius: "4px",
+                borderTopRightRadius: "4px",
+                zIndex: 10,
+              }}
+              // className={className}
             />
           )}
 
