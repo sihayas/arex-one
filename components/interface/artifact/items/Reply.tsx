@@ -93,9 +93,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         originX: !isEven ? 1 : 0,
         willChange: "opacity, scale, transform",
       }}
-      className={`relative flex h-fit w-full flex-col ${
-        showChildReplies ? "mt-8" : ""
-      }`}
+      className={`relative flex h-fit w-full flex-col`}
     >
       {/* Main Reply */}
       <div className={`flex w-full items-end ${flexDirection}`}>
@@ -105,17 +103,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         >
           {/* Fill Line | */}
           {!isChild && (
-            <div
-              style={{
-                height: "100%",
-                width: "4px",
-                backgroundColor: "#CCC",
-                borderTopLeftRadius: "4px",
-                borderTopRightRadius: "4px",
-                zIndex: 10,
-              }}
-              // className={className}
-            />
+            <div className="z-10 h-full w-1 rounded-tl-lg rounded-tr-lg bg-[#CCC]" />
           )}
 
           <Avatar
@@ -130,7 +118,9 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
 
         {/* Text Bubble */}
         <div
-          className={`relative mb-3 flex w-full items-end justify-between ${reverseAlignment} ${flexDirection}`}
+          className={`relative mb-3 flex w-full items-end justify-between ${reverseAlignment} ${flexDirection}  ${
+            showChildReplies ? "mt-8" : ""
+          }`}
         >
           <motion.div
             className={`relative w-fit max-w-[322px] overflow-visible rounded-2xl bg-white px-3 py-1.5`}
@@ -224,9 +214,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         {/* If this reply's level is 2 or greater, add a loop with the Avatar of the parent at the end of the chain of children */}
         {level > 1 && showChildReplies && (
           <div
-            className={`flex w-full items-center gap-2 pb-8
+            className={`relative flex w-full items-center gap-2 pb-8
             ${isEven ? "justify-start pl-[14px]" : "flex-row-reverse pr-[14px]"}`}
           >
+            <div className="absolute z-10 h-full w-1 translate-y-9 rounded bg-[#CCC]" />
             <LoopIcon className={`${!isEven && "-scale-x-[1]"}`} />
             <Image
               className="border-silver rounded-full border"

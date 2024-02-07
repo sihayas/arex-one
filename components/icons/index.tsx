@@ -715,9 +715,9 @@ export function LoopIcon({ ...props }) {
       width={32}
       height={23}
       fill="none"
-      className={props.className}
       {...props}
     >
+      <path fill="#F6F6F6" d="M0 0h32v23H0z" />
       <path
         stroke="#CCC"
         strokeLinecap="round"
