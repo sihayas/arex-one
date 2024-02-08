@@ -20,14 +20,15 @@ export default async function handle(
   }
 
   // Optionally validate cursor if it's provided
-  // if (cursor !== undefined && typeof cursor !== "string") {
-  //   return res.status(400).json({ error: "Invalid cursor." });
-  // }
+  if (cursor !== undefined && typeof cursor !== "string") {
+    return res.status(400).json({ error: "Invalid cursor." });
+  }
 
   const ancestorLimit = 6;
-  let currentReplyId = cursor || replyId;
   const replyChain = [];
-  let lastReplyId = null;
+
+  let currentReplyId = cursor || replyId;
+  let cursorId = null;
 
   try {
     while (replyChain.length < ancestorLimit) {
@@ -37,19 +38,27 @@ export default async function handle(
           id: true,
           hearts: { where: { authorId: userId } },
           _count: { select: { replies: true, hearts: true } },
-          text: true,
-          replyToId: true,
-          author: {
-            select: { image: true },
+          replyTo: {
+            select: {
+              author: { select: { image: true } },
+              text: true,
+              id: true,
+            },
           },
         },
       });
 
-      if (!reply || !reply.replyToId) break; // Exit if no reply or no parent
+      if (!reply) {
+        break;
+      }
+      replyChain.push(reply); // Push the reply to the chain
 
-      replyChain.push(reply);
-      currentReplyId = reply.replyToId;
-      lastReplyId = reply.id; // Update last fetched for pagination
+      if (!reply.replyTo) {
+        break; // Stop the loop if reply has no replyTo
+      }
+
+      currentReplyId = reply.replyTo.id; // Update current reply to the parent
+      cursorId = reply.replyTo.id;
     }
 
     if (!replyChain || replyChain.length === 0) {
@@ -68,6 +77,7 @@ export default async function handle(
       return {
         ...reply,
         ...detailedReply,
+        //@ts-ignore
         heartedByUser: reply.hearts.length > 0,
       };
     });
@@ -75,7 +85,7 @@ export default async function handle(
     res.status(200).json({
       replies: enrichedReplies,
       pagination: {
-        nextPage: lastReplyId,
+        nextPage: cursorId,
       },
     });
   } catch (error) {

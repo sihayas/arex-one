@@ -47,6 +47,8 @@ export const useChainQuery = (userId: string, replyId: string | undefined) =>
       const replies = data.replies;
       const cursor = data.pagination.nextPage;
 
+      console.log(cursor);
+
       if (!replies) {
         throw new Error("Unexpected server response structure");
       }

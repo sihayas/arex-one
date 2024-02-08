@@ -18,6 +18,8 @@ function Children({ level, parentReplyId, isChild }: RenderChildrenProps) {
 
   const replies = data ? data.pages.flatMap((page) => page.data) : [];
 
+  console.log("replies", replies);
+
   // The layout prop preserves the LayoutGroup functionality of animating the container to expand/contract when replies are loaded or unloaded.
   return (
     <>

@@ -1,8 +1,7 @@
 import { ReplyType } from "@/types/dbTypes";
-import { useChainQuery, useRepliesQuery } from "@/lib/apiHelper/artifact";
-import React from "react";
+import { useChainQuery } from "@/lib/apiHelper/artifact";
+import React, { useEffect, useState } from "react";
 import RootReply from "@/components/interface/artifact/items/RootReply";
-import { LayoutGroup } from "framer-motion";
 import Reply from "../items/Reply";
 
 type RenderRepliesProps = {
@@ -11,12 +10,18 @@ type RenderRepliesProps = {
 };
 
 function Chain({ userId, replyId }: RenderRepliesProps) {
+  const [depth, setDepth] = useState(0);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useChainQuery(userId, replyId);
 
   const replies = data ? data.pages.flatMap((page) => page.data) : [];
 
+  useEffect(() => {
+    setDepth((prevDepth) => prevDepth + replies.length);
+  }, []);
+
   console.log("replies", replies);
+
   // Add layout group to the 2nd fragment
   return (
     <>
@@ -24,6 +29,7 @@ function Chain({ userId, replyId }: RenderRepliesProps) {
         <>
           {replies.map((reply: ReplyType, index: number) => {
             const isRoot = !reply.replyToId;
+            const level = depth - index;
             return isRoot ? (
               // Render RootReply for the root reply
               <RootReply key={reply.id} index={index} reply={reply} />
@@ -33,7 +39,7 @@ function Chain({ userId, replyId }: RenderRepliesProps) {
                 key={reply.id}
                 index={index}
                 reply={reply}
-                level={1}
+                level={level}
                 isChild={true}
               />
             );

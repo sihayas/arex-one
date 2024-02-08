@@ -30,8 +30,8 @@ export default async function handle(
     const whereClause = artifactId
       ? { artifactId, replyToId: null }
       : replyId
-        ? { replyToId: replyId }
-        : {};
+      ? { replyToId: replyId }
+      : {};
 
     const replies = await prisma.reply.findMany({
       where: whereClause,
@@ -47,7 +47,7 @@ export default async function handle(
         hearts: { where: { authorId: userId } },
         _count: { select: { replies: true, hearts: true } },
         replyTo: {
-          select: { author: { select: { image: true } }, text: true },
+          select: { author: { select: { image: true } }, text: true, id: true },
         },
       },
     });

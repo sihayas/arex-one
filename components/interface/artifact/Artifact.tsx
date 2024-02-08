@@ -135,10 +135,15 @@ export const Artifact = () => {
             {artifactExtended.content?.text}
           </div>
 
-          {/* If viewing a specific chain */}
-          <p>highlighted chain</p>
-          {chainId && <Chain replyId={chainId} userId={user.id} />}
+          {/* If viewing a specific chain i.e. from notification */}
+          <p className={`text-sm`}>highlighted chain</p>
+          {chainId && (
+            <div className={`flex flex-col-reverse pr-8 -ml-8`}>
+              <Chain replyId={chainId} userId={user.id} />
+            </div>
+          )}
 
+          {/* Chains */}
           <div className={`-ml-8 min-h-full min-w-full pr-8`}>
             <Replies artifactId={artifactExtended.id} userId={user.id} />
           </div>
