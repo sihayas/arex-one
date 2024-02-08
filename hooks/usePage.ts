@@ -20,7 +20,7 @@ export const useArtifact = () => {
         scrollPosition: 0,
         artifact: {
           artifact,
-          replyId,
+          replyTo: replyId,
         },
         color: artifact.appleData.attributes.artwork.bgColor,
         isOpen: false,

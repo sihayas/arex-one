@@ -38,22 +38,23 @@ export const useRepliesQuery = (
 export const useChainQuery = (userId: string, replyId: string | undefined) =>
   useInfiniteQuery(
     ["replies", replyId],
-    async ({ pageParam = 1 }) => {
+    async ({ pageParam = undefined }) => {
       const url = `/api/artifact/get/chain`;
-      const params = { replyId, userId, page: pageParam, limit: 6 };
+      const params = { replyId, userId, cursor: pageParam };
 
       const { data } = await axios.get(url, { params });
 
-      const { replies, pagination } = data.data;
+      const replies = data.replies;
+      const cursor = data.pagination.nextPage;
 
-      if (!replies || !pagination) {
+      if (!replies) {
         throw new Error("Unexpected server response structure");
       }
 
-      return { data: replies, pagination };
+      return { data: replies, nextPage: cursor };
     },
     {
-      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
+      getNextPageParam: (lastPage) => lastPage.nextPage,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,

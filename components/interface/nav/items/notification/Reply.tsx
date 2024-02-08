@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
@@ -18,13 +18,11 @@ const Reply = ({ notificationsGroup }: any) => {
   const name =
     notificationsGroup.notifications[0].activity.reply.author.username;
 
-  console.log(reply?.artifact);
-
   return reply.replyTo && user ? (
     <div
       onClick={(event) => {
         event.stopPropagation();
-        handleSelectArtifact(reply?.artifact);
+        handleSelectArtifact(reply?.artifact, reply.id);
       }}
       className={`flex flex-col gap-4`}
     >

@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 import {
   motion,
   useMotionValueEvent,
@@ -12,6 +11,7 @@ import { useSound } from "@/hooks/usePage";
 import useHandleHeartClick from "@/hooks/useHeart";
 import Avatar from "@/components/global/Avatar";
 import Replies from "@/components/interface/artifact/render/Replies";
+import Chain from "@/components/interface/artifact/render/Chain";
 import { ArtifactExtended } from "@/types/globalTypes";
 
 import Image from "next/image";
@@ -60,6 +60,7 @@ export const Artifact = () => {
     () => activePage.artifact?.artifact as ArtifactExtended,
     [activePage],
   );
+  const chainId = activePage.artifact?.replyTo;
 
   const sound = artifactExtended.appleData;
   const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 520, 520);
@@ -67,8 +68,6 @@ export const Artifact = () => {
   const handleSoundClick = async () => {
     handleSelectSound(sound);
   };
-
-  const artifact = artifactExtended;
 
   // Scroll to top on mount
   useEffect(() => {
@@ -106,7 +105,7 @@ export const Artifact = () => {
         <div className={`flex flex-col pb-[100vh]`}>
           <div className={`flex w-full items-center p-8 pb-2`}>
             <div className="rounded-max outline-silver z-10 -ml-[50px] bg-white p-3 outline outline-1">
-              {getStarComponent(artifact.content!.rating!)}
+              {getStarComponent(artifactExtended.content!.rating!)}
             </div>
 
             <div className={`ml-3 flex flex-col`}>
@@ -120,24 +119,28 @@ export const Artifact = () => {
 
             <div className={`ml-auto flex w-max items-center gap-2`}>
               <p className={`text-end text-base font-medium`}>
-                {artifact.author.username}
+                {artifactExtended.author.username}
               </p>
               <Avatar
                 className={`border-silver border`}
-                imageSrc={artifact.author.image}
-                altText={`${artifact.author.username}'s avatar`}
+                imageSrc={artifactExtended.author.image}
+                altText={`${artifactExtended.author.username}'s avatar`}
                 width={40}
                 height={40}
-                user={artifact.author}
+                user={artifactExtended.author}
               />
             </div>
           </div>
           <div className={`text-gray p-8 pt-0 text-base font-medium`}>
-            {artifact.content?.text}
+            {artifactExtended.content?.text}
           </div>
 
+          {/* If viewing a specific chain */}
+          <p>highlighted chain</p>
+          {chainId && <Chain replyId={chainId} userId={user.id} />}
+
           <div className={`-ml-8 min-h-full min-w-full pr-8`}>
-            <Replies artifactId={artifact.id} userId={user.id} />
+            <Replies artifactId={artifactExtended.id} userId={user.id} />
           </div>
         </div>
       </div>

@@ -93,6 +93,7 @@ export default async function handler(
                   // Heart is on a Reply
                   reply: {
                     select: {
+                      id: true,
                       // Get the Post that the Reply is on
                       artifact: {
                         select: {
@@ -128,6 +129,7 @@ export default async function handler(
               // Activity is a Reply
               reply: {
                 select: {
+                  id: true,
                   text: true,
                   author: {
                     select: {

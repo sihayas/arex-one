@@ -20,9 +20,9 @@ export default async function handle(
   }
 
   // Optionally validate cursor if it's provided
-  if (cursor !== undefined && typeof cursor !== "string") {
-    return res.status(400).json({ error: "Invalid cursor." });
-  }
+  // if (cursor !== undefined && typeof cursor !== "string") {
+  //   return res.status(400).json({ error: "Invalid cursor." });
+  // }
 
   const ancestorLimit = 6;
   let currentReplyId = cursor || replyId;
@@ -36,6 +36,7 @@ export default async function handle(
         select: {
           id: true,
           hearts: { where: { authorId: userId } },
+          _count: { select: { replies: true, hearts: true } },
           text: true,
           replyToId: true,
           author: {
@@ -63,6 +64,7 @@ export default async function handle(
       const detailedReply = detailedReplyData.find(
         (detailedReply) => detailedReply.id === reply.id,
       );
+
       return {
         ...reply,
         ...detailedReply,

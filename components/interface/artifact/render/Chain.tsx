@@ -3,6 +3,7 @@ import { useChainQuery, useRepliesQuery } from "@/lib/apiHelper/artifact";
 import React from "react";
 import RootReply from "@/components/interface/artifact/items/RootReply";
 import { LayoutGroup } from "framer-motion";
+import Reply from "../items/Reply";
 
 type RenderRepliesProps = {
   userId: string;
@@ -15,14 +16,28 @@ function Chain({ userId, replyId }: RenderRepliesProps) {
 
   const replies = data ? data.pages.flatMap((page) => page.data) : [];
 
+  console.log("replies", replies);
   // Add layout group to the 2nd fragment
   return (
     <>
       {replies.length > 0 ? (
         <>
-          {replies.map((reply: ReplyType, index: number) => (
-            <RootReply key={reply.id} index={index} reply={reply} />
-          ))}
+          {replies.map((reply: ReplyType, index: number) => {
+            const isRoot = !reply.replyToId;
+            return isRoot ? (
+              // Render RootReply for the root reply
+              <RootReply key={reply.id} index={index} reply={reply} />
+            ) : (
+              // Render Reply for all other replies
+              <Reply
+                key={reply.id}
+                index={index}
+                reply={reply}
+                level={1}
+                isChild={true}
+              />
+            );
+          })}
         </>
       ) : (
         <div className="text-action text-sm font-medium uppercase">
