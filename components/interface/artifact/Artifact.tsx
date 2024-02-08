@@ -42,28 +42,22 @@ export const Artifact = () => {
     damping: 40,
   });
 
-  const scale = useSpring(useTransform(scrollY, [0, 1], [1, 0.625]), {
-    stiffness: 400,
-    damping: 40,
-  });
+  const scale = useSpring(
+    useTransform(scrollY, [0, 1], [1, 0.625]),
+    artworkConfig,
+  );
 
-  const rotate = useSpring(useTransform(scrollY, [0, 1], [0, -3]), {
-    stiffness: 400,
-    damping: 40,
-  });
+  const rotate = useSpring(
+    useTransform(scrollY, [0, 1], [0, -3]),
+    artworkConfig,
+  );
 
-  const x = useSpring(useTransform(scrollY, [0, 1], [0, 32]), {
-    stiffness: 400,
-    damping: 40,
-  });
+  const x = useSpring(useTransform(scrollY, [0, 1], [0, 32]), artworkConfig);
 
-  const y = useSpring(useTransform(scrollY, [0, 1], [0, 32]), {
-    stiffness: 400,
-    damping: 40,
-  });
+  const y = useSpring(useTransform(scrollY, [0, 1], [0, 32]), artworkConfig);
 
   const artifactExtended = useMemo(
-    () => activePage.artifact as ArtifactExtended,
+    () => activePage.artifact?.artifact as ArtifactExtended,
     [activePage],
   );
 
@@ -109,8 +103,8 @@ export const Artifact = () => {
           />
         </motion.div>
 
-        <div className={`flex flex-col gap-[18px] pb-[100vh]`}>
-          <div className={`flex max-h-[32px] w-full items-center p-8 pb-2`}>
+        <div className={`flex flex-col pb-[100vh]`}>
+          <div className={`flex w-full items-center p-8 pb-2`}>
             <div className="rounded-max outline-silver z-10 -ml-[50px] bg-white p-3 outline outline-1">
               {getStarComponent(artifact.content!.rating!)}
             </div>
@@ -132,8 +126,8 @@ export const Artifact = () => {
                 className={`border-silver border`}
                 imageSrc={artifact.author.image}
                 altText={`${artifact.author.username}'s avatar`}
-                width={32}
-                height={32}
+                width={40}
+                height={40}
                 user={artifact.author}
               />
             </div>

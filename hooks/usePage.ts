@@ -9,7 +9,7 @@ export const useArtifact = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setThreadcrumbs } = useThreadcrumb();
 
-  const handleSelectArtifact = (artifact: Artifact) => {
+  const handleSelectArtifact = (artifact: Artifact, replyId?: string) => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
@@ -18,7 +18,10 @@ export const useArtifact = () => {
         name: "artifact",
         threadcrumbs: [artifact.id],
         scrollPosition: 0,
-        artifact: artifact,
+        artifact: {
+          artifact,
+          replyId,
+        },
         color: artifact.appleData.attributes.artwork.bgColor,
         isOpen: false,
       },

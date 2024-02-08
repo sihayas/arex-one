@@ -6,8 +6,6 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 const Notifications = () => {
   const { notifs } = useInterfaceContext();
 
-  console.log("notifs", notifs);
-
   return (
     <div
       className={`scrollbar-none -z-10 flex h-full w-full flex-col overflow-scroll`}

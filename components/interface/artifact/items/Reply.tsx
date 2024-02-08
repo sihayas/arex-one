@@ -29,7 +29,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const replyCount = reply._count ? reply._count.replies : 0;
 
   const handleReplyParent = useCallback(() => {
-    const artifact = activePage.artifact;
+    const artifact = activePage.artifact?.artifact;
 
     if (artifact) {
       if (replyTarget?.reply === reply) {
@@ -63,8 +63,6 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
     : "-bottom-1 -right-1 transform scale-x-[-1]";
 
   const dashLinePosition = isEven ? "right-0" : "left-0";
-
-  console.log(reply);
 
   // Layout prop is what dictates animating the container to expand/contract when
   // replies are loaded or unloaded. The parent/root is in Replies.tsx
@@ -123,7 +121,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           }`}
         >
           <motion.div
-            className={`relative w-fit max-w-[322px] overflow-visible rounded-2xl bg-white px-3 py-1.5`}
+            className={`relative w-fit max-w-[322px] overflow-visible rounded-[18px] bg-[#E5E5E5] px-3 py-1.5`}
           >
             {/* Content  */}
             <motion.div
@@ -146,10 +144,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             {/* Bubbles */}
             <div className={`absolute -z-10 h-3 w-3 ${bubblePosition}`}>
               <div
-                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#E5E5E5]`}
               />
               <div
-                className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-white`}
+                className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-[#E5E5E5]`}
               />
             </div>
           </motion.div>
@@ -164,16 +162,21 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
                     backgroundColor: showChildReplies ? "#CCC" : "#000",
                   }}
                   onClick={() => setShowChildReplies((prev) => !prev)}
-                  className={`center-y bg-gray3 absolute h-3 w-3 cursor-pointer rounded-full ${isEven ? "right-12" : "left-12"}`}
+                  className={`center-y bg-gray3 absolute h-3 w-3 cursor-pointer rounded-full ${
+                    isEven ? "right-12" : "left-12"
+                  }`}
                 />
               )}
 
               {showChildReplies && (
                 <div
                   onClick={() => setShowChildReplies((prev) => !prev)}
-                  className={`absolute cursor-pointer ${isEven ? "right-[14px] -scale-x-[1]" : "left-[14px] top-1/2"}`}
+                  className={`absolute cursor-pointer ${
+                    isEven ? "right-[14px] -scale-x-[1]" : "left-[14px] top-1/2"
+                  }`}
                 >
                   <CurveIcon />
+                  <div className="absolute -z-10 h-4 w-1 -translate-y-1 rounded-tl-lg rounded-tr-lg bg-[#F6F6F6]" />
                 </div>
               )}
             </>
@@ -187,17 +190,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           <div
             className={`absolute -z-10 flex h-full w-8 items-center justify-center ${dashLinePosition}`}
           >
-            <svg style={{ width: 4, height: "100%" }}>
-              <motion.line
-                x1="50%"
-                y1="0"
-                x2="50%"
-                y2="100%"
-                stroke={"#E9E9E9"}
-                strokeWidth={4}
-                strokeLinecap="round"
-              />
-            </svg>
+            <div className="z-10 h-full w-1 rounded-tl-lg rounded-tr-lg bg-[#E9E9E9]" />
           </div>
         )}
 
@@ -215,7 +208,9 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         {level > 1 && showChildReplies && (
           <div
             className={`relative flex w-full items-center gap-2 pb-8
-            ${isEven ? "justify-start pl-[14px]" : "flex-row-reverse pr-[14px]"}`}
+            ${
+              isEven ? "justify-start pl-[14px]" : "flex-row-reverse pr-[14px]"
+            }`}
           >
             <div className="absolute z-10 h-full w-1 translate-y-9 rounded bg-[#CCC]" />
             <LoopIcon className={`${!isEven && "-scale-x-[1]"}`} />

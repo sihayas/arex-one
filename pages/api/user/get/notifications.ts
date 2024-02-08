@@ -75,6 +75,19 @@ export default async function handler(
                       sound: {
                         select: { appleId: true, type: true },
                       },
+                      content: {
+                        select: {
+                          text: true,
+                          rating: true,
+                        },
+                      },
+                      author: {
+                        select: {
+                          id: true,
+                          username: true,
+                          image: true,
+                        },
+                      },
                     },
                   },
                   // Heart is on a Reply
@@ -130,20 +143,46 @@ export default async function handler(
                       sound: {
                         select: { appleId: true, type: true },
                       },
+                      content: {
+                        select: {
+                          text: true,
+                          rating: true,
+                        },
+                      },
+                      author: {
+                        select: {
+                          id: true,
+                          username: true,
+                          image: true,
+                        },
+                      },
                     },
                   },
                   // Reply is on a Reply
                   replyTo: {
                     select: {
                       // Get the Post that the Reply is on
-                      // artifact: {
-                      //   select: {
-                      //     id: true,
-                      //     sound: {
-                      //       select: { appleId: true, type: true },
-                      //     },
-                      //   },
-                      // },
+                      artifact: {
+                        select: {
+                          id: true,
+                          sound: {
+                            select: { appleId: true, type: true },
+                          },
+                          content: {
+                            select: {
+                              text: true,
+                              rating: true,
+                            },
+                          },
+                          author: {
+                            select: {
+                              id: true,
+                              username: true,
+                              image: true,
+                            },
+                          },
+                        },
+                      },
                       // Get the text of the reply its replying to
                       text: true,
                       author: {

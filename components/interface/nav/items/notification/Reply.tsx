@@ -1,12 +1,15 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useArtifact } from "@/hooks/usePage";
 
 const Reply = ({ notificationsGroup }: any) => {
-  const notifications = notificationsGroup.notifications;
   const { user } = useInterfaceContext();
+  const { handleSelectArtifact } = useArtifact();
+
+  const notifications = notificationsGroup.notifications;
   const reply = notifications[0].activity.reply;
 
   const url = reply.artifact?.appleData.attributes.artwork.url;
@@ -15,8 +18,16 @@ const Reply = ({ notificationsGroup }: any) => {
   const name =
     notificationsGroup.notifications[0].activity.reply.author.username;
 
+  console.log(reply?.artifact);
+
   return reply.replyTo && user ? (
-    <div className={`flex flex-col gap-4`}>
+    <div
+      onClick={(event) => {
+        event.stopPropagation();
+        handleSelectArtifact(reply?.artifact);
+      }}
+      className={`flex flex-col gap-4`}
+    >
       {/* Parent */}
       <div className={`flex min-w-full items-end justify-end`}>
         <div

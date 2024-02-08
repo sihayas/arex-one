@@ -17,7 +17,7 @@ import {
 } from "@/components/icons";
 import { useNavContext } from "@/context/NavContext";
 import Avatar from "@/components/global/Avatar";
-import { Page, useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { addReply } from "@/lib/apiHelper/artifact";
 import { toast } from "sonner";
@@ -60,6 +60,7 @@ const Nav = () => {
   } = useNavContext();
   const { selectedFormSound } = useSoundContext();
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
+  const contentContainerRef = useRef<HTMLDivElement>(null);
 
   const pageObject = activePage.sound || activePage.artifact;
   // isNone = activeAction === "none";
@@ -181,7 +182,9 @@ const Nav = () => {
 
       if (
         notificationButtonRef.current &&
-        !notificationButtonRef.current.contains(target)
+        !notificationButtonRef.current.contains(target) &&
+        contentContainerRef.current &&
+        !contentContainerRef.current.contains(target)
       ) {
         if (isNotifications) {
           setExpandInput(false);
@@ -206,6 +209,7 @@ const Nav = () => {
       >
         {/* Top / Content */}
         <motion.div
+          ref={contentContainerRef}
           className={`outline-silver relative -z-10 flex w-full flex-col items-end justify-end rounded-3xl bg-[#F4F4F4] outline outline-1`}
           variants={contentVariants}
           animate={expandInput ? "expanded" : "collapsed"}

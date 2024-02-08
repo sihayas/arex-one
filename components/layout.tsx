@@ -3,7 +3,7 @@ import React, { useEffect, ReactNode } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 
-import { motion, useAnimate } from "framer-motion";
+import { useAnimate } from "framer-motion";
 
 const opacityConfig = {
   type: "spring" as const,
@@ -85,7 +85,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       {/* Interface */}
-      {user && activePage && <Interface isVisible={isVisible} />}
+      {user && activePage && MusicKit && <Interface isVisible={isVisible} />}
 
       {/* Feed */}
       <main

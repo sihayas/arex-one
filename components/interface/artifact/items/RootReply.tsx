@@ -27,7 +27,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
   const replyCount = reply._count ? reply._count.replies : 0;
 
   const handleReplyParent = useCallback(() => {
-    const artifact = activePage.artifact;
+    const artifact = activePage.artifact?.artifact;
     if (artifact) {
       setReplyTarget({ artifact, reply });
     }
@@ -72,7 +72,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
       style={{
         willChange: "opacity, scale, transform",
       }}
-      className={`relative mt-8 flex h-fit w-full flex-col`}
+      className={`relative mt-4 flex h-fit w-full flex-col`}
     >
       {/* Main Reply */}
       <div className={`flex items-end gap-2`}>
@@ -85,7 +85,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
           user={reply.author}
         />
         <div
-          className={`relative mb-2 w-full overflow-visible rounded-2xl bg-white px-3 py-1.5`}
+          className={`relative mb-2 w-fit overflow-visible rounded-[18px] bg-[#E5E5E5] px-3 py-1.5`}
         >
           {/* Content  */}
           <motion.div
@@ -104,10 +104,10 @@ export default function RootReply({ reply, index }: ReplyProps) {
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -left-1 -z-10 h-3 w-3`}>
             <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#E5E5E5]`}
             />
             <div
-              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-[#E5E5E5]`}
             />
           </div>
         </div>

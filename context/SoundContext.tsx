@@ -51,11 +51,6 @@ export const SoundDetailsProvider = ({
   const [prevEssentialId, setPrevEssentialId] = useState("");
   const [rank, setRank] = useState(0);
 
-  // Initialize MusicKit
-  useEffect(() => {
-    document.addEventListener("musickitloaded", () => {});
-  }, []);
-
   const playContent = async (contentId: string, contentType: string) => {
     try {
       const music = MusicKit.getInstance();
