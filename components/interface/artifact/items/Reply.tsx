@@ -121,7 +121,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           }`}
         >
           <motion.div
-            className={`relative w-fit max-w-[322px] overflow-visible rounded-[18px] bg-[#E5E5E5] px-3 py-1.5`}
+            className={`relative w-fit max-w-[322px] overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
           >
             {/* Content  */}
             <motion.div
@@ -132,11 +132,14 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
               }
               onClick={handleReplyParent}
               animate={{
-                color: replyTarget?.reply === reply ? "#7AFF00" : "#000",
+                color:
+                  replyTarget?.reply === reply
+                    ? "#7AFF00"
+                    : "RGB(119 119 119 / 1)",
                 scale: replyTarget?.reply === reply ? 1.01 : 1,
               }}
               transition={{ duration: 0.24 }}
-              className={`cursor-pointer break-words text-base`}
+              className={`cursor-pointer break-words text-base text-gray`}
             >
               {reply.text}
             </motion.div>
@@ -144,10 +147,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             {/* Bubbles */}
             <div className={`absolute -z-10 h-3 w-3 ${bubblePosition}`}>
               <div
-                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#E5E5E5]`}
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
               />
               <div
-                className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-[#E5E5E5]`}
+                className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-white`}
               />
             </div>
           </motion.div>
@@ -190,7 +193,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           <div
             className={`absolute -z-10 flex h-full w-8 items-center justify-center ${dashLinePosition}`}
           >
-            <div className="z-10 h-full w-1 rounded-tl-lg rounded-tr-lg bg-[#E9E9E9]" />
+            <div className="z-10 h-full w-1 rounded bg-[#E9E9E9]" />
           </div>
         )}
 
@@ -230,27 +233,6 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
     </motion.div>
   );
 }
-
-const Line: React.FC<{
-  height?: string;
-  width?: string;
-  color?: string;
-  className?: string;
-}> = ({
-  width = "1px",
-  height,
-  color = "rgba(0, 0, 0, 0.1)",
-  className = "",
-}) => (
-  <div
-    style={{
-      height,
-      width,
-      backgroundColor: color,
-    }}
-    className={className}
-  />
-);
 
 // <Heart
 //     handleHeartClick={handleHeartClick}

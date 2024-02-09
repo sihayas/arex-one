@@ -91,54 +91,47 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       />
 
       {/* Content Inner / Card */}
-      <motion.div
+      <div
         style={{
           width: 304,
           height: 432,
           ...maskStyle,
         }}
         ref={containerRef}
-        className={`relative z-10 flex flex-col   will-change-transform`}
+        className={`relative z-10 flex flex-col will-change-transform bg-white p-6 gap-[18px]`}
       >
-        <div
-          className={`w-full h-[304px] bg-[#F4F4F4] flex items-center justify-center`}
-        >
-          <Art
-            size={240}
-            sound={sound}
-            containerClass={`rounded-2xl shadow-shadowKitHigh`}
-          />
+        {/* Metadata */}
+        <Art
+          size={240}
+          containerClass="shadow-shadowKitHigh rounded-[17px] overflow-hidden outline outline-1 outline-silver mx-2 mt-2"
+          sound={sound}
+        />
+
+        <div className="`text-base line-clamp-5 text-black">
+          {artifact.content?.text}
         </div>
 
-        <motion.div
-          onClick={() => handleSelectArtifact(artifact)}
-          className={`line-clamp-4 cursor-pointer px-6 pt-2.5 text-base text-black bg-white`}
-        >
-          {artifact.content?.text}
-        </motion.div>
-
         <div
-          className={`absolute bottom-0 left-0 z-50 flex items-center gap-2 px-6 py-3`}
+          className="absolute bottom-0 left-0 w-full h-20 p-3 flex gap-2 items-end"
+          style={{
+            backgroundImage:
+              "linear-gradient(to top, #fff 68.91%, transparent)",
+          }}
         >
-          {/* {getStarComponent(artifact.content!.rating!)} */}
-          <div className={`line-clamp-1 text-base font-semibold text-black`}>
-            {sound.attributes.name}
+          <div className="rounded-max outline-silver bg-[#F4F4F4] p-[11px] outline outline-1 w-fit">
+            {getStarComponent(artifact.content!.rating!)}
+          </div>
+
+          <div className={`flex flex-col translate-y-[1px]`}>
+            <p className={`text-gray2 line-clamp-1 text-sm`}>
+              {sound.attributes.artistName}
+            </p>
+            <p className={`line-clamp-1 text-base font-medium text-black`}>
+              {sound.attributes.name}
+            </p>
           </div>
         </div>
-
-        <motion.div
-          style={{
-            background: `linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 24%, #FFF 55.32%)`,
-            height: "50px",
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            zIndex: 10,
-          }}
-          className={`absolute left-0 w-full`}
-        />
-      </motion.div>
+      </div>
 
       <div
         className={`cloud-shadow absolute bottom-0 right-0 h-[432px] w-[304px]`}

@@ -54,6 +54,7 @@ export default async function handle(
       replyChain.push(reply); // Push the reply to the chain
 
       if (!reply.replyTo) {
+        cursorId = null; // No more pages left
         break; // Stop the loop if reply has no replyTo
       }
 

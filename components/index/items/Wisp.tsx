@@ -7,43 +7,30 @@ import Avatar from "@/components/global/Avatar";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 
-import Image from "next/image";
-import { WispIcon } from "@/components/icons";
-import { useSoundContext } from "@/context/SoundContext";
+import { MaskCardBottomOutlined } from "@/components/icons";
+import { Art } from "@/components/global/Art";
 
 interface WispProps {
   artifact: ArtifactExtended;
 }
 
+const maskStyle = {
+  maskImage: "url('/images/mask_card_bottom_outlined.svg')",
+  maskSize: "cover",
+  maskRepeat: "no-repeat",
+  WebkitMaskImage: "url('/images/mask_card_bottom_outlined.svg')",
+  WebkitMaskSize: "cover",
+  WebkitMaskRepeat: "no-repeat",
+};
+
 export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   // const { user } = useInterfaceContext();
-  const { playContent } = useSoundContext();
 
   const sound = artifact.appleData;
   const artwork = sound.attributes.artwork.url
     .replace("{w}", "120")
     .replace("{h}", "120");
   const color = sound.attributes.artwork.bgColor;
-  const artist = sound.attributes.artistName;
-  const name = sound.attributes.name;
-
-  // const apiUrl = artifact.heartedByUser
-  //   ? "/api/heart/delete/artifact"
-  //   : "/api/heart/post/artifact";
-
-  // const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-  //   artifact.heartedByUser,
-  //   artifact._count.hearts,
-  //   apiUrl,
-  //   "artifactId",
-  //   artifact.id,
-  //   artifact.author.id,
-  //   user?.id,
-  // );
-
-  const handleSoundClick = async () => {
-    playContent(sound.id, sound.type);
-  };
 
   return (
     <div className={`relative flex h-fit w-[356px] items-end gap-2.5`}>
@@ -56,68 +43,83 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         user={artifact.author}
       />
 
-      {/* Cloud / Content */}
-      <motion.div className="flex w-[304px] flex-col pb-2">
-        <div
-          className={`cloud-shadow relative flex h-[222px] w-[304px] flex-col items-center gap-[11px]`}
+      <motion.div className={`relative `}>
+        <motion.div
+          style={{
+            width: 304,
+            height: 432,
+            ...maskStyle,
+          }}
+          className={`relative z-10 flex flex-col justify-between bg-white will-change-transform p-6`}
         >
-          <WispIcon className={`absolute left-0 top-0`} />
+          {/* Metadata */}
+          <div className={`flex w-full flex-col items-end`}>
+            <Art
+              size={128}
+              containerClass="shadow-shadowKitHigh rounded-[17px] overflow-hidden outline outline-1 outline-silver"
+              sound={sound}
+            />
 
-          <div
-            className={`relative z-10 flex w-[152px] items-center gap-2 pt-6`}
-          >
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              initial={{ borderRadius: 9999 }}
-              className={`shadow-shadowKitMedium outline-silver cursor-pointer overflow-hidden outline outline-1`}
+            <div className={`text-gray2 line-clamp-1 pt-4 text-end text-sm`}>
+              {sound.attributes.artistName}
+            </div>
+            <div
+              className={`line-clamp-1 text-end text-base font-medium text-black`}
             >
-              <Image
-                src={artwork}
-                alt={`${sound.attributes.name} artwork`}
-                width={48}
-                height={48}
-              />
-            </motion.div>
-
-            <div className={`flex flex-col`}>
-              <p className={`text-gray5 line-clamp-1 max-w-[90px] text-sm`}>
-                {artist}
-              </p>
-              <p
-                className={`text-gray4 line-clamp-1 max-w-[106px] text-base font-semibold`}
-              >
-                {name}
-              </p>
+              {sound.attributes.name}
             </div>
           </div>
 
-          <div
-            className={`z-10 flex h-[88px] w-[232px] items-center justify-center`}
+          <motion.div
+            className={`relative w-fit max-w-[252px] overflow-visible rounded-[18px] bg-[#F4F4F4] px-3 py-1.5 mb-3`}
           >
-            <p
-              className={`text-gray4 line-clamp-4 break-words text-center text-base`}
-            >
+            {/* Content  */}
+            <div className="`text-base line-clamp-[7] text-black">
               {artifact.content?.text}
-            </p>
-          </div>
+            </div>
+
+            {/* Bubbles */}
+            <div className={`absolute -z-10 h-3 w-3 -bottom-1 -left-1`}>
+              <div
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#F4F4F4]`}
+              />
+              <div
+                className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-[#F4F4F4]`}
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <div
+          className={`cloud-shadow absolute bottom-0 right-0 h-[432px] w-[304px]`}
+        >
+          <MaskCardBottomOutlined />
         </div>
-        <div
-          onClick={handleSoundClick}
-          className={`rounded-max border-silver -mb-2 ml-8 h-[36px] w-[36px] cursor-pointer border bg-white`}
-        />
-        <div
-          className={`rounded-max border-silver h-[16px] w-[16px] border bg-white`}
-        />
-        {/*Ambien*/}
-        <motion.div
-          style={{
-            background: `#${color}`,
-            backgroundRepeat: "repeat, no-repeat",
-            width: "calc(100% - 52px)",
-          }}
-          className={`absolute bottom-0 left-[52px] -z-10 h-full w-full`}
-        />
       </motion.div>
+
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        style={{
+          background: `#${color}`,
+          backgroundRepeat: "repeat, no-repeat",
+        }}
+        className={`absolute left-[52px] -z-10 h-[400px] w-[304px]`}
+      />
     </div>
   );
 };
+
+// const apiUrl = artifact.heartedByUser
+//   ? "/api/heart/delete/artifact"
+//   : "/api/heart/post/artifact";
+
+// const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+//   artifact.heartedByUser,
+//   artifact._count.hearts,
+//   apiUrl,
+//   "artifactId",
+//   artifact.id,
+//   artifact.author.id,
+//   user?.id,
+// );

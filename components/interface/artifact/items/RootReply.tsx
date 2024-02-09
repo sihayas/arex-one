@@ -85,14 +85,15 @@ export default function RootReply({ reply, index }: ReplyProps) {
           user={reply.author}
         />
         <div
-          className={`relative mb-2 w-fit overflow-visible rounded-[18px] bg-[#E5E5E5] px-3 py-1.5`}
+          className={`relative mb-2 w-fit overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
         >
           {/* Content  */}
           <motion.div
             whileHover={{ color: "rgba(0,0,0,1)" }}
             onClick={handleReplyParent}
             animate={{
-              color: replyTarget?.reply === reply ? "#FFF" : "#000",
+              color:
+                replyTarget?.reply === reply ? "#FFF" : "rgb(119 119 119 / 1)",
               scale: replyTarget?.reply === reply ? 1.01 : 1,
             }}
             transition={{ duration: 0.24 }}
@@ -104,10 +105,10 @@ export default function RootReply({ reply, index }: ReplyProps) {
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -left-1 -z-10 h-3 w-3`}>
             <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#E5E5E5]`}
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
             />
             <div
-              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-[#E5E5E5]`}
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
             />
           </div>
         </div>
