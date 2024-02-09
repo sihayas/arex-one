@@ -62,8 +62,12 @@ const Sound = () => {
   );
   const artHeight = -base.height / 2;
   const yArt = useSpring(
-    useTransform(scrollY, [0, 1], [artHeight + 32, -520]),
+    useTransform(scrollY, [0, 1], [artHeight + 32, -494]),
     yConfig,
+  );
+  const rotateArt = useSpring(
+    useTransform(scrollY, [0, 1], [0, -4]),
+    generalConfig,
   );
   const scaleArt = useSpring(
     useTransform(scrollY, [0, 1], [1, 0.407]),
@@ -76,10 +80,10 @@ const Sound = () => {
   );
 
   // Dial Transformations
-  const xDial = useSpring(useTransform(scrollY, [0, 1], [-48, -48]), xConfig);
-  const yDial = useSpring(useTransform(scrollY, [0, 1], [32, 48]), yConfig);
+  const xDial = useSpring(useTransform(scrollY, [0, 1], [-32, 32]), xConfig);
+  const yDial = useSpring(useTransform(scrollY, [0, 1], [32, -32]), yConfig);
   const scaleDial = useSpring(
-    useTransform(scrollY, [0, 1], [1, 0.93]),
+    useTransform(scrollY, [0, 1], [1, 0.25]),
     scaleConfig,
   );
   const hideDial = useSpring(
@@ -122,12 +126,14 @@ const Sound = () => {
           scale: isOpen ? 0.1389 : 1,
           x: isOpen ? -240 : artHeight + 32,
           y: isOpen ? 26 : artWidth + 32,
+          rotate: isOpen ? -4 : 0,
         }}
         style={{
           borderRadius: borderRad,
           scale: scaleArt,
           y: yArt,
           x: xArt,
+          rotate: rotateArt,
         }}
         className="shadow-shadowKitHigh pointer-events-none absolute left-1/2 top-1/2 z-10 min-h-[432px] min-w-[432px] origin-top-left overflow-hidden"
       >
@@ -147,7 +153,7 @@ const Sound = () => {
         style={{
           opacity: showMini,
         }}
-        className={`center-x shadow-shadowKitHigh absolute bottom-8 z-10 flex origin-bottom flex-col items-center justify-center rounded-2xl bg-white p-4`}
+        className={`center-x shadow-shadowKitHigh absolute bottom-8 z-10 flex origin-bottom flex-col items-center justify-center -space-y-[1px] rounded-2xl bg-white px-4 pb-[13px] pt-[10px]`}
       >
         <p className={`text-center text-base font-bold text-black`}>{name}</p>
         <p
@@ -158,7 +164,7 @@ const Sound = () => {
       </motion.div>
 
       {/* Sort */}
-      <div className={`absolute bottom-40 left-40`}>
+      <div className={`absolute bottom-[92px] left-[92px]`}>
         <Sort onSortOrderChange={handleSortOrderChange} />
       </div>
 
@@ -168,21 +174,43 @@ const Sound = () => {
           <>
             {/* Big Dial */}
             <motion.div
-              className={`absolute bottom-0 left-0 z-10 flex origin-bottom-left items-center justify-center drop-shadow-xl will-change-transform`}
+              className={`pointer-events-none absolute bottom-0 left-0 z-10 flex origin-bottom-left items-center justify-center drop-shadow-xl will-change-transform`}
               style={{
                 x: xDial,
                 y: yDial,
                 scale: scaleDial,
-                // opacity: hideDial,
+                opacity: hideDial,
               }}
               initial={{
-                x: isOpen ? -16 : 16,
-                y: isOpen ? -16 : 16,
+                x: isOpen ? 32 : -32,
+                y: isOpen ? -32 : 32,
                 scale: isOpen ? 0.25 : 1,
                 opacity: isOpen ? 0 : 1,
               }}
             >
               <Dial ratings={[4, 8900, 2445, 500, 500]} average={3.8} />
+            </motion.div>
+
+            {/* Mini Dial */}
+            <motion.div
+              className={`absolute bottom-0 left-0 flex origin-bottom-left items-center justify-center will-change-transform`}
+              style={{
+                x: xDial,
+                y: yDial,
+                scale: scaleDial,
+                opacity: showMini,
+              }}
+              initial={{
+                x: isOpen ? 32 : -32,
+                y: isOpen ? -32 : 32,
+                scale: isOpen ? 0.25 : 1,
+                opacity: isOpen ? 1 : 0,
+              }}
+            >
+              <DialMini
+                ratings={[4, 8900, 2445, 500, 500]}
+                onRangeChange={handleRangeChange}
+              />
             </motion.div>
           </>,
           cmdk,
