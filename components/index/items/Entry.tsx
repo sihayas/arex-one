@@ -118,7 +118,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
               "linear-gradient(to top, #fff 68.91%, transparent)",
           }}
         >
-          <div className="rounded-max outline-silver bg-[#F4F4F4] p-[11px] outline outline-1 w-fit">
+          <div className="rounded-max outline-silver bg-[#F4F4F4] p-[11px] outline outline-1 w-fit shadow-shadowKitMedium">
             {getStarComponent(artifact.content!.rating!)}
           </div>
 

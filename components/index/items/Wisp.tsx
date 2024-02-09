@@ -53,19 +53,17 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
           className={`relative z-10 flex flex-col justify-between bg-white will-change-transform p-6`}
         >
           {/* Metadata */}
-          <div className={`flex w-full flex-col items-end`}>
+          <div className={`flex w-fit flex-col`}>
             <Art
               size={128}
               containerClass="shadow-shadowKitHigh rounded-[17px] overflow-hidden outline outline-1 outline-silver"
               sound={sound}
             />
 
-            <div className={`text-gray2 line-clamp-1 pt-4 text-end text-sm`}>
+            <div className={`text-gray2 line-clamp-1 pt-4 text-sm`}>
               {sound.attributes.artistName}
             </div>
-            <div
-              className={`line-clamp-1 text-end text-base font-medium text-black`}
-            >
+            <div className={`line-clamp-1 text-base font-medium text-black`}>
               {sound.attributes.name}
             </div>
           </div>
