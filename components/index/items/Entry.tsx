@@ -98,31 +98,27 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           ...maskStyle,
         }}
         ref={containerRef}
-        className={`relative z-10 flex flex-col will-change-transform bg-white p-6 gap-[18px]`}
+        className={`relative z-10 flex flex-col bg-white will-change-transform`}
       >
-        {/* Metadata */}
-        <Art
-          size={240}
-          containerClass="shadow-shadowKitHigh rounded-[17px] overflow-hidden outline outline-1 outline-silver mx-2 mt-2"
-          sound={sound}
-        />
+        <Art size={304} containerClass="-mt-6" sound={sound} />
 
-        <div className="`text-base line-clamp-5 text-black">
+        <div className="`text-base line-clamp-5 px-6 pt-2 text-black">
           {artifact.content?.text}
         </div>
 
+        {/* Footer */}
         <div
-          className="absolute bottom-0 left-0 w-full h-20 p-3 flex gap-2 items-end"
+          className="absolute bottom-0 left-0 flex h-20 w-full items-end gap-2 p-3"
           style={{
             backgroundImage:
               "linear-gradient(to top, #fff 68.91%, transparent)",
           }}
         >
-          <div className="rounded-max outline-silver bg-[#F4F4F4] p-[11px] outline outline-1 w-fit shadow-shadowKitMedium">
+          <div className="rounded-max outline-silver w-fit bg-white p-[11px]">
             {getStarComponent(artifact.content!.rating!)}
           </div>
 
-          <div className={`flex flex-col translate-y-[1px]`}>
+          <div className={`flex translate-y-[1px] flex-col`}>
             <p className={`text-gray2 line-clamp-1 text-sm`}>
               {sound.attributes.artistName}
             </p>

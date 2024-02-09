@@ -691,6 +691,20 @@ export function MaskCardBottomOutlined({ ...props }) {
   );
 }
 
+export function MaskTop({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={304}
+      height={432}
+      fill="none"
+      {...props}
+    >
+      <rect width={304} height={432} fill="#fff" rx={32} />
+    </svg>
+  );
+}
+
 export function CurveIcon({ ...props }) {
   return (
     <svg
