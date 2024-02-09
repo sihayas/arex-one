@@ -26,6 +26,7 @@ const garamond12 = localFont({
 
 const App = ({ Component, pageProps }: AppProps<{}>) => {
   const [queryClient] = useState(() => new QueryClient());
+  const [musicKitReady, setMusicKitReady] = useState(false);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -39,6 +40,7 @@ const App = ({ Component, pageProps }: AppProps<{}>) => {
           build: "0001",
         },
       });
+      setMusicKitReady(true);
     };
     document.body.appendChild(script);
 
@@ -46,6 +48,10 @@ const App = ({ Component, pageProps }: AppProps<{}>) => {
       document.body.removeChild(script);
     };
   }, []);
+
+  if (!musicKitReady) {
+    return <div>Loading MusicKit...</div>; // Or any other loading indicator
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

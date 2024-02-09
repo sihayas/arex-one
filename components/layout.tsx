@@ -85,7 +85,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       {/* Interface */}
-      {user && activePage && MusicKit && <Interface isVisible={isVisible} />}
+      {user && activePage && <Interface isVisible={isVisible} />}
 
       {/* Feed */}
       <main

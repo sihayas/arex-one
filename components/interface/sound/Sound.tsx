@@ -19,7 +19,7 @@ import { createPortal } from "react-dom";
 import Sort from "@/components/interface/sound/sub/Sort";
 import { GetDimensions } from "@/components/interface/Interface";
 
-const scaleConfig = { damping: 20, stiffness: 122 };
+const scaleConfig = { damping: 16, stiffness: 122 };
 const xConfig = { damping: 20, stiffness: 160 };
 const yConfig = { damping: 20, stiffness: 100 };
 const generalConfig = { damping: 36, stiffness: 400 };
@@ -57,28 +57,29 @@ const Sound = () => {
   // Art Transformations
   const artWidth = -base.width / 2;
   const xArt = useSpring(
-    useTransform(scrollY, [0, 1], [artWidth + 32, -240]),
+    useTransform(scrollY, [0, 1], [artWidth + 32, -328]),
     xConfig,
   );
   const artHeight = -base.height / 2;
   const yArt = useSpring(
-    useTransform(scrollY, [0, 1], [artHeight + 32, 26]),
+    useTransform(scrollY, [0, 1], [artHeight + 32, -520]),
     yConfig,
   );
   const scaleArt = useSpring(
-    useTransform(scrollY, [0, 1], [1, 0.1389]),
+    useTransform(scrollY, [0, 1], [1, 0.407]),
     scaleConfig,
   );
+
   const borderRad = useSpring(
-    useTransform(scrollY, [0, 1], [24, 96]),
+    useTransform(scrollY, [0, 1], [24, 48]),
     generalConfig,
   );
 
   // Dial Transformations
-  const xDial = useSpring(useTransform(scrollY, [0, 1], [16, -16]), xConfig);
-  const yDial = useSpring(useTransform(scrollY, [0, 1], [16, -16]), yConfig);
+  const xDial = useSpring(useTransform(scrollY, [0, 1], [-48, -48]), xConfig);
+  const yDial = useSpring(useTransform(scrollY, [0, 1], [32, 48]), yConfig);
   const scaleDial = useSpring(
-    useTransform(scrollY, [0, 1], [1, 0.25]),
+    useTransform(scrollY, [0, 1], [1, 0.93]),
     scaleConfig,
   );
   const hideDial = useSpring(
@@ -111,7 +112,9 @@ const Sound = () => {
     <>
       {/* Art Ghost Placeholder */}
       <div className={`min-h-[496px] min-w-[496px] ${snap}`} />
+
       <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
+
       {/* Art */}
       <motion.div
         initial={{
@@ -126,7 +129,7 @@ const Sound = () => {
           y: yArt,
           x: xArt,
         }}
-        className="shadow-shadowKitHigh pointer-events-none absolute left-1/2 top-1/2 min-h-[432px] min-w-[432px] origin-bottom-left overflow-hidden z-10"
+        className="shadow-shadowKitHigh pointer-events-none absolute left-1/2 top-1/2 z-10 min-h-[432px] min-w-[432px] origin-top-left overflow-hidden"
       >
         <Image
           src={artwork}
@@ -144,18 +147,18 @@ const Sound = () => {
         style={{
           opacity: showMini,
         }}
-        className={`center-x shadow-shadowKitHigh absolute bottom-4 flex origin-bottom flex-col items-center justify-center rounded-2xl bg-white p-4 z-10`}
+        className={`center-x shadow-shadowKitHigh absolute bottom-8 z-10 flex origin-bottom flex-col items-center justify-center rounded-2xl bg-white p-4`}
       >
-        <p className={`text-base font-bold text-black text-center`}>{name}</p>
+        <p className={`text-center text-base font-bold text-black`}>{name}</p>
         <p
-          className={`text-gray2 line-clamp-1 text-sm font-medium text-center`}
+          className={`text-gray2 line-clamp-1 text-center text-sm font-medium`}
         >
           {artist}
         </p>
       </motion.div>
 
       {/* Sort */}
-      <div className={`absolute bottom-8 right-[92px] z-0`}>
+      <div className={`absolute bottom-40 left-40`}>
         <Sort onSortOrderChange={handleSortOrderChange} />
       </div>
 
@@ -165,12 +168,12 @@ const Sound = () => {
           <>
             {/* Big Dial */}
             <motion.div
-              className={`absolute bottom-0 right-0 z-10 flex origin-bottom-right items-center justify-center drop-shadow-xl will-change-transform`}
+              className={`absolute bottom-0 left-0 z-10 flex origin-bottom-left items-center justify-center drop-shadow-xl will-change-transform`}
               style={{
                 x: xDial,
                 y: yDial,
                 scale: scaleDial,
-                opacity: hideDial,
+                // opacity: hideDial,
               }}
               initial={{
                 x: isOpen ? -16 : 16,
@@ -180,28 +183,6 @@ const Sound = () => {
               }}
             >
               <Dial ratings={[4, 8900, 2445, 500, 500]} average={3.8} />
-            </motion.div>
-
-            {/* Mini Dial */}
-            <motion.div
-              className={`absolute bottom-0 right-0 flex origin-bottom-right items-center justify-center will-change-transform`}
-              style={{
-                x: xDial,
-                y: yDial,
-                scale: scaleDial,
-                opacity: showMini,
-              }}
-              initial={{
-                x: isOpen ? -16 : 48,
-                y: isOpen ? -16 : 48,
-                scale: isOpen ? 0.25 : 1,
-                opacity: isOpen ? 1 : 0,
-              }}
-            >
-              <DialMini
-                ratings={[4, 8900, 2445, 500, 500]}
-                onRangeChange={handleRangeChange}
-              />
             </motion.div>
           </>,
           cmdk,

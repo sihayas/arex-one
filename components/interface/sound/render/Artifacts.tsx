@@ -53,7 +53,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   };
 
   return (
-    <div className={`mt-1 h-max w-full snap-start mask`}>
+    <div className={`mask mt-1 h-max w-full snap-start`}>
       <Virtuoso
         key={key}
         ref={ref}
@@ -81,23 +81,23 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
             className={`p-8 pb-4`}
           >
             <div
-              className={`flex flex-col bg-[#F4F4F4] relative w-full px-6 pt-[18px] pb-4 rounded-full gap-2.5 outline outline-1 outline-silver`}
+              className={`outline-silver relative ml-auto flex max-w-[448px] flex-col gap-2.5 rounded-full bg-[#F4F4F4] px-6 pb-4 pt-[18px] outline outline-1`}
             >
               <div
-                className={`absolute -top-3 -left-3 flex items-center justify-center bg-white rounded-max shadow-shadowKitMedium p-3`}
+                className={`rounded-max shadow-shadowKitMedium absolute -left-3 -top-3 flex items-center justify-center bg-white p-3`}
               >
                 {getStarComponent(activity.artifact.content!.rating!)}
               </div>
               {/* Content */}
               <div
-                className={`break-words line-clamp-6 w-full text-base text-center text-gray font-medium cursor-pointer`}
+                className={`text-gray line-clamp-6 w-full cursor-pointer break-words text-center text-base font-medium`}
               >
                 {activity.artifact.content?.text}
               </div>
 
-              <div className={`flex items-center gap-2 -mx-2`}>
+              <div className={`-mx-2 flex items-center gap-2`}>
                 <Avatar
-                  className={`border border-silver`}
+                  className={`border-silver border`}
                   imageSrc={activity.artifact.author.image}
                   altText={`${activity.artifact.author.username}'s avatar`}
                   width={32}
@@ -105,7 +105,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
                   user={activity.artifact.author}
                 />
                 <div
-                  className={`text-base leading-[10px] text-black font-semibold`}
+                  className={`text-base font-semibold leading-[10px] text-black`}
                 >
                   {activity.artifact.author.username}
                 </div>
