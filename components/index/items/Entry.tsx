@@ -98,7 +98,8 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           ...maskStyle,
         }}
         ref={containerRef}
-        className={`relative z-10 flex flex-col bg-white will-change-transform`}
+        onClick={() => handleSelectArtifact(artifact)}
+        className={`relative z-10 flex cursor-pointer flex-col bg-white will-change-transform`}
       >
         <Art size={304} containerClass="-mt-6" sound={sound} />
 

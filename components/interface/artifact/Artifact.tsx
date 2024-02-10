@@ -16,6 +16,7 @@ import { ArtifactExtended } from "@/types/globalTypes";
 
 import Image from "next/image";
 import { getStarComponent } from "@/components/index/items/Entry";
+import { Art } from "@/components/global/Art";
 
 const artworkConfig = {
   type: "spring",
@@ -60,14 +61,12 @@ export const Artifact = () => {
     () => activePage.artifact?.artifact as ArtifactExtended,
     [activePage],
   );
+
+  const artifactType = artifactExtended.type;
+
+  // If opening from a notification, load the chain
   const chainId = activePage.artifact?.replyTo;
-
   const sound = artifactExtended.appleData;
-  const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 520, 520);
-
-  const handleSoundClick = async () => {
-    handleSelectSound(sound);
-  };
 
   // Scroll to top on mount
   useEffect(() => {
@@ -78,76 +77,122 @@ export const Artifact = () => {
 
   if (!user) return;
 
-  return (
+  return artifactType === "entry" ? (
     <>
-      <div className="flex">
-        <motion.div
-          style={{
-            scale,
-            rotate,
-            borderRadius,
-            x,
-            y,
-          }}
-          className={`shadow-shadowKitHigh sticky top-0 h-fit min-w-fit origin-top-left cursor-pointer overflow-hidden`}
-        >
-          <Image
-            onClick={handleSoundClick}
-            src={artwork}
-            alt={`artwork`}
-            loading="lazy"
-            quality={100}
-            width={256}
-            height={256}
-          />
-        </motion.div>
+      <Art
+        size={304}
+        containerClass="min-w-[304px] min-h-[304px] rounded-[18px] shadow-shadowKitHigh mt-[104px]"
+        sound={sound}
+      />
 
-        <div className={`flex flex-col pb-[100vh]`}>
-          <div className={`flex w-full items-center p-8 pb-2`}>
-            <div className="rounded-max outline-silver z-10 -ml-[50px] bg-white p-3 outline outline-1">
-              {getStarComponent(artifactExtended.content!.rating!)}
-            </div>
+      {/* Attribution and Rating */}
+      <div
+        className={`relative flex w-full items-center gap-4 p-8 pb-[10px] pt-12`}
+      >
+        <Avatar
+          className={`border-silver border`}
+          imageSrc={artifactExtended.author.image}
+          altText={`${artifactExtended.author.username}'s avatar`}
+          width={48}
+          height={48}
+          user={artifactExtended.author}
+        />
+        <p className="font-semibold text-black">
+          {artifactExtended.author.username}
+        </p>
 
-            <div className={`ml-3 flex flex-col`}>
-              <p className={`text-gray2 line-clamp-1 text-sm`}>
-                {sound.attributes.artistName}
-              </p>
-              <p className={`line-clamp-1 text-base font-medium text-black`}>
-                {sound.attributes.name}
-              </p>
-            </div>
-
-            <div className={`ml-auto flex w-max items-center gap-2`}>
-              <p className={`text-end text-base font-medium`}>
-                {artifactExtended.author.username}
-              </p>
-              <Avatar
-                className={`border-silver border`}
-                imageSrc={artifactExtended.author.image}
-                altText={`${artifactExtended.author.username}'s avatar`}
-                width={40}
-                height={40}
-                user={artifactExtended.author}
-              />
-            </div>
+        <div className="absolute left-16 top-8 flex items-center gap-2">
+          <div className="rounded-max z-10 bg-white p-2 outline outline-4 outline-[#F6F6F6]">
+            {getStarComponent(artifactExtended.content!.rating!)}
           </div>
-          <div className={`text-gray p-8 pt-0 text-base font-medium`}>
+          <p className={`line-clamp-1 text-sm text-black`}>
+            {sound.attributes.name}
+          </p>
+          <p className={`text-gray2 line-clamp-1 text-sm`}>
+            {sound.attributes.artistName}
+          </p>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className={`text-gray p-8 pt-0 text-base font-medium`}>
+        {artifactExtended.content?.text}
+      </div>
+
+      {/* If viewing a specific chain i.e. from notification */}
+      {chainId && (
+        <div className={`-ml-8 flex flex-col-reverse pr-8`}>
+          <p className={`text-sm`}>highlighted chain</p>
+          <Chain replyId={chainId} userId={user.id} />
+        </div>
+      )}
+
+      {/* Chains */}
+      <div className={`min-h-full min-w-full px-8 pb-96`}>
+        <Replies artifactId={artifactExtended.id} userId={user.id} />
+      </div>
+    </>
+  ) : (
+    <>
+      <Art
+        size={128}
+        containerClass="min-w-[128px] min-h-[128px] rounded-[18px] shadow-shadowKitHigh m-8 mb-0 ml-auto"
+        sound={sound}
+      />
+
+      <div className="flex w-full flex-col items-end p-8 pb-[18px] pt-2.5">
+        <p className={`text-gray2 line-clamp-1 text-end text-sm`}>
+          {sound.attributes.artistName}
+        </p>
+
+        <p
+          className={`text-gray2 line-clamp-1 text-end text-base font-semibold`}
+        >
+          {sound.attributes.name}
+        </p>
+      </div>
+
+      <div className="cloud-shadow flex items-end gap-2 px-8 pb-8">
+        <Avatar
+          className={`border-silver border`}
+          imageSrc={artifactExtended.author.image}
+          altText={`${artifactExtended.author.username}'s avatar`}
+          width={48}
+          height={48}
+          user={artifactExtended.author}
+        />
+
+        <motion.div
+          className={`relative mb-3 w-fit overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
+        >
+          {/* Content  */}
+          <div className="`text-base line-clamp-[7] text-black">
             {artifactExtended.content?.text}
           </div>
 
-          {/* If viewing a specific chain i.e. from notification */}
-          <p className={`text-sm`}>highlighted chain</p>
-          {chainId && (
-            <div className={`flex flex-col-reverse pr-8 -ml-8`}>
-              <Chain replyId={chainId} userId={user.id} />
-            </div>
-          )}
-
-          {/* Chains */}
-          <div className={`-ml-8 min-h-full min-w-full pr-8`}>
-            <Replies artifactId={artifactExtended.id} userId={user.id} />
+          {/* Bubbles */}
+          <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
+            <div
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+            />
+            <div
+              className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-white`}
+            />
           </div>
+        </motion.div>
+      </div>
+
+      {/* If viewing a specific chain i.e. from notification */}
+      {chainId && (
+        <div className={`-ml-8 flex flex-col-reverse pr-8`}>
+          <p className={`text-sm`}>highlighted chain</p>
+          <Chain replyId={chainId} userId={user.id} />
         </div>
+      )}
+
+      {/* Chains */}
+      <div className={`min-h-full min-w-full px-8 pb-96`}>
+        <Replies artifactId={artifactExtended.id} userId={user.id} />
       </div>
     </>
   );
@@ -164,3 +209,10 @@ export default Artifact;
 //   artifactExtended.authorId,
 //   user?.id,
 // );
+
+// <div className={`ml-3 flex flex-col`}>
+
+//   <p className={`line-clamp-1 text-base font-medium text-black`}>
+//     {sound.attributes.name}
+//   </p>
+// </div>

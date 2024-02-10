@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 
 import { MaskCardBottomOutlined } from "@/components/icons";
 import { Art } from "@/components/global/Art";
+import { useArtifact } from "@/hooks/usePage";
 
 interface WispProps {
   artifact: ArtifactExtended;
@@ -23,8 +24,18 @@ const maskStyle = {
   WebkitMaskRepeat: "no-repeat",
 };
 
+const wispStyle = {
+  maskImage: "url('/images/mask_wisp.svg')",
+  maskSize: "cover",
+  maskRepeat: "no-repeat",
+  WebkitMaskImage: "url('/images/mask_wisp.svg')",
+  WebkitMaskSize: "cover",
+  WebkitMaskRepeat: "no-repeat",
+};
+
 export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   // const { user } = useInterfaceContext();
+  const { handleSelectArtifact } = useArtifact();
 
   const sound = artifact.appleData;
   const color = sound.attributes.artwork.bgColor;
@@ -47,17 +58,22 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             height: 432,
             ...maskStyle,
           }}
-          className={`relative z-10 flex flex-col justify-between bg-white p-6 will-change-transform`}
+          onClick={() => handleSelectArtifact(artifact)}
+          className={`relative z-10 flex cursor-pointer flex-col justify-between bg-white p-6 will-change-transform`}
         >
           {/* Metadata */}
           <div className={`flex w-full flex-col items-end`}>
-            <Art
-              size={128}
-              containerClass="shadow-shadowKitHigh rounded-[17px] overflow-hidden outline outline-1 outline-silver"
-              sound={sound}
-            />
+            <motion.div
+              style={{
+                width: 128,
+                height: 128,
+                ...wispStyle,
+              }}
+            >
+              <Art size={128} sound={sound} />
+            </motion.div>
 
-            <div className={`text-gray2 line-clamp-1 pt-4 text-end text-sm`}>
+            <div className={`line-clamp-1 pt-4 text-end text-sm text-black`}>
               {sound.attributes.artistName}
             </div>
             <div
@@ -68,10 +84,10 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
           </div>
 
           <motion.div
-            className={`relative mb-3 w-fit max-w-[252px] overflow-visible rounded-[18px] bg-[#F4F4F4] px-3 py-1.5`}
+            className={`relative w-fit overflow-visible rounded-[18px] bg-[#F4F4F4] px-3 py-1.5`}
           >
             {/* Content  */}
-            <div className="`text-base line-clamp-[7] text-black">
+            <div className="`text-base text-gray line-clamp-[7]">
               {artifact.content?.text}
             </div>
 

@@ -40,8 +40,8 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 720, height: maxHeight },
     },
     artifact: {
-      base: { width: 720, height: 256 },
-      target: { width: 720, height: maxHeight },
+      base: { width: 512, height: 728 },
+      target: { width: 512, height: maxHeight },
     },
   };
 
@@ -209,7 +209,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`relative flex items-start justify-center overflow-auto rounded-full bg-[#F4F4F4]/80 ${
+        className={`relative flex items-start justify-center overflow-auto rounded-full bg-[#F6F6F6] ${
           expandInput ? "mix-blend-darken" : ""
         }`}
         shouldFilter={false}
