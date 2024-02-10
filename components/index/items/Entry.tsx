@@ -120,10 +120,10 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           </div>
 
           <div className={`flex translate-y-[1px] flex-col`}>
-            <p className={`text-gray2 line-clamp-1 text-sm`}>
+            <p className={`line-clamp-1 text-sm text-black`}>
               {sound.attributes.artistName}
             </p>
-            <p className={`line-clamp-1 text-base font-medium text-black`}>
+            <p className={`line-clamp-1 text-base font-semibold text-black`}>
               {sound.attributes.name}
             </p>
           </div>
