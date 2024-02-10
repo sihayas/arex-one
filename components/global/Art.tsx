@@ -58,11 +58,7 @@ export const Art = ({ sound, size, imageClass, containerClass }: Props) => {
       onMouseLeave={() => setHovered(false)}
       className={`relative cursor-pointer overflow-hidden ${containerClass}`}
     >
-      <motion.div
-        className={`${imageClass}`}
-        whileHover={{ scale: 1.1 }}
-        transition={artConfig}
-      >
+      <motion.div className={`${imageClass}`} transition={artConfig}>
         <Image
           onClick={handleSoundClick}
           src={url}

@@ -26,8 +26,18 @@ const maskStyle = {
   WebkitMaskRepeat: "no-repeat",
 };
 
+const artMask = {
+  maskImage: "url('/images/mask_card_user.svg')",
+  maskSize: "cover",
+  maskRepeat: "no-repeat",
+  WebkitMaskImage: "url('/images/mask_card_user.svg')",
+  WebkitMaskSize: "cover",
+  WebkitMaskRepeat: "no-repeat",
+};
+
 export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   const { scrollContainerRef } = useInterfaceContext();
+  const [hovered, setHovered] = React.useState(false);
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -102,33 +112,31 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           height: 432,
           ...maskStyle,
         }}
-        className={`relative z-10 flex flex-col bg-white will-change-transform`}
+        className={`relative z-10 flex cursor-pointer flex-col bg-white will-change-transform`}
       >
         {/* Metadata */}
-        <div className={`flex w-full items-start justify-between p-6 pb-3`}>
-          <div className="rounded-max outline-silver mr-auto bg-[#F4F4F4] p-3 outline outline-1">
+        <div className={`flex w-full items-start justify-between p-6 pb-0`}>
+          <div className="rounded-max bg-white p-3">
             {getStarComponent(artifact.content!.rating!)}
           </div>
-          <div className={`flex w-full flex-col items-end`}>
-            <Art
-              size={192}
-              containerClass="shadow-shadowKitHigh rounded-[17px] overflow-hidden outline outline-1 outline-silver"
-              sound={sound}
-            />
-
-            <div className={`text-gray2 line-clamp-1 pt-3 text-end text-sm`}>
-              {sound.attributes.artistName}
-            </div>
-            <div
-              className={`line-clamp-1 text-end text-base font-medium text-black`}
-            >
-              {sound.attributes.name}
-            </div>
+          <div
+            style={{
+              ...artMask,
+            }}
+          >
+            <Art size={192} sound={sound} />
           </div>
         </div>
 
+        <div className={`line-clamp-1 px-6 pt-2 text-sm text-black`}>
+          {sound.attributes.artistName}
+        </div>
+        <div className={`line-clamp-1 px-6 text-base font-semibold text-black`}>
+          {sound.attributes.name}
+        </div>
+
         {/* Text */}
-        <div className="`text-base line-clamp-5 px-6 text-black">
+        <div className="`text-base line-clamp-6 px-6 pt-[3px] text-black">
           {artifact.content?.text}
         </div>
       </motion.div>

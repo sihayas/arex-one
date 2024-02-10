@@ -101,15 +101,19 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         onClick={() => handleSelectArtifact(artifact)}
         className={`relative z-10 flex cursor-pointer flex-col bg-white will-change-transform`}
       >
-        <Art size={304} containerClass="-mt-6" sound={sound} />
+        <Art
+          size={256}
+          containerClass="mt-6 mx-6 rounded-[18px] outline outline-1 outline-silver"
+          sound={sound}
+        />
 
-        <div className="`text-base line-clamp-5 px-6 pt-2 text-black">
+        <div className="`text-base line-clamp-5 px-6 pt-[15px] text-black">
           {artifact.content?.text}
         </div>
 
         {/* Footer */}
         <div
-          className="absolute bottom-0 left-0 flex h-20 w-full items-end gap-2 p-3"
+          className="absolute bottom-0 left-0 flex h-[72px] w-full items-end gap-2 p-3"
           style={{
             backgroundImage:
               "linear-gradient(to top, #fff 68.91%, transparent)",
