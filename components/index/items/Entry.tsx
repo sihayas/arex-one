@@ -126,42 +126,51 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           }}
           className="relative flex cursor-pointer flex-col bg-white will-change-transform w-[304px] h-[432px]"
         >
-          <Image
-            className={`-mt-6`}
-            onClick={handleSoundClick}
-            src={url}
-            alt={`${name} by ${artistName} - artwork`}
-            quality={100}
-            width={304}
-            height={304}
-            draggable={false}
-          />
-
-          <div className="`text-base line-clamp-3 px-6 pt-[15px] text-black">
-            {artifact.content?.text}
-          </div>
-
-          {/* Footer */}
-          <div
-            style={{
-              backgroundImage:
-                "linear-gradient(to top, #fff 68.91%, transparent)",
-            }}
-            className="absolute bottom-0 left-0 flex h-[72px] w-full items-end p-3 pr-6"
-          >
-            <div className="rounded-max outline-silver w-fit bg-white p-2.5">
-              {getStarComponent(artifact.content!.rating!)}
+          {isFlipped ? (
+            <div className={`-scale-y-[1]`}>
+              <p>Back Side Content</p>
             </div>
+          ) : (
+            <>
+              <Image
+                className={`-mt-6`}
+                onClick={handleSoundClick}
+                src={url}
+                alt={`${name} by ${artistName} - artwork`}
+                quality={100}
+                width={304}
+                height={304}
+                draggable={false}
+              />
+              <div className="`text-base line-clamp-3 px-6 pt-[15px] text-black">
+                {artifact.content?.text}
+              </div>
 
-            <div className={`flex translate-y-[1px] flex-col`}>
-              <p className={`line-clamp-1 text-sm text-black`}>
-                {sound.attributes.artistName}
-              </p>
-              <p className={`line-clamp-1 text-base font-semibold text-black`}>
-                {sound.attributes.name}
-              </p>
-            </div>
-          </div>
+              {/* Footer */}
+              <div
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to top, #fff 68.91%, transparent)",
+                }}
+                className="absolute bottom-0 left-0 flex h-[72px] w-full items-end p-3 pr-6"
+              >
+                <div className="rounded-max outline-silver w-fit bg-white p-2.5">
+                  {getStarComponent(artifact.content!.rating!)}
+                </div>
+
+                <div className={`flex translate-y-[1px] flex-col`}>
+                  <p className={`line-clamp-1 text-sm text-black`}>
+                    {sound.attributes.artistName}
+                  </p>
+                  <p
+                    className={`line-clamp-1 text-base font-semibold text-black`}
+                  >
+                    {sound.attributes.name}
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
         </motion.div>
       </Tilt>
 
