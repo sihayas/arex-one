@@ -42,6 +42,7 @@
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-parallax-tilt": "^1.7.210",
     "react-textarea-autosize": "^8.5.0",
     "react-use-measure": "^2.1.1",
     "react-virtuoso": "^4.6.3",

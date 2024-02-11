@@ -14,7 +14,6 @@ import Replies from "@/components/interface/artifact/render/Replies";
 import Chain from "@/components/interface/artifact/render/Chain";
 import { ArtifactExtended } from "@/types/globalTypes";
 
-import Image from "next/image";
 import { getStarComponent } from "@/components/index/items/Entry";
 import { Art } from "@/components/global/Art";
 
@@ -81,7 +80,7 @@ export const Artifact = () => {
     <>
       <Art
         size={304}
-        containerClass="min-w-[304px] min-h-[304px] rounded-[18px] shadow-shadowKitHigh mt-[104px]"
+        containerClass="min-w-[304px] min-h-[304px] rounded-[18px] shadow-shadowKitHigh mt-8"
         sound={sound}
       />
 

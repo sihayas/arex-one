@@ -1,7 +1,7 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
-import { useArtifact } from "@/hooks/usePage";
+import { useArtifact, useSound } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
@@ -21,17 +21,18 @@ import {
   TwoHalfStar,
   TwoStar,
 } from "@/components/icons";
-import { Art } from "@/components/global/Art";
+import Tilt from "react-parallax-tilt";
+import Image from "next/image";
 
 interface NewAProps {
   artifact: ArtifactExtended;
 }
 
 const maskStyle = {
-  maskImage: "url('/images/mask_card_top_outlined.svg')",
+  maskImage: "url('/images/mask_card_top.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_card_top_outlined.svg')",
+  WebkitMaskImage: "url('/images/mask_card_top.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
 };
@@ -57,15 +58,23 @@ export const getStarComponent = (rating: number) => {
 
 export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const { user } = useInterfaceContext();
+  const { handleSelectSound } = useSound();
   const { handleSelectArtifact } = useArtifact();
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const sound = artifact.appleData;
-  const color = sound.attributes.artwork.bgColor;
+  const [isFlipped, setIsFlipped] = useState(false);
 
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
+
+  const sound = artifact.appleData;
+  const name = sound.attributes.name;
+  const artistName = sound.attributes.artistName;
+  const color = sound.attributes.artwork.bgColor;
+  const url = MusicKit.formatArtworkURL(
+    sound.attributes.artwork,
+    304 * 2.5,
+    304 * 2.5,
+  );
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     artifact.heartedByUser,
@@ -77,8 +86,12 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     user?.id,
   );
 
+  const handleSoundClick = async () => {
+    handleSelectSound(sound);
+  };
+
   return (
-    <div
+    <motion.div
       className={`over group group relative flex w-[356px] items-end gap-2.5`}
     >
       <Avatar
@@ -91,54 +104,66 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       />
 
       {/* Content Inner / Card */}
-      <div
-        style={{
-          width: 304,
-          height: 432,
-          ...maskStyle,
-        }}
-        ref={containerRef}
-        onClick={() => handleSelectArtifact(artifact)}
-        className={`relative z-10 flex cursor-pointer flex-col bg-white will-change-transform`}
+      <Tilt
+        flipVertically={isFlipped}
+        perspective={1000}
+        tiltMaxAngleX={8}
+        tiltMaxAngleY={8}
+        tiltReverse={false}
+        glareEnable={true}
+        glareMaxOpacity={0.45}
+        scale={1.02}
+        transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
+        className={`cloud-shadow rounded-[32px] overflow-hidden`}
       >
-        <Art
-          size={256}
-          containerClass="mt-6 mx-6 rounded-[18px] outline outline-1 outline-silver"
-          sound={sound}
-        />
-
-        <div className="`text-base line-clamp-5 px-6 pt-[15px] text-black">
-          {artifact.content?.text}
-        </div>
-
-        {/* Footer */}
-        <div
-          className="absolute bottom-0 left-0 flex h-[72px] w-full items-end gap-2 p-3"
+        <motion.div
           style={{
-            backgroundImage:
-              "linear-gradient(to top, #fff 68.91%, transparent)",
+            ...maskStyle,
           }}
+          // onClick={() => handleSelectArtifact(artifact)}
+          onClick={() => {
+            setIsFlipped(!isFlipped);
+          }}
+          className="relative flex cursor-pointer flex-col bg-white will-change-transform w-[304px] h-[432px]"
         >
-          <div className="rounded-max outline-silver w-fit bg-white p-[11px]">
-            {getStarComponent(artifact.content!.rating!)}
+          <Image
+            className={`-mt-6`}
+            onClick={handleSoundClick}
+            src={url}
+            alt={`${name} by ${artistName} - artwork`}
+            quality={100}
+            width={304}
+            height={304}
+            draggable={false}
+          />
+
+          <div className="`text-base line-clamp-3 px-6 pt-[15px] text-black">
+            {artifact.content?.text}
           </div>
 
-          <div className={`flex translate-y-[1px] flex-col`}>
-            <p className={`line-clamp-1 text-sm text-black`}>
-              {sound.attributes.artistName}
-            </p>
-            <p className={`line-clamp-1 text-base font-semibold text-black`}>
-              {sound.attributes.name}
-            </p>
-          </div>
-        </div>
-      </div>
+          {/* Footer */}
+          <div
+            style={{
+              backgroundImage:
+                "linear-gradient(to top, #fff 68.91%, transparent)",
+            }}
+            className="absolute bottom-0 left-0 flex h-[72px] w-full items-end p-3 pr-6"
+          >
+            <div className="rounded-max outline-silver w-fit bg-white p-2.5">
+              {getStarComponent(artifact.content!.rating!)}
+            </div>
 
-      <div
-        className={`cloud-shadow absolute bottom-0 right-0 h-[432px] w-[304px]`}
-      >
-        <MaskCardTopOutlined />
-      </div>
+            <div className={`flex translate-y-[1px] flex-col`}>
+              <p className={`line-clamp-1 text-sm text-black`}>
+                {sound.attributes.artistName}
+              </p>
+              <p className={`line-clamp-1 text-base font-semibold text-black`}>
+                {sound.attributes.name}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      </Tilt>
 
       {/* Ambien */}
       <motion.div
@@ -151,13 +176,13 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         className={`absolute left-[52px] -z-10 h-[400px] w-[304px]`}
       />
 
-      <Heart
-        handleHeartClick={handleHeartClick}
-        hearted={hearted}
-        className="absolute -top-[26px] left-[46px] z-10 mix-blend-multiply"
-        heartCount={heartCount}
-        replyCount={artifact._count.replies}
-      />
-    </div>
+      {/*<Heart*/}
+      {/*  handleHeartClick={handleHeartClick}*/}
+      {/*  hearted={hearted}*/}
+      {/*  className="absolute -top-[26px] left-[46px] z-10 mix-blend-multiply"*/}
+      {/*  heartCount={heartCount}*/}
+      {/*  replyCount={artifact._count.replies}*/}
+      {/*/>*/}
+    </motion.div>
   );
 };

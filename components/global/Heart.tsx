@@ -41,7 +41,7 @@ const Heart: React.FC<HeartButtonProps> = ({
 
   return (
     <motion.button
-      className={`${className} flex gap-1 p-2 -m-2`}
+      className={`${className} -m-2 flex gap-1 p-2`}
       onClick={(event) => {
         handleHeartClick(event);
         event.stopPropagation();
@@ -50,8 +50,8 @@ const Heart: React.FC<HeartButtonProps> = ({
       onMouseLeave={handleMouseLeave}
       animate={controls}
     >
-      <div className={`flex flex-col w-7 h-8 will-change-transform`}>
-        <div className={`relative w-7 h-7`}>
+      <div className={`flex h-8 w-7 flex-col will-change-transform`}>
+        <div className={`relative h-7 w-7`}>
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             variants={{
@@ -61,7 +61,7 @@ const Heart: React.FC<HeartButtonProps> = ({
               },
               initial: { scale: 0, opacity: 0 },
             }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
             style={{ transformOrigin: "bottom left" }}
           >
             <BubbleIcon color={bubbleColor} />
@@ -71,9 +71,9 @@ const Heart: React.FC<HeartButtonProps> = ({
             initial={{ scale: 0, x: "50%", y: "50%" }}
             variants={{
               hover: { scale: 1 },
-              initial: { scale: 0 },
+              initial: { scale: 0.5 },
             }}
-            className={`absolute top-0 left-0 origin-bottom-left`}
+            className={`absolute left-0 top-0 origin-bottom-left`}
           >
             <LoveIcon color={heartColor} />
           </motion.div>
@@ -99,12 +99,12 @@ const Heart: React.FC<HeartButtonProps> = ({
       </div>
 
       <div
-        className={`bg-[#F4F4F4] flex items-center text-gray2 rounded-full px-2 py-1`}
+        className={`text-gray2 flex items-center rounded-full bg-[#F4F4F4] px-2 py-1`}
       >
-        <p className={`font-medium text-sm leading-[9px]`}>{heartCount}</p>
-        <div className={`w-0.5 h-0.5 bg-gray3 mx-1 rounded-full`} />
+        <p className={`text-sm font-medium leading-[9px]`}>{heartCount}</p>
+        <div className={`bg-gray3 mx-1 h-0.5 w-0.5 rounded-full`} />
         <ChainIcon />
-        <p className={`font-medium text-sm ml-2 leading-[9px]`}>{replyCount}</p>
+        <p className={`ml-2 text-sm font-medium leading-[9px]`}>{replyCount}</p>
       </div>
     </motion.button>
   );

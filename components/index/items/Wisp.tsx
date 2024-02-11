@@ -51,7 +51,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         user={artifact.author}
       />
 
-      <motion.div className={`relative `}>
+      <motion.div className={`relative`}>
         <motion.div
           style={{
             width: 304,
@@ -87,7 +87,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             className={`relative w-fit overflow-visible rounded-[18px] bg-[#F4F4F4] px-3 py-1.5`}
           >
             {/* Content  */}
-            <div className="`text-base text-gray line-clamp-[7]">
+            <div className="text-base text-gray line-clamp-[7]">
               {artifact.content?.text}
             </div>
 

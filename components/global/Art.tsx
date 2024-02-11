@@ -60,7 +60,7 @@ export const Art = ({ sound, size, imageClass, containerClass }: Props) => {
     >
       <motion.div className={`${imageClass}`} transition={artConfig}>
         <Image
-          onClick={handleSoundClick}
+          // onClick={handleSoundClick}
           src={url}
           alt={`${name} by ${artistName} - artwork`}
           quality={100}
@@ -76,7 +76,7 @@ export const Art = ({ sound, size, imageClass, containerClass }: Props) => {
         whileTap={{ scale: 0.9 }}
         animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0 }}
         transition={buttonConfig}
-        className="item-center absolute bottom-2 left-2 z-50 flex justify-center rounded-full bg-[#E5E5E5] p-3"
+        className="item-center absolute bottom-2 left-2 z-50 flex justify-center rounded-full p-3"
         onClick={handlePlayContent}
         aria-label="Play"
       >
