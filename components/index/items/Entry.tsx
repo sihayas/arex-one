@@ -168,9 +168,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           style={{
             ...maskStyle,
           }}
-          onClick={() => {
-            setIsFlipped(!isFlipped);
-          }}
           className="backface-hidden rotate-x-180 absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white"
         >
           <p>Back</p>
