@@ -91,9 +91,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   };
 
   return (
-    <motion.div
-      className={`over group group relative flex w-[356px] items-end gap-2.5`}
-    >
+    <motion.div className={`relative flex w-[356px] items-end gap-2.5`}>
       <Avatar
         className={`border-silver z-10 h-[42px] border`}
         imageSrc={artifact.author.image}
@@ -114,63 +112,61 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         glareMaxOpacity={0.45}
         scale={1.02}
         transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
-        className={`cloud-shadow transform-style-3d relative h-[432px] w-[304px] overflow-hidden rounded-[32px]`}
+        className={`cloud-shadow transform-style-3d z-50 h-[432px] w-[304px] overflow-hidden rounded-[32px]`}
       >
-        {/* Front */}
+        {/* Masked Container */}
         <div
+          onClick={() => setIsFlipped(!isFlipped)}
           style={{
             ...maskStyle,
           }}
-          onClick={() => {
-            setIsFlipped(!isFlipped);
-          }}
-          className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white"
+          className="relative h-full w-full bg-white"
         >
-          <Image
-            className={`-mt-6`}
-            onClick={handleSoundClick}
-            src={url}
-            alt={`${name} by ${artistName} - artwork`}
-            quality={100}
-            width={304}
-            height={304}
-            draggable={false}
-          />
-          <div className="`text-base line-clamp-3 px-6 pt-[15px] text-black">
-            {artifact.content?.text}
-          </div>
-
-          {/* Footer */}
-          <div
-            style={{
-              backgroundImage:
-                "linear-gradient(to top, #fff 68.91%, transparent)",
-            }}
-            className="absolute bottom-0 left-0 flex h-[72px] w-full items-end p-3 pr-6"
-          >
-            <div className="rounded-max outline-silver w-fit bg-white p-2.5">
-              {getStarComponent(artifact.content!.rating!)}
+          {/* Front */}
+          <div className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white">
+            <Image
+              className={`-mt-6`}
+              onClick={handleSoundClick}
+              src={url}
+              alt={`${name} by ${artistName} - artwork`}
+              quality={100}
+              width={304}
+              height={304}
+              draggable={false}
+            />
+            <div className="`text-base line-clamp-3 px-6 pt-[15px] text-black">
+              {artifact.content?.text}
             </div>
 
-            <div className={`flex translate-y-[1px] flex-col`}>
-              <p className={`line-clamp-1 text-sm text-black`}>
-                {sound.attributes.artistName}
-              </p>
-              <p className={`line-clamp-1 text-base font-semibold text-black`}>
-                {sound.attributes.name}
-              </p>
+            {/* Footer */}
+            <div
+              style={{
+                backgroundImage:
+                  "linear-gradient(to top, #fff 68.91%, transparent)",
+              }}
+              className="absolute bottom-0 left-0 flex h-[72px] w-full items-end p-3 pr-6"
+            >
+              <div className="rounded-max outline-silver w-fit bg-white p-2.5">
+                {getStarComponent(artifact.content!.rating!)}
+              </div>
+
+              <div className={`flex translate-y-[1px] flex-col`}>
+                <p className={`line-clamp-1 text-sm text-black`}>
+                  {sound.attributes.artistName}
+                </p>
+                <p
+                  className={`line-clamp-1 text-base font-semibold text-black`}
+                >
+                  {sound.attributes.name}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Back */}
-        <div
-          style={{
-            ...maskStyle,
-          }}
-          className="backface-hidden rotate-x-180 absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white"
-        >
-          <p>Back</p>
+          {/* Back */}
+          <div className="backface-hidden rotate-x-180 absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white">
+            <p>Back</p>
+          </div>
         </div>
       </Tilt>
 
