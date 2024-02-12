@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.23.2",
-    "prisma": "^5.4.2"
+    "prisma": "^5.4.2",
+    "tailwindcss-3d": "^1.0.5"
   }
 }

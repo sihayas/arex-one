@@ -1,5 +1,25 @@
 // * @type {import('tailwindcss').Config}
 
+const plugin = require("tailwindcss/plugin");
+
+// Define your custom plugin for backface-visibility
+const backfaceVisibility = plugin(function ({ addUtilities }) {
+  addUtilities({
+    ".backface-visible": {
+      "backface-visibility": "visible",
+      "-moz-backface-visibility": "visible",
+      "-webkit-backface-visibility": "visible",
+      "-ms-backface-visibility": "visible",
+    },
+    ".backface-hidden": {
+      "backface-visibility": "hidden",
+      "-moz-backface-visibility": "hidden",
+      "-webkit-backface-visibility": "hidden",
+      "-ms-backface-visibility": "hidden",
+    },
+  });
+});
+
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
@@ -19,10 +39,6 @@ module.exports = {
         essentials:
           "0px 11px 24px 0px rgba(0, 0, 0, 0.10), 0px 43px 43px 0px rgba(0, 0, 0, 0.09), 0px 97px 58px 0px rgba(0, 0, 0, 0.05), 0px 173px 69px 0px rgba(0, 0, 0, 0.01), 0px 271px 76px 0px rgba(0, 0, 0, 0.00)",
         cardArt: "rgba(0, 0, 0, 0.04) 0px 3px 5px",
-        wispArt:
-          "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
-        cartArtArtifact:
-          "6px 0px 13px 0px rgba(0, 0, 0, 0.10), 23px 2px 23px 0px rgba(0, 0, 0, 0.09), 52px 4px 31px 0px rgba(0, 0, 0, 0.05), 92px 7px 37px 0px rgba(0, 0, 0, 0.01), 143px 11px 40px 0px rgba(0, 0, 0, 0.00)",
       },
       borderRadius: {
         full: "32px",
@@ -57,9 +73,6 @@ module.exports = {
         10: "10",
         11: "11",
       },
-      maskImage: {
-        entryMask: "url('/images/entry_mask.svg')",
-      },
       translate: {
         "3d": "0,0,0",
       },
@@ -71,5 +84,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar")],
+  plugins: [
+    require("tailwind-scrollbar"),
+    require("tailwindcss-3d"),
+    backfaceVisibility,
+  ],
 };
