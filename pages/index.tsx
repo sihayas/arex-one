@@ -180,7 +180,7 @@ export default function Home() {
         </motion.div>
       )}
 
-      <Player />
+      {/*<Player />*/}
 
       <button
         className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"

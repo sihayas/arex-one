@@ -13,26 +13,37 @@ import {
   FourHalfStar,
   FourStar,
   HalfStar,
-  MaskCardTopOutlined,
   OneHalfStar,
   OneStar,
   ThreeHalfStar,
   ThreeStar,
   TwoHalfStar,
   TwoStar,
+  CurveIcon,
+  TinyCurveIcon,
 } from "@/components/icons";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
+import { Interaction } from "@/components/global/Interaction";
 
 interface NewAProps {
   artifact: ArtifactExtended;
 }
 
-const maskStyle = {
+const cardMask = {
   maskImage: "url('/images/mask_card_top.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
   WebkitMaskImage: "url('/images/mask_card_top.svg')",
+  WebkitMaskSize: "cover",
+  WebkitMaskRepeat: "no-repeat",
+};
+
+const backArtMask = {
+  maskImage: "url('/images/mask_art_card_back.svg')",
+  maskSize: "cover",
+  maskRepeat: "no-repeat",
+  WebkitMaskImage: "url('/images/mask_art_card_back.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
 };
@@ -50,16 +61,19 @@ const starComponents = {
   5: FiveStar,
 };
 
-export const getStarComponent = (rating: number) => {
+export const getStarComponent = (
+  rating: number,
+  width: number = 16,
+  height: number = 16,
+) => {
   //@ts-ignore
   const StarComponent = starComponents[Math.ceil(rating * 2) / 2];
-  return StarComponent ? <StarComponent /> : null;
+  return StarComponent ? <StarComponent width={width} height={height} /> : null;
 };
 
 export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const { user } = useInterfaceContext();
-  const { handleSelectSound } = useSound();
-  const { handleSelectArtifact } = useArtifact();
+
   const [isFlipped, setIsFlipped] = useState(false);
 
   const apiUrl = artifact.heartedByUser
@@ -86,17 +100,34 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     user?.id,
   );
 
-  const handleSoundClick = async () => {
-    handleSelectSound(sound);
+  // Define the animation variants
+  const dotVariants = {
+    hidden: { opacity: 0, scale: 0 },
+    visible: { opacity: 1, scale: 1 },
+  };
+
+  const containerVariants = {
+    hidden: { transition: { staggerChildren: 0.02 } },
+    visible: {
+      transition: {
+        staggerChildren: 0.02,
+        delayChildren: 0.02,
+      },
+    },
+  };
+
+  // Create a styled dot component
+  const Dot = () => {
+    return (
+      <motion.div
+        className="w-1 h-1 bg-gray3 rounded-full"
+        variants={dotVariants}
+      />
+    );
   };
 
   return (
-    <motion.div
-      onClick={() => {
-        setIsFlipped(!isFlipped);
-      }}
-      className={`relative flex w-[356px] items-end gap-2.5`}
-    >
+    <motion.div className={`relative flex w-[356px] items-end gap-2.5`}>
       <Avatar
         className={`border-silver z-10 h-[42px] border`}
         imageSrc={artifact.author.image}
@@ -106,74 +137,136 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         user={artifact.author}
       />
 
-      {/* Scene */}
-      <Tilt
-        flipVertically={isFlipped}
-        perspective={1000}
-        tiltMaxAngleX={8}
-        tiltMaxAngleY={8}
-        tiltReverse={true}
-        glareEnable={true}
-        glareMaxOpacity={0.45}
-        scale={1.02}
-        transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
-        className={`transform-style-3d relative h-[432px] w-[304px] rounded-[32px]`}
+      {/* Applying drop-shadow directly to Tilt breaks the flip effect! */}
+      <div
+        onClick={() => {
+          setIsFlipped(!isFlipped);
+        }}
+        className={`cloud-shadow z-20`}
       >
-        {/* Front */}
-        <div
-          style={{
-            ...maskStyle,
-          }}
-          className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white"
+        {/* Scene */}
+        <Tilt
+          flipVertically={isFlipped}
+          perspective={1000}
+          tiltMaxAngleX={8}
+          tiltMaxAngleY={8}
+          tiltReverse={false}
+          // reset={false}
+          glareEnable={true}
+          glareMaxOpacity={0.45}
+          scale={1.02}
+          transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
+          className={`transform-style-3d relative h-[432px] w-[304px] rounded-[32px]`}
         >
-          <Image
-            className={`-mt-6`}
-            // onClick={handleSoundClick}
-            src={url}
-            alt={`${name} by ${artistName} - artwork`}
-            quality={100}
-            width={304}
-            height={304}
-            draggable={false}
-          />
-          <div className="`text-base line-clamp-3 px-6 pt-[15px] text-black">
-            {artifact.content?.text}
-          </div>
-
-          {/* Footer */}
+          {/* Front */}
           <div
             style={{
-              backgroundImage:
-                "linear-gradient(to top, #fff 68.91%, transparent)",
+              ...cardMask,
             }}
-            className="absolute bottom-0 left-0 flex h-[72px] w-full items-end p-3 pr-6"
+            className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white"
           >
-            <div className="rounded-max outline-silver w-fit bg-white p-2.5">
-              {getStarComponent(artifact.content!.rating!)}
+            <Image
+              className={`-mt-6`}
+              // onClick={handleSoundClick}
+              src={url}
+              alt={`${name} by ${artistName} - artwork`}
+              quality={100}
+              width={304}
+              height={304}
+              draggable={false}
+            />
+            <div className="`text-base line-clamp-3 px-6 pt-[18px] text-black">
+              {artifact.content?.text}
             </div>
 
-            <div className={`flex translate-y-[1px] flex-col`}>
-              <p className={`line-clamp-1 text-sm text-black`}>
-                {sound.attributes.artistName}
-              </p>
-              <p className={`line-clamp-1 text-base font-semibold text-black`}>
-                {sound.attributes.name}
-              </p>
+            {/* Footer */}
+            <div
+              style={{
+                backgroundImage:
+                  "linear-gradient(to top, #fff 68.91%, transparent)",
+              }}
+              className="absolute bottom-0 left-0 flex h-[72px] w-full items-center p-6 gap-3"
+            >
+              {getStarComponent(artifact.content!.rating!, 20, 20)}
+
+              <div className={`flex translate-y-[1px] flex-col`}>
+                <p className={`line-clamp-1 text-sm text-black`}>
+                  {sound.attributes.artistName}
+                </p>
+                <p
+                  className={`line-clamp-1 text-base font-semibold text-black`}
+                >
+                  {sound.attributes.name}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Back */}
-        <div
-          style={{
-            ...maskStyle,
-            transform: "rotateX(180deg)",
-          }}
-          className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white"
-        >
-          <p>Back</p>
-        </div>
-      </Tilt>
+          {/* Back */}
+          <div
+            style={{
+              ...cardMask,
+              transform: "rotateX(180deg)",
+            }}
+            className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white p-6 pb-0"
+          >
+            {/* Header */}
+            <div className={`w-full flex gap-2`}>
+              <div
+                style={{
+                  ...backArtMask,
+                }}
+                className={`w-[72px] h-[72px] relative flex-shrink-0`}
+              >
+                <Image
+                  src={url}
+                  alt={`${name} by ${artistName} - artwork`}
+                  quality={100}
+                  width={72}
+                  height={72}
+                  draggable={false}
+                />
+                <div className="absolute bottom-0 right-0 rounded-max outline-silver w-fit bg-white p-2.5">
+                  {getStarComponent(artifact.content!.rating!)}
+                </div>
+              </div>
+
+              <div className={`flex flex-col pt-2`}>
+                <p className={`text-gray2 text-sm font-medium`}>11.02.63</p>
+                <p className={`text-black text-sm mt-auto line-clamp-1`}>
+                  {artistName}
+                </p>
+                <p
+                  className={`text-black text-base font-semibold line-clamp-1`}
+                >
+                  {name}
+                </p>
+              </div>
+            </div>
+
+            <p className={`pt-2.5 text-base line-clamp-[14]`}>
+              {artifact.content?.text}
+            </p>
+          </div>
+        </Tilt>
+      </div>
+
+      <Heart
+        handleHeartClick={handleHeartClick}
+        hearted={hearted}
+        className="absolute -top-[26px] left-[46px] z-10 mix-blend-multiply p-12 -m-12"
+        heartCount={heartCount}
+        replyCount={artifact._count.replies}
+      />
+
+      {/* Interactions */}
+      <Interaction />
+
+      <p
+        className={`font-medium text-gray2 absolute -bottom-7 left-[68px] mix-blend-darken`}
+      >
+        {artifact.author.username}
+      </p>
 
       {/* Ambien */}
       <motion.div
@@ -183,16 +276,8 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute left-[52px] -z-10 h-[400px] w-[304px]`}
+        className={`absolute left-[52px] -z-10 h-[432px] w-[304px]`}
       />
-
-      {/*<Heart*/}
-      {/*  handleHeartClick={handleHeartClick}*/}
-      {/*  hearted={hearted}*/}
-      {/*  className="absolute -top-[26px] left-[46px] z-10 mix-blend-multiply"*/}
-      {/*  heartCount={heartCount}*/}
-      {/*  replyCount={artifact._count.replies}*/}
-      {/*/>*/}
     </motion.div>
   );
 };
