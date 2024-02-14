@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useMotionValueEvent, useScroll } from "framer-motion";
-import { useUserDataQuery } from "@/lib/apiHelper/user";
+import { useUserDataQuery } from "@/lib/helper/user";
 import Essentials from "@/components/interface/user/render/Essentials";
 import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";

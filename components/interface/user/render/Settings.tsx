@@ -3,7 +3,7 @@ import {
   useUserSettingsQuery,
   toggleSetting,
   changeBio,
-} from "@/lib/apiHelper/user";
+} from "@/lib/helper/user";
 import { Essential, Settings } from "@/types/dbTypes";
 import React, { useEffect, useState } from "react";
 import { useSoundContext } from "@/context/SoundContext";

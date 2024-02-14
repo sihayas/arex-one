@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSoundContext } from "@/context/SoundContext";
-import GetSearchResults from "@/lib/apiHelper/search";
+import GetSearchResults from "@/lib/helper/search";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -19,7 +19,7 @@ import { useNavContext } from "@/context/NavContext";
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
-import { addReply } from "@/lib/apiHelper/artifact";
+import { createReply } from "@/lib/helper/artifact";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
@@ -141,7 +141,7 @@ const Nav = () => {
     if (!replyTarget || !inputValue || !user) return;
 
     toast.promise(
-      addReply(replyTarget, inputValue, user.id).then(() => {
+      createReply(replyTarget, inputValue, user.id).then(() => {
         setInputValue("");
       }),
       {

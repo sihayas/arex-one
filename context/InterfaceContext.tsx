@@ -12,7 +12,7 @@ import { Session } from "lucia";
 import {
   useUserAndSessionQuery,
   useNotificationsQuery,
-} from "@/lib/apiHelper/user";
+} from "@/lib/helper/user";
 import { StateSnapshot } from "react-virtuoso";
 
 export type Page = {

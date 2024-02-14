@@ -68,7 +68,7 @@ export default async function handler(
       songs: Array.from(responseData.songs.values()).filter(Boolean),
     });
   } catch (error) {
-    console.error("Error in /apiHelper/album/get/cachedAlbums:", error);
+    console.error("Error in /helper/album/get/cachedAlbums:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 }

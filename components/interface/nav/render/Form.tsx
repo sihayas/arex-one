@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import { toast } from "sonner";
-import { postEntry } from "@/lib/apiHelper/form";
+import { createEntry } from "@/lib/helper/artifact";
 import { useSoundContext } from "@/context/SoundContext";
 
 // import Dial from "./search/Dial";
@@ -53,7 +53,7 @@ const Form = () => {
       }
 
       toast.promise(
-        postEntry(submissionData).then(() => {
+        createEntry(submissionData).then(() => {
           setSelectedFormSound(null);
           setInputValue("");
         }),

@@ -40,7 +40,10 @@ export default async function handle(
 
     // Fetch bare artifacts
     const activities = await prisma.activity.findMany({
-      where: { artifact: { authorId: { in: followingIds } }, type: "artifact" },
+      where: {
+        artifact: { authorId: { in: followingIds }, isDeleted: false },
+        type: "artifact",
+      },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit + 1,

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { attachSoundData } from "@/lib/apiHelper/feed";
+import { attachSoundData } from "@/lib/helper/feed";
 import { Artifact } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 

@@ -3,7 +3,7 @@ import { Command } from "cmdk";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { useSoundContext } from "@/context/SoundContext";
 import { useNavContext } from "@/context/NavContext";
-import { changeEssential } from "@/lib/apiHelper/user";
+import { changeEssential } from "@/lib/helper/user";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {

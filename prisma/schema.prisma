@@ -31,6 +31,7 @@ model User {
   replies       Reply[]
   hearts        Heart[]
   settings      Settings?
+  flags         Flag[]
 
   apple_id      String?          @unique
   sessions      Session[]
@@ -178,6 +179,7 @@ model Artifact {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   activities  Activity[]  @relation("ActivityArtifact")
+  flags       Flag[]      @relation("FlaggedArtifact")
 
   @@index([authorId])
   @@index([soundId])
@@ -234,7 +236,9 @@ model Reply {
   author       User        @relation(fields: [authorId], references: [id])
   artifact     Artifact    @relation(fields: [artifactId], references: [id])
   hearts       Heart[]
+
   activities   Activity[]  @relation("ActivityReply")
+  flags        Flag[]      @relation("FlaggedReply")
 
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
@@ -246,9 +250,6 @@ model Reply {
   @@index([replyToId])
   @@index([rootId])
 }
-
-
-
 
   model Activity {
     id            String          @id @default(cuid())
@@ -295,3 +296,26 @@ model Notification {
   @@index([activityId])
 }
 
+
+enum FlagType {
+  artifact
+  reply
+}
+
+model Flag {
+  id          String   @id @default(cuid())
+  flaggedById String
+  referenceId String
+  type        FlagType
+  resolved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  flaggedBy   User     @relation(fields: [flaggedById], references: [id])
+
+  artifact    Artifact? @relation("FlaggedArtifact", fields: [referenceId], references: [id], map: "flagged_artifact_id")
+  reply      Reply?    @relation("FlaggedReply", fields: [referenceId], references: [id], map: "flagged_reply_id")
+
+  @@index([flaggedById])
+  @@index([referenceId])
+}

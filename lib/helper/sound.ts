@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { AlbumData } from "@/types/appleTypes";
 
+// Fetch entries on sound page
 export const useArtifactsQuery = (
   soundId: string,
   userId: string | undefined,

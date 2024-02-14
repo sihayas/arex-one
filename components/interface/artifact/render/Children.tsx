@@ -1,7 +1,7 @@
 import React from "react";
 import Reply from "@/components/interface/artifact/items/Reply";
 import { ReplyType } from "@/types/dbTypes";
-import { useRepliesQuery } from "@/lib/apiHelper/artifact";
+import { useRepliesQuery } from "@/lib/helper/artifact";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 type RenderChildrenProps = {
@@ -45,7 +45,7 @@ function Children({ level, parentReplyId, isChild }: RenderChildrenProps) {
           {isFetchingNextPage ? (
             "loading"
           ) : (
-            <div className={`text-xs text-gray3 font-bold pt-8`}>more</div>
+            <div className={`text-gray3 pt-8 text-xs font-bold`}>more</div>
           )}
         </button>
       )}

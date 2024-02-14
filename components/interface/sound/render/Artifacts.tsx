@@ -1,5 +1,5 @@
 import React from "react";
-import { useArtifactsQuery } from "@/lib/apiHelper/album";
+import { useArtifactsQuery } from "@/lib/helper/sound";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { GetDimensions } from "@/components/interface/Interface";
 import { PageName } from "@/context/InterfaceContext";
@@ -20,7 +20,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   sortOrder = "newest",
   range = null,
 }) => {
-  const { user, activePage, scrollContainerRef } = useInterfaceContext();
+  const { user, activePage } = useInterfaceContext();
   const { data, fetchNextPage, hasNextPage } = useArtifactsQuery(
     soundId,
     user?.id,
