@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import useHandleHeartClick from "@/hooks/useHeart";
-import { useArtifact, useSound } from "@/hooks/usePage";
 
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
@@ -19,8 +18,6 @@ import {
   ThreeStar,
   TwoHalfStar,
   TwoStar,
-  CurveIcon,
-  TinyCurveIcon,
 } from "@/components/icons";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
@@ -159,7 +156,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
                 backgroundImage:
                   "linear-gradient(to top, #fff 68.91%, transparent)",
               }}
-              className="absolute bottom-0 left-0 flex h-[72px] w-full items-center p-6 gap-3"
+              className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6"
             >
               {getStarComponent(artifact.content!.rating!, 20, 20)}
 
@@ -185,12 +182,12 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
             className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white p-6 pb-0"
           >
             {/* Header */}
-            <div className={`w-full flex gap-2`}>
+            <div className={`flex w-full gap-2`}>
               <div
                 style={{
                   ...backArtMask,
                 }}
-                className={`w-[72px] h-[72px] relative flex-shrink-0`}
+                className={`relative h-[72px] w-[72px] flex-shrink-0`}
               >
                 <Image
                   src={url}
@@ -200,25 +197,25 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
                   height={72}
                   draggable={false}
                 />
-                <div className="absolute bottom-0 right-0 rounded-max outline-silver w-fit bg-white p-2.5">
+                <div className="rounded-max outline-silver absolute bottom-0 right-0 w-fit bg-white p-2.5">
                   {getStarComponent(artifact.content!.rating!)}
                 </div>
               </div>
 
               <div className={`flex flex-col pt-2`}>
                 <p className={`text-gray2 text-sm font-medium`}>11.02.63</p>
-                <p className={`text-black text-sm mt-auto line-clamp-1`}>
+                <p className={`mt-auto line-clamp-1 text-sm text-black`}>
                   {artistName}
                 </p>
                 <p
-                  className={`text-black text-base font-semibold line-clamp-1`}
+                  className={`line-clamp-1 text-base font-semibold text-black`}
                 >
                   {name}
                 </p>
               </div>
             </div>
 
-            <p className={`pt-2.5 text-base line-clamp-[14]`}>
+            <p className={`line-clamp-[14] pt-2.5 text-base`}>
               {artifact.content?.text}
             </p>
           </div>
@@ -228,7 +225,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -top-[26px] left-[46px] z-10 mix-blend-multiply p-12 -m-12"
+        className="absolute -top-[26px] left-[46px] z-10 -m-12 p-12 mix-blend-multiply"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />
@@ -237,7 +234,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       <Interaction artifact={artifact} />
 
       <p
-        className={`font-medium text-gray2 absolute -bottom-7 left-[68px] mix-blend-darken`}
+        className={`text-gray2 absolute -bottom-7 left-[68px] font-medium mix-blend-darken`}
       >
         {artifact.author.username}
       </p>

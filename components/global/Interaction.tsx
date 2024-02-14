@@ -13,7 +13,9 @@ import { useSoundContext } from "@/context/SoundContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 import { toast } from "sonner";
-import { deleteEntry } from "@/lib/helper/artifact";
+import { createFlag, deleteEntry } from "@/lib/helper/artifact";
+
+import { FlagType } from "@prisma/client";
 
 // Define the animation variants
 const dotVariants = {
@@ -55,7 +57,7 @@ type InteractionProps = {
 
 export const Interaction = ({ artifact }: InteractionProps) => {
   const { playContent, setSelectedFormSound } = useSoundContext();
-  const { setIsVisible } = useInterfaceContext();
+  const { setIsVisible, user } = useInterfaceContext();
   const { setExpandInput } = useNavContext();
 
   const [isHovered, setIsHovered] = React.useState(false);
@@ -84,6 +86,14 @@ export const Interaction = ({ artifact }: InteractionProps) => {
       },
     );
   }, []);
+
+  const handleFlag = () => {
+    toast.promise(createFlag(artifact.id, FlagType.artifact, user!.id), {
+      loading: "Flagging...",
+      success: "Content flagged successfully!",
+      error: "Error flagging content",
+    });
+  };
 
   return (
     <motion.div
@@ -124,6 +134,7 @@ export const Interaction = ({ artifact }: InteractionProps) => {
           variants={dotVariants}
         />
         <motion.div
+          onClick={handleFlag}
           variants={dotVariants}
           className={`bg-gray4 flex h-8 w-8 items-center justify-center rounded-full`}
         >

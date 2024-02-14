@@ -2,6 +2,7 @@ import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { ReplyTargetType } from "@/context/Threadcrumbs";
 import { AlbumData, SongData } from "@/types/appleTypes";
+import { FlagType } from "@prisma/client";
 
 export const createEntry = async (submissionData: {
   text: string;
@@ -11,7 +12,7 @@ export const createEntry = async (submissionData: {
   sound: AlbumData | SongData;
 }) => {
   // No rating means it's a wisp
-  const endpoint = "/api/artifact/post/artifact";
+  const endpoint = "/api/artifact/post";
 
   try {
     const response = await axios.post(endpoint, submissionData);
@@ -69,7 +70,7 @@ export const createReply = async (
 };
 
 export const deleteEntry = async (artifactId: string) => {
-  const endpoint = "/api/artifact/delete/artifact";
+  const endpoint = "/api/artifact/delete";
 
   try {
     const response = await axios.patch(endpoint, { artifactId });
@@ -84,11 +85,19 @@ export const deleteEntry = async (artifactId: string) => {
   }
 };
 
-export const flagEntry = async (referenceId: string, type: string) => {
+export const createFlag = async (
+  referenceId: string,
+  type: FlagType,
+  authorId: string,
+) => {
   const endpoint = "/api/artifact/post/flag";
 
   try {
-    const response = await axios.post(endpoint, { referenceId, type });
+    const response = await axios.post(endpoint, {
+      referenceId,
+      type,
+      authorId,
+    });
 
     if (response.status === 200) {
       console.log("Flagging successful", response.data);

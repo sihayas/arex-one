@@ -11,7 +11,6 @@ import RatingDial from "@/components/interface/nav/items/search/RatingDial";
 import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import Heart from "@/components/global/Heart";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
 

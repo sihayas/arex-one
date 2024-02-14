@@ -87,7 +87,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             className={`relative w-fit overflow-visible rounded-[18px] bg-[#F4F4F4] px-3 py-1.5`}
           >
             {/* Content  */}
-            <div className="text-base text-gray line-clamp-[7]">
+            <div className="text-gray line-clamp-[7] text-base">
               {artifact.content?.text}
             </div>
 
