@@ -1,6 +1,14 @@
 import { motion } from "framer-motion";
-import { CurveIcon, ExpandCurveIcon, TinyCurveIcon } from "@/components/icons";
+import {
+  ExpandCurveIcon,
+  TinyCurveIcon,
+  PlayIcon,
+  AddIcon,
+  DeleteIcon,
+  ReportIcon,
+} from "@/components/icons";
 import React from "react";
+import { ArtifactExtended } from "@/types/globalTypes";
 
 // Define the animation variants
 const dotVariants = {
@@ -36,8 +44,14 @@ const Dot = () => {
   );
 };
 
-export const Interaction = () => {
+type InteractionProps = {
+  artifact: ArtifactExtended;
+};
+
+export const Interaction = ({ artifact }: InteractionProps) => {
   const [isHovered, setIsHovered] = React.useState(false);
+  const sound = artifact.sound;
+
   return (
     <motion.div
       onMouseEnter={() => setIsHovered(true)}
@@ -67,16 +81,20 @@ export const Interaction = () => {
         ))}
         <motion.div
           variants={dotVariants}
-          className={`w-8 h-8 bg-gray4 rounded-full`}
-        />
+          className={`w-8 h-8 bg-gray4 rounded-full flex items-center justify-center`}
+        >
+          <DeleteIcon />
+        </motion.div>
         <motion.div
           className="w-1 h-1 bg-gray4 rounded-full"
           variants={dotVariants}
         />
         <motion.div
           variants={dotVariants}
-          className={`w-8 h-8 bg-gray4 rounded-full`}
-        />
+          className={`w-8 h-8 bg-gray4 rounded-full flex items-center justify-center`}
+        >
+          <ReportIcon />
+        </motion.div>
       </motion.div>
 
       {/* Sound Actions */}
@@ -91,16 +109,20 @@ export const Interaction = () => {
           ))}
           <motion.div
             variants={dotVariants}
-            className={`w-8 h-8 bg-gray4 rounded-full`}
-          />
+            className={`w-8 h-8 bg-gray4 rounded-full flex items-center justify-center`}
+          >
+            <AddIcon />
+          </motion.div>
           <motion.div
             className="w-1 h-1 bg-gray4 rounded-full"
             variants={dotVariants}
           />
           <motion.div
             variants={dotVariants}
-            className={`w-8 h-8 bg-gray4 rounded-full`}
-          />
+            className={`w-8 h-8 bg-gray4 rounded-full flex items-center justify-center`}
+          >
+            <PlayIcon />
+          </motion.div>
         </motion.div>
         <motion.div
           animate={{

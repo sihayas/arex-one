@@ -100,32 +100,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     user?.id,
   );
 
-  // Define the animation variants
-  const dotVariants = {
-    hidden: { opacity: 0, scale: 0 },
-    visible: { opacity: 1, scale: 1 },
-  };
-
-  const containerVariants = {
-    hidden: { transition: { staggerChildren: 0.02 } },
-    visible: {
-      transition: {
-        staggerChildren: 0.02,
-        delayChildren: 0.02,
-      },
-    },
-  };
-
-  // Create a styled dot component
-  const Dot = () => {
-    return (
-      <motion.div
-        className="w-1 h-1 bg-gray3 rounded-full"
-        variants={dotVariants}
-      />
-    );
-  };
-
   return (
     <motion.div className={`relative flex w-[356px] items-end gap-2.5`}>
       <Avatar
@@ -150,8 +124,8 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           perspective={1000}
           tiltMaxAngleX={8}
           tiltMaxAngleY={8}
-          tiltReverse={false}
-          // reset={false}
+          tiltReverse={true}
+          reset={false}
           glareEnable={true}
           glareMaxOpacity={0.45}
           scale={1.02}
@@ -260,7 +234,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
       />
 
       {/* Interactions */}
-      <Interaction />
+      <Interaction artifact={artifact} />
 
       <p
         className={`font-medium text-gray2 absolute -bottom-7 left-[68px] mix-blend-darken`}
