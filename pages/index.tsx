@@ -4,7 +4,7 @@ import React from "react";
 import Dash from "@/components/index/items/Dash";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import Artifacts from "@/components/index/render/Artifacts";
+import Feed from "@/components/index/render/Feed";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
 import { AppleIcon } from "@/components/icons";
@@ -35,91 +35,91 @@ export default function Home() {
         <Head>
           <title>VOIR</title>
         </Head>
-        <div className="h-screen w-screen flex">
-          <div className={`w-[448px] h-full p-16 home-container`}>
+        <div className="flex h-screen w-screen">
+          <div className={`home-container h-full w-[448px] p-16`}>
             <p
-              className={`col-span-3 row-span-1 font-semibold text-[22px] tracking-tighter leading-[16px`}
+              className={`leading-[16px col-span-3 row-span-1 text-[22px] font-semibold tracking-tighter`}
             >
               Voir
             </p>
 
             <div
-              className={`row-start-3 row-span-2 col-span-full flex items-center gap-1 -ml-12`}
+              className={`col-span-full row-span-2 row-start-3 -ml-12 flex items-center gap-1`}
             >
               <Link
                 href="/api/oauth/apple/login"
-                className={`bg-white rounded-max min-w-[2rem] h-8 relative shadow-shadowKitHigh`}
+                className={`rounded-max shadow-shadowKitHigh relative h-8 min-w-[2rem] bg-white`}
               >
-                <AppleIcon className={`absolute center-y center-x`} />
+                <AppleIcon className={`center-y center-x absolute`} />
               </Link>
-              <div className={`bg-gray3 rounded-full min-w-[2px] h-0.5`} />
-              <div className={`bg-gray3 rounded-full min-w-[2px] h-0.5`} />
-              <div className={`bg-gray3 rounded-full min-w-[2px] h-0.5`} />
-              <div className={`bg-gray3 rounded-full w-full h-0.5`} />
+              <div className={`bg-gray3 h-0.5 min-w-[2px] rounded-full`} />
+              <div className={`bg-gray3 h-0.5 min-w-[2px] rounded-full`} />
+              <div className={`bg-gray3 h-0.5 min-w-[2px] rounded-full`} />
+              <div className={`bg-gray3 h-0.5 w-full rounded-full`} />
             </div>
 
             <>
               <p
-                className={`row-start-6 col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-6 text-lg italic leading-[10px]`}
               >
                 In this haven of harmonies
               </p>
               <p
-                className={`ml-auto row-start-[8] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[8] ml-auto text-lg italic leading-[10px]`}
               >
                 interaction is a delicate dance
               </p>
 
               <p
-                className={`ml-4 row-start-[10] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[10] ml-4 text-lg italic leading-[10px]`}
               >
                 of digits across screens
               </p>
 
               <p
-                className={`ml-8 row-start-[12] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[12] ml-8 text-lg italic leading-[10px]`}
               >
                 a silent symphony shared
               </p>
 
               <p
-                className={`row-start-[14] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[14] text-lg italic leading-[10px]`}
               >
                 Users
               </p>
 
               <p
-                className={`row-start-[16] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[16] text-lg italic leading-[10px]`}
               >
                 as intertwined melodies
               </p>
 
               <p
-                className={`ml-16 row-start-[18] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[18] ml-16 text-lg italic leading-[10px]`}
               >
                 resonate in a silent pact
               </p>
 
               <p
-                className={`ml-16 row-start-[20] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[20] ml-16 text-lg italic leading-[10px]`}
               >
                 bound by the unseen thread of rhythm
               </p>
 
               <p
-                className={`ml-auto row-start-[22] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[22] ml-auto text-lg italic leading-[10px]`}
               >
                 Here
               </p>
 
               <p
-                className={`ml-[111px] row-start-[24] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[24] ml-[111px] text-lg italic leading-[10px]`}
               >
                 a song sent is a soul’s whisper
               </p>
 
               <p
-                className={`ml-5 row-start-[26] col-span-full font-garamond12 leading-[10px] italic text-lg`}
+                className={`font-garamond12 col-span-full row-start-[26] ml-5 text-lg italic leading-[10px]`}
               >
                 a shared pulse within the vast digital expanse
               </p>
@@ -140,27 +140,27 @@ export default function Home() {
       {activeFeed && (
         <motion.div
           ref={scrollContainerRef}
-          className={`flex flex-col items-center pt-16 px-8 pb-32 gap-32 max-h-screen w-full overflow-scroll scrollbar-none`}
+          className={`scrollbar-none flex max-h-screen w-full flex-col items-center gap-32 overflow-scroll px-8 pb-32 pt-16`}
         >
           {/*  Blur Backdrop */}
           <div
-            className={`absolute top-0 center-x w-full h-full bg-white/50 backdrop-blur-[72px] pointer-events-none z-0`}
+            className={`center-x pointer-events-none absolute top-0 z-0 h-full w-full bg-white/50 backdrop-blur-[72px]`}
           />
 
           {activeFeed === "bloom" ? (
-            <Artifacts
+            <Feed
               userId={user.id}
               scrollContainerRef={scrollContainerRef}
               type={"bloom"}
             />
           ) : activeFeed === "personal" ? (
-            <Artifacts
+            <Feed
               userId={user.id}
               scrollContainerRef={scrollContainerRef}
               type={"personal"}
             />
           ) : activeFeed === "recent" ? (
-            <Artifacts
+            <Feed
               userId={user.id}
               scrollContainerRef={scrollContainerRef}
               type={"recent"}
@@ -168,7 +168,7 @@ export default function Home() {
           ) : null}
 
           <Avatar
-            className="rounded-full z-20 -translate-x-[157px] absolute shadow-shadowKitMedium"
+            className="shadow-shadowKitMedium absolute z-20 -translate-x-[157px] rounded-full"
             imageSrc={user.image}
             altText={`avatar`}
             width={42}
@@ -183,7 +183,7 @@ export default function Home() {
       {/*<Player />*/}
 
       <button
-        className="fixed bottom-0 left-0 cursor-pointer text-sm uppercase text-gray3 hover:text-red/60 z-50"
+        className="text-gray3 hover:text-red/60 fixed bottom-0 left-0 z-50 cursor-pointer text-sm uppercase"
         onClick={handleLogout}
       >
         Disconnect

@@ -35,51 +35,51 @@ const User = () => {
 
   return (
     <>
-      <Essentials essentials={userData.essentials} />
-
-      <div
-        className={`sticky top-8 z-10 mt-8 flex w-full flex-col items-center gap-2 px-16`}
-      >
-        <div className="flex w-full items-center justify-between">
-          <div className="flex flex-col">
+      <div className={`flex flex-col w-full p-8`}>
+        <div className="flex items-center gap-4">
+          <Avatar
+            className="rounded-max border-silver min-h-[64px] min-w-[64px] border"
+            imageSrc={userData.image}
+            altText={`avatar`}
+            width={64}
+            height={64}
+            user={userData}
+          />
+          <p className={`text-gray2 text-xl font-semibold  tracking-tighter`}>
+            {userData.username}
+          </p>
+        </div>
+        <div className="flex ml-20 gap-[29px] ">
+          <div className={`flex flex-col`}>
             <p className="text-gray2 text-base font-medium tracking-tighter">
               Sounds
             </p>
             <p className="text-gray2 text-base font-bold tracking-tighter">
               42
             </p>
+          </div>
 
-            <p className="text-gray2 pt-[18px] text-base font-medium tracking-tighter">
+          <div className={`flex flex-col`}>
+            <p className="text-gray2 text-base font-medium tracking-tighter">
               Entries
             </p>
             <p className="text-gray2 text-base font-bold tracking-tighter">
               {userData._count.artifact}
             </p>
+          </div>
 
-            <p className="text-gray2 pt-[18px] text-base font-medium tracking-tighter">
+          <div className={`flex flex-col`}>
+            <p className="text-gray2 text-base font-medium tracking-tighter">
               Links
             </p>
             <p className="text-gray2 text-base font-bold tracking-tighter">
               {userData._count.followedBy}
             </p>
           </div>
+        </div>
+        {/* <Essentials essentials={userData.essentials} /> */}
 
-          <div className="center-x center-y absolute">
-            <Avatar
-              className="rounded-max border-silver min-h-[80px] min-w-[80px] border"
-              imageSrc={userData.image}
-              altText={`avatar`}
-              width={80}
-              height={80}
-              user={userData}
-            />
-            <p
-              className={`text-gray2 center-x absolute bottom-[-20px] text-xl font-semibold leading-[15px] tracking-tighter`}
-            >
-              {userData.username}
-            </p>
-          </div>
-
+        <div className="flex w-full items-center justify-between">
           <div className="shadow-shadowKitLow flex items-center justify-center rounded-full bg-white p-2 opacity-0">
             <SettingsIcon />
           </div>

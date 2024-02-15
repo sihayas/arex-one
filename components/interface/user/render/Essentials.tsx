@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import { Essential } from "@/types/dbTypes";
-import { motion } from "framer-motion";
 import { Art } from "@/components/global/Art";
 
 interface EssentialsProps {
@@ -35,7 +34,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
         return (
           <Fragment key={`essential-${i}`}>
             <Art
-              size={144}
+              size={128}
               containerClass={`rounded-3xl shadow-shadowKitHigh outline outline-silver outline-1 ${rotationClass} ${
                 i === 1 ? "translate-y-[88px] z-10" : ""
               }`}

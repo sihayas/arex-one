@@ -3,9 +3,9 @@ import React from "react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { MaskCardBottomOutlined } from "@/components/icons";
 import { getStarComponent } from "@/components/index/items/Entry";
-import { Art } from "@/components/global/Art";
+import Tilt from "react-parallax-tilt";
+import Image from "next/image";
 
 interface UserProps {
   artifact: ArtifactExtended;
@@ -17,20 +17,20 @@ const springConfig = {
   stiffness: 224,
 };
 
-const maskStyle = {
-  maskImage: "url('/images/mask_card_bottom_outlined.svg')",
+const cardMask = {
+  maskImage: "url('/images/mask_card_top.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_card_bottom_outlined.svg')",
+  WebkitMaskImage: "url('/images/mask_card_top.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
 };
 
-const artMask = {
-  maskImage: "url('/images/mask_card_user.svg')",
+const backArtMask = {
+  maskImage: "url('/images/mask_art_card_back.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_card_user.svg')",
+  WebkitMaskImage: "url('/images/mask_art_card_back.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
 };
@@ -38,6 +38,7 @@ const artMask = {
 export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   const { scrollContainerRef } = useInterfaceContext();
   const [hovered, setHovered] = React.useState(false);
+  const [isFlipped, setIsFlipped] = React.useState(false);
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -91,6 +92,18 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   );
 
   const sound = artifact.appleData;
+
+  if (!sound) return;
+
+  const name = sound.attributes.name;
+  const artistName = sound.attributes.artistName;
+  const color = sound.attributes.artwork.bgColor;
+  const artwork = MusicKit.formatArtworkURL(
+    sound.attributes.artwork,
+    304 * 2.5,
+    304 * 2.5,
+  );
+
   const apiUrl = artifact.heartedByUser
     ? "/api/heart/delete/artifact"
     : "/api/heart/post/artifact";
@@ -106,45 +119,118 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
       }}
       className={`relative ${isEven ? "mr-auto" : "ml-auto"}`}
     >
-      <motion.div
-        style={{
-          width: 304,
-          height: 432,
-          ...maskStyle,
+      <div
+        onClick={() => {
+          setIsFlipped(!isFlipped);
         }}
-        className={`relative z-10 flex cursor-pointer flex-col bg-white will-change-transform`}
+        className={`cloud-shadow z-20`}
       >
-        {/* Metadata */}
-        <div className={`flex w-full items-start justify-between p-6 pb-0`}>
-          <div className="rounded-max bg-white p-3">
-            {getStarComponent(artifact.content!.rating!)}
-          </div>
+        {/* Scene */}
+        <Tilt
+          flipVertically={isFlipped}
+          perspective={1000}
+          tiltMaxAngleX={8}
+          tiltMaxAngleY={8}
+          tiltReverse={true}
+          reset={false}
+          glareEnable={true}
+          glareMaxOpacity={0.45}
+          glareBorderRadius={"32px"}
+          scale={1.02}
+          transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
+          className={`transform-style-3d relative h-[432px] w-[304px] rounded-[32px]`}
+        >
+          {/* Front */}
           <div
             style={{
-              ...artMask,
+              ...cardMask,
             }}
+            className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white"
           >
-            <Art size={192} sound={sound} />
+            <Image
+              className={`-mt-6`}
+              // onClick={handleSoundClick}
+              src={artwork}
+              alt={`${name} by ${artistName} - artwork`}
+              quality={100}
+              width={304}
+              height={304}
+              draggable={false}
+            />
+            <div className="`text-base line-clamp-3 px-6 pt-[18px] text-black">
+              {artifact.content?.text}
+            </div>
+
+            {/* Footer */}
+            <div
+              style={{
+                backgroundImage:
+                  "linear-gradient(to top, #fff 68.91%, transparent)",
+              }}
+              className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6"
+            >
+              {getStarComponent(artifact.content!.rating!, 20, 20)}
+
+              <div className={`flex translate-y-[1px] flex-col`}>
+                <p className={`line-clamp-1 text-sm text-black`}>
+                  {sound.attributes.artistName}
+                </p>
+                <p
+                  className={`line-clamp-1 text-base font-semibold text-black`}
+                >
+                  {sound.attributes.name}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className={`line-clamp-1 px-6 pt-2 text-sm text-black`}>
-          {sound.attributes.artistName}
-        </div>
-        <div className={`line-clamp-1 px-6 text-base font-semibold text-black`}>
-          {sound.attributes.name}
-        </div>
+          {/* Back */}
+          <div
+            style={{
+              ...cardMask,
+              transform: "rotateX(180deg)",
+            }}
+            className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white p-6 pb-0"
+          >
+            {/* Header */}
+            <div className={`flex w-full gap-2`}>
+              <div
+                style={{
+                  ...backArtMask,
+                }}
+                className={`relative h-[72px] w-[72px] flex-shrink-0`}
+              >
+                <Image
+                  src={artwork}
+                  alt={`${name} by ${artistName} - artwork`}
+                  quality={100}
+                  width={72}
+                  height={72}
+                  draggable={false}
+                />
+                <div className="rounded-max outline-silver absolute bottom-0 right-0 w-fit bg-white p-2.5">
+                  {getStarComponent(artifact.content!.rating!)}
+                </div>
+              </div>
 
-        {/* Text */}
-        <div className="`text-base line-clamp-6 px-6 pt-[3px] text-black">
-          {artifact.content?.text}
-        </div>
-      </motion.div>
+              <div className={`flex flex-col pt-2`}>
+                <p className={`text-gray2 text-sm font-medium`}>11.02.63</p>
+                <p className={`mt-auto line-clamp-1 text-sm text-black`}>
+                  {artistName}
+                </p>
+                <p
+                  className={`line-clamp-1 text-base font-semibold text-black`}
+                >
+                  {name}
+                </p>
+              </div>
+            </div>
 
-      <div
-        className={`cloud-shadow absolute bottom-0 right-0 h-[432px] w-[304px]`}
-      >
-        <MaskCardBottomOutlined />
+            <p className={`line-clamp-[14] pt-2.5 text-base`}>
+              {artifact.content?.text}
+            </p>
+          </div>
+        </Tilt>
       </div>
     </motion.div>
   );

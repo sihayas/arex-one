@@ -78,6 +78,9 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     : "/api/heart/post/artifact";
 
   const sound = artifact.appleData;
+
+  if (!sound) return;
+
   const name = sound.attributes.name;
   const artistName = sound.attributes.artistName;
   const color = sound.attributes.artwork.bgColor;

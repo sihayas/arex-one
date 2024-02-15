@@ -7,7 +7,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { Entry } from "@/components/index/items/Entry";
 import { Wisp } from "@/components/index/items/Wisp";
 
-const Artifacts = ({
+const Feed = ({
   userId,
   scrollContainerRef,
   type,
@@ -61,18 +61,4 @@ const Artifacts = ({
   );
 };
 
-export default Artifacts;
-
-// {allActivities.map((activity: Activity, i) => (
-//     <Fragment key={activity.id}>
-//       {activity.artifact ? (
-//           <Feed artifact={activity.artifact as ArtifactExtended} />
-//       ) : activity.reply?.artifact ? (
-//           <Feed artifact={activity.reply.artifact as ArtifactExtended} />
-//       ) : activity.heart?.artifact ? (
-//           <Feed artifact={activity.heart.artifact as ArtifactExtended} />
-//       ) : (
-//           "No artifact available for this activity."
-//       )}
-//     </Fragment>
-// ))}
+export default Feed;
