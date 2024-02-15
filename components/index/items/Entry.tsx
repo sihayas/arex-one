@@ -125,6 +125,7 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
           reset={false}
           glareEnable={true}
           glareMaxOpacity={0.45}
+          glareBorderRadius={"32px"}
           scale={1.02}
           transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
           className={`transform-style-3d relative h-[432px] w-[304px] rounded-[32px]`}

@@ -9,6 +9,7 @@ import { Toaster } from "sonner";
 import { InterfaceContextProvider } from "@/context/InterfaceContext";
 import { NavProvider } from "@/context/NavContext";
 import localFont from "next/font/local";
+import Head from "next/head";
 
 const garamond12 = localFont({
   src: [
