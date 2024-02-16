@@ -29,6 +29,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   );
   const { handleSelectArtifact } = useArtifact();
 
+  // Capture the state of the virtuoso list
   const ref = React.useRef<VirtuosoHandle>(null);
   const state = React.useRef<StateSnapshot | undefined>(
     activePage.sound?.snapshot?.state,

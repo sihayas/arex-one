@@ -9,7 +9,6 @@ import Chain from "@/components/interface/artifact/render/Chain";
 import { ArtifactExtended } from "@/types/globalTypes";
 
 import { getStarComponent } from "@/components/index/items/Entry";
-import { Art } from "@/components/global/Art";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import Image from "next/image";
 
@@ -57,8 +56,6 @@ export const Artifact = () => {
       scrollContainerRef.current.scrollTo(0, 0);
     }
   }, []);
-
-  console.log(sound);
 
   return artifactType === "entry" ? (
     <>
@@ -122,10 +119,15 @@ export const Artifact = () => {
     </>
   ) : (
     <>
-      <Art
-        size={128}
-        containerClass="min-w-[128px] min-h-[128px] rounded-[18px] shadow-shadowKitHigh m-8 mb-0 ml-auto"
-        sound={sound}
+      <Image
+        className="min-w-[128px] min-h-[128px] rounded-[18px] shadow-shadowKitHigh m-8 mb-0 ml-auto"
+        onClick={handleSoundClick}
+        src={artwork}
+        alt={`${sound.attributes.name} by ${sound.attributes.artistName} - artwork`}
+        quality={100}
+        width={128}
+        height={128}
+        draggable={false}
       />
 
       <div className="flex w-full flex-col items-end p-8 pb-[18px] pt-2.5">
