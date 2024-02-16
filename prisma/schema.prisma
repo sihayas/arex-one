@@ -1,321 +1,319 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
-  relationMode = "prisma"
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
 model User {
-  id            String           @id @default(cuid())
-  email         String?          @unique
-  username      String           @unique
-  bio           String?          @db.VarChar(50)
-  image         String
-  emailVerified Boolean          @default(false) @map(name: "email_verified")
-  password_hash String?
-  dateJoined    DateTime         @default(now()) @map(name: "date_joined")
-  dateUpdated   DateTime         @updatedAt @map(name: "date_updated")
-  lastLogin     DateTime?        @map(name: "last_login")
-  lastActive    DateTime?        @map(name: "last_active")
-  isBanned      Boolean          @default(false) @map(name: "is_banned")
-  isDeleted     Boolean          @default(false) @map(name: "is_deleted")
-  isSuspended   Boolean          @default(false) @map(name: "is_suspended")
-  following     Follows[]        @relation("follower")
-  followedBy    Follows[]        @relation("following")
-  essentials    Essential[]
-  notifications Notification[]
-  artifact      Artifact[]
-  replies       Reply[]
-  hearts        Heart[]
-  settings      Settings?
-  flags         Flag[]
+    id            String         @id @default(cuid())
+    email         String?        @unique
+    username      String         @unique
+    bio           String?        @db.VarChar(50)
+    image         String
+    emailVerified Boolean        @default(false) @map(name: "email_verified")
+    password_hash String?
+    dateJoined    DateTime       @default(now()) @map(name: "date_joined")
+    dateUpdated   DateTime       @updatedAt @map(name: "date_updated")
+    lastLogin     DateTime?      @map(name: "last_login")
+    lastActive    DateTime?      @map(name: "last_active")
+    isBanned      Boolean        @default(false) @map(name: "is_banned")
+    isDeleted     Boolean        @default(false) @map(name: "is_deleted")
+    isSuspended   Boolean        @default(false) @map(name: "is_suspended")
+    following     Follows[]      @relation("follower")
+    followedBy    Follows[]      @relation("following")
+    essentials    Essential[]
+    notifications Notification[]
+    artifact      Artifact[]
+    replies       Reply[]
+    hearts        Heart[]
+    settings      Settings?
+    flags         Flag[]
 
-  apple_id      String?          @unique
-  sessions      Session[]
-  oauthAccounts OauthAccount[]
+    apple_id      String?        @unique
+    sessions      Session[]
+    oauthAccounts OauthAccount[]
 }
 
 model Session {
-  id        String   @id
-  userId    String
-  expiresAt DateTime
-  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+    id        String   @id
+    userId    String
+    expiresAt DateTime
+    user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model OauthAccount {
-  providerId     String
-  providerUserId String
-  userId         String
-  user           User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+    providerId     String
+    providerUserId String
+    userId         String
+    user           User   @relation(references: [id], fields: [userId], onDelete: Cascade)
 
-  @@id([providerId, providerUserId])
+    @@id([providerId, providerUserId])
+    @@index([userId])
 }
 
 model Settings {
-  id                  String   @id @default(cuid())
-  userId              String   @unique
-  email               Boolean  @default(true)
-  push                Boolean  @default(true)
+    id     String  @id @default(cuid())
+    userId String  @unique
+    email  Boolean @default(true)
+    push   Boolean @default(true)
 
+    isPrivate             Boolean @default(false) @map(name: "is_private")
+    isMinus               Boolean @default(false) @map(name: "is_premium")
+    followerNotifications Boolean @default(true) @map(name: "follower_notifications")
+    replyNotifications    Boolean @default(true) @map(name: "reply_notifications")
+    heartNotifications    Boolean @default(true) @map(name: "heart_notifications")
 
-  isPrivate             Boolean  @default(false) @map(name: "is_private")
-  isMinus               Boolean  @default(false) @map(name: "is_premium")
-  followerNotifications Boolean  @default(true) @map(name: "follower_notifications")
-  replyNotifications    Boolean  @default(true) @map(name: "reply_notifications")
-  heartNotifications    Boolean  @default(true) @map(name: "heart_notifications")
-
-
-  createdAt           DateTime @default(now()) @map(name: "created_at")
-  updatedAt           DateTime @updatedAt @map(name: "updated_at")
-  user                User     @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now()) @map(name: "created_at")
+    updatedAt DateTime @updatedAt @map(name: "updated_at")
+    user      User     @relation(fields: [userId], references: [id])
 }
 
 model Essential {
-  id        String   @id @default(cuid())
-  userId    String
-  soundId   String
-  rank      Int?
+    id      String @id @default(cuid())
+    userId  String
+    soundId String
+    rank    Int?
 
-  user  User  @relation(fields: [userId], references: [id])
-  sound Sound @relation(fields: [soundId], references: [id])
+    user  User  @relation(fields: [userId], references: [id])
+    sound Sound @relation(fields: [soundId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  @@index([userId])
-  @@index([soundId])
+    @@index([userId])
+    @@index([soundId])
 }
 
-
 model Follows {
-  id           String     @id @default(cuid())
-  followerId   String
-  followingId  String
+    id          String @id @default(cuid())
+    followerId  String
+    followingId String
 
-  follower   User   @relation("follower", fields: [followerId], references:[id])
-  following  User   @relation("following", fields: [followingId], references:[id])
-  activities   Activity[] @relation("ActivityFollow")
+    follower   User       @relation("follower", fields: [followerId], references: [id])
+    following  User       @relation("following", fields: [followingId], references: [id])
+    activities Activity[] @relation("ActivityFollow")
 
-  isDeleted    Boolean    @default(false) @map(name: "is_deleted")
+    isDeleted Boolean @default(false) @map(name: "is_deleted")
 
-  @@index([followerId])
-  @@index([followingId])
-  @@unique([followerId, followingId])
+    @@unique([followerId, followingId])
+    @@index([followerId])
+    @@index([followingId])
 }
 
 enum SoundType {
-  albums
-  songs
+    albums
+    songs
 }
-
 
 model Sound {
-  id          String   @id @default(cuid())
-  appleId     String   @unique
-  type        SoundType
-  rating      Float    @default(0)
+    id           String     @id @default(cuid())
+    appleId      String     @unique
+    type         SoundType
+    attributes   Attributes @relation(fields: [attributesId], references: [id])
+    attributesId String
 
-  attributes  Attributes @relation(fields: [attributesId], references:[id])
-  attributesId String
+    // Self relation for Sound
+    albumId String?
+    album   Sound?  @relation("AlbumSongs", fields: [albumId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+    Songs   Sound[] @relation("AlbumSongs")
 
-  // Self relation for Sound
-  albumId      String?
-  album        Sound?      @relation("AlbumSongs", fields: [albumId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  Songs        Sound[]     @relation("AlbumSongs")
+    ratings_count Int   @default(0) @map(name: "ratings_count")
+    ratings_sum   Int   @default(0) @map(name: "ratings_sum")
+    avg_rating    Float @default(0) @map(name: "avg_rating")
+    bayesian_avg  Float @default(0) @map(name: "bayesian_avg")
 
-  essentials    Essential[]
-  artifact      Artifact[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  @@unique([id])
-  @@index([id])
-  @@index([appleId])
-  @@index([attributesId])
-  @@index([albumId])
+    essentials Essential[]
+    artifact   Artifact[]
 
+    @@unique([id])
+    @@index([id])
+    @@index([appleId])
+    @@index([attributesId])
+    @@index([albumId])
 }
 
+model Attributes {
+    id          String  @id @default(cuid())
+    name        String
+    artistName  String
+    releaseDate String
+    albumName   String?
 
-model Attributes{
-  id          String   @id @default(cuid())
-  name        String
-  artistName  String
-  releaseDate String
-  albumName   String?
+    sound Sound[]
 
-  sound      Sound[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  @@unique([id])
+    @@unique([id])
 }
-
-
-
 
 enum ArtifactType {
-  entry // A rating post
-  wisp // A non-rating post
+    entry // A rating post
+    wisp // A non-rating post
 }
 
 model Artifact {
-  id          String    @id @default(cuid())
-  type        ArtifactType
-  authorId    String
-  soundId     String
+    id       String       @id @default(cuid())
+    type     ArtifactType
+    authorId String
+    soundId  String
 
-  sound       Sound     @relation(fields: [soundId], references: [id])
-  author      User      @relation(fields: [authorId], references: [id])
+    sound  Sound @relation(fields: [soundId], references: [id])
+    author User  @relation(fields: [authorId], references: [id])
 
-  hearts      Heart[]
-  replies     Reply[]
-  content     Content?
+    hearts  Heart[]
+    replies Reply[]
+    content Content?
 
-  isDeleted   Boolean     @default(false) @map(name: "is_deleted")
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  activities  Activity[]  @relation("ActivityArtifact")
-  flags       Flag[]      @relation("FlaggedArtifact")
+    isDeleted  Boolean    @default(false) @map(name: "is_deleted")
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    activities Activity[] @relation("ActivityArtifact")
+    flags      Flag[]     @relation("FlaggedArtifact")
 
-  @@index([authorId])
-  @@index([soundId])
+    @@index([authorId])
+    @@index([soundId])
 }
 
 model Content {
-  id         String   @id @default(cuid())
-  text       String   @db.LongText
+    id   String @id @default(cuid())
+    text String @db.LongText
 
-  rating     Float?
-  loved      Boolean?  @default(false)
-  replay     Boolean?  @default(false)
+    rating Float?
+    loved  Boolean? @default(false)
+    replay Boolean? @default(false)
 
-  artifact   Artifact  @relation(fields: [artifactId], references: [id])
-  artifactId String
+    artifact   Artifact @relation(fields: [artifactId], references: [id])
+    artifactId String
 
-  @@index([id])
-  @@unique([artifactId])
+    @@unique([artifactId])
+    @@index([id])
 }
 
 model Heart {
-  id         String      @id @default(cuid())
-  authorId   String
-  artifactId String?
-  replyId    String?
+    id         String  @id @default(cuid())
+    authorId   String
+    artifactId String?
+    replyId    String?
 
-  author     User        @relation(fields: [authorId], references: [id])
-  artifact   Artifact?   @relation(fields: [artifactId], references: [id])
-  reply      Reply?      @relation(fields: [replyId], references: [id])
-  activities Activity[]  @relation("ActivityHeart")
+    author     User       @relation(fields: [authorId], references: [id])
+    artifact   Artifact?  @relation(fields: [artifactId], references: [id])
+    reply      Reply?     @relation(fields: [replyId], references: [id])
+    activities Activity[] @relation("ActivityHeart")
 
-  createdAt  DateTime    @default(now()) @map(name: "created_at")
-  updatedAt  DateTime    @updatedAt @map(name: "updated_at")
-  isDeleted  Boolean     @default(false) @map(name: "is_deleted")
+    createdAt DateTime @default(now()) @map(name: "created_at")
+    updatedAt DateTime @updatedAt @map(name: "updated_at")
+    isDeleted Boolean  @default(false) @map(name: "is_deleted")
 
-  @@index([authorId])
-  @@index([artifactId])
-  @@index([replyId])
+    @@index([authorId])
+    @@index([artifactId])
+    @@index([replyId])
 }
 
 model Reply {
-  id           String      @id @default(cuid())
-  text         String
-  replyToId    String?
-  rootId       String?
-  artifactId   String
-  authorId     String
+    id         String  @id @default(cuid())
+    text       String
+    replyToId  String?
+    rootId     String?
+    artifactId String
+    authorId   String
 
-  // Relationships
-  replyTo      Reply?      @relation("ReplyParent", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  replies      Reply[]     @relation("ReplyParent")
-  root         Reply?      @relation("RootToReplies", fields: [rootId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  rootReplies  Reply[]     @relation("RootToReplies")
-  author       User        @relation(fields: [authorId], references: [id])
-  artifact     Artifact    @relation(fields: [artifactId], references: [id])
-  hearts       Heart[]
+    // Relationships
+    replyTo     Reply?   @relation("ReplyParent", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+    replies     Reply[]  @relation("ReplyParent")
+    root        Reply?   @relation("RootToReplies", fields: [rootId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+    rootReplies Reply[]  @relation("RootToReplies")
+    author      User     @relation(fields: [authorId], references: [id])
+    artifact    Artifact @relation(fields: [artifactId], references: [id])
+    hearts      Heart[]
 
-  activities   Activity[]  @relation("ActivityReply")
-  flags        Flag[]      @relation("FlaggedReply")
+    activities Activity[] @relation("ActivityReply")
+    flags      Flag[]     @relation("FlaggedReply")
 
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  // Indexes
-  isDeleted    Boolean     @default(false)
-  @@index([artifactId])
-  @@index([authorId])
-  @@index([replyToId])
-  @@index([rootId])
+    // Indexes
+    isDeleted Boolean @default(false)
+
+    @@index([artifactId])
+    @@index([authorId])
+    @@index([replyToId])
+    @@index([rootId])
 }
 
-  model Activity {
-    id            String          @id @default(cuid())
-    type          ActivityType
-    referenceId   String
-    createdAt     DateTime        @default(now()) @map(name: "created_at")
-    updatedAt     DateTime        @updatedAt @map(name: "updated_at")
+enum ActivityType {
+    artifact
+    heart
+    followed
+    followed_back
+    reply
+}
+
+model Activity {
+    id          String       @id @default(cuid())
+    type        ActivityType
+    referenceId String
+    createdAt   DateTime     @default(now()) @map(name: "created_at")
+    updatedAt   DateTime     @updatedAt @map(name: "updated_at")
 
     // Polymorphic relations
-    artifact      Artifact?      @relation("ActivityArtifact", fields: [referenceId], references: [id], map: "activity_artifact_id")
-    heart         Heart?         @relation("ActivityHeart",    fields: [referenceId], references: [id], map: "activity_heart_id")
-    follow        Follows?       @relation("ActivityFollow",  fields: [referenceId], references: [id], map: "activity_follow_id")
-    reply         Reply?         @relation("ActivityReply",   fields: [referenceId], references: [id], map: "activity_reply_id")
+    artifact Artifact? @relation("ActivityArtifact", fields: [referenceId], references: [id], map: "activity_artifact_id")
+    heart    Heart?    @relation("ActivityHeart", fields: [referenceId], references: [id], map: "activity_heart_id")
+    follow   Follows?  @relation("ActivityFollow", fields: [referenceId], references: [id], map: "activity_follow_id")
+    reply    Reply?    @relation("ActivityReply", fields: [referenceId], references: [id], map: "activity_reply_id")
 
-    isDeleted     Boolean         @default(false) @map(name: "is_deleted")
+    isDeleted     Boolean        @default(false) @map(name: "is_deleted")
     notifications Notification[]
 
     @@index([referenceId])
-  }
-
-enum ActivityType {
-  artifact
-  heart
-  followed
-  followed_back
-  reply
 }
 
 model Notification {
-  id              String   @id @default(cuid())
-  recipient       User     @relation(fields: [recipientId], references: [id])
-  recipientId     String
-  activity        Activity @relation(fields: [activityId], references: [id])
-  activityId      String
+    id          String   @id @default(cuid())
+    recipient   User     @relation(fields: [recipientId], references: [id])
+    recipientId String
+    activity    Activity @relation(fields: [activityId], references: [id])
+    activityId  String
 
-  key             String?
-  isDeleted       Boolean  @default(false) @map(name: "is_deleted")
-  isRead          Boolean  @default(false) @map(name: "is_read")
-  createdAt       DateTime @default(now()) @map(name: "created_at")
-  updatedAt       DateTime @updatedAt @map(name: "updated_at")
+    key       String?
+    isDeleted Boolean  @default(false) @map(name: "is_deleted")
+    isRead    Boolean  @default(false) @map(name: "is_read")
+    createdAt DateTime @default(now()) @map(name: "created_at")
+    updatedAt DateTime @updatedAt @map(name: "updated_at")
 
-
-  @@index([recipientId])
-  @@index([activityId])
+    @@index([recipientId])
+    @@index([activityId])
 }
 
-
 enum FlagType {
-  artifact
-  reply
+    artifact
+    reply
 }
 
 model Flag {
-  id          String   @id @default(cuid())
-  flaggedById String
-  referenceId String
-  type        FlagType
-  resolved    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+    id          String   @id @default(cuid())
+    flaggedById String
+    referenceId String
+    type        FlagType
+    resolved    Boolean  @default(false)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
 
-  flaggedBy   User     @relation(fields: [flaggedById], references: [id])
+    flaggedBy User @relation(fields: [flaggedById], references: [id])
 
-  artifact    Artifact? @relation("FlaggedArtifact", fields: [referenceId], references: [id], map: "flagged_artifact_id")
-  reply      Reply?    @relation("FlaggedReply", fields: [referenceId], references: [id], map: "flagged_reply_id")
+    artifact Artifact? @relation("FlaggedArtifact", fields: [referenceId], references: [id], map: "flagged_artifact_id")
+    reply    Reply?    @relation("FlaggedReply", fields: [referenceId], references: [id], map: "flagged_reply_id")
 
-  @@index([flaggedById])
-  @@index([referenceId])
+    @@index([flaggedById])
+    @@index([referenceId])
 }
