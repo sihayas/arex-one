@@ -132,17 +132,3 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
     </div>
   );
 };
-
-// const apiUrl = artifact.heartedByUser
-//   ? "/api/heart/delete/artifact"
-//   : "/api/heart/post/artifact";
-
-// const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-//   artifact.heartedByUser,
-//   artifact._count.hearts,
-//   apiUrl,
-//   "artifactId",
-//   artifact.id,
-//   artifact.author.id,
-//   user?.id,
-// );

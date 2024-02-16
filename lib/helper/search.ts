@@ -8,9 +8,7 @@ const GetSearchResults = (searchQuery: string) => {
   const { data, isInitialLoading, isFetching, error } = useQuery(
     ["albums", searchQuery],
     () =>
-      fetch(`/api/search/get/results?query=${searchQuery}`).then((res) =>
-        res.json(),
-      ),
+      fetch(`/api/search/get/?query=${searchQuery}`).then((res) => res.json()),
     {
       enabled: !selectedFormSound && !!inputValue && activeAction === "none",
       retry: false,

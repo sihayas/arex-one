@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { fetchOrCacheActivities } from "@/pages/api/caches/activity";
+import { fetchOrCacheActivities } from "@/pages/api/cache/activity";
 import { Activity, ActivityType } from "@/types/dbTypes";
 import axios from "axios";
 import { AlbumData, SongData } from "@/types/appleTypes";

@@ -189,20 +189,3 @@ export const Artifact = () => {
 };
 
 export default Artifact;
-
-// const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-//   artifactExtended.heartedByUser,
-//   artifactExtended._count.hearts,
-//   "/api/heart/post/artifact",
-//   "artifactId",
-//   artifactExtended.id,
-//   artifactExtended.authorId,
-//   user?.id,
-// );
-
-// <div className={`ml-3 flex flex-col`}>
-
-//   <p className={`line-clamp-1 text-base font-medium text-black`}>
-//     {sound.attributes.name}
-//   </p>
-// </div>

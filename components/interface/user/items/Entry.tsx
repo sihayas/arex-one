@@ -112,8 +112,8 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   );
 
   const apiUrl = artifact.heartedByUser
-    ? "/api/heart/delete/artifact"
-    : "/api/heart/post/artifact";
+    ? "/api/artifact/post/heart"
+    : "/api/artifact/post/heart";
 
   return (
     <motion.div

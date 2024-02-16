@@ -11,7 +11,7 @@ export const useArtifactsQuery = (
   useInfiniteQuery(
     ["artifacts", soundId, sort, range],
     async ({ pageParam = 1 }) => {
-      const url = `/api/album/get/artifacts`;
+      const url = `/api/sound/get`;
       const { data } = await axios.get(url, {
         params: { soundId, page: pageParam, sort, userId, range, limit: 12 },
       });

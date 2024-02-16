@@ -74,8 +74,8 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const apiUrl = artifact.heartedByUser
-    ? "/api/heart/delete/artifact"
-    : "/api/heart/post/artifact";
+    ? "/api/artifact/delete/heart"
+    : "/api/artifact/post/heart";
 
   const sound = artifact.appleData;
 

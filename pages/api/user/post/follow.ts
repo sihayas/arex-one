@@ -4,7 +4,7 @@ import { createFollowActivity } from "@/pages/api/middleware/createActivity";
 import { createNotification } from "@/pages/api/middleware/createNotification";
 import { ActivityType } from "@/types/dbTypes";
 import { setCache } from "@/lib/global/redis";
-import { fetchOrCacheUser } from "@/pages/api/caches/user";
+import { fetchOrCacheUser } from "@/pages/api/cache/user";
 import { createKey } from "@/pages/api/middleware/createKey";
 
 async function updateExistingFollow(existingFollow: any) {

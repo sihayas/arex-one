@@ -34,8 +34,8 @@ export default function RootReply({ reply, index }: ReplyProps) {
   }, [reply, setReplyTarget, activePage.artifact]);
 
   const url = reply.heartedByUser
-    ? "/api/heart/delete/reply"
-    : "/api/heart/post/reply";
+    ? "/api/reply/delete/heart"
+    : "/api/reply/post/heart";
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     reply.heartedByUser,

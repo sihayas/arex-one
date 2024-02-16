@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { fetchOrCacheActivities } from "@/pages/api/caches/activity";
+import { fetchOrCacheActivities } from "@/pages/api/cache/activity";
 import client from "@/lib/global/redis";
 
 export default async function handle(

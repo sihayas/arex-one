@@ -80,7 +80,7 @@ export const attachSoundData = async (activityData: Activity[]) => {
 
   // Fetch album and track data
   const idTypes = { albums: albumIds, songs: songIds };
-  const response = await axios.get(`/api/caches/sounds`, {
+  const response = await axios.get(`/api/cache/sounds`, {
     params: { idTypes: JSON.stringify(idTypes) },
   });
   const { albums, songs } = response.data;

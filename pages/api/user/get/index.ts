@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
-import { Artifact, Essential } from "@/types/dbTypes";
-import { fetchAndCacheSoundsByType } from "@/pages/api/caches/sound";
-import { fetchAndCacheSoundsByTypes } from "@/pages/api/caches/sounds";
-import { fetchOrCacheUser } from "@/pages/api/caches/user";
+import { Essential } from "@/types/dbTypes";
+import { fetchAndCacheSoundsByType } from "@/pages/api/cache/sound";
+import { fetchOrCacheUser } from "@/pages/api/cache/user";
 
 async function enrichEssentialsWithAlbumData(essentials: Essential[]) {
   if (essentials.length === 0) {
