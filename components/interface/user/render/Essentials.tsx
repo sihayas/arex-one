@@ -1,48 +1,47 @@
 import React, { Fragment } from "react";
 import { Essential } from "@/types/dbTypes";
-import { Art } from "@/components/global/Art";
+import Image from "next/image";
+import { useSound } from "@/hooks/usePage";
+import { AlbumData } from "@/types/appleTypes";
 
 interface EssentialsProps {
   essentials: Essential[];
 }
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
+  const { handleSelectSound } = useSound();
+
+  const handleSoundClick = (sound: AlbumData) => {
+    handleSelectSound(sound);
+  };
+
   return (
-    <div className={`flex w-max items-center -space-x-8 p-8`}>
+    <div className={`ml-auto flex flex-col w-full h-full items-end -space-y-4`}>
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
-        const color = sound.attributes.artwork.bgColor;
+        const artwork = MusicKit.formatArtworkURL(
+          sound.attributes.artwork,
+          128 * 2.5,
+          128 * 2.5,
+        );
 
-        let style = {
-          backgroundColor: `#${color}`,
-          width: `144px`,
-          height: `144px`,
-          position: "absolute",
-        };
-        if (i === 0) {
-          //@ts-ignore
-          style = { ...style, top: "88px", left: "32px" };
-        } else if (i === 1) {
-          //@ts-ignore
-          style = { ...style, top: "128px", right: "140px" };
-        } else if (i === 2) {
-          //@ts-ignore
-          style = { ...style, top: "32px", right: "32px", rotate: "2deg" };
-        }
-        const rotationClass = i === 0 ? "-rotate-3" : i === 2 ? "rotate-3" : "";
+        const rotationClass =
+          i === 0 ? "rotate-3" : i === 2 ? "rotate-3" : "-rotate-3";
 
         return (
           <Fragment key={`essential-${i}`}>
-            <Art
-              size={128}
-              containerClass={`rounded-3xl shadow-shadowKitHigh outline outline-silver outline-1 ${rotationClass} ${
-                i === 1 ? "translate-y-[88px] z-10" : ""
+            <Image
+              className={`rounded-3xl shadow-shadowKitHigh outline outline-silver outline-1 cursor-pointer ${rotationClass} ${
+                i === 1 ? "-translate-x-[88px] z-10" : ""
               }`}
-              sound={sound}
+              onClick={() => handleSoundClick(sound)}
+              src={artwork}
+              alt={`${sound.attributes.name} by ${sound.attributes.artistName} - artwork`}
+              quality={100}
+              width={112}
+              height={112}
+              draggable={false}
             />
-
-            {/* @ts-ignore */}
-            {/* <motion.div style={style} className="-z-20" /> */}
           </Fragment>
         );
       })}

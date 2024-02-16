@@ -35,55 +35,47 @@ const User = () => {
 
   return (
     <>
-      <div className={`flex flex-col w-full p-8`}>
-        <div className="flex items-center gap-4">
-          <Avatar
-            className="rounded-max border-silver min-h-[64px] min-w-[64px] border"
-            imageSrc={userData.image}
-            altText={`avatar`}
-            width={64}
-            height={64}
-            user={userData}
-          />
-          <p className={`text-gray2 text-xl font-semibold  tracking-tighter`}>
-            {userData.username}
-          </p>
-        </div>
-        <div className="flex ml-20 gap-[29px] ">
-          <div className={`flex flex-col`}>
-            <p className="text-gray2 text-base font-medium tracking-tighter">
-              Sounds
-            </p>
-            <p className="text-gray2 text-base font-bold tracking-tighter">
-              42
+      <div className="flex w-full gap-4 p-8 h-full">
+        <Avatar
+          className="rounded-max h-[64px] w-[64px] shadow-shadowKitHigh"
+          imageSrc={userData.image}
+          altText={`avatar`}
+          width={64}
+          height={64}
+          user={userData}
+        />
+
+        <div className={`flex flex-col`}>
+          <div className={`flex items-center h-16`}>
+            <p
+              className={`text-gray2 text-xl font-semibold  tracking-tighter `}
+            >
+              {userData.username}
             </p>
           </div>
 
-          <div className={`flex flex-col`}>
-            <p className="text-gray2 text-base font-medium tracking-tighter">
-              Entries
-            </p>
-            <p className="text-gray2 text-base font-bold tracking-tighter">
-              {userData._count.artifact}
-            </p>
-          </div>
+          <div className={`flex gap-[29px]`}>
+            <div className={`flex flex-col`}>
+              <p className="text-gray2 text-xs uppercase font-medium tracking-tighter">
+                Sounds
+              </p>
+              <p className="text-gray2 text-base font-bold tracking-tighter">
+                42
+              </p>
+            </div>
 
-          <div className={`flex flex-col`}>
-            <p className="text-gray2 text-base font-medium tracking-tighter">
-              Links
-            </p>
-            <p className="text-gray2 text-base font-bold tracking-tighter">
-              {userData._count.followedBy}
-            </p>
+            <div className={`flex flex-col`}>
+              <p className="text-gray2 text-xs uppercase font-medium tracking-tighter">
+                Entries
+              </p>
+              <p className="text-gray2 text-base font-bold tracking-tighter">
+                {userData._count.artifact}
+              </p>
+            </div>
           </div>
         </div>
-        {/* <Essentials essentials={userData.essentials} /> */}
 
-        <div className="flex w-full items-center justify-between">
-          <div className="shadow-shadowKitLow flex items-center justify-center rounded-full bg-white p-2 opacity-0">
-            <SettingsIcon />
-          </div>
-        </div>
+        <Essentials essentials={userData.essentials} />
       </div>
 
       <Entries userId={user.id} />

@@ -7,7 +7,6 @@ import Avatar from "@/components/global/Avatar";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 
-import { MaskCardBottomOutlined } from "@/components/icons";
 import { Art } from "@/components/global/Art";
 import { useArtifact } from "@/hooks/usePage";
 
@@ -102,12 +101,6 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             </div>
           </motion.div>
         </motion.div>
-
-        <div
-          className={`cloud-shadow absolute bottom-0 right-0 h-[432px] w-[304px]`}
-        >
-          <MaskCardBottomOutlined />
-        </div>
       </motion.div>
 
       <motion.div

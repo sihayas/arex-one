@@ -6,6 +6,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { getStarComponent } from "@/components/index/items/Entry";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
+import { Interaction } from "@/components/global/Interaction";
 
 interface UserProps {
   artifact: ArtifactExtended;
@@ -47,18 +48,17 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   const isEven = index % 2 === 0;
   const rotate = isEven ? -2 : 2;
 
-  const scale = useSpring(
-    useTransform(scrollY, [0, 24], [0.84, 1]),
-    springConfig,
-  );
-
   // First card translations
   const xZero = useSpring(
-    useTransform(scrollY, [0, 24], [112, 0]),
+    useTransform(scrollY, [0, 24], [-48, 0]),
     springConfig,
   );
   const yZero = useSpring(
-    useTransform(scrollY, [0, 24], [-36, 0]),
+    useTransform(scrollY, [0, 24], [-64, 0]),
+    springConfig,
+  );
+  const scaleZero = useSpring(
+    useTransform(scrollY, [0, 24], [0.74, 1]),
     springConfig,
   );
   const rotateZero = useSpring(
@@ -68,26 +68,34 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
 
   // Second card translations
   const xOne = useSpring(
-    useTransform(scrollY, [0, 24], [-32, 0]),
+    useTransform(scrollY, [0, 24], [-190, 0]),
     springConfig,
   );
   const yOne = useSpring(
-    useTransform(scrollY, [0, 24], [-420, 0]),
+    useTransform(scrollY, [0, 24], [-472, 0]),
+    springConfig,
+  );
+  const scaleOne = useSpring(
+    useTransform(scrollY, [0, 24], [0.63, 1]),
     springConfig,
   );
   const rotateOne = useSpring(
-    useTransform(scrollY, [0, 24], [-12, rotate]),
+    useTransform(scrollY, [0, 24], [6, rotate]),
     springConfig,
   );
 
   // Third card translations
-  const xTwo = useSpring(useTransform(scrollY, [0, 24], [48, 0]), springConfig);
+  const xTwo = useSpring(useTransform(scrollY, [0, 24], [76, 0]), springConfig);
   const yTwo = useSpring(
-    useTransform(scrollY, [0, 24], [-760, 0]),
+    useTransform(scrollY, [0, 24], [-880, 0]),
+    springConfig,
+  );
+  const scaleTwo = useSpring(
+    useTransform(scrollY, [0, 24], [0.52, 1]),
     springConfig,
   );
   const rotateTwo = useSpring(
-    useTransform(scrollY, [0, 24], [-19, rotate]),
+    useTransform(scrollY, [0, 24], [12, rotate]),
     springConfig,
   );
 
@@ -97,7 +105,6 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
 
   const name = sound.attributes.name;
   const artistName = sound.attributes.artistName;
-  const color = sound.attributes.artwork.bgColor;
   const artwork = MusicKit.formatArtworkURL(
     sound.attributes.artwork,
     304 * 2.5,
@@ -113,7 +120,14 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
       style={{
         y: index === 0 ? yZero : index === 1 ? yOne : index === 2 ? yTwo : 0,
         x: index === 0 ? xZero : index === 1 ? xOne : index === 2 ? xTwo : 0,
-        scale: index < 4 ? scale : 1,
+        scale:
+          index === 0
+            ? scaleZero
+            : index === 1
+            ? scaleOne
+            : index === 2
+            ? scaleTwo
+            : 1,
         zIndex: 10 - index,
         rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : rotateTwo,
       }}
@@ -232,6 +246,8 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           </div>
         </Tilt>
       </div>
+
+      <Interaction artifact={artifact} />
     </motion.div>
   );
 };

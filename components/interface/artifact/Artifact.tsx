@@ -1,12 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
 import useHandleHeartClick from "@/hooks/useHeart";
 import Avatar from "@/components/global/Avatar";
@@ -16,13 +10,8 @@ import { ArtifactExtended } from "@/types/globalTypes";
 
 import { getStarComponent } from "@/components/index/items/Entry";
 import { Art } from "@/components/global/Art";
-
-const artworkConfig = {
-  type: "spring",
-  stiffness: 357,
-  damping: 60,
-  mass: 2,
-};
+import { AlbumData, SongData } from "@/types/appleTypes";
+import Image from "next/image";
 
 export const Artifact = () => {
   const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
@@ -37,25 +26,6 @@ export const Artifact = () => {
     pages[pages.length - 1].isOpen = latest >= 1;
   });
 
-  const borderRadius = useSpring(useTransform(scrollY, [0, 1], [0, 20]), {
-    stiffness: 400,
-    damping: 40,
-  });
-
-  const scale = useSpring(
-    useTransform(scrollY, [0, 1], [1, 0.625]),
-    artworkConfig,
-  );
-
-  const rotate = useSpring(
-    useTransform(scrollY, [0, 1], [0, -3]),
-    artworkConfig,
-  );
-
-  const x = useSpring(useTransform(scrollY, [0, 1], [0, 32]), artworkConfig);
-
-  const y = useSpring(useTransform(scrollY, [0, 1], [0, 32]), artworkConfig);
-
   const artifactExtended = useMemo(
     () => activePage.artifact?.artifact as ArtifactExtended,
     [activePage],
@@ -65,7 +35,21 @@ export const Artifact = () => {
 
   // If opening from a notification, load the chain
   const chainId = activePage.artifact?.replyTo;
-  const sound = artifactExtended.appleData;
+
+  const album = artifactExtended.appleData as AlbumData;
+  const song = artifactExtended.appleData as SongData;
+
+  const sound = album ? album : song;
+
+  const artwork = MusicKit.formatArtworkURL(
+    sound.attributes.artwork,
+    304 * 2.5,
+    304 * 2.5,
+  );
+
+  const handleSoundClick = () => {
+    handleSelectSound(sound);
+  };
 
   // Scroll to top on mount
   useEffect(() => {
@@ -74,14 +58,19 @@ export const Artifact = () => {
     }
   }, []);
 
-  if (!user) return;
+  console.log(sound);
 
   return artifactType === "entry" ? (
     <>
-      <Art
-        size={304}
-        containerClass="min-w-[304px] min-h-[304px] rounded-[18px] shadow-shadowKitHigh mt-8"
-        sound={sound}
+      <Image
+        className="min-w-[304px] min-h-[304px] rounded-[18px] shadow-shadowKitHigh mt-8 border border-silver cursor-pointer"
+        onClick={handleSoundClick}
+        src={artwork}
+        alt={`${sound.attributes.name} by ${sound.attributes.artistName} - artwork`}
+        quality={100}
+        width={304}
+        height={304}
+        draggable={false}
       />
 
       {/* Attribution and Rating */}
@@ -122,13 +111,13 @@ export const Artifact = () => {
       {chainId && (
         <div className={`-ml-8 flex flex-col-reverse pr-8`}>
           <p className={`text-sm`}>highlighted chain</p>
-          <Chain replyId={chainId} userId={user.id} />
+          <Chain replyId={chainId} userId={user!.id} />
         </div>
       )}
 
       {/* Chains */}
       <div className={`min-h-full min-w-full px-8 pb-96`}>
-        <Replies artifactId={artifactExtended.id} userId={user.id} />
+        <Replies artifactId={artifactExtended.id} userId={user!.id} />
       </div>
     </>
   ) : (
@@ -185,13 +174,13 @@ export const Artifact = () => {
       {chainId && (
         <div className={`-ml-8 flex flex-col-reverse pr-8`}>
           <p className={`text-sm`}>highlighted chain</p>
-          <Chain replyId={chainId} userId={user.id} />
+          <Chain replyId={chainId} userId={user!.id} />
         </div>
       )}
 
       {/* Chains */}
       <div className={`min-h-full min-w-full px-8 pb-96`}>
-        <Replies artifactId={artifactExtended.id} userId={user.id} />
+        <Replies artifactId={artifactExtended.id} userId={user!.id} />
       </div>
     </>
   );

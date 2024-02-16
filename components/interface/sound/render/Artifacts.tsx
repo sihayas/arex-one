@@ -81,7 +81,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
             className={`p-8 pb-4`}
           >
             <div
-              className={`outline-silver relative ml-auto flex max-w-[448px] flex-col gap-2.5 rounded-full bg-[#F4F4F4] px-6 pb-4 pt-[18px] outline outline-1`}
+              className={`outline-silver relative ml-auto flex max-w-[448px] flex-col gap-2.5 rounded-full bg-white px-6 pb-4 pt-[18px] outline outline-1`}
             >
               <div
                 className={`rounded-max shadow-shadowKitMedium absolute -left-3 -top-3 flex items-center justify-center bg-white p-3`}
@@ -90,7 +90,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
               </div>
               {/* Content */}
               <div
-                className={`text-gray line-clamp-6 w-full cursor-pointer break-words text-center text-base font-medium`}
+                className={`text-black line-clamp-6 w-full cursor-pointer break-words text-base`}
               >
                 {activity.artifact.content?.text}
               </div>

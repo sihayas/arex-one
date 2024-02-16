@@ -32,7 +32,7 @@ const Entries = ({ userId }: { userId: string }) => {
   });
 
   return (
-    <div className={`z-0 flex w-full flex-col -space-y-4 p-10`}>
+    <div className={`z-0 flex w-full flex-col -space-y-4 p-10 -mt-[242px]`}>
       {activities.map((activity, index) => {
         if (!activity.artifact) return null;
         const artifact = activity.artifact as ArtifactExtended;
