@@ -79,6 +79,16 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
 
   const sound = artifact.appleData;
 
+  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+    artifact.heartedByUser,
+    artifact._count.hearts,
+    apiUrl,
+    "artifactId",
+    artifact.id,
+    artifact.author.id,
+    user?.id,
+  );
+
   if (!sound) return;
 
   const name = sound.attributes.name;
@@ -88,16 +98,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     sound.attributes.artwork,
     304 * 2.5,
     304 * 2.5,
-  );
-
-  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    artifact.heartedByUser,
-    artifact._count.hearts,
-    apiUrl,
-    "artifactId",
-    artifact.id,
-    artifact.author.id,
-    user?.id,
   );
 
   return (
