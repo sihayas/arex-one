@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { createArtifactActivity } from "@/pages/api/middleware/createActivity";
-import { fetchSoundsByType } from "@/lib/global/musicKit";
-import { setCache } from "@/lib/global/redis";
+import client, { setCache } from "@/lib/global/redis";
 import { ArtifactType, SoundType } from "@prisma/client";
 
 export default async function handle(
@@ -16,23 +15,38 @@ export default async function handle(
   const { rating, loved, text, userId, sound } = req.body;
   const appleId = sound.id;
   const type = sound.type;
+  const isAlbum = type === "albums";
   const isWisp = rating === 0 || type === "songs";
 
+  // If sound is of type songs, the album is in relationships object
+  const album = type === "songs" ? sound.relationships.albums.data[0] : sound;
+
   try {
-    // @ts-ignore
     const existingSound = await prisma.sound.findUnique({
       where: { appleId },
     });
-    let newArtifact;
-    // sound holds the song
 
-    // Create the sound if it doesn't exist
+    // Create the sound in our DB if it doesn't exist
     if (!existingSound) {
-      const fetchedData = await fetchSoundsByType(type, [appleId]);
-      const album = fetchedData[0];
-
-      // Initiate the sound in the database
-      if (type === "songs") {
+      if (isAlbum) {
+        await prisma.sound.create({
+          data: {
+            appleId: album.id,
+            type: SoundType.albums,
+            attributes: {
+              create: {
+                name: album.attributes.name,
+                artistName: album.attributes.artistName,
+                releaseDate: album.attributes.releaseDate,
+              },
+            },
+            ...(!isWisp && {
+              ratings_count: 1,
+              ratings_sum: rating,
+            }),
+          },
+        });
+      } else {
         // Create album with song if it doesn't exist or Update
         await prisma.sound.upsert({
           where: { appleId: album.id, type: SoundType.albums },
@@ -41,7 +55,6 @@ export default async function handle(
               create: {
                 appleId: sound.id,
                 type: SoundType.songs,
-                rating: 0,
                 attributes: {
                   create: {
                     name: sound.attributes.albumName,
@@ -56,7 +69,6 @@ export default async function handle(
           create: {
             appleId: album.id,
             type: SoundType.albums,
-            rating: 0,
             attributes: {
               create: {
                 name: album.attributes.name,
@@ -68,7 +80,6 @@ export default async function handle(
               create: {
                 appleId: sound.id,
                 type: SoundType.songs,
-                rating: 0,
                 attributes: {
                   create: {
                     name: sound.attributes.albumName,
@@ -81,39 +92,28 @@ export default async function handle(
             },
           },
         });
-
-        // Cache album data and song -> album id
-        const albumKey = `sound:albums:${album.id}:data`;
-        const songKey = `sound:songs:${appleId}:albumId`;
-        const songData = `sound:songs:${sound.id}:data`;
-
-        await setCache(albumKey, album, 3600);
-        await setCache(songKey, album.id, 3600);
-        await setCache(songData, sound, 3600);
-      } else {
-        const key = `sound:${type}:${appleId}:data`;
-        await setCache(key, album, 3600);
-        await prisma.sound.create({
+        // Cache song data
+        await setCache(`sound:songs:${sound.id}:data`, sound, 3600);
+      }
+    } else {
+      if (isAlbum && !isWisp) {
+        await prisma.sound.update({
+          where: { appleId },
           data: {
-            appleId: album.id,
-            type: SoundType.albums,
-            rating: 0,
-            attributes: {
-              create: {
-                name: album.attributes.name,
-                artistName: album.attributes.artistName,
-                releaseDate: album.attributes.releaseDate,
-              },
-            },
+            ratings_count: existingSound.ratings_count + 1,
+            ratings_sum: existingSound.ratings_sum + rating,
           },
         });
       }
     }
 
-    // If sound exists ->
-    // If is wisp (sound is a song/not an album) or rating for an album is 0 ->
+    await setCache(`sound:albums:${appleId}:data`, album, 3600);
+
+    let artifact;
+
+    // Sound exists/created, continue ->
     if (isWisp) {
-      newArtifact = await prisma.artifact.create({
+      artifact = await prisma.artifact.create({
         data: {
           type: ArtifactType.wisp,
           author: { connect: { id: userId } },
@@ -122,7 +122,7 @@ export default async function handle(
         },
       });
     } else {
-      newArtifact = await prisma.artifact.create({
+      artifact = await prisma.artifact.create({
         data: {
           type: ArtifactType.entry,
           author: { connect: { id: userId } },
@@ -130,11 +130,14 @@ export default async function handle(
           content: { create: { text, rating, loved, replay: false } },
         },
       });
+
+      // If album, store in averageQueue8
+      await client.sadd("averageQueue", appleId);
     }
 
-    await createArtifactActivity(newArtifact.id);
+    await createArtifactActivity(artifact.id);
 
-    res.status(201).json({ newArtifact });
+    res.status(201).json({ artifact });
   } catch (error) {
     console.error("Failed to create review:", error);
     res.status(500).json({ error: "Failed to create review." });

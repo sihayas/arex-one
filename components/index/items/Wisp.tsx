@@ -94,7 +94,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             {sound.attributes.artistName}
           </div>
           <div
-            className={`line-clamp-1 text-end text-base text-black font-semibold`}
+            className={`line-clamp-1 text-end text-base font-semibold text-black`}
           >
             {sound.attributes.name}
           </div>
