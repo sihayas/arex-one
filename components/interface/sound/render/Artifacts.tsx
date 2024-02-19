@@ -38,20 +38,21 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
 
   const { target } = GetDimensions(activePage.name as PageName);
 
-  const activities = data ? data.pages.flatMap((page) => page.data) : [];
+  const artifacts = data
+    ? data.pages.flatMap((page) => page.data.map((item: any) => item.artifact))
+    : [];
 
   const handleEndReached = () => {
     if (hasNextPage) {
       fetchNextPage()
-        .then(() => {
-          // Handle successful fetch
-        })
+        .then(() => {})
         .catch((error) => {
-          // Handle any errors that occur during fetch
           console.error("Error fetching next page:", error);
         });
     }
   };
+
+  if (!artifacts) return null;
 
   return (
     <div className={`mask mt-1 h-max w-full snap-start`}>
@@ -60,12 +61,12 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
         ref={ref}
         className={`scrollbar-none`}
         style={{ height: target.height }}
-        data={activities}
+        data={artifacts}
         overscan={200}
         restoreStateFrom={state.current}
         computeItemKey={(key: number) => `item-${key.toString()}`}
         endReached={handleEndReached}
-        itemContent={(index, activity) => (
+        itemContent={(index, artifact) => (
           <div
             onClick={() => {
               ref.current?.getState((snapshot) => {
@@ -75,7 +76,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
                 };
               });
               handleSelectArtifact({
-                ...activity.artifact,
+                ...artifact,
                 appleData: activePage.sound?.sound,
               });
             }}
@@ -87,28 +88,28 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
               <div
                 className={`rounded-max shadow-shadowKitMedium absolute -left-3 -top-3 flex items-center justify-center bg-white p-3`}
               >
-                {getStarComponent(activity.artifact.content!.rating!)}
+                {getStarComponent(artifact.content!.rating!)}
               </div>
               {/* Content */}
               <div
-                className={`text-black line-clamp-6 w-full cursor-pointer break-words text-base`}
+                className={`line-clamp-6 w-full cursor-pointer break-words text-base text-black`}
               >
-                {activity.artifact.content?.text}
+                {artifact.content?.text}
               </div>
 
               <div className={`-mx-2 flex items-center gap-2`}>
                 <Avatar
                   className={`border-silver border`}
-                  imageSrc={activity.artifact.author.image}
-                  altText={`${activity.artifact.author.username}'s avatar`}
+                  imageSrc={artifact.author.image}
+                  altText={`${artifact.author.username}'s avatar`}
                   width={32}
                   height={32}
-                  user={activity.artifact.author}
+                  user={artifact.author}
                 />
                 <div
                   className={`text-base font-semibold leading-[10px] text-black`}
                 >
-                  {activity.artifact.author.username}
+                  {artifact.author.username}
                 </div>
               </div>
             </div>

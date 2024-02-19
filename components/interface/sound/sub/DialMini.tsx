@@ -1,12 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  OneStar,
-  TwoStar,
-  ThreeStar,
-  FourStar,
-  FiveStar,
-} from "@/components/icons";
+
 
 type DialMiniProps = {
   ratings: number[];

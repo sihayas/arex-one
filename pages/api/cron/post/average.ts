@@ -23,7 +23,7 @@ export default async function handler(
       });
 
       const M = globalStats._avg.avg_rating || 0;
-      const C = 100;
+      const C = 50;
 
       // Process each sound ID
       for (const appleId of appleIdsToUpdate) {

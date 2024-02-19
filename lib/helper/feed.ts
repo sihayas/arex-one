@@ -58,10 +58,10 @@ export function extractArtifact(activity: Activity) {
   return activity.type === ActivityType.Artifact
     ? activity.artifact
     : activity.type === ActivityType.ReplyType
-    ? activity.reply?.artifact
-    : activity.type === ActivityType.Heart
-    ? activity.heart?.artifact || activity.heart?.reply?.artifact
-    : null;
+      ? activity.reply?.artifact
+      : activity.type === ActivityType.Heart
+        ? activity.heart?.artifact || activity.heart?.reply?.artifact
+        : null;
 }
 
 // Utility function to attach album and song data to activities
@@ -95,9 +95,9 @@ export const attachSoundData = async (activityData: Activity[]) => {
     if (artifact) {
       const { type, appleId } = artifact.sound;
       if (type === "albums")
-        artifact.appleData = albumMap.get(appleId) as AlbumData;
+        artifact.sound.appleData = albumMap.get(appleId) as AlbumData;
       else if (type === "songs")
-        artifact.appleData = songMap.get(appleId) as SongData;
+        artifact.sound.appleData = songMap.get(appleId) as SongData;
     }
   });
 

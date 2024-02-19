@@ -2,7 +2,6 @@ import React, { useEffect, useMemo } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
-import useHandleHeartClick from "@/hooks/useHeart";
 import Avatar from "@/components/global/Avatar";
 import Replies from "@/components/interface/artifact/render/Replies";
 import Chain from "@/components/interface/artifact/render/Chain";
@@ -35,19 +34,18 @@ export const Artifact = () => {
   // If opening from a notification, load the chain
   const chainId = activePage.artifact?.replyTo;
 
-  const album = artifactExtended.appleData as AlbumData;
-  const song = artifactExtended.appleData as SongData;
-
-  const sound = album ? album : song;
+  const album = artifactExtended.sound.appleData as AlbumData;
+  const song = artifactExtended.sound.appleData as SongData;
+  const appleData = album ? album : song;
 
   const artwork = MusicKit.formatArtworkURL(
-    sound.attributes.artwork,
+    appleData.attributes.artwork,
     304 * 2.5,
     304 * 2.5,
   );
 
   const handleSoundClick = () => {
-    handleSelectSound(sound);
+    handleSelectSound(artifactExtended.sound);
   };
 
   // Scroll to top on mount
@@ -60,10 +58,10 @@ export const Artifact = () => {
   return artifactType === "entry" ? (
     <>
       <Image
-        className="min-w-[304px] min-h-[304px] rounded-[18px] shadow-shadowKitHigh mt-8 border border-silver cursor-pointer"
+        className="shadow-shadowKitHigh border-silver mt-8 min-h-[304px] min-w-[304px] cursor-pointer rounded-[18px] border"
         onClick={handleSoundClick}
         src={artwork}
-        alt={`${sound.attributes.name} by ${sound.attributes.artistName} - artwork`}
+        alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
         quality={100}
         width={304}
         height={304}
@@ -91,10 +89,10 @@ export const Artifact = () => {
             {getStarComponent(artifactExtended.content!.rating!)}
           </div>
           <p className={`line-clamp-1 text-sm text-black`}>
-            {sound.attributes.name}
+            {appleData.attributes.name}
           </p>
           <p className={`text-gray2 line-clamp-1 text-sm`}>
-            {sound.attributes.artistName}
+            {appleData.attributes.artistName}
           </p>
         </div>
       </div>
@@ -108,22 +106,22 @@ export const Artifact = () => {
       {chainId && (
         <div className={`-ml-8 flex flex-col-reverse pr-8`}>
           <p className={`text-sm`}>highlighted chain</p>
-          <Chain replyId={chainId} userId={user!.id} />
+          {/* <Chain replyId={chainId} userId={user!.id} /> */}
         </div>
       )}
 
       {/* Chains */}
       <div className={`min-h-full min-w-full px-8 pb-96`}>
-        <Replies artifactId={artifactExtended.id} userId={user!.id} />
+        {/* <Replies artifactId={artifactExtended.id} userId={user!.id} /> */}
       </div>
     </>
   ) : (
     <>
       <Image
-        className="min-w-[128px] min-h-[128px] rounded-[18px] shadow-shadowKitHigh m-8 mb-0 ml-auto"
+        className="shadow-shadowKitHigh m-8 mb-0 ml-auto min-h-[128px] min-w-[128px] rounded-[18px]"
         onClick={handleSoundClick}
         src={artwork}
-        alt={`${sound.attributes.name} by ${sound.attributes.artistName} - artwork`}
+        alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
         quality={100}
         width={128}
         height={128}
@@ -132,13 +130,13 @@ export const Artifact = () => {
 
       <div className="flex w-full flex-col items-end p-8 pb-[18px] pt-2.5">
         <p className={`text-gray2 line-clamp-1 text-end text-sm`}>
-          {sound.attributes.artistName}
+          {appleData.attributes.artistName}
         </p>
 
         <p
           className={`text-gray2 line-clamp-1 text-end text-base font-semibold`}
         >
-          {sound.attributes.name}
+          {appleData.attributes.name}
         </p>
       </div>
 
@@ -176,13 +174,13 @@ export const Artifact = () => {
       {chainId && (
         <div className={`-ml-8 flex flex-col-reverse pr-8`}>
           <p className={`text-sm`}>highlighted chain</p>
-          <Chain replyId={chainId} userId={user!.id} />
+          {/* <Chain replyId={chainId} userId={user!.id} /> */}
         </div>
       )}
 
       {/* Chains */}
       <div className={`min-h-full min-w-full px-8 pb-96`}>
-        <Replies artifactId={artifactExtended.id} userId={user!.id} />
+        {/* <Replies artifactId={artifactExtended.id} userId={user!.id} /> */}
       </div>
     </>
   );

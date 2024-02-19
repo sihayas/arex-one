@@ -5,8 +5,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { UserType, Artifact } from "@/types/dbTypes";
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { UserType, Artifact, Sound } from "@/types/dbTypes";
 
 import { Session } from "lucia";
 import {
@@ -18,11 +17,10 @@ import { StateSnapshot } from "react-virtuoso";
 export type Page = {
   key: string;
   name: string;
-  color: string;
   scrollPosition: number;
   user?: UserType;
   sound?: {
-    sound: SongData | AlbumData;
+    sound: Sound;
     snapshot?: {
       // To retain scroll position
       state: StateSnapshot;

@@ -23,7 +23,7 @@ import Tilt from "react-parallax-tilt";
 import Image from "next/image";
 import { Interaction } from "@/components/global/Interaction";
 
-interface NewAProps {
+interface EntryProps {
   artifact: ArtifactExtended;
 }
 
@@ -68,34 +68,16 @@ export const getStarComponent = (
   return StarComponent ? <StarComponent width={width} height={height} /> : null;
 };
 
-export const Entry: React.FC<NewAProps> = ({ artifact }) => {
-  const { user } = useInterfaceContext();
-
+export const Entry: React.FC<EntryProps> = ({ artifact }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
-  const apiUrl = artifact.heartedByUser
-    ? "/api/artifact/delete/heart"
-    : "/api/artifact/post/heart";
+  const appleData = artifact.sound.appleData;
 
-  const sound = artifact.appleData;
-
-  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    artifact.heartedByUser,
-    artifact._count.hearts,
-    apiUrl,
-    "artifactId",
-    artifact.id,
-    artifact.author.id,
-    user?.id,
-  );
-
-  if (!sound) return;
-
-  const name = sound.attributes.name;
-  const artistName = sound.attributes.artistName;
-  const color = sound.attributes.artwork.bgColor;
+  const name = appleData.attributes.name;
+  const artistName = appleData.attributes.artistName;
+  const color = appleData.attributes.artwork.bgColor;
   const url = MusicKit.formatArtworkURL(
-    sound.attributes.artwork,
+    appleData.attributes.artwork,
     304 * 2.5,
     304 * 2.5,
   );
@@ -166,12 +148,12 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
 
               <div className={`flex translate-y-[1px] flex-col`}>
                 <p className={`line-clamp-1 text-sm text-black`}>
-                  {sound.attributes.artistName}
+                  {artistName}
                 </p>
                 <p
                   className={`line-clamp-1 text-base font-semibold text-black`}
                 >
-                  {sound.attributes.name}
+                  {name}
                 </p>
               </div>
             </div>
@@ -226,14 +208,6 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
         </Tilt>
       </div>
 
-      <Heart
-        handleHeartClick={handleHeartClick}
-        hearted={hearted}
-        className="absolute -top-[26px] left-[46px] z-10 -m-12 p-12 mix-blend-multiply"
-        heartCount={heartCount}
-        replyCount={artifact._count.replies}
-      />
-
       {/* Interactions */}
       <Interaction artifact={artifact} />
 
@@ -256,3 +230,25 @@ export const Entry: React.FC<NewAProps> = ({ artifact }) => {
     </motion.div>
   );
 };
+
+// const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+//   artifact.heartedByUser,
+//   artifact._count.hearts,
+//   apiUrl,
+//   "artifactId",
+//   artifact.id,
+//   artifact.author.id,
+//   user?.id,
+// );
+
+// <Heart
+//   handleHeartClick={handleHeartClick}
+//   hearted={hearted}
+//   className="absolute -top-[26px] left-[46px] z-10 -m-12 p-12 mix-blend-multiply"
+//   heartCount={heartCount}
+//   replyCount={artifact._count.replies}
+// />
+
+// const apiUrl = artifact.heartedByUser
+//   ? "/api/artifact/delete/heart"
+//   : "/api/artifact/post/heart";

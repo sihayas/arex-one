@@ -21,26 +21,19 @@ type ArtifactData = {
   author: AuthorData;
 };
 
-type ActivityData = {
-  id: string;
-  artifact?: ArtifactData | null;
-};
-
-async function fetchOrCacheActivities(ids: string[]): Promise<ActivityData[]> {
-  const activityData: Record<string, ActivityData> = {};
+async function fetchOrCacheArtifacts(ids: string[]): Promise<ArtifactData[]> {
+  const artifactData: Record<string, ArtifactData> = {};
   const idsToFetch: string[] = [];
 
   // Initiate cache lookups in parallel for all activity IDs
-  const cachePromises = ids.map((id) =>
-    getCache(`activity:${id}:artifact:data`),
-  );
+  const cachePromises = ids.map((id) => getCache(`artifact:${id}:data`));
   const cacheResults = await Promise.allSettled(cachePromises);
 
   // Process cache results and identify IDs not in cache
   cacheResults.forEach((result, index) => {
     const id = ids[index];
     if (result.status === "fulfilled" && result.value) {
-      activityData[id] = result.value;
+      artifactData[id] = result.value;
     } else {
       idsToFetch.push(id);
     }
@@ -48,37 +41,32 @@ async function fetchOrCacheActivities(ids: string[]): Promise<ActivityData[]> {
 
   // Fetch data from database for IDs not found in cache
   if (idsToFetch.length > 0) {
-    const data = await prisma.activity.findMany({
+    const data = await prisma.artifact.findMany({
       where: { id: { in: idsToFetch }, isDeleted: false },
       select: {
         id: true,
-        artifact: {
-          select: {
-            id: true,
-            author: { select: { id: true, username: true, image: true } },
-            type: true,
-            content: {
-              select: { text: true, rating: true, loved: true, replay: true },
-            },
-            sound: { select: { appleId: true, type: true, id: true } },
-          },
+        author: { select: { id: true, username: true, image: true } },
+        type: true,
+        content: {
+          select: { text: true, rating: true, loved: true, replay: true },
         },
+        sound: { select: { appleId: true, type: true } },
       },
     });
 
-    const enrichArtifactData = data.map((activity) => {
+    const enrichArtifactData = data.map((artifact) => {
       // Set the activity to its corresponding ID in the activityData object
       // const id = idsToFetch[data.indexOf(activity)];
-      activityData[activity.id] = activity;
+      artifactData[artifact.id] = artifact;
       // Cache the activity data
-      return setCache(`activity:${activity.id}:artifact:data`, activity, 3600);
+      return setCache(`artifact:${artifact.id}:data`, artifact, 3600);
     });
 
     await Promise.all(enrichArtifactData);
   }
 
   // Compile and return results
-  return ids.map((id) => activityData[id]);
+  return ids.map((id) => artifactData[id]);
 }
 
-export { fetchOrCacheActivities };
+export { fetchOrCacheArtifacts };

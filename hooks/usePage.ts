@@ -1,9 +1,8 @@
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { useSoundContext } from "@/context/SoundContext";
-import { AlbumData, SongData } from "@/types/appleTypes";
 
-import { Artifact, UserType } from "@/types/dbTypes";
+import { Artifact, Sound, UserType } from "@/types/dbTypes";
 
 export const useArtifact = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
@@ -22,7 +21,6 @@ export const useArtifact = () => {
           artifact,
           replyTo: replyId,
         },
-        color: artifact.appleData.attributes.artwork.bgColor,
         isOpen: false,
       },
     ]);
@@ -45,7 +43,6 @@ export const useUser = () => {
         name: "user",
         user: author,
         scrollPosition: 0,
-        color: "CCC",
         isOpen: false,
       },
     ]);
@@ -59,7 +56,7 @@ export const useSound = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
   const { setSelectedSound } = useSoundContext();
 
-  const handleSelectSound = (sound: AlbumData | SongData) => {
+  const handleSelectSound = (sound: Sound) => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
@@ -68,11 +65,10 @@ export const useSound = () => {
         name: "sound",
         sound: { sound },
         scrollPosition: 0,
-        color: sound.attributes.artwork.bgColor,
         isOpen: false,
       },
     ]);
-    setSelectedSound(sound);
+    setSelectedSound(sound.appleData);
     window.history.pushState(null, "");
   };
 

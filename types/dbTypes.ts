@@ -83,6 +83,8 @@ export interface Sound {
   metrics: Metrics[];
   createdAt: Date;
   updatedAt: Date;
+
+  appleData: AlbumData | SongData;
 }
 
 export interface Attributes {

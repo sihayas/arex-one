@@ -1,5 +1,16 @@
 import axios from "axios";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+
+export const useSoundInfoQuery = (soundId: string) =>
+  useQuery(
+    ["sound", soundId],
+    async () => {
+      const url = `/api/sound/get`;
+      const { data } = await axios.get(url, { params: { soundId } });
+      return data.data;
+    },
+    { enabled: !!soundId, refetchOnWindowFocus: false },
+  );
 
 // Fetch entries on sound page
 export const useArtifactsQuery = (
@@ -11,17 +22,17 @@ export const useArtifactsQuery = (
   useInfiniteQuery(
     ["artifacts", soundId, sort, range],
     async ({ pageParam = 1 }) => {
-      const url = `/api/sound/get`;
+      const url = `/api/sound/get/artifacts`;
       const { data } = await axios.get(url, {
         params: { soundId, page: pageParam, sort, userId, range, limit: 12 },
       });
-      const { activities, pagination } = data.data;
+      const { artifacts, pagination } = data.data;
 
-      if (!activities || !pagination) {
+      if (!artifacts || !pagination) {
         throw new Error("Unexpected server response structure");
       }
 
-      return { data: activities, pagination };
+      return { data: artifacts, pagination };
     },
     {
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,

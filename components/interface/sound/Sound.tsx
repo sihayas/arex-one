@@ -18,6 +18,7 @@ import DialMini from "@/components/interface/sound/sub/DialMini";
 import { createPortal } from "react-dom";
 import Sort from "@/components/interface/sound/sub/Sort";
 import { GetDimensions } from "@/components/interface/Interface";
+import { useSoundInfoQuery } from "@/lib/helper/sound";
 
 const scaleConfig = { damping: 16, stiffness: 122 };
 const xConfig = { damping: 20, stiffness: 160 };
@@ -31,11 +32,14 @@ const Sound = () => {
   const { base, target } = GetDimensions(activePage.name as PageName);
   const isOpen = activePage.isOpen;
   const sound = activePage.sound!.sound;
+  const appleData = sound.appleData;
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [range, setRange] = useState<number | null>(null);
 
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
+
+  const { data } = useSoundInfoQuery(sound.id);
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -49,12 +53,10 @@ const Sound = () => {
   const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
     setSortOrder(newSortOrder);
   };
-
   const handleRangeChange = (newRange: number | null) => {
     setRange(newRange);
   };
 
-  // Art Transformations
   const artWidth = -base.width / 2;
   const xArt = useSpring(
     useTransform(scrollY, [0, 1], [artWidth + 32, -328]),
@@ -73,13 +75,11 @@ const Sound = () => {
     useTransform(scrollY, [0, 1], [1, 0.407]),
     scaleConfig,
   );
-
   const borderRad = useSpring(
     useTransform(scrollY, [0, 1], [24, 48]),
     generalConfig,
   );
 
-  // Dial Transformations
   const xDial = useSpring(useTransform(scrollY, [0, 1], [-32, 32]), xConfig);
   const yDial = useSpring(useTransform(scrollY, [0, 1], [32, -32]), yConfig);
   const scaleDial = useSpring(
@@ -97,17 +97,18 @@ const Sound = () => {
     generalConfig,
   );
 
-  const artwork = MusicKit.formatArtworkURL(sound.attributes.artwork, 800, 800);
-  const name = sound.attributes.name;
-  const artist = sound.attributes.artistName;
+  const artwork = MusicKit.formatArtworkURL(
+    appleData.attributes.artwork,
+    800,
+    800,
+  );
 
-  const albumId =
-    sound.type === "albums"
-      ? sound.id
-      : (sound as SongData).relationships.albums.data[0].id;
+  const appleAlbumId =
+    appleData.type === "albums"
+      ? appleData.id
+      : (appleData as SongData).relationships.albums.data[0].id;
 
   const snap = activePage.isOpen ? "" : "snap-start";
-
   useEffect(() => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
   }, []);
@@ -117,7 +118,7 @@ const Sound = () => {
       {/* Art Ghost Placeholder */}
       <div className={`min-h-[496px] min-w-[496px] ${snap}`} />
 
-      <Artifacts soundId={albumId} sortOrder={sortOrder} range={range} />
+      <Artifacts soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
 
       {/* Art */}
       <motion.div
@@ -139,7 +140,7 @@ const Sound = () => {
       >
         <Image
           src={artwork}
-          alt={`${name}'s artwork`}
+          alt={`${appleData.attributes.name}'s artwork`}
           width={432}
           height={432}
           quality={100}
@@ -155,11 +156,13 @@ const Sound = () => {
         }}
         className={`center-x shadow-shadowKitHigh absolute bottom-8 z-10 flex origin-bottom flex-col items-center justify-center -space-y-[1px] rounded-2xl bg-white px-4 pb-[13px] pt-[10px]`}
       >
-        <p className={`text-center text-base font-bold text-black`}>{name}</p>
+        <p className={`text-center text-base font-bold text-black`}>
+          {appleData.attributes.name}
+        </p>
         <p
           className={`text-gray2 line-clamp-1 text-center text-sm font-medium`}
         >
-          {artist}
+          {appleData.attributes.artistName}
         </p>
       </motion.div>
 
