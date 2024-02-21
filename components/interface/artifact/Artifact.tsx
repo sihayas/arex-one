@@ -12,7 +12,7 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 import Image from "next/image";
 
 export const Artifact = () => {
-  const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
+  const { activePage, scrollContainerRef, pages } = useInterfaceContext();
   const { handleSelectSound } = useSound();
 
   const { scrollY } = useScroll({
@@ -24,11 +24,7 @@ export const Artifact = () => {
     pages[pages.length - 1].isOpen = latest >= 1;
   });
 
-  const artifactExtended = useMemo(
-    () => activePage.artifact?.artifact as ArtifactExtended,
-    [activePage],
-  );
-
+  const artifactExtended = activePage.artifact?.artifact as ArtifactExtended;
   const artifactType = artifactExtended.type;
 
   // If opening from a notification, load the chain
@@ -45,7 +41,7 @@ export const Artifact = () => {
   );
 
   const handleSoundClick = () => {
-    handleSelectSound(artifactExtended.sound);
+    handleSelectSound(artifactExtended.sound.appleData);
   };
 
   // Scroll to top on mount

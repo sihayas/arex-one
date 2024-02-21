@@ -5,12 +5,9 @@ import { toast } from "sonner";
 import { createEntry } from "@/lib/helper/artifact";
 import { useSoundContext } from "@/context/SoundContext";
 
-// import Dial from "./search/Dial";
-
 import RatingDial from "@/components/interface/nav/items/search/RatingDial";
 import { useNavContext } from "@/context/NavContext";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { AlbumData, SongData } from "@/types/appleTypes";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
 
@@ -26,6 +23,8 @@ const Form = () => {
 
   const userId = user!.id;
 
+  const appleData = selectedFormSound;
+
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement> | null) => {
       event?.preventDefault();
@@ -38,7 +37,7 @@ const Form = () => {
           rating,
           loved,
           userId,
-          sound: sound as AlbumData | SongData,
+          sound: appleData,
         };
       };
 
@@ -101,11 +100,13 @@ const Form = () => {
     setRating(rating);
   };
 
-  const artwork = selectedFormSound.attributes.artwork.url
-    .replace("{w}", "780")
-    .replace("{h}", "780");
-  const name = selectedFormSound.attributes.name;
-  const artist = selectedFormSound.attributes.artistName;
+  const artwork = MusicKit.formatArtworkURL(
+    appleData.attributes.artwork,
+    322 * 2.5,
+    322 * 2.5,
+  );
+  const name = appleData.attributes.name;
+  const artist = appleData.attributes.artistName;
 
   // handle sound clikc and prevent default
   const handleSoundClick = (event: React.MouseEvent<HTMLImageElement>) => {

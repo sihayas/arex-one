@@ -1,15 +1,15 @@
 import axios from "axios";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-export const useSoundInfoQuery = (soundId: string) =>
+export const useSoundInfoQuery = (appleId: string) =>
   useQuery(
-    ["sound", soundId],
+    ["sound", appleId],
     async () => {
       const url = `/api/sound/get`;
-      const { data } = await axios.get(url, { params: { soundId } });
+      const { data } = await axios.get(url, { params: { appleId } });
       return data.data;
     },
-    { enabled: !!soundId, refetchOnWindowFocus: false },
+    { enabled: !!appleId, refetchOnWindowFocus: false },
   );
 
 // Fetch entries on sound page

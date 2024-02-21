@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 type DialProps = {
   ratings: number[];
   average: number;
+  count: number;
 };
 
 const dialVariants = {
@@ -15,8 +16,7 @@ const dialVariants = {
   },
 };
 
-const Dial: React.FC<DialProps> = ({ ratings, average }) => {
-  const total = ratings.reduce((sum, count) => sum + count, 0).toLocaleString();
+const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
   const strokeWidth = 8;
   const dotRadius = 1.5;
   const radius = 116;
@@ -141,11 +141,11 @@ const Dial: React.FC<DialProps> = ({ ratings, average }) => {
       </motion.svg>
 
       <motion.div
-        className={`absolute center-x center-y flex flex-col items-center justify-center text-center gap-2 text-white`}
+        className={`center-x center-y absolute flex flex-col items-center justify-center gap-2 text-center text-white`}
       >
-        <p className={`text-[64px] font-serif leading-[43px]`}>{average}</p>
-        <hr className={`w-4 border-[1px] border-white rounded-full`} />
-        <p className={`text-[15px] leading-[11px] font-bold`}>{total}</p>
+        <p className={`font-serif text-[64px] leading-[43px]`}>{average}</p>
+        <hr className={`w-4 rounded-full border-[1px] border-white`} />
+        <p className={`text-[15px] font-bold leading-[11px]`}>{count}</p>
       </motion.div>
     </motion.div>
   );

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 
-interface RatingsDistribution {
+interface Ratings {
   "0.5-1": number;
   "1.5-2": number;
   "2.5-3": number;
@@ -22,16 +22,16 @@ export default async function handle(
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const soundId =
-    typeof req.query.soundId === "string" ? req.query.soundId : null;
+  const appleId =
+    typeof req.query.appleId === "string" ? req.query.appleId : null;
 
-  if (!soundId) {
+  if (!appleId) {
     return res.status(400).json({ error: "Sound ID is required." });
   }
 
   try {
     const soundInfo: SoundInfo | null = await prisma.sound.findUnique({
-      where: { id: soundId },
+      where: { appleId },
       select: {
         avg_rating: true,
         ratings_count: true,
@@ -42,23 +42,25 @@ export default async function handle(
       return res.status(404).json({ error: "Sound not found." });
     }
 
-    const ratingsDistributionResult: RatingsDistribution[] =
-      await prisma.$queryRaw<RatingsDistribution[]>(
-        `SELECT
-         SUM(CASE WHEN content->>'rating' BETWEEN 0.5 AND 1 THEN 1 ELSE 0 END) AS "0.5-1",
-         SUM(CASE WHEN content->>'rating' BETWEEN 1.5 AND 2 THEN 1 ELSE 0 END) AS "1.5-2",
-         SUM(CASE WHEN content->>'rating' BETWEEN 2.5 AND 3 THEN 1 ELSE 0 END) AS "2.5-3",
-         SUM(CASE WHEN content->>'rating' BETWEEN 3.5 AND 4 THEN 1 ELSE 0 END) AS "3.5-4",
-         SUM(CASE WHEN content->>'rating' BETWEEN 4.5 AND 5 THEN 1 ELSE 0 END) AS "4.5-5"
-       FROM Artifact
-       WHERE soundId = ? AND type = 'entry'`,
-        soundId,
-      );
+    const ratingsDistributionResult: Ratings[] = await prisma.$queryRaw<
+      Ratings[]
+    >`
+      SELECT
+        SUM(CASE WHEN c.rating BETWEEN 0.5 AND 1 THEN 1 ELSE 0 END) AS "0.5-1",
+        SUM(CASE WHEN c.rating BETWEEN 1.5 AND 2 THEN 1 ELSE 0 END) AS "1.5-2",
+        SUM(CASE WHEN c.rating BETWEEN 2.5 AND 3 THEN 1 ELSE 0 END) AS "2.5-3",
+        SUM(CASE WHEN c.rating BETWEEN 3.5 AND 4 THEN 1 ELSE 0 END) AS "3.5-4",
+        SUM(CASE WHEN c.rating BETWEEN 4.5 AND 5 THEN 1 ELSE 0 END) AS "4.5-5"
+      FROM Artifact a
+      JOIN Content c ON a.id = c.artifactId
+      JOIN Sound s ON a.soundId = s.id
+      WHERE s.appleId = ${appleId} AND a.type = 'entry'
+    `;
 
     // Since the raw query returns an array, access the first element directly
-    const ratingsDistribution = ratingsDistributionResult[0];
+    const ratings = ratingsDistributionResult[0];
 
-    if (!ratingsDistribution) {
+    if (!ratings) {
       return res
         .status(404)
         .json({ error: "No rating distribution data found." });
@@ -68,7 +70,7 @@ export default async function handle(
       data: {
         avg_rating: soundInfo.avg_rating,
         ratings_count: soundInfo.ratings_count,
-        ratingsDistribution,
+        ratings,
       },
     });
   } catch (error) {

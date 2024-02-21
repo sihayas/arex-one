@@ -1,14 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 // Form can either be for a song or an album. Interface sound can only be an
 // album obviously
 
 export type SoundContextType = {
-  selectedSound: AlbumData | SongData | null;
-  setSelectedSound: React.Dispatch<
-    React.SetStateAction<AlbumData | SongData | null>
-  >;
   selectedFormSound: AlbumData | SongData | null;
   setSelectedFormSound: React.Dispatch<
     React.SetStateAction<AlbumData | SongData | null>
@@ -40,10 +36,6 @@ export const useSoundContext = (): SoundContextType => {
 export const SoundDetailsProvider = ({
   children,
 }: SoundContextProviderProps) => {
-  const [selectedSound, setSelectedSound] = useState<
-    AlbumData | SongData | null
-  >(null);
-
   const [selectedFormSound, setSelectedFormSound] = useState<
     AlbumData | SongData | null
   >(null);
@@ -68,8 +60,6 @@ export const SoundDetailsProvider = ({
   return (
     <SoundContext.Provider
       value={{
-        selectedSound,
-        setSelectedSound,
         selectedFormSound,
         setSelectedFormSound,
         prevEssentialId,

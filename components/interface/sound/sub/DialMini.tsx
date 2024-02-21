@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-
 type DialMiniProps = {
   ratings: number[];
+  average: number;
   onRangeChange: (newRange: number | null) => void;
 };
 
@@ -53,7 +53,11 @@ const textVariants = {
   },
 };
 
-const DialMini: React.FC<DialMiniProps> = ({ ratings, onRangeChange }) => {
+const DialMini: React.FC<DialMiniProps> = ({
+  ratings,
+  onRangeChange,
+  average,
+}) => {
   const [isHovered, setIsHovered] = React.useState(false);
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
@@ -203,7 +207,7 @@ const DialMini: React.FC<DialMiniProps> = ({ ratings, onRangeChange }) => {
         {hoveredIndex !== null && (
           <motion.div
             key={hoveredIndex}
-            className={`absolute flex items-center justify-center text-center gap-2 pointer-events-none text-black text-base will-change-transform`}
+            className={`pointer-events-none absolute flex items-center justify-center gap-2 text-center text-base text-black will-change-transform font-bold`}
             variants={textVariants}
             initial={`initial`}
             animate={`animate`}
@@ -227,9 +231,9 @@ const DialMini: React.FC<DialMiniProps> = ({ ratings, onRangeChange }) => {
             animate={{ opacity: 1, scale: 4 }}
             exit={{ opacity: 0, scale: 0 }}
             transition={springTextConfig}
-            className={`absolute pointer-events-none flex flex-col items-center justify-center text-center gap-4 text-xl font-serif leading-[13px] text-black will-change-transform`}
+            className={`pointer-events-none absolute flex flex-col items-center justify-center gap-4 text-center font-serif text-xl leading-[13px] text-black will-change-transform`}
           >
-            3.8
+            {average}
           </motion.div>
         )}
       </AnimatePresence>

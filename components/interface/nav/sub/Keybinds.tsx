@@ -41,6 +41,7 @@ export const Keybinds = (
         value.substring(cursorPosition);
       handleInputTextChange(newValue);
     }
+
     //Submit reply with cmd/ctrl + enter
     else if (
       e.key === "Enter" &&
@@ -50,12 +51,13 @@ export const Keybinds = (
     ) {
       handleReplySubmit();
     }
+
     // Switch to album page from form
     else if (e.key === "Enter" && selectedFormSound && inputValue === "") {
       e.preventDefault();
       handleSelectSound(selectedFormSound);
       setSelectedFormSound(null);
-      inputRef?.current?.blur();
+      inputRef.current?.blur();
       window.history.pushState(null, "");
     }
 
@@ -70,7 +72,7 @@ export const Keybinds = (
       setReplyTarget(null);
       setInputValue(storedInputValue);
       setStoredInputValue("");
-      inputRef?.current?.focus();
+      inputRef.current?.focus();
     }
     // Prepare form if on sound page
     else if (
@@ -80,8 +82,8 @@ export const Keybinds = (
       !inputValue
     ) {
       e.preventDefault();
-      const sound = activePage.sound;
-      setSelectedFormSound(sound.sound);
+      const sound = activePage.sound.data;
+      setSelectedFormSound(sound);
     }
     // Prepare reply parent
     else if (

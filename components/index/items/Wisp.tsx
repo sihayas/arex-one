@@ -36,7 +36,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
   const { handleSelectArtifact } = useArtifact();
   const { handleSelectSound } = useSound();
 
-  const sound = artifact.appleData;
+  const sound = artifact.sound.appleData;
 
   const artwork = MusicKit.formatArtworkURL(
     sound.attributes.artwork,

@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { UserType, Artifact, Sound } from "@/types/dbTypes";
+import { UserType, Artifact } from "@/types/dbTypes";
 
 import { Session } from "lucia";
 import {
@@ -13,6 +13,7 @@ import {
   useNotificationsQuery,
 } from "@/lib/helper/user";
 import { StateSnapshot } from "react-virtuoso";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
 export type Page = {
   key: string;
@@ -20,10 +21,9 @@ export type Page = {
   scrollPosition: number;
   user?: UserType;
   sound?: {
-    sound: Sound;
+    data: AlbumData | SongData;
     snapshot?: {
-      // To retain scroll position
-      state: StateSnapshot;
+      state: StateSnapshot; // To retain scroll position
       key: number;
     };
   };

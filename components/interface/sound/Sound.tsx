@@ -27,19 +27,34 @@ const generalConfig = { damping: 36, stiffness: 400 };
 
 export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
+interface Ratings {
+  "0.5-1": string;
+  "1.5-2": string;
+  "2.5-3": string;
+  "3.5-4": string;
+  "4.5-5": string;
+}
+
 const Sound = () => {
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const { scrollContainerRef, activePage, pages } = useInterfaceContext();
-  const { base, target } = GetDimensions(activePage.name as PageName);
-  const isOpen = activePage.isOpen;
-  const sound = activePage.sound!.sound;
-  const appleData = sound.appleData;
+  const { base } = GetDimensions(activePage.name as PageName);
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [range, setRange] = useState<number | null>(null);
 
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
+  const [ratings, setRatings] = useState<number[]>([]);
 
-  const { data } = useSoundInfoQuery(sound.id);
+  const isOpen = activePage.isOpen;
+  const soundData = activePage.sound!.data;
+
+  const { data } = useSoundInfoQuery(soundData.id);
+
+  useEffect(() => {
+    if (data) {
+      setRatings(Object.values(data.ratings).map(Number));
+    }
+  }, [data]);
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -98,20 +113,22 @@ const Sound = () => {
   );
 
   const artwork = MusicKit.formatArtworkURL(
-    appleData.attributes.artwork,
+    soundData.attributes.artwork,
     800,
     800,
   );
 
   const appleAlbumId =
-    appleData.type === "albums"
-      ? appleData.id
-      : (appleData as SongData).relationships.albums.data[0].id;
+    soundData.type === "albums"
+      ? soundData.id
+      : (soundData as SongData).relationships.albums.data[0].id;
 
   const snap = activePage.isOpen ? "" : "snap-start";
   useEffect(() => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
   }, []);
+
+  if (!data) return null;
 
   return (
     <>
@@ -140,7 +157,7 @@ const Sound = () => {
       >
         <Image
           src={artwork}
-          alt={`${appleData.attributes.name}'s artwork`}
+          alt={`${soundData.attributes.name}'s artwork`}
           width={432}
           height={432}
           quality={100}
@@ -157,12 +174,12 @@ const Sound = () => {
         className={`center-x shadow-shadowKitHigh absolute bottom-8 z-10 flex origin-bottom flex-col items-center justify-center -space-y-[1px] rounded-2xl bg-white px-4 pb-[13px] pt-[10px]`}
       >
         <p className={`text-center text-base font-bold text-black`}>
-          {appleData.attributes.name}
+          {soundData.attributes.name}
         </p>
         <p
           className={`text-gray2 line-clamp-1 text-center text-sm font-medium`}
         >
-          {appleData.attributes.artistName}
+          {soundData.attributes.artistName}
         </p>
       </motion.div>
 
@@ -191,7 +208,11 @@ const Sound = () => {
                 opacity: isOpen ? 0 : 1,
               }}
             >
-              <Dial ratings={[4, 8900, 2445, 500, 500]} average={3.8} />
+              <Dial
+                ratings={ratings}
+                average={data.avg_rating}
+                count={data.ratings_count}
+              />
             </motion.div>
 
             {/* Mini Dial */}
@@ -211,8 +232,9 @@ const Sound = () => {
               }}
             >
               <DialMini
-                ratings={[4, 8900, 2445, 500, 500]}
+                ratings={ratings}
                 onRangeChange={handleRangeChange}
+                average={data.avg_rating}
               />
             </motion.div>
           </>,

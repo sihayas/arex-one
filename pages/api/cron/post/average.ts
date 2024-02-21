@@ -35,7 +35,9 @@ export default async function handler(
           const bayesianAvg =
             (C * M + sound.ratings_sum) / (C + sound.ratings_count);
 
-          const regularAvg = sound.ratings_sum / sound.ratings_count;
+          const regularAvg = parseFloat(
+            (sound.ratings_sum / sound.ratings_count).toFixed(1),
+          );
 
           // Update the sound with the new Bayesian average
           await prisma.sound.update({
