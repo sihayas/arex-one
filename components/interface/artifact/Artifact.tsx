@@ -1,6 +1,11 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import {
+  animate,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+} from "framer-motion";
 import { useSound } from "@/hooks/usePage";
 import Avatar from "@/components/global/Avatar";
 import Replies from "@/components/interface/artifact/render/Replies";
@@ -10,6 +15,7 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { getStarComponent } from "@/components/index/items/Entry";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import Image from "next/image";
+import Tilt from "react-parallax-tilt";
 
 export const Artifact = () => {
   const { activePage, scrollContainerRef, pages } = useInterfaceContext();
@@ -25,8 +31,6 @@ export const Artifact = () => {
   });
 
   const artifactExtended = activePage.artifact?.artifact as ArtifactExtended;
-  const artifactType = artifactExtended.type;
-
   // If opening from a notification, load the chain
   const chainId = activePage.artifact?.replyTo;
 
@@ -44,6 +48,45 @@ export const Artifact = () => {
     handleSelectSound(artifactExtended.sound.appleData);
   };
 
+  const [tiltAngles, setTiltAngles] = useState({
+    tiltAngleX: 0,
+    tiltAngleY: 0,
+  });
+
+  const x = useSpring(0, { damping: 560, stiffness: 80 });
+  const y = useSpring(0, { damping: 560, stiffness: 80 });
+
+  // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
+  useEffect(() => {
+    const xControls = animate(x, [16, 16, -16, -16, 16], {
+      repeat: Infinity,
+      duration: 12,
+      ease: "easeOut",
+    });
+
+    const yControls = animate(y, [16, -16, -16, 16, 16], {
+      repeat: Infinity,
+      duration: 12,
+      ease: "easeOut",
+    });
+
+    const unsubscribeX = x.on("change", (latest) => {
+      setTiltAngles((prev) => ({ ...prev, tiltAngleX: latest }));
+    });
+
+    const unsubscribeY = y.on("change", (latest) => {
+      setTiltAngles((prev) => ({ ...prev, tiltAngleY: latest }));
+    });
+
+    return () => {
+      xControls.stop();
+      yControls.stop();
+
+      unsubscribeX();
+      unsubscribeY();
+    };
+  }, []);
+
   // Scroll to top on mount
   useEffect(() => {
     if (!activePage.isOpen && scrollContainerRef.current) {
@@ -51,135 +94,85 @@ export const Artifact = () => {
     }
   }, []);
 
-  return artifactType === "entry" ? (
+  return (
     <>
-      <Image
-        className="shadow-shadowKitHigh border-silver mt-8 min-h-[304px] min-w-[304px] cursor-pointer rounded-[18px] border"
-        onClick={handleSoundClick}
-        src={artwork}
-        alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
-        quality={100}
-        width={304}
-        height={304}
-        draggable={false}
-      />
-
-      {/* Attribution and Rating */}
-      <div
-        className={`relative flex w-full items-center gap-4 p-8 pb-[10px] pt-12`}
+      <Tilt
+        tiltAngleXManual={tiltAngles.tiltAngleX}
+        tiltAngleYManual={tiltAngles.tiltAngleY}
+        perspective={1000}
+        tiltMaxAngleX={8}
+        tiltMaxAngleY={8}
+        tiltReverse={true}
+        reset={true}
+        glareEnable={true}
+        glareMaxOpacity={0.45}
+        glareBorderRadius={"32px"}
+        transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
+        className={`transform-style-3d shadow-artifact relative mt-10 h-[454px] w-[432px] cursor-pointer rounded-[32px]`}
       >
-        <Avatar
-          className={`border-silver border`}
-          imageSrc={artifactExtended.author.image}
-          altText={`${artifactExtended.author.username}'s avatar`}
-          width={48}
-          height={48}
-          user={artifactExtended.author}
-        />
-        <p className="font-semibold text-black">
-          {artifactExtended.author.username}
-        </p>
+        <div
+          className={`relative h-[454px] w-[432px] overflow-hidden rounded-[24px] bg-white p-4`}
+        >
+          <Image
+            className="border-silver cursor-pointer rounded-xl border"
+            onClick={handleSoundClick}
+            src={artwork}
+            alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
+            quality={100}
+            width={208}
+            height={208}
+            draggable={false}
+          />
 
-        <div className="absolute left-16 top-8 flex items-center gap-2">
-          <div className="rounded-max z-10 bg-white p-2 outline outline-4 outline-[#F6F6F6]">
+          {/* Rating */}
+          <div className="mt-[14px] flex items-center gap-4">
             {getStarComponent(artifactExtended.content!.rating!)}
+
+            <div className={`flex flex-col`}>
+              <p className={`line-clamp-1 text-sm text-black`}>
+                {appleData.attributes.artistName}
+              </p>
+              <p className={`line-clamp-1 text-base font-semibold text-black`}>
+                {appleData.attributes.name}
+              </p>
+            </div>
           </div>
-          <p className={`line-clamp-1 text-sm text-black`}>
-            {appleData.attributes.name}
-          </p>
-          <p className={`text-gray2 line-clamp-1 text-sm`}>
-            {appleData.attributes.artistName}
-          </p>
-        </div>
-      </div>
 
-      {/* Content */}
-      <div className={`text-gray p-8 pt-0 text-base font-medium`}>
-        {artifactExtended.content?.text}
-      </div>
-
-      {/* If viewing a specific chain i.e. from notification */}
-      {chainId && (
-        <div className={`-ml-8 flex flex-col-reverse pr-8`}>
-          <p className={`text-sm`}>highlighted chain</p>
-          {/* <Chain replyId={chainId} userId={user!.id} /> */}
-        </div>
-      )}
-
-      {/* Chains */}
-      <div className={`min-h-full min-w-full px-8 pb-96`}>
-        {/* <Replies artifactId={artifactExtended.id} userId={user!.id} /> */}
-      </div>
-    </>
-  ) : (
-    <>
-      <Image
-        className="shadow-shadowKitHigh m-8 mb-0 ml-auto min-h-[128px] min-w-[128px] rounded-[18px]"
-        onClick={handleSoundClick}
-        src={artwork}
-        alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
-        quality={100}
-        width={128}
-        height={128}
-        draggable={false}
-      />
-
-      <div className="flex w-full flex-col items-end p-8 pb-[18px] pt-2.5">
-        <p className={`text-gray2 line-clamp-1 text-end text-sm`}>
-          {appleData.attributes.artistName}
-        </p>
-
-        <p
-          className={`text-gray2 line-clamp-1 text-end text-base font-semibold`}
-        >
-          {appleData.attributes.name}
-        </p>
-      </div>
-
-      <div className="cloud-shadow flex items-end gap-2 px-8 pb-8">
-        <Avatar
-          className={`border-silver border`}
-          imageSrc={artifactExtended.author.image}
-          altText={`${artifactExtended.author.username}'s avatar`}
-          width={48}
-          height={48}
-          user={artifactExtended.author}
-        />
-
-        <motion.div
-          className={`relative mb-3 w-fit overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
-        >
-          {/* Content  */}
-          <div className="`text-base line-clamp-[7] text-black">
+          {/* Content */}
+          <div className={`mt-[6px] text-base`}>
             {artifactExtended.content?.text}
           </div>
 
-          {/* Bubbles */}
-          <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
-            <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
-            />
-            <div
-              className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-white`}
-            />
+          <div
+            style={{
+              backgroundImage:
+                "linear-gradient(to top, rgb(255, 255, 255) 56.72%, transparent)",
+            }}
+            className="absolute bottom-0 left-0 flex h-[86px] w-full items-end p-4"
+          >
+            <div className={`flex items-center gap-2`}>
+              <Avatar
+                className={`border-silver border`}
+                imageSrc={artifactExtended.author.image}
+                altText={`${artifactExtended.author.username}'s avatar`}
+                width={32}
+                height={32}
+                user={artifactExtended.author}
+              />
+              <p className={`line-clamp-1 text-base font-medium text-black`}>
+                {artifactExtended.author.username}
+              </p>
+            </div>
           </div>
-        </motion.div>
-      </div>
-
-      {/* If viewing a specific chain i.e. from notification */}
-      {chainId && (
-        <div className={`-ml-8 flex flex-col-reverse pr-8`}>
-          <p className={`text-sm`}>highlighted chain</p>
-          {/* <Chain replyId={chainId} userId={user!.id} /> */}
         </div>
-      )}
-
-      {/* Chains */}
-      <div className={`min-h-full min-w-full px-8 pb-96`}>
-        {/* <Replies artifactId={artifactExtended.id} userId={user!.id} /> */}
-      </div>
+      </Tilt>
     </>
   );
 };
 
 export default Artifact;
+
+// Handler function to update tilt angles
+// const onMove = ({ tiltAngleX, tiltAngleY }: OnMoveParams) => {
+//   console.log("x", tiltAngleX, "y", tiltAngleY);
+// };

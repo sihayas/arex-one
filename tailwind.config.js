@@ -39,6 +39,9 @@ module.exports = {
         essentials:
           "0px 11px 24px 0px rgba(0, 0, 0, 0.10), 0px 43px 43px 0px rgba(0, 0, 0, 0.09), 0px 97px 58px 0px rgba(0, 0, 0, 0.05), 0px 173px 69px 0px rgba(0, 0, 0, 0.01), 0px 271px 76px 0px rgba(0, 0, 0, 0.00)",
         cardArt: "rgba(0, 0, 0, 0.04) 0px 3px 5px",
+        test: "0px 4px 20px 0px rgba(0, 0, 0, 0.25)",
+        artifact:
+          "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
       },
       borderRadius: {
         full: "32px",

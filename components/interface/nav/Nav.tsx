@@ -71,10 +71,8 @@ const Nav = () => {
       x: "-50%",
       left: "50%",
       width: 124,
-      boxShadow:
-        "0px 0px 0px 0px rgba(0,0,0,0.0), 0px 0px 0px 0px rgba(0,0,0,0.0)",
-      outline: "1px solid rgba(0,0,0,0.05)",
       height: 44,
+      backgroundColor: "#FFFFFF",
       transition: {
         type: "spring",
         damping: 24,
@@ -82,12 +80,12 @@ const Nav = () => {
       },
     },
     expanded: {
+      backgroundColor: "#F4F4F4A9",
+      outline: "1px solid rgba(0,0,0,0.05)",
       x: "-50%",
       left: "50%",
       width: isNotifications ? 320 : 384,
-      boxShadow:
-        "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
-      outline: "1px solid rgba(0,0,0,0.0)",
+
       height: !expandInput
         ? 44 // base
         : activeAction === "none" && inputValue
@@ -210,7 +208,7 @@ const Nav = () => {
         {/* Top / Content */}
         <motion.div
           ref={contentContainerRef}
-          className={`outline-silver relative -z-10 flex w-full flex-col items-end justify-end rounded-3xl bg-[#F4F4F4] outline outline-1`}
+          className={`relative -z-10 flex w-full flex-col items-end justify-end rounded-3xl`}
           variants={contentVariants}
           animate={expandInput ? "expanded" : "collapsed"}
         >
@@ -279,8 +277,8 @@ const Nav = () => {
                   className="border-silver border"
                   imageSrc={user.image}
                   altText={`${user.username}'s avatar`}
-                  width={28}
-                  height={28}
+                  width={32}
+                  height={32}
                   user={user}
                 />
               </motion.div>
@@ -376,12 +374,3 @@ const Nav = () => {
 
 export default Nav;
 
-{
-  /* Text Input */
-}
-// <div className={`relative flex w-fit items-center`}>
-//   {/* Input */}
-
-//   {/* Discover & */}
-
-// </div>

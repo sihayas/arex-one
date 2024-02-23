@@ -74,7 +74,7 @@ const DialMini: React.FC<DialMiniProps> = ({
   const viewBoxSize = radius * 2 + strokeWidth;
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
-  const colors = ["#000", "#000", "#000", "#000", "#000"];
+  const colors = ["#FFF", "#F20000", "#FFF639", "#7AFF00", "#0000FF"];
 
   // Account for excess stroke created by the linecap rounding
   const excessStroke = 40;
@@ -171,6 +171,7 @@ const DialMini: React.FC<DialMiniProps> = ({
                 }}
                 whileHover={{
                   strokeWidth: hoverStrokeWidth,
+                  stroke: colors[index % colors.length],
                   opacity: 1,
                 }}
                 cx={viewBoxSize / 2}
@@ -207,7 +208,7 @@ const DialMini: React.FC<DialMiniProps> = ({
         {hoveredIndex !== null && (
           <motion.div
             key={hoveredIndex}
-            className={`pointer-events-none absolute flex items-center justify-center gap-2 text-center text-base text-black will-change-transform font-bold`}
+            className={`pointer-events-none absolute flex items-center justify-center gap-2 text-center text-xl text-black will-change-transform font-bold`}
             variants={textVariants}
             initial={`initial`}
             animate={`animate`}

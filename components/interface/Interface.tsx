@@ -40,7 +40,7 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 720, height: maxHeight },
     },
     artifact: {
-      base: { width: 512, height: 728 },
+      base: { width: 512, height: 660 },
       target: { width: 512, height: maxHeight },
     },
   };
@@ -81,33 +81,35 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   // Animate portal visibility
   useEffect(() => {
     const animateParent = () => {
-      const animationConfig = {
-        x: "-50%",
-        y: "-50%",
-        opacity: isVisible ? 1 : 0,
-        scale: isVisible ? 1 : 0.97,
-        visibility: isVisible ? "visible" : "hidden",
-      };
-      const transitionConfig = {
-        scale: {
-          type: "spring" as const,
-          mass: 1,
-          stiffness: 180,
-          damping: 22,
-          delay: isVisible ? 0.15 : 0,
+      animateRoot(
+        rootScope.current,
+        {
+          x: "-50%",
+          y: "-50%",
+          opacity: isVisible ? 1 : 0,
+          scale: isVisible ? 1 : 0.97,
+          visibility: isVisible ? "visible" : "hidden",
         },
-        opacity: {
-          type: "spring" as const,
-          mass: 1,
-          stiffness: 180,
-          damping: 22,
-          delay: isVisible ? 0.15 : 0,
+        {
+          scale: {
+            type: "spring" as const,
+            mass: 1,
+            stiffness: 180,
+            damping: 22,
+            delay: isVisible ? 0.15 : 0,
+          },
+          opacity: {
+            type: "spring" as const,
+            mass: 1,
+            stiffness: 180,
+            damping: 22,
+            delay: isVisible ? 0.15 : 0,
+          },
+          visibility: {
+            delay: isVisible ? 0 : 0.15,
+          },
         },
-        visibility: {
-          delay: isVisible ? 0 : 0.15,
-        },
-      };
-      animateRoot(rootScope.current, animationConfig, transitionConfig);
+      );
     };
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
