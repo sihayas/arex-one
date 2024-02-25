@@ -16,6 +16,7 @@ import { getStarComponent } from "@/components/index/items/Entry";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
+import { StarIcon } from "@/components/icons";
 
 export const Artifact = () => {
   const { activePage, scrollContainerRef, pages } = useInterfaceContext();
@@ -53,20 +54,20 @@ export const Artifact = () => {
     tiltAngleY: 0,
   });
 
-  const x = useSpring(0, { damping: 560, stiffness: 80 });
-  const y = useSpring(0, { damping: 560, stiffness: 80 });
+  const x = useSpring(0, { damping: 400, stiffness: 80 });
+  const y = useSpring(0, { damping: 400, stiffness: 80 });
 
   // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
   useEffect(() => {
-    const xControls = animate(x, [16, 16, -16, -16, 16], {
+    const xControls = animate(x, [4, 4, -4, -4, 4], {
       repeat: Infinity,
-      duration: 12,
+      duration: 16,
       ease: "easeOut",
     });
 
-    const yControls = animate(y, [16, -16, -16, 16, 16], {
+    const yControls = animate(y, [4, -4, -4, 4, 4], {
       repeat: Infinity,
-      duration: 12,
+      duration: 16,
       ease: "easeOut",
     });
 
@@ -81,7 +82,6 @@ export const Artifact = () => {
     return () => {
       xControls.stop();
       yControls.stop();
-
       unsubscribeX();
       unsubscribeY();
     };
@@ -100,69 +100,64 @@ export const Artifact = () => {
         tiltAngleXManual={tiltAngles.tiltAngleX}
         tiltAngleYManual={tiltAngles.tiltAngleY}
         perspective={1000}
-        tiltMaxAngleX={8}
-        tiltMaxAngleY={8}
+        tiltMaxAngleX={6}
+        tiltMaxAngleY={6}
         tiltReverse={true}
         reset={true}
         glareEnable={true}
-        glareMaxOpacity={0.45}
+        glareMaxOpacity={0.25}
         glareBorderRadius={"32px"}
         transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
-        className={`transform-style-3d shadow-artifact relative mt-10 h-[454px] w-[432px] cursor-pointer rounded-[32px]`}
+        className={`transform-style-3d shadow-artifact relative mt-[56px] h-[560px] w-[400px] cursor-pointer overflow-hidden rounded-3xl bg-white p-6 flex flex-col`}
       >
-        <div
-          className={`relative h-[454px] w-[432px] overflow-hidden rounded-[24px] bg-white p-4`}
-        >
+        <div className="flex justify-between">
+          <StarIcon />
+
           <Image
-            className="border-silver cursor-pointer rounded-xl border"
+            className="border-silver cursor-pointer rounded-xl shadow-shadowKitHigh"
             onClick={handleSoundClick}
             src={artwork}
             alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
             quality={100}
-            width={208}
-            height={208}
+            width={304}
+            height={304}
             draggable={false}
           />
+        </div>
 
-          {/* Rating */}
-          <div className="mt-[14px] flex items-center gap-4">
-            {getStarComponent(artifactExtended.content!.rating!)}
+        <div className={`flex flex-col pt-5`}>
+          <p className={`line-clamp-1 text-sm text-gray2 font-medium`}>
+            {appleData.attributes.artistName}
+          </p>
+          <p className={`line-clamp-4 text-base font-semibold text-black`}>
+            {appleData.attributes.name}
+          </p>
+        </div>
 
-            <div className={`flex flex-col`}>
-              <p className={`line-clamp-1 text-sm text-black`}>
-                {appleData.attributes.artistName}
-              </p>
-              <p className={`line-clamp-1 text-base font-semibold text-black`}>
-                {appleData.attributes.name}
-              </p>
-            </div>
-          </div>
+        {/* Content */}
+        <p className={`line-clamp-4 text-base mt-auto mb-10`}>
+          {artifactExtended.content?.text}
+        </p>
 
-          {/* Content */}
-          <div className={`mt-[6px] text-base`}>
-            {artifactExtended.content?.text}
-          </div>
-
-          <div
-            style={{
-              backgroundImage:
-                "linear-gradient(to top, rgb(255, 255, 255) 56.72%, transparent)",
-            }}
-            className="absolute bottom-0 left-0 flex h-[86px] w-full items-end p-4"
-          >
-            <div className={`flex items-center gap-2`}>
-              <Avatar
-                className={`border-silver border`}
-                imageSrc={artifactExtended.author.image}
-                altText={`${artifactExtended.author.username}'s avatar`}
-                width={32}
-                height={32}
-                user={artifactExtended.author}
-              />
-              <p className={`line-clamp-1 text-base font-medium text-black`}>
-                {artifactExtended.author.username}
-              </p>
-            </div>
+        <div
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, rgba(255, 255, 255, 0), rgb(255, 255, 255) 70%)",
+          }}
+          className="absolute bottom-0 left-0 flex h-[80px] w-full items-end p-6"
+        >
+          <div className={`flex items-center gap-2`}>
+            <Avatar
+              className={`border-silver border`}
+              imageSrc={artifactExtended.author.image}
+              altText={`${artifactExtended.author.username}'s avatar`}
+              width={40}
+              height={40}
+              user={artifactExtended.author}
+            />
+            <p className={`line-clamp-1 text-base font-medium text-black`}>
+              {artifactExtended.author.username}
+            </p>
           </div>
         </div>
       </Tilt>
@@ -176,3 +171,5 @@ export default Artifact;
 // const onMove = ({ tiltAngleX, tiltAngleY }: OnMoveParams) => {
 //   console.log("x", tiltAngleX, "y", tiltAngleY);
 // };
+
+// {getStarComponent(artifactExtended.content!.rating!)}

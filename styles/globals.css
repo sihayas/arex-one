@@ -19,6 +19,7 @@
     font-style: normal;
     src: url("../public/fonts/EBGaramond12-Regular.ttf") format("truetype");
 }
+
 @font-face {
     font-family: "EB Garamond 12";
     font-style: italic;
@@ -74,9 +75,11 @@ body {
     position: relative;
     overflow: hidden;
 }
+
 textarea {
     caret-color: #999;
 }
+
 a {
     text-decoration: none;
 }
@@ -131,4 +134,15 @@ input {
     transform: rotateX(180deg) translateZ(1px);
     -webkit-transform: rotateX(180deg) translateZ(1px);
     -moz-transform: rotateX(180deg) translateZ(1px);
+}
+
+.inner-element {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    font-style: italic;
+    color: white;
+    transform: translateZ(60px);
 }

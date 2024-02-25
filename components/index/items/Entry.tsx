@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import useHandleHeartClick from "@/hooks/useHeart";
-
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
 import { ArtifactExtended } from "@/types/globalTypes";
@@ -14,6 +12,7 @@ import {
   HalfStar,
   OneHalfStar,
   OneStar,
+  StarIcon,
   ThreeHalfStar,
   ThreeStar,
   TwoHalfStar,
@@ -83,13 +82,13 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
   );
 
   return (
-    <motion.div className={`relative flex w-[356px] items-end gap-2.5`}>
+    <motion.div className={`relative flex w-[354px] items-end gap-2.5`}>
       <Avatar
-        className={`border-silver z-10 h-[42px] border`}
+        className={`border-silver z-10 border`}
         imageSrc={artifact.author.image}
         altText={`${artifact.author.username}'s avatar`}
-        width={42}
-        height={42}
+        width={40}
+        height={40}
         user={artifact.author}
       />
 
@@ -104,10 +103,10 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
         <Tilt
           flipVertically={isFlipped}
           perspective={1000}
-          tiltMaxAngleX={8}
-          tiltMaxAngleY={8}
+          tiltMaxAngleX={6}
+          tiltMaxAngleY={6}
           tiltReverse={true}
-          reset={false}
+          // reset={false}
           glareEnable={true}
           glareMaxOpacity={0.45}
           glareBorderRadius={"32px"}
@@ -144,15 +143,13 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               }}
               className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6"
             >
-              {getStarComponent(artifact.content!.rating!, 20, 20)}
+              <StarIcon />
 
               <div className={`flex translate-y-[1px] flex-col`}>
                 <p className={`line-clamp-1 text-sm text-black`}>
                   {artistName}
                 </p>
-                <p
-                  className={`line-clamp-1 text-base font-semibold text-black`}
-                >
+                <p className={`line-clamp-1 text-sm font-semibold text-black`}>
                   {name}
                 </p>
               </div>
@@ -165,43 +162,37 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               ...cardMask,
               transform: "rotateX(180deg)",
             }}
-            className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white p-6 pb-0"
+            className="backface-hidden absolute left-0 top-0 flex h-full  w-full cursor-pointer flex-col bg-white p-6 pb-0 "
           >
-            {/* Header */}
-            <div className={`flex w-full gap-2`}>
-              <div
-                style={{
-                  ...backArtMask,
-                }}
-                className={`relative h-[72px] w-[72px] flex-shrink-0`}
-              >
-                <Image
-                  src={url}
-                  alt={`${name} by ${artistName} - artwork`}
-                  quality={100}
-                  width={72}
-                  height={72}
-                  draggable={false}
-                />
-                <div className="rounded-max outline-silver absolute bottom-0 right-0 w-fit bg-white p-2.5">
+            <div
+              style={{
+                ...backArtMask,
+              }}
+              className={`relative h-[88px] w-[88px] flex-shrink-0`}
+            >
+              <Image
+                src={url}
+                alt={`${name} by ${artistName} - artwork`}
+                quality={100}
+                width={88}
+                height={88}
+                draggable={false}
+              />
+              {/* <div className="rounded-max outline-silver absolute bottom-0 right-0 w-fit bg-white p-2.5">
                   {getStarComponent(artifact.content!.rating!)}
-                </div>
-              </div>
-
-              <div className={`flex flex-col pt-2`}>
-                <p className={`text-gray2 text-sm font-medium`}>11.02.63</p>
-                <p className={`mt-auto line-clamp-1 text-sm text-black`}>
-                  {artistName}
-                </p>
-                <p
-                  className={`line-clamp-1 text-base font-semibold text-black`}
-                >
-                  {name}
-                </p>
-              </div>
+                </div> */}
             </div>
 
-            <p className={`line-clamp-[14] pt-2.5 text-base`}>
+            <div className={`flex flex-col pt-[9px]`}>
+              <p className={`mt-auto line-clamp-1 text-sm text-black`}>
+                {artistName}
+              </p>
+              <p className={`line-clamp-1 text-base font-semibold text-black`}>
+                {name}
+              </p>
+            </div>
+
+            <p className={`line-clamp-[11] pt-[9px] text-base`}>
               {artifact.content?.text}
             </p>
           </div>
