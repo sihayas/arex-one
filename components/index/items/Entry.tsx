@@ -35,6 +35,16 @@ const cardMask = {
   WebkitMaskRepeat: "no-repeat",
 };
 
+const backCardMask = {
+  maskImage: "url('/images/mask_card_top.svg')",
+  maskSize: "cover",
+  maskRepeat: "no-repeat",
+  WebkitMaskImage: "url('/images/mask_card_top.svg')",
+  WebkitMaskSize: "cover",
+  WebkitMaskRepeat: "no-repeat",
+  transform: "rotateX(180deg)",
+};
+
 const backArtMask = {
   maskImage: "url('/images/mask_art_card_back.svg')",
   maskSize: "cover",
@@ -112,7 +122,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
           glareBorderRadius={"32px"}
           scale={1.02}
           transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
-          className={`transform-style-3d relative h-[432px] w-[304px] rounded-[32px]`}
+          className={`transform-style-3d relative h-[432px] w-[304px]`}
         >
           {/* Front */}
           <div
@@ -164,13 +174,11 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
             }}
             className="backface-hidden absolute left-0 top-0 flex h-full  w-full cursor-pointer flex-col bg-white p-6 pb-0 "
           >
-            <div
-              style={{
-                ...backArtMask,
-              }}
-              className={`relative h-[88px] w-[88px] flex-shrink-0`}
-            >
+            <div className={`flex-shrink-0 flex justify-between`}>
+              <StarIcon />
+
               <Image
+                className={`rounded-xl shadow-shadowKitHigh`}
                 src={url}
                 alt={`${name} by ${artistName} - artwork`}
                 quality={100}
@@ -178,13 +186,12 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
                 height={88}
                 draggable={false}
               />
-              {/* <div className="rounded-max outline-silver absolute bottom-0 right-0 w-fit bg-white p-2.5">
-                  {getStarComponent(artifact.content!.rating!)}
-                </div> */}
             </div>
 
-            <div className={`flex flex-col pt-[9px]`}>
-              <p className={`mt-auto line-clamp-1 text-sm text-black`}>
+            <div className={`flex flex-col pt-2`}>
+              <p
+                className={`mt-auto line-clamp-1 text-sm text-gray2 font-medium`}
+              >
                 {artistName}
               </p>
               <p className={`line-clamp-1 text-base font-semibold text-black`}>

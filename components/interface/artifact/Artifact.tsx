@@ -108,56 +108,64 @@ export const Artifact = () => {
         glareMaxOpacity={0.25}
         glareBorderRadius={"32px"}
         transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
-        className={`transform-style-3d shadow-artifact relative mt-[56px] h-[560px] w-[400px] cursor-pointer overflow-hidden rounded-3xl bg-white p-6 flex flex-col`}
+        className={`transform-style-3d shadow-artifact relative mt-[56px] cursor-pointer overflow-hidden rounded-3xl bg-white p-6`}
       >
-        <div className="flex justify-between">
-          <StarIcon />
-
-          <Image
-            className="border-silver cursor-pointer rounded-xl shadow-shadowKitHigh"
-            onClick={handleSoundClick}
-            src={artwork}
-            alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
-            quality={100}
-            width={304}
-            height={304}
-            draggable={false}
-          />
-        </div>
-
-        <div className={`flex flex-col pt-5`}>
-          <p className={`line-clamp-1 text-sm text-gray2 font-medium`}>
-            {appleData.attributes.artistName}
-          </p>
-          <p className={`line-clamp-4 text-base font-semibold text-black`}>
-            {appleData.attributes.name}
-          </p>
-        </div>
-
-        {/* Content */}
-        <p className={`line-clamp-4 text-base mt-auto mb-10`}>
-          {artifactExtended.content?.text}
-        </p>
-
         <div
           style={{
-            backgroundImage:
-              "radial-gradient(circle, rgba(255, 255, 255, 0), rgb(255, 255, 255) 70%)",
+            width: 400,
+            height: 560,
           }}
-          className="absolute bottom-0 left-0 flex h-[80px] w-full items-end p-6"
+          className={`flex flex-col`}
         >
-          <div className={`flex items-center gap-2`}>
-            <Avatar
-              className={`border-silver border`}
-              imageSrc={artifactExtended.author.image}
-              altText={`${artifactExtended.author.username}'s avatar`}
-              width={40}
-              height={40}
-              user={artifactExtended.author}
+          <div className="flex justify-between">
+            <StarIcon />
+
+            <Image
+              className="border-silver cursor-pointer rounded-xl shadow-shadowKitHigh"
+              onClick={handleSoundClick}
+              src={artwork}
+              alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
+              quality={100}
+              width={304}
+              height={304}
+              draggable={false}
             />
-            <p className={`line-clamp-1 text-base font-medium text-black`}>
-              {artifactExtended.author.username}
+          </div>
+
+          <div className={`flex flex-col pt-5`}>
+            <p className={`line-clamp-1 text-sm text-gray2 font-medium`}>
+              {appleData.attributes.artistName}
             </p>
+            <p className={`line-clamp-4 text-base font-semibold text-black`}>
+              {appleData.attributes.name}
+            </p>
+          </div>
+
+          {/* Content */}
+          <p className={`text-base mt-auto mb-10`}>
+            {artifactExtended.content?.text}
+          </p>
+
+          <div
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(rgba(255, 255, 255, 0), rgb(255, 255, 255))",
+            }}
+            className="absolute bottom-0 left-0 flex h-[196px] w-full items-end p-6"
+          >
+            <div className={`flex items-center gap-2`}>
+              <Avatar
+                className={`border-silver border`}
+                imageSrc={artifactExtended.author.image}
+                altText={`${artifactExtended.author.username}'s avatar`}
+                width={40}
+                height={40}
+                user={artifactExtended.author}
+              />
+              <p className={`line-clamp-1 text-base font-medium text-black`}>
+                {artifactExtended.author.username}
+              </p>
+            </div>
           </div>
         </div>
       </Tilt>
