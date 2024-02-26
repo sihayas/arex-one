@@ -21,7 +21,7 @@ import Tilt from "react-parallax-tilt";
 import { StarIcon } from "@/components/icons";
 
 export const Artifact = () => {
-  const { activePage, scrollContainerRef, pages } = useInterfaceContext();
+  const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
   const { handleSelectSound } = useSound();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -57,20 +57,20 @@ export const Artifact = () => {
     tiltAngleY: 0,
   });
 
-  const x = useSpring(0, { damping: 400, stiffness: 80 });
-  const y = useSpring(0, { damping: 400, stiffness: 80 });
+  const x = useSpring(0, { damping: 320, stiffness: 80 });
+  const y = useSpring(0, { damping: 320, stiffness: 80 });
 
   // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
   useEffect(() => {
     if (isExpanded) return;
 
-    const xControls = animate(x, [4, 4, -4, -4, 4], {
+    const xControls = animate(x, [8, 8, -8, -8, 8], {
       repeat: Infinity,
       duration: 16,
       ease: "easeOut",
     });
 
-    const yControls = animate(y, [4, -4, -4, 4, 4], {
+    const yControls = animate(y, [8, -8, -8, 8, 8], {
       repeat: Infinity,
       duration: 16,
       ease: "easeOut",
@@ -126,7 +126,6 @@ export const Artifact = () => {
           tiltMaxAngleY={6}
           tiltReverse={true}
           reset={true}
-          // glareEnable={true}
           glareMaxOpacity={0.25}
           glareBorderRadius={"32px"}
           tiltEnable={true}
@@ -136,7 +135,7 @@ export const Artifact = () => {
           <motion.div
             animate={{
               width: isExpanded ? 448 : 400,
-              height: isExpanded ? 1400 : 560,
+              height: isExpanded ? "auto" : 560,
             }}
             transition={{
               type: "spring",
@@ -196,30 +195,43 @@ export const Artifact = () => {
               </AnimatePresence>
             </motion.div>
 
-            {/*<div*/}
-            {/*  style={{*/}
-            {/*    backgroundImage:*/}
-            {/*      "repeating-linear-gradient(rgba(255, 255, 255, 0), rgb(255, 255, 255))",*/}
-            {/*  }}*/}
-            {/*  className="absolute bottom-0 left-0 flex h-[196px] w-full items-end p-6"*/}
-            {/*>*/}
-            {/*  <div className={`flex items-center gap-2`}>*/}
-            {/*    <Avatar*/}
-            {/*      className={`border-silver border`}*/}
-            {/*      imageSrc={artifactExtended.author.image}*/}
-            {/*      altText={`${artifactExtended.author.username}'s avatar`}*/}
-            {/*      width={40}*/}
-            {/*      height={40}*/}
-            {/*      user={artifactExtended.author}*/}
-            {/*    />*/}
-            {/*    <p className={`line-clamp-1 text-base font-medium text-black`}>*/}
-            {/*      {artifactExtended.author.username}*/}
-            {/*    </p>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
+            <div
+              style={{
+                backgroundImage:
+                  "linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75) 48.74%, rgb(255, 255, 255))",
+              }}
+              className="absolute bottom-0 left-0 flex h-[88px] w-full items-end p-6"
+            >
+              <div className={`flex items-center gap-2`}>
+                <Avatar
+                  className={`border-silver border`}
+                  imageSrc={artifactExtended.author.image}
+                  altText={`${artifactExtended.author.username}'s avatar`}
+                  width={40}
+                  height={40}
+                  user={artifactExtended.author}
+                />
+                <p className={`line-clamp-1 text-base font-medium text-black`}>
+                  {artifactExtended.author.username}
+                </p>
+              </div>
+            </div>
           </motion.div>
         </Tilt>
       </motion.div>
+
+      {/* If viewing a specific chain i.e. from notification */}
+      {chainId && (
+        <div className={`-ml-8 flex flex-col-reverse pr-8`}>
+          <p className={`text-sm`}>highlighted chain</p>
+          <Chain replyId={chainId} userId={user!.id} />
+        </div>
+      )}
+
+      {/* Chains */}
+      <div className={`min-h-full min-w-full pt-8  px-8 pb-96`}>
+        <Replies artifactId={artifactExtended.id} userId={user!.id} />
+      </div>
     </>
   );
 };
