@@ -156,7 +156,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               <StarIcon />
 
               <div className={`flex translate-y-[1px] flex-col`}>
-                <p className={`line-clamp-1 text-sm text-black`}>
+                <p className={`line-clamp-1 text-sm text-gray2 font-medium`}>
                   {artistName}
                 </p>
                 <p className={`line-clamp-1 text-sm font-semibold text-black`}>

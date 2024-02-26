@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import {
   animate,
+  AnimatePresence,
+  motion,
   useMotionValueEvent,
   useScroll,
   useSpring,
@@ -21,6 +23,7 @@ import { StarIcon } from "@/components/icons";
 export const Artifact = () => {
   const { activePage, scrollContainerRef, pages } = useInterfaceContext();
   const { handleSelectSound } = useSound();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -59,6 +62,8 @@ export const Artifact = () => {
 
   // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
   useEffect(() => {
+    if (isExpanded) return;
+
     const xControls = animate(x, [4, 4, -4, -4, 4], {
       repeat: Infinity,
       duration: 16,
@@ -85,7 +90,13 @@ export const Artifact = () => {
       unsubscribeX();
       unsubscribeY();
     };
-  }, []);
+  }, [isExpanded]);
+
+  useEffect(() => {
+    if (isExpanded) {
+      setTiltAngles({ tiltAngleX: 0, tiltAngleY: 0 });
+    }
+  }, [isExpanded]);
 
   // Scroll to top on mount
   useEffect(() => {
@@ -96,79 +107,119 @@ export const Artifact = () => {
 
   return (
     <>
-      <Tilt
-        tiltAngleXManual={tiltAngles.tiltAngleX}
-        tiltAngleYManual={tiltAngles.tiltAngleY}
-        perspective={1000}
-        tiltMaxAngleX={6}
-        tiltMaxAngleY={6}
-        tiltReverse={true}
-        reset={true}
-        glareEnable={true}
-        glareMaxOpacity={0.25}
-        glareBorderRadius={"32px"}
-        transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
-        className={`transform-style-3d shadow-artifact relative mt-[56px] cursor-pointer overflow-hidden rounded-3xl bg-white p-6`}
+      <motion.div
+        animate={{
+          y: isExpanded ? -22 : 0,
+        }}
+        whileTap={{ scale: 0.9 }}
+        transition={{
+          type: "spring",
+          damping: 15,
+          stiffness: 100,
+        }}
       >
-        <div
-          style={{
-            width: 400,
-            height: 560,
-          }}
-          className={`flex flex-col`}
+        <Tilt
+          tiltAngleXManual={tiltAngles.tiltAngleX}
+          tiltAngleYManual={tiltAngles.tiltAngleY}
+          perspective={1000}
+          tiltMaxAngleX={6}
+          tiltMaxAngleY={6}
+          tiltReverse={true}
+          reset={true}
+          // glareEnable={true}
+          glareMaxOpacity={0.25}
+          glareBorderRadius={"32px"}
+          tiltEnable={true}
+          transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
+          className={`transform-style-3d shadow-artifact relative mt-[56px] cursor-pointer overflow-hidden rounded-3xl`}
         >
-          <div className="flex justify-between">
-            <StarIcon />
-
-            <Image
-              className="border-silver cursor-pointer rounded-xl shadow-shadowKitHigh"
-              onClick={handleSoundClick}
-              src={artwork}
-              alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
-              quality={100}
-              width={304}
-              height={304}
-              draggable={false}
-            />
-          </div>
-
-          <div className={`flex flex-col pt-5`}>
-            <p className={`line-clamp-1 text-sm text-gray2 font-medium`}>
-              {appleData.attributes.artistName}
-            </p>
-            <p className={`line-clamp-4 text-base font-semibold text-black`}>
-              {appleData.attributes.name}
-            </p>
-          </div>
-
-          {/* Content */}
-          <p className={`text-base mt-auto mb-10`}>
-            {artifactExtended.content?.text}
-          </p>
-
-          <div
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(rgba(255, 255, 255, 0), rgb(255, 255, 255))",
+          <motion.div
+            animate={{
+              width: isExpanded ? 448 : 400,
+              height: isExpanded ? 1400 : 560,
             }}
-            className="absolute bottom-0 left-0 flex h-[196px] w-full items-end p-6"
+            transition={{
+              type: "spring",
+              damping: 22,
+              stiffness: 220,
+            }}
+            onClick={() => setIsExpanded(!isExpanded)}
+            className={`flex flex-col p-6 overflow-hidden bg-white rounded-3xl`}
           >
-            <div className={`flex items-center gap-2`}>
-              <Avatar
-                className={`border-silver border`}
-                imageSrc={artifactExtended.author.image}
-                altText={`${artifactExtended.author.username}'s avatar`}
-                width={40}
-                height={40}
-                user={artifactExtended.author}
+            <div className="flex justify-between">
+              <StarIcon />
+
+              <Image
+                className="border-silver cursor-pointer rounded-xl shadow-shadowKitHigh"
+                onClick={handleSoundClick}
+                src={artwork}
+                alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
+                quality={100}
+                width={304}
+                height={304}
+                draggable={false}
               />
-              <p className={`line-clamp-1 text-base font-medium text-black`}>
-                {artifactExtended.author.username}
+            </div>
+
+            {/* Names */}
+            <div className={`flex flex-col pt-5 pb-[30px]`}>
+              <p className={`line-clamp-1 text-sm text-gray2 font-medium`}>
+                {appleData.attributes.artistName}
+              </p>
+              <p className={`line-clamp-4 text-base font-semibold text-black`}>
+                {appleData.attributes.name}
               </p>
             </div>
-          </div>
-        </div>
-      </Tilt>
+
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, filter: "blur(4px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, filter: "blur(4px)" }}
+              key={isExpanded ? "expanded" : "collapsed"}
+              transition={{
+                type: "spring",
+                damping: 20,
+                stiffness: 100,
+              }}
+            >
+              <AnimatePresence>
+                {isExpanded ? (
+                  <p className={`text-base w-[400px]`}>
+                    {artifactExtended.content?.text}
+                  </p>
+                ) : (
+                  <p className={`text-base w-[352px]`}>
+                    {artifactExtended.content?.text}
+                  </p>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            {/*<div*/}
+            {/*  style={{*/}
+            {/*    backgroundImage:*/}
+            {/*      "repeating-linear-gradient(rgba(255, 255, 255, 0), rgb(255, 255, 255))",*/}
+            {/*  }}*/}
+            {/*  className="absolute bottom-0 left-0 flex h-[196px] w-full items-end p-6"*/}
+            {/*>*/}
+            {/*  <div className={`flex items-center gap-2`}>*/}
+            {/*    <Avatar*/}
+            {/*      className={`border-silver border`}*/}
+            {/*      imageSrc={artifactExtended.author.image}*/}
+            {/*      altText={`${artifactExtended.author.username}'s avatar`}*/}
+            {/*      width={40}*/}
+            {/*      height={40}*/}
+            {/*      user={artifactExtended.author}*/}
+            {/*    />*/}
+            {/*    <p className={`line-clamp-1 text-base font-medium text-black`}>*/}
+            {/*      {artifactExtended.author.username}*/}
+            {/*    </p>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
+          </motion.div>
+        </Tilt>
+      </motion.div>
     </>
   );
 };
