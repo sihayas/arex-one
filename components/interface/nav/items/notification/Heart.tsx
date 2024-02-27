@@ -11,9 +11,11 @@ const Heart = ({ notificationsGroup }: any) => {
   const remainingCount =
     notificationsGroup.count > 4 ? notificationsGroup.count - 3 : 0;
 
+  console.log(notifications[0]);
+
   const sound =
-    notifications[0].activity.heart.artifact?.appleData ||
-    notifications[0].activity.heart.reply?.artifact.appleData;
+    notifications[0].activity.heart.artifact?.sound.appleData ||
+    notifications[0].activity.heart.reply?.artifact.sound.appleData;
 
   const url = MusicKit.formatArtworkURL(
     sound.attributes.artwork,

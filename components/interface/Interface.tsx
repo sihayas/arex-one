@@ -15,6 +15,7 @@ import {
   useScroll,
   useTransform,
   MotionValue,
+  stagger,
 } from "framer-motion";
 import { PageName } from "@/context/InterfaceContext";
 import { createPortal } from "react-dom";
@@ -186,8 +187,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         outline: expandInput
           ? "1px solid rgba(0,0,0,0.05)"
           : "1px solid rgba(0,0,0,0.0)",
-        scale: expandInput ? 0.98 : 1,
-        filter: expandInput ? "blur(4px)" : "blur(0px)",
+        scale: expandInput ? 0.96 : 1,
+        filter: expandInput ? "blur(40px)" : "blur(0px)",
       };
       const transitionConfig = {
         type: "spring" as const,

@@ -21,9 +21,7 @@ const UserItem = ({ user }: { user: UserType }) => {
           draggable="false"
         />
 
-        <div className="flex text-sm font-medium text-black">
-          {user.username}
-        </div>
+        <div className="flex font-medium text-base">{user.username}</div>
       </div>
     </Command.Item>
   );

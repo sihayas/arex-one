@@ -126,7 +126,6 @@ export const InterfaceContextProvider = ({
           name: "user",
           user: user,
           scrollPosition: 0,
-          color: "CCC",
           isOpen: false,
         },
       ]);

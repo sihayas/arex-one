@@ -31,7 +31,7 @@ const Results = ({ searchData }: SearchProps) => {
 
   return (
     <div
-      className={`scrollbar-none -z-10 flex w-full flex-col overflow-scroll `}
+      className={`-z-10 flex w-full flex-col overflow-scroll -mb-[34px] mask`}
     >
       <Command.List>
         {allData.map((item, index) => {

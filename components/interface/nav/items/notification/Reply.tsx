@@ -12,7 +12,7 @@ const Reply = ({ notificationsGroup }: any) => {
   const notifications = notificationsGroup.notifications;
   const reply = notifications[0].activity.reply;
 
-  const url = reply.artifact?.appleData.attributes.artwork.url;
+  const url = reply.artifact?.sound.appleData.attributes.artwork.url;
   const artwork = url ? url.replace("{w}", "280").replace("{h}", "280") : null;
 
   const name =

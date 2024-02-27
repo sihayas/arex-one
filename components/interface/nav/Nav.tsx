@@ -11,7 +11,7 @@ import {
   TargetGoIcon,
   TargetArtifactIcon,
   NotificationIcon,
-  AmperesandIcon,
+  SearchIcon,
   TargetFormIcon,
   TargetCommandIcon,
 } from "@/components/icons";
@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
+import Search from "@/lib/helper/search";
 
 const iconVariants = {
   exit: {
@@ -68,11 +69,12 @@ const Nav = () => {
 
   const contentVariants = {
     collapsed: {
-      x: "-50%",
-      left: "50%",
+      opacity: 0,
+      x: -32,
+      y: 32,
       width: 124,
-      height: 44,
-      backgroundColor: "#FFFFFF",
+      height: 32,
+      backgroundColor: "#F4F4F4A9",
       transition: {
         type: "spring",
         damping: 24,
@@ -80,21 +82,21 @@ const Nav = () => {
       },
     },
     expanded: {
+      opacity: 1,
       backgroundColor: "#F4F4F4A9",
       outline: "1px solid rgba(0,0,0,0.05)",
-      x: "-50%",
-      left: "50%",
+      x: -32,
+      y: 32,
       width: isNotifications ? 320 : 384,
-
       height: !expandInput
-        ? 44 // base
+        ? 32 // base
         : activeAction === "none" && inputValue
-          ? 432 // search
-          : activeAction === "form"
-            ? "auto" // form
-            : activeAction === "notifications"
-              ? 610 // notifications
-              : 44,
+        ? 472 // search
+        : activeAction === "form"
+        ? "auto" // form
+        : activeAction === "notifications"
+        ? 610 // notifications
+        : 32,
       transition:
         activeAction === "notifications"
           ? notificationTransition
@@ -104,9 +106,8 @@ const Nav = () => {
 
   const barVariants = {
     collapsed: {
-      x: "-50%",
-      y: -6,
-      left: "50%",
+      x: -40,
+      y: 40,
       transition: {
         type: "spring",
         damping: 24,
@@ -114,9 +115,8 @@ const Nav = () => {
       },
     },
     expanded: {
-      x: isNotifications ? -154 : -186,
-      y: -6,
-      left: "50%",
+      x: -40,
+      y: 40,
       transition:
         activeAction === "notifications"
           ? notificationTransition
@@ -202,13 +202,16 @@ const Nav = () => {
 
   return (
     <>
+      {/* Content / Shifter */}
       <div
-        className={`absolute -bottom-[52px] z-40 flex flex-col ${!expandInput && "mix-blend-darken"}`}
+        className={`absolute bottom-0 left-0 flex flex-col  ${
+          !expandInput && "mix-blend-darken"
+        }`}
       >
         {/* Top / Content */}
         <motion.div
           ref={contentContainerRef}
-          className={`relative -z-10 flex w-full flex-col items-end justify-end rounded-3xl`}
+          className={`relative flex w-full flex-col items-end justify-end rounded-2xl`}
           variants={contentVariants}
           animate={expandInput ? "expanded" : "collapsed"}
         >
@@ -220,11 +223,13 @@ const Nav = () => {
 
           {!isNotifications && (
             <div
-              className={`flex w-full items-center justify-center bg-transparent p-[11px] pl-[82px]`}
+              className={`flex w-full items-center justify-center bg-transparent p-[5px] pl-[40px]`}
             >
               <TextareaAutosize
                 id="entryText"
-                className={`w-full resize-none bg-transparent text-base text-black outline-none ${!expandInput && "pointer-events-none "}`}
+                className={`w-full resize-none bg-transparent text-base text-black outline-none ${
+                  !expandInput && "pointer-events-none "
+                }`}
                 value={expandInput ? inputValue : ""}
                 onChange={(e) => handleInputTextChange(e.target.value)}
                 onBlur={onBlur}
@@ -243,129 +248,137 @@ const Nav = () => {
       <motion.div
         variants={barVariants}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`absolute -bottom-[52px] z-50 flex w-fit items-center gap-2 bg-transparent`}
+        className={`absolute bottom-0 left-0 flex flex-wrap max-w-[68px] items-center gap-3 bg-transparent`}
       >
         {/* Notification Icon */}
         <motion.button
           whileHover={{
             scale: 1.1,
           }}
+          animate={expandInput ? { scale: 0.8, opacity: 0.1 } : { scale: 1 }}
           ref={notificationButtonRef}
           onClick={handleNotificationsClick}
-          className={`flex items-center justify-center rounded-full bg-[#E5E5E5] px-3 py-2`}
+          className={`flex items-center justify-center rounded-full px-4 py-0`}
         >
           <NotificationIcon />
         </motion.button>
 
         {/* Target Container */}
-        <motion.button
-          className={`relative flex h-7 w-7 items-center justify-center`}
+        <button
+          className={`relative flex h-10 w-10 items-center justify-center`}
         >
           {/* Avatar */}
-          {(!expandInput ||
-            (expandInput &&
-              !pageObject &&
-              !inputValue &&
-              activeAction === "none")) && (
-            <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-              >
-                <Avatar
-                  className="border-silver border"
-                  imageSrc={user.image}
-                  altText={`${user.username}'s avatar`}
-                  width={32}
-                  height={32}
-                  user={user}
-                />
-              </motion.div>
-            </AnimatePresence>
-          )}
-
-          {/* Form is Active */}
-          {expandInput &&
-            activeAction === "form" &&
-            (inputValue ? (
-              <AnimatePresence>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                >
-                  <TargetCommandIcon />
-                </motion.div>
-              </AnimatePresence>
-            ) : (
-              <AnimatePresence>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                >
-                  <TargetFormIcon />
-                </motion.div>
-              </AnimatePresence>
-            ))}
-
-          {/* User is on a Sound page */}
-          {expandInput &&
-            activeAction === "none" &&
-            activePage.sound &&
-            !inputValue && (
-              <AnimatePresence>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                >
-                  <TargetAddIcon />
-                </motion.div>
-              </AnimatePresence>
-            )}
-
-          {/* User is on an Artifact page */}
-          {expandInput &&
-            activeAction === "none" &&
-            activePage.artifact &&
-            !inputValue && (
-              <AnimatePresence>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                >
-                  <TargetArtifactIcon />
-                </motion.div>
-              </AnimatePresence>
-            )}
+          <motion.div
+            className={`origin-top-right absolute`}
+            animate={!expandInput ? { opacity: 1, scale: 1 } : { scale: 0.8 }}
+            transition={{ type: "spring", damping: 24, stiffness: 400 }}
+          >
+            <Avatar
+              imageSrc={user.image}
+              altText={`${user.username}'s avatar`}
+              width={40}
+              height={40}
+              user={user}
+            />
+          </motion.div>
 
           {/* User is on Search results */}
-          {expandInput && inputValue && activeAction === "none" && (
-            <AnimatePresence>
+          <AnimatePresence>
+            {expandInput && activeAction === "none" && (
               <motion.div
+                className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
               >
                 <TargetGoIcon />
               </motion.div>
-            </AnimatePresence>
-          )}
-        </motion.button>
+            )}
+          </AnimatePresence>
+
+          {/* Form is Active */}
+          <AnimatePresence>
+            {expandInput &&
+              activeAction === "form" &&
+              (inputValue ? (
+                <motion.div
+                  className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                >
+                  <TargetCommandIcon />
+                </motion.div>
+              ) : (
+                <motion.div
+                  className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                >
+                  <TargetFormIcon />
+                </motion.div>
+              ))}
+          </AnimatePresence>
+
+          {/* User is on a Sound page */}
+          <AnimatePresence>
+            {expandInput &&
+              activeAction === "none" &&
+              activePage.sound &&
+              !inputValue && (
+                <motion.div
+                  className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                >
+                  <TargetAddIcon />
+                </motion.div>
+              )}
+          </AnimatePresence>
+
+          {/* User is on an Artifact page */}
+          <AnimatePresence>
+            {expandInput &&
+              activeAction === "none" &&
+              activePage.artifact &&
+              !inputValue && (
+                <motion.div
+                  className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
+                  initial={{ opacity: 0, scale: 2 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 2 }}
+                >
+                  <TargetArtifactIcon />
+                </motion.div>
+              )}
+          </AnimatePresence>
+
+          {/* User is viewing notifications */}
+          <AnimatePresence>
+            {expandInput && activeAction === "notifications" && (
+              <motion.div
+                className={`absolute top-0 right-0 px-3 py-2 bg-white rounded-full`}
+                initial={{ opacity: 0, scale: 2 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 2 }}
+              >
+                <NotificationIcon />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </button>
 
         {/* Search Icon */}
-
         <motion.button
-          whileHover={!expandInput ? { scale: 1.1 } : undefined}
+          whileHover={!expandInput ? { scale: 1.5 } : undefined}
           animate={expandInput ? "exit" : "initial"}
           variants={iconVariants}
           onClick={() => setExpandInput((prev) => !prev)}
-          className="flex cursor-pointer items-center justify-center rounded-full bg-[#E5E5E5] p-2"
+          className="flex cursor-pointer items-center justify-center rounded-full"
         >
-          <AmperesandIcon />
+          <SearchIcon />
         </motion.button>
       </motion.div>
     </>
@@ -373,4 +386,3 @@ const Nav = () => {
 };
 
 export default Nav;
-

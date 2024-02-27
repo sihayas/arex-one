@@ -61,42 +61,42 @@ export const Artifact = () => {
   const y = useSpring(0, { damping: 320, stiffness: 80 });
 
   // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
-  useEffect(() => {
-    if (isExpanded) return;
-
-    const xControls = animate(x, [8, 8, -8, -8, 8], {
-      repeat: Infinity,
-      duration: 16,
-      ease: "easeOut",
-    });
-
-    const yControls = animate(y, [8, -8, -8, 8, 8], {
-      repeat: Infinity,
-      duration: 16,
-      ease: "easeOut",
-    });
-
-    const unsubscribeX = x.on("change", (latest) => {
-      setTiltAngles((prev) => ({ ...prev, tiltAngleX: latest }));
-    });
-
-    const unsubscribeY = y.on("change", (latest) => {
-      setTiltAngles((prev) => ({ ...prev, tiltAngleY: latest }));
-    });
-
-    return () => {
-      xControls.stop();
-      yControls.stop();
-      unsubscribeX();
-      unsubscribeY();
-    };
-  }, [isExpanded]);
-
-  useEffect(() => {
-    if (isExpanded) {
-      setTiltAngles({ tiltAngleX: 0, tiltAngleY: 0 });
-    }
-  }, [isExpanded]);
+  // useEffect(() => {
+  //   if (isExpanded) return;
+  //
+  //   const xControls = animate(x, [8, 8, -8, -8, 8], {
+  //     repeat: Infinity,
+  //     duration: 16,
+  //     ease: "easeOut",
+  //   });
+  //
+  //   const yControls = animate(y, [8, -8, -8, 8, 8], {
+  //     repeat: Infinity,
+  //     duration: 16,
+  //     ease: "easeOut",
+  //   });
+  //
+  //   const unsubscribeX = x.on("change", (latest) => {
+  //     setTiltAngles((prev) => ({ ...prev, tiltAngleX: latest }));
+  //   });
+  //
+  //   const unsubscribeY = y.on("change", (latest) => {
+  //     setTiltAngles((prev) => ({ ...prev, tiltAngleY: latest }));
+  //   });
+  //
+  //   return () => {
+  //     xControls.stop();
+  //     yControls.stop();
+  //     unsubscribeX();
+  //     unsubscribeY();
+  //   };
+  // }, [isExpanded]);
+  //
+  // useEffect(() => {
+  //   if (isExpanded) {
+  //     setTiltAngles({ tiltAngleX: 0, tiltAngleY: 0 });
+  //   }
+  // }, [isExpanded]);
 
   // Scroll to top on mount
   useEffect(() => {
@@ -182,17 +182,15 @@ export const Artifact = () => {
                 stiffness: 100,
               }}
             >
-              <AnimatePresence>
-                {isExpanded ? (
-                  <p className={`text-base w-[400px]`}>
-                    {artifactExtended.content?.text}
-                  </p>
-                ) : (
-                  <p className={`text-base w-[352px]`}>
-                    {artifactExtended.content?.text}
-                  </p>
-                )}
-              </AnimatePresence>
+              {isExpanded ? (
+                <p className={`text-base w-[400px]`}>
+                  {artifactExtended.content?.text}
+                </p>
+              ) : (
+                <p className={`text-base w-[352px]`}>
+                  {artifactExtended.content?.text}
+                </p>
+              )}
             </motion.div>
 
             <div

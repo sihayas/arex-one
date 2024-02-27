@@ -99,7 +99,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     springConfig,
   );
 
-  const sound = artifact.appleData;
+  const sound = artifact.sound.appleData;
 
   if (!sound) return;
 
