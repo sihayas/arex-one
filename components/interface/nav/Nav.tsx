@@ -26,12 +26,15 @@ import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
 import Search from "@/lib/helper/search";
 import Image from "next/image";
+import { render } from "react-dom";
 
 const iconVariants = {
   exit: {
+    opacity: 0,
     scale: 0,
   },
   initial: {
+    opacity: 1,
     scale: 1,
   },
 };
@@ -72,15 +75,14 @@ const Nav = () => {
 
   const contentVariants = {
     collapsed: {
-      opacity: 0,
-      x: -40,
+      x: 8,
       y: 36,
-      width: 124,
-      height: 0,
-      borderRadius: 0,
+      width: 56,
+      height: 32,
+      borderRadius: 24,
       boxShadow:
         "0px 0px 0px 0px rgba(0, 0, 0, 0.0), 0px 0px 0px 0px rgba(0, 0, 0,0.0)",
-      backgroundColor: "rgba(0, 0, 0, 0.0)",
+      backgroundColor: "#F4F4F4A9",
       transition: {
         type: "spring",
         damping: 24,
@@ -89,9 +91,8 @@ const Nav = () => {
     },
 
     expanded: {
-      opacity: 1,
-      x: isReply ? 16 : -36,
-      y: isReply ? -16 : 36,
+      x: isReply ? 16 : -40,
+      y: isReply ? -16 : 40,
       width: isNotifications ? 320 : 384,
       height: !expandInput
         ? 40 // base
@@ -213,23 +214,22 @@ const Nav = () => {
     <>
       {/* Content / Shifter */}
       <div
-        className={`absolute bottom-0 left-0 flex flex-col  ${
+        className={`absolute bottom-0 left-0 flex flex-col ${
           !expandInput && "mix-blend-darken"
         }`}
       >
         {/* Top / Content */}
         <motion.div
           ref={contentContainerRef}
-          className={`relative flex w-full flex-col items-end justify-end origin-top-left`}
+          className={`flex w-full flex-col items-end justify-end`}
           variants={contentVariants}
           animate={expandInput ? "expanded" : "collapsed"}
         >
-          {activeAction === "form" && expandInput && <Form />}
-          {activeAction === "none" && inputValue && expandInput && (
-            <Results searchData={data} />
-          )}
-          {activeAction === "notifications" && expandInput && <Notifications />}
+          {/* Content */}
+          {isForm && expandInput && <Form />}
+          {isNotifications && expandInput && <Notifications />}
 
+          {/* Text Input */}
           {!isNotifications && (
             <div
               className={`flex w-full items-center justify-center bg-transparent p-[9px] relative ${
@@ -277,11 +277,11 @@ const Nav = () => {
         </motion.div>
       </div>
 
-      {/* Bottom / Bar */}
+      {/* Iconography */}
       <motion.div
         variants={barVariants}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`absolute bottom-0 left-0 flex flex-wrap max-w-[68px] items-center gap-3 bg-transparent`}
+        className={`absolute bottom-0 left-0 flex flex-col gap-3 bg-transparent`}
       >
         {/* Notification Icon */}
         <motion.button
@@ -291,119 +291,124 @@ const Nav = () => {
           animate={expandInput ? { scale: 0.8, opacity: 0.1 } : { scale: 1 }}
           ref={notificationButtonRef}
           onClick={handleNotificationsClick}
-          className={`flex items-center justify-center rounded-full px-4 py-0`}
+          className={`flex`}
         >
           <NotificationIcon />
         </motion.button>
 
-        {/* Target Container */}
-        <button
-          className={`relative flex h-10 w-10 items-center justify-center`}
-        >
-          {/* Avatar */}
-          <motion.div
-            className={`origin-top-right absolute`}
-            animate={expandInput ? { scale: 0.8 } : { opacity: 1, scale: 1 }}
-            transition={{ type: "spring", damping: 24, stiffness: 400 }}
+        <div className={`flex gap-2 items-center`}>
+          {/* Target Container */}
+          <button
+            className={`relative flex h-10 w-10 items-center justify-center`}
           >
-            <Avatar
-              imageSrc={user.image}
-              altText={`${user.username}'s avatar`}
-              width={40}
-              height={40}
-              user={user}
-            />
-          </motion.div>
+            {/* Avatar */}
+            <motion.div
+              className={`absolute`}
+              animate={expandInput ? { scale: 0.5 } : { opacity: 1, scale: 1 }}
+              transition={{ type: "spring", damping: 24, stiffness: 400 }}
+            >
+              <Avatar
+                imageSrc={user.image}
+                altText={`${user.username}'s avatar`}
+                width={40}
+                height={40}
+                user={user}
+              />
+            </motion.div>
 
-          {/* User is on Search results */}
-          <AnimatePresence>
-            {expandInput && activeAction === "none" && !pageHasData && (
-              <motion.div
-                className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-              >
-                <TargetGoIcon />
-              </motion.div>
-            )}
-
-            {/* Form is Active */}
-            {expandInput &&
-              activeAction === "form" &&
-              (inputValue ? (
+            {/* User is on Search results */}
+            <AnimatePresence>
+              {expandInput && activeAction === "none" && !pageHasData && (
                 <motion.div
-                  className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
+                  className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
                 >
-                  <TargetCommandIcon />
-                </motion.div>
-              ) : (
-                <motion.div
-                  className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                >
-                  <TargetFormIcon />
-                </motion.div>
-              ))}
-
-            {/* User is on a Sound page */}
-            {expandInput &&
-              activeAction === "none" &&
-              activePage.sound &&
-              !inputValue && (
-                <motion.div
-                  className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                >
-                  <TargetAddIcon />
+                  <TargetGoIcon />
                 </motion.div>
               )}
 
-            {/* User is on an Artifact page */}
-            {expandInput &&
-              activeAction === "none" &&
-              activePage.artifact &&
-              !inputValue && (
+              {/* Form is Active */}
+              {expandInput &&
+                activeAction === "form" &&
+                (inputValue ? (
+                  <motion.div
+                    className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                  >
+                    <TargetCommandIcon />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                  >
+                    <TargetFormIcon />
+                  </motion.div>
+                ))}
+
+              {/* User is on a Sound page */}
+              {expandInput &&
+                activeAction === "none" &&
+                activePage.sound &&
+                !inputValue && (
+                  <motion.div
+                    className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                  >
+                    <TargetAddIcon />
+                  </motion.div>
+                )}
+
+              {/* User is on an Artifact page */}
+              {expandInput &&
+                activeAction === "none" &&
+                activePage.artifact &&
+                !inputValue && (
+                  <motion.div
+                    className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
+                    initial={{ opacity: 0, scale: 2 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                  >
+                    <TargetArtifactIcon />
+                  </motion.div>
+                )}
+
+              {/* User is viewing notifications */}
+              {expandInput && activeAction === "notifications" && (
                 <motion.div
-                  className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
+                  className={`absolute top-0 right-0 px-3 py-2 bg-white rounded-full`}
                   initial={{ opacity: 0, scale: 2 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 2 }}
                 >
-                  <TargetArtifactIcon />
+                  <NotificationIcon />
                 </motion.div>
               )}
+            </AnimatePresence>
+          </button>
 
-            {/* User is viewing notifications */}
-            {expandInput && activeAction === "notifications" && (
-              <motion.div
-                className={`absolute top-0 right-0 px-3 py-2 bg-white rounded-full`}
-                initial={{ opacity: 0, scale: 2 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 2 }}
-              >
-                <NotificationIcon />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </button>
-
-        {/* Search Icon */}
-        <motion.button
-          animate={expandInput ? "exit" : "initial"}
-          variants={iconVariants}
-          onClick={() => setExpandInput((prev) => !prev)}
-          className="flex cursor-pointer items-center justify-center rounded-full"
-        >
-          <SearchIcon />
-        </motion.button>
+          {/* Search Icon */}
+          <motion.button
+            whileHover={{
+              scale: 1.1,
+            }}
+            animate={expandInput ? "exit" : "initial"}
+            variants={iconVariants}
+            onClick={() => setExpandInput((prev) => !prev)}
+            className="flex cursor-pointer items-center justify-center rounded-full py-2 px-[20px]"
+          >
+            <SearchIcon />
+          </motion.button>
+        </div>
       </motion.div>
     </>
   );
