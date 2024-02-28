@@ -159,7 +159,9 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
                 <p className={`line-clamp-1 text-sm text-gray2 font-medium`}>
                   {artistName}
                 </p>
-                <p className={`line-clamp-1 text-sm font-semibold text-black`}>
+                <p
+                  className={`line-clamp-1 text-base font-semibold text-black`}
+                >
                   {name}
                 </p>
               </div>

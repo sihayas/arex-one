@@ -18,7 +18,7 @@ export const useArtifact = () => {
         threadcrumbs: [artifact.id],
         scrollPosition: 0,
         artifact: {
-          artifact,
+          data: artifact,
           replyTo: replyId,
         },
         isOpen: false,

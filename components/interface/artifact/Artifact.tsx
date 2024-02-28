@@ -19,6 +19,7 @@ import { AlbumData, SongData } from "@/types/appleTypes";
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
 import { StarIcon } from "@/components/icons";
+import { Interaction } from "@/components/global/Interaction";
 
 export const Artifact = () => {
   const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
@@ -34,7 +35,7 @@ export const Artifact = () => {
     pages[pages.length - 1].isOpen = latest >= 1;
   });
 
-  const artifactExtended = activePage.artifact?.artifact as ArtifactExtended;
+  const artifactExtended = activePage.artifact?.data as ArtifactExtended;
   // If opening from a notification, load the chain
   const chainId = activePage.artifact?.replyTo;
 
@@ -61,37 +62,38 @@ export const Artifact = () => {
   const y = useSpring(0, { damping: 320, stiffness: 80 });
 
   // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
-  // useEffect(() => {
-  //   if (isExpanded) return;
-  //
-  //   const xControls = animate(x, [8, 8, -8, -8, 8], {
-  //     repeat: Infinity,
-  //     duration: 16,
-  //     ease: "easeOut",
-  //   });
-  //
-  //   const yControls = animate(y, [8, -8, -8, 8, 8], {
-  //     repeat: Infinity,
-  //     duration: 16,
-  //     ease: "easeOut",
-  //   });
-  //
-  //   const unsubscribeX = x.on("change", (latest) => {
-  //     setTiltAngles((prev) => ({ ...prev, tiltAngleX: latest }));
-  //   });
-  //
-  //   const unsubscribeY = y.on("change", (latest) => {
-  //     setTiltAngles((prev) => ({ ...prev, tiltAngleY: latest }));
-  //   });
-  //
-  //   return () => {
-  //     xControls.stop();
-  //     yControls.stop();
-  //     unsubscribeX();
-  //     unsubscribeY();
-  //   };
-  // }, [isExpanded]);
-  //
+
+  useEffect(() => {
+    if (isExpanded) return;
+
+    const xControls = animate(x, [8, 8, -8, -8, 8], {
+      repeat: Infinity,
+      duration: 16,
+      ease: "easeOut",
+    });
+
+    const yControls = animate(y, [8, -8, -8, 8, 8], {
+      repeat: Infinity,
+      duration: 16,
+      ease: "easeOut",
+    });
+
+    const unsubscribeX = x.on("change", (latest) => {
+      setTiltAngles((prev) => ({ ...prev, tiltAngleX: latest }));
+    });
+
+    const unsubscribeY = y.on("change", (latest) => {
+      setTiltAngles((prev) => ({ ...prev, tiltAngleY: latest }));
+    });
+
+    return () => {
+      xControls.stop();
+      yControls.stop();
+      unsubscribeX();
+      unsubscribeY();
+    };
+  }, [isExpanded]);
+
   // useEffect(() => {
   //   if (isExpanded) {
   //     setTiltAngles({ tiltAngleX: 0, tiltAngleY: 0 });
@@ -117,6 +119,7 @@ export const Artifact = () => {
           damping: 15,
           stiffness: 100,
         }}
+        className={`relative`}
       >
         <Tilt
           tiltAngleXManual={tiltAngles.tiltAngleX}
@@ -216,6 +219,7 @@ export const Artifact = () => {
             </div>
           </motion.div>
         </Tilt>
+        <Interaction artifact={artifactExtended} />
       </motion.div>
 
       {/* If viewing a specific chain i.e. from notification */}

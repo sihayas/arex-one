@@ -94,7 +94,7 @@ export const Keybinds = (
     ) {
       e.preventDefault();
       //@ts-ignore
-      setReplyTarget({ artifact: activePage.artifact, reply: null });
+      setReplyTarget({ artifact: activePage.artifact.data, reply: null });
     }
   };
 

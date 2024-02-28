@@ -29,7 +29,7 @@ const Reply = ({ notificationsGroup }: any) => {
       {/* Parent */}
       <div className={`flex min-w-full items-end justify-end`}>
         <div
-          className={`relative mb-3 mr-3 w-fit rounded-[18px] bg-[#E5E5E5] px-[10px] pb-[7px] pt-[6px]`}
+          className={`relative mb-3 mr-3 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
         >
           <div
             className={`text-gray5 line-clamp-2 w-full cursor-pointer break-words text-sm`}
@@ -44,10 +44,10 @@ const Reply = ({ notificationsGroup }: any) => {
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -right-1 h-3 w-3`}>
             <div
-              className={`absolute left-0 top-0 h-2 w-2 rounded-full bg-[#E5E5E5]`}
+              className={`absolute left-0 top-0 h-2 w-2 rounded-full bg-white`}
             />
             <div
-              className={`absolute bottom-0 right-0 h-1 w-1 rounded-full bg-[#E5E5E5]`}
+              className={`absolute bottom-0 right-0 h-1 w-1 rounded-full bg-white`}
             />
           </div>
         </div>
@@ -72,7 +72,7 @@ const Reply = ({ notificationsGroup }: any) => {
           height={32}
         />
         <div
-          className={`relative mb-3 ml-3 w-fit  rounded-[18px] bg-[#E5E5E5] px-[10px] pb-[7px] pt-[6px]`}
+          className={`relative mb-3 ml-3 w-fit  rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
         >
           <div
             className={`line-clamp-6 w-full cursor-pointer break-words text-base text-black`}
@@ -87,10 +87,10 @@ const Reply = ({ notificationsGroup }: any) => {
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
             <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#E5E5E5]`}
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
             />
             <div
-              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-[#E5E5E5]`}
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
             />
           </div>
         </div>
@@ -132,7 +132,7 @@ const Reply = ({ notificationsGroup }: any) => {
           height={32}
         />
         <div
-          className={`relative mb-3 ml-3 w-fit rounded-[18px] bg-[#E5E5E5] px-[10px] pb-[7px] pt-[6px]`}
+          className={`relative mb-3 ml-3 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
         >
           <div
             className={`line-clamp-6 w-full cursor-pointer break-words text-base text-black`}
@@ -143,10 +143,10 @@ const Reply = ({ notificationsGroup }: any) => {
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
             <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#E5E5E5]`}
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
             />
             <div
-              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-[#E5E5E5]`}
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
             />
           </div>
         </div>

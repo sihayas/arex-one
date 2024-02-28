@@ -30,8 +30,6 @@ const Form = () => {
       event?.preventDefault();
 
       const gatherSubmissionData = () => {
-        const sound = selectedFormSound;
-        if (!sound) return undefined;
         return {
           text: inputValue,
           rating,
@@ -119,16 +117,11 @@ const Form = () => {
         <motion.div
           initial={{
             scale: 0.75,
-            // rotateX: -30,
-            // rotateY: -15,
             opacity: 0,
             filter: "blur(8px)",
           }}
           animate={{
             scale: 1,
-            // rotateX: 0,
-            // rotateY: 0,
-            rotateZ: -2,
             opacity: 1,
             filter: "blur(0px)",
           }}

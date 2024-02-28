@@ -194,7 +194,7 @@ const Sound = () => {
           <>
             {/* Big Dial */}
             <motion.div
-              className={`pointer-events-none absolute bottom-0 left-0 z-10 flex origin-bottom-left items-center justify-center drop-shadow-xl will-change-transform`}
+              className={`absolute bottom-0 left-0 z-10 flex origin-bottom-left items-center justify-center drop-shadow-xl will-change-transform`}
               style={{
                 x: xDial,
                 y: yDial,

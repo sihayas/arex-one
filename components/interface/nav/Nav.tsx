@@ -25,6 +25,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
 import Search from "@/lib/helper/search";
+import Image from "next/image";
 
 const iconVariants = {
   exit: {
@@ -63,40 +64,48 @@ const Nav = () => {
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
   const contentContainerRef = useRef<HTMLDivElement>(null);
 
-  const pageObject = activePage.sound || activePage.artifact;
-  // isNone = activeAction === "none";
   const isNotifications = activeAction === "notifications";
+  const isForm = activeAction === "form";
+  const isReply = activeAction === "reply";
+
+  const pageHasData = activePage.sound || activePage.artifact;
 
   const contentVariants = {
     collapsed: {
       opacity: 0,
-      x: -32,
-      y: 32,
+      x: -40,
+      y: 36,
       width: 124,
-      height: 32,
-      backgroundColor: "#F4F4F4A9",
+      height: 0,
+      borderRadius: 0,
+      boxShadow:
+        "0px 0px 0px 0px rgba(0, 0, 0, 0.0), 0px 0px 0px 0px rgba(0, 0, 0,0.0)",
+      backgroundColor: "rgba(0, 0, 0, 0.0)",
       transition: {
         type: "spring",
         damping: 24,
         stiffness: 180,
       },
     },
+
     expanded: {
       opacity: 1,
-      backgroundColor: "#F4F4F4A9",
-      outline: "1px solid rgba(0,0,0,0.05)",
-      x: -32,
-      y: 32,
+      x: isReply ? 16 : -36,
+      y: isReply ? -16 : 36,
       width: isNotifications ? 320 : 384,
       height: !expandInput
-        ? 32 // base
+        ? 40 // base
         : activeAction === "none" && inputValue
         ? 472 // search
-        : activeAction === "form"
+        : isForm || isReply
         ? "auto" // form
-        : activeAction === "notifications"
+        : isNotifications
         ? 610 // notifications
-        : 32,
+        : 40,
+      borderRadius: isReply ? 20 : 16,
+      boxShadow:
+        "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
+      backgroundColor: isReply ? "#FFFFFF" : "#F4F4F4A9",
       transition:
         activeAction === "notifications"
           ? notificationTransition
@@ -115,8 +124,8 @@ const Nav = () => {
       },
     },
     expanded: {
-      x: -40,
-      y: 40,
+      x: isReply ? -32 : -40,
+      y: isReply ? 32 : 40,
       transition:
         activeAction === "notifications"
           ? notificationTransition
@@ -211,7 +220,7 @@ const Nav = () => {
         {/* Top / Content */}
         <motion.div
           ref={contentContainerRef}
-          className={`relative flex w-full flex-col items-end justify-end rounded-2xl`}
+          className={`relative flex w-full flex-col items-end justify-end origin-top-left`}
           variants={contentVariants}
           animate={expandInput ? "expanded" : "collapsed"}
         >
@@ -223,8 +232,32 @@ const Nav = () => {
 
           {!isNotifications && (
             <div
-              className={`flex w-full items-center justify-center bg-transparent p-[5px] pl-[40px]`}
+              className={`flex w-full items-center justify-center bg-transparent p-[9px] relative ${
+                isReply ? "pr-[44px] pl-3" : "pl-[44px]"
+              }`}
             >
+              {isReply && expandInput && replyTarget && (
+                <>
+                  <div className={`absolute top-2 right-2`}>
+                    <Image
+                      src={replyTarget?.artifact.author.image}
+                      alt={`${replyTarget?.artifact.author.username}'s avatar`}
+                      width={24}
+                      height={24}
+                      className={`rounded-full`}
+                    />
+                  </div>
+
+                  <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
+                    <div
+                      className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+                    />
+                    <div
+                      className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
+                    />
+                  </div>
+                </>
+              )}
               <TextareaAutosize
                 id="entryText"
                 className={`w-full resize-none bg-transparent text-base text-black outline-none ${
@@ -270,7 +303,7 @@ const Nav = () => {
           {/* Avatar */}
           <motion.div
             className={`origin-top-right absolute`}
-            animate={!expandInput ? { opacity: 1, scale: 1 } : { scale: 0.8 }}
+            animate={expandInput ? { scale: 0.8 } : { opacity: 1, scale: 1 }}
             transition={{ type: "spring", damping: 24, stiffness: 400 }}
           >
             <Avatar
@@ -284,7 +317,7 @@ const Nav = () => {
 
           {/* User is on Search results */}
           <AnimatePresence>
-            {expandInput && activeAction === "none" && (
+            {expandInput && activeAction === "none" && !pageHasData && (
               <motion.div
                 className={`absolute top-0 right-0 p-3 bg-white rounded-full`}
                 initial={{ opacity: 0, scale: 0.5 }}
@@ -294,10 +327,8 @@ const Nav = () => {
                 <TargetGoIcon />
               </motion.div>
             )}
-          </AnimatePresence>
 
-          {/* Form is Active */}
-          <AnimatePresence>
+            {/* Form is Active */}
             {expandInput &&
               activeAction === "form" &&
               (inputValue ? (
@@ -319,10 +350,8 @@ const Nav = () => {
                   <TargetFormIcon />
                 </motion.div>
               ))}
-          </AnimatePresence>
 
-          {/* User is on a Sound page */}
-          <AnimatePresence>
+            {/* User is on a Sound page */}
             {expandInput &&
               activeAction === "none" &&
               activePage.sound &&
@@ -336,10 +365,8 @@ const Nav = () => {
                   <TargetAddIcon />
                 </motion.div>
               )}
-          </AnimatePresence>
 
-          {/* User is on an Artifact page */}
-          <AnimatePresence>
+            {/* User is on an Artifact page */}
             {expandInput &&
               activeAction === "none" &&
               activePage.artifact &&
@@ -353,10 +380,8 @@ const Nav = () => {
                   <TargetArtifactIcon />
                 </motion.div>
               )}
-          </AnimatePresence>
 
-          {/* User is viewing notifications */}
-          <AnimatePresence>
+            {/* User is viewing notifications */}
             {expandInput && activeAction === "notifications" && (
               <motion.div
                 className={`absolute top-0 right-0 px-3 py-2 bg-white rounded-full`}
@@ -372,7 +397,6 @@ const Nav = () => {
 
         {/* Search Icon */}
         <motion.button
-          whileHover={!expandInput ? { scale: 1.5 } : undefined}
           animate={expandInput ? "exit" : "initial"}
           variants={iconVariants}
           onClick={() => setExpandInput((prev) => !prev)}

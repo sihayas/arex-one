@@ -153,7 +153,6 @@ export const Interaction = ({ artifact }: InteractionProps) => {
 
       {/* System */}
       <motion.div
-        layout
         className="flex origin-top-right flex-row-reverse items-center justify-center gap-2 pr-2"
         variants={containerVariants}
         animate={isHovered ? "visible" : "hidden"}
@@ -174,7 +173,6 @@ export const Interaction = ({ artifact }: InteractionProps) => {
               }}
             >
               <motion.div
-                layout
                 onClick={() => handleDelete(artifact.id)}
                 variants={dotVariants}
                 className={`flex items-center justify-center rounded-full bg-[#F20000] bg-opacity-25 p-2 text-xs font-medium uppercase leading-[8px] text-[#F20000]`}

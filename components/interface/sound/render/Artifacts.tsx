@@ -77,8 +77,12 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
               });
               handleSelectArtifact({
                 ...artifact,
-                appleData: activePage.sound?.sound,
+                sound: {
+                  data: activePage.sound?.data,
+                },
               });
+              console.log("set the data", activePage.sound?.data);
+              console.log("set the artifact", artifact);
             }}
             className={`p-8 pb-4`}
           >

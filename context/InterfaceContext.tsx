@@ -27,7 +27,7 @@ export type Page = {
       key: number;
     };
   };
-  artifact?: { artifact: Artifact; replyTo?: string };
+  artifact?: { data: Artifact; replyTo?: string };
   isOpen: boolean;
 };
 
