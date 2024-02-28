@@ -24,9 +24,7 @@ import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
-import Search from "@/lib/helper/search";
 import Image from "next/image";
-import { render } from "react-dom";
 
 const iconVariants = {
   exit: {
@@ -37,18 +35,6 @@ const iconVariants = {
     opacity: 1,
     scale: 1,
   },
-};
-
-const notificationTransition = {
-  type: "spring",
-  damping: 72,
-  stiffness: 800,
-};
-
-const searchTransition = {
-  type: "spring",
-  damping: 34,
-  stiffness: 500,
 };
 
 const Nav = () => {
@@ -107,10 +93,11 @@ const Nav = () => {
       boxShadow:
         "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
       backgroundColor: isReply ? "#FFFFFF" : "#F4F4F4A9",
-      transition:
-        activeAction === "notifications"
-          ? notificationTransition
-          : searchTransition,
+      transition: {
+        type: "spring",
+        damping: 40,
+        stiffness: 400,
+      },
     },
   };
 
@@ -127,10 +114,11 @@ const Nav = () => {
     expanded: {
       x: isReply ? -32 : -40,
       y: isReply ? 32 : 40,
-      transition:
-        activeAction === "notifications"
-          ? notificationTransition
-          : searchTransition,
+      transition: {
+        type: "spring",
+        damping: 40,
+        stiffness: 400,
+      },
     },
   };
 
@@ -226,14 +214,19 @@ const Nav = () => {
           animate={expandInput ? "expanded" : "collapsed"}
         >
           {/* Content */}
-          {isForm && expandInput && <Form />}
-          {isNotifications && expandInput && <Notifications />}
+          <AnimatePresence>
+            {isForm && expandInput && <Form />}
+            {!isForm && !isReply && expandInput && (
+              <Results searchData={data} />
+            )}
+            {/*{isNotifications && expandInput && <Notifications />}*/}
+          </AnimatePresence>
 
           {/* Text Input */}
           {!isNotifications && (
             <div
               className={`flex w-full items-center justify-center bg-transparent p-[9px] relative ${
-                isReply ? "pr-[44px] pl-3" : "pl-[44px]"
+                isReply ? "pr-[44px] pl-3" : "pl-[40px]"
               }`}
             >
               {isReply && expandInput && replyTarget && (

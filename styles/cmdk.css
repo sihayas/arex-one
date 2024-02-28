@@ -2,7 +2,6 @@
     position: absolute;
     top: 50%;
     left: 50%;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,16 +47,7 @@
 
 .cmdk [cmdk-list] {
     width: 100%;
-    overscroll-behavior: contain;
-    scroll-padding-block-end: 40px;
     border-radius: 32px;
-    minheight: 100%;
 }
 
-.cmdk [cmdk-group-heading] {
-    user-select: none;
-    font-size: 12px;
-    padding: 0 8px;
-    display: flex;
-    align-items: center;
-}
+

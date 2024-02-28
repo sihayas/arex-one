@@ -14,7 +14,7 @@ import { useSound } from "@/hooks/usePage";
 const Form = () => {
   const { user } = useInterfaceContext();
   const { selectedFormSound, setSelectedFormSound } = useSoundContext();
-  const { inputRef, inputValue, setInputValue } = useNavContext();
+  const { inputRef, inputValue, setInputValue, activeAction } = useNavContext();
   const { handleSelectSound } = useSound();
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -111,17 +111,28 @@ const Form = () => {
     event.preventDefault();
     handleSelectSound(selectedFormSound);
   };
+
   return (
-    <div className={`-z-10 flex w-full flex-col overflow-visible `}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className={`-z-10 flex w-full flex-col overflow-visible `}
+    >
       <form ref={formRef} onSubmit={handleSubmit} className={`flex p-8`}>
         <motion.div
           initial={{
             scale: 0.75,
+            rotateX: -30,
+            rotateY: -15,
             opacity: 0,
             filter: "blur(8px)",
           }}
           animate={{
             scale: 1,
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: -2,
             opacity: 1,
             filter: "blur(0px)",
           }}
@@ -132,7 +143,7 @@ const Form = () => {
             mass: 2,
             delay: 0.24,
           }}
-          className={`relative flex h-[322px] w-[322px] origin-center flex-col overflow-hidden rounded-3xl bg-white shadow-2xl will-change-transform`}
+          className={`relative flex h-[322px] w-[322px] origin-center flex-col overflow-hidden rounded-3xl bg-white shadow-test will-change-transform`}
           style={{ perspective: 1000 }}
         >
           <Image
@@ -174,7 +185,7 @@ const Form = () => {
           </div>
         </motion.div>
       </form>
-    </div>
+    </motion.div>
   );
 };
 

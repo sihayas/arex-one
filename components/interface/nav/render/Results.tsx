@@ -30,7 +30,10 @@ const Results = ({ searchData }: SearchProps) => {
   ];
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       className={`-z-10 flex w-full flex-col overflow-scroll -mb-[34px] mask`}
     >
       <Command.List>
@@ -62,7 +65,7 @@ const Results = ({ searchData }: SearchProps) => {
           }
         })}
       </Command.List>
-    </div>
+    </motion.div>
   );
 };
 

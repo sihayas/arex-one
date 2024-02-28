@@ -40,6 +40,7 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
   const usableCircumference = circumference - createGapSpace;
 
   const calculateStrokeLength = (rating: number) => {
+    if (totalRatings === 0) return 0;
     return (rating / totalRatings) * usableCircumference;
   };
 
@@ -70,6 +71,9 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
   };
 
   const calculateDotPosition = (length: number, offset: number) => {
+    length = !isNaN(length) ? length : 0;
+    offset = !isNaN(offset) ? offset : 0;
+
     const angle = ((length + offset) / circumference) * 360;
     const angleRad = (Math.PI / 180) * angle;
     const x = Math.cos(angleRad) * radius + viewBoxSize / 2;

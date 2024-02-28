@@ -27,14 +27,6 @@ const generalConfig = { damping: 36, stiffness: 400 };
 
 export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
-interface Ratings {
-  "0.5-1": string;
-  "1.5-2": string;
-  "2.5-3": string;
-  "3.5-4": string;
-  "4.5-5": string;
-}
-
 const Sound = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const { scrollContainerRef, activePage, pages } = useInterfaceContext();
@@ -128,8 +120,6 @@ const Sound = () => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
   }, []);
 
-  if (!data) return null;
-
   return (
     <>
       {/* Art Ghost Placeholder */}
@@ -209,9 +199,9 @@ const Sound = () => {
               }}
             >
               <Dial
-                ratings={ratings}
-                average={data.avg_rating}
-                count={data.ratings_count}
+                ratings={data ? ratings : [0, 0, 0, 0, 0]}
+                average={data ? data.avg_rating : 0}
+                count={data ? data.ratings_count : 0}
               />
             </motion.div>
 
@@ -232,9 +222,9 @@ const Sound = () => {
               }}
             >
               <DialMini
-                ratings={ratings}
+                ratings={data ? ratings : [0, 0, 0, 0, 0]}
                 onRangeChange={handleRangeChange}
-                average={data.avg_rating}
+                average={data ? data.avg_rating : 0}
               />
             </motion.div>
           </>,

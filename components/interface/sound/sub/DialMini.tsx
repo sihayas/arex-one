@@ -25,7 +25,6 @@ const springSegmentConfig = {
   damping: 10,
   mass: 0.1,
 };
-
 const textVariants = {
   initial: {
     scale: 0,
@@ -88,6 +87,7 @@ const DialMini: React.FC<DialMiniProps> = ({
   const usableCircumference = circumference - createGapSpace;
 
   const calculateStrokeLength = (rating: number) => {
+    if (totalRatings === 0) return 0;
     return (rating / totalRatings) * usableCircumference;
   };
 
@@ -118,6 +118,9 @@ const DialMini: React.FC<DialMiniProps> = ({
   };
 
   const calculateDotPosition = (length: number, offset: number) => {
+    length = !isNaN(length) ? length : 0;
+    offset = !isNaN(offset) ? offset : 0;
+
     const angle = ((length + offset) / circumference) * 360;
     const angleRad = (Math.PI / 180) * angle;
     const x = Math.cos(angleRad) * radius + viewBoxSize / 2;
