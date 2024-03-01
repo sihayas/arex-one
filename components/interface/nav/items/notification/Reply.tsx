@@ -28,38 +28,7 @@ const Reply = ({ notificationsGroup }: any) => {
     >
       {/* Parent */}
       <div className={`flex min-w-full items-end justify-end`}>
-        <div
-          className={`relative mb-3 mr-3 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
-        >
-          <div
-            className={`text-gray5 line-clamp-2 w-full cursor-pointer break-words text-sm`}
-          >
-            {reply.replyTo.text}
-          </div>
-
-          <div className="text-gray2 absolute -bottom-5 right-4 text-sm">
-            {reply.replyTo.author.username}
-          </div>
-
-          {/* Bubbles */}
-          <div className={`absolute -bottom-1 -right-1 h-3 w-3`}>
-            <div
-              className={`absolute left-0 top-0 h-2 w-2 rounded-full bg-white`}
-            />
-            <div
-              className={`absolute bottom-0 right-0 h-1 w-1 rounded-full bg-white`}
-            />
-          </div>
-        </div>
-
-        <Avatar
-          className={`border-silver h-6 border`}
-          imageSrc={reply.replyTo.author.image}
-          altText={`${user.username}'s avatar`}
-          user={user}
-          width={24}
-          height={24}
-        />
+        this is a reply to someone, not sure how to handle this yet
       </div>
       {/* Reply */}
       <div className={`flex w-full items-end`}>

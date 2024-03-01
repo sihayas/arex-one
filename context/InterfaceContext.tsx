@@ -108,7 +108,7 @@ export const InterfaceContextProvider = ({
     }
   }, [data]);
 
-  // Fetch notifications
+  // Initialize notifications
   const { data: notifData } = useNotificationsQuery(user?.id);
 
   useEffect(() => {

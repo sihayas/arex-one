@@ -219,7 +219,7 @@ const Nav = () => {
             {!isForm && !isReply && expandInput && (
               <Results searchData={data} />
             )}
-            {/*{isNotifications && expandInput && <Notifications />}*/}
+            {isNotifications && expandInput && <Notifications />}
           </AnimatePresence>
 
           {/* Text Input */}
@@ -274,19 +274,21 @@ const Nav = () => {
       <motion.div
         variants={barVariants}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`absolute bottom-0 left-0 flex flex-col gap-3 bg-transparent`}
+        className={`absolute bottom-0 left-0 flex flex-col gap-2 bg-transparent`}
       >
         {/* Notification Icon */}
         <motion.button
           whileHover={{
             scale: 1.1,
           }}
-          animate={expandInput ? { scale: 0.8, opacity: 0.1 } : { scale: 1 }}
+          animate={expandInput ? { scale: 0, opacity: 0 } : { scale: 1 }}
           ref={notificationButtonRef}
           onClick={handleNotificationsClick}
-          className={`flex`}
+          className={`flex w-10 items-center justify-center`}
         >
-          <NotificationIcon />
+          <div className={`px-[11px] py-3 bg-[#F4F4F4] rounded-full`}>
+            <NotificationIcon />
+          </div>
         </motion.button>
 
         <div className={`flex gap-2 items-center`}>
@@ -309,7 +311,6 @@ const Nav = () => {
               />
             </motion.div>
 
-            {/* User is on Search results */}
             <AnimatePresence>
               {expandInput && activeAction === "none" && !pageHasData && (
                 <motion.div
@@ -378,7 +379,7 @@ const Nav = () => {
               {/* User is viewing notifications */}
               {expandInput && activeAction === "notifications" && (
                 <motion.div
-                  className={`absolute top-0 right-0 px-3 py-2 bg-white rounded-full`}
+                  className={`absolute top-0 right-0 px-[11px] py-2 bg-white rounded-full`}
                   initial={{ opacity: 0, scale: 2 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 2 }}
