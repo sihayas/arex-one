@@ -66,9 +66,9 @@ const Nav = () => {
       width: 56,
       height: 32,
       borderRadius: 24,
-      boxShadow:
-        "0px 0px 0px 0px rgba(0, 0, 0, 0.0), 0px 0px 0px 0px rgba(0, 0, 0,0.0)",
-      backgroundColor: "#F4F4F4A9",
+      // boxShadow:
+      //   "0px 0px 0px 0px rgba(0, 0, 0, 0.0), 0px 0px 0px 0px rgba(0, 0, 0,0.0)",
+      // backgroundColor: "#F4F4F4A9",
       transition: {
         type: "spring",
         damping: 24,
@@ -79,16 +79,15 @@ const Nav = () => {
     expanded: {
       x: isReply ? 16 : -40,
       y: isReply ? -16 : 40,
-      width: isNotifications ? 448 : 384,
-      height: !expandInput
-        ? 40 // base
-        : activeAction === "none" && inputValue
-        ? 472 // search
-        : isForm || isReply
-        ? "auto" // form
-        : isNotifications
-        ? 780 // notifications
-        : 40,
+      width: !isNotifications && 384,
+      height:
+        !expandInput && !isNotifications
+          ? 40 // base
+          : activeAction === "none" && inputValue
+          ? 472 // search
+          : isForm || isReply
+          ? "auto" // form
+          : 40,
       borderRadius: isReply ? 20 : isNotifications ? 24 : 16,
       // boxShadow:
       //   "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
@@ -201,6 +200,8 @@ const Nav = () => {
 
   return (
     <>
+      {isNotifications && expandInput && <Notifications />}
+
       {/* Content / Shifter */}
       <div
         className={`absolute bottom-0 left-0 flex flex-col ${
@@ -220,7 +221,6 @@ const Nav = () => {
             {!isForm && !isReply && expandInput && (
               <Results searchData={data} />
             )}
-            {isNotifications && expandInput && <Notifications />}
           </AnimatePresence>
 
           {/* Text Input */}

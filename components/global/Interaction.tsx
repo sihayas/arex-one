@@ -106,10 +106,10 @@ export const Interaction = ({ artifact }: InteractionProps) => {
           loading: "Deleting...",
           success: "Deletion successful!",
           error: "Error deleting artifact",
-        },
+        }
       );
     },
-    [isDeleting],
+    [isDeleting]
   );
 
   const handleFlag = async () => {
@@ -123,7 +123,7 @@ export const Interaction = ({ artifact }: InteractionProps) => {
       const response = await createFlag(
         artifact.id,
         FlagType.artifact,
-        user!.id,
+        user!.id
       );
       console.log("Content flagged successfully!", response);
       setIsFlagging(false);

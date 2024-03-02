@@ -121,8 +121,9 @@ const Heart = ({ notificationsGroup }: any) => {
               >
                 <StarMiniIcon />
               </div>
-              <p className={`text-gray2 font-semibold text-base`}>
+              <p className={`text-gray2 text-sm font-medium line-clamp-1`}>
                 {sound.attributes.name}
+                &nbsp;&middot;&nbsp; {sound.attributes.artistName}
               </p>
             </div>
           )}
@@ -130,12 +131,13 @@ const Heart = ({ notificationsGroup }: any) => {
 
         {/* Reply? & Attribution */}
         {reply ? (
+          //   If Reply Heart, show Reply & Attribution
           <div className={`flex w-full items-end z-10 relative`}>
             <p className={`absolute -top-[23px] left-4 z-10`}>
               <p className={`text-gray2 text-base font-semibold`}>
-                {reply.author.username}{" "}
+                {name} & {count}{" "}
                 <span className={`font-normal`}>
-                  & {count} {count > 1 ? "other hearts" : "other heart"}
+                  {count > 1 ? "other hearts..." : "hearts..."}
                 </span>
               </p>
             </p>

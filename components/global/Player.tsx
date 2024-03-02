@@ -113,8 +113,8 @@ export const Player = () => {
       setRemainingTime(
         MusicKit.formatMediaTime(
           music.currentPlaybackDuration - music.currentPlaybackTime,
-          ":",
-        ),
+          ":"
+        )
       );
     };
 
@@ -132,28 +132,28 @@ export const Player = () => {
 
     music.addEventListener(
       MusicKit.Events.playbackStateDidChange,
-      handlePlaybackStateChange,
+      handlePlaybackStateChange
     );
 
     music.addEventListener(MusicKit.Events.mediaCanPlay, handleMediaCanPlay);
 
     music.addEventListener(
       MusicKit.Events.playbackTimeDidChange,
-      handlePlaybackTimeDidChange,
+      handlePlaybackTimeDidChange
     );
 
     return () => {
       music.removeEventListener(
         MusicKit.Events.playbackStateDidChange,
-        handlePlaybackStateChange,
+        handlePlaybackStateChange
       );
       music.removeEventListener(
         MusicKit.Events.mediaCanPlay,
-        handleMediaCanPlay,
+        handleMediaCanPlay
       );
       music.removeEventListener(
         MusicKit.Events.playbackTimeDidChange,
-        handlePlaybackTimeDidChange,
+        handlePlaybackTimeDidChange
       );
     };
   }, [music, lockPlayback, panning, seeking, progress]);
@@ -164,7 +164,7 @@ export const Player = () => {
       artwork.current = MusicKit.formatArtworkURL(
         mediaItem.attributes.artwork,
         120,
-        120,
+        120
       );
       name.current = mediaItem.attributes.name;
       artist.current = mediaItem.attributes.artistName;
