@@ -188,7 +188,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           ? "1px solid rgba(0,0,0,0.05)"
           : "1px solid rgba(0,0,0,0.0)",
         scale: expandInput ? 0.96 : 1,
-        filter: expandInput ? "blur(4px)" : "blur(0px)",
+        filter: expandInput ? "blur(24px)" : "blur(0px)",
       };
       const transitionConfig = {
         type: "spring" as const,

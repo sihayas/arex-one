@@ -90,10 +90,10 @@ const Nav = () => {
         ? 780 // notifications
         : 40,
       borderRadius: isReply ? 20 : isNotifications ? 24 : 16,
-      boxShadow:
-        "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
-      backgroundColor: isReply ? "#FFFFFF" : "#F4F4F4",
-      outline: "1px solid rgba(0,0,0,0.05)",
+      // boxShadow:
+      //   "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
+      // backgroundColor: isReply ? "#FFFFFF" : "#F4F4F4",
+      // outline: "1px solid rgba(0,0,0,0.05)",
       transition: {
         type: "spring",
         damping: 40,

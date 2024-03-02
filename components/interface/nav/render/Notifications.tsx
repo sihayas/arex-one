@@ -10,7 +10,7 @@ const Notifications = () => {
     <div
       className={`scrollbar-none -z-10 flex h-full w-full flex-col overflow-scroll`}
     >
-      <div className={`flex w-full flex-col gap-8 p-6`}>
+      <div className={`flex w-full flex-col`}>
         {Object.entries(notifs).map(([key, notificationGroup], index) => {
           const notificationType = key.split("|")[0].toUpperCase();
           switch (notificationType) {
@@ -18,14 +18,14 @@ const Notifications = () => {
               return (
                 <>
                   <Heart key={key} notificationsGroup={notificationGroup} />
-                  <div className="bg-silver h-[1.5px] w-full rounded-full" />
+                  {/*<div className="bg-silver h-[1.5px] w-full rounded-full" />*/}
                 </>
               );
             case "REPLY":
               return (
                 <>
                   <Reply key={key} notificationsGroup={notificationGroup} />
-                  <div className="bg-silver h-[1.5px] w-full rounded-full" />
+                  {/*<div className="bg-silver h-[1.5px] w-full rounded-full" />*/}
                 </>
               );
             // case "FOLLOWED":

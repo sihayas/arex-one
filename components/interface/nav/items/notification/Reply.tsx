@@ -26,27 +26,30 @@ const Reply = ({ notificationsGroup }: any) => {
         event.stopPropagation();
         handleSelectArtifact(reply?.artifact, reply.id);
       }}
-      className={`flex flex-col`}
+      className={`flex flex-col rounded-3xl py-6 px-4`}
     >
       <div className={`flex items-center`}>
         <div
-          className={`w-8 h-8 bg-gray3 flex-shrink-0 flex items-center justify-center rounded-full mr-4`}
+          className={`w-8 h-8 bg-black flex-shrink-0 flex items-center justify-center rounded-full mr-4 shadow-notification`}
         >
           <ChainlinkIcon />
         </div>
         {/* Art & Avatar */}
         <div className={`w-12 h-16 relative flex-shrink-0`}>
-          <Image
-            className="rounded-xl shadow-shadowKitLow"
-            src={url}
-            alt={`Artwork`}
-            loading="lazy"
-            quality={100}
-            style={{ objectFit: "cover" }}
-            fill={true}
-          />
+          <div className={`-rotate-3 w-12 h-16`}>
+            <Image
+              className="rounded-xl shadow-notification"
+              src={url}
+              alt={`Artwork`}
+              loading="lazy"
+              quality={100}
+              style={{ objectFit: "cover" }}
+              fill={true}
+            />
+          </div>
+
           <Avatar
-            className={`absolute -bottom-2 -right-2 outline-2 outline-white outline shadow-shadowKitLow`}
+            className={`absolute -bottom-2 -right-2 outline-2 outline-white outline shadow-notification`}
             imageSrc={reply.author.image}
             altText={`${reply.author.username}'s avatar`}
             user={reply.author}
@@ -56,14 +59,13 @@ const Reply = ({ notificationsGroup }: any) => {
         </div>
         {/* Reply & Attribution */}
         <div className={`flex w-full items-end z-10 relative`}>
-          <p className={`absolute -top-[23px] left-4 z-10`}>
-            <p className={`text-gray2 text-base font-semibold`}>
-              {reply.author.username}{" "}
-              <span className={`font-normal`}>chainlinked...</span>
+          <p className={`absolute -bottom-[12px] left-4 z-10`}>
+            <p className={`text-gray2 text-sm font-semibold`}>
+              {reply.author.username}
             </p>
           </p>
           <div
-            className={`relative mb-1 ml-1 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px] shadow-shadowKitLow`}
+            className={`relative mb-1.5 ml-1 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px] shadow-notification`}
           >
             <div
               className={`line-clamp-6 w-full cursor-pointer break-words text-base text-black`}
@@ -90,27 +92,30 @@ const Reply = ({ notificationsGroup }: any) => {
         event.stopPropagation();
         handleSelectArtifact(reply?.artifact, reply.id);
       }}
-      className={`flex flex-col`}
+      className={`flex flex-col rounded-3xl py-6 px-4`}
     >
       <div className={`flex items-center`}>
         <div
-          className={`w-8 h-8 bg-gray3 flex-shrink-0 flex items-center justify-center rounded-full mr-4`}
+          className={`w-8 h-8 bg-black flex-shrink-0 flex items-center justify-center rounded-full mr-4 shadow-notification`}
         >
           <ChainIcon />
         </div>
         {/* Art & Avatar */}
         <div className={`w-12 h-16 relative flex-shrink-0`}>
-          <Image
-            className="rounded-xl shadow-shadowKitLow"
-            src={url}
-            alt={`Artwork`}
-            loading="lazy"
-            quality={100}
-            style={{ objectFit: "cover" }}
-            fill={true}
-          />
+          <div className={`-rotate-3 w-12 h-16`}>
+            <Image
+              className="rounded-xl shadow-notification"
+              src={url}
+              alt={`Artwork`}
+              loading="lazy"
+              quality={100}
+              style={{ objectFit: "cover" }}
+              fill={true}
+            />
+          </div>
+
           <Avatar
-            className={`absolute -bottom-2 -right-2 outline-2 outline-white outline shadow-shadowKitLow`}
+            className={`absolute -bottom-2 -right-2 outline-2 outline-white outline shadow-notification`}
             imageSrc={reply.author.image}
             altText={`${reply.author.username}'s avatar`}
             user={reply.author}
@@ -120,14 +125,13 @@ const Reply = ({ notificationsGroup }: any) => {
         </div>
         {/* Reply & Attribution */}
         <div className={`flex w-full items-end z-10 relative`}>
-          <p className={`absolute -top-[23px] left-4 z-10`}>
-            <p className={`text-gray2 text-base font-semibold`}>
-              {reply.author.username}{" "}
-              <span className={`font-normal`}>created a chain...</span>
+          <p className={`absolute -bottom-[12px] left-4 z-10`}>
+            <p className={`text-gray2 text-sm font-semibold`}>
+              {reply.author.username}
             </p>
           </p>
           <div
-            className={`relative mb-1 ml-1 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px] shadow-shadowKitLow`}
+            className={`relative mb-1.5 ml-1 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px] shadow-notification`}
           >
             <div
               className={`line-clamp-6 w-full cursor-pointer break-words text-base text-black`}

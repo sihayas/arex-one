@@ -45,28 +45,31 @@ const Heart = ({ notificationsGroup }: any) => {
       onClick={(event) => {
         event.stopPropagation();
       }}
-      className={`flex flex-col`}
+      className={`flex flex-col py-6 px-4`}
     >
       <div className={`flex items-center`}>
         <div
-          className={`w-8 h-8 bg-[#FF4DC9] flex-shrink-0 flex items-center justify-center rounded-full mr-4`}
+          className={`w-8 h-8 bg-black flex-shrink-0 flex items-center justify-center rounded-full mr-4 shadow-notification`}
         >
           <HeartIcon />
         </div>
         {/* Art & Avatar */}
         <div className={`w-12 h-16 relative flex-shrink-0 -rotate-4`}>
-          <Image
-            className="rounded-xl shadow-shadowKitLow"
-            src={url}
-            alt={`Artwork`}
-            loading="lazy"
-            quality={100}
-            style={{ objectFit: "cover" }}
-            fill={true}
-          />
+          <div className={`-rotate-3 w-12 h-16`}>
+            <Image
+              className="rounded-xl shadow-notification"
+              src={url}
+              alt={`Artwork`}
+              loading="lazy"
+              quality={100}
+              style={{ objectFit: "cover" }}
+              fill={true}
+            />
+          </div>
+
           {avatarData1 && (
             <Image
-              className="absolute -top-2 -left-2 outline-2 outline-white outline shadow-shadowKitLow rounded-full"
+              className="absolute -top-2 -left-2 outline-2 outline-white outline shadow-notification rounded-full"
               src={avatarData1.image}
               alt={`Author ${avatarData1.id}`}
               width={32}
@@ -75,9 +78,10 @@ const Heart = ({ notificationsGroup }: any) => {
               quality={100}
             />
           )}
+
           {avatarData2 && (
             <Image
-              className="absolute -left-2 -bottom-2 outline-2 outline-white outline shadow-shadowKitLow rounded-full"
+              className="absolute -left-2 -bottom-2 outline-2 outline-white outline shadow-notification rounded-full"
               src={avatarData2.image}
               alt={`Author ${avatarData2.id}`}
               width={24}
@@ -86,9 +90,10 @@ const Heart = ({ notificationsGroup }: any) => {
               quality={100}
             />
           )}
+
           {avatarData3 && (
             <Image
-              className="absolute bottom-2 left-0 outline-2 outline-white outline shadow-shadowKitLow rounded-full"
+              className="absolute bottom-1 left-0 outline-2 outline-white outline shadow-notification rounded-full"
               src={avatarData3.image}
               alt={`Author ${avatarData3.id}`}
               width={20}
@@ -100,7 +105,7 @@ const Heart = ({ notificationsGroup }: any) => {
 
           {reply ? (
             <Avatar
-              className={`absolute -bottom-2 -right-2 outline-2 outline-white outline shadow-shadowKitLow`}
+              className={`absolute -bottom-2 -right-2 outline-2 outline-white outline shadow-notification`}
               imageSrc={reply.author.image}
               altText={`${reply.author.username}'s avatar`}
               user={reply.author}
@@ -109,9 +114,16 @@ const Heart = ({ notificationsGroup }: any) => {
             />
           ) : (
             <div
-              className={`absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-shadowKitLow flex items-center justify-center`}
+              className={`flex w-max items-center gap-2 absolute -bottom-2 left-6`}
             >
-              <StarMiniIcon />
+              <div
+                className={`w-8 h-8 bg-white rounded-full shadow-notification flex items-center justify-center`}
+              >
+                <StarMiniIcon />
+              </div>
+              <p className={`text-gray2 font-semibold text-base`}>
+                {sound.attributes.name}
+              </p>
             </div>
           )}
         </div>
@@ -150,10 +162,9 @@ const Heart = ({ notificationsGroup }: any) => {
         ) : (
           <div className={`pl-4 flex w-full items-end z-10 relative`}>
             <p className={`text-gray2 text-base font-semibold`}>
-              {name} <span className={`font-semibold`}>& {count} </span>
-              <span className={`font-normal`}>other</span>
-              <span className={`font-semibold text-[#FF4DC9]`}>
-                {count > 1 ? "hearts" : "other heart"}
+              {name} & {count}{" "}
+              <span className={`font-normal`}>
+                {count > 1 ? "other hearts..." : "hearts..."}
               </span>
             </p>
           </div>
