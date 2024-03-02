@@ -5,7 +5,6 @@ import { useUserDataQuery } from "@/lib/helper/user";
 import Essentials from "@/components/interface/user/render/Essentials";
 import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
-import { SettingsIcon } from "@/components/icons";
 
 export type Section = "essentials" | "sounds" | "entries" | "wisps";
 

@@ -52,7 +52,7 @@ export default async function handler(
           isRead: false,
         },
         orderBy: { createdAt: "desc" },
-        take: 4,
+        take: 3,
         select: {
           activity: {
             select: {

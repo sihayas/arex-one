@@ -79,7 +79,7 @@ const Nav = () => {
     expanded: {
       x: isReply ? 16 : -40,
       y: isReply ? -16 : 40,
-      width: isNotifications ? 320 : 384,
+      width: isNotifications ? 448 : 384,
       height: !expandInput
         ? 40 // base
         : activeAction === "none" && inputValue
@@ -87,12 +87,13 @@ const Nav = () => {
         : isForm || isReply
         ? "auto" // form
         : isNotifications
-        ? 610 // notifications
+        ? 780 // notifications
         : 40,
-      borderRadius: isReply ? 20 : 16,
+      borderRadius: isReply ? 20 : isNotifications ? 24 : 16,
       boxShadow:
         "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
-      backgroundColor: isReply ? "#FFFFFF" : "#F4F4F4A9",
+      backgroundColor: isReply ? "#FFFFFF" : "#F4F4F4",
+      outline: "1px solid rgba(0,0,0,0.05)",
       transition: {
         type: "spring",
         damping: 40,
