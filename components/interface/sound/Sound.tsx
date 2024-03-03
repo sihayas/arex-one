@@ -40,6 +40,11 @@ const Sound = () => {
   const isOpen = activePage.isOpen;
   const soundData = activePage.sound!.data;
 
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+    layoutEffect: false,
+  });
+
   const { data } = useSoundInfoQuery(soundData.id);
 
   useEffect(() => {
@@ -47,11 +52,6 @@ const Sound = () => {
       setRatings(Object.values(data.ratings).map(Number));
     }
   }, [data]);
-
-  const { scrollY } = useScroll({
-    container: scrollContainerRef,
-    layoutEffect: false,
-  });
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;
@@ -87,8 +87,8 @@ const Sound = () => {
     generalConfig,
   );
 
-  const xDial = useSpring(useTransform(scrollY, [0, 1], [-32, 32]), xConfig);
-  const yDial = useSpring(useTransform(scrollY, [0, 1], [32, -32]), yConfig);
+  const xDial = useSpring(useTransform(scrollY, [0, 1], [-72, 32]), xConfig);
+  const yDial = useSpring(useTransform(scrollY, [0, 1], [72, -32]), yConfig);
   const scaleDial = useSpring(
     useTransform(scrollY, [0, 1], [1, 0.25]),
     scaleConfig,
@@ -128,33 +128,33 @@ const Sound = () => {
       <Artifacts soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
 
       {/* Art */}
-      <motion.div
-        initial={{
-          borderRadius: isOpen ? 96 : 16,
-          scale: isOpen ? 0.1389 : 1,
-          x: isOpen ? -240 : artHeight + 32,
-          y: isOpen ? 26 : artWidth + 32,
-          rotate: isOpen ? -4 : 0,
-        }}
-        style={{
-          borderRadius: borderRad,
-          scale: scaleArt,
-          y: yArt,
-          x: xArt,
-          rotate: rotateArt,
-        }}
-        className="shadow-shadowKitHigh pointer-events-none absolute left-1/2 top-1/2 z-10 min-h-[432px] min-w-[432px] origin-top-left overflow-hidden"
-      >
-        <Image
-          src={artwork}
-          alt={`${soundData.attributes.name}'s artwork`}
-          width={432}
-          height={432}
-          quality={100}
-          draggable="false"
-          onDragStart={(e) => e.preventDefault()}
-        />
-      </motion.div>
+      {/*<motion.div*/}
+      {/*  initial={{*/}
+      {/*    borderRadius: isOpen ? 96 : 16,*/}
+      {/*    scale: isOpen ? 0.1389 : 1,*/}
+      {/*    x: isOpen ? -240 : artHeight + 32,*/}
+      {/*    y: isOpen ? 26 : artWidth + 32,*/}
+      {/*    rotate: isOpen ? -4 : 0,*/}
+      {/*  }}*/}
+      {/*  style={{*/}
+      {/*    borderRadius: borderRad,*/}
+      {/*    scale: scaleArt,*/}
+      {/*    y: yArt,*/}
+      {/*    x: xArt,*/}
+      {/*    rotate: rotateArt,*/}
+      {/*  }}*/}
+      {/*  className="pointer-events-none absolute left-1/2 top-1/2 z-10 min-h-[432px] min-w-[432px] origin-top-left overflow-hidden"*/}
+      {/*>*/}
+      {/*  <Image*/}
+      {/*    src={artwork}*/}
+      {/*    alt={`${soundData.attributes.name}'s artwork`}*/}
+      {/*    width={432}*/}
+      {/*    height={432}*/}
+      {/*    quality={100}*/}
+      {/*    draggable="false"*/}
+      {/*    onDragStart={(e) => e.preventDefault()}*/}
+      {/*  />*/}
+      {/*</motion.div>*/}
 
       {/* Titles */}
       <motion.div
@@ -192,8 +192,8 @@ const Sound = () => {
                 opacity: hideDial,
               }}
               initial={{
-                x: isOpen ? 32 : -32,
-                y: isOpen ? -32 : 32,
+                x: isOpen ? 72 : -72,
+                y: isOpen ? -72 : 72,
                 scale: isOpen ? 0.25 : 1,
                 opacity: isOpen ? 0 : 1,
               }}
@@ -215,8 +215,8 @@ const Sound = () => {
                 opacity: showMini,
               }}
               initial={{
-                x: isOpen ? 32 : -32,
-                y: isOpen ? -32 : 32,
+                x: isOpen ? 72 : -72,
+                y: isOpen ? -72 : 72,
                 scale: isOpen ? 0.25 : 1,
                 opacity: isOpen ? 1 : 0,
               }}

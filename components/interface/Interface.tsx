@@ -15,7 +15,6 @@ import {
   useScroll,
   useTransform,
   MotionValue,
-  stagger,
 } from "framer-motion";
 import { PageName } from "@/context/InterfaceContext";
 import { createPortal } from "react-dom";
@@ -38,7 +37,7 @@ export const GetDimensions = (pageName: PageName) => {
     },
     sound: {
       base: { width: 496, height: 496 },
-      target: { width: 720, height: maxHeight },
+      target: { width: 702, height: maxHeight },
     },
     artifact: {
       base: { width: 512, height: 768 },
@@ -151,7 +150,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     activePage,
   ]);
 
-  // Animate page dimensions while scrolling
+  // Animate portal dimensions while scrolling
   useEffect(() => {
     const shiftDimension = (dimension: string, newDimension: MotionValue) => {
       animate(
@@ -178,13 +177,13 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     };
   }, [animate, newWidth, newHeight, scope]);
 
-  // Animate portal shadow when input is expanded
+  // Animate portal styles
   useEffect(() => {
     const animateShadow = () => {
       const animationConfig = {
-        boxShadow: !expandInput
-          ? "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)"
-          : "0px 0px 0px 0px rgba(0,0,0,0.0), 0px 0px 0px 0px rgba(0,0,0,0.0)",
+        boxShadow: expandInput
+          ? "0px 0px 0px 0px rgba(0,0,0,0.0), 0px 0px 0px 0px rgba(0,0,0,0.0)"
+          : "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
         outline: expandInput
           ? "1px solid rgba(0,0,0,0.05)"
           : "1px solid rgba(0,0,0,0.0)",
@@ -245,8 +244,5 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
 function template({ x, y, scale }: { x: number; y: number; scale: number }) {
   // Assuming x and y are percentages and scale is a unit-less number
-  // Assuming x and y are percentages and scale
-
-  // Assuming X and Y are percentages and scale is a unit-less number.
   return `translateX(${x}) translateY(${y}) scale(${scale})`;
 }

@@ -19,7 +19,7 @@ const dialVariants = {
 const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
   const strokeWidth = 8;
   const dotRadius = 1.5;
-  const radius = 116;
+  const radius = 156;
 
   const circumference = 2 * Math.PI * radius;
   const viewBoxSize = radius * 2 + strokeWidth; // 32 = padding
@@ -145,7 +145,7 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
       </motion.svg>
 
       <motion.div
-        className={`center-x center-y absolute flex flex-col items-center justify-center gap-2 text-center text-white`}
+        className={`center-x center-y absolute flex flex-col items-center justify-center gap-[13px] text-center text-white w-20 h-20`}
       >
         <p className={`font-serif text-[64px] leading-[43px]`}>{average}</p>
         <hr className={`w-4 rounded-full border-[1px] border-white`} />

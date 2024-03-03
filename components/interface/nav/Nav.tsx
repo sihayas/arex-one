@@ -299,7 +299,7 @@ const Nav = () => {
           >
             {/* Avatar */}
             <motion.div
-              className={`absolute`}
+              className={`absolute shadow-notification rounded-full`}
               animate={expandInput ? { scale: 0.5 } : { opacity: 1, scale: 1 }}
               transition={{ type: "spring", damping: 24, stiffness: 400 }}
             >
