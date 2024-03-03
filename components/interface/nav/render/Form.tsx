@@ -49,6 +49,7 @@ const Form = () => {
       }
 
       toast.promise(
+        // @ts-ignore
         createEntry(submissionData).then(() => {
           setSelectedFormSound(null);
           setInputValue("");
@@ -65,9 +66,9 @@ const Form = () => {
       loved,
       inputValue,
       userId,
-      selectedFormSound,
       setSelectedFormSound,
       setInputValue,
+      appleData,
     ],
   );
 
@@ -98,6 +99,8 @@ const Form = () => {
     setRating(rating);
   };
 
+  if (!appleData) return;
+
   const artwork = MusicKit.formatArtworkURL(
     appleData.attributes.artwork,
     322 * 2.5,
@@ -106,7 +109,7 @@ const Form = () => {
   const name = appleData.attributes.name;
   const artist = appleData.attributes.artistName;
 
-  // handle sound clikc and prevent default
+  // handle sound click and prevent default
   const handleSoundClick = (event: React.MouseEvent<HTMLImageElement>) => {
     event.preventDefault();
     handleSelectSound(selectedFormSound);
@@ -132,7 +135,7 @@ const Form = () => {
             scale: 1,
             rotateX: 0,
             rotateY: 0,
-            rotateZ: -2,
+            rotateZ: -1,
             opacity: 1,
             filter: "blur(0px)",
           }}
@@ -143,7 +146,7 @@ const Form = () => {
             mass: 2,
             delay: 0.24,
           }}
-          className={`relative flex h-[322px] w-[322px] origin-center flex-col overflow-hidden rounded-3xl bg-white shadow-test will-change-transform`}
+          className={`relative flex h-[304px] w-[304px] origin-center flex-col overflow-hidden rounded-2xl bg-white shadow-test will-change-transform`}
           style={{ perspective: 1000 }}
         >
           <Image
@@ -161,12 +164,12 @@ const Form = () => {
             <RatingDial setRatingValue={handleRatingChange} />
             <AnimatePresence>
               <motion.div
-                initial={{
-                  scale: 0.75,
-                  opacity: 0,
-                  filter: "blur(8px)",
-                }}
-                className={`center-x center-y absolute font-serif text-2xl leading-[16px] text-white`}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                transition={{ duration: 0.24 }}
+                key={rating}
+                className={`center-x center-y absolute text-2xl font-bold leading-[16px] tracking-tighter text-white`}
               >
                 {rating}
               </motion.div>

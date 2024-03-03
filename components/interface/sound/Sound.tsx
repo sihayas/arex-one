@@ -83,7 +83,7 @@ const Sound = () => {
     scaleConfig,
   );
   const borderRad = useSpring(
-    useTransform(scrollY, [0, 1], [24, 48]),
+    useTransform(scrollY, [0, 1], [20, 48]),
     generalConfig,
   );
 
@@ -184,7 +184,7 @@ const Sound = () => {
           <>
             {/* Big Dial */}
             <motion.div
-              className={`absolute bottom-0 left-0 z-10 flex origin-bottom-left items-center justify-center drop-shadow-xl will-change-transform`}
+              className={`absolute bottom-0 left-0 flex origin-bottom-left items-center justify-center drop-shadow-xl will-change-transform point`}
               style={{
                 x: xDial,
                 y: yDial,

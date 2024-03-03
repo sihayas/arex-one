@@ -51,8 +51,9 @@ export const GetDimensions = (pageName: PageName) => {
 
 export function Interface({ isVisible }: { isVisible: boolean }) {
   const { scrollContainerRef, activePage } = useInterfaceContext();
-  const { expandInput } = useNavContext();
+  const { expandInput, activeAction } = useNavContext();
   const cmdkPortal = document.getElementById("cmdk");
+  const isNotifications = activeAction === "notifications";
 
   const activePageName: PageName = activePage.name as PageName;
   const ActiveComponent = componentMap[activePageName];
@@ -187,8 +188,12 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         outline: expandInput
           ? "1px solid rgba(0,0,0,0.05)"
           : "1px solid rgba(0,0,0,0.0)",
-        scale: expandInput ? 0.96 : 1,
-        filter: expandInput ? "blur(24px)" : "blur(0px)",
+        scale: expandInput ? (isNotifications ? 1.05 : 0.9) : 1,
+        filter: expandInput
+          ? isNotifications
+            ? "blur(24px)"
+            : "blur(4px)"
+          : "blur(0px)",
       };
       const transitionConfig = {
         type: "spring" as const,
@@ -200,7 +205,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       animate(scope.current, animationConfig, transitionConfig);
     };
     animateShadow();
-  }, [expandInput, animate, scope]);
+  }, [expandInput, animate, scope, isNotifications]);
 
   return (
     <motion.div
@@ -240,5 +245,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
 function template({ x, y, scale }: { x: number; y: number; scale: number }) {
   // Assuming x and y are percentages and scale is a unit-less number
+  // Assuming x and y are percentages and scale
+
+  // Assuming X and Y are percentages and scale is a unit-less number.
   return `translateX(${x}) translateY(${y}) scale(${scale})`;
 }

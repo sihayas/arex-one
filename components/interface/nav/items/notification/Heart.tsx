@@ -2,18 +2,11 @@ import Image from "next/image";
 import React from "react";
 
 import Avatar from "@/components/global/Avatar";
-import {
-  ChainlinkIcon,
-  HeartIcon,
-  StarIcon,
-  StarMiniIcon,
-} from "@/components/icons";
+import { HeartIcon, StarMiniIcon } from "@/components/icons";
 
 const Heart = ({ notificationsGroup }: any) => {
   const notifications = notificationsGroup.notifications.slice(0, 4);
   const count = Math.min(notificationsGroup.count, 4);
-  const remainingCount =
-    notificationsGroup.count > 4 ? notificationsGroup.count - 3 : 0;
 
   const sound =
     notifications[0].activity.heart.artifact?.sound.appleData ||
@@ -53,6 +46,7 @@ const Heart = ({ notificationsGroup }: any) => {
         >
           <HeartIcon />
         </div>
+
         {/* Art & Avatar */}
         <div className={`w-12 h-16 relative flex-shrink-0 -rotate-4`}>
           <div className={`-rotate-3 w-12 h-16`}>
@@ -70,7 +64,9 @@ const Heart = ({ notificationsGroup }: any) => {
           {avatarData1 && (
             <Image
               className="absolute -top-2 -left-2 outline-2 outline-white outline shadow-notification rounded-full"
+              // @ts-ignore
               src={avatarData1.image}
+              // @ts-ignore
               alt={`Author ${avatarData1.id}`}
               width={32}
               height={32}
@@ -82,7 +78,10 @@ const Heart = ({ notificationsGroup }: any) => {
           {avatarData2 && (
             <Image
               className="absolute -left-2 -bottom-2 outline-2 outline-white outline shadow-notification rounded-full"
+              // @ts-ignore
               src={avatarData2.image}
+              // @ts-ignore
+
               alt={`Author ${avatarData2.id}`}
               width={24}
               height={24}
@@ -94,7 +93,9 @@ const Heart = ({ notificationsGroup }: any) => {
           {avatarData3 && (
             <Image
               className="absolute bottom-1 left-0 outline-2 outline-white outline shadow-notification rounded-full"
+              // @ts-ignore
               src={avatarData3.image}
+              // @ts-ignore
               alt={`Author ${avatarData3.id}`}
               width={20}
               height={20}

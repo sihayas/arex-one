@@ -66,9 +66,9 @@ const Nav = () => {
       width: 56,
       height: 32,
       borderRadius: 24,
-      // boxShadow:
-      //   "0px 0px 0px 0px rgba(0, 0, 0, 0.0), 0px 0px 0px 0px rgba(0, 0, 0,0.0)",
-      // backgroundColor: "#F4F4F4A9",
+      boxShadow:
+        "0px 0px 0px 0px rgba(0, 0, 0, 0.0), 0px 0px 0px 0px rgba(0, 0, 0,0.0)",
+      backgroundColor: "#F4F4F4A9",
       transition: {
         type: "spring",
         damping: 24,
@@ -79,7 +79,7 @@ const Nav = () => {
     expanded: {
       x: isReply ? 16 : -40,
       y: isReply ? -16 : 40,
-      width: !isNotifications && 384,
+      width: isNotifications ? 56 : 368,
       height:
         !expandInput && !isNotifications
           ? 40 // base
@@ -88,11 +88,11 @@ const Nav = () => {
           : isForm || isReply
           ? "auto" // form
           : 40,
-      borderRadius: isReply ? 20 : isNotifications ? 24 : 16,
-      // boxShadow:
-      //   "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
-      // backgroundColor: isReply ? "#FFFFFF" : "#F4F4F4",
-      // outline: "1px solid rgba(0,0,0,0.05)",
+      borderRadius: isReply ? 20 : 24,
+      boxShadow:
+        "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
+      backgroundColor: isReply ? "#FFFFFF" : "#F4F4F4A9",
+      outline: "1px solid rgba(0,0,0,0.05)",
       transition: {
         type: "spring",
         damping: 40,
@@ -196,15 +196,15 @@ const Nav = () => {
     };
   }, [isNotifications, setExpandInput, setActiveAction]);
 
-  if (!user) return null;
-
   return (
     <>
-      {isNotifications && expandInput && <Notifications />}
+      <AnimatePresence>
+        {isNotifications && expandInput && <Notifications />}
+      </AnimatePresence>
 
       {/* Content / Shifter */}
       <div
-        className={`absolute bottom-0 left-0 flex flex-col ${
+        className={`absolute bottom-0 left-0 flex flex-col z-10 ${
           !expandInput && "mix-blend-darken"
         }`}
       >
@@ -275,7 +275,7 @@ const Nav = () => {
       <motion.div
         variants={barVariants}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`absolute bottom-0 left-0 flex flex-col gap-2 bg-transparent`}
+        className={`absolute bottom-0 left-0 flex flex-col gap-2 bg-transparent z-10`}
       >
         {/* Notification Icon */}
         <motion.button
@@ -304,11 +304,11 @@ const Nav = () => {
               transition={{ type: "spring", damping: 24, stiffness: 400 }}
             >
               <Avatar
-                imageSrc={user.image}
-                altText={`${user.username}'s avatar`}
+                imageSrc={user!.image}
+                altText={`${user!.username}'s avatar`}
                 width={40}
                 height={40}
-                user={user}
+                user={user!}
               />
             </motion.div>
 
