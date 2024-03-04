@@ -51,7 +51,6 @@ const Nav = () => {
   } = useNavContext();
   const { selectedFormSound } = useSoundContext();
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
-  const contentContainerRef = useRef<HTMLDivElement>(null);
 
   const isNotifications = activeAction === "notifications";
   const isForm = activeAction === "form";
@@ -106,7 +105,7 @@ const Nav = () => {
     expanded: {
       opacity: 1,
       scale: 1,
-      height: isForm ? "auto" : 472,
+      height: 472,
       boxShadow:
         "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
       transition: {
@@ -194,9 +193,7 @@ const Nav = () => {
 
       if (
         notificationButtonRef.current &&
-        !notificationButtonRef.current.contains(target) &&
-        contentContainerRef.current &&
-        !contentContainerRef.current.contains(target)
+        !notificationButtonRef.current.contains(target)
       ) {
         if (isNotifications) {
           setExpandInput(false);
@@ -220,7 +217,7 @@ const Nav = () => {
 
       <motion.div
         variants={contentVariants}
-        animate={expandInput ? "expanded" : "collapsed"}
+        animate={expandInput && !isNotifications ? "expanded" : "collapsed"}
         className={`absolute bottom-0 left-0 z-0 flex h-[472px] w-[368px] origin-bottom-left -translate-x-10 translate-y-10 flex-col rounded-[20px] bg-[#F4F4F4A9] ${
           !expandInput && "mix-blend-darken"
         }`}
@@ -231,65 +228,51 @@ const Nav = () => {
         </AnimatePresence>
       </motion.div>
 
-      {/* Content / Shifter */}
-      <div
-        className={`absolute bottom-0 left-0 z-10 flex flex-col ${
-          !expandInput && "mix-blend-darken"
+      {/* Text Input */}
+      <motion.div
+        className={`absolute bottom-0 left-0 z-10 flex w-full items-center justify-center bg-transparent p-[9px] ${
+          isReply ? "pl-3 pr-[44px]" : "pl-[40px]"
         }`}
+        variants={inputVariants}
+        animate={expandInput ? "expanded" : "collapsed"}
       >
-        <motion.div
-          ref={contentContainerRef}
-          className={`flex w-full flex-col items-end justify-end`}
-          variants={inputVariants}
-          animate={expandInput ? "expanded" : "collapsed"}
-        >
-          {/* Text Input */}
-          {!isNotifications && (
-            <div
-              className={`relative flex w-full items-center justify-center bg-transparent p-[9px] ${
-                isReply ? "pl-3 pr-[44px]" : "pl-[40px]"
-              }`}
-            >
-              {isReply && expandInput && replyTarget && (
-                <>
-                  <div className={`absolute right-2 top-2`}>
-                    <Image
-                      src={replyTarget?.artifact.author.image}
-                      alt={`${replyTarget?.artifact.author.username}'s avatar`}
-                      width={24}
-                      height={24}
-                      className={`rounded-full`}
-                    />
-                  </div>
-
-                  <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
-                    <div
-                      className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
-                    />
-                    <div
-                      className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
-                    />
-                  </div>
-                </>
-              )}
-              <TextareaAutosize
-                id="entryText"
-                className={`w-full resize-none bg-transparent text-base text-black outline-none ${
-                  !expandInput && "pointer-events-none "
-                }`}
-                value={expandInput ? inputValue : ""}
-                onChange={(e) => handleInputTextChange(e.target.value)}
-                onBlur={onBlur}
-                onFocus={onFocus}
-                ref={inputRef}
-                onKeyDown={handleKeyDown}
-                minRows={1}
-                maxRows={6}
+        {isReply && expandInput && replyTarget && (
+          <>
+            <div className={`absolute right-2 top-2`}>
+              <Image
+                src={replyTarget?.artifact.author.image}
+                alt={`${replyTarget?.artifact.author.username}'s avatar`}
+                width={24}
+                height={24}
+                className={`rounded-full`}
               />
             </div>
-          )}
-        </motion.div>
-      </div>
+
+            <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
+              <div
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+              />
+              <div
+                className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
+              />
+            </div>
+          </>
+        )}
+        <TextareaAutosize
+          id="entryText"
+          className={`w-full resize-none bg-transparent text-base text-black outline-none ${
+            !expandInput && "pointer-events-none "
+          }`}
+          value={expandInput ? inputValue : ""}
+          onChange={(e) => handleInputTextChange(e.target.value)}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          ref={inputRef}
+          onKeyDown={handleKeyDown}
+          minRows={1}
+          maxRows={6}
+        />
+      </motion.div>
 
       {/* Iconography */}
       <motion.div
