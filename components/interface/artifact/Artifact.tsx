@@ -146,13 +146,13 @@ export const Artifact = () => {
               stiffness: 220,
             }}
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`flex flex-col p-6 overflow-hidden bg-white rounded-3xl`}
+            className={`flex flex-col overflow-hidden rounded-3xl bg-white p-6`}
           >
             <div className="flex justify-between">
               <StarIcon />
 
               <Image
-                className="border-silver cursor-pointer rounded-xl shadow-shadowKitHigh"
+                className="border-silver shadow-shadowKitHigh cursor-pointer rounded-xl"
                 onClick={handleSoundClick}
                 src={artwork}
                 alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
@@ -164,8 +164,8 @@ export const Artifact = () => {
             </div>
 
             {/* Names */}
-            <div className={`flex flex-col pt-5 pb-[30px]`}>
-              <p className={`line-clamp-1 text-sm text-gray2 font-medium`}>
+            <div className={`flex flex-col pb-[30px] pt-5`}>
+              <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
                 {appleData.attributes.artistName}
               </p>
               <p className={`line-clamp-4 text-base font-semibold text-black`}>
@@ -186,11 +186,11 @@ export const Artifact = () => {
               }}
             >
               {isExpanded ? (
-                <p className={`text-base w-[400px]`}>
+                <p className={`w-[400px] text-base`}>
                   {artifactExtended.content?.text}
                 </p>
               ) : (
-                <p className={`text-base w-[352px]`}>
+                <p className={`w-[352px] text-base`}>
                   {artifactExtended.content?.text}
                 </p>
               )}
@@ -231,7 +231,7 @@ export const Artifact = () => {
       )}
 
       {/* Chains */}
-      <div className={`min-h-full min-w-full pt-8  px-8 pb-96`}>
+      <div className={`min-h-full min-w-full px-8  pb-96 pt-8`}>
         <Replies artifactId={artifactExtended.id} userId={user!.id} />
       </div>
     </>

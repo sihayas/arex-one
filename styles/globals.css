@@ -107,10 +107,10 @@ input {
     mask-image: linear-gradient(
         to top,
         transparent 0%,
-        rgba(0, 0, 0, 0.2) 5%,
-        rgba(0, 0, 0, 0.4) 10%,
-        rgba(0, 0, 0, 0.6) 15%,
-        black 20%
+        rgba(0, 0, 0, 0.2) 0%,
+        rgba(0, 0, 0, 0.4) 5%,
+        rgba(0, 0, 0, 0.6) 10%,
+        black 15%
     );
     scroll-snap-align: start;
 }
@@ -123,12 +123,12 @@ input {
     /*rgba(0, 0, 0, 0.6) 15%,*/
     /*black 20%);*/
     mask-image: linear-gradient(
-            to bottom,
-            transparent 0%,
-            rgba(0, 0, 0, 0.2) 5%,
-            rgba(0, 0, 0, 0.4) 10%,
-            rgba(0, 0, 0, 0.6) 15%,
-            black 20%
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.2) 5%,
+        rgba(0, 0, 0, 0.4) 10%,
+        rgba(0, 0, 0, 0.6) 15%,
+        black 20%
     );
     scroll-snap-align: start;
 }
@@ -164,5 +164,3 @@ input {
     color: white;
     transform: translateZ(60px);
 }
-
-

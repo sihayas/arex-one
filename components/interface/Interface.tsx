@@ -37,7 +37,7 @@ export const GetDimensions = (pageName: PageName) => {
     },
     sound: {
       base: { width: 496, height: 496 },
-      target: { width: 702, height: maxHeight },
+      target: { width: 704, height: maxHeight },
     },
     artifact: {
       base: { width: 512, height: 768 },

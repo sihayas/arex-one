@@ -27,29 +27,19 @@ interface EntryProps {
 }
 
 const cardMask = {
-  maskImage: "url('/images/mask_card_top.svg')",
+  maskImage: "url('/images/mask_card_front.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_card_top.svg')",
+  WebkitMaskImage: "url('/images/mask_card_front.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
 };
 
-const backCardMask = {
-  maskImage: "url('/images/mask_card_top.svg')",
+const cardBackMask = {
+  maskImage: "url('/images/mask_card_back.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_card_top.svg')",
-  WebkitMaskSize: "cover",
-  WebkitMaskRepeat: "no-repeat",
-  transform: "rotateX(180deg)",
-};
-
-const backArtMask = {
-  maskImage: "url('/images/mask_art_card_back.svg')",
-  maskSize: "cover",
-  maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_art_card_back.svg')",
+  WebkitMaskImage: "url('/images/mask_card_back.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
 };
@@ -156,7 +146,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               <StarIcon />
 
               <div className={`flex translate-y-[1px] flex-col`}>
-                <p className={`line-clamp-1 text-sm text-gray2 font-medium`}>
+                <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
                   {artistName}
                 </p>
                 <p
@@ -171,16 +161,16 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
           {/* Back */}
           <div
             style={{
-              ...cardMask,
+              ...cardBackMask,
               transform: "rotateX(180deg)",
             }}
             className="backface-hidden absolute left-0 top-0 flex h-full  w-full cursor-pointer flex-col bg-white p-6 pb-0 "
           >
-            <div className={`flex-shrink-0 flex justify-between`}>
+            <div className={`flex flex-shrink-0 justify-between`}>
               <StarIcon />
 
               <Image
-                className={`rounded-xl shadow-shadowKitHigh`}
+                className={`shadow-shadowKitHigh rounded-xl`}
                 src={url}
                 alt={`${name} by ${artistName} - artwork`}
                 quality={100}
@@ -192,7 +182,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
 
             <div className={`flex flex-col pt-2`}>
               <p
-                className={`mt-auto line-clamp-1 text-sm text-gray2 font-medium`}
+                className={`text-gray2 mt-auto line-clamp-1 text-sm font-medium`}
               >
                 {artistName}
               </p>

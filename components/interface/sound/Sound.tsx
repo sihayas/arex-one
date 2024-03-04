@@ -128,33 +128,33 @@ const Sound = () => {
       <Artifacts soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
 
       {/* Art */}
-      {/*<motion.div*/}
-      {/*  initial={{*/}
-      {/*    borderRadius: isOpen ? 96 : 16,*/}
-      {/*    scale: isOpen ? 0.1389 : 1,*/}
-      {/*    x: isOpen ? -240 : artHeight + 32,*/}
-      {/*    y: isOpen ? 26 : artWidth + 32,*/}
-      {/*    rotate: isOpen ? -4 : 0,*/}
-      {/*  }}*/}
-      {/*  style={{*/}
-      {/*    borderRadius: borderRad,*/}
-      {/*    scale: scaleArt,*/}
-      {/*    y: yArt,*/}
-      {/*    x: xArt,*/}
-      {/*    rotate: rotateArt,*/}
-      {/*  }}*/}
-      {/*  className="pointer-events-none absolute left-1/2 top-1/2 z-10 min-h-[432px] min-w-[432px] origin-top-left overflow-hidden"*/}
-      {/*>*/}
-      {/*  <Image*/}
-      {/*    src={artwork}*/}
-      {/*    alt={`${soundData.attributes.name}'s artwork`}*/}
-      {/*    width={432}*/}
-      {/*    height={432}*/}
-      {/*    quality={100}*/}
-      {/*    draggable="false"*/}
-      {/*    onDragStart={(e) => e.preventDefault()}*/}
-      {/*  />*/}
-      {/*</motion.div>*/}
+      {/* <motion.div
+        initial={{
+          borderRadius: isOpen ? 96 : 16,
+          scale: isOpen ? 0.1389 : 1,
+          x: isOpen ? -240 : artHeight + 32,
+          y: isOpen ? 26 : artWidth + 32,
+          rotate: isOpen ? -4 : 0,
+        }}
+        style={{
+          borderRadius: borderRad,
+          scale: scaleArt,
+          y: yArt,
+          x: xArt,
+          rotate: rotateArt,
+        }}
+        className="pointer-events-none absolute left-1/2 top-1/2 z-10 min-h-[432px] min-w-[432px] origin-top-left overflow-hidden"
+      >
+        <Image
+          src={artwork}
+          alt={`${soundData.attributes.name}'s artwork`}
+          width={432}
+          height={432}
+          quality={100}
+          draggable="false"
+          onDragStart={(e) => e.preventDefault()}
+        />
+      </motion.div> */}
 
       {/* Titles */}
       <motion.div
@@ -184,7 +184,7 @@ const Sound = () => {
           <>
             {/* Big Dial */}
             <motion.div
-              className={`absolute bottom-0 left-0 flex origin-bottom-left items-center justify-center drop-shadow-xl will-change-transform point`}
+              className={`point absolute bottom-0 left-0 flex origin-bottom-left items-center justify-center drop-shadow-xl will-change-transform`}
               style={{
                 x: xDial,
                 y: yDial,
