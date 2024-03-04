@@ -35,7 +35,7 @@ const textVariants = {
     top: "50%",
   },
   animate: {
-    scale: 4,
+    scale: 1,
     opacity: 1,
     x: "-50%",
     y: "-50%",
@@ -65,15 +65,15 @@ const DialMini: React.FC<DialMiniProps> = ({
     onRangeChange(activeIndex);
   }, [activeIndex, onRangeChange]);
 
-  const strokeWidth = 12;
+  const strokeWidth = 6;
   const dotRadius = 1.5;
-  const radius = 116;
+  const radius = 74;
 
   const circumference = 2 * Math.PI * radius;
   const viewBoxSize = radius * 2 + strokeWidth;
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
-  const colors = ["#FFF", "#F20000", "#FFF639", "#7AFF00", "#0000FF"];
+  const colors = ["#000", "#000", "#000", "#000", "#000"];
 
   // Account for excess stroke created by the linecap rounding
   const excessStroke = 40;
@@ -141,7 +141,7 @@ const DialMini: React.FC<DialMiniProps> = ({
     >
       <motion.svg
         whileHover={{
-          scale: 2.8889,
+          scale: 1.2,
         }}
         transition={springDialConfig}
         width={viewBoxSize}
@@ -211,7 +211,7 @@ const DialMini: React.FC<DialMiniProps> = ({
         {hoveredIndex !== null && (
           <motion.div
             key={hoveredIndex}
-            className={`pointer-events-none absolute flex items-center justify-center gap-2 text-center text-xl text-black will-change-transform font-bold`}
+            className={`text-gray2 pointer-events-none absolute flex items-center justify-center gap-2  text-center font-serif text-[48px] leading-[32px] will-change-transform`}
             variants={textVariants}
             initial={`initial`}
             animate={`animate`}
@@ -232,10 +232,10 @@ const DialMini: React.FC<DialMiniProps> = ({
               y: "-50%",
             }}
             initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 4 }}
+            animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
             transition={springTextConfig}
-            className={`pointer-events-none absolute flex flex-col items-center justify-center gap-4 text-center font-serif text-xl leading-[13px] text-black will-change-transform`}
+            className={`text-gray2 pointer-events-none absolute flex flex-col items-center justify-center gap-4 text-center font-serif text-[48px] leading-[32px] will-change-transform`}
           >
             {average}
           </motion.div>

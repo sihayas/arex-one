@@ -11,13 +11,12 @@ import {
 } from "framer-motion";
 
 import { SongData } from "@/types/appleTypes";
-import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import Dial from "@/components/interface/sound/sub/Dial";
 import DialMini from "@/components/interface/sound/sub/DialMini";
 import { createPortal } from "react-dom";
 import Sort from "@/components/interface/sound/sub/Sort";
-import { GetDimensions } from "@/components/interface/Interface";
 import { useSoundInfoQuery } from "@/lib/helper/sound";
 
 const scaleConfig = { damping: 16, stiffness: 122 };
@@ -30,7 +29,6 @@ export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 const Sound = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const { scrollContainerRef, activePage, pages } = useInterfaceContext();
-  const { base } = GetDimensions(activePage.name as PageName);
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [range, setRange] = useState<number | null>(null);
@@ -38,7 +36,7 @@ const Sound = () => {
   const [ratings, setRatings] = useState<number[]>([]);
 
   const isOpen = activePage.isOpen;
-  const soundData = activePage.sound!.data;
+  let soundData = activePage.sound!.data;
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -64,26 +62,14 @@ const Sound = () => {
     setRange(newRange);
   };
 
-  const artWidth = -base.width / 2;
-  const xArt = useSpring(
-    useTransform(scrollY, [0, 1], [artWidth + 32, -328]),
-    xConfig,
-  );
-  const artHeight = -base.height / 2;
-  const yArt = useSpring(
-    useTransform(scrollY, [0, 1], [artHeight + 32, -494]),
-    yConfig,
-  );
-  const rotateArt = useSpring(
-    useTransform(scrollY, [0, 1], [0, -4]),
-    generalConfig,
-  );
+  const xArt = useSpring(useTransform(scrollY, [0, 1], [32, 32]), xConfig);
+  const yArt = useSpring(useTransform(scrollY, [0, 1], [32, 32]), yConfig);
   const scaleArt = useSpring(
-    useTransform(scrollY, [0, 1], [1, 0.407]),
+    useTransform(scrollY, [0, 1], [1, 0.375]),
     scaleConfig,
   );
   const borderRad = useSpring(
-    useTransform(scrollY, [0, 1], [20, 48]),
+    useTransform(scrollY, [0, 1], [20, 40]),
     generalConfig,
   );
 
@@ -99,6 +85,10 @@ const Sound = () => {
   );
 
   // Mini Dial Transformations
+  const scaleMini = useSpring(
+    useTransform(scrollY, [0, 1], [2, 1]),
+    scaleConfig,
+  );
   const showMini = useSpring(
     useTransform(scrollY, [0, 1], [0, 1]),
     generalConfig,
@@ -116,6 +106,7 @@ const Sound = () => {
       : (soundData as SongData).relationships.albums.data[0].id;
 
   const snap = activePage.isOpen ? "" : "snap-start";
+
   useEffect(() => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
   }, []);
@@ -123,27 +114,25 @@ const Sound = () => {
   return (
     <>
       {/* Art Ghost Placeholder */}
-      <div className={`min-h-[496px] min-w-[496px] ${snap}`} />
+      <div className={`min-h-[432px] min-w-[432px] ${snap}`} />
 
       <Artifacts soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
 
       {/* Art */}
-      {/* <motion.div
+      <motion.div
         initial={{
           borderRadius: isOpen ? 96 : 16,
-          scale: isOpen ? 0.1389 : 1,
-          x: isOpen ? -240 : artHeight + 32,
-          y: isOpen ? 26 : artWidth + 32,
-          rotate: isOpen ? -4 : 0,
+          scale: isOpen ? 0.5 : 1,
+          x: isOpen ? -240 : 32,
+          y: isOpen ? 26 : 32,
         }}
         style={{
           borderRadius: borderRad,
           scale: scaleArt,
           y: yArt,
           x: xArt,
-          rotate: rotateArt,
         }}
-        className="pointer-events-none absolute left-1/2 top-1/2 z-10 min-h-[432px] min-w-[432px] origin-top-left overflow-hidden"
+        className="shadow-soundArt pointer-events-none absolute left-0 top-0 z-10 min-h-[432px] min-w-[432px] origin-top-left overflow-hidden"
       >
         <Image
           src={artwork}
@@ -154,27 +143,23 @@ const Sound = () => {
           draggable="false"
           onDragStart={(e) => e.preventDefault()}
         />
-      </motion.div> */}
+      </motion.div>
 
       {/* Titles */}
       <motion.div
         style={{
           opacity: showMini,
         }}
-        className={`center-x shadow-shadowKitHigh absolute bottom-8 z-10 flex origin-bottom flex-col items-center justify-center -space-y-[1px] rounded-2xl bg-white px-4 pb-[13px] pt-[10px]`}
+        className={`text-gray2 absolute left-8 top-[222px] -z-10 flex max-w-[288px] flex-col`}
       >
-        <p className={`text-center text-base font-bold text-black`}>
-          {soundData.attributes.name}
-        </p>
-        <p
-          className={`text-gray2 line-clamp-1 text-center text-sm font-medium`}
-        >
+        <p className={`text-[26px] font-bold`}>{soundData.attributes.name}</p>
+        <p className={`text-gray2 text-[18px] font-medium`}>
           {soundData.attributes.artistName}
         </p>
       </motion.div>
 
       {/* Sort */}
-      <div className={`absolute bottom-[92px] left-[92px]`}>
+      <div className={`absolute bottom-[176px] left-[176px]`}>
         <Sort onSortOrderChange={handleSortOrderChange} />
       </div>
 
@@ -211,7 +196,7 @@ const Sound = () => {
               style={{
                 x: xDial,
                 y: yDial,
-                scale: scaleDial,
+                scale: scaleMini,
                 opacity: showMini,
               }}
               initial={{

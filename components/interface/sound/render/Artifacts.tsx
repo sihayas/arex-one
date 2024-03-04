@@ -1,61 +1,29 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import { useArtifactsQuery } from "@/lib/helper/sound";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { GetDimensions } from "@/components/interface/Interface";
 import { PageName } from "@/context/InterfaceContext";
 import { SortOrder } from "@/components/interface/sound/Sound";
-import {
-  Virtuoso,
-  StateSnapshot,
-  VirtuosoHandle,
-  VirtuosoGrid,
-} from "react-virtuoso";
+import { Virtuoso, StateSnapshot, VirtuosoHandle } from "react-virtuoso";
 import { useArtifact } from "@/hooks/usePage";
 import Avatar from "@/components/global/Avatar";
-import Image from "next/image";
+import Tilt from "react-parallax-tilt";
 import { StarIcon } from "@/components/icons";
+import Image from "next/image";
 
 interface RenderArtifactsProps {
   soundId: string;
   sortOrder: SortOrder;
   range: number | null;
 }
-const cardMask = {
+
+const cardBackMask = {
   maskImage: "url('/images/mask_card_back.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
   WebkitMaskImage: "url('/images/mask_card_back.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
-};
-
-const gridComponents = {
-  List: forwardRef(({ style, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      {...props}
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        rowGap: "2rem",
-        columnGap: "2rem",
-        ...style,
-      }}
-    >
-      {children}
-    </div>
-  )),
-  Item: ({ children, ...props }) => (
-    <div
-      {...props}
-      style={{
-        // padding: "1rem",
-        display: "flex",
-      }}
-    >
-      {children}
-    </div>
-  ),
 };
 
 const Artifacts: React.FC<RenderArtifactsProps> = ({
@@ -71,12 +39,14 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     range,
   );
   const { handleSelectArtifact } = useArtifact();
+  const sound = activePage.sound!.data;
 
   // Capture the state of the virtuoso list
   const ref = React.useRef<VirtuosoHandle>(null);
-  const sound = activePage.sound;
-  const state = React.useRef<StateSnapshot | undefined>(sound?.snapshot?.state);
-  const key = sound?.snapshot?.key;
+  const state = React.useRef<StateSnapshot | undefined>(
+    activePage.sound?.snapshot?.state,
+  );
+  const key = activePage.sound?.snapshot?.key;
 
   const { target } = GetDimensions(activePage.name as PageName);
 
@@ -94,35 +64,27 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     }
   };
 
+  if (!artifacts) return null;
+
   const url = MusicKit.formatArtworkURL(
-    sound!.data.attributes.artwork,
+    sound.attributes.artwork,
     88 * 2.5,
     88 * 2.5,
   );
 
-  if (!artifacts) return null;
-
   return (
     <div className={`mask mt-1 h-max w-full snap-start`}>
-      <VirtuosoGrid
+      <Virtuoso
         key={key}
         ref={ref}
-        className={`scrollbar-none`}
-        style={{
-          height: target.height,
-          padding: "0 2rem",
-        }}
+        style={{ height: target.height }}
         data={artifacts}
         overscan={200}
-        // restoreStateFrom={state.current}
+        restoreStateFrom={state.current}
         computeItemKey={(key: number) => `item-${key.toString()}`}
         endReached={handleEndReached}
-        components={gridComponents}
         itemContent={(index, artifact) => (
           <div
-            style={{
-              ...cardMask,
-            }}
             onClick={() => {
               ref.current?.getState((snapshot) => {
                 activePage.sound!.snapshot = {
@@ -137,43 +99,72 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
                 },
               });
             }}
-            className="flex h-[432px] w-[304px] cursor-pointer flex-col bg-white p-6 pb-0"
+            className={`cloud-shadow -my-4 ${index % 2 !== 0 ? "-rotate-1 pr-[128px]" : "rotate-1 pr-8"} ${index === 0 && "pt-12"}`}
           >
-            <div className={`flex flex-shrink-0 justify-between`}>
-              <StarIcon />
-
-              <Image
-                className={`shadow-shadowKitHigh rounded-xl`}
-                src={url}
-                alt={`- artwork`}
-                quality={100}
-                width={88}
-                height={88}
-                draggable={false}
-              />
-            </div>
-
-            <div className={`flex items-center gap-2 pt-2`}>
-              <Avatar
-                className={`border-silver border`}
-                imageSrc={artifact.author.image}
-                altText={`${artifact.author.username}'s avatar`}
-                width={32}
-                height={32}
-                user={artifact.author}
-              />
+            {/* Scene */}
+            <Tilt
+              perspective={1000}
+              tiltMaxAngleX={6}
+              tiltMaxAngleY={6}
+              tiltReverse={true}
+              // reset={false}
+              glareEnable={true}
+              glareMaxOpacity={0.45}
+              glareBorderRadius={"32px"}
+              scale={1.02}
+              transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
+              className={`transform-style-3d relative ml-auto h-[432px] w-[304px]`}
+            >
+              {/* Back */}
               <div
-                className={`text-base font-semibold leading-[10px] text-black`}
+                style={{
+                  ...cardBackMask,
+                }}
+                className="flex h-full w-full cursor-pointer flex-col bg-white p-6 pb-0 "
               >
-                {artifact.author.username}
-              </div>
-            </div>
+                <div className={`flex flex-shrink-0 justify-between`}>
+                  <StarIcon />
 
-            <p className={`line-clamp-[11] pt-[9px] text-base`}>
-              {artifact.content?.text}
-            </p>
+                  <Image
+                    className={`shadow-shadowKitHigh rounded-xl`}
+                    src={url}
+                    alt={` - artwork`}
+                    quality={100}
+                    width={88}
+                    height={88}
+                    draggable={false}
+                  />
+                </div>
+
+                <div className={`flex items-center gap-2 pt-2`}>
+                  <Avatar
+                    className={`border-silver border`}
+                    imageSrc={artifact.author.image}
+                    altText={`${artifact.author.username}'s avatar`}
+                    width={32}
+                    height={32}
+                    user={artifact.author}
+                  />
+                  <div
+                    className={`text-base font-semibold leading-[10px] text-black`}
+                  >
+                    {artifact.author.username}
+                  </div>
+                </div>
+
+                <p className={`line-clamp-[11] pt-[9px] text-base`}>
+                  {artifact.content?.text}
+                </p>
+              </div>
+            </Tilt>
           </div>
         )}
+        components={
+          {
+            // Footer: () => isFetchingNextPage && <div>Loading more...</div>,
+            // EmptyPlaceholder: () => <div>No artifacts available</div>,
+          }
+        }
       />
     </div>
   );

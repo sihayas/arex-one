@@ -5,7 +5,6 @@ import { Command, useCommandState } from "cmdk";
 import UserItem from "@/components/interface/nav/items/search/User";
 import Sound from "@/components/interface/nav/items/search/Sound";
 import { UserType } from "@/types/dbTypes";
-import { useEffect, useState } from "react";
 import { LayoutGroup, motion } from "framer-motion";
 
 interface SearchProps {
@@ -34,7 +33,7 @@ const Results = ({ searchData }: SearchProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className={`-z-10 flex w-full flex-col overflow-scroll -mb-[34px] mask`}
+      className={`mask -z-10 flex w-full flex-col overflow-scroll`}
     >
       <Command.List>
         {allData.map((item, index) => {

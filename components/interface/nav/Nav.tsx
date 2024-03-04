@@ -59,15 +59,14 @@ const Nav = () => {
 
   const pageHasData = activePage.sound || activePage.artifact;
 
-  const contentVariants = {
+  const inputVariants = {
     collapsed: {
       x: 8,
       y: 36,
       width: 56,
       height: 32,
       borderRadius: 24,
-      boxShadow:
-        "0px 0px 0px 0px rgba(0, 0, 0, 0.0), 0px 0px 0px 0px rgba(0, 0, 0,0.0)",
+      outline: "rgba(0,0,0,0.0)",
       backgroundColor: "#F4F4F4A9",
       transition: {
         type: "spring",
@@ -80,19 +79,36 @@ const Nav = () => {
       x: isReply ? 16 : -40,
       y: isReply ? -16 : 40,
       width: isNotifications ? 56 : 368,
-      height:
-        !expandInput && !isNotifications
-          ? 40 // base
-          : activeAction === "none" && inputValue
-          ? 472 // search
-          : isForm || isReply
-          ? "auto" // form
-          : 40,
+      height: isForm ? "auto" : 40,
       borderRadius: isReply ? 20 : 24,
+      outline: "rgba(0,0,0,0.05)",
+      backgroundColor: isReply ? "#FFFFFF" : "transparent",
+      transition: {
+        type: "spring",
+        damping: 40,
+        stiffness: 400,
+      },
+    },
+  };
+
+  const contentVariants = {
+    collapsed: {
+      opacity: 0,
+      scale: 0,
+      boxShadow:
+        "0px 0px 0px 0px rgba(0, 0, 0, 0.0), 0px 0px 0px 0px rgba(0, 0, 0,0.0)",
+      transition: {
+        type: "spring",
+        damping: 24,
+        stiffness: 180,
+      },
+    },
+    expanded: {
+      opacity: 1,
+      scale: 1,
+      height: isForm ? "auto" : 472,
       boxShadow:
         "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
-      backgroundColor: isReply ? "#FFFFFF" : "#F4F4F4A9",
-      outline: "1px solid rgba(0,0,0,0.05)",
       transition: {
         type: "spring",
         damping: 40,
@@ -202,37 +218,41 @@ const Nav = () => {
         {isNotifications && expandInput && <Notifications />}
       </AnimatePresence>
 
-      {/* Content / Shifter */}
-      <div
-        className={`absolute bottom-0 left-0 flex flex-col z-10 ${
+      <motion.div
+        variants={contentVariants}
+        animate={expandInput ? "expanded" : "collapsed"}
+        className={`absolute bottom-0 left-0 z-0 flex h-[472px] w-[368px] origin-bottom-left -translate-x-10 translate-y-10 flex-col rounded-[20px] bg-[#F4F4F4A9] ${
           !expandInput && "mix-blend-darken"
         }`}
       >
-        {/* Top / Content */}
+        <AnimatePresence>
+          {isForm && expandInput && <Form />}
+          {!isForm && !isReply && expandInput && <Results searchData={data} />}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Content / Shifter */}
+      <div
+        className={`absolute bottom-0 left-0 z-10 flex flex-col ${
+          !expandInput && "mix-blend-darken"
+        }`}
+      >
         <motion.div
           ref={contentContainerRef}
           className={`flex w-full flex-col items-end justify-end`}
-          variants={contentVariants}
+          variants={inputVariants}
           animate={expandInput ? "expanded" : "collapsed"}
         >
-          {/* Content */}
-          <AnimatePresence>
-            {isForm && expandInput && <Form />}
-            {!isForm && !isReply && expandInput && (
-              <Results searchData={data} />
-            )}
-          </AnimatePresence>
-
           {/* Text Input */}
           {!isNotifications && (
             <div
-              className={`flex w-full items-center justify-center bg-transparent p-[9px] relative ${
-                isReply ? "pr-[44px] pl-3" : "pl-[40px]"
+              className={`relative flex w-full items-center justify-center bg-transparent p-[9px] ${
+                isReply ? "pl-3 pr-[44px]" : "pl-[40px]"
               }`}
             >
               {isReply && expandInput && replyTarget && (
                 <>
-                  <div className={`absolute top-2 right-2`}>
+                  <div className={`absolute right-2 top-2`}>
                     <Image
                       src={replyTarget?.artifact.author.image}
                       alt={`${replyTarget?.artifact.author.username}'s avatar`}
@@ -275,7 +295,7 @@ const Nav = () => {
       <motion.div
         variants={barVariants}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`absolute bottom-0 left-0 flex flex-col gap-2 bg-transparent z-10`}
+        className={`absolute bottom-0 left-0 z-10 flex flex-col gap-2 bg-transparent`}
       >
         {/* Notification Icon */}
         <motion.button
@@ -287,19 +307,19 @@ const Nav = () => {
           onClick={handleNotificationsClick}
           className={`flex w-10 items-center justify-center`}
         >
-          <div className={`px-[11px] py-3 bg-[#F4F4F4] rounded-full`}>
+          <div className={`rounded-full bg-[#F4F4F4] px-[11px] py-3`}>
             <NotificationIcon />
           </div>
         </motion.button>
 
-        <div className={`flex gap-2 items-center`}>
+        <div className={`flex items-center gap-2`}>
           {/* Target Container */}
           <button
             className={`relative flex h-10 w-10 items-center justify-center`}
           >
             {/* Avatar */}
             <motion.div
-              className={`absolute shadow-notification rounded-full`}
+              className={`shadow-notification absolute rounded-full`}
               animate={expandInput ? { scale: 0.5 } : { opacity: 1, scale: 1 }}
               transition={{ type: "spring", damping: 24, stiffness: 400 }}
             >
@@ -315,7 +335,7 @@ const Nav = () => {
             <AnimatePresence>
               {expandInput && activeAction === "none" && !pageHasData && (
                 <motion.div
-                  className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
+                  className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
@@ -329,7 +349,7 @@ const Nav = () => {
                 activeAction === "form" &&
                 (inputValue ? (
                   <motion.div
-                    className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
+                    className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
@@ -338,7 +358,7 @@ const Nav = () => {
                   </motion.div>
                 ) : (
                   <motion.div
-                    className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
+                    className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
@@ -353,7 +373,7 @@ const Nav = () => {
                 activePage.sound &&
                 !inputValue && (
                   <motion.div
-                    className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
+                    className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
@@ -368,7 +388,7 @@ const Nav = () => {
                 activePage.artifact &&
                 !inputValue && (
                   <motion.div
-                    className={`absolute center-x center-y p-1.5 bg-[#CCC] rounded-full`}
+                    className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
                     initial={{ opacity: 0, scale: 2 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0 }}
@@ -380,7 +400,7 @@ const Nav = () => {
               {/* User is viewing notifications */}
               {expandInput && activeAction === "notifications" && (
                 <motion.div
-                  className={`absolute top-0 right-0 px-[11px] py-2 bg-white rounded-full`}
+                  className={`absolute right-0 top-0 rounded-full bg-white px-[11px] py-2`}
                   initial={{ opacity: 0, scale: 2 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 2 }}
@@ -399,7 +419,7 @@ const Nav = () => {
             animate={expandInput ? "exit" : "initial"}
             variants={iconVariants}
             onClick={() => setExpandInput((prev) => !prev)}
-            className="flex cursor-pointer items-center justify-center rounded-full py-2 px-[20px]"
+            className="flex cursor-pointer items-center justify-center rounded-full px-[20px] py-2"
           >
             <SearchIcon />
           </motion.button>

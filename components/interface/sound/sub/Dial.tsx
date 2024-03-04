@@ -25,6 +25,7 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
   const viewBoxSize = radius * 2 + strokeWidth; // 32 = padding
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
+  const strokes = [8, 10, 12, 14, 16];
   const colors = ["#000", "#000", "#000", "#000", "#000"];
 
   // Account for excess stroke created by the linecap rounding
@@ -84,7 +85,7 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
   const hoverStrokeWidth = strokeWidth * 1.5;
 
   return (
-    <motion.div className={`relative`}>
+    <motion.div className={`relative overflow-visible`}>
       <motion.svg
         width={viewBoxSize}
         height={viewBoxSize}
@@ -109,7 +110,7 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
                 r={radius}
                 fill="none"
                 stroke={colors[index % colors.length]}
-                strokeWidth={strokeWidth}
+                strokeWidth={strokes[index % strokes.length]}
                 strokeLinecap="round"
                 initial={{
                   strokeDasharray: "0 1",
@@ -145,7 +146,7 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
       </motion.svg>
 
       <motion.div
-        className={`center-x center-y absolute flex flex-col items-center justify-center gap-[13px] text-center text-white w-20 h-20`}
+        className={`center-x center-y absolute flex h-20 w-20 flex-col items-center justify-center gap-[13px] text-center text-white`}
       >
         <p className={`font-serif text-[64px] leading-[43px]`}>{average}</p>
         <hr className={`w-4 rounded-full border-[1px] border-white`} />

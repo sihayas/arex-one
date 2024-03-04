@@ -41,6 +41,8 @@ module.exports = {
         cardArt: "rgba(0, 0, 0, 0.04) 0px 3px 5px",
         test: "0px 4px 20px 0px rgba(0, 0, 0, 0.25)",
         notification: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+        soundArt:
+          "rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
       },
       borderRadius: {
         full: "32px",
