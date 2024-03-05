@@ -27,4 +27,4 @@ export default async function getSettings(
   }
 }
 
-export const runtime = "edge";
+// export const runtime = "edge";

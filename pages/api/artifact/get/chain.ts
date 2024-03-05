@@ -95,4 +95,4 @@ export default async function handle(
   }
 }
 
-export const runtime = "edge";
+// export const runtime = "edge";

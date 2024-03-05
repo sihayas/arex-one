@@ -18,4 +18,4 @@ export default async function handler(
   res.json({ user, session });
 }
 
-export const runtime = "edge";
+// export const runtime = "edge";

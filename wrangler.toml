@@ -1,0 +1,11 @@
+name = "audition"
+type = "webpack"
+account_id = "bd0b3dba96cee92de958f553d91bbf4c"
+workers_dev = true
+compatibility_date = "2022-07-12"
+
+# Optional: Compatibility flags
+compatibility_flags = ["nodejs_compat"]
+
+[env.production]
+name = "audition-production"

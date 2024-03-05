@@ -111,7 +111,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
           glareMaxOpacity={0.45}
           glareBorderRadius={"32px"}
           scale={1.02}
-          transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
+          transitionEasing={"cubic-bezier(0.1, 0.8, 0.2, 1)"}
           className={`transform-style-3d relative h-[432px] w-[304px]`}
         >
           {/* Front */}

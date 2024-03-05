@@ -39,4 +39,4 @@ export default async function toggleSetting(
   }
 }
 
-export const runtime = "edge";
+// export const runtime = "edge";
