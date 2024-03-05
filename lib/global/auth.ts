@@ -8,7 +8,6 @@ import type { AppleCredentials } from "arctic";
 // import path from "path";
 import type { IncomingMessage, ServerResponse } from "http";
 import { Notification } from "@/types/dbTypes";
-import { env } from "node:process";
 
 declare module "lucia" {
   interface Register {
@@ -38,16 +37,16 @@ const adapter = new PrismaAdapter(client.session, client.user);
 // const certificate =
 //   process.env.APPLE_CERT ?? fs.readFileSync(certificatePath, "utf-8");
 
-const certificate = env["APPLE_CERT"] ?? "";
+const certificate = process.env.APPLE_CERT ?? "";
 
 const credentials: AppleCredentials = {
-  clientId: env["APPLE_CLIENT_ID"] ?? "",
-  teamId: env["APPLE_TEAM_ID"] ?? "",
-  keyId: env["APPLE_KEY_ID"] ?? "",
+  clientId: process.env.APPLE_CLIENT_ID ?? "",
+  teamId: process.env.APPLE_TEAM_ID ?? "",
+  keyId: process.env.APPLE_KEY_ID ?? "",
   certificate,
 };
 
-const redirectURI = env["APPLE_REDIRECT_URI"] ?? "";
+const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
 export const apple = new Apple(credentials, redirectURI);
 
 export const lucia = new Lucia(adapter, {
