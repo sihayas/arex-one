@@ -52,27 +52,26 @@ const credentials: AppleCredentials = {
 const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
 export const apple = new Apple(credentials, redirectURI);
 
-export const lucia = new Lucia(
-  {},
-  {
-    sessionCookie: {
-      name: "session",
-      expires: false,
-      attributes: {
-        secure: true,
-        sameSite: "strict",
-        domain: "voir.space",
-      },
+export const lucia = new Lucia(adapter, {
+  sessionCookie: {
+    name: "session",
+    expires: false, // session cookies have very long lifespan (2 years)
+    attributes: {
+      secure: true,
+      sameSite: "strict",
+      domain: "voir.space",
     },
-    getUserAttributes: (attributes) => ({
+  },
+  getUserAttributes: (attributes) => {
+    return {
       id: attributes.id,
       appleId: attributes.apple_id,
       username: attributes.username,
       image: attributes.image,
       notifications: attributes.notifications,
-    }),
+    };
   },
-);
+});
 
 export default {
   async fetch(request, env, ctx) {
