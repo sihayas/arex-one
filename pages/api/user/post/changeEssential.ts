@@ -30,4 +30,4 @@ export default async function changeEssential(
   }
 }
 
-// export const runtime = "edge";
+export const runtime = "edge";

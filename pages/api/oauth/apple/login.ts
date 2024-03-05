@@ -46,4 +46,4 @@ export default async function handler(
   }
 }
 
-// export const runtime = "edge";
+export const runtime = "edge";
