@@ -23,7 +23,7 @@ export default async function handler(
   if (req.method === "OPTIONS") {
     if (origin && allowedOrigins.includes(origin)) {
       res.setHeader("Access-Control-Allow-Origin", origin);
-      res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+      res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS, GET, HEAD");
       res.setHeader(
         "Access-Control-Allow-Headers",
         "Content-Type, Authorization",
