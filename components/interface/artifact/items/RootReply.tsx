@@ -27,7 +27,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
   const replyCount = reply._count ? reply._count.replies : 0;
 
   const handleReplyParent = useCallback(() => {
-    const artifact = activePage.artifact?.artifact;
+    const artifact = activePage.artifact?.data;
     if (artifact) {
       setReplyTarget({ artifact, reply });
     }
