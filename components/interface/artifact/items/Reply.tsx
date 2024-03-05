@@ -29,7 +29,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const replyCount = reply._count ? reply._count.replies : 0;
 
   const handleReplyParent = useCallback(() => {
-    const artifact = activePage.artifact?.artifact;
+    const artifact = activePage.artifact?.data;
 
     if (artifact) {
       if (replyTarget?.reply === reply) {
@@ -139,7 +139,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
                 scale: replyTarget?.reply === reply ? 1.01 : 1,
               }}
               transition={{ duration: 0.24 }}
-              className={`cursor-pointer break-words text-base text-gray`}
+              className={`text-gray cursor-pointer break-words text-base`}
             >
               {reply.text}
             </motion.div>

@@ -24,6 +24,7 @@ const Notifications = () => {
     <motion.div
       initial={{
         y: offset,
+        x: -40,
         opacity: 0,
         scale: 0,
         filter: "blur(8px)",
@@ -46,7 +47,7 @@ const Notifications = () => {
         stiffness: 200,
         mass: 0.8,
       }}
-      className={`absolute left-0 flex w-[448px] flex-col overflow-y-scroll h-[calc(50vh)] origin-top-left mask-top pt-20 z-10`}
+      className={`mask-top absolute left-0 z-10 flex h-[calc(50vh)] w-[448px] origin-top-left flex-col overflow-y-scroll pt-20`}
       style={{
         bottom: `calc(-50vh + ${offset}px)`,
       }}

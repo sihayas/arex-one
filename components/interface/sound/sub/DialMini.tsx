@@ -73,6 +73,7 @@ const DialMini: React.FC<DialMiniProps> = ({
   const viewBoxSize = radius * 2 + strokeWidth;
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
+  const strokes = [4, 6, 8, 10, 12];
   const colors = ["#000", "#000", "#000", "#000", "#000"];
 
   // Account for excess stroke created by the linecap rounding
@@ -182,7 +183,7 @@ const DialMini: React.FC<DialMiniProps> = ({
                 r={radius}
                 fill="none"
                 stroke={"#000"}
-                strokeWidth={strokeWidth}
+                strokeWidth={strokes[index % strokes.length]}
                 strokeLinecap="round"
                 transition={{ type: "spring", stiffness: 160, damping: 10 }}
               />

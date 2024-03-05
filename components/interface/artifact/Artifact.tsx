@@ -133,7 +133,7 @@ export const Artifact = () => {
           glareBorderRadius={"32px"}
           tiltEnable={true}
           transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
-          className={`transform-style-3d shadow-artifact relative mt-[56px] cursor-pointer overflow-hidden rounded-3xl`}
+          className={`transform-style-3d shadow-soundArt relative mt-[56px] cursor-pointer overflow-hidden rounded-3xl`}
         >
           <motion.div
             animate={{
@@ -148,7 +148,7 @@ export const Artifact = () => {
             onClick={() => setIsExpanded(!isExpanded)}
             className={`flex flex-col overflow-hidden rounded-3xl bg-white p-6`}
           >
-            <div className="flex justify-between">
+            <div className="translate-z-1 flex justify-between">
               <StarIcon />
 
               <Image

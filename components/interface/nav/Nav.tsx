@@ -217,7 +217,9 @@ const Nav = () => {
 
       <motion.div
         variants={contentVariants}
-        animate={expandInput && !isNotifications ? "expanded" : "collapsed"}
+        animate={
+          expandInput && !isNotifications && !isReply ? "expanded" : "collapsed"
+        }
         className={`absolute bottom-0 left-0 z-0 flex h-[472px] w-[368px] origin-bottom-left -translate-x-10 translate-y-10 flex-col rounded-[20px] bg-[#F4F4F4A9] ${
           !expandInput && "mix-blend-darken"
         }`}
