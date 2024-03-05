@@ -22,4 +22,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-// export const runtime = "edge";
+export const runtime = "edge";
