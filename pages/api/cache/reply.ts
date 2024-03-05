@@ -51,4 +51,4 @@ async function fetchOrCacheRoots(ids: string[]): Promise<ReplyType[]> {
 
 export { fetchOrCacheRoots };
 
-export const runtime = "edge";
+// export const runtime = "edge";
