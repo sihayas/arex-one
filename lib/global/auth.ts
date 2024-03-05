@@ -24,7 +24,7 @@ interface DatabaseUserAttributes {
   notifications: Notification[];
 }
 
-globalThis.crypto = webcrypto as Crypto;
+// globalThis.crypto = webcrypto as Crypto;
 
 const client = new PrismaClient();
 const adapter = new PrismaAdapter(client.session, client.user);
