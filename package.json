@@ -16,7 +16,9 @@
     "@azure/storage-blob": "^12.17.0",
     "@lucia-auth/adapter-mysql": "^3.0.0-beta.7",
     "@lucia-auth/adapter-prisma": "^4.0.0-beta.9",
-    "@prisma/client": "^5.10.2",
+    "@planetscale/database": "^1.16.0",
+    "@prisma/adapter-planetscale": "^5.11.0-dev.5",
+    "@prisma/client": "^5.11.0-dev.5",
     "@tanstack/react-query": "^4.29.19",
     "@tanstack/react-query-devtools": "^4.29.19",
     "@types/lodash": "^4.14.195",
@@ -53,7 +55,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.23.2",
-    "prisma": "^5.10.2",
+    "prisma": "^5.11.0-dev.5",
     "tailwindcss-3d": "^1.0.5"
   }
 }

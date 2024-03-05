@@ -1,13 +1,16 @@
 import { Lucia, Session, User } from "lucia";
-// import { webcrypto } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
+import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
+import { Client } from "@planetscale/database";
 import { Apple } from "arctic";
 import type { AppleCredentials } from "arctic";
-// import fs from "fs";
-// import path from "path";
 import type { IncomingMessage, ServerResponse } from "http";
 import { Notification } from "@/types/dbTypes";
+
+// import { webcrypto } from "node:crypto";
+// // import fs from "fs";
+// import path from "path";
 
 declare module "lucia" {
   interface Register {
@@ -49,26 +52,45 @@ const credentials: AppleCredentials = {
 const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
 export const apple = new Apple(credentials, redirectURI);
 
-export const lucia = new Lucia(adapter, {
-  sessionCookie: {
-    name: "session",
-    expires: false, // session cookies have very long lifespan (2 years)
-    attributes: {
-      secure: true,
-      sameSite: "strict",
-      domain: "voir.space",
+export const lucia = new Lucia(
+  {},
+  {
+    sessionCookie: {
+      name: "session",
+      expires: false,
+      attributes: {
+        secure: true,
+        sameSite: "strict",
+        domain: "voir.space",
+      },
     },
-  },
-  getUserAttributes: (attributes) => {
-    return {
+    getUserAttributes: (attributes) => ({
       id: attributes.id,
       appleId: attributes.apple_id,
       username: attributes.username,
       image: attributes.image,
       notifications: attributes.notifications,
-    };
+    }),
   },
-});
+);
+
+export default {
+  async fetch(request, env, ctx) {
+    const planetscaleClient = new Client({
+      url: env.DATABASE_URL,
+      fetch(url, init) {
+        delete init["cache"];
+        return fetch(url, init);
+      },
+    });
+    const adapter = new PrismaPlanetScale(planetscaleClient);
+    const prisma = new PrismaClient({ adapter });
+
+    const users = await prisma.user.findMany();
+    const result = JSON.stringify(users);
+    return new Response(result);
+  },
+};
 
 // Middleware to validate the session cookie on every request
 export async function validateRequest(
