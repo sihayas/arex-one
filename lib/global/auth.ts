@@ -29,13 +29,12 @@ interface DatabaseUserAttributes {
 const client = new PrismaClient();
 const adapter = new PrismaAdapter(client.session, client.user);
 
-const certificatePath = path.join(
-  process.cwd(),
-  process.env.APPLE_CERT_PATH ?? "",
-);
+// const certificatePath = path.join(
+//   process.cwd(),
+//   process.env.APPLE_CERT_PATH ?? "",
+// );
 
-const certificate =
-  process.env.APPLE_CERT ?? fs.readFileSync(certificatePath, "utf-8");
+const certificate = process.env.APPLE_CERT!;
 
 const credentials: AppleCredentials = {
   clientId: process.env.APPLE_CLIENT_ID ?? "",
