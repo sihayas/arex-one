@@ -74,6 +74,7 @@ export async function validateRequest(
   res: ServerResponse,
 ): Promise<{ user: User; session: Session } | { user: null; session: null }> {
   const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
+
   if (!sessionId) {
     return {
       user: null,
@@ -99,3 +100,5 @@ export async function validateRequest(
   }
   return result;
 }
+
+export const runtime = "edge";

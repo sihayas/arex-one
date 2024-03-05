@@ -11,6 +11,7 @@ const allowedOrigins = [
   "https://voir.space",
   "https://dev.voir.space:3000",
   "https://dev.voir.space",
+  "https://www.voir.space",
 ];
 
 export default async function handler(
