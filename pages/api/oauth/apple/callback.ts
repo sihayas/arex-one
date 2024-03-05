@@ -122,3 +122,5 @@ export default async function handler(
     return;
   }
 }
+
+export const runtime = "edge";

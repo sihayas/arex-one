@@ -70,3 +70,5 @@ async function fetchOrCacheArtifacts(ids: string[]): Promise<ArtifactData[]> {
 }
 
 export { fetchOrCacheArtifacts };
+
+export const runtime = "edge";

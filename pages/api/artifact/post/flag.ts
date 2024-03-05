@@ -33,3 +33,5 @@ export default async function handle(
     return res.status(500).json({ error: "Failed to flag content." });
   }
 }
+
+export const runtime = "edge";

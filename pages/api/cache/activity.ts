@@ -82,3 +82,5 @@ async function fetchOrCacheActivities(ids: string[]): Promise<ActivityData[]> {
 }
 
 export { fetchOrCacheActivities };
+
+export const runtime = "edge";

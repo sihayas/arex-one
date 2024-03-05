@@ -3,7 +3,7 @@ import { prisma } from "@/lib/global/prisma";
 
 export default async function getSettings(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { userId } = req.query;
 
@@ -26,3 +26,5 @@ export default async function getSettings(
     return res.status(500).end("Error fetching settings.");
   }
 }
+
+export const runtime = "edge";

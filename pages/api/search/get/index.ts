@@ -34,3 +34,5 @@ export default async function handler(
 
   res.json(combinedResponse);
 }
+
+export const runtime = "edge";

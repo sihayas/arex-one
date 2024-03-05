@@ -30,8 +30,8 @@ export default async function handle(
     const whereClause = artifactId
       ? { artifactId, replyToId: null }
       : replyId
-      ? { replyToId: replyId }
-      : {};
+        ? { replyToId: replyId }
+        : {};
 
     const replies = await prisma.reply.findMany({
       where: whereClause,
@@ -85,3 +85,5 @@ export default async function handle(
     return res.status(500).json({ error: "Error fetching replies." });
   }
 }
+
+export const runtime = "edge";

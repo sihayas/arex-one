@@ -182,11 +182,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     const animateShadow = () => {
       const animationConfig = {
         boxShadow: expandInput
-          ? "0px 0px 0px 0px rgba(0,0,0,0.0), 0px 0px 0px 0px rgba(0,0,0,0.0)"
-          : "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
-        outline: expandInput
-          ? "1px solid rgba(0,0,0,0.05)"
-          : "1px solid rgba(0,0,0,0.0)",
+          ? "rgba(0, 0, 0, 0.0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.0) 0px 0px 0px 0px"
+          : "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
         scale: expandInput ? (isNotifications ? 1.05 : 0.9) : 1,
         filter: expandInput
           ? isNotifications

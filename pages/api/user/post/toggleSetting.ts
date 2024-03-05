@@ -38,3 +38,5 @@ export default async function toggleSetting(
     return res.status(500).json({ error: "Error toggling setting." });
   }
 }
+
+export const runtime = "edge";

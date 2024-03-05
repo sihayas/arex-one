@@ -85,3 +85,5 @@ export default async function handle(
     res.status(500).json({ error: "Error fetching user." });
   }
 }
+
+export const runtime = "edge";

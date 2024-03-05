@@ -94,3 +94,5 @@ export default async function handle(
     return res.status(500).json({ error: "Error fetching replies." });
   }
 }
+
+export const runtime = "edge";

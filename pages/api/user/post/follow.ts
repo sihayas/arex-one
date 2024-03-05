@@ -125,3 +125,5 @@ export default async function handle(
     res.status(500).json({ error: "Failed to create follow relationship." });
   }
 }
+
+export const runtime = "edge";

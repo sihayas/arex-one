@@ -111,3 +111,5 @@ export default async function handle(
     res.status(500).json({ error: "Failed to remove follow relationship." });
   }
 }
+
+export const runtime = "edge";

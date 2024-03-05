@@ -30,3 +30,5 @@ export default async function handler(
     res.status(500).end("Internal Server Error");
   }
 }
+
+export const runtime = "edge";

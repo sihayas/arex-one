@@ -90,3 +90,5 @@ export default async function handle(
     return res.status(500).json({ error: "Error fetching activities." });
   }
 }
+
+export const runtime = "edge";

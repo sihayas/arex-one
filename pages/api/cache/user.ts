@@ -40,3 +40,5 @@ async function fetchOrCacheUser(userId: string) {
 }
 
 export { fetchOrCacheUser };
+
+export const runtime = "edge";
