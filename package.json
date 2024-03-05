@@ -10,8 +10,7 @@
     "postinstall": "prisma generate",
     "prismaSeed": "ts-node --project tsconfig.scripts.json scripts/prismaSeed.ts",
     "prismaHeart": "ts-node --project tsconfig.scripts.json scripts/prismaHeart.ts",
-    "prismaReply": "ts-node-transpile-only scripts/prismaReply.ts",
-    "cloudflare-build": "npm install --force && npx @cloudflare/next-on-pages@1"
+    "prismaReply": "ts-node-transpile-only scripts/prismaReply.ts"
   },
   "dependencies": {
     "@azure/storage-blob": "^12.17.0",
