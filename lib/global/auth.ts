@@ -4,8 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import { Apple } from "arctic";
 import type { AppleCredentials } from "arctic";
-import fs from "fs";
-import path from "path";
+// import fs from "fs";
+// import path from "path";
 import type { IncomingMessage, ServerResponse } from "http";
 import { Notification } from "@/types/dbTypes";
 
@@ -33,6 +33,9 @@ const adapter = new PrismaAdapter(client.session, client.user);
 //   process.cwd(),
 //   process.env.APPLE_CERT_PATH ?? "",
 // );
+
+// const certificate =
+//   process.env.APPLE_CERT ?? fs.readFileSync(certificatePath, "utf-8");
 
 const certificate = process.env.APPLE_CERT!;
 
