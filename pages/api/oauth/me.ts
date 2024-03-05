@@ -11,6 +11,7 @@ export default async function handler(
   }
 
   const { user, session } = await lucia.validateSession(sessionId);
+
   if (!session) {
     return res.status(401).json({ error: "Unauthorized" });
   }

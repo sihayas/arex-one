@@ -26,9 +26,7 @@ export default async function handler(
     const cookieString = serializeCookie("apple_oauth_state", state, {
       path: "/",
       // Important, treat development as secure for Apple
-      secure:
-        process.env.NODE_ENV === "development" ||
-        process.env.NODE_ENV === "production",
+      secure: true,
       httpOnly: true,
       maxAge: 60 * 10,
       sameSite: "none",
