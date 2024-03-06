@@ -22,7 +22,7 @@ export default function Home() {
     const response = await fetch("/api/oauth/apple/logout", {
       method: "POST",
     });
-    // Handle the response, e.g., redirect to the homepage
+    // Handle the response, e.g., redirect to home
     if (response.ok) {
       window.location.href = "/";
     }
