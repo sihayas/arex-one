@@ -73,23 +73,23 @@ export const lucia = new Lucia(adapter, {
   },
 });
 
-export default {
-  async fetch(request, env, ctx) {
-    const planetscaleClient = new Client({
-      url: env.DATABASE_URL,
-      fetch(url, init) {
-        delete init["cache"];
-        return fetch(url, init);
-      },
-    });
-    const adapter = new PrismaPlanetScale(planetscaleClient);
-    const prisma = new PrismaClient({ adapter });
+// export default {
+//   async fetch(request, env, ctx) {
+//     const planetscaleClient = new Client({
+//       url: env.DATABASE_URL,
+//       fetch(url, init) {
+//         delete init["cache"];
+//         return fetch(url, init);
+//       },
+//     });
+//     const adapter = new PrismaPlanetScale(planetscaleClient);
+//     const prisma = new PrismaClient({ adapter });
 
-    const users = await prisma.user.findMany();
-    const result = JSON.stringify(users);
-    return new Response(result);
-  },
-};
+//     const users = await prisma.user.findMany();
+//     const result = JSON.stringify(users);
+//     return new Response(result);
+//   },
+// };
 
 // Middleware to validate the session cookie on every request
 export async function validateRequest(
