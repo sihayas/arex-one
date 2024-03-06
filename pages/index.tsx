@@ -8,7 +8,6 @@ import Feed from "@/components/index/render/Feed";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
 import { AppleIcon } from "@/components/icons";
-import { Player } from "@/components/global/Player";
 
 type Feed = "personal" | "bloom" | "recent" | null;
 

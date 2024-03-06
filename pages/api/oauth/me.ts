@@ -6,6 +6,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
+
   if (!sessionId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
