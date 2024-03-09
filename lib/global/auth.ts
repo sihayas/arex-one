@@ -7,7 +7,6 @@ import { Client } from "@planetscale/database";
 import { Apple } from "arctic";
 // import type { IncomingMessage, ServerResponse } from "http";
 import { Notification } from "@/types/dbTypes";
-import { Request, ExecutionContext } from "@cloudflare/workers-types";
 import { Env } from "@/types/worker-configuration";
 
 declare module "lucia" {
