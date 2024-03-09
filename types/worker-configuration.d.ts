@@ -1,0 +1,16 @@
+export interface Env {
+  APPLE_CERT: string;
+  APPLE_CERT_BASE64: string;
+  APPLE_CLIENT_ID: string;
+  APPLE_KEY_ID: string;
+  APPLE_REDIRECT_URI: string;
+  APPLE_TEAM_ID: string;
+  AZURE_CONNECTION_STRING: string;
+  AZURE_STORAGE_ACCOUNT_ACCESS: string;
+  AZURE_STORAGE_ACCOUNT_NAME: string;
+  AZURE_STORAGE_CONTAINER_NAME: string;
+  DATABASE_URL: string;
+  NEXT_PUBLIC_MUSICKIT_TOKEN: string;
+  NEXT_PUBLIC_RUNTIME_ENV: string;
+  SKIP_DEPENDENCY_INSTALL: string;
+}

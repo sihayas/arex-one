@@ -1,23 +1,47 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { lucia } from "@/lib/global/auth";
+import { initializeLuciaAndPrisma } from "@/lib/global/auth";
+import { Request, ExecutionContext } from "@cloudflare/workers-types";
+import { Env } from "@/types/worker-configuration";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
 ) {
-  const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
+  // Initialize Lucia with your Edge environment's configurations
+  const { lucia } = await initializeLuciaAndPrisma(env);
+
+  // Extract the Cookie header from the request
+  const cookieHeader = request.headers.get("cookie") ?? "";
+  const sessionId = lucia.readSessionCookie(cookieHeader);
 
   if (!sessionId) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+    });
   }
 
-  const { user, session } = await lucia.validateSession(sessionId);
+  try {
+    const { user, session } = await lucia.validateSession(sessionId);
 
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
+    if (!session) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
+
+    // If the session is valid, respond with the user and session information
+    return new Response(JSON.stringify({ user, session }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Session validation error:", error);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+    });
   }
-
-  res.json({ user, session });
 }
 
 export const runtime = "edge";

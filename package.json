@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.17.0",
+    "@cloudflare/workers-types": "^4.20240222.0",
     "@lucia-auth/adapter-mysql": "^3.0.0-beta.7",
     "@lucia-auth/adapter-prisma": "^4.0.0-beta.9",
     "@planetscale/database": "^1.16.0",
@@ -21,6 +22,7 @@
     "@prisma/client": "^5.11.0-dev.5",
     "@tanstack/react-query": "^4.29.19",
     "@tanstack/react-query-devtools": "^4.29.19",
+    "@types/cookie": "^0.6.0",
     "@types/lodash": "^4.14.195",
     "@types/node": "20.3.2",
     "@types/react": "18.2.14",
@@ -31,6 +33,7 @@
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "cmdk": "^0.2.0",
+    "cookie": "^0.6.0",
     "date-fns": "^2.30.0",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.7",

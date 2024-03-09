@@ -1,20 +1,18 @@
-import { Lucia, Session, User } from "lucia";
+import { Lucia } from "lucia";
 import { PrismaClient } from "@prisma/client";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
 import { Client } from "@planetscale/database";
-import { Apple } from "arctic";
-import type { AppleCredentials } from "arctic";
-import type { IncomingMessage, ServerResponse } from "http";
-import { Notification } from "@/types/dbTypes";
 
-// import { webcrypto } from "node:crypto";
-// // import fs from "fs";
-// import path from "path";
+import { Apple } from "arctic";
+// import type { IncomingMessage, ServerResponse } from "http";
+import { Notification } from "@/types/dbTypes";
+import { Request, ExecutionContext } from "@cloudflare/workers-types";
+import { Env } from "@/types/worker-configuration";
 
 declare module "lucia" {
   interface Register {
-    Lucia: typeof lucia;
+    Lucia: typeof Lucia;
     DatabaseUserAttributes: DatabaseUserAttributes;
   }
 }
@@ -27,101 +25,101 @@ interface DatabaseUserAttributes {
   notifications: Notification[];
 }
 
-// globalThis.crypto = webcrypto as Crypto; // Not necessary for Cloudflare Prod.
-
-const client = new PrismaClient();
-const adapter = new PrismaAdapter(client.session, client.user);
-
-// const certificatePath = path.join(
-//   process.cwd(),
-//   process.env.APPLE_CERT_PATH ?? "",
-// );
-
-// const certificate =
-//   process.env.APPLE_CERT ?? fs.readFileSync(certificatePath, "utf-8");
-
-const certificate = process.env.APPLE_CERT ?? "";
-
-const credentials: AppleCredentials = {
-  clientId: process.env.APPLE_CLIENT_ID ?? "",
-  teamId: process.env.APPLE_TEAM_ID ?? "",
-  keyId: process.env.APPLE_KEY_ID ?? "",
-  certificate,
-};
-
-const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
-export const apple = new Apple(credentials, redirectURI);
-
-export const lucia = new Lucia(adapter, {
-  sessionCookie: {
-    name: "session",
-    expires: false, // session cookies have very long lifespan (2 years)
-    attributes: {
-      secure: true,
-      sameSite: "strict",
-      domain: "voir.space",
+export async function initializeApple(env: Env): Promise<Apple> {
+  const apple = new Apple(
+    {
+      clientId: env.APPLE_CLIENT_ID,
+      teamId: env.APPLE_TEAM_ID,
+      keyId: env.APPLE_KEY_ID,
+      certificate: env.APPLE_CERT,
     },
-  },
-  getUserAttributes: (attributes) => {
-    return {
+    env.APPLE_REDIRECT_URI,
+  );
+
+  return apple;
+}
+
+export async function initializeLuciaAndPrisma(
+  env: Env,
+): Promise<{ lucia: Lucia; prisma: PrismaClient }> {
+  const client = new Client({
+    url: env.DATABASE_URL,
+    fetch(url, init) {
+      // @ts-ignore
+      delete init["cache"];
+      return fetch(url, init);
+    },
+  });
+
+  const adapter = new PrismaPlanetScale(client);
+  const prisma = new PrismaClient({ adapter: adapter });
+
+  const luciaAdapter = new PrismaAdapter(prisma.user, prisma.session);
+
+  const lucia = new Lucia({
+    // @ts-ignore
+    adapter: luciaAdapter,
+    sessionCookie: {
+      name: "session",
+      expires: false,
+      attributes: {
+        secure: true,
+        sameSite: "strict",
+        domain: "voir.space",
+      },
+    },
+    getUserAttributes: (attributes: DatabaseUserAttributes) => ({
       id: attributes.id,
-      appleId: attributes.apple_id,
+      apple_id: attributes.apple_id,
       username: attributes.username,
       image: attributes.image,
       notifications: attributes.notifications,
-    };
-  },
-});
+    }),
+  });
 
-// export default {
-//   async fetch(request, env, ctx) {
-//     const planetscaleClient = new Client({
-//       url: env.DATABASE_URL,
-//       fetch(url, init) {
-//         delete init["cache"];
-//         return fetch(url, init);
-//       },
-//     });
-//     const adapter = new PrismaPlanetScale(planetscaleClient);
-//     const prisma = new PrismaClient({ adapter });
+  // Return both lucia and prisma instances
+  return { lucia, prisma };
+}
 
-//     const users = await prisma.user.findMany();
-//     const result = JSON.stringify(users);
-//     return new Response(result);
+export async function initializePrisma(env: Env) {
+  const client = new Client({
+    url: env.DATABASE_URL,
+    fetch(url, init) {
+      // @ts-ignore
+      delete init["cache"];
+      return fetch(url, init);
+    },
+  });
+
+  const adapter = new PrismaPlanetScale(client);
+  const prisma = new PrismaClient({ adapter: adapter });
+
+  return prisma;
+}
+
+// export const edgeHandler = {
+//   async fetch(
+//     request: Request,
+//     env: Env,
+//     ctx: ExecutionContext,
+//   ): Promise<Response> {
+//     const { lucia, prisma } = await initializeLuciaAndPrisma(env);
+
+//     const sessionCookie = request.headers.get("cookie") ?? "";
+//     try {
+//       const sessionValidationResult =
+//         await lucia.validateSession(sessionCookie);
+//       if (!sessionValidationResult.user) {
+//         return new Response("Unauthorized", { status: 401 });
+//       }
+//       // Proceed with your logic for a valid session...
+//       return new Response(JSON.stringify(sessionValidationResult.user), {
+//         status: 200,
+//       });
+//     } catch (error) {
+//       return new Response("Error validating session", { status: 500 });
+//     }
 //   },
 // };
-
-// Middleware to validate the session cookie on every request
-export async function validateRequest(
-  req: IncomingMessage,
-  res: ServerResponse,
-): Promise<{ user: User; session: Session } | { user: null; session: null }> {
-  const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
-
-  if (!sessionId) {
-    return {
-      user: null,
-      session: null,
-    };
-  }
-
-  const result = await lucia.validateSession(sessionId);
-
-  // Re-set the session on every response
-  if (result.session && result.session.fresh) {
-    res.appendHeader(
-      "Set-Cookie",
-      lucia.createSessionCookie(result.session.id).serialize(),
-    );
-  }
-
-  if (!result.session) {
-    res.appendHeader(
-      "Set-Cookie",
-      lucia.createBlankSessionCookie().serialize(),
-    );
-  }
-  return result;
-}
 
 export const runtime = "edge";

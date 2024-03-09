@@ -1,54 +1,45 @@
-import { apple } from "@/lib/global/auth";
 import { generateState } from "arctic";
 import { serializeCookie } from "oslo/cookie";
-
-import type { NextApiRequest, NextApiResponse } from "next";
+import { Request, ExecutionContext } from "@cloudflare/workers-types";
+import { Env } from "@/types/worker-configuration";
+import { initializeApple } from "@/lib/global/auth";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
 ) {
   try {
-    if (req.method !== "GET") {
-      console.error("Invalid request method:", req.method);
-      res.status(405).end("Method Not Allowed");
-      return;
+    if (request.method !== "GET") {
+      return new Response("Method Not Allowed", { status: 405 });
     }
 
+    const apple = await initializeApple(env);
+
     const state = generateState();
-    const url: URL = await apple.createAuthorizationURL(state, {
+    const url = await apple.createAuthorizationURL(state, {
       scopes: ["name", "email"],
     });
     url.searchParams.set("response_mode", "form_post");
 
-    const cookieString = serializeCookie("apple_oauth_state", state, {
-      path: "/",
-      secure: true,
-      httpOnly: true,
-      maxAge: 60 * 10, // 10 minutes
-      sameSite: "none",
-    });
+    const headers = new Headers();
+    headers.append("Location", url.toString());
+    headers.append(
+      "Set-Cookie",
+      serializeCookie("apple_oauth_state", state, {
+        path: "/",
+        secure: true,
+        httpOnly: true,
+        maxAge: 60 * 10, // 10 minutes
+        sameSite: "none",
+      }),
+    );
 
-    res.setHeader("Set-Cookie", cookieString);
-    res.redirect(url.toString());
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Error in /api/oauth/apple handler:", {
-        message: error.message,
-        stack: error.stack,
-      });
-
-      if (process.env.NODE_ENV === "development") {
-        res
-          .status(500)
-          .json({ error: "Internal Server Error", details: error.message });
-      } else {
-        res.status(500).end("Internal Server Error");
-      }
-    } else {
-      console.error("An unexpected error occurred", error);
-      res.status(500).end("Internal Server Error");
-    }
+    // Use 302 for redirection
+    return new Response(null, { status: 302, headers: headers });
+  } catch (error) {
+    console.error("Error in /api/oauth/apple handler:", error);
+    return new Response("Internal Server Error", { status: 500 });
   }
 }
 

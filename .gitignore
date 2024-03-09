@@ -18,6 +18,8 @@
 
 # development
 /certificates
+wrangler.toml
+.dev.vars
 
 # misc
 /archive

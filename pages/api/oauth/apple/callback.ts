@@ -1,127 +1,129 @@
-import { apple, lucia } from "@/lib/global/auth";
-import { OAuth2RequestError } from "arctic";
+import { initializeApple, initializeLuciaAndPrisma } from "@/lib/global/auth";
 import { generateId } from "lucia";
 
-import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/global/prisma";
 import { uploadDefaultImage } from "@/lib/azureBlobUtils";
 import { parseJWT } from "oslo/jwt";
+import { parse } from "cookie";
+import { Request, ExecutionContext } from "@cloudflare/workers-types";
+import { Env } from "@/types/worker-configuration";
 
 const allowedOrigins = [
   "https://voir.space",
-  "https://dev.voir.space:3000",
   "https://dev.voir.space",
   "https://www.voir.space",
 ];
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const origin = req.headers.origin;
-  // Handle OPTIONS request for CORS Preflight
-  if (req.method === "OPTIONS") {
-    if (origin && allowedOrigins.includes(origin)) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-      res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization",
-      );
-      res.setHeader("Access-Control-Allow-Credentials", "true");
-    }
-    res.status(204).end();
-    return;
-  }
+interface AuthRequest {
+  code: string;
+  state: string;
+}
 
-  if (req.method !== "POST") {
-    res.status(405).end("Method Not Allowed");
-    return;
-  }
+interface JWTPayload {
+  sub: string;
+}
 
-  if (typeof req.url !== "string") {
-    console.error("req.url is undefined");
-    res.status(500).end();
-    return;
-  }
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const origin = request.headers.get("origin");
 
-  // On first login, Apple sends the user's data as JSON in the request body (also user
-  const { code, state } = req.body;
-
-  // Cross-check the state from the request body with the stored cookie/state
-  const storedState = req.cookies.apple_oauth_state;
-
-  if (!code || !state || !storedState || state !== storedState) {
-    console.error("Invalid request parameters. Details:", {
-      code: code ? "Received" : "Missing",
-      state: state ? "Received" : "Missing",
-      storedState: storedState ? "Received" : "Missing",
-      stateMatch: state === storedState ? "Match" : "Mismatch",
-    });
-    res.status(400).end("Invalid request parameters");
-    return;
-  }
-
-  try {
-    // Validate and return Apple tokens
-    const tokens = await apple.validateAuthorizationCode(code);
-    if (!tokens) {
-      console.log("Failed to validate authorization code");
-      res.status(400).end();
-      return;
+    // Handle OPTIONS request for CORS Preflight
+    if (request.method === "OPTIONS") {
+      if (origin && allowedOrigins.includes(origin)) {
+        let headers = new Headers();
+        headers.set("Access-Control-Allow-Origin", origin);
+        headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+        headers.set(
+          "Access-Control-Allow-Headers",
+          "Content-Type, Authorization",
+        );
+        headers.set("Access-Control-Allow-Credentials", "true");
+        return new Response(null, { status: 204, headers });
+      }
+      return new Response(null, { status: 204 });
     }
 
-    const jwt = parseJWT(tokens.idToken);
-    if (!jwt || !jwt.payload) {
-      console.error("Invalid JWT");
-      res.status(400).end("Invalid JWT");
-      return;
+    if (request.method !== "POST") {
+      return new Response("Method Not Allowed", { status: 405 });
     }
 
-    const payload = jwt.payload;
+    const url = new URL(request.url);
+    if (!url) {
+      console.error("req.url is undefined");
+      return new Response(null, { status: 500 });
+    }
 
-    // Check for existing user
-    const existingUser = await prisma.user.findFirst({
-      // @ts-ignore
-      where: { apple_id: payload.sub },
-    });
+    const { lucia, prisma } = await initializeLuciaAndPrisma(env);
+    const apple = await initializeApple(env);
 
-    let session;
-    if (existingUser) {
-      console.log("Existing user found, creating new session.");
-      session = await lucia.createSession(existingUser.id, {});
-    } else {
-      console.log("No existing user found, creating new user.");
-      const userId = generateId(15);
-      const defaultImageUrl = await uploadDefaultImage();
-      await prisma.user.create({
-        data: {
-          id: userId,
-          // @ts-ignore
-          apple_id: payload.sub,
-          username: `user-${userId}`,
-          image: defaultImageUrl,
-        },
+    // Assuming `request.json()` is used for parsing JSON body
+    // On first login, Apple sends the user's data as JSON in the request body
+    const requestBody = (await request.json()) as AuthRequest;
+    const { code, state } = requestBody;
+
+    // Cross-check the state from the request body with the stored cookie/state
+    const STATE_COOKIE_NAME = "apple_oauth_state";
+    const cookies = parse(request.headers.get("Cookie") || "");
+    const storedState = cookies[STATE_COOKIE_NAME];
+
+    if (!code || !state || !storedState || state !== storedState) {
+      console.error("Invalid request parameters. Details:", {
+        code: code ? "Received" : "Missing",
+        state: state ? "Received" : "Missing",
+        storedState: storedState ? "Received" : "Missing",
+        stateMatch: state === storedState ? "Match" : "Mismatch",
+      });
+      return new Response("Invalid request parameters", { status: 400 });
+    }
+
+    try {
+      const tokens = await apple.validateAuthorizationCode(code);
+      if (!tokens) {
+        console.log("Failed to validate authorization code");
+        return new Response(null, { status: 400 });
+      }
+
+      const jwt = parseJWT(tokens.idToken);
+      if (!jwt || !jwt.payload) {
+        console.error("Invalid JWT");
+        return new Response("Invalid JWT", { status: 400 });
+      }
+
+      const payload = jwt.payload as JWTPayload;
+
+      const existingUser = await prisma.user.findFirst({
+        where: { apple_id: payload.sub },
       });
 
-      session = await lucia.createSession(userId, {});
-    }
+      let session;
+      if (existingUser) {
+        // Existing user found, creating new session
+        session = await lucia.createSession(existingUser.id, {});
+      } else {
+        // No existing user found, creating new user
+        const userId = generateId(15);
+        const defaultImageUrl = await uploadDefaultImage();
+        await prisma.user.create({
+          data: {
+            id: userId,
+            apple_id: payload.sub,
+            username: `user-${userId}`,
+            image: defaultImageUrl,
+          },
+        });
 
-    // Set session cookie and redirect
-    res
-      .appendHeader(
-        "Set-Cookie",
-        lucia.createSessionCookie(session.id).serialize(),
-      )
-      .redirect("/");
-  } catch (e) {
-    if (e instanceof OAuth2RequestError) {
-      const { message, description, request } = e;
-      console.error(message, description, request);
+        session = await lucia.createSession(userId, {});
+      }
+
+      // Set session cookie and respond
+      const headers = new Headers({
+        "Set-Cookie": lucia.createSessionCookie(session.id).serialize(),
+      });
+      return new Response(null, { status: 302, headers });
+    } catch (e) {
+      console.error("Error:", e);
+      return new Response("Internal Server Error", { status: 500 });
     }
-    res.status(500).end();
-    return;
-  }
-}
+  },
+};
 
 export const runtime = "edge";

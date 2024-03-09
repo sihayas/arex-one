@@ -1,33 +1,46 @@
-import { lucia, validateRequest } from "@/lib/global/auth";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { initializeLuciaAndPrisma } from "@/lib/global/auth";
+import { Request } from "@cloudflare/workers-types";
+import { Env } from "@/types/worker-configuration";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export default async function handler(request: Request, env: Env) {
+  if (request.method !== "POST") {
+    return new Response("Method Not Allowed", { status: 405 });
+  }
+
   try {
-    if (req.method !== "POST") {
-      // Log and return a 405 Method Not Allowed error if not a POST request
-      console.error("Invalid request method:", req.method);
-      res.status(405).end("Method Not Allowed");
-      return;
-    }
+    const { lucia } = await initializeLuciaAndPrisma(env);
 
-    // Make sure there is a session to log out of
-    const { session } = await validateRequest(req, res);
+    // Read the session cookie from the request
+    const sessionCookie = request.headers.get("cookie") ?? "";
+    const {
+      // user,
+      session,
+    } = await lucia.validateSession(sessionCookie);
 
     if (!session) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
     }
 
+    // Invalidate the session
     await lucia.invalidateSession(session.id);
 
-    const sessionCookie = lucia.createBlankSessionCookie();
-    res.appendHeader("Set-Cookie", sessionCookie.serialize());
-    res.status(200).json({ message: "Successfully logged out" });
+    // Create a new blank session cookie to clear the session
+    const blankSessionCookie = lucia.createBlankSessionCookie();
+    return new Response(
+      JSON.stringify({ message: "Successfully logged out" }),
+      {
+        status: 200,
+        headers: {
+          "Set-Cookie": blankSessionCookie.serialize(),
+          "Content-Type": "application/json",
+        },
+      },
+    );
   } catch (error) {
-    console.error("Error in sign-out handler:", error);
-    res.status(500).end("Internal Server Error");
+    console.error("Error in logout handler:", error);
+    return new Response("Internal Server Error", { status: 500 });
   }
 }
 
