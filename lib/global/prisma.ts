@@ -1,9 +1,13 @@
-// import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
+import { Client } from "@planetscale/database";
 
-// const globalForPrisma = globalThis as unknown as {
-//   prisma: PrismaClient | undefined;
-// };
+export function initializePrisma() {
+  const env = process.env;
 
-// export const prisma = globalForPrisma.prisma ?? new PrismaClient();
+  const client = new Client({ url: env.DATABASE_URL });
+  const adapter = new PrismaPlanetScale(client);
+  const prisma = new PrismaClient({ adapter: adapter });
 
-// if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+  return prisma;
+}

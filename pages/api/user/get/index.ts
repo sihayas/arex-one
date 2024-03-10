@@ -1,89 +1,95 @@
-// import type { NextApiRequest, NextApiResponse } from "next";
-// import { prisma } from "@/lib/global/prisma";
-// import { Essential } from "@/types/dbTypes";
-// import { fetchAndCacheSoundsByType } from "@/pages/api/cache/sound";
-// import { fetchOrCacheUser } from "@/pages/api/cache/user";
+import { initializePrisma } from "@/lib/global/prisma";
+import { Essential } from "@/types/dbTypes";
+import { fetchAndCacheSoundsByType } from "../../cache/sound";
+import { fetchOrCacheUser } from "../../cache/user";
 
-// async function enrichEssentialsWithAlbumData(essentials: Essential[]) {
-//   if (essentials.length === 0) {
-//     return essentials;
-//   }
+async function enrichEssentialsWithAlbumData(essentials: Essential[]) {
+  if (essentials.length === 0) {
+    return essentials;
+  }
 
-//   const albumIds = essentials.map((e) => e.sound.appleId).join(",");
-//   const albumData = await fetchAndCacheSoundsByType(albumIds, "albums");
-//   const albumDataMap = Object.fromEntries(
-//     // @ts-ignore
-//     albumData.map((album) => [album.id, album]),
-//   );
+  const albumIds = essentials.map((e) => e.sound.appleId).join(",");
+  const albumData = await fetchAndCacheSoundsByType(albumIds, "albums");
+  const albumDataMap = Object.fromEntries(
+    // @ts-ignore
+    albumData.map((album) => [album.id, album]),
+  );
 
-//   return essentials.map((essential) => ({
-//     ...essential,
-//     appleData: albumDataMap[essential.sound.appleId],
-//   }));
-// }
+  return essentials.map((essential) => ({
+    ...essential,
+    appleData: albumDataMap[essential.sound.appleId],
+  }));
+}
 
-// async function countUniqueAlbumsAndTracks(
-//   userId: string,
-// ): Promise<{ soundCount: number }> {
-//   const [uniqueAlbumCount] = await Promise.all([
-//     prisma.artifact.groupBy({
-//       by: ["soundId"],
-//       where: { authorId: userId, type: "entry" },
-//       _count: { soundId: true },
-//     }),
-//   ]);
+async function countUniqueAlbumsAndTracks(
+  userId: string,
+): Promise<{ soundCount: number }> {
+  const prisma = initializePrisma();
 
-//   return {
-//     soundCount: uniqueAlbumCount.length,
-//   };
-// }
+  const [uniqueAlbumCount] = await Promise.all([
+    prisma.artifact.groupBy({
+      by: ["soundId"],
+      where: { authorId: userId, type: "entry" },
+      _count: { soundId: true },
+    }),
+  ]);
 
-// export default async function handle(
-//   req: NextApiRequest,
-//   res: NextApiResponse,
-// ) {
-//   if (req.method !== "GET") {
-//     return res.status(405).json({ error: "Method not allowed." });
-//   }
+  return {
+    soundCount: uniqueAlbumCount.length,
+  };
+}
 
-//   const { sessionUserId, pageUserId } = req.query;
-//   if (
-//     !sessionUserId ||
-//     typeof sessionUserId !== "string" ||
-//     !pageUserId ||
-//     typeof pageUserId !== "string"
-//   ) {
-//     return res
-//       .status(400)
-//       .json({ error: "Signed in Personal is required and must be a string." });
-//   }
+export async function onRequest(request: any) {
+  const url = new URL(request.url);
 
-//   try {
-//     let sessionUserData = await fetchOrCacheUser(sessionUserId);
-//     let pageUserData = await fetchOrCacheUser(pageUserId);
+  // Check for method and extract query parameters
+  if (request.method !== "GET") {
+    return new Response(JSON.stringify({ error: "Method not allowed." }), {
+      status: 405,
+    });
+  }
 
-//     // Attach album data to essentials
-//     pageUserData.essentials = await enrichEssentialsWithAlbumData(
-//       pageUserData.essentials,
-//     );
+  const sessionUserId = url.searchParams.get("sessionUserId");
+  const pageUserId = url.searchParams.get("pageUserId");
 
-//     const { soundCount } = await countUniqueAlbumsAndTracks(pageUserId);
+  if (!sessionUserId || !pageUserId) {
+    return new Response(
+      JSON.stringify({ error: "Required parameters are missing." }),
+      { status: 400 },
+    );
+  }
 
-//     const isFollowingAtoB = pageUserData.followedBy.includes(sessionUserId);
-//     const isFollowingBtoA = sessionUserData.followedBy.includes(pageUserId);
+  try {
+    let sessionUserData = await fetchOrCacheUser(sessionUserId);
+    let pageUserData = await fetchOrCacheUser(pageUserId);
 
-//     const response = {
-//       ...pageUserData,
-//       isFollowingAtoB,
-//       isFollowingBtoA,
-//       soundCount,
-//     };
+    // Attach album data to essentials
+    pageUserData.essentials = await enrichEssentialsWithAlbumData(
+      pageUserData.essentials,
+    );
 
-//     return res.status(200).json(response);
-//   } catch (error) {
-//     console.error("Error fetching user:", error);
-//     res.status(500).json({ error: "Error fetching user." });
-//   }
-// }
+    const { soundCount } = await countUniqueAlbumsAndTracks(pageUserId);
+
+    const isFollowingAtoB = pageUserData.followedBy.includes(sessionUserId);
+    const isFollowingBtoA = sessionUserData.followedBy.includes(pageUserId);
+
+    const response = {
+      ...pageUserData,
+      isFollowingAtoB,
+      isFollowingBtoA,
+      soundCount,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return new Response(JSON.stringify({ error: "Error fetching user." }), {
+      status: 500,
+    });
+  }
+}
 
 export const runtime = "edge";

@@ -20,10 +20,8 @@ const nextConfig = {
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Enable WebAssembly experiments
-    config.experiments = config.experiments || {}; // Ensure the experiments object exists
+    config.experiments = config.experiments || {};
     config.experiments.asyncWebAssembly = true;
-
-    // Important: return the modified config
     return config;
   },
 };
