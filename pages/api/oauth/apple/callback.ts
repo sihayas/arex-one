@@ -1,7 +1,6 @@
 import { apple } from "@/lib/global/auth";
 import { generateId } from "lucia";
 
-import { uploadDefaultImage } from "@/lib/azureBlobUtils";
 import { parseJWT } from "oslo/jwt";
 import { parse } from "cookie";
 import { initializePrisma } from "@/lib/global/prisma";
@@ -13,11 +12,6 @@ const allowedOrigins = [
   "https://www.voir.space",
 ];
 
-interface AuthRequest {
-  code: string;
-  state: string;
-}
-
 interface JWTPayload {
   sub: string;
 }
@@ -27,18 +21,19 @@ export default async function onRequest(request: any) {
 
   // Handle OPTIONS request for CORS Preflight
   if (request.method === "OPTIONS") {
-    if (origin && allowedOrigins.includes(origin)) {
-      let headers = new Headers();
-      headers.set("Access-Control-Allow-Origin", origin);
-      headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-      headers.set(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization",
-      );
-      headers.set("Access-Control-Allow-Credentials", "true");
-      return new Response(null, { status: 204, headers });
+    let headers = new Headers({
+      "Access-Control-Allow-Origin": origin || "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Credentials": "true",
+    });
+
+    // Only send CORS headers if the origin is allowed
+    if (!origin || !allowedOrigins.includes(origin)) {
+      headers.delete("Access-Control-Allow-Origin");
     }
-    return new Response(null, { status: 204 });
+
+    return new Response(null, { status: 204, headers });
   }
 
   if (request.method !== "POST") {
@@ -51,11 +46,32 @@ export default async function onRequest(request: any) {
     return new Response(null, { status: 500 });
   }
 
-  const prisma = initializePrisma();
-
   // Assuming `request.json()` is used for parsing JSON body
   // On first login, Apple sends the user's data as JSON in the request body
-  const requestBody = (await request.json()) as AuthRequest;
+  const contentType = request.headers.get("Content-Type") || "";
+  let requestBody;
+  if (contentType.includes("application/json")) {
+    try {
+      requestBody = await request.json();
+    } catch (e) {
+      console.error("Failed to parse request body as JSON", e);
+      return new Response("Bad Request: Body must be JSON", { status: 400 });
+    }
+  } else if (contentType.includes("application/x-www-form-urlencoded")) {
+    try {
+      const formData = await request.text();
+      requestBody = Object.fromEntries(new URLSearchParams(formData));
+    } catch (e) {
+      console.error("Failed to parse request body as URL-encoded form", e);
+      return new Response("Bad Request: Body must be URL-encoded form", {
+        status: 400,
+      });
+    }
+  } else {
+    console.error("Invalid content type. Received:", contentType);
+    return new Response("Invalid content type", { status: 415 });
+  }
+
   const { code, state } = requestBody;
 
   // Cross-check the state from the request body with the stored cookie/state
@@ -87,25 +103,27 @@ export default async function onRequest(request: any) {
     }
 
     const payload = jwt.payload as JWTPayload;
+    console.log("JWT Payload:", payload);
 
-    const existingUser = await prisma.user.findFirst({
+    const prisma = initializePrisma();
+    const existingUser = await prisma.user.findUnique({
       where: { apple_id: payload.sub },
     });
 
     let session;
     if (existingUser) {
-      // Existing user found, creating new session
+      console.log("Existing user found:", existingUser.id);
       session = await lucia.createSession(existingUser.id, {});
     } else {
-      // No existing user found, creating new user
+      console.log("No existing user found, creating new user...");
       const userId = generateId(15);
-      const defaultImageUrl = await uploadDefaultImage();
       await prisma.user.create({
         data: {
           id: userId,
           apple_id: payload.sub,
           username: `user-${userId}`,
-          image: defaultImageUrl,
+          image:
+            "https://voirmedia.blob.core.windows.net/voir-media/default_avi.jpg",
         },
       });
 

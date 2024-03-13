@@ -10,11 +10,11 @@ datasource db {
 }
 
 model User {
-    id            String         @id @default(cuid())
+    id            String         @id
     email         String?        @unique
-    username      String         @unique
+    username      String?         @unique
     bio           String?        @db.VarChar(50)
-    image         String
+    image         String?
     emailVerified Boolean        @default(false) @map(name: "email_verified")
     password_hash String?
     dateJoined    DateTime       @default(now()) @map(name: "date_joined")

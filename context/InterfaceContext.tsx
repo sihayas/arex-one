@@ -109,13 +109,13 @@ export const InterfaceContextProvider = ({
   }, [data]);
 
   // Initialize notifications
-  const { data: notifData } = useNotificationsQuery(user?.id);
+  // const { data: notifData } = useNotificationsQuery(user?.id);
 
-  useEffect(() => {
-    if (notifData) {
-      setNotifs(notifData.data);
-    }
-  }, [notifData]);
+  // useEffect(() => {
+  //   if (notifData) {
+  //     setNotifs(notifData.data);
+  //   }
+  // }, [notifData]);
 
   // Initialize the interface
   useEffect(() => {

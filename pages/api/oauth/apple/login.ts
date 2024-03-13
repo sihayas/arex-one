@@ -15,6 +15,7 @@ export default async function onRequest(request: any) {
     url.searchParams.set("response_mode", "form_post");
 
     const headers = new Headers();
+
     headers.append("Location", url.toString());
     headers.append(
       "Set-Cookie",

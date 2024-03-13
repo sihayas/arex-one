@@ -40,7 +40,7 @@ export const lucia = new Lucia(luciaAdapter, {
     attributes: {
       secure: true,
       sameSite: "strict",
-      domain: "voir.space",
+      domain: "dev.voir.space",
     },
   },
   getUserAttributes: (attributes) => {

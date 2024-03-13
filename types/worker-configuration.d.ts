@@ -13,4 +13,6 @@ export interface Env {
   NEXT_PUBLIC_MUSICKIT_TOKEN: string;
   NEXT_PUBLIC_RUNTIME_ENV: string;
   SKIP_DEPENDENCY_INSTALL: string;
+  UPSTASH_REDIS_REST_TOKEN: string;
+  UPSTASH_REDIS_REST_URL: string;
 }

@@ -1,10 +1,9 @@
-import Redis from "ioredis";
+import { Redis } from "@upstash/redis/cloudflare";
 
-const client = new Redis(
-  "redis://default:ce01f2aef8b74c88932b8e28d0dec717@us1-evolved-squirrel-39264.upstash.io:39264",
-);
-
-export default client;
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL ?? "",
+  token: process.env.UPSTASH_REDIS_REST_TOKEN ?? "",
+});
 
 // Set data in Redis cache with an expiration time
 export const setCache = async (
@@ -12,12 +11,13 @@ export const setCache = async (
   value: any,
   ttl: number,
 ): Promise<void> => {
-  await client.setex(key, ttl, JSON.stringify(value));
+  await redis.setex(key, ttl, JSON.stringify(value));
 };
 
 // Get data from Redis cache
 export const getCache = async (key: string): Promise<any | null> => {
-  const data = await client.get(key);
+  const data = await redis.get(key);
+  // @ts-ignore
   return data ? JSON.parse(data) : null;
 };
 
@@ -32,7 +32,8 @@ export async function fetchAndClearUpdateSet(
   `;
 
   try {
-    const result = await client.eval(fetchAndClearScript, 1, setKey);
+    // @ts-ignore
+    const result = await redis.eval(fetchAndClearScript, 1, setKey);
 
     if (Array.isArray(result)) {
       return result.map((id) => String(id));
