@@ -3,7 +3,7 @@ import { generateId } from "lucia";
 
 import { parseJWT } from "oslo/jwt";
 import { parse } from "cookie";
-import { prismaClient } from "@/lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 import { lucia } from "@/lib/global/auth";
 
 const allowedOrigins = [
@@ -98,7 +98,6 @@ export default async function onRequest(request: any) {
 
     const payload = jwt.payload as JWTPayload;
 
-    const prisma = prismaClient();
     const existingUser = await prisma.user.findUnique({
       where: { apple_id: payload.sub },
     });
@@ -115,8 +114,7 @@ export default async function onRequest(request: any) {
           id: userId,
           apple_id: payload.sub,
           username: `user-${userId}`,
-          image:
-            "https://voirmedia.blob.core.windows.net/voir-media/default_avi.jpg",
+          image: "https://voirmedia.blob.core.windows.net/voir-media/default_avi.jpg",
         },
       });
 
@@ -128,10 +126,7 @@ export default async function onRequest(request: any) {
     // TODO: Fix the redirect internal server error.
 
     // headers.append("Location", "/");
-    headers.append(
-      "Set-Cookie",
-      lucia.createSessionCookie(session.id).serialize(),
-    );
+    headers.append("Set-Cookie", lucia.createSessionCookie(session.id).serialize());
 
     return new Response(null, { status: 200, headers });
   } catch (e) {

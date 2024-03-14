@@ -1,4 +1,4 @@
-import { prismaClient } from "@/lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 import { Essential } from "@/types/dbTypes";
 import { fetchAndCacheSoundsByType } from "../../cache/sounds";
 import { fetchOrCacheUser } from "../../cache/user";
@@ -69,8 +69,6 @@ async function enrichEssentialsWithAlbumData(essentials: Essential[]) {
 async function countUniqueAlbumsAndTracks(
   userId: string,
 ): Promise<{ soundCount: number }> {
-  const prisma = prismaClient();
-
   const [uniqueAlbumCount] = await Promise.all([
     prisma.artifact.groupBy({
       by: ["soundId"],

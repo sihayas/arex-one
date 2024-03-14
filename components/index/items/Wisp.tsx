@@ -15,15 +15,6 @@ interface WispProps {
 }
 
 const maskStyle = {
-  maskImage: "url('/images/mask_card.svg')",
-  maskSize: "cover",
-  maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_card.svg')",
-  WebkitMaskSize: "cover",
-  WebkitMaskRepeat: "no-repeat",
-};
-
-const wispStyle = {
   maskImage: "url('/images/mask_wisp.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
@@ -76,7 +67,6 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
             style={{
               width: 128,
               height: 128,
-              ...wispStyle,
             }}
           >
             <Image
@@ -93,9 +83,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
           <div className={`line-clamp-1 pt-4 text-end text-sm text-black`}>
             {sound.attributes.artistName}
           </div>
-          <div
-            className={`line-clamp-1 text-end text-base font-semibold text-black`}
-          >
+          <div className={`line-clamp-1 text-end text-base font-semibold text-black`}>
             {sound.attributes.name}
           </div>
         </div>
@@ -110,9 +98,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
 
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -left-1 -z-10 h-3 w-3`}>
-            <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#F4F4F4]`}
-            />
+            <div className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-[#F4F4F4]`} />
             <div
               className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-[#F4F4F4]`}
             />

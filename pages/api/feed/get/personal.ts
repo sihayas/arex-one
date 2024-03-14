@@ -1,4 +1,4 @@
-import { prismaClient } from "@/lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 import { fetchOrCacheActivities } from "@/pages/api/cache/activity";
 
 export default async function onRequestGet(request: any) {
@@ -8,14 +8,7 @@ export default async function onRequestGet(request: any) {
   const limit = Number(url.searchParams.get("limit")) || 6;
 
   // Validate input parameters
-  if (
-    !userId ||
-    isNaN(page) ||
-    page < 1 ||
-    isNaN(limit) ||
-    limit < 1 ||
-    limit > 100
-  ) {
+  if (!userId || isNaN(page) || page < 1 || isNaN(limit) || limit < 1 || limit > 100) {
     return new Response(
       JSON.stringify({ error: "Invalid user ID, page number or limit." }),
       {
@@ -24,8 +17,6 @@ export default async function onRequestGet(request: any) {
       },
     );
   }
-
-  const prisma = prismaClient();
 
   try {
     // Fetch list of following IDs including the user themselves
@@ -93,13 +84,10 @@ export default async function onRequestGet(request: any) {
     );
   } catch (error) {
     console.error("Error fetching activities:", error);
-    return new Response(
-      JSON.stringify({ error: "Error fetching activities." }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ error: "Error fetching activities." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
 

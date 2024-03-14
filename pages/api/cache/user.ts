@@ -1,9 +1,7 @@
 import { getCache, setCache } from "@/lib/global/redis";
-import { prismaClient } from "@/lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 
 async function fetchOrCacheUser(userId: string) {
-  const prisma = prismaClient();
-
   try {
     const cacheKey = `user:${userId}:data`;
     let userData = await getCache(cacheKey);
@@ -32,10 +30,7 @@ async function fetchOrCacheUser(userId: string) {
             bio: true,
           },
         })
-        .then(
-          (u) =>
-            u && { ...u, followedBy: u.followedBy.map((f) => f.followerId) },
-        );
+        .then((u) => u && { ...u, followedBy: u.followedBy.map((f) => f.followerId) });
 
       if (userData) {
         await setCache(cacheKey, JSON.stringify(userData), 3600);

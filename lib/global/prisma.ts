@@ -16,3 +16,5 @@ export function prismaClient() {
   const adapter = new PrismaPlanetScale(client);
   return new PrismaClient({ adapter: adapter });
 }
+
+export const prisma = prismaClient();

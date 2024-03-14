@@ -1,4 +1,3 @@
-import axios from "axios";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
@@ -7,9 +6,7 @@ export const baseURL = "https://api.music.apple.com/v1/catalog/us";
 // Helper function to check if the title contains unwanted keywords
 const isUnwanted = (title: string) => {
   const unwantedKeywords = ["remix", "edition", "mix"];
-  return unwantedKeywords.some((keyword) =>
-    title.toLowerCase().includes(keyword),
-  );
+  return unwantedKeywords.some((keyword) => title.toLowerCase().includes(keyword));
 };
 
 export const searchAlbums = async (keyword: string) => {
@@ -19,18 +16,25 @@ export const searchAlbums = async (keyword: string) => {
     keyword,
   )}&limit=${limit}&types=${types}&include[songs]=albums`;
 
-  const response = await axios.get(url, {
+  const response = await fetch(url, {
+    method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const jsonData = await response.json();
+
   // Limit to 12 results
-  const songs = response.data.results.songs.data
-    .filter((song: SongData) => !isUnwanted(song.attributes.albumName)) // Check if the song title contains unwanted keywords
+  const songs = jsonData.results.songs.data
+    .filter((song: SongData) => !isUnwanted(song.attributes.albumName))
     .slice(0, 8);
 
-  const albums = response.data.results.albums.data
+  const albums = jsonData.results.albums.data
     .filter(
       (album: AlbumData) =>
         !album.attributes.isSingle && // Check if the album is not a single
@@ -45,9 +49,7 @@ export const searchAlbums = async (keyword: string) => {
 export const fetchSoundsByTypes = async (idTypes: Record<string, string[]>) => {
   const idParams = Object.entries(idTypes)
     .flatMap(([type, ids]) =>
-      ids.length > 0
-        ? `ids[${type}]=${ids.join(",")}&include[songs]=albums`
-        : [],
+      ids.length > 0 ? `ids[${type}]=${ids.join(",")}&include[songs]=albums` : [],
     )
     .join("&");
 
@@ -75,9 +77,7 @@ export const fetchSoundsByType = async (type: string, ids: string[]) => {
   if (ids.length === 0) return [];
 
   const endpoint =
-    type === "songs"
-      ? `${type}/${ids.join(",")}/albums`
-      : `${type}?ids=${ids.join(",")}`;
+    type === "songs" ? `${type}/${ids.join(",")}/albums` : `${type}?ids=${ids.join(",")}`;
 
   const response = await fetch(`${baseURL}/${endpoint}`, {
     method: "GET",

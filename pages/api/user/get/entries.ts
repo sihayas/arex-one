@@ -1,4 +1,4 @@
-import { prismaClient } from "@/lib/global/prisma";
+import { prisma } from "@/lib/global/prisma";
 import { fetchOrCacheActivities } from "@/pages/api/cache/activity";
 
 export default async function onRequestGet(request: any) {
@@ -16,8 +16,6 @@ export default async function onRequestGet(request: any) {
 
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 6;
-
-  const prisma = prismaClient();
 
   try {
     const activities = await prisma.activity.findMany({
@@ -71,13 +69,10 @@ export default async function onRequestGet(request: any) {
     );
   } catch (error) {
     console.error("Error fetching user entries:", error);
-    return new Response(
-      JSON.stringify({ error: "Error fetching user entries." }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ error: "Error fetching user entries." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
 
