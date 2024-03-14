@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";

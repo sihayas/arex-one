@@ -1,9 +1,8 @@
 import { getCache, setCache } from "@/lib/global/redis";
-import { initializePrisma } from "@/lib/global/prisma";
+import { prismaClient } from "@/lib/global/prisma";
 
 async function fetchOrCacheUser(userId: string) {
-  console.log(`Fetching or caching user data for userId: ${userId}`);
-  const prisma = initializePrisma();
+  const prisma = prismaClient();
 
   try {
     const cacheKey = `user:${userId}:data`;

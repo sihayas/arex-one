@@ -1,4 +1,4 @@
-import { initializePrisma } from "@/lib/global/prisma";
+import { prismaClient } from "@/lib/global/prisma";
 import { fetchOrCacheActivities } from "@/pages/api/cache/activity";
 
 export default async function onRequestGet(request: any) {
@@ -17,7 +17,7 @@ export default async function onRequestGet(request: any) {
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 6;
 
-  const prisma = initializePrisma();
+  const prisma = prismaClient();
 
   try {
     const activities = await prisma.activity.findMany({
@@ -50,10 +50,8 @@ export default async function onRequestGet(request: any) {
     const enrichedActivities = activities.map((activity) => ({
       ...activity,
       artifact: {
-        // @ts-ignore
         ...activity.artifact,
         ...detailedActivityData.find((d) => d.id === activity.id)?.artifact,
-        // @ts-ignore
         heartedByUser: (activity.artifact?.hearts?.length ?? 0) > 0,
       },
     }));

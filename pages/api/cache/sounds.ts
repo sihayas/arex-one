@@ -2,15 +2,8 @@ import { setCache, getCache } from "@/lib/global/redis";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { fetchSoundsByType, fetchSoundsByTypes } from "@/lib/global/musicKit";
 
-export default async function onRequest(request: any) {
+export default async function onRequestGet(request: any) {
   try {
-    if (request.method !== "GET") {
-      return new Response(JSON.stringify({ error: "Method not allowed." }), {
-        status: 405,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
     const url = new URL(request.url);
     const idTypesParam = url.searchParams.get("idTypes");
     if (!idTypesParam) {
@@ -69,7 +62,7 @@ export async function fetchAndCacheSoundsByTypes(
       for (const id of idTypes[type]) {
         const cacheKey = `sound:${type}:${id}:data`;
         const cachedData = await getCache(cacheKey);
-        const parsedData = cachedData ? JSON.parse(cachedData) : null;
+        const parsedData = cachedData ? cachedData : null;
 
         if (!cachedData) {
           needToFetch[type].set(id, null);
@@ -116,7 +109,7 @@ export async function fetchAndCacheSoundsByType(ids: any, type: string) {
       return;
     }
 
-    responseDataMap.set(id, JSON.parse(cachedData));
+    responseDataMap.set(id, cachedData);
   });
 
   await Promise.all(promises);

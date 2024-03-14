@@ -3,7 +3,7 @@ import { generateId } from "lucia";
 
 import { parseJWT } from "oslo/jwt";
 import { parse } from "cookie";
-import { initializePrisma } from "@/lib/global/prisma";
+import { prismaClient } from "@/lib/global/prisma";
 import { lucia } from "@/lib/global/auth";
 
 const allowedOrigins = [
@@ -98,7 +98,7 @@ export default async function onRequest(request: any) {
 
     const payload = jwt.payload as JWTPayload;
 
-    const prisma = initializePrisma();
+    const prisma = prismaClient();
     const existingUser = await prisma.user.findUnique({
       where: { apple_id: payload.sub },
     });

@@ -1,5 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { initializePrisma } from "@/lib/global/prisma";
+import { prismaClient } from "@/lib/global/prisma";
 import { fetchOrCacheActivities } from "@/pages/api/cache/activity";
 
 export default async function onRequestGet(request: any) {
@@ -26,7 +25,7 @@ export default async function onRequestGet(request: any) {
     );
   }
 
-  const prisma = initializePrisma();
+  const prisma = prismaClient();
 
   try {
     // Fetch list of following IDs including the user themselves

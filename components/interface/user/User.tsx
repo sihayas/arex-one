@@ -46,9 +46,7 @@ const User = () => {
 
         <div className={`flex flex-col`}>
           <div className={`flex h-16 items-center`}>
-            <p
-              className={`text-gray2 text-xl font-semibold  tracking-tighter `}
-            >
+            <p className={`text-gray2 text-xl font-semibold  tracking-tighter `}>
               {userData.username}
             </p>
           </div>
@@ -58,9 +56,7 @@ const User = () => {
               <p className="text-gray2 text-xs font-medium uppercase tracking-tighter">
                 Sounds
               </p>
-              <p className="text-gray2 text-base font-bold tracking-tighter">
-                42
-              </p>
+              <p className="text-gray2 text-base font-bold tracking-tighter">42</p>
             </div>
 
             <div className={`flex flex-col`}>
@@ -74,7 +70,7 @@ const User = () => {
           </div>
         </div>
 
-        {/* <Essentials essentials={userData.essentials} /> */}
+        <Essentials essentials={userData.essentials} />
       </div>
 
       <Entries userId={user.id} />

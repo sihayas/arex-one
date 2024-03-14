@@ -31,8 +31,6 @@ const Entries = ({ userId }: { userId: string }) => {
     }
   });
 
-  console.log(activities, "activities");
-
   return (
     <div className={`z-0 -mt-[242px] flex w-full flex-col -space-y-4 p-10`}>
       {activities.map((activity, index) => {

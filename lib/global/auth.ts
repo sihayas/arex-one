@@ -2,7 +2,7 @@ import { Lucia } from "lucia";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 
 import { Apple, AppleCredentials } from "arctic";
-import { initializePrisma } from "./prisma";
+import { prismaClient } from "./prisma";
 
 declare module "lucia" {
   interface Register {
@@ -30,7 +30,7 @@ const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
 export const apple = new Apple(credentials, redirectURI);
 
 // Lucia
-const client = initializePrisma();
+const client = prismaClient();
 const luciaAdapter = new PrismaAdapter(client.session, client.user);
 export const lucia = new Lucia(luciaAdapter, {
   sessionCookie: {

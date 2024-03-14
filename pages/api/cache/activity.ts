@@ -1,5 +1,5 @@
-import { getCache, redis, setCache } from "@/lib/global/redis";
-import { initializePrisma } from "@/lib/global/prisma";
+import { getCache, setCache } from "@/lib/global/redis";
+import { prismaClient } from "@/lib/global/prisma";
 import { Sound, UserType } from "@/types/dbTypes";
 import { Artifact as PrismaArtifact } from "@prisma/client";
 
@@ -27,7 +27,7 @@ type ActivityData = {
 };
 
 async function fetchOrCacheActivities(ids: string[]): Promise<ActivityData[]> {
-  const prisma = initializePrisma();
+  const prisma = prismaClient();
   const activities: Record<string, ActivityData> = {};
 
   const cachedResults = await Promise.all(

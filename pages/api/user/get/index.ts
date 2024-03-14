@@ -1,36 +1,28 @@
-import { initializePrisma } from "@/lib/global/prisma";
+import { prismaClient } from "@/lib/global/prisma";
 import { Essential } from "@/types/dbTypes";
 import { fetchAndCacheSoundsByType } from "../../cache/sounds";
 import { fetchOrCacheUser } from "../../cache/user";
 
-export default async function onRequest(request: any) {
+export default async function onRequestGet(request: any) {
   const url = new URL(request.url);
-
-  if (request.method !== "GET") {
-    console.log("Non-GET request", request.method);
-    return new Response(JSON.stringify({ error: "Method not allowed." }), {
-      status: 405,
-    });
-  }
 
   const sessionUserId = url.searchParams.get("sessionUserId");
   const pageUserId = url.searchParams.get("pageUserId");
 
   if (!sessionUserId || !pageUserId) {
     console.log("Missing parameters");
-    return new Response(
-      JSON.stringify({ error: "Required parameters are missing." }),
-      { status: 400 },
-    );
+    return new Response(JSON.stringify({ error: "Required parameters are missing." }), {
+      status: 400,
+    });
   }
 
   try {
     let sessionUserData = await fetchOrCacheUser(sessionUserId);
     let pageUserData = await fetchOrCacheUser(pageUserId);
 
-    //     pageUserData.essentials = await enrichEssentialsWithAlbumData(
-    //       pageUserData.essentials,
-    //     );
+    pageUserData.essentials = await enrichEssentialsWithAlbumData(
+      pageUserData.essentials,
+    );
 
     const { soundCount } = await countUniqueAlbumsAndTracks(pageUserId);
 
@@ -77,7 +69,7 @@ async function enrichEssentialsWithAlbumData(essentials: Essential[]) {
 async function countUniqueAlbumsAndTracks(
   userId: string,
 ): Promise<{ soundCount: number }> {
-  const prisma = initializePrisma();
+  const prisma = prismaClient();
 
   const [uniqueAlbumCount] = await Promise.all([
     prisma.artifact.groupBy({
