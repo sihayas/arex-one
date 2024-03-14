@@ -21,7 +21,7 @@ export default async function onRequest(request: any) {
   }
 
   try {
-    const { session } = await lucia.validateSession(sessionId);
+    const { session, user } = await lucia.validateSession(sessionId);
 
     if (!session) {
       return new Response(
@@ -38,15 +38,12 @@ export default async function onRequest(request: any) {
     }
 
     // If the session is valid, respond with the user and session information
-    return new Response(
-      JSON.stringify({ user: process.env, event: cookieHeader }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 200,
+    return new Response(JSON.stringify({ user: user, event: cookieHeader }), {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      status: 200,
+    });
   } catch (error) {
     console.error("Session validation error:", error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {

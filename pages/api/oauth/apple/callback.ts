@@ -40,12 +40,6 @@ export default async function onRequest(request: any) {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
-  const url = new URL(request.url);
-  if (!url) {
-    console.error("req.url is undefined");
-    return new Response(null, { status: 500 });
-  }
-
   // Assuming `request.json()` is used for parsing JSON body
   // On first login, Apple sends the user's data as JSON in the request body
   const contentType = request.headers.get("Content-Type") || "";
@@ -103,7 +97,6 @@ export default async function onRequest(request: any) {
     }
 
     const payload = jwt.payload as JWTPayload;
-    console.log("JWT Payload:", payload);
 
     const prisma = initializePrisma();
     const existingUser = await prisma.user.findUnique({
@@ -130,12 +123,15 @@ export default async function onRequest(request: any) {
       session = await lucia.createSession(userId, {});
     }
 
-    // Set session cookie and respond
-    const headers = new Headers({
-      "Set-Cookie": lucia.createSessionCookie(session.id).serialize(),
-      Location: "/",
-    });
-    return new Response(null, { status: 302, headers });
+    const headers = new Headers();
+
+    // headers.append("Location", "/");
+    headers.append(
+      "Set-Cookie",
+      lucia.createSessionCookie(session.id).serialize(),
+    );
+
+    return new Response(null, { status: 200, headers });
   } catch (e) {
     console.error("Error:", e);
     return new Response("Internal Server Error", { status: 500 });

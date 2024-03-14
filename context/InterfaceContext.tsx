@@ -105,6 +105,7 @@ export const InterfaceContextProvider = ({
     if (data) {
       setUser(data.user);
       setSession(data.session);
+      console.log("user", data.user);
     }
   }, [data]);
 

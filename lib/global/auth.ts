@@ -2,12 +2,11 @@ import { Lucia } from "lucia";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 
 import { Apple, AppleCredentials } from "arctic";
-import { Notification } from "@/types/dbTypes";
 import { initializePrisma } from "./prisma";
 
 declare module "lucia" {
   interface Register {
-    Lucia: typeof Lucia;
+    Lucia: typeof lucia;
     DatabaseUserAttributes: DatabaseUserAttributes;
   }
 }
@@ -31,8 +30,8 @@ const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
 export const apple = new Apple(credentials, redirectURI);
 
 // Lucia
-const prisma = initializePrisma();
-const luciaAdapter = new PrismaAdapter(prisma.user, prisma.session);
+const client = initializePrisma();
+const luciaAdapter = new PrismaAdapter(client.session, client.user);
 export const lucia = new Lucia(luciaAdapter, {
   sessionCookie: {
     name: "session",
@@ -40,7 +39,7 @@ export const lucia = new Lucia(luciaAdapter, {
     attributes: {
       secure: true,
       sameSite: "strict",
-      domain: "dev.voir.space",
+      domain: "voir.space",
     },
   },
   getUserAttributes: (attributes) => {
