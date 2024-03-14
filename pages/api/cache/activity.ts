@@ -1,4 +1,4 @@
-import { getCache, setCache } from "@/lib/global/redis";
+import { getCache, redis, setCache } from "@/lib/global/redis";
 import { initializePrisma } from "@/lib/global/prisma";
 import { Sound, UserType } from "@/types/dbTypes";
 import { Artifact as PrismaArtifact } from "@prisma/client";
@@ -28,28 +28,26 @@ type ActivityData = {
 
 async function fetchOrCacheActivities(ids: string[]): Promise<ActivityData[]> {
   const prisma = initializePrisma();
-  const activityData: Record<string, ActivityData> = {};
-  const idsToFetch: string[] = [];
+  const activities: Record<string, ActivityData> = {};
 
-  // Initiate cache lookups in parallel for all activity IDs
-  const cachePromises = ids.map((id) =>
-    getCache(`activity:${id}:artifact:data`),
+  const cachedResults = await Promise.all(
+    ids.map(async (id) => {
+      const key = `activity:${id}:artifact:data`;
+      const data = await getCache(key);
+      return data ? data : null;
+    }),
   );
-  const cacheResults = await Promise.allSettled(cachePromises);
 
-  // Process cache results and identify IDs not in cache
-  cacheResults.forEach((result, index) => {
-    const id = ids[index];
-    if (result.status === "fulfilled" && result.value) {
-      activityData[id] = result.value;
-    } else {
-      idsToFetch.push(id);
+  const idsToFetch = ids.filter((_, index) => cachedResults[index] === null);
+
+  ids.forEach((id, index) => {
+    if (cachedResults[index] !== null) {
+      activities[id] = cachedResults[index];
     }
   });
 
-  // Fetch data from database for IDs not found in cache
   if (idsToFetch.length > 0) {
-    const data = await prisma.activity.findMany({
+    const missingActivities = await prisma.activity.findMany({
       where: { id: { in: idsToFetch }, isDeleted: false },
       select: {
         id: true,
@@ -67,19 +65,19 @@ async function fetchOrCacheActivities(ids: string[]): Promise<ActivityData[]> {
       },
     });
 
-    const enrichArtifactData = data.map((activity) => {
-      // Set the activity to its corresponding ID in the activityData object
-      // const id = idsToFetch[data.indexOf(activity)];
-      activityData[activity.id] = activity;
-      // Cache the activity data
-      return setCache(`activity:${activity.id}:artifact:data`, activity, 3600);
-    });
-
-    await Promise.all(enrichArtifactData);
+    await Promise.all(
+      missingActivities.map((activity) => {
+        activities[activity.id] = activity;
+        return setCache(
+          `activity:${activity.id}:artifact:data`,
+          JSON.stringify(activity),
+          3600,
+        );
+      }),
+    );
   }
 
-  // Compile and return results
-  return ids.map((id) => activityData[id]);
+  return ids.map((id) => activities[id] || null);
 }
 
 export { fetchOrCacheActivities };

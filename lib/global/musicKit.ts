@@ -53,12 +53,21 @@ export const fetchSoundsByTypes = async (idTypes: Record<string, string[]>) => {
 
   if (!idParams) return [];
 
-  const response = await axios.get(`${baseURL}?${idParams}`, {
+  const url = `${baseURL}?${idParams}`;
+  const response = await fetch(url, {
+    method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   });
-  return response.data.data;
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.data;
 };
 
 // Fetch one or more sounds by a single type (song or album), returns albums
@@ -70,9 +79,18 @@ export const fetchSoundsByType = async (type: string, ids: string[]) => {
       ? `${type}/${ids.join(",")}/albums`
       : `${type}?ids=${ids.join(",")}`;
 
-  const { data } = await axios.get(`${baseURL}/${endpoint}`, {
-    headers: { Authorization: `Bearer ${token}` },
+  const response = await fetch(`${baseURL}/${endpoint}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
   });
 
-  return data.data;
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.data; // Adjust according to the actual structure of your response
 };

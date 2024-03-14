@@ -1,7 +1,7 @@
 import { initializePrisma } from "@/lib/global/prisma";
 import { fetchOrCacheActivities } from "@/pages/api/cache/activity";
 
-export async function onRequest(request: any) {
+export default async function onRequestGet(request: any) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
 
@@ -10,13 +10,6 @@ export async function onRequest(request: any) {
   if (!userId) {
     return new Response(JSON.stringify({ error: "User ID is required." }), {
       status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  if (request.method !== "GET") {
-    return new Response(JSON.stringify({ error: "Method not allowed." }), {
-      status: 405,
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -30,17 +23,15 @@ export async function onRequest(request: any) {
     const activities = await prisma.activity.findMany({
       where: {
         artifact: { authorId: userId, type: "entry" },
-        type: "artifact",
       },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit + 1,
       select: {
         id: true,
-        type: true,
         artifact: {
           select: {
-            id: true,
+            // Always fetch up to date replies/hearts
             hearts: { where: { authorId: userId } },
             _count: { select: { replies: true, hearts: true } },
           },
@@ -51,18 +42,18 @@ export async function onRequest(request: any) {
     const hasMorePages = activities.length > limit;
     if (hasMorePages) activities.pop();
 
-    // Extract activity IDs
-    const activityIds = activities.map((activity) => activity.id);
-
-    // Fetch enriched artifacts
-    const detailedActivityData = await fetchOrCacheActivities(activityIds);
+    const detailedActivityData = await fetchOrCacheActivities(
+      activities.map((activity) => activity.id),
+    );
 
     // Merge detailed data with basic activity data
     const enrichedActivities = activities.map((activity) => ({
       ...activity,
       artifact: {
+        // @ts-ignore
         ...activity.artifact,
         ...detailedActivityData.find((d) => d.id === activity.id)?.artifact,
+        // @ts-ignore
         heartedByUser: (activity.artifact?.hearts?.length ?? 0) > 0,
       },
     }));
@@ -81,9 +72,9 @@ export async function onRequest(request: any) {
       },
     );
   } catch (error) {
-    console.error("Error fetching unique albums:", error);
+    console.error("Error fetching user entries:", error);
     return new Response(
-      JSON.stringify({ error: "Error fetching unique albums." }),
+      JSON.stringify({ error: "Error fetching user entries." }),
       {
         status: 500,
         headers: { "Content-Type": "application/json" },

@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis/cloudflare";
 
-const redis = new Redis({
+export const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL ?? "",
   token: process.env.UPSTASH_REDIS_REST_TOKEN ?? "",
 });
@@ -11,14 +11,14 @@ export const setCache = async (
   value: any,
   ttl: number,
 ): Promise<void> => {
-  await redis.setex(key, ttl, JSON.stringify(value));
+  await redis.setex(key, ttl, value);
 };
 
 // Get data from Redis cache
 export const getCache = async (key: string): Promise<any | null> => {
   const data = await redis.get(key);
   // @ts-ignore
-  return data ? JSON.parse(data) : null;
+  return data ? data : null;
 };
 
 // Utility function to fetch and clear the set atomically

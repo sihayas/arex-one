@@ -3,26 +3,16 @@ import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { attachSoundData } from "@/lib/helper/feed";
 
+// Initial fetch of basic user and session data
 export const useUserAndSessionQuery = () => {
   return useQuery(["userAndSession"], async () => {
-    const response = await axios.get("/api/oauth/me");
-    return response.data;
+    const response = await fetch("/api/oauth/me");
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
   });
-};
-
-export const followUser = async (followerId: string, followingId: string) => {
-  await axios.post(`/api/user/post/follow`, { followerId, followingId });
-  return { followingAtoB: true };
-};
-
-export const unfollowUser = async (followerId: string, followingId: string) => {
-  await axios.delete(`/api/user/post/unfollow`, {
-    params: {
-      unfollowerId: followerId,
-      unfollowingId: followingId,
-    },
-  });
-  return { followingAtoB: false };
 };
 
 // Get user data, handle follow/unfollow, and fetch favorites
@@ -40,8 +30,8 @@ export const useUserDataQuery = (
     if (!sessionUserId || !pageUserId) return;
     const newState =
       action === "follow"
-        ? await followUser(sessionUserId, pageUserId)
-        : await unfollowUser(sessionUserId, pageUserId);
+        ? await followUser(sessionUserId, pageUserId) // Ensure these functions are adapted for `fetch`
+        : await unfollowUser(sessionUserId, pageUserId); // Ensure these functions are adapted for `fetch`
     setFollowState((prevState) => ({ ...prevState, ...newState }));
   };
 
@@ -49,9 +39,15 @@ export const useUserDataQuery = (
     ["userData", pageUserId],
     async () => {
       if (!sessionUserId || !pageUserId) return null;
-      const { data: userData } = await axios.get(`/api/user/get`, {
-        params: { sessionUserId, pageUserId },
-      });
+      const response = await fetch(
+        `/api/user/get?sessionUserId=${encodeURIComponent(sessionUserId)}&pageUserId=${encodeURIComponent(pageUserId)}`,
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const userData = await response.json();
       setFollowState((prevState) => ({
         ...prevState,
         followingAtoB: userData.isFollowingAtoB,
@@ -62,6 +58,21 @@ export const useUserDataQuery = (
   );
 
   return { data, isLoading, isError, followState, handleFollowUnfollow };
+};
+
+export const followUser = async (followerId: string, followingId: string) => {
+  await axios.post(`/api/user/post/follow`, { followerId, followingId });
+  return { followingAtoB: true };
+};
+
+export const unfollowUser = async (followerId: string, followingId: string) => {
+  await axios.delete(`/api/user/post/unfollow`, {
+    params: {
+      unfollowerId: followerId,
+      unfollowingId: followingId,
+    },
+  });
+  return { followingAtoB: false };
 };
 
 export const useUserSettingsQuery = (userId: string) => {
@@ -84,16 +95,25 @@ export const useEntriesQuery = (userId: string) => {
   return useInfiniteQuery(
     ["entries", userId],
     async ({ pageParam = 1 }) => {
-      const url = `/api/user/get/entries`;
-      const { data } = await axios.get(url, {
-        params: {
-          userId,
-          page: pageParam,
-          limit: 8,
+      const queryParams = new URLSearchParams({
+        userId,
+        page: pageParam.toString(),
+        limit: "8",
+      });
+      const url = `/api/user/get/entries?${queryParams.toString()}`;
+
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
         },
       });
 
-      const { activities, pagination } = data.data;
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const jsonResponse = await response.json();
+      const { activities, pagination } = jsonResponse.data;
 
       const mergedData = await attachSoundData(activities);
 

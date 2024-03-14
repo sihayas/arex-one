@@ -136,47 +136,46 @@ export default function Home() {
       </Head>
 
       {activeFeed && (
-        <></>
-        // <motion.div
-        //   ref={scrollContainerRef}
-        //   className={`scrollbar-none flex max-h-screen w-full flex-col items-center gap-32 overflow-scroll px-8 pb-32 pt-16`}
-        // >
-        //   {/*  Blur Backdrop */}
-        //   <div
-        //     className={`center-x pointer-events-none absolute top-0 z-0 h-full w-full bg-white/50 backdrop-blur-[72px]`}
-        //   />
+        <motion.div
+          ref={scrollContainerRef}
+          className={`scrollbar-none flex max-h-screen w-full flex-col items-center gap-32 overflow-scroll px-8 pb-32 pt-16`}
+        >
+          {/*  Blur Backdrop */}
+          <div
+            className={`center-x pointer-events-none absolute top-0 z-0 h-full w-full bg-white/50 backdrop-blur-[72px]`}
+          />
 
-        //   {activeFeed === "bloom" ? (
-        //     <Feed
-        //       userId={user.id}
-        //       scrollContainerRef={scrollContainerRef}
-        //       type={"bloom"}
-        //     />
-        //   ) : activeFeed === "personal" ? (
-        //     <Feed
-        //       userId={user.id}
-        //       scrollContainerRef={scrollContainerRef}
-        //       type={"personal"}
-        //     />
-        //   ) : activeFeed === "recent" ? (
-        //     <Feed
-        //       userId={user.id}
-        //       scrollContainerRef={scrollContainerRef}
-        //       type={"recent"}
-        //     />
-        //   ) : null}
+          {activeFeed === "bloom" ? (
+            <Feed
+              userId={user.id}
+              scrollContainerRef={scrollContainerRef}
+              type={"bloom"}
+            />
+          ) : activeFeed === "personal" ? (
+            <Feed
+              userId={user.id}
+              scrollContainerRef={scrollContainerRef}
+              type={"personal"}
+            />
+          ) : activeFeed === "recent" ? (
+            <Feed
+              userId={user.id}
+              scrollContainerRef={scrollContainerRef}
+              type={"recent"}
+            />
+          ) : null}
 
-        //   <Avatar
-        //     className="shadow-shadowKitMedium absolute z-20 -translate-x-[157px] rounded-full"
-        //     imageSrc={user.image}
-        //     altText={`avatar`}
-        //     width={42}
-        //     height={42}
-        //     user={user}
-        //   />
+          <Avatar
+            className="shadow-shadowKitMedium absolute z-20 -translate-x-[157px] rounded-full"
+            imageSrc={user.image}
+            altText={`avatar`}
+            width={42}
+            height={42}
+            user={user}
+          />
 
-        //   <Dash className="absolute z-0 -translate-x-[157px]" />
-        // </motion.div>
+          <Dash className="absolute z-0 -translate-x-[157px]" />
+        </motion.div>
       )}
 
       {/*<Player />*/}

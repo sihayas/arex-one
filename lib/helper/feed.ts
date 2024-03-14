@@ -31,11 +31,19 @@ const useGenericFeedQuery = (
   return useInfiniteQuery(
     [key, userId],
     async ({ pageParam = 1 }) => {
-      const { data } = await axios.get(url, {
-        params: { userId, page: pageParam, limit },
+      const queryParams = new URLSearchParams({
+        userId,
+        page: pageParam.toString(),
+        limit: limit.toString(),
       });
+      const response = await fetch(`${url}?${queryParams.toString()}`);
 
-      const { activities, pagination } = data.data;
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const jsonData = await response.json();
+      const { activities, pagination } = jsonData.data;
 
       if (!activities || !pagination) {
         throw new Error("Unexpected server response structure");
@@ -80,10 +88,14 @@ export const attachSoundData = async (activityData: Activity[]) => {
 
   // Fetch album and track data
   const idTypes = { albums: albumIds, songs: songIds };
-  const response = await axios.get(`/api/cache/sounds`, {
-    params: { idTypes: JSON.stringify(idTypes) },
-  });
-  const { albums, songs } = response.data;
+  const url = new URL(`/api/cache/sounds`, location.origin);
+  url.searchParams.append("idTypes", JSON.stringify(idTypes));
+
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  const { albums, songs } = await response.json();
 
   // Create maps for albums and tracks
   const albumMap = new Map(albums.map((album: AlbumData) => [album.id, album]));

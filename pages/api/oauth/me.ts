@@ -2,6 +2,7 @@ import { lucia } from "@/lib/global/auth";
 
 export const runtime = "edge";
 
+// Initialize authentication on homepage.
 export default async function onRequest(request: any) {
   const cookieHeader = request.headers.get("cookie") ?? "";
   const sessionId = lucia.readSessionCookie(cookieHeader);

@@ -1,43 +1,53 @@
 import { getCache, setCache } from "@/lib/global/redis";
 import { initializePrisma } from "@/lib/global/prisma";
 
-// Fetches and/or caches user data
 async function fetchOrCacheUser(userId: string) {
-  let userData = await getCache(`user:${userId}:data`);
+  console.log(`Fetching or caching user data for userId: ${userId}`);
   const prisma = initializePrisma();
-  if (!userData) {
-    userData = await prisma.user
-      .findUnique({
-        where: { id: String(userId), isDeleted: false, isBanned: false },
-        select: {
-          _count: { select: { artifact: true, followedBy: true } },
-          essentials: {
-            select: {
-              id: true,
-              rank: true,
-              sound: { select: { appleId: true } },
+
+  try {
+    const cacheKey = `user:${userId}:data`;
+    let userData = await getCache(cacheKey);
+
+    if (!userData) {
+      userData = await prisma.user
+        .findUnique({
+          where: { id: String(userId), isDeleted: false, isBanned: false },
+          select: {
+            _count: { select: { artifact: true, followedBy: true } },
+            essentials: {
+              select: {
+                id: true,
+                rank: true,
+                sound: { select: { appleId: true } },
+              },
+              orderBy: { rank: "desc" },
             },
-            orderBy: { rank: "desc" },
+            followedBy: {
+              where: { isDeleted: false },
+              select: { followerId: true },
+            },
+            username: true,
+            id: true,
+            image: true,
+            bio: true,
           },
-          followedBy: {
-            where: { isDeleted: false },
-            select: { followerId: true },
-          },
-          username: true,
-          id: true,
-          image: true,
-          bio: true,
-        },
-      })
-      //cache followers list
-      .then(
-        (u) => u && { ...u, followedBy: u.followedBy.map((f) => f.followerId) },
-      );
+        })
+        .then(
+          (u) =>
+            u && { ...u, followedBy: u.followedBy.map((f) => f.followerId) },
+        );
 
-    if (userData) await setCache(`user:${userId}:data`, userData, 3600);
+      if (userData) {
+        await setCache(cacheKey, JSON.stringify(userData), 3600);
+      }
+    }
+
+    return userData;
+  } catch (error) {
+    console.error(`Error fetching or caching user data for ${userId}:`, error);
+    throw error;
   }
-
-  return userData;
 }
 
 export { fetchOrCacheUser };

@@ -125,6 +125,8 @@ export default async function onRequest(request: any) {
 
     const headers = new Headers();
 
+    // TODO: Fix the redirect internal server error.
+
     // headers.append("Location", "/");
     headers.append(
       "Set-Cookie",
