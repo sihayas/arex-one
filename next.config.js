@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -18,6 +17,12 @@ const nextConfig = {
       "voir.space",
     ],
     unoptimized: true,
+  },
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    // Enable WebAssembly experiments
+    config.experiments = config.experiments || {};
+    config.experiments.asyncWebAssembly = true;
+    return config;
   },
 };
 

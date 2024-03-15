@@ -7,14 +7,18 @@ async function fetchOrCacheRoots(ids: string[]): Promise<ReplyType[]> {
   const idsToFetch: string[] = [];
 
   // Initiate cache lookups in parallel for all root reply IDs
-  const cachePromises = ids.map((id) => getCache(`reply:${id}:data`));
-  const cacheResults = await Promise.allSettled(cachePromises);
+  const cachePromises = ids.map(async (id) => {
+    const cacheKey = `reply:${id}:data`;
+    const data = await getCache(cacheKey);
+    return data ? JSON.parse(data) : null; // Assuming getCache returns a JSON string.
+  });
+  const cacheResults = await Promise.all(cachePromises);
 
   // Process cache results and identify IDs not in cache
-  cacheResults.forEach((result, index) => {
+  cacheResults.forEach((data, index) => {
     const id = ids[index];
-    if (result.status === "fulfilled" && result.value) {
-      replyData[id] = result.value;
+    if (data) {
+      replyData[id] = data;
     } else {
       idsToFetch.push(id);
     }
@@ -22,7 +26,7 @@ async function fetchOrCacheRoots(ids: string[]): Promise<ReplyType[]> {
 
   // Fetch data from database for IDs not found in cache
   if (idsToFetch.length > 0) {
-    const data = await prisma.reply.findMany({
+    const fetchedReplies = await prisma.reply.findMany({
       where: { id: { in: idsToFetch }, isDeleted: false },
       select: {
         id: true,
@@ -33,20 +37,19 @@ async function fetchOrCacheRoots(ids: string[]): Promise<ReplyType[]> {
       },
     });
 
-    const enrichReplyData = data.map((activity) => {
-      // Set the reply to its corresponding ID
-      const id = idsToFetch[data.indexOf(activity)];
-      //@ts-ignore
-      replyData[id] = activity;
-      // Cache the reply data
-      return setCache(`reply:${id}:data`, activity, 3600);
-    });
-
-    await Promise.all(enrichReplyData);
+    // Update replyData with fetched replies and cache them
+    await Promise.all(
+      fetchedReplies.map(async (reply) => {
+        //  @ts-ignore
+        replyData[reply.id] = reply;
+        const cacheKey = `reply:${reply.id}:data`;
+        await setCache(cacheKey, JSON.stringify(reply), 3600);
+      }),
+    );
   }
 
   // Compile and return results
-  return ids.map((id) => replyData[id]);
+  return ids.map((id) => replyData[id]).filter((reply) => reply !== undefined);
 }
 
 export { fetchOrCacheRoots };

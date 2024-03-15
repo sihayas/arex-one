@@ -22,7 +22,7 @@ const cardMask = {
   maskImage: "url('/images/mask_card_top.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_card_top.svg')",
+  WebkitMaskImage: "url('/images/mask_card_front.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
 };
@@ -31,7 +31,7 @@ const backArtMask = {
   maskImage: "url('/images/mask_art_card_back.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_art_card_back.svg')",
+  WebkitMaskImage: "url('/images/mask_card_back.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
 };
@@ -124,10 +124,10 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           index === 0
             ? scaleZero
             : index === 1
-            ? scaleOne
-            : index === 2
-            ? scaleTwo
-            : 1,
+              ? scaleOne
+              : index === 2
+                ? scaleTwo
+                : 1,
         zIndex: 10 - index,
         rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : rotateTwo,
       }}

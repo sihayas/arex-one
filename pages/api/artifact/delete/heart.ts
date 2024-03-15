@@ -1,15 +1,14 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { ActivityType } from "@prisma/client";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<{ success: boolean; message?: string }>,
-) {
-  const { artifactId, userId, authorId } = req.body;
+export default async function onRequestPost(request: any) {
+  const { artifactId, userId, authorId } = await request.json();
 
   if (authorId === userId) {
-    return res.status(400).json({ success: false });
+    return new Response(JSON.stringify({ success: false }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const existingHeart = await prisma.heart.findFirst({
@@ -17,9 +16,13 @@ export default async function handler(
   });
 
   if (!existingHeart) {
-    return res
-      .status(400)
-      .json({ success: false, message: "No heart found to unheart" });
+    return new Response(
+      JSON.stringify({ success: false, message: "No heart found to unheart" }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   const existingActivity = await prisma.activity.findFirst({
@@ -27,9 +30,16 @@ export default async function handler(
   });
 
   if (!existingActivity) {
-    return res
-      .status(400)
-      .json({ success: false, message: "No activity found to unheart" });
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: "No activity found to un-heart",
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   const key = `heart|${artifactId}`;
@@ -45,5 +55,8 @@ export default async function handler(
     prisma.heart.delete({ where: { id: existingHeart.id } }),
   ]);
 
-  res.status(200).json({ success: true });
+  return new Response(JSON.stringify({ success: true }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }

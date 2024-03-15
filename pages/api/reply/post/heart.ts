@@ -1,27 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { ActivityType } from "@prisma/client";
-import { createHeartActivity } from "@/pages/api/middleware/createActivity";
-import { createKey } from "@/pages/api/middleware/createKey";
+import { createHeartActivity } from "@/pages/api/mid/createActivity";
+import { createKey } from "@/pages/api/mid/createKey";
 
 type Data = {
   success: boolean;
   message: string;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>,
-) {
-  const { replyId, userId, authorId } = req.body;
+export default async function onRequestPost(request: any) {
+  const { replyId, userId, authorId } = await request.json();
 
   if (
     authorId === userId ||
     (await prisma.heart.findFirst({ where: { authorId: userId, replyId } }))
   ) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid heart operation" });
+    return new Response(
+      JSON.stringify({ success: false, message: "Invalid heart operation" }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   const newHeart = await prisma.heart.create({
@@ -40,5 +41,11 @@ export default async function handler(
     },
   });
 
-  res.status(200).json({ success: true, message: "Hearted successfully." });
+  return new Response(
+    JSON.stringify({ success: true, message: "Hearted successfully." }),
+    {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    },
+  );
 }

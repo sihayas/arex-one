@@ -1,32 +1,23 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method not allowed." });
-  }
-
-  const userId =
-    typeof req.query.userId === "string" ? req.query.userId : undefined;
+export default async function onRequestGet(request: any) {
+  const url = new URL(request.url);
+  const userId = url.searchParams.get("userId");
 
   if (!userId) {
-    return res.status(400).json({ error: "Invalid user ID." });
+    return new Response(JSON.stringify({ error: "Invalid user ID." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   try {
-    // Grab unread notifications
     const unread = await prisma.notification.findMany({
-      where: { recipientId: String(userId), isDeleted: false, isRead: false },
+      where: { recipientId: userId, isDeleted: false, isRead: false },
       orderBy: { activity: { createdAt: "desc" } },
-      select: {
-        key: true,
-      },
+      select: { key: true },
     });
 
-    // Group notifications by aggregation key
     const unreadGrouped = unread.reduce(
       (acc, notification) => {
         if (notification.key) {
@@ -45,12 +36,7 @@ export default async function handler(
 
     for (const key in unreadGrouped) {
       const detailedNotifications = await prisma.notification.findMany({
-        where: {
-          key: key,
-          recipientId: String(userId),
-          isDeleted: false,
-          isRead: false,
-        },
+        where: { key, recipientId: userId, isDeleted: false, isRead: false },
         orderBy: { createdAt: "desc" },
         take: 3,
         select: {
@@ -58,87 +44,53 @@ export default async function handler(
             select: {
               type: true,
               createdAt: true,
-              // Activity is a Heart
               heart: {
                 select: {
-                  author: {
-                    select: {
-                      id: true,
-                      image: true,
-                      username: true,
-                    },
-                  },
-                  // Heart is on a Post
+                  author: { select: { id: true, image: true, username: true } },
                   artifact: {
                     select: {
                       id: true,
-                      sound: {
-                        select: { appleId: true, type: true },
-                      },
+                      sound: { select: { appleId: true, type: true } },
                     },
                   },
-                  // Heart is on a Reply
                   reply: {
                     select: {
                       id: true,
-                      // Get the Post that the Reply is on
                       artifact: {
                         select: {
                           id: true,
-                          sound: {
-                            select: { appleId: true, type: true },
-                          },
+                          sound: { select: { appleId: true, type: true } },
                         },
                       },
-                      // Get the text of the reply being hearted
                       text: true,
                     },
                   },
                 },
               },
-              // Activity is a Follow
               follow: {
                 select: {
                   follower: {
-                    select: {
-                      id: true,
-                      image: true,
-                      username: true,
-                    },
+                    select: { id: true, image: true, username: true },
                   },
                 },
               },
-              // Activity is a Reply
               reply: {
                 select: {
                   id: true,
                   text: true,
-                  author: {
-                    select: {
-                      id: true,
-                      image: true,
-                      username: true,
-                    },
-                  },
-                  // Reply is on a Post
+                  author: { select: { id: true, image: true, username: true } },
                   artifact: {
                     select: {
                       id: true,
-                      sound: {
-                        select: { appleId: true, type: true },
-                      },
+                      sound: { select: { appleId: true, type: true } },
                     },
                   },
-                  // Reply is to a Reply
                   replyTo: {
                     select: {
-                      // Get the Post that the Reply is on
                       artifact: {
                         select: {
                           id: true,
-                          sound: {
-                            select: { appleId: true, type: true },
-                          },
+                          sound: { select: { appleId: true, type: true } },
                         },
                       },
                     },
@@ -149,19 +101,25 @@ export default async function handler(
           },
         },
       });
-
-      // Attach the detailed notifications to the group
       //@ts-ignore
       unreadGrouped[key].notifications = detailedNotifications;
     }
 
-    return res.status(200).json({
-      data: {
-        notifications: unreadGrouped,
+    return new Response(
+      JSON.stringify({ data: { notifications: unreadGrouped } }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
       },
-    });
+    );
   } catch (error) {
     console.error("Error fetching notifications:", error);
-    return res.status(500).json({ error: "Error fetching notifications." });
+    return new Response(
+      JSON.stringify({ error: "Error fetching notifications." }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }

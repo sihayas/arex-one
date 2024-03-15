@@ -1,28 +1,27 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { searchAlbums } from "@/lib/global/musicKit";
 import { prisma } from "@/lib/global/prisma";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const { query } = req.query;
+export default async function onRequest(request: any) {
+  const url = new URL(request.url);
+  const query = url.searchParams.get("query");
 
-  if (typeof query === "undefined") {
-    res.status(400).json({ error: "Query parameter is required" });
-    return;
+  if (!query) {
+    return new Response(
+      JSON.stringify({ error: "Query parameter is required" }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
-  // Convert query to string if it's an array
-  const keyword = typeof query === "string" ? query : query.join(" ");
-
   // Fetch filtered albums and songs from Apple's database
-  const appleResponse = await searchAlbums(keyword);
+  const appleResponse = await searchAlbums(query);
 
-  // // Fetch users related to the search query from our own database
+  // Fetch users related to the search query from our own database
   const usersResponse = await prisma.user.findMany({
     where: {
-      OR: [{ username: { contains: keyword } }],
+      OR: [{ username: { contains: query } }],
     },
   });
 
@@ -32,5 +31,7 @@ export default async function handler(
     users: usersResponse,
   };
 
-  res.json(combinedResponse);
+  return new Response(JSON.stringify(combinedResponse), {
+    headers: { "Content-Type": "application/json" },
+  });
 }

@@ -34,9 +34,9 @@ const User = () => {
 
   return (
     <>
-      <div className="flex w-full gap-4 p-8 h-full">
+      <div className="flex h-full w-full gap-4 p-8">
         <Avatar
-          className="rounded-max h-[64px] w-[64px] shadow-shadowKitHigh"
+          className="rounded-max shadow-shadowKitHigh h-[64px] w-[64px]"
           imageSrc={userData.image}
           altText={`avatar`}
           width={64}
@@ -45,26 +45,22 @@ const User = () => {
         />
 
         <div className={`flex flex-col`}>
-          <div className={`flex items-center h-16`}>
-            <p
-              className={`text-gray2 text-xl font-semibold  tracking-tighter `}
-            >
+          <div className={`flex h-16 items-center`}>
+            <p className={`text-gray2 text-xl font-semibold  tracking-tighter `}>
               {userData.username}
             </p>
           </div>
 
           <div className={`flex gap-[29px]`}>
             <div className={`flex flex-col`}>
-              <p className="text-gray2 text-xs uppercase font-medium tracking-tighter">
+              <p className="text-gray2 text-xs font-medium uppercase tracking-tighter">
                 Sounds
               </p>
-              <p className="text-gray2 text-base font-bold tracking-tighter">
-                42
-              </p>
+              <p className="text-gray2 text-base font-bold tracking-tighter">42</p>
             </div>
 
             <div className={`flex flex-col`}>
-              <p className="text-gray2 text-xs uppercase font-medium tracking-tighter">
+              <p className="text-gray2 text-xs font-medium uppercase tracking-tighter">
                 Entries
               </p>
               <p className="text-gray2 text-base font-bold tracking-tighter">

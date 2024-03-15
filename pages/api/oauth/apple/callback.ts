@@ -1,55 +1,77 @@
-import { apple, lucia } from "@/lib/global/auth";
-import { OAuth2RequestError } from "arctic";
+import { apple } from "@/lib/global/auth";
 import { generateId } from "lucia";
 
-import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/global/prisma";
-import { uploadDefaultImage } from "@/lib/azureBlobUtils";
 import { parseJWT } from "oslo/jwt";
+import { parse } from "cookie";
+import { prisma } from "@/lib/global/prisma";
+import { lucia } from "@/lib/global/auth";
 
 const allowedOrigins = [
   "https://voir.space",
-  "https://dev.voir.space:3000",
   "https://dev.voir.space",
   "https://www.voir.space",
 ];
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const origin = req.headers.origin;
+interface JWTPayload {
+  sub: string;
+}
+
+export default async function onRequest(request: any) {
+  const origin = request.headers.get("origin");
+
   // Handle OPTIONS request for CORS Preflight
-  if (req.method === "OPTIONS") {
-    if (origin && allowedOrigins.includes(origin)) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-      res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization",
-      );
-      res.setHeader("Access-Control-Allow-Credentials", "true");
+  if (request.method === "OPTIONS") {
+    let headers = new Headers({
+      "Access-Control-Allow-Origin": origin || "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Credentials": "true",
+    });
+
+    // Only send CORS headers if the origin is allowed
+    if (!origin || !allowedOrigins.includes(origin)) {
+      headers.delete("Access-Control-Allow-Origin");
     }
-    res.status(204).end();
-    return;
+
+    return new Response(null, { status: 204, headers });
   }
 
-  if (req.method !== "POST") {
-    res.status(405).end("Method Not Allowed");
-    return;
+  if (request.method !== "POST") {
+    return new Response("Method Not Allowed", { status: 405 });
   }
 
-  if (typeof req.url !== "string") {
-    console.error("req.url is undefined");
-    res.status(500).end();
-    return;
+  // Assuming `request.json()` is used for parsing JSON body
+  // On first login, Apple sends the user's data as JSON in the request body
+  const contentType = request.headers.get("Content-Type") || "";
+  let requestBody;
+  if (contentType.includes("application/json")) {
+    try {
+      requestBody = await request.json();
+    } catch (e) {
+      console.error("Failed to parse request body as JSON", e);
+      return new Response("Bad Request: Body must be JSON", { status: 400 });
+    }
+  } else if (contentType.includes("application/x-www-form-urlencoded")) {
+    try {
+      const formData = await request.text();
+      requestBody = Object.fromEntries(new URLSearchParams(formData));
+    } catch (e) {
+      console.error("Failed to parse request body as URL-encoded form", e);
+      return new Response("Bad Request: Body must be URL-encoded form", {
+        status: 400,
+      });
+    }
+  } else {
+    console.error("Invalid content type. Received:", contentType);
+    return new Response("Invalid content type", { status: 415 });
   }
 
-  // On first login, Apple sends the user's data as JSON in the request body (also user
-  const { code, state } = req.body;
+  const { code, state } = requestBody;
 
   // Cross-check the state from the request body with the stored cookie/state
-  const storedState = req.cookies.apple_oauth_state;
+  const STATE_COOKIE_NAME = "apple_oauth_state";
+  const cookies = parse(request.headers.get("Cookie") || "");
+  const storedState = cookies[STATE_COOKIE_NAME];
 
   if (!code || !state || !storedState || state !== storedState) {
     console.error("Invalid request parameters. Details:", {
@@ -58,68 +80,59 @@ export default async function handler(
       storedState: storedState ? "Received" : "Missing",
       stateMatch: state === storedState ? "Match" : "Mismatch",
     });
-    res.status(400).end("Invalid request parameters");
-    return;
+    return new Response("Invalid request parameters", { status: 400 });
   }
 
   try {
-    // Validate and return Apple tokens
     const tokens = await apple.validateAuthorizationCode(code);
     if (!tokens) {
       console.log("Failed to validate authorization code");
-      res.status(400).end();
-      return;
+      return new Response(null, { status: 400 });
     }
 
     const jwt = parseJWT(tokens.idToken);
     if (!jwt || !jwt.payload) {
       console.error("Invalid JWT");
-      res.status(400).end("Invalid JWT");
-      return;
+      return new Response("Invalid JWT", { status: 400 });
     }
 
-    const payload = jwt.payload;
+    const payload = jwt.payload as JWTPayload;
 
-    // Check for existing user
-    const existingUser = await prisma.user.findFirst({
-      // @ts-ignore
+    const existingUser = await prisma.user.findUnique({
       where: { apple_id: payload.sub },
     });
 
     let session;
     if (existingUser) {
-      console.log("Existing user found, creating new session.");
       session = await lucia.createSession(existingUser.id, {});
     } else {
-      console.log("No existing user found, creating new user.");
       const userId = generateId(15);
-      const defaultImageUrl = await uploadDefaultImage();
       await prisma.user.create({
         data: {
           id: userId,
-          // @ts-ignore
           apple_id: payload.sub,
           username: `user-${userId}`,
-          image: defaultImageUrl,
+          image:
+            "https://voirmedia.blob.core.windows.net/voir-media/default_avi.jpg",
         },
       });
 
       session = await lucia.createSession(userId, {});
     }
 
-    // Set session cookie and redirect
-    res
-      .appendHeader(
-        "Set-Cookie",
-        lucia.createSessionCookie(session.id).serialize(),
-      )
-      .redirect("/");
+    const headers = new Headers();
+
+    // TODO: Fix the redirect internal server error.
+
+    // headers.append("Location", "/");
+    headers.append(
+      "Set-Cookie",
+      lucia.createSessionCookie(session.id).serialize(),
+    );
+
+    return new Response(null, { status: 200, headers });
   } catch (e) {
-    if (e instanceof OAuth2RequestError) {
-      const { message, description, request } = e;
-      console.error(message, description, request);
-    }
-    res.status(500).end();
-    return;
+    console.error("Error:", e);
+    return new Response("Internal Server Error", { status: 500 });
   }
 }

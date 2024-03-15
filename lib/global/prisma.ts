@@ -1,9 +1,20 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
+import { Client } from "@planetscale/database";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
+export function prismaClient() {
+  const env = process.env;
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient();
+  const client = new Client({
+    url: env.DATABASE_URL,
+    fetch(url, init) {
+      // @ts-ignore
+      delete init["cache"];
+      return fetch(url, init);
+    },
+  });
+  const adapter = new PrismaPlanetScale(client);
+  return new PrismaClient({ adapter: adapter });
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+export const prisma = prismaClient();

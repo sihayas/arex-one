@@ -1,24 +1,22 @@
 import { prisma } from "@/lib/global/prisma";
-import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed." });
-  }
+export default async function onRequestPost(request: any) {
+  const data = await request.json();
+  const { referenceId, type, authorId } = data;
 
-  console.log("flag.ts: req.body", req.body);
-  const { referenceId, type, authorId } = req.body;
   if (!referenceId || !type) {
-    return res
-      .status(400)
-      .json({ error: "Missing required fields: referenceId and type." });
+    return new Response(
+      JSON.stringify({
+        error: "Missing required fields: referenceId and type.",
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   try {
-    // Create a flag in the database
     const flag = await prisma.flag.create({
       data: {
         referenceId,
@@ -27,9 +25,15 @@ export default async function handle(
       },
     });
 
-    return res.status(201).json(flag);
+    return new Response(JSON.stringify(flag), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     console.error("Error flagging content:", error);
-    return res.status(500).json({ error: "Failed to flag content." });
+    return new Response(JSON.stringify({ error: "Failed to flag content." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

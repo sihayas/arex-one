@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 
 interface Ratings {
@@ -14,19 +13,17 @@ interface SoundInfo {
   ratings_count: number | null;
 }
 
-export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method Not Allowed" });
-  }
+export const runtime = "edge";
 
-  const appleId =
-    typeof req.query.appleId === "string" ? req.query.appleId : null;
+export default async function onRequestGet(request: Request) {
+  const url = new URL(request.url);
+  const appleId = url.searchParams.get("appleId");
 
   if (!appleId) {
-    return res.status(400).json({ error: "Sound ID is required." });
+    return new Response(JSON.stringify({ error: "Sound ID is required." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   try {
@@ -39,9 +36,13 @@ export default async function handle(
     });
 
     if (!soundInfo) {
-      return res.status(404).json({ error: "Sound not found." });
+      return new Response(JSON.stringify({ error: "Sound not found." }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
+    // Use prisma.raw for raw queries, adjust as necessary for your Prisma version
     const ratingsDistributionResult: Ratings[] = await prisma.$queryRaw<
       Ratings[]
     >`
@@ -57,24 +58,34 @@ export default async function handle(
       WHERE s.appleId = ${appleId} AND a.type = 'entry'
     `;
 
-    // Since the raw query returns an array, access the first element directly
     const ratings = ratingsDistributionResult[0];
 
     if (!ratings) {
-      return res
-        .status(404)
-        .json({ error: "No rating distribution data found." });
+      return new Response(
+        JSON.stringify({ error: "No rating distribution data found." }),
+        {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
     }
 
-    return res.status(200).json({
-      data: {
-        avg_rating: soundInfo.avg_rating,
-        ratings_count: soundInfo.ratings_count,
-        ratings,
-      },
+    // Construct the response object
+    const responseData = {
+      avg_rating: soundInfo.avg_rating,
+      ratings_count: soundInfo.ratings_count,
+      ratings,
+    };
+
+    return new Response(JSON.stringify({ data: responseData }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Error executing query:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

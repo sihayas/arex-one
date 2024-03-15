@@ -135,7 +135,6 @@ export default function Home() {
         <title>Rx</title>
       </Head>
 
-      {/* Feed */}
       {activeFeed && (
         <motion.div
           ref={scrollContainerRef}

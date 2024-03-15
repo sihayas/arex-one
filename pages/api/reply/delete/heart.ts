@@ -6,11 +6,8 @@ type Data = {
   success: boolean;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>,
-) {
-  const { replyId, userId, authorId } = req.body;
+export default async function onRequestPost(request: any) {
+  const { replyId, userId, authorId } = await request.json();
 
   const existingHeart = await prisma.heart.findFirst({
     where: {
@@ -45,7 +42,7 @@ export default async function handler(
       await prisma.activity.update({
         where: { id: existingActivity.id },
         data: {
-          isDeleted: true, // Assuming 'isDeleted' field exists
+          isDeleted: true,
         },
       });
     }
@@ -53,10 +50,13 @@ export default async function handler(
     await prisma.heart.update({
       where: { id: existingHeart.id },
       data: {
-        isDeleted: true, // Assuming 'isDeleted' field exists
+        isDeleted: true,
       },
     });
   }
 
-  res.status(200).json({ success: true });
+  return new Response(JSON.stringify({ success: true }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }

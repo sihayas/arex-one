@@ -16,7 +16,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   };
 
   return (
-    <div className={`ml-auto flex flex-col w-full h-full items-end -space-y-4`}>
+    <div className={`ml-auto flex h-full w-full flex-col items-end -space-y-4`}>
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const artwork = MusicKit.formatArtworkURL(
@@ -25,14 +25,13 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
           128 * 2.5,
         );
 
-        const rotationClass =
-          i === 0 ? "rotate-3" : i === 2 ? "rotate-3" : "-rotate-3";
+        const rotationClass = i === 0 ? "rotate-3" : i === 2 ? "rotate-3" : "-rotate-3";
 
         return (
           <Fragment key={`essential-${i}`}>
             <Image
-              className={`rounded-3xl shadow-shadowKitHigh outline outline-silver outline-1 cursor-pointer ${rotationClass} ${
-                i === 1 ? "-translate-x-[88px] z-10" : ""
+              className={`shadow-shadowKitHigh outline-silver cursor-pointer rounded-3xl outline outline-1 ${rotationClass} ${
+                i === 1 ? "z-10 -translate-x-[88px]" : ""
               }`}
               onClick={() => handleSoundClick(sound)}
               src={artwork}

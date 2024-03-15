@@ -1,21 +1,57 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { lucia } from "@/lib/global/auth";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
+export const runtime = "edge";
+
+// Initialize authentication on homepage.
+export default async function onRequest(request: any) {
+  const cookieHeader = request.headers.get("cookie") ?? "";
+  const sessionId = lucia.readSessionCookie(cookieHeader);
 
   if (!sessionId) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return new Response(
+      JSON.stringify({
+        error: "Unauthorized, missing sessionId in cookie",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        status: 401,
+      },
+    );
   }
 
-  const { user, session } = await lucia.validateSession(sessionId);
+  try {
+    const { session, user } = await lucia.validateSession(sessionId);
 
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
+    if (!session) {
+      return new Response(
+        JSON.stringify({
+          error: "Unauthorized, unable to validate session",
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          status: 401,
+        },
+      );
+    }
+
+    // If the session is valid, respond with the user and session information
+    return new Response(JSON.stringify({ user: user, event: cookieHeader }), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Session validation error:", error);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      status: 500,
+    });
   }
-
-  res.json({ user, session });
 }

@@ -25,11 +25,3 @@ export function createKey(type: ActivityType, targetId: string): string {
 
   return key;
 }
-
-// //follow
-// const followType = isFollowingBtoA
-//   ? ActivityType.FOLLOWED_BACK
-//   : ActivityType.FOLLOWED;
-// const aggregationKey = `${followType}|${followerId}|${followingId}`;
-// //unfollow
-// const aggregationKey = `${followType}|${unfollowingId}|${unfollowerId}`;
