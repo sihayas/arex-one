@@ -125,3 +125,5 @@ export async function fetchAndCacheSoundsByType(ids: any, type: string) {
 
   return Array.from(responseDataMap.values()).filter(Boolean);
 }
+
+export const runtime = "edge";

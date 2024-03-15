@@ -110,3 +110,4 @@ export async function onRequestGet(request: any) {
     });
   }
 }
+export const runtime = "edge";

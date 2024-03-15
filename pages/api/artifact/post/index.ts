@@ -132,3 +132,5 @@ export default async function onRequest(request: any) {
     });
   }
 }
+
+export const runtime = "edge";

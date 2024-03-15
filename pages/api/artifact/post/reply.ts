@@ -105,3 +105,5 @@ async function notifyReplyChain(
     currentReplyId = reply.replyToId ?? null;
   }
 }
+
+export const runtime = "edge";

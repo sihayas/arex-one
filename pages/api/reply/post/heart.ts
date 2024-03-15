@@ -49,3 +49,5 @@ export default async function onRequestPost(request: any) {
     },
   );
 }
+
+export const runtime = "edge";

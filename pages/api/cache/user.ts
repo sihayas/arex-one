@@ -30,7 +30,10 @@ async function fetchOrCacheUser(userId: string) {
             bio: true,
           },
         })
-        .then((u) => u && { ...u, followedBy: u.followedBy.map((f) => f.followerId) });
+        .then(
+          (u) =>
+            u && { ...u, followedBy: u.followedBy.map((f) => f.followerId) },
+        );
 
       if (userData) {
         await setCache(cacheKey, JSON.stringify(userData), 3600);
@@ -45,3 +48,5 @@ async function fetchOrCacheUser(userId: string) {
 }
 
 export { fetchOrCacheUser };
+
+export const runtime = "edge";

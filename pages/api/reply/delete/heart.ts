@@ -60,3 +60,5 @@ export default async function onRequestPost(request: any) {
     headers: { "Content-Type": "application/json" },
   });
 }
+
+export const runtime = "edge";

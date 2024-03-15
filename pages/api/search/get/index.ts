@@ -35,3 +35,5 @@ export default async function onRequest(request: any) {
     headers: { "Content-Type": "application/json" },
   });
 }
+
+export const runtime = "edge";

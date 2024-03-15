@@ -34,3 +34,5 @@ export async function onRequestPatch(request: any) {
     );
   }
 }
+
+export const runtime = "edge";

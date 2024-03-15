@@ -136,3 +136,5 @@ export default async function onRequest(request: any) {
     return new Response("Internal Server Error", { status: 500 });
   }
 }
+
+export const runtime = "edge";

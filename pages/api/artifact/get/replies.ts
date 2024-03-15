@@ -103,3 +103,5 @@ export default async function onRequestGet(request: any) {
     });
   }
 }
+
+export const runtime = "edge";

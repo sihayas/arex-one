@@ -25,3 +25,5 @@ export function createKey(type: ActivityType, targetId: string): string {
 
   return key;
 }
+
+export const runtime = "edge";
