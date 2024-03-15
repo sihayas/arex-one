@@ -6,10 +6,13 @@ export default async function onRequest(request: any) {
   const query = url.searchParams.get("query");
 
   if (!query) {
-    return new Response(JSON.stringify({ error: "Query parameter is required" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Query parameter is required" }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   // Fetch filtered albums and songs from Apple's database

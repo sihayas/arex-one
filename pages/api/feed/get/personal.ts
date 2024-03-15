@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/global/prisma";
-import { fetchOrCacheActivities } from "@/pages/api/cache/activity";
+import { cacheActivityArtifacts } from "@/pages/api/cache/activityArtifact";
 
 export default async function onRequestGet(request: any) {
   const url = new URL(request.url);
@@ -7,7 +7,6 @@ export default async function onRequestGet(request: any) {
   const page = Number(url.searchParams.get("page")) || 1;
   const limit = Number(url.searchParams.get("limit")) || 6;
 
-  // Validate input parameters
   if (!userId || isNaN(page) || page < 1 || isNaN(limit) || limit < 1 || limit > 100) {
     return new Response(
       JSON.stringify({ error: "Invalid user ID, page number or limit." }),
@@ -55,7 +54,7 @@ export default async function onRequestGet(request: any) {
     if (hasMorePages) activities.pop();
 
     // Fetch enriched artifacts
-    const detailedActivityData = await fetchOrCacheActivities(
+    const detailedActivityData = await cacheActivityArtifacts(
       activities.map((activity) => activity.id),
     );
 

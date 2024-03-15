@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/global/prisma";
-import { fetchOrCacheActivities } from "@/pages/api/cache/activity";
+import { cacheActivityArtifacts } from "@/pages/api/cache/activityArtifact";
 
 export default async function onRequestGet(request: any) {
   const url = new URL(request.url);
@@ -29,7 +29,7 @@ export default async function onRequestGet(request: any) {
         id: true,
         artifact: {
           select: {
-            // Always fetch up to date replies/hearts
+            // Always fetch up-to date replies/hearts
             hearts: { where: { authorId: userId } },
             _count: { select: { replies: true, hearts: true } },
           },
@@ -40,7 +40,7 @@ export default async function onRequestGet(request: any) {
     const hasMorePages = activities.length > limit;
     if (hasMorePages) activities.pop();
 
-    const detailedActivityData = await fetchOrCacheActivities(
+    const detailedActivityData = await cacheActivityArtifacts(
       activities.map((activity) => activity.id),
     );
 
@@ -69,10 +69,13 @@ export default async function onRequestGet(request: any) {
     );
   } catch (error) {
     console.error("Error fetching user entries:", error);
-    return new Response(JSON.stringify({ error: "Error fetching user entries." }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Error fetching user entries." }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }
 

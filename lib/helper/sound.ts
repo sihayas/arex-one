@@ -1,12 +1,15 @@
-import axios from "axios";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const useSoundInfoQuery = (appleId: string) =>
   useQuery(
     ["sound", appleId],
     async () => {
-      const url = `/api/sound/get`;
-      const { data } = await axios.get(url, { params: { appleId } });
+      const url = `/api/sound/get?appleId=${encodeURIComponent(appleId)}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
       return data.data;
     },
     { enabled: !!appleId, refetchOnWindowFocus: false },
@@ -22,10 +25,20 @@ export const useArtifactsQuery = (
   useInfiniteQuery(
     ["artifacts", soundId, sort, range],
     async ({ pageParam = 1 }) => {
-      const url = `/api/sound/get/artifacts`;
-      const { data } = await axios.get(url, {
-        params: { soundId, page: pageParam, sort, userId, range, limit: 12 },
-      });
+      const queryParams = new URLSearchParams({
+        soundId,
+        page: pageParam.toString(),
+        sort,
+        userId: userId ?? "",
+        range: range?.toString() ?? "",
+        limit: "12",
+      }).toString();
+      const url = `/api/sound/get/artifacts?${queryParams}`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
       const { artifacts, pagination } = data.data;
 
       if (!artifacts || !pagination) {

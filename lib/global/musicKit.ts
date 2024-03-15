@@ -92,5 +92,5 @@ export const fetchSoundsByType = async (type: string, ids: string[]) => {
   }
 
   const data = await response.json();
-  return data.data; // Adjust according to the actual structure of your response
+  return data.data;
 };

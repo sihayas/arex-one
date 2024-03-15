@@ -104,17 +104,16 @@ export default async function onRequest(request: any) {
 
     let session;
     if (existingUser) {
-      console.log("Existing user found:", existingUser.id);
       session = await lucia.createSession(existingUser.id, {});
     } else {
-      console.log("No existing user found, creating new user...");
       const userId = generateId(15);
       await prisma.user.create({
         data: {
           id: userId,
           apple_id: payload.sub,
           username: `user-${userId}`,
-          image: "https://voirmedia.blob.core.windows.net/voir-media/default_avi.jpg",
+          image:
+            "https://voirmedia.blob.core.windows.net/voir-media/default_avi.jpg",
         },
       });
 
@@ -126,7 +125,10 @@ export default async function onRequest(request: any) {
     // TODO: Fix the redirect internal server error.
 
     // headers.append("Location", "/");
-    headers.append("Set-Cookie", lucia.createSessionCookie(session.id).serialize());
+    headers.append(
+      "Set-Cookie",
+      lucia.createSessionCookie(session.id).serialize(),
+    );
 
     return new Response(null, { status: 200, headers });
   } catch (e) {
