@@ -39,5 +39,3 @@ export async function createFollowActivity(
     },
   });
 }
-
-export const runtime = "edge";

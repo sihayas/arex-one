@@ -42,5 +42,3 @@ export default async function handler(
 
   res.status(200).json({ success: true, message: "Hearted successfully." });
 }
-
-export const runtime = "edge";

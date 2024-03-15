@@ -30,7 +30,7 @@ export default async function handle(
 
   try {
     const activities = await Promise.all(
-      bloomingActivities.map(async (id) => {
+      bloomingActivities.map(async (id: any) => {
         // Check cache for activity
         const cacheKey = `activity:${id}:data`;
         let activityData = await getCache(cacheKey);
@@ -98,5 +98,3 @@ export default async function handle(
     return res.status(500).json({ error: "Error fetching activities." });
   }
 }
-
-export const runtime = "edge";

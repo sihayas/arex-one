@@ -165,5 +165,3 @@ export default async function handler(
     return res.status(500).json({ error: "Error fetching notifications." });
   }
 }
-
-export const runtime = "edge";

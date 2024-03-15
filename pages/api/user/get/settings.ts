@@ -26,5 +26,3 @@ export default async function getSettings(
     return res.status(500).end("Error fetching settings.");
   }
 }
-
-export const runtime = "edge";

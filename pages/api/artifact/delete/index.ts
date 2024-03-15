@@ -30,5 +30,3 @@ export default async function handle(
     res.status(500).json({ error: "Failed to update artifact status." });
   }
 }
-
-export const runtime = "edge";

@@ -132,5 +132,3 @@ export default async function handle(
       .json({ error: `Failed to fetch activities: ${error.message}` });
   }
 }
-
-export const runtime = "edge";

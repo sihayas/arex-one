@@ -1,16 +1,13 @@
 import { Lucia, Session, User } from "lucia";
+import { webcrypto } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
-import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
-import { Client } from "@planetscale/database";
 import { Apple } from "arctic";
 import type { AppleCredentials } from "arctic";
+import fs from "fs";
+import path from "path";
 import type { IncomingMessage, ServerResponse } from "http";
 import { Notification } from "@/types/dbTypes";
-
-// import { webcrypto } from "node:crypto";
-// // import fs from "fs";
-// import path from "path";
 
 declare module "lucia" {
   interface Register {
@@ -27,20 +24,18 @@ interface DatabaseUserAttributes {
   notifications: Notification[];
 }
 
-// globalThis.crypto = webcrypto as Crypto; // Not necessary for Cloudflare Prod.
+globalThis.crypto = webcrypto as Crypto;
 
 const client = new PrismaClient();
 const adapter = new PrismaAdapter(client.session, client.user);
 
-// const certificatePath = path.join(
-//   process.cwd(),
-//   process.env.APPLE_CERT_PATH ?? "",
-// );
+const certificatePath = path.join(
+  process.cwd(),
+  process.env.APPLE_CERT_PATH ?? "",
+);
 
-// const certificate =
-//   process.env.APPLE_CERT ?? fs.readFileSync(certificatePath, "utf-8");
-
-const certificate = process.env.APPLE_CERT ?? "";
+const certificate =
+  process.env.APPLE_CERT ?? fs.readFileSync(certificatePath, "utf-8");
 
 const credentials: AppleCredentials = {
   clientId: process.env.APPLE_CLIENT_ID ?? "",
@@ -73,31 +68,12 @@ export const lucia = new Lucia(adapter, {
   },
 });
 
-export default {
-  async fetch(request, env, ctx) {
-    const planetscaleClient = new Client({
-      url: env.DATABASE_URL,
-      fetch(url, init) {
-        delete init["cache"];
-        return fetch(url, init);
-      },
-    });
-    const adapter = new PrismaPlanetScale(planetscaleClient);
-    const prisma = new PrismaClient({ adapter });
-
-    const users = await prisma.user.findMany();
-    const result = JSON.stringify(users);
-    return new Response(result);
-  },
-};
-
 // Middleware to validate the session cookie on every request
 export async function validateRequest(
   req: IncomingMessage,
   res: ServerResponse,
 ): Promise<{ user: User; session: Session } | { user: null; session: null }> {
   const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
-
   if (!sessionId) {
     return {
       user: null,
@@ -123,5 +99,3 @@ export async function validateRequest(
   }
   return result;
 }
-
-export const runtime = "edge";

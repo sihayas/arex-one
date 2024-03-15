@@ -104,5 +104,3 @@ export default async function handle(
     res.status(500).json({ error: "Error adding reply." });
   }
 }
-
-export const runtime = "edge";

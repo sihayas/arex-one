@@ -33,5 +33,3 @@ export function createKey(type: ActivityType, targetId: string): string {
 // const aggregationKey = `${followType}|${followerId}|${followingId}`;
 // //unfollow
 // const aggregationKey = `${followType}|${unfollowingId}|${unfollowerId}`;
-
-export const runtime = "edge";

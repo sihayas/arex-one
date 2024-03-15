@@ -13,5 +13,3 @@ export async function createNotification(
     },
   });
 }
-
-export const runtime = "edge";

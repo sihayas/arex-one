@@ -78,5 +78,3 @@ export default async function handle(
     return res.status(500).json({ error: "Internal server error" });
   }
 }
-
-export const runtime = "edge";

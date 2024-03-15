@@ -85,5 +85,3 @@ export default async function handle(
     res.status(500).json({ error: "Error fetching reviews." });
   }
 }
-
-export const runtime = "edge";

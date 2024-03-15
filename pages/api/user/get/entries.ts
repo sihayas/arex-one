@@ -72,5 +72,3 @@ export default async function getUniqueAlbumsByUserId(
     return res.status(500).json({ error: "Error fetching unique albums." });
   }
 }
-
-export const runtime = "edge";

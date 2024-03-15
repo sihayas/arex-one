@@ -29,5 +29,3 @@ export default async function changeEssential(
     return res.status(500).json({ error: "Error changing essential." });
   }
 }
-
-export const runtime = "edge";
