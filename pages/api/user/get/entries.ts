@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/global/prisma";
-import { cacheActivityArtifacts } from "@/pages/api/cache/activityArtifact";
+import { cacheActivityArtifacts } from "@/pages/api/cache/activityArtifacts";
 
 export default async function onRequestGet(request: any) {
   const url = new URL(request.url);

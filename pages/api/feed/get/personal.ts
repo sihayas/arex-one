@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/global/prisma";
-import { cacheActivityArtifacts } from "@/pages/api/cache/activityArtifact";
+import { cacheActivityArtifacts } from "@/pages/api/cache/activityArtifacts";
 
 export default async function onRequestGet(request: any) {
   const url = new URL(request.url);
@@ -7,7 +7,14 @@ export default async function onRequestGet(request: any) {
   const page = Number(url.searchParams.get("page")) || 1;
   const limit = Number(url.searchParams.get("limit")) || 6;
 
-  if (!userId || isNaN(page) || page < 1 || isNaN(limit) || limit < 1 || limit > 100) {
+  if (
+    !userId ||
+    isNaN(page) ||
+    page < 1 ||
+    isNaN(limit) ||
+    limit < 1 ||
+    limit > 100
+  ) {
     return new Response(
       JSON.stringify({ error: "Invalid user ID, page number or limit." }),
       {
@@ -83,10 +90,13 @@ export default async function onRequestGet(request: any) {
     );
   } catch (error) {
     console.error("Error fetching activities:", error);
-    return new Response(JSON.stringify({ error: "Error fetching activities." }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Error fetching activities." }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 }
 
