@@ -16,7 +16,7 @@ interface JWTPayload {
   sub: string;
 }
 
-export default async function onRequest(request: any) {
+export default async function onRequestPost(request: any) {
   const origin = request.headers.get("origin");
 
   // Handle OPTIONS request for CORS Preflight
@@ -34,10 +34,6 @@ export default async function onRequest(request: any) {
     }
 
     return new Response(null, { status: 204, headers });
-  }
-
-  if (request.method !== "POST") {
-    return new Response("Method Not Allowed", { status: 405 });
   }
 
   // Assuming `request.json()` is used for parsing JSON body

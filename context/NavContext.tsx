@@ -62,7 +62,7 @@ export const NavProvider = ({ children }: NavProviderProps) => {
 
   // Whenever expandInput changes and is true, focus the input
   useEffect(() => {
-    if (expandInput && inputRef.current) {
+    if (expandInput && inputRef.current && activeAction !== "notifications") {
       inputRef.current.focus();
     }
   }, [expandInput]);

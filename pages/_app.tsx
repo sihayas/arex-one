@@ -24,6 +24,20 @@ const garamond12 = localFont({
   variable: "--font-garamond12",
 });
 
+const garamond08 = localFont({
+  src: [
+    {
+      path: "../public/fonts/EBGaramond08-Regular.ttf",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/EBGaramond08-Italic.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-garamond08",
+});
+
 const App = ({ Component, pageProps }: AppProps<{}>) => {
   const [queryClient] = useState(() => new QueryClient());
   const [musicKitReady, setMusicKitReady] = useState(false);
@@ -59,7 +73,7 @@ const App = ({ Component, pageProps }: AppProps<{}>) => {
         <NavProvider>
           <SoundDetailsProvider>
             <ThreadcrumbProvider>
-              <main className={`${garamond12.variable}`}>
+              <main className={`${garamond12.variable} ${garamond08.variable}`}>
                 <Component {...pageProps} />
               </main>
             </ThreadcrumbProvider>

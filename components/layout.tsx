@@ -3,23 +3,7 @@ import React, { useEffect, ReactNode } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 
-import { useAnimate } from "framer-motion";
-
-const opacityConfig = {
-  type: "spring" as const,
-  mass: 0.75,
-  stiffness: 200,
-  damping: 22,
-  delay: 0.15,
-};
-
-const scaleConfig = {
-  type: "spring" as const,
-  mass: 0.75,
-  stiffness: 200,
-  damping: 22,
-  delay: 0.15,
-};
+import { motion, useAnimate } from "framer-motion";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user } = useInterfaceContext();
@@ -27,22 +11,40 @@ export default function Layout({ children }: { children: ReactNode }) {
   const { inputRef } = useNavContext();
   const [scope, animate] = useAnimate();
 
+  const handleLogout = async () => {
+    // Make a POST request to the logout API endpoint
+    const response = await fetch("/api/oauth/apple/logout", {
+      method: "POST",
+    });
+    // Handle the response, e.g., redirect to home
+    if (response.ok) {
+      window.location.href = "/";
+    }
+  };
+
   useEffect(() => {
-    const animateMainContent = async () => {
+    const animateMainContent = () => {
       const animationConfig = {
-        scale: isVisible ? 0.95 : 1,
+        scale: isVisible ? 0.9 : 1,
         pointerEvents: isVisible ? "none" : "auto",
         opacity: isVisible ? 0 : 1,
-        visibility: isVisible ? "hidden" : "visible",
       };
       const transitionConfig = {
-        scale: scaleConfig,
-        opacity: opacityConfig,
-        visibility: {
-          delay: 0.15,
+        scale: {
+          type: "spring" as const,
+          mass: 0.75,
+          stiffness: 200,
+          damping: 22,
+          delay: isVisible ? 0 : 0.15,
+        },
+        opacity: {
+          type: "spring" as const,
+          stiffness: 400,
+          damping: 22,
+          delay: isVisible ? 0 : 0.15,
         },
       };
-      await animate(scope.current, animationConfig, transitionConfig);
+      animate(scope.current, animationConfig, transitionConfig);
     };
     animateMainContent();
   }, [isVisible, animate, scope]);
@@ -95,6 +97,55 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         {children}
       </main>
+
+      {/* System */}
+      <motion.div
+        className={`fixed bottom-8 left-8 flex-col flex items-start gap-2`}
+      >
+        <motion.button
+          whileHover={{
+            opacity: 1,
+            fontWeight: 600,
+          }}
+          className="text-black opacity-50 cursor-pointer uppercase text-sm tracking-widest"
+        >
+          ethos
+        </motion.button>
+
+        <motion.button
+          whileHover={{
+            opacity: 1,
+            fontWeight: 600,
+          }}
+          className="text-black opacity-50 cursor-pointer uppercase text-sm tracking-widest"
+        >
+          contact
+        </motion.button>
+
+        {/* System Interactions */}
+        {user && (
+          <motion.button
+            whileHover={{
+              opacity: 1,
+              fontWeight: 600,
+            }}
+            className="text-[#FF0000] opacity-50  cursor-pointer uppercase text-sm tracking-widest"
+            onClick={handleLogout}
+          >
+            disconnect
+          </motion.button>
+        )}
+
+        <motion.button
+          whileHover={{
+            opacity: 1,
+            fontWeight: 600,
+          }}
+          className="text-black opacity-50 cursor-pointer uppercase text-sm tracking-widest"
+        >
+          privacy & safety
+        </motion.button>
+      </motion.div>
     </>
   );
 }

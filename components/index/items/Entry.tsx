@@ -21,12 +21,13 @@ import {
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
 import { Interaction } from "@/components/global/Interaction";
+import useHandleHeartClick from "@/hooks/useHeart";
 
 interface EntryProps {
   artifact: ArtifactExtended;
 }
 
-const cardMask = {
+export const cardMask = {
   maskImage: "url('/images/mask_card_front.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
@@ -35,7 +36,7 @@ const cardMask = {
   WebkitMaskRepeat: "no-repeat",
 };
 
-const cardBackMask = {
+export const cardBackMask = {
   maskImage: "url('/images/mask_card_back.svg')",
   maskSize: "cover",
   maskRepeat: "no-repeat",
@@ -68,6 +69,7 @@ export const getStarComponent = (
 };
 
 export const Entry: React.FC<EntryProps> = ({ artifact }) => {
+  const { user } = useInterfaceContext();
   const [isFlipped, setIsFlipped] = useState(false);
 
   const appleData = artifact.sound.appleData;
@@ -81,8 +83,22 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
     304 * 2.5,
   );
 
+  const apiUrl = artifact.heartedByUser
+    ? "/api/artifact/delete/heart"
+    : "/api/artifact/post/heart";
+
+  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+    artifact.heartedByUser,
+    artifact._count.hearts,
+    apiUrl,
+    "artifactId",
+    artifact.id,
+    artifact.author.id,
+    user?.id,
+  );
+
   return (
-    <motion.div className={`relative flex w-[354px] items-end gap-2.5`}>
+    <motion.div className={`-ml-14 relative flex w-[360px] items-end gap-4`}>
       <Avatar
         className={`border-silver z-10 border`}
         imageSrc={artifact.author.image}
@@ -201,6 +217,14 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
       {/* Interactions */}
       <Interaction artifact={artifact} />
 
+      <Heart
+        handleHeartClick={handleHeartClick}
+        hearted={hearted}
+        className="absolute -top-[26px] left-[46px] z-10 -m-12 p-12 mix-blend-multiply"
+        heartCount={heartCount}
+        replyCount={artifact._count.replies}
+      />
+
       <p
         className={`text-gray2 absolute -bottom-7 left-[68px] font-medium mix-blend-darken`}
       >
@@ -220,25 +244,3 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
     </motion.div>
   );
 };
-
-// const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-//   artifact.heartedByUser,
-//   artifact._count.hearts,
-//   apiUrl,
-//   "artifactId",
-//   artifact.id,
-//   artifact.author.id,
-//   user?.id,
-// );
-
-// <Heart
-//   handleHeartClick={handleHeartClick}
-//   hearted={hearted}
-//   className="absolute -top-[26px] left-[46px] z-10 -m-12 p-12 mix-blend-multiply"
-//   heartCount={heartCount}
-//   replyCount={artifact._count.replies}
-// />
-
-// const apiUrl = artifact.heartedByUser
-//   ? "/api/artifact/delete/heart"
-//   : "/api/artifact/post/heart";

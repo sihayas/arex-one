@@ -28,15 +28,11 @@ const Heart: React.FC<HeartButtonProps> = ({
   }, [hearted]);
 
   const handleMouseEnter = () => {
-    controls.start("hover").catch((error) => {
-      // console.error("Hover animation failed", error);
-    });
+    controls.start("hover").catch((error) => {});
   };
 
   const handleMouseLeave = () => {
-    controls.start("initial").catch((error) => {
-      // console.error("Hover animation failed", error);
-    });
+    controls.start("initial").catch((error) => {});
   };
 
   return (

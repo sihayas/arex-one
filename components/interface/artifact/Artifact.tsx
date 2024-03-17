@@ -92,7 +92,7 @@ export const Artifact = () => {
       unsubscribeX();
       unsubscribeY();
     };
-  }, [isExpanded]);
+  }, [isExpanded, x, y]);
 
   // useEffect(() => {
   //   if (isExpanded) {

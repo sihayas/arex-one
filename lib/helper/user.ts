@@ -40,7 +40,9 @@ export const useUserDataQuery = (
     async () => {
       if (!sessionUserId || !pageUserId) return null;
       const response = await fetch(
-        `/api/user/get?sessionUserId=${encodeURIComponent(sessionUserId)}&pageUserId=${encodeURIComponent(pageUserId)}`,
+        `/api/user/get?sessionUserId=${encodeURIComponent(
+          sessionUserId,
+        )}&pageUserId=${encodeURIComponent(pageUserId)}`,
       );
 
       if (!response.ok) {
@@ -131,9 +133,13 @@ export const useNotificationsQuery = (userId: string | undefined) => {
   return useQuery(
     ["notifications", userId],
     async () => {
-      const { data } = await axios.get(`/api/user/get/notifications`, {
-        params: { userId },
-      });
+      const response = await fetch(
+        `/api/user/get/notifications?userId=${userId}`,
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
 
       const { notifications } = data.data;
 

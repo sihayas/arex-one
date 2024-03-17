@@ -24,7 +24,7 @@ const Notifications = () => {
     <motion.div
       initial={{
         y: offset,
-        x: -40,
+        x: -52,
         opacity: 0,
         scale: 0,
         filter: "blur(8px)",

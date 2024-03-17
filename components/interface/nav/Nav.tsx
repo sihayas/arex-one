@@ -232,7 +232,7 @@ const Nav = () => {
 
       {/* Text Input */}
       <motion.div
-        className={`absolute bottom-0 left-0 z-10 flex w-full items-center justify-center bg-transparent p-[9px] ${
+        className={`absolute bottom-0 left-0 z-10 flex w-full items-center justify-center bg-transparent p-[9px] mix-blend-darken ${
           isReply ? "pl-3 pr-[44px]" : "pl-[40px]"
         }`}
         variants={inputVariants}
@@ -280,7 +280,7 @@ const Nav = () => {
       <motion.div
         variants={barVariants}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`absolute bottom-0 left-0 z-10 flex flex-col gap-2 bg-transparent`}
+        className={`absolute bottom-0 left-0 z-10 flex flex-col gap-2 bg-transparent mix-blend-darken`}
       >
         {/* Notification Icon */}
         <motion.button
@@ -318,6 +318,7 @@ const Nav = () => {
             </motion.div>
 
             <AnimatePresence>
+              {/* Search Results */}
               {expandInput && activeAction === "none" && !pageHasData && (
                 <motion.div
                   className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
@@ -385,12 +386,16 @@ const Nav = () => {
               {/* User is viewing notifications */}
               {expandInput && activeAction === "notifications" && (
                 <motion.div
-                  className={`absolute right-0 top-0 rounded-full bg-white px-[11px] py-2`}
+                  className={`center-x center-y absolute rounded-full bg-[#CCC] w-6 h-6 flex items-center justify-center`}
                   initial={{ opacity: 0, scale: 2 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 2 }}
                 >
-                  <NotificationIcon />
+                  <p
+                    className={`text-xs font-semibold text-white leading-[8px]`}
+                  >
+                    99
+                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -404,7 +409,7 @@ const Nav = () => {
             animate={expandInput ? "exit" : "initial"}
             variants={iconVariants}
             onClick={() => setExpandInput((prev) => !prev)}
-            className="flex cursor-pointer items-center justify-center rounded-full px-[20px] py-2"
+            className="flex cursor-pointer items-center justify-center rounded-full px-[20px] py-2 bg-[#F4F4F4]"
           >
             <SearchIcon />
           </motion.button>

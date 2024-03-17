@@ -88,13 +88,11 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           x: "-50%",
           y: "-50%",
           opacity: isVisible ? 1 : 0,
-          scale: isVisible ? 1 : 0.97,
-          visibility: isVisible ? "visible" : "hidden",
+          scale: isVisible ? 1 : 0.9,
         },
         {
           scale: {
             type: "spring" as const,
-            mass: 1,
             stiffness: 180,
             damping: 22,
             delay: isVisible ? 0.15 : 0,
@@ -107,7 +105,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
             delay: isVisible ? 0.15 : 0,
           },
           visibility: {
-            delay: isVisible ? 0 : 0.15,
+            delay: isVisible ? 0.15 : 0.25,
           },
         },
       );

@@ -28,6 +28,8 @@ export default async function onRequest(request: any) {
       }),
     );
 
+    console.log("apple", apple);
+
     return new Response(null, { status: 302, headers });
   } catch (error) {
     console.error("Error in /api/oauth/apple handler:", error);
