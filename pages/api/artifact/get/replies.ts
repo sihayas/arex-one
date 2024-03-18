@@ -7,20 +7,6 @@ export default async function onRequestGet(request: any) {
   const replyId = url.searchParams.get("replyId");
   const userId = url.searchParams.get("userId");
 
-  if (!artifactId) {
-    return new Response(JSON.stringify({ error: "Invalid artifact ID." }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  if (!replyId) {
-    return new Response(JSON.stringify({ error: "Invalid reply ID." }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
   if (!userId) {
     return new Response(JSON.stringify({ error: "User ID is required." }), {
       status: 400,

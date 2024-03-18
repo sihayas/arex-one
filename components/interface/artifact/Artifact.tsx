@@ -20,8 +20,12 @@ import Image from "next/image";
 import Tilt from "react-parallax-tilt";
 import { StarIcon } from "@/components/icons";
 import { Interaction } from "@/components/global/Interaction";
+import { createPortal } from "react-dom";
+import Dial from "@/components/interface/sound/sub/Dial";
+import DialMini from "@/components/interface/sound/sub/DialMini";
 
 export const Artifact = () => {
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
   const { handleSelectSound } = useSound();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -43,6 +47,7 @@ export const Artifact = () => {
   const song = artifactExtended.sound.appleData as SongData;
   const appleData = album ? album : song;
 
+  const color = appleData.attributes.artwork.bgColor;
   const artwork = MusicKit.formatArtworkURL(
     appleData.attributes.artwork,
     304 * 2.5,
@@ -110,20 +115,15 @@ export const Artifact = () => {
   return (
     <>
       <motion.div
-        animate={{
-          y: isExpanded ? -22 : 0,
-        }}
+        animate={{ y: isExpanded ? -104 : 0 }}
         whileTap={{ scale: 0.9 }}
-        transition={{
-          type: "spring",
-          damping: 15,
-          stiffness: 100,
-        }}
-        className={`relative`}
+        transition={{ type: "spring", damping: 15, stiffness: 100 }}
+        onClick={() => setIsExpanded(!isExpanded)}
+        className={`relative mt-[104px]`}
       >
         <Tilt
-          tiltAngleXManual={tiltAngles.tiltAngleX}
-          tiltAngleYManual={tiltAngles.tiltAngleY}
+          tiltAngleXManual={0}
+          tiltAngleYManual={0}
           perspective={1000}
           tiltMaxAngleX={6}
           tiltMaxAngleY={6}
@@ -133,93 +133,167 @@ export const Artifact = () => {
           glareBorderRadius={"32px"}
           tiltEnable={true}
           transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
-          className={`transform-style-3d shadow-soundArt relative mt-[56px] cursor-pointer overflow-hidden rounded-3xl`}
+          className={`transform-style-3d shadow-soundArt relative cursor-pointer overflow-hidden rounded-3xl`}
         >
           <motion.div
             animate={{
-              width: isExpanded ? 448 : 400,
-              height: isExpanded ? "auto" : 560,
+              width: isExpanded ? 512 : 304,
+              height: isExpanded ? 1000 : 432,
             }}
-            transition={{
-              type: "spring",
-              damping: 22,
-              stiffness: 220,
-            }}
-            onClick={() => setIsExpanded(!isExpanded)}
-            className={`flex flex-col overflow-hidden rounded-3xl bg-white p-6`}
+            transition={{ type: "spring", damping: 22, stiffness: 220 }}
+            className={`flex flex-col overflow-hidden rounded-3xl bg-white items-center`}
           >
-            <div className="translate-z-1 flex justify-between">
-              <StarIcon />
+            {/* Art */}
+            <motion.div
+              className={`origin-top`}
+              animate={{
+                y: isExpanded ? 66 : -24,
+                scale: isExpanded ? 1.25 : 1,
+              }}
+              transition={{ type: "spring", damping: 15, stiffness: 100 }}
+            >
+              <motion.div
+                animate={{
+                  borderRadius: isExpanded
+                    ? "12px 12px 12px 12px"
+                    : "32px 32px 0px 0px",
+                  boxShadow: isExpanded
+                    ? `#${color}1A 0px 1px 1px 0px inset, #${color}40 0px 50px 100px -20px, #${color}4D 0px 30px 60px -30px`
+                    : `#${color}00 0px 1px 1px 0px inset, #${color}00 0px 50px 100px -20px, #${color}00 0px 30px 60px -30px`,
+                }}
+                className={`overflow-hidden outline outline-1 outline-silver`}
+              >
+                <Image
+                  src={artwork}
+                  alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
+                  quality={100}
+                  width={304}
+                  height={304}
+                  draggable={false}
+                />
+              </motion.div>
+            </motion.div>
 
-              <Image
-                className="border-silver shadow-shadowKitHigh cursor-pointer rounded-xl"
-                onClick={handleSoundClick}
-                src={artwork}
-                alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
-                quality={100}
-                width={304}
-                height={304}
-                draggable={false}
-              />
-            </div>
+            {/* Attribution */}
+            {isExpanded ? (
+              <>
+                <div
+                  className={`w-[448px] mt-[calc(142px+32px)] mb-[26px] mix-blend-darken`}
+                >
+                  <div
+                    className={`w-full bg-silver flex items-center px-4 h-[52px] rounded-2xl gap-2`}
+                  >
+                    <StarIcon color={"#999"} />
+                    <div className={`flex flex-col text-gray2`}>
+                      <p className={`line-clamp-1 text-sm font-medium`}>
+                        {appleData.attributes.artistName}
+                      </p>
+                      <p className={`line-clamp-1 text-base font-semibold`}>
+                        {appleData.attributes.name}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-            {/* Names */}
-            <div className={`flex flex-col pb-[30px] pt-5`}>
-              <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
-                {appleData.attributes.artistName}
-              </p>
-              <p className={`line-clamp-4 text-base font-semibold text-black`}>
-                {appleData.attributes.name}
-              </p>
-            </div>
+                {/* Avatar */}
+                {cmdk &&
+                  createPortal(
+                    <AnimatePresence>
+                      <motion.div
+                        initial={{ opacity: 0, filter: "blur(4px)" }}
+                        animate={{ opacity: 1, filter: "blur(0px)" }}
+                        exit={{ opacity: 0, filter: "blur(4px)" }}
+                        transition={{
+                          type: "spring",
+                          damping: 40,
+                          stiffness: 100,
+                        }}
+                        className={`absolute top-[527px] right-0 w-full -translate-x-full`}
+                      >
+                        <div
+                          className={`absolute -right-5 flex items-center gap-2`}
+                        >
+                          <p
+                            className={`line-clamp-1 text-base font-semibold text-gray2`}
+                          >
+                            {artifactExtended.author.username}
+                          </p>
+                          <Avatar
+                            className={`outline outline-4 outline-white shadow-shadowKitHigh`}
+                            imageSrc={artifactExtended.author.image}
+                            altText={`${artifactExtended.author.username}'s avatar`}
+                            width={40}
+                            height={40}
+                            user={artifactExtended.author}
+                          />
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>,
+                    cmdk,
+                  )}
+              </>
+            ) : (
+              <div
+                className={`flex items-center justify-between absolute bottom-0 left-0 bg-white w-full pb-5 px-6`}
+              >
+                <div className={`flex items-center gap-2`}>
+                  <StarIcon color={`#000`} />
+                  <div className={`flex flex-col`}>
+                    <p
+                      className={`text-gray2 line-clamp-1 text-sm font-medium`}
+                    >
+                      {appleData.attributes.artistName}
+                    </p>
+                    <p
+                      className={`line-clamp-1 text-base font-semibold text-black`}
+                    >
+                      {appleData.attributes.name}
+                    </p>
+                  </div>
+                </div>
+
+                <div className={`flex items-center gap-2 flex-shrink-0`}>
+                  <p
+                    className={`line-clamp-1 text-base font-semibold text-gray2`}
+                  >
+                    {artifactExtended.author.username}
+                  </p>
+
+                  <Avatar
+                    className={`border-silver border`}
+                    imageSrc={artifactExtended.author.image}
+                    altText={`${artifactExtended.author.username}'s avatar`}
+                    width={32}
+                    height={32}
+                    user={artifactExtended.author}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Content */}
             <motion.div
-              initial={{ opacity: 0, filter: "blur(4px)" }}
+              initial={{ opacity: 0, filter: "blur(1px)" }}
               animate={{ opacity: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, filter: "blur(4px)" }}
+              exit={{ opacity: 0, filter: "blur(1px)" }}
               key={isExpanded ? "expanded" : "collapsed"}
-              transition={{
-                type: "spring",
-                damping: 20,
-                stiffness: 100,
-              }}
+              transition={{ type: "spring", damping: 20, stiffness: 100 }}
             >
               {isExpanded ? (
-                <p className={`w-[400px] text-base`}>
+                <p className={`w-[448px] text-base m-8 mt-0`}>
                   {artifactExtended.content?.text}
                 </p>
               ) : (
-                <p className={`w-[352px] text-base`}>
+                <p
+                  className={`w-[256px] text-base line-clamp-3 m-6 mt-0 -mt-[6px]`}
+                >
                   {artifactExtended.content?.text}
                 </p>
               )}
             </motion.div>
-
-            <div
-              style={{
-                backgroundImage:
-                  "linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75) 48.74%, rgb(255, 255, 255))",
-              }}
-              className="absolute bottom-0 left-0 flex h-[88px] w-full items-end p-6"
-            >
-              <div className={`flex items-center gap-2`}>
-                <Avatar
-                  className={`border-silver border`}
-                  imageSrc={artifactExtended.author.image}
-                  altText={`${artifactExtended.author.username}'s avatar`}
-                  width={40}
-                  height={40}
-                  user={artifactExtended.author}
-                />
-                <p className={`line-clamp-1 text-base font-medium text-black`}>
-                  {artifactExtended.author.username}
-                </p>
-              </div>
-            </div>
           </motion.div>
         </Tilt>
-        <Interaction artifact={artifactExtended} />
+        {!isExpanded && <Interaction artifact={artifactExtended} />}
       </motion.div>
 
       {/* If viewing a specific chain i.e. from notification */}

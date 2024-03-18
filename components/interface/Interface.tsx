@@ -40,7 +40,7 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 688, height: maxHeight },
     },
     artifact: {
-      base: { width: 512, height: 768 },
+      base: { width: 512, height: 640 },
       target: { width: 512, height: maxHeight },
     },
   };
@@ -89,6 +89,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           y: "-50%",
           opacity: isVisible ? 1 : 0,
           scale: isVisible ? 1 : 0.9,
+          pointerEvents: isVisible ? "auto" : "none",
+          zIndex: isVisible ? 10 : -10,
         },
         {
           scale: {

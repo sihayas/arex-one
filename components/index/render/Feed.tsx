@@ -25,7 +25,6 @@ const Feed = ({
 
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,
-    layoutEffect: false,
   });
 
   useMotionValueEvent(scrollYProgress, "change", async () => {

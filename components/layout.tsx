@@ -106,8 +106,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           whileHover={{
             opacity: 1,
             fontWeight: 600,
+            color: user ? "#000" : "#FFF",
           }}
-          className="text-black opacity-50 cursor-pointer uppercase text-sm tracking-widest"
+          className="opacity-25 cursor-pointer uppercase text-sm tracking-widest"
         >
           ethos
         </motion.button>
@@ -116,8 +117,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           whileHover={{
             opacity: 1,
             fontWeight: 600,
+            color: user ? "#000" : "#FFF",
           }}
-          className="text-black opacity-50 cursor-pointer uppercase text-sm tracking-widest"
+          className="opacity-25 cursor-pointer uppercase text-sm tracking-widest"
         >
           contact
         </motion.button>
@@ -140,8 +142,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           whileHover={{
             opacity: 1,
             fontWeight: 600,
+            color: user ? "#000" : "#FFF",
           }}
-          className="text-black opacity-50 cursor-pointer uppercase text-sm tracking-widest"
+          className="opacity-25 cursor-pointer uppercase text-sm tracking-widest"
         >
           privacy & safety
         </motion.button>

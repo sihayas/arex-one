@@ -27,8 +27,8 @@ const generalConfig = { damping: 36, stiffness: 400 };
 export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
 const Sound = () => {
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const { scrollContainerRef, activePage, pages } = useInterfaceContext();
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [range, setRange] = useState<number | null>(null);
