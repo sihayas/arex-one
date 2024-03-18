@@ -60,7 +60,6 @@ export default function RootReply({ reply, index }: ReplyProps) {
           restSpeed: 0.01,
           restDelta: 0.01,
         },
-
         layout: {
           type: "spring",
           stiffness: 280,
@@ -72,16 +71,16 @@ export default function RootReply({ reply, index }: ReplyProps) {
       style={{
         willChange: "opacity, scale, transform",
       }}
-      className={`relative mt-4 flex h-fit w-full flex-col`}
+      className={`relative mt-4 flex h-fit w-full flex-col `}
     >
       {/* Main Reply */}
       <div className={`flex items-end gap-2`}>
         <Avatar
-          className="border-silver h-8 w-8 rounded-full border"
+          className="h-10 w-10 rounded-full outline outline-4 outline-white"
           imageSrc={reply.author.image}
           altText={`${reply.author.username}'s avatar`}
-          width={32}
-          height={32}
+          width={40}
+          height={40}
           user={reply.author}
         />
         <div
@@ -92,8 +91,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
             whileHover={{ color: "rgba(0,0,0,1)" }}
             onClick={handleReplyParent}
             animate={{
-              color:
-                replyTarget?.reply === reply ? "#FFF" : "rgb(119 119 119 / 1)",
+              color: replyTarget?.reply === reply ? "#FFF" : "#000",
               scale: replyTarget?.reply === reply ? 1.01 : 1,
             }}
             transition={{ duration: 0.24 }}

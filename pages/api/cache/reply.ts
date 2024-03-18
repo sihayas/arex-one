@@ -10,7 +10,7 @@ async function fetchOrCacheRoots(ids: string[]): Promise<ReplyType[]> {
   const cachePromises = ids.map(async (id) => {
     const cacheKey = `reply:${id}:data`;
     const data = await getCache(cacheKey);
-    return data ? JSON.parse(data) : null; // Assuming getCache returns a JSON string.
+    return data ? data : null; // Assuming getCache returns a JSON string.
   });
   const cacheResults = await Promise.all(cachePromises);
 

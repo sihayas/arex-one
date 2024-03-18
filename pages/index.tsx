@@ -21,46 +21,46 @@ export default function Home() {
   const [activeFeed, setActiveFeed] = React.useState<Feed>("personal");
 
   const url =
-    "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/49/3d/ab/493dab54-f920-9043-6181-80993b8116c9/19UMGIM53909.rgb.jpg/1000x1000.jpg";
+    "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/49/3d/ab/493dab54-f920-9043-6181-80993b8116c9/19UMGIM53909.rgb.jpg/800x800.jpg";
 
-  const [tiltAngles, setTiltAngles] = useState({
-    tiltAngleX: 0,
-    tiltAngleY: 0,
-  });
-
-  const x = useSpring(0, { damping: 320, stiffness: 80 });
-  const y = useSpring(0, { damping: 320, stiffness: 80 });
+  // const [tiltAngles, setTiltAngles] = useState({
+  //   tiltAngleX: 0,
+  //   tiltAngleY: 0,
+  // });
+  //
+  // const x = useSpring(0, { damping: 320, stiffness: 80 });
+  // const y = useSpring(0, { damping: 320, stiffness: 80 });
 
   // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
-
-  useEffect(() => {
-    const xControls = animate(x, [8, 8, -8, -8, 8], {
-      repeat: Infinity,
-      duration: 16,
-      ease: "easeOut",
-    });
-
-    const yControls = animate(y, [8, -8, -8, 8, 8], {
-      repeat: Infinity,
-      duration: 16,
-      ease: "easeOut",
-    });
-
-    const unsubscribeX = x.on("change", (latest) => {
-      setTiltAngles((prev) => ({ ...prev, tiltAngleX: latest }));
-    });
-
-    const unsubscribeY = y.on("change", (latest) => {
-      setTiltAngles((prev) => ({ ...prev, tiltAngleY: latest }));
-    });
-
-    return () => {
-      xControls.stop();
-      yControls.stop();
-      unsubscribeX();
-      unsubscribeY();
-    };
-  }, [x, y]);
+  //
+  // useEffect(() => {
+  //   const xControls = animate(x, [8, 8, -8, -8, 8], {
+  //     repeat: Infinity,
+  //     duration: 16,
+  //     ease: "easeOut",
+  //   });
+  //
+  //   const yControls = animate(y, [8, -8, -8, 8, 8], {
+  //     repeat: Infinity,
+  //     duration: 16,
+  //     ease: "easeOut",
+  //   });
+  //
+  //   const unsubscribeX = x.on("change", (latest) => {
+  //     setTiltAngles((prev) => ({ ...prev, tiltAngleX: latest }));
+  //   });
+  //
+  //   const unsubscribeY = y.on("change", (latest) => {
+  //     setTiltAngles((prev) => ({ ...prev, tiltAngleY: latest }));
+  //   });
+  //
+  //   return () => {
+  //     xControls.stop();
+  //     yControls.stop();
+  //     unsubscribeX();
+  //     unsubscribeY();
+  //   };
+  // }, [x, y]);
 
   if (!user) {
     return (

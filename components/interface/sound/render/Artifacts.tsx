@@ -73,7 +73,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   );
 
   return (
-    <div className={`mask mt-1 h-max w-full snap-start`}>
+    <div className={`mt-1 h-max w-full snap-start`}>
       <Virtuoso
         key={key}
         ref={ref}
@@ -99,7 +99,9 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
                 },
               });
             }}
-            className={`cloud-shadow -my-4 ${index % 2 !== 0 ? "-rotate-1 pr-[128px]" : "rotate-1 pr-8"} ${index === 0 && "pt-12"}`}
+            className={`cloud-shadow -my-4 ${
+              index % 2 !== 0 ? "-rotate-1 pr-[128px]" : "rotate-1 pr-8"
+            } ${index === 0 && "pt-12"}`}
           >
             {/* Scene */}
             <Tilt
@@ -107,7 +109,6 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
               tiltMaxAngleX={6}
               tiltMaxAngleY={6}
               tiltReverse={true}
-              // reset={false}
               glareEnable={true}
               glareMaxOpacity={0.45}
               glareBorderRadius={"32px"}

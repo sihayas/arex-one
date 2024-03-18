@@ -46,21 +46,23 @@ const User = () => {
 
         <div className={`flex flex-col`}>
           <div className={`flex h-16 items-center`}>
-            <p className={`text-gray2 text-xl font-semibold  tracking-tighter `}>
+            <p className={`text-gray2 text-3xl font-semibold`}>
               {userData.username}
             </p>
           </div>
 
           <div className={`flex gap-[29px]`}>
             <div className={`flex flex-col`}>
-              <p className="text-gray2 text-xs font-medium uppercase tracking-tighter">
+              <p className="text-gray2 text-base lowercase tracking-tighter">
                 Sounds
               </p>
-              <p className="text-gray2 text-base font-bold tracking-tighter">42</p>
+              <p className="text-gray2 text-base font-bold tracking-tighter">
+                42
+              </p>
             </div>
 
             <div className={`flex flex-col`}>
-              <p className="text-gray2 text-xs font-medium uppercase tracking-tighter">
+              <p className="text-gray2 text-base lowercase tracking-tighter">
                 Entries
               </p>
               <p className="text-gray2 text-base font-bold tracking-tighter">

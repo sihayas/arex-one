@@ -67,37 +67,36 @@ export const Artifact = () => {
   const y = useSpring(0, { damping: 320, stiffness: 80 });
 
   // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
-
-  useEffect(() => {
-    if (isExpanded) return;
-
-    const xControls = animate(x, [8, 8, -8, -8, 8], {
-      repeat: Infinity,
-      duration: 16,
-      ease: "easeOut",
-    });
-
-    const yControls = animate(y, [8, -8, -8, 8, 8], {
-      repeat: Infinity,
-      duration: 16,
-      ease: "easeOut",
-    });
-
-    const unsubscribeX = x.on("change", (latest) => {
-      setTiltAngles((prev) => ({ ...prev, tiltAngleX: latest }));
-    });
-
-    const unsubscribeY = y.on("change", (latest) => {
-      setTiltAngles((prev) => ({ ...prev, tiltAngleY: latest }));
-    });
-
-    return () => {
-      xControls.stop();
-      yControls.stop();
-      unsubscribeX();
-      unsubscribeY();
-    };
-  }, [isExpanded, x, y]);
+  // useEffect(() => {
+  //   if (isExpanded) return;
+  //
+  //   const xControls = animate(x, [8, 8, -8, -8, 8], {
+  //     repeat: Infinity,
+  //     duration: 16,
+  //     ease: "easeOut",
+  //   });
+  //
+  //   const yControls = animate(y, [8, -8, -8, 8, 8], {
+  //     repeat: Infinity,
+  //     duration: 16,
+  //     ease: "easeOut",
+  //   });
+  //
+  //   const unsubscribeX = x.on("change", (latest) => {
+  //     setTiltAngles((prev) => ({ ...prev, tiltAngleX: latest }));
+  //   });
+  //
+  //   const unsubscribeY = y.on("change", (latest) => {
+  //     setTiltAngles((prev) => ({ ...prev, tiltAngleY: latest }));
+  //   });
+  //
+  //   return () => {
+  //     xControls.stop();
+  //     yControls.stop();
+  //     unsubscribeX();
+  //     unsubscribeY();
+  //   };
+  // }, [isExpanded, x, y]);
 
   // useEffect(() => {
   //   if (isExpanded) {
@@ -115,11 +114,17 @@ export const Artifact = () => {
   return (
     <>
       <motion.div
-        animate={{ y: isExpanded ? -104 : 0 }}
-        whileTap={{ scale: 0.9 }}
+        animate={{
+          y: isExpanded ? -104 : 0,
+          boxShadow: !isExpanded
+            ? "rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px"
+            : "rgba(255, 255, 255, 0.0) 0px 1px 1px 0px inset, rgba(50," +
+              " 50,93, 0.0) 0px 50px 100px -20px, rgba(0, 0, 0, 0.0) 0px 30px 60px -30px",
+        }}
+        whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", damping: 15, stiffness: 100 }}
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`relative mt-[104px]`}
+        className={`relative mt-[104px] shadow-soundArt rounded-full`}
       >
         <Tilt
           tiltAngleXManual={0}
@@ -133,15 +138,18 @@ export const Artifact = () => {
           glareBorderRadius={"32px"}
           tiltEnable={true}
           transitionEasing={"cubic-bezier(0.23, 1, 0.32, 1)"}
-          className={`transform-style-3d shadow-soundArt relative cursor-pointer overflow-hidden rounded-3xl`}
+          className={`transform-style-3d cursor-pointer`}
         >
           <motion.div
             animate={{
               width: isExpanded ? 512 : 304,
-              height: isExpanded ? 1000 : 432,
+              height: isExpanded ? 864 : 432,
+              borderRadius: isExpanded
+                ? "32px 32px 20px 20px"
+                : "32px 32px 32px 32px",
             }}
             transition={{ type: "spring", damping: 22, stiffness: 220 }}
-            className={`flex flex-col overflow-hidden rounded-3xl bg-white items-center`}
+            className={`flex flex-col bg-white items-center overflow-hidden rounded-3xl relative`}
           >
             {/* Art */}
             <motion.div
@@ -181,7 +189,7 @@ export const Artifact = () => {
                   className={`w-[448px] mt-[calc(142px+32px)] mb-[26px] mix-blend-darken`}
                 >
                   <div
-                    className={`w-full bg-silver flex items-center px-4 h-[52px] rounded-2xl gap-2`}
+                    className={`w-full bg-silver shadow-inset flex items-center px-4 h-[52px] rounded-2xl gap-2`}
                   >
                     <StarIcon color={"#999"} />
                     <div className={`flex flex-col text-gray2`}>

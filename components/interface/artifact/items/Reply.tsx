@@ -132,10 +132,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
               }
               onClick={handleReplyParent}
               animate={{
-                color:
-                  replyTarget?.reply === reply
-                    ? "#7AFF00"
-                    : "RGB(119 119 119 / 1)",
+                color: replyTarget?.reply === reply ? "#7AFF00" : "#000",
                 scale: replyTarget?.reply === reply ? 1.01 : 1,
               }}
               transition={{ duration: 0.24 }}
