@@ -9,7 +9,7 @@ import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { CurveIcon, LoopIcon } from "@/components/icons";
+import { CurveIcon, LoopIcon, TinyCurveIcon, ReplyCurveIcon } from "@/components/icons";
 import Image from "next/image";
 
 interface ReplyProps {
@@ -27,6 +27,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
 
   const activePage = pages[pages.length - 1];
   const replyCount = reply._count ? reply._count.replies : 0;
+  const hasChildren = replyCount > 0;
 
   const handleReplyParent = useCallback(() => {
     const artifact = activePage.artifact?.data;
@@ -40,9 +41,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
     }
   }, [reply, setReplyTarget, activePage.artifact, replyTarget?.reply]);
 
-  const url = reply.heartedByUser
-    ? "/api/reply/delete/heart"
-    : "/api/reply/post/heart";
+  const url = reply.heartedByUser ? "/api/reply/delete/heart" : "/api/reply/post/heart";
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     reply.heartedByUser,
@@ -75,16 +74,12 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         scale: {
           type: "spring",
           stiffness: 260,
-          damping: 20,
-          restSpeed: 0.01,
-          restDelta: 0.01,
+          damping: 24,
         },
         layout: {
           type: "spring",
           stiffness: 280,
           damping: 34,
-          restSpeed: 0.01,
-          restDelta: 0.01,
         },
       }}
       style={{
@@ -96,39 +91,35 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
       {/* Main Reply */}
       <div className={`flex w-full items-end ${flexDirection}`}>
         {/* Avatar & Collapse*/}
-        <div
-          className={`relative flex h-full flex-col items-center justify-end`}
-        >
+        <div className={`relative flex h-full flex-col items-center justify-end`}>
           {/* Fill Line | */}
           {!isChild && (
             <div className="z-10 h-full w-1 rounded-tl-lg rounded-tr-lg bg-[#CCC]" />
           )}
 
           <Avatar
-            className="border-silver mt-auto min-h-[32px] min-w-[32px] rounded-full border"
+            className="mt-auto min-h-[40px] min-w-[40px] rounded-full outline outline-2 outline-white"
             imageSrc={reply.author.image}
             altText={`${reply.author.username}'s avatar`}
-            width={32}
-            height={32}
+            width={40}
+            height={40}
             user={reply.author}
           />
         </div>
 
-        {/* Text Bubble */}
+        {/* Content, Text, and Expand Dot / Collapse Curve */}
         <div
           className={`relative mb-3 flex w-full items-end justify-between ${reverseAlignment} ${flexDirection}  ${
             showChildReplies ? "mt-8" : ""
           }`}
         >
           <motion.div
-            className={`relative w-fit max-w-[322px] overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
+            className={`relative w-fit max-w-[304px] overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
           >
             {/* Content  */}
             <motion.div
               whileHover={
-                replyTarget?.reply === reply
-                  ? { color: "#CCC" }
-                  : { color: "#7AFF00" }
+                replyTarget?.reply === reply ? { color: "#CCC" } : { color: "#7AFF00" }
               }
               onClick={handleReplyParent}
               animate={{
@@ -141,45 +132,35 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
               {reply.text}
             </motion.div>
 
+            {/* Expand Dot */}
+            {!showChildReplies && replyCount > 0 && (
+              <motion.div
+                whileHover={{
+                  scale: 1.5,
+                  backgroundColor: showChildReplies ? "#CCC" : "#000",
+                }}
+                onClick={() => setShowChildReplies((prev) => !prev)}
+                className={`center-y bg-gray3 absolute h-3 w-3 cursor-pointer rounded-full ${isEven ? "-right-5" : "-left-5"}`}
+              />
+            )}
+
             {/* Bubbles */}
             <div className={`absolute -z-10 h-3 w-3 ${bubblePosition}`}>
-              <div
-                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
-              />
-              <div
-                className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-white`}
-              />
+              <div className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`} />
+              <div className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-white`} />
             </div>
           </motion.div>
 
-          {/* Collapse Dot / Curve */}
-          {replyCount > 0 && (
-            <>
-              {!showChildReplies && (
-                <motion.div
-                  whileHover={{
-                    scale: 1.5,
-                    backgroundColor: showChildReplies ? "#CCC" : "#000",
-                  }}
-                  onClick={() => setShowChildReplies((prev) => !prev)}
-                  className={`center-y bg-gray3 absolute h-3 w-3 cursor-pointer rounded-full ${
-                    isEven ? "right-12" : "left-12"
-                  }`}
-                />
-              )}
-
-              {showChildReplies && (
-                <div
-                  onClick={() => setShowChildReplies((prev) => !prev)}
-                  className={`absolute cursor-pointer ${
-                    isEven ? "right-[14px] -scale-x-[1]" : "left-[14px] top-1/2"
-                  }`}
-                >
-                  <CurveIcon />
-                  <div className="absolute -z-10 h-4 w-1 -translate-y-1 rounded-tl-lg rounded-tr-lg bg-[#F6F6F6]" />
-                </div>
-              )}
-            </>
+          {/* Curve */}
+          {showChildReplies && (
+            <div
+              onClick={() => setShowChildReplies((prev) => !prev)}
+              className={`absolute top-1/2 cursor-pointer ${
+                isEven ? "right-[18px] -scale-x-[1]" : "left-[18px]"
+              }`}
+            >
+              <TinyCurveIcon color={"#CCC"} className={`-scale-x-[1] -scale-y-[1]`} />
+            </div>
           )}
         </div>
       </div>
@@ -188,7 +169,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
       <div className={`relative flex w-full flex-col ${flexDirection}`}>
         {showChildReplies && (
           <div
-            className={`absolute -z-10 flex h-full w-8 items-center justify-center ${dashLinePosition}`}
+            className={`absolute -z-10 flex h-full w-10 items-center justify-center ${dashLinePosition}`}
           >
             <div className="z-10 h-full w-1 rounded bg-[#E9E9E9]" />
           </div>
@@ -196,11 +177,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
 
         {showChildReplies && (
           <div className={`flex w-full flex-col ${showChildReplies && "mb-8"}`}>
-            <Children
-              parentReplyId={reply.id}
-              level={level + 1}
-              isChild={false}
-            />
+            <Children parentReplyId={reply.id} level={level + 1} isChild={false} />
           </div>
         )}
 
@@ -208,20 +185,20 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         {level > 1 && showChildReplies && (
           <div
             className={`relative flex w-full items-center gap-2 pb-8
-            ${
-              isEven ? "justify-start pl-[14px]" : "flex-row-reverse pr-[14px]"
-            }`}
+            ${isEven ? "justify-start pl-[18px]" : "flex-row-reverse pr-[18px]"}`}
           >
             <div className="absolute z-10 h-full w-1 translate-y-9 rounded bg-[#CCC]" />
             <LoopIcon className={`${!isEven && "-scale-x-[1]"}`} />
             <Image
-              className="border-silver rounded-full border"
+              className="rounded-full outline outline-2 outline-white"
               src={reply.replyTo!.author.image}
               alt={`${reply.replyTo!.author.username}'s avatar`}
               width={24}
               height={24}
             />
-            <p className="text-gray2 line-clamp-2 max-w-[302px] text-xs">
+            <p
+              className={`text-gray2 line-clamp-2 max-w-[302px] text-xs ${!isEven ? "text-end" : ""}`}
+            >
               {reply.replyTo?.text}
             </p>
           </div>

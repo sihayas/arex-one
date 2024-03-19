@@ -21,8 +21,6 @@ import Tilt from "react-parallax-tilt";
 import { StarIcon } from "@/components/icons";
 import { Interaction } from "@/components/global/Interaction";
 import { createPortal } from "react-dom";
-import Dial from "@/components/interface/sound/sub/Dial";
-import DialMini from "@/components/interface/sound/sub/DialMini";
 
 export const Artifact = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
@@ -118,13 +116,12 @@ export const Artifact = () => {
           y: isExpanded ? -104 : 0,
           boxShadow: !isExpanded
             ? "rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px"
-            : "rgba(255, 255, 255, 0.0) 0px 1px 1px 0px inset, rgba(50," +
-              " 50,93, 0.0) 0px 50px 100px -20px, rgba(0, 0, 0, 0.0) 0px 30px 60px -30px",
+            : "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
         }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", damping: 15, stiffness: 100 }}
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`relative mt-[104px] shadow-soundArt rounded-full`}
+        className={`shadow-soundArt relative mt-[104px] rounded-full`}
       >
         <Tilt
           tiltAngleXManual={0}
@@ -144,12 +141,10 @@ export const Artifact = () => {
             animate={{
               width: isExpanded ? 512 : 304,
               height: isExpanded ? 864 : 432,
-              borderRadius: isExpanded
-                ? "32px 32px 20px 20px"
-                : "32px 32px 32px 32px",
+              borderRadius: isExpanded ? "32px 32px 20px 20px" : "32px 32px 32px 32px",
             }}
-            transition={{ type: "spring", damping: 22, stiffness: 220 }}
-            className={`flex flex-col bg-white items-center overflow-hidden rounded-3xl relative`}
+            transition={{ type: "spring", damping: 26, stiffness: 220 }}
+            className={`relative flex flex-col items-center overflow-hidden rounded-3xl bg-white`}
           >
             {/* Art */}
             <motion.div
@@ -162,14 +157,12 @@ export const Artifact = () => {
             >
               <motion.div
                 animate={{
-                  borderRadius: isExpanded
-                    ? "12px 12px 12px 12px"
-                    : "32px 32px 0px 0px",
+                  borderRadius: isExpanded ? "12px 12px 12px 12px" : "32px 32px 0px 0px",
                   boxShadow: isExpanded
                     ? `#${color}1A 0px 1px 1px 0px inset, #${color}40 0px 50px 100px -20px, #${color}4D 0px 30px 60px -30px`
                     : `#${color}00 0px 1px 1px 0px inset, #${color}00 0px 50px 100px -20px, #${color}00 0px 30px 60px -30px`,
                 }}
-                className={`overflow-hidden outline outline-1 outline-silver`}
+                className={`outline-silver overflow-hidden outline outline-1`}
               >
                 <Image
                   src={artwork}
@@ -186,13 +179,13 @@ export const Artifact = () => {
             {isExpanded ? (
               <>
                 <div
-                  className={`w-[448px] mt-[calc(142px+32px)] mb-[26px] mix-blend-darken`}
+                  className={`mb-[26px] mt-[calc(142px+32px)] w-[448px] mix-blend-darken`}
                 >
                   <div
-                    className={`w-full bg-silver shadow-inset flex items-center px-4 h-[52px] rounded-2xl gap-2`}
+                    className={`bg-silver shadow-inset flex h-[52px] w-full items-center gap-2 rounded-2xl px-4`}
                   >
                     <StarIcon color={"#999"} />
-                    <div className={`flex flex-col text-gray2`}>
+                    <div className={`text-gray2 flex flex-col`}>
                       <p className={`line-clamp-1 text-sm font-medium`}>
                         {appleData.attributes.artistName}
                       </p>
@@ -216,18 +209,16 @@ export const Artifact = () => {
                           damping: 40,
                           stiffness: 100,
                         }}
-                        className={`absolute top-[527px] right-0 w-full -translate-x-full`}
+                        className={`absolute right-0 top-[527px] w-full -translate-x-full`}
                       >
-                        <div
-                          className={`absolute -right-5 flex items-center gap-2`}
-                        >
+                        <div className={`absolute -right-5 flex items-center gap-2`}>
                           <p
-                            className={`line-clamp-1 text-base font-semibold text-gray2`}
+                            className={`text-gray2 line-clamp-1 text-base font-semibold`}
                           >
                             {artifactExtended.author.username}
                           </p>
                           <Avatar
-                            className={`outline outline-4 outline-white shadow-shadowKitHigh`}
+                            className={`shadow-shadowKitHigh outline outline-4 outline-white`}
                             imageSrc={artifactExtended.author.image}
                             altText={`${artifactExtended.author.username}'s avatar`}
                             width={40}
@@ -242,28 +233,22 @@ export const Artifact = () => {
               </>
             ) : (
               <div
-                className={`flex items-center justify-between absolute bottom-0 left-0 bg-white w-full pb-5 px-6`}
+                className={`absolute bottom-0 left-0 flex w-full items-center justify-between bg-white px-6 pb-5`}
               >
                 <div className={`flex items-center gap-2`}>
                   <StarIcon color={`#000`} />
                   <div className={`flex flex-col`}>
-                    <p
-                      className={`text-gray2 line-clamp-1 text-sm font-medium`}
-                    >
+                    <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
                       {appleData.attributes.artistName}
                     </p>
-                    <p
-                      className={`line-clamp-1 text-base font-semibold text-black`}
-                    >
+                    <p className={`line-clamp-1 text-base font-semibold text-black`}>
                       {appleData.attributes.name}
                     </p>
                   </div>
                 </div>
 
-                <div className={`flex items-center gap-2 flex-shrink-0`}>
-                  <p
-                    className={`line-clamp-1 text-base font-semibold text-gray2`}
-                  >
+                <div className={`flex flex-shrink-0 items-center gap-2`}>
+                  <p className={`text-gray2 line-clamp-1 text-base font-semibold`}>
                     {artifactExtended.author.username}
                   </p>
 
@@ -288,13 +273,11 @@ export const Artifact = () => {
               transition={{ type: "spring", damping: 20, stiffness: 100 }}
             >
               {isExpanded ? (
-                <p className={`w-[448px] text-base m-8 mt-0`}>
+                <p className={`m-8 mt-0 w-[448px] text-base`}>
                   {artifactExtended.content?.text}
                 </p>
               ) : (
-                <p
-                  className={`w-[256px] text-base line-clamp-3 m-6 mt-0 -mt-[6px]`}
-                >
+                <p className={`m-6 -mt-[6px] mt-0 line-clamp-3 w-[256px] text-base`}>
                   {artifactExtended.content?.text}
                 </p>
               )}

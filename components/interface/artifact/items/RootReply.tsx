@@ -33,9 +33,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
     }
   }, [reply, setReplyTarget, activePage.artifact]);
 
-  const url = reply.heartedByUser
-    ? "/api/reply/delete/heart"
-    : "/api/reply/post/heart";
+  const url = reply.heartedByUser ? "/api/reply/delete/heart" : "/api/reply/post/heart";
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     reply.heartedByUser,
@@ -74,9 +72,9 @@ export default function RootReply({ reply, index }: ReplyProps) {
       className={`relative mt-4 flex h-fit w-full flex-col `}
     >
       {/* Main Reply */}
-      <div className={`flex items-end gap-2`}>
+      <div className={`flex items-end gap-3`}>
         <Avatar
-          className="h-10 w-10 rounded-full outline outline-4 outline-white"
+          className="shadow-shadowKitMedium h-10 w-10 rounded-full outline outline-2 outline-white"
           imageSrc={reply.author.image}
           altText={`${reply.author.username}'s avatar`}
           width={40}
@@ -84,7 +82,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
           user={reply.author}
         />
         <div
-          className={`relative mb-2 w-fit overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
+          className={`relative mb-3 w-fit overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
         >
           {/* Content  */}
           <motion.div
@@ -100,14 +98,14 @@ export default function RootReply({ reply, index }: ReplyProps) {
             {reply.text}
           </motion.div>
 
+          <div className={`text-gray2 absolute -bottom-4 left-3 text-sm font-medium`}>
+            {reply.author.username}
+          </div>
+
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -left-1 -z-10 h-3 w-3`}>
-            <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
-            />
-            <div
-              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
-            />
+            <div className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`} />
+            <div className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`} />
           </div>
         </div>
       </div>
@@ -115,9 +113,7 @@ export default function RootReply({ reply, index }: ReplyProps) {
       {/* Sub Replies & Collapse Dot */}
       {replyCount > 0 && (
         <div className={`flex w-full`}>
-          <div
-            className={`flex min-w-[32px] cursor-pointer flex-col items-center`}
-          >
+          <div className={`flex min-w-[40px] cursor-pointer flex-col items-center`}>
             {!showChildReplies ? (
               //   Expand
               <motion.div
@@ -125,15 +121,18 @@ export default function RootReply({ reply, index }: ReplyProps) {
                   scale: 1.25,
                   opacity: 1,
                 }}
+                whileTap={{
+                  scale: 0.9,
+                }}
                 onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`h-[9px] w-[9px] cursor-pointer rounded-full bg-black opacity-50`}
+                className={`bg-gray3 h-3 w-3 translate-y-2 cursor-pointer rounded-full`}
               />
             ) : (
               //   Collapse
               <motion.button
                 whileHover={{
                   width: 6,
-                  backgroundColor: "#999",
+                  backgroundColor: "#000",
                 }}
                 initial={{
                   width: 4,
@@ -145,13 +144,13 @@ export default function RootReply({ reply, index }: ReplyProps) {
                   damping: 20,
                 }}
                 onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`rounded-max flex-grow `}
+                className={`rounded-max flex-grow translate-y-2 `}
               />
             )}
           </div>
 
           {/* Replies & Username */}
-          <div className={`flex w-full flex-col`}>
+          <div className={`mt-4 flex w-full flex-col`}>
             {showChildReplies && (
               <Children parentReplyId={reply.id} level={1} isChild={true} />
             )}

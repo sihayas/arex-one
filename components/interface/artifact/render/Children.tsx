@@ -13,12 +13,13 @@ type RenderChildrenProps = {
 function Children({ level, parentReplyId, isChild }: RenderChildrenProps) {
   const { user } = useInterfaceContext();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useRepliesQuery(user!.id, undefined, parentReplyId);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useRepliesQuery(
+    user!.id,
+    undefined,
+    parentReplyId,
+  );
 
   const replies = data ? data.pages.flatMap((page) => page.data) : [];
-
-  console.log("replies", replies);
 
   // The layout prop preserves the LayoutGroup functionality of animating the container to expand/contract when replies are loaded or unloaded.
   return (
