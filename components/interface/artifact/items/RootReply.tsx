@@ -27,10 +27,8 @@ export default function RootReply({ reply, index }: ReplyProps) {
   const replyCount = reply._count ? reply._count.replies : 0;
 
   const handleReplyParent = useCallback(() => {
-    const artifact = activePage.artifact?.data;
-    if (artifact) {
-      setReplyTarget({ artifact, reply });
-    }
+    const artifact = activePage.artifact!.data;
+    setReplyTarget({ artifact, reply });
   }, [reply, setReplyTarget, activePage.artifact]);
 
   const url = reply.heartedByUser ? "/api/reply/delete/heart" : "/api/reply/post/heart";
@@ -86,10 +84,12 @@ export default function RootReply({ reply, index }: ReplyProps) {
         >
           {/* Content  */}
           <motion.div
-            whileHover={{ color: "rgba(0,0,0,1)" }}
+            whileHover={
+              replyTarget?.reply === reply ? { color: "#CCC" } : { color: "#CCC" }
+            }
             onClick={handleReplyParent}
             animate={{
-              color: replyTarget?.reply === reply ? "#FFF" : "#000",
+              color: replyTarget?.reply === reply ? "#0024cc" : "#000",
               scale: replyTarget?.reply === reply ? 1.01 : 1,
             }}
             transition={{ duration: 0.24 }}

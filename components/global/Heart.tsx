@@ -10,6 +10,7 @@ interface HeartButtonProps {
   className?: string;
   heartCount?: number;
   replyCount?: number;
+  isMirrored?: boolean; // For use with sub-replies
 }
 
 const Heart: React.FC<HeartButtonProps> = ({
@@ -18,6 +19,7 @@ const Heart: React.FC<HeartButtonProps> = ({
   className,
   heartCount,
   replyCount,
+  isMirrored,
 }) => {
   const [heartColor, setHeartColor] = useState(hearted ? "#FFF" : "#FFF");
   const [bubbleColor, setBubbleColor] = useState(hearted ? "#FF4DC9" : "#CCC");
@@ -67,7 +69,7 @@ const Heart: React.FC<HeartButtonProps> = ({
             initial={{ scale: 0, x: "50%", y: "50%" }}
             variants={{
               hover: { scale: 1 },
-              initial: { scale: 0.5 },
+              initial: { scale: 0.0 },
             }}
             className={`absolute left-0 top-0 origin-bottom-left`}
           >
@@ -78,7 +80,7 @@ const Heart: React.FC<HeartButtonProps> = ({
         {/* Tiny / Interaction Bubble*/}
         <motion.div
           initial={{
-            scale: 2,
+            scale: 1,
           }}
           style={{
             backgroundColor: bubbleColor,
@@ -89,19 +91,26 @@ const Heart: React.FC<HeartButtonProps> = ({
           }}
           variants={{
             hover: { scale: 1 },
-            initial: { scale: 2 },
+            initial: { scale: 1 },
           }}
         />
       </div>
 
-      <div
-        className={`text-gray2 flex items-center rounded-full bg-[#F4F4F4] px-2 py-1`}
+      <motion.div
+        initial={{
+          translateX: isMirrored ? 12 : -12,
+        }}
+        variants={{
+          hover: { translateX: 0 },
+          initial: { translateX: isMirrored ? 12 : -12 },
+        }}
+        className={`text-gray2 flex items-center rounded-full bg-[#E5E5E5] px-2 py-1 ${isMirrored ? "-scale-x-[1]" : ""}`}
       >
         <p className={`text-sm font-medium leading-[9px]`}>{heartCount}</p>
-        <div className={`bg-gray3 mx-1 h-0.5 w-0.5 rounded-full`} />
-        <ChainIcon />
-        <p className={`ml-2 text-sm font-medium leading-[9px]`}>{replyCount}</p>
-      </div>
+        <div className={`bg-gray2 mx-1 h-0.5 w-0.5 rounded-full`} />
+        <ChainIcon color={"#999"} className={`scale-75`} />
+        <p className={`ml-1 text-sm font-medium leading-[9px]`}>{replyCount}</p>
+      </motion.div>
     </motion.button>
   );
 };

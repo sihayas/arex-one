@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-
 import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { ReplyType } from "@/types/dbTypes";
@@ -9,8 +8,9 @@ import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { CurveIcon, LoopIcon, TinyCurveIcon, ReplyCurveIcon } from "@/components/icons";
+import { LoopIcon, TinyCurveIcon } from "@/components/icons";
 import Image from "next/image";
+import Heart from "@/components/global/Heart";
 
 interface ReplyProps {
   reply: ReplyType;
@@ -27,7 +27,6 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
 
   const activePage = pages[pages.length - 1];
   const replyCount = reply._count ? reply._count.replies : 0;
-  const hasChildren = replyCount > 0;
 
   const handleReplyParent = useCallback(() => {
     const artifact = activePage.artifact?.data;
@@ -60,7 +59,6 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const bubblePosition = isEven
     ? "-bottom-1 -left-1"
     : "-bottom-1 -right-1 transform scale-x-[-1]";
-
   const dashLinePosition = isEven ? "right-0" : "left-0";
 
   // Layout prop is what dictates animating the container to expand/contract when
@@ -86,7 +84,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         originX: !isEven ? 1 : 0,
         willChange: "opacity, scale, transform",
       }}
-      className={`relative flex h-fit w-full flex-col`}
+      className={`relative flex h-fit w-full flex-col pt-8`}
     >
       {/* Main Reply */}
       <div className={`flex w-full items-end ${flexDirection}`}>
@@ -94,7 +92,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         <div className={`relative flex h-full flex-col items-center justify-end`}>
           {/* Fill Line | */}
           {!isChild && (
-            <div className="z-10 h-full w-1 rounded-tl-lg rounded-tr-lg bg-[#CCC]" />
+            <div className="z-10 -mt-4 h-full w-1 rounded-tl-lg rounded-tr-lg bg-[#CCC]" />
           )}
 
           <Avatar
@@ -107,10 +105,10 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
           />
         </div>
 
-        {/* Content, Text, and Expand Dot / Collapse Curve */}
+        {/* Content, Text, and Expand/Collapse + Spacer for Children */}
         <div
           className={`relative mb-3 flex w-full items-end justify-between ${reverseAlignment} ${flexDirection}  ${
-            showChildReplies ? "mt-8" : ""
+            showChildReplies ? "mt-4" : ""
           }`}
         >
           <motion.div
@@ -119,11 +117,11 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             {/* Content  */}
             <motion.div
               whileHover={
-                replyTarget?.reply === reply ? { color: "#CCC" } : { color: "#7AFF00" }
+                replyTarget?.reply === reply ? { color: "#CCC" } : { color: "#CCC" }
               }
               onClick={handleReplyParent}
               animate={{
-                color: replyTarget?.reply === reply ? "#7AFF00" : "#000",
+                color: replyTarget?.reply === reply ? "#0024cc" : "#000",
                 scale: replyTarget?.reply === reply ? 1.01 : 1,
               }}
               transition={{ duration: 0.24 }}
@@ -131,6 +129,21 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             >
               {reply.text}
             </motion.div>
+
+            {/* Username */}
+            <p className={`text-gray2 absolute -bottom-[18px] text-sm font-semibold`}>
+              {reply.author.username}
+            </p>
+
+            {/* Heart */}
+            <Heart
+              handleHeartClick={handleHeartClick}
+              hearted={hearted}
+              className={`absolute -top-7 ${isEven ? "-right-2 -scale-x-[1]" : "-left-2"}`}
+              heartCount={heartCount}
+              replyCount={reply._count.replies}
+              isMirrored={isEven}
+            />
 
             {/* Expand Dot */}
             {!showChildReplies && replyCount > 0 && (
@@ -165,7 +178,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         </div>
       </div>
 
-      {/* Render Dash & Child Replies */}
+      {/* Render Dash & Sub-replies */}
       <div className={`relative flex w-full flex-col ${flexDirection}`}>
         {showChildReplies && (
           <div
@@ -176,6 +189,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         )}
 
         {showChildReplies && (
+          // mb-8 creates space between the children and the parent
           <div className={`flex w-full flex-col ${showChildReplies && "mb-8"}`}>
             <Children parentReplyId={reply.id} level={level + 1} isChild={false} />
           </div>
