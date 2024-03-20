@@ -3,6 +3,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import {
   animate,
   AnimatePresence,
+  LayoutGroup,
   motion,
   useMotionValueEvent,
   useScroll,
@@ -141,7 +142,9 @@ export const Artifact = () => {
             animate={{
               width: isExpanded ? 512 : 304,
               height: isExpanded ? 864 : 432,
-              borderRadius: isExpanded ? "32px 32px 20px 20px" : "32px 32px 32px 32px",
+              borderRadius: isExpanded
+                ? "32px 32px 20px 20px"
+                : "32px 32px 32px 32px",
             }}
             transition={{ type: "spring", damping: 26, stiffness: 220 }}
             className={`relative flex flex-col items-center overflow-hidden rounded-3xl bg-white`}
@@ -157,7 +160,9 @@ export const Artifact = () => {
             >
               <motion.div
                 animate={{
-                  borderRadius: isExpanded ? "12px 12px 12px 12px" : "32px 32px 0px 0px",
+                  borderRadius: isExpanded
+                    ? "12px 12px 12px 12px"
+                    : "32px 32px 0px 0px",
                   boxShadow: isExpanded
                     ? `#${color}1A 0px 1px 1px 0px inset, #${color}40 0px 50px 100px -20px, #${color}4D 0px 30px 60px -30px`
                     : `#${color}00 0px 1px 1px 0px inset, #${color}00 0px 50px 100px -20px, #${color}00 0px 30px 60px -30px`,
@@ -182,7 +187,7 @@ export const Artifact = () => {
                   className={`mb-[26px] mt-[calc(142px+32px)] w-[448px] mix-blend-darken`}
                 >
                   <div
-                    className={`bg-silver shadow-inset flex h-[52px] w-full items-center gap-2 rounded-2xl px-4`}
+                    className={`bg-silver flex h-[52px] w-full items-center gap-2 rounded-2xl px-4 shadow-shadowKitLow`}
                   >
                     <StarIcon color={"#999"} />
                     <div className={`text-gray2 flex flex-col`}>
@@ -211,7 +216,9 @@ export const Artifact = () => {
                         }}
                         className={`absolute right-0 top-[527px] w-full -translate-x-full`}
                       >
-                        <div className={`absolute -right-5 flex items-center gap-2`}>
+                        <div
+                          className={`absolute -right-5 flex items-center gap-2`}
+                        >
                           <p
                             className={`text-gray2 line-clamp-1 text-base font-semibold`}
                           >
@@ -238,17 +245,23 @@ export const Artifact = () => {
                 <div className={`flex items-center gap-2`}>
                   <StarIcon color={`#000`} />
                   <div className={`flex flex-col`}>
-                    <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
+                    <p
+                      className={`text-gray2 line-clamp-1 text-sm font-medium`}
+                    >
                       {appleData.attributes.artistName}
                     </p>
-                    <p className={`line-clamp-1 text-base font-semibold text-black`}>
+                    <p
+                      className={`line-clamp-1 text-base font-semibold text-black`}
+                    >
                       {appleData.attributes.name}
                     </p>
                   </div>
                 </div>
 
                 <div className={`flex flex-shrink-0 items-center gap-2`}>
-                  <p className={`text-gray2 line-clamp-1 text-base font-semibold`}>
+                  <p
+                    className={`text-gray2 line-clamp-1 text-base font-semibold`}
+                  >
                     {artifactExtended.author.username}
                   </p>
 
@@ -277,7 +290,9 @@ export const Artifact = () => {
                   {artifactExtended.content?.text}
                 </p>
               ) : (
-                <p className={`m-6 -mt-[6px] mt-0 line-clamp-3 w-[256px] text-base`}>
+                <p
+                  className={`m-6 -mt-[6px] mt-0 line-clamp-3 w-[256px] text-base`}
+                >
                   {artifactExtended.content?.text}
                 </p>
               )}
@@ -296,7 +311,7 @@ export const Artifact = () => {
       )}
 
       {/* Chains */}
-      <div className={`min-h-full min-w-full px-8  pb-96 pt-8`}>
+      <div className={`min-h-full min-w-full px-8 pb-96 pt-8`}>
         <Replies artifactId={artifactExtended.id} userId={user!.id} />
       </div>
     </>

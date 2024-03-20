@@ -13,11 +13,8 @@ type RenderChildrenProps = {
 function Children({ level, parentReplyId, isChild }: RenderChildrenProps) {
   const { user } = useInterfaceContext();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useRepliesQuery(
-    user!.id,
-    undefined,
-    parentReplyId,
-  );
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useRepliesQuery(user!.id, undefined, parentReplyId);
 
   const replies = data ? data.pages.flatMap((page) => page.data) : [];
 
@@ -37,7 +34,7 @@ function Children({ level, parentReplyId, isChild }: RenderChildrenProps) {
           );
         })
       ) : (
-        <div className="text-xs text-[#CCC]">seems quiet</div>
+        <div className="text-xs text-[#CCC]"></div>
       )}
 
       {/* End */}

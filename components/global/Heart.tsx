@@ -21,12 +21,14 @@ const Heart: React.FC<HeartButtonProps> = ({
   replyCount,
   isMirrored,
 }) => {
-  const [heartColor, setHeartColor] = useState(hearted ? "#FFF" : "#FFF");
-  const [bubbleColor, setBubbleColor] = useState(hearted ? "#FF4DC9" : "#CCC");
+  const [heartColor, setHeartColor] = useState(hearted ? "#FFF" : "#999");
+  const [bubbleColor, setBubbleColor] = useState(
+    hearted ? "#FF4DC9" : "#E5E5E5",
+  );
   const controls = useAnimation();
 
   useEffect(() => {
-    setHeartColor(hearted ? "#FFF" : "#FFF");
+    setHeartColor(hearted ? "#FFF" : "#999");
   }, [hearted]);
 
   const handleMouseEnter = () => {
@@ -39,7 +41,7 @@ const Heart: React.FC<HeartButtonProps> = ({
 
   return (
     <motion.button
-      className={`${className} -m-2 flex gap-1 p-2`}
+      className={`${className} -m-2 flex gap-1 p-2 cursor-default`}
       onClick={(event) => {
         handleHeartClick(event);
         event.stopPropagation();
@@ -53,10 +55,7 @@ const Heart: React.FC<HeartButtonProps> = ({
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             variants={{
-              hover: {
-                scale: 1,
-                opacity: 1,
-              },
+              hover: { scale: 1, opacity: 1 },
               initial: { scale: 0, opacity: 0 },
             }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -67,10 +66,7 @@ const Heart: React.FC<HeartButtonProps> = ({
 
           <motion.div
             initial={{ scale: 0, x: "50%", y: "50%" }}
-            variants={{
-              hover: { scale: 1 },
-              initial: { scale: 0.0 },
-            }}
+            variants={{ hover: { scale: 1 }, initial: { scale: 0.0 } }}
             className={`absolute left-0 top-0 origin-bottom-left`}
           >
             <LoveIcon color={heartColor} />
@@ -79,9 +75,7 @@ const Heart: React.FC<HeartButtonProps> = ({
 
         {/* Tiny / Interaction Bubble*/}
         <motion.div
-          initial={{
-            scale: 1,
-          }}
+          initial={{ scale: 1 }}
           style={{
             backgroundColor: bubbleColor,
             x: 8,
@@ -89,22 +83,19 @@ const Heart: React.FC<HeartButtonProps> = ({
             height: 4,
             borderRadius: 4,
           }}
-          variants={{
-            hover: { scale: 1 },
-            initial: { scale: 1 },
-          }}
+          variants={{ hover: { scale: 1 }, initial: { scale: 1 } }}
         />
       </div>
 
       <motion.div
-        initial={{
-          translateX: isMirrored ? 12 : -12,
-        }}
+        initial={{ translateX: isMirrored ? 12 : -12 }}
         variants={{
           hover: { translateX: 0 },
           initial: { translateX: isMirrored ? 12 : -12 },
         }}
-        className={`text-gray2 flex items-center rounded-full bg-[#E5E5E5] px-2 py-1 ${isMirrored ? "-scale-x-[1]" : ""}`}
+        className={`text-gray2 flex items-center rounded-full bg-[#E5E5E5] px-2 py-1 ${
+          isMirrored ? "-scale-x-[1]" : ""
+        }`}
       >
         <p className={`text-sm font-medium leading-[9px]`}>{heartCount}</p>
         <div className={`bg-gray2 mx-1 h-0.5 w-0.5 rounded-full`} />

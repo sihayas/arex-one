@@ -32,11 +32,19 @@ function Replies({ userId, artifactId }: RenderRepliesProps) {
 
       {/* End */}
       {hasNextPage && (
-        <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+        <button
+          className={`w-full`}
+          onClick={() => fetchNextPage()}
+          disabled={isFetchingNextPage}
+        >
           {isFetchingNextPage ? (
-            "loading"
+            ""
           ) : (
-            <div className={`text-gray3 pt-8 text-xs font-bold`}>more</div>
+            <div
+              className={`text-gray2 pt-8 text-sm uppercase text-center w-full`}
+            >
+              load more
+            </div>
           )}
         </button>
       )}

@@ -5,11 +5,10 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { ReplyType } from "@/types/dbTypes";
 
 import Children from "@/components/interface/artifact/render/Children";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
-import Heart from "@/components/global/Heart";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 interface ReplyProps {
@@ -51,30 +50,39 @@ export default function RootReply({ reply, index }: ReplyProps) {
       animate={{ opacity: 1, scale: 1 }}
       transition={{
         opacity: { duration: 0.2 + index * index * 0.05, ease: "easeInOut" },
-        scale: {
-          type: "spring",
-          stiffness: 260,
-          damping: 20,
-        },
+        scale: { type: "spring", stiffness: 260, damping: 20 },
       }}
-      style={{
-        willChange: "opacity, scale, transform",
-      }}
-      className={`relative mt-4 flex h-fit w-full flex-col `}
+      className={`relative mt-8 flex h-fit w-full flex-col`}
     >
       {/* Main Reply */}
-      <div className={`flex items-end gap-3`}>
+      <div
+        className={`flex bg-white items-center gap-3 px-3 py-[9px] rounded-[20px] relative`}
+      >
         <Avatar
-          className="shadow-shadowKitMedium h-10 w-10 rounded-full outline outline-2 outline-white"
+          className="shadow-shadowKitMedium rounded-full outline outline-2 outline-silver flex-shrink-0"
           imageSrc={reply.author.image}
           altText={`${reply.author.username}'s avatar`}
           width={40}
           height={40}
           user={reply.author}
         />
-        <div
-          className={`relative mb-3 w-fit overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
-        >
+
+        {/* Collapse Dot */}
+        <div className={`absolute -bottom-2 left-0 w-16`}>
+          {!showChildReplies && replyCount > 0 && (
+            <motion.div
+              whileHover={{ scale: 1.5, opacity: 1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setShowChildReplies((prev) => !prev)}
+              className={`absolute center-x center-y bg-gray2 w-2 h-2 rounded-full`}
+            />
+          )}
+        </div>
+
+        <div className={`flex flex-col`}>
+          <div className={`text-black text-sm font-medium`}>
+            {reply.author.username}
+          </div>
           {/* Content  */}
           <motion.div
             whileHover={
@@ -92,72 +100,37 @@ export default function RootReply({ reply, index }: ReplyProps) {
           >
             {reply.text}
           </motion.div>
-
-          <div
-            className={`text-gray2 absolute -bottom-4 left-3 text-sm font-medium`}
-          >
-            {reply.author.username}
-          </div>
-
-          {/* Bubbles */}
-          <div className={`absolute -bottom-1 -left-1 -z-10 h-3 w-3`}>
-            <div
-              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
-            />
-            <div
-              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
-            />
-          </div>
         </div>
       </div>
 
-      {/* Sub Replies & Collapse Dot */}
+      {/* Sub Replies & Collapse Line */}
       {replyCount > 0 && (
         <div className={`flex w-full`}>
-          <div
-            className={`flex min-w-[40px] cursor-pointer flex-col items-center`}
-          >
-            {!showChildReplies ? (
-              //   Expand
+          <div className={`flex min-w-[40px] flex-col items-center`}>
+            {showChildReplies && (
               <motion.div
-                whileHover={{
-                  scale: 1.25,
-                  opacity: 1,
-                }}
-                whileTap={{
-                  scale: 0.9,
-                }}
+                whileHover={{ width: 6, backgroundColor: "#999999" }}
+                initial={{ width: 4, backgroundColor: "#E9E9E9" }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`bg-gray3 h-3 w-3 translate-y-2 cursor-pointer rounded-full`}
-              />
-            ) : (
-              //   Collapse
-              <motion.button
-                whileHover={{
-                  width: 6,
-                  backgroundColor: "#000",
-                }}
-                initial={{
-                  width: 4,
-                  backgroundColor: "#E9E9E9",
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 20,
-                }}
-                onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`rounded-max flex-grow translate-y-2 `}
+                className={`rounded-max flex-grow translate-y-2 translate-x-[12px]`}
               />
             )}
           </div>
 
           {/* Replies & Username */}
-          <div className={`mt-4 flex w-full flex-col`}>
+          <AnimatePresence>
             {showChildReplies && (
-              <Children parentReplyId={reply.id} level={1} isChild={true} />
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className={`mt-2 flex w-full flex-col`}
+              >
+                <Children parentReplyId={reply.id} level={1} isChild={true} />
+              </motion.div>
             )}
-          </div>
+          </AnimatePresence>
         </div>
       )}
     </motion.div>
