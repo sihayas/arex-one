@@ -26,16 +26,16 @@ const dotVariants = {
     scale: 1,
     transition: {
       type: "spring",
-      damping: 49,
-      stiffness: 400,
+      damping: 10,
+      stiffness: 100,
     },
   },
   hovered: {
     scale: 1.25,
     transition: {
       type: "spring",
-      damping: 49,
-      stiffness: 400,
+      damping: 10,
+      stiffness: 100,
     },
   },
 };
@@ -53,7 +53,7 @@ const containerVariants = {
 const Dot = () => {
   return (
     <motion.div
-      className="bg-gray4 h-1 w-1 rounded-full"
+      className="bg-[#E5E5E5] h-1 w-1 rounded-full"
       variants={dotVariants}
     />
   );
@@ -61,9 +61,10 @@ const Dot = () => {
 
 type InteractionProps = {
   artifact: ArtifactExtended;
+  isMirrored?: boolean;
 };
 
-export const Interaction = ({ artifact }: InteractionProps) => {
+export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
   const { playContent, setSelectedFormSound } = useSoundContext();
   const { setIsVisible, user } = useInterfaceContext();
   const { setExpandInput } = useNavContext();
@@ -106,10 +107,10 @@ export const Interaction = ({ artifact }: InteractionProps) => {
           loading: "Deleting...",
           success: "Deletion successful!",
           error: "Error deleting artifact",
-        }
+        },
       );
     },
-    [isDeleting]
+    [isDeleting],
   );
 
   const handleFlag = async () => {
@@ -123,7 +124,7 @@ export const Interaction = ({ artifact }: InteractionProps) => {
       const response = await createFlag(
         artifact.id,
         FlagType.artifact,
-        user!.id
+        user!.id,
       );
       console.log("Content flagged successfully!", response);
       setIsFlagging(false);
@@ -137,7 +138,9 @@ export const Interaction = ({ artifact }: InteractionProps) => {
     <motion.div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`absolute -bottom-[38px] -right-[38px] z-10 flex cursor-pointer items-end mix-blend-multiply`}
+      className={`absolute -bottom-[38px] z-10 flex cursor-pointer items-end mix-blend-multiply ${
+        isMirrored ? "-scale-x-[1] -left-[38px]" : " -right-[38px]"
+      }`}
     >
       <motion.div
         animate={{
@@ -153,7 +156,7 @@ export const Interaction = ({ artifact }: InteractionProps) => {
 
       {/* System */}
       <motion.div
-        className="flex origin-top-right flex-row-reverse items-center justify-center gap-2 pr-2"
+        className={`flex origin-top-right flex-row-reverse items-center justify-center gap-2 pr-2`}
         variants={containerVariants}
         animate={isHovered ? "visible" : "hidden"}
       >
@@ -164,14 +167,7 @@ export const Interaction = ({ artifact }: InteractionProps) => {
         {/* Delete button */}
         {user?.id === artifact.author.id && (
           <>
-            <motion.div
-              whileHover={{
-                scale: 1.25,
-              }}
-              whileTap={{
-                scale: 0.75,
-              }}
-            >
+            <motion.div whileHover={{ scale: 1.25 }} whileTap={{ scale: 0.75 }}>
               <motion.div
                 onClick={() => handleDelete(artifact.id)}
                 variants={dotVariants}
@@ -188,7 +184,7 @@ export const Interaction = ({ artifact }: InteractionProps) => {
             </motion.div>
 
             <motion.div
-              className="bg-gray4 h-1 w-1 rounded-full"
+              className="bg-[#E5E5E5] h-1 w-1 rounded-full"
               variants={dotVariants}
             />
           </>
@@ -224,7 +220,9 @@ export const Interaction = ({ artifact }: InteractionProps) => {
             <motion.div
               onClick={handleCreate}
               variants={dotVariants}
-              className={`bg-gray4 flex h-8 w-8 items-center justify-center rounded-full`}
+              className={`bg-[#E5E5E5] flex h-8 w-8 items-center justify-center rounded-full ${
+                isMirrored && "-scale-x-[1]"
+              }`}
             >
               <AddIcon />
             </motion.div>
@@ -247,7 +245,9 @@ export const Interaction = ({ artifact }: InteractionProps) => {
             <motion.button
               onClick={handlePlayContent}
               variants={dotVariants}
-              className={`bg-gray4 flex h-8 w-8 items-center justify-center rounded-full`}
+              className={`bg-[#E5E5E5] flex h-8 w-8 items-center justify-center rounded-full ${
+                isMirrored && "-scale-x-[1]"
+              }`}
             >
               <PlayIcon />
             </motion.button>
@@ -275,7 +275,7 @@ export const Interaction = ({ artifact }: InteractionProps) => {
           >
             <ExpandIcon />
           </motion.div>
-          <TinyCurveIcon color={"#F4F4F4"} />
+          <TinyCurveIcon color={"#E5E5E5"} />
         </motion.div>
       </div>
     </motion.div>

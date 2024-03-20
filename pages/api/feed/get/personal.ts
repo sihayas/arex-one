@@ -39,7 +39,6 @@ export default async function onRequestGet(request: any) {
     const activities = await prisma.activity.findMany({
       where: {
         artifact: { authorId: { in: followingIds }, isDeleted: false },
-        type: "artifact",
       },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,

@@ -65,10 +65,10 @@ export function extractArtifact(activity: Activity) {
   return activity.type === ActivityType.Artifact
     ? activity.artifact
     : activity.type === ActivityType.ReplyType
-      ? activity.reply?.artifact
-      : activity.type === ActivityType.Heart
-        ? activity.heart?.artifact || activity.heart?.reply?.artifact
-        : null;
+    ? activity.reply?.artifact
+    : activity.type === ActivityType.Heart
+    ? activity.heart?.artifact || activity.heart?.reply?.artifact
+    : null;
 }
 
 // Utility function to attach album and song data to activities

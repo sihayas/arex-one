@@ -19,17 +19,17 @@ export default async function onRequestGet(request: any) {
 
   try {
     const activities = await prisma.activity.findMany({
-      where: {
-        artifact: { authorId: userId, type: "entry" },
-      },
+      where: { artifact: { authorId: userId, type: "entry" } },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit + 1,
       select: {
         id: true,
+        type: true,
         artifact: {
           select: {
             // Always fetch up-to date replies/hearts
+            id: true,
             hearts: { where: { authorId: userId } },
             _count: { select: { replies: true, hearts: true } },
           },

@@ -124,10 +124,10 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           index === 0
             ? scaleZero
             : index === 1
-              ? scaleOne
-              : index === 2
-                ? scaleTwo
-                : 1,
+            ? scaleOne
+            : index === 2
+            ? scaleTwo
+            : 1,
         zIndex: 10 - index,
         rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : rotateTwo,
       }}
@@ -146,7 +146,6 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           tiltMaxAngleX={8}
           tiltMaxAngleY={8}
           tiltReverse={true}
-          reset={false}
           glareEnable={true}
           glareMaxOpacity={0.45}
           glareBorderRadius={"32px"}
@@ -247,7 +246,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
         </Tilt>
       </div>
 
-      <Interaction artifact={artifact} />
+      <Interaction artifact={artifact} isMirrored={isEven} />
     </motion.div>
   );
 };
