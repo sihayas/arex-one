@@ -146,7 +146,7 @@ export const Artifact = () => {
                 ? "32px 32px 20px 20px"
                 : "32px 32px 32px 32px",
             }}
-            transition={{ type: "spring", damping: 26, stiffness: 220 }}
+            transition={{ type: "spring", damping: 70, stiffness: 600 }}
             className={`relative flex flex-col items-center overflow-hidden rounded-3xl bg-white`}
           >
             {/* Art */}
@@ -156,7 +156,7 @@ export const Artifact = () => {
                 y: isExpanded ? 66 : -24,
                 scale: isExpanded ? 1.25 : 1,
               }}
-              transition={{ type: "spring", damping: 15, stiffness: 100 }}
+              transition={{ type: "spring", damping: 20, stiffness: 100 }}
             >
               <motion.div
                 animate={{
@@ -240,7 +240,7 @@ export const Artifact = () => {
               </>
             ) : (
               <div
-                className={`absolute bottom-0 left-0 flex w-full items-center justify-between bg-white px-6 pb-5`}
+                className={`absolute center-x bottom-0 flex w-[304px] items-center justify-between bg-white px-6 pb-5`}
               >
                 <div className={`flex items-center gap-2`}>
                   <StarIcon color={`#000`} />
@@ -286,13 +286,11 @@ export const Artifact = () => {
               transition={{ type: "spring", damping: 20, stiffness: 100 }}
             >
               {isExpanded ? (
-                <p className={`m-8 mt-0 w-[448px] text-base`}>
+                <p className={`m-8 mt-0 w-[448px] text-base origin-bottom`}>
                   {artifactExtended.content?.text}
                 </p>
               ) : (
-                <p
-                  className={`m-6 -mt-[6px] mt-0 line-clamp-3 w-[256px] text-base`}
-                >
+                <p className={`m-6 -mt-[6px] line-clamp-3 w-[256px] text-base`}>
                   {artifactExtended.content?.text}
                 </p>
               )}

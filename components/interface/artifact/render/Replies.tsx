@@ -25,7 +25,7 @@ function Replies({ userId, artifactId }: RenderRepliesProps) {
           ))}
         </>
       ) : (
-        <div className="text-sm font-medium uppercase text-gray3 text-center">
+        <div className="text-xl font-semibold text-gray3 text-center uppercase">
           unchained
         </div>
       )}
