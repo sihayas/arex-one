@@ -3,7 +3,7 @@ import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { ReplyType } from "@/types/dbTypes";
 import Children from "@/components/interface/artifact/render/Children";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
@@ -40,7 +40,9 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
     }
   }, [reply, setReplyTarget, activePage.artifact, replyTarget?.reply]);
 
-  const url = reply.heartedByUser ? "/api/reply/delete/heart" : "/api/reply/post/heart";
+  const url = reply.heartedByUser
+    ? "/api/reply/delete/heart"
+    : "/api/reply/post/heart";
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     reply.heartedByUser,
@@ -65,31 +67,28 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   // replies are loaded or unloaded. The parent/root is in Replies.tsx
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{
+        opacity: 0,
+        scale: 0.8,
+        paddingTop: showChildReplies ? 48 : 32,
+      }}
+      animate={{ opacity: 1, scale: 1, paddingTop: showChildReplies ? 48 : 32 }}
       transition={{
         opacity: { duration: 0.2 + index * index * 0.05, ease: "easeInOut" },
-        scale: {
-          type: "spring",
-          stiffness: 260,
-          damping: 24,
-        },
-        layout: {
-          type: "spring",
-          stiffness: 280,
-          damping: 34,
-        },
+        scale: { type: "spring", stiffness: 260, damping: 24 },
+        paddingTop: { type: "spring", stiffness: 180, damping: 16 },
       }}
-      style={{
-        originX: !isEven ? 1 : 0,
-        willChange: "opacity, scale, transform",
-      }}
-      className={`relative flex h-fit w-full flex-col pt-8`}
+      style={{ originX: !isEven ? 1 : 0 }}
+      className={`relative flex h-fit w-full flex-col ${
+        showChildReplies ? "pt-12" : "pt-8"
+      }`}
     >
       {/* Main Reply */}
       <div className={`flex w-full items-end ${flexDirection}`}>
         {/* Avatar & Collapse*/}
-        <div className={`relative flex h-full flex-col items-center justify-end`}>
+        <div
+          className={`relative flex h-full flex-col items-center justify-end`}
+        >
           {/* Fill Line | */}
           {!isChild && (
             <div className="z-10 -mt-4 h-full w-1 rounded-tl-lg rounded-tr-lg bg-[#CCC]" />
@@ -107,9 +106,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
 
         {/* Content, Text, and Expand/Collapse + Spacer for Children */}
         <div
-          className={`relative mb-3 flex w-full items-end justify-between ${reverseAlignment} ${flexDirection}  ${
-            showChildReplies ? "mt-4" : ""
-          }`}
+          className={`relative mb-3 flex w-full items-end justify-between ${reverseAlignment} ${flexDirection} `}
         >
           <motion.div
             className={`relative w-fit max-w-[304px] overflow-visible rounded-[18px] bg-white px-3 py-1.5`}
@@ -117,7 +114,9 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             {/* Content  */}
             <motion.div
               whileHover={
-                replyTarget?.reply === reply ? { color: "#CCC" } : { color: "#CCC" }
+                replyTarget?.reply === reply
+                  ? { color: "#CCC" }
+                  : { color: "#CCC" }
               }
               onClick={handleReplyParent}
               animate={{
@@ -131,7 +130,9 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             </motion.div>
 
             {/* Username */}
-            <p className={`text-gray2 absolute -bottom-[18px] text-sm font-semibold`}>
+            <p
+              className={`text-gray2 absolute -bottom-[18px] text-sm font-semibold`}
+            >
               {reply.author.username}
             </p>
 
@@ -139,42 +140,73 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             <Heart
               handleHeartClick={handleHeartClick}
               hearted={hearted}
-              className={`absolute -top-7 ${isEven ? "-right-2 -scale-x-[1]" : "-left-2"}`}
+              className={`absolute -top-7 ${
+                isEven ? "-right-2 -scale-x-[1]" : "-left-2"
+              }`}
               heartCount={heartCount}
               replyCount={reply._count.replies}
               isMirrored={isEven}
             />
 
-            {/* Expand Dot */}
-            {!showChildReplies && replyCount > 0 && (
-              <motion.div
-                whileHover={{
-                  scale: 1.5,
-                  backgroundColor: showChildReplies ? "#CCC" : "#000",
-                }}
-                onClick={() => setShowChildReplies((prev) => !prev)}
-                className={`center-y bg-gray3 absolute h-3 w-3 cursor-pointer rounded-full ${isEven ? "-right-5" : "-left-5"}`}
-              />
-            )}
+            <AnimatePresence>
+              {/* Expand Dot */}
+              {!showChildReplies && replyCount > 0 && (
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  whileHover={{
+                    scale: 1.5,
+                    backgroundColor: showChildReplies ? "#CCC" : "#000",
+                  }}
+                  onClick={() => setShowChildReplies((prev) => !prev)}
+                  className={`center-y bg-gray3 absolute h-2 w-2 cursor-pointer rounded-full ${
+                    isEven ? "-right-5" : "-left-5"
+                  }`}
+                />
+              )}
+            </AnimatePresence>
 
             {/* Bubbles */}
             <div className={`absolute -z-10 h-3 w-3 ${bubblePosition}`}>
-              <div className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`} />
-              <div className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-white`} />
+              <div
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+              />
+              <div
+                className={`absolute bottom-0 left-0 h-1 w-1 rounded-full bg-white`}
+              />
             </div>
           </motion.div>
 
-          {/* Curve */}
-          {showChildReplies && (
-            <div
-              onClick={() => setShowChildReplies((prev) => !prev)}
-              className={`absolute top-1/2 cursor-pointer ${
-                isEven ? "right-[18px] -scale-x-[1]" : "left-[18px]"
-              }`}
-            >
-              <TinyCurveIcon color={"#CCC"} className={`-scale-x-[1] -scale-y-[1]`} />
-            </div>
-          )}
+          {/* Curve / Collapse */}
+          <AnimatePresence>
+            {showChildReplies && (
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  scaleX: 0,
+                  scaleY: 0,
+                  filter: "blur(4px)",
+                }}
+                animate={{
+                  opacity: 1,
+                  scaleX: isEven ? -1 : 1,
+                  scaleY: 1,
+                  filter: "blur(0px)",
+                }}
+                exit={{ opacity: 0, scaleX: 0, scaleY: 0, filter: "blur(4px)" }}
+                onClick={() => setShowChildReplies((prev) => !prev)}
+                className={`absolute top-1/2 cursor-pointer ${
+                  isEven ? "right-[18px]" : "left-[18px]"
+                }`}
+              >
+                <TinyCurveIcon
+                  color={"#CCC"}
+                  className={`-scale-x-[1] -scale-y-[1]`}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
@@ -191,7 +223,11 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         {showChildReplies && (
           // mb-8 creates space between the children and the parent
           <div className={`flex w-full flex-col ${showChildReplies && "mb-8"}`}>
-            <Children parentReplyId={reply.id} level={level + 1} isChild={false} />
+            <Children
+              parentReplyId={reply.id}
+              level={level + 1}
+              isChild={false}
+            />
           </div>
         )}
 
@@ -199,7 +235,9 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         {level > 1 && showChildReplies && (
           <div
             className={`relative flex w-full items-center gap-2 pb-8
-            ${isEven ? "justify-start pl-[18px]" : "flex-row-reverse pr-[18px]"}`}
+            ${
+              isEven ? "justify-start pl-[18px]" : "flex-row-reverse pr-[18px]"
+            }`}
           >
             <div className="absolute z-10 h-full w-1 translate-y-9 rounded bg-[#CCC]" />
             <LoopIcon className={`${!isEven && "-scale-x-[1]"}`} />
@@ -211,7 +249,9 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
               height={24}
             />
             <p
-              className={`text-gray2 line-clamp-2 max-w-[302px] text-xs ${!isEven ? "text-end" : ""}`}
+              className={`text-gray2 line-clamp-2 max-w-[302px] text-xs ${
+                !isEven ? "text-end" : ""
+              }`}
             >
               {reply.replyTo?.text}
             </p>
@@ -221,17 +261,3 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
     </motion.div>
   );
 }
-
-// <Heart
-//     handleHeartClick={handleHeartClick}
-//     hearted={hearted}
-//     className={`absolute -top-7 z-20 ${
-//         isEvenLevel
-//             ? "-right-[7px] transform scale-x-[-1]"
-//             : "-left-1.5"
-//     }`}
-//     heartCount={heartCount}
-//     replyCount={reply._count.replies}
-//     isReply={true}
-//     isEvenLevel={isEvenLevel}
-// />

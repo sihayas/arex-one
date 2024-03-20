@@ -20,8 +20,6 @@ function Chain({ userId, replyId }: RenderRepliesProps) {
     setDepth((prevDepth) => prevDepth + replies.length);
   }, []);
 
-  console.log("replies", replies);
-
   // Add layout group to the 2nd fragment
   return (
     <>

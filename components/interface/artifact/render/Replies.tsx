@@ -2,7 +2,7 @@ import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/helper/artifact";
 import React from "react";
 import RootReply from "@/components/interface/artifact/items/RootReply";
-import { LayoutGroup } from "framer-motion";
+import { LayoutGroup, motion } from "framer-motion";
 
 type RenderRepliesProps = {
   userId: string;

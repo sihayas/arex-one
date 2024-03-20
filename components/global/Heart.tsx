@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { LoveIcon, BubbleIcon, ChainIcon } from "../icons";
+import { LoveIcon, BubbleIcon, ReplyIcon } from "../icons";
 
 interface HeartButtonProps {
   handleHeartClick: (
@@ -108,7 +108,7 @@ const Heart: React.FC<HeartButtonProps> = ({
       >
         <p className={`text-sm font-medium leading-[9px]`}>{heartCount}</p>
         <div className={`bg-gray2 mx-1 h-0.5 w-0.5 rounded-full`} />
-        <ChainIcon color={"#999"} className={`scale-75`} />
+        <ReplyIcon color={"#999"} className={`scale-75`} />
         <p className={`ml-1 text-sm font-medium leading-[9px]`}>{replyCount}</p>
       </motion.div>
     </motion.button>

@@ -31,7 +31,9 @@ export default function RootReply({ reply, index }: ReplyProps) {
     setReplyTarget({ artifact, reply });
   }, [reply, setReplyTarget, activePage.artifact]);
 
-  const url = reply.heartedByUser ? "/api/reply/delete/heart" : "/api/reply/post/heart";
+  const url = reply.heartedByUser
+    ? "/api/reply/delete/heart"
+    : "/api/reply/post/heart";
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
     reply.heartedByUser,
@@ -53,15 +55,6 @@ export default function RootReply({ reply, index }: ReplyProps) {
           type: "spring",
           stiffness: 260,
           damping: 20,
-          restSpeed: 0.01,
-          restDelta: 0.01,
-        },
-        layout: {
-          type: "spring",
-          stiffness: 280,
-          damping: 34,
-          restSpeed: 0.01,
-          restDelta: 0.01,
         },
       }}
       style={{
@@ -85,7 +78,9 @@ export default function RootReply({ reply, index }: ReplyProps) {
           {/* Content  */}
           <motion.div
             whileHover={
-              replyTarget?.reply === reply ? { color: "#CCC" } : { color: "#CCC" }
+              replyTarget?.reply === reply
+                ? { color: "#CCC" }
+                : { color: "#CCC" }
             }
             onClick={handleReplyParent}
             animate={{
@@ -98,14 +93,20 @@ export default function RootReply({ reply, index }: ReplyProps) {
             {reply.text}
           </motion.div>
 
-          <div className={`text-gray2 absolute -bottom-4 left-3 text-sm font-medium`}>
+          <div
+            className={`text-gray2 absolute -bottom-4 left-3 text-sm font-medium`}
+          >
             {reply.author.username}
           </div>
 
           {/* Bubbles */}
           <div className={`absolute -bottom-1 -left-1 -z-10 h-3 w-3`}>
-            <div className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`} />
-            <div className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`} />
+            <div
+              className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+            />
+            <div
+              className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
+            />
           </div>
         </div>
       </div>
@@ -113,7 +114,9 @@ export default function RootReply({ reply, index }: ReplyProps) {
       {/* Sub Replies & Collapse Dot */}
       {replyCount > 0 && (
         <div className={`flex w-full`}>
-          <div className={`flex min-w-[40px] cursor-pointer flex-col items-center`}>
+          <div
+            className={`flex min-w-[40px] cursor-pointer flex-col items-center`}
+          >
             {!showChildReplies ? (
               //   Expand
               <motion.div

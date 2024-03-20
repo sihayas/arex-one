@@ -12,7 +12,7 @@ datasource db {
 model User {
     id            String         @id
     email         String?        @unique
-    username      String?         @unique
+    username      String?        @unique
     bio           String?        @db.VarChar(50)
     image         String?
     emailVerified Boolean        @default(false) @map(name: "email_verified")
@@ -222,7 +222,7 @@ model Heart {
 
 model Reply {
     id         String  @id @default(cuid())
-    text       String
+    text       String  @db.LongText
     replyToId  String?
     rootId     String?
     artifactId String
