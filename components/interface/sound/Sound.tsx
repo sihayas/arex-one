@@ -10,7 +10,7 @@ import {
   useTransform,
 } from "framer-motion";
 
-import { SongData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
 import Dial from "@/components/interface/sound/sub/Dial";
@@ -18,6 +18,7 @@ import DialMini from "@/components/interface/sound/sub/DialMini";
 import { createPortal } from "react-dom";
 import Sort from "@/components/interface/sound/sub/Sort";
 import { useSoundInfoQuery } from "@/lib/helper/sound";
+import { ArtifactExtended } from "@/types/globalTypes";
 
 const scaleConfig = { damping: 16, stiffness: 122 };
 const xConfig = { damping: 20, stiffness: 160 };
@@ -29,27 +30,18 @@ export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 const Sound = () => {
   const { scrollContainerRef, activePage, pages } = useInterfaceContext();
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
+  const isOpen = activePage.isOpen;
 
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [range, setRange] = useState<number | null>(null);
+  const [soundData, setSoundData] = useState<AlbumData | SongData | null>(null);
 
   const [ratings, setRatings] = useState<number[]>([]);
-
-  const isOpen = activePage.isOpen;
-  let soundData = activePage.sound!.data;
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
     layoutEffect: false,
   });
-
-  const { data } = useSoundInfoQuery(soundData.id);
-
-  useEffect(() => {
-    if (data) {
-      setRatings(Object.values(data.ratings).map(Number));
-    }
-  }, [data]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;
@@ -62,8 +54,7 @@ const Sound = () => {
     setRange(newRange);
   };
 
-  const xArt = useSpring(useTransform(scrollY, [0, 1], [32, 32]), xConfig);
-  const yArt = useSpring(useTransform(scrollY, [0, 1], [32, 32]), yConfig);
+  const xArt = useSpring(useTransform(scrollY, [0, 1], [0, -96]), xConfig);
   const scaleArt = useSpring(
     useTransform(scrollY, [0, 1], [1, 0.375]),
     scaleConfig,
@@ -94,6 +85,26 @@ const Sound = () => {
     generalConfig,
   );
 
+  useEffect(() => {
+    !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    if (activePage.sound) {
+      setSoundData(activePage.sound.data);
+    }
+  }, [activePage]);
+
+  if (!soundData) return null;
+
+  // const { data } = useSoundInfoQuery(soundData.id);
+
+  // useEffect(() => {
+  //   if (data) {
+  //     setRatings(Object.values(data.ratings).map(Number));
+  //   }
+  // }, [data]);
+
   const artwork = MusicKit.formatArtworkURL(
     soundData.attributes.artwork,
     800,
@@ -105,34 +116,21 @@ const Sound = () => {
       ? soundData.id
       : (soundData as SongData).relationships.albums.data[0].id;
 
-  const snap = activePage.isOpen ? "" : "snap-start";
-
-  useEffect(() => {
-    !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
-  }, []);
-
   return (
     <>
-      {/* Art Ghost Placeholder */}
-      <div className={`min-h-[432px] min-w-[432px] ${snap}`} />
-
-      <Artifacts soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
-
       {/* Art */}
       <motion.div
         initial={{
-          borderRadius: isOpen ? 96 : 16,
-          scale: isOpen ? 0.5 : 1,
-          x: isOpen ? -240 : 32,
-          y: isOpen ? 26 : 32,
+          borderRadius: 16,
+          scale: 1,
+          x: 0,
         }}
         style={{
           borderRadius: borderRad,
           scale: scaleArt,
-          y: yArt,
           x: xArt,
         }}
-        className="shadow-soundArt pointer-events-none absolute left-0 top-0 z-10 min-h-[432px] min-w-[432px] origin-top-left overflow-hidden"
+        className="shadow-soundArt pointer-events-auto flex-shrink-0 origin-top-left overflow-hidden sticky top-8"
       >
         <Image
           src={artwork}
@@ -145,6 +143,8 @@ const Sound = () => {
         />
       </motion.div>
 
+      <Artifacts soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
+
       {/* Titles */}
       <motion.div
         style={{
@@ -152,10 +152,10 @@ const Sound = () => {
         }}
         className={`text-gray2 absolute left-8 top-[222px] -z-10 flex max-w-[288px] flex-col`}
       >
-        <p className={`text-[26px] font-bold`}>{soundData.attributes.name}</p>
         <p className={`text-gray2 text-[18px] font-medium`}>
           {soundData.attributes.artistName}
         </p>
+        <p className={`text-[26px] font-bold`}>{soundData.attributes.name}</p>
       </motion.div>
 
       {/* Sort */}
@@ -183,35 +183,31 @@ const Sound = () => {
                 opacity: isOpen ? 0 : 1,
               }}
             >
-              <Dial
-                ratings={data ? ratings : [0, 0, 0, 0, 0]}
-                average={data ? data.avg_rating : 0}
-                count={data ? data.ratings_count : 0}
-              />
+              <Dial ratings={[0, 0, 0, 0, 0]} average={0} count={0} />
             </motion.div>
 
-            {/* Mini Dial */}
-            <motion.div
-              className={`absolute bottom-0 left-0 flex origin-bottom-left items-center justify-center will-change-transform`}
-              style={{
-                x: xDial,
-                y: yDial,
-                scale: scaleMini,
-                opacity: showMini,
-              }}
-              initial={{
-                x: isOpen ? 72 : -72,
-                y: isOpen ? -72 : 72,
-                scale: isOpen ? 0.25 : 1,
-                opacity: isOpen ? 1 : 0,
-              }}
-            >
-              <DialMini
-                ratings={data ? ratings : [0, 0, 0, 0, 0]}
-                onRangeChange={handleRangeChange}
-                average={data ? data.avg_rating : 0}
-              />
-            </motion.div>
+            {/*/!* Mini Dial *!/*/}
+            {/*<motion.div*/}
+            {/*  className={`absolute bottom-0 left-0 flex origin-bottom-left items-center justify-center will-change-transform`}*/}
+            {/*  style={{*/}
+            {/*    x: xDial,*/}
+            {/*    y: yDial,*/}
+            {/*    scale: scaleMini,*/}
+            {/*    opacity: showMini,*/}
+            {/*  }}*/}
+            {/*  initial={{*/}
+            {/*    x: isOpen ? 72 : -72,*/}
+            {/*    y: isOpen ? -72 : 72,*/}
+            {/*    scale: isOpen ? 0.25 : 1,*/}
+            {/*    opacity: isOpen ? 1 : 0,*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  <DialMini*/}
+            {/*    ratings={data ? ratings : [0, 0, 0, 0, 0]}*/}
+            {/*    onRangeChange={handleRangeChange}*/}
+            {/*    average={data ? data.avg_rating : 0}*/}
+            {/*  />*/}
+            {/*</motion.div>*/}
           </>,
           cmdk,
         )}

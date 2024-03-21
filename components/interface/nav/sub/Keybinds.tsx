@@ -75,16 +75,16 @@ export const Keybinds = (
       inputRef.current?.focus();
     }
     // Prepare form if on sound page
-    else if (
-      e.key === "Enter" &&
-      activePage.sound &&
-      activeAction === "none" &&
-      !inputValue
-    ) {
-      e.preventDefault();
-      const sound = activePage.sound.data;
-      setSelectedFormSound(sound);
-    }
+    // else if (
+    //   e.key === "Enter" &&
+    //   activePage.sound &&
+    //   activeAction === "none" &&
+    //   !inputValue
+    // ) {
+    //   e.preventDefault();
+    //   const sound = activePage.sound.data;
+    //   setSelectedFormSound(sound);
+    // }
     // Prepare reply parent
     else if (
       e.key === "Enter" &&

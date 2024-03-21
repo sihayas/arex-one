@@ -220,7 +220,7 @@ const Nav = () => {
         animate={
           expandInput && !isNotifications && !isReply ? "expanded" : "collapsed"
         }
-        className={`absolute bottom-0 left-0 z-0 flex h-[472px] w-[368px] origin-bottom-left -translate-x-10 translate-y-10 flex-col rounded-[20px] bg-[#F4F4F4A9] ${
+        className={`absolute bottom-0 left-0 z-40 flex h-[472px] w-[368px] origin-bottom-left -translate-x-10 translate-y-10 flex-col rounded-[20px] bg-[#F4F4F4A9] ${
           !expandInput && "mix-blend-darken"
         }`}
       >
@@ -232,7 +232,7 @@ const Nav = () => {
 
       {/* Text Input */}
       <motion.div
-        className={`absolute bottom-0 left-0 z-10 flex w-full items-center justify-center bg-transparent p-[9px] mix-blend-darken ${
+        className={`absolute bottom-0 left-0 z-50 flex w-full items-center justify-center bg-transparent p-[9px] mix-blend-darken ${
           isReply ? "pl-3 pr-[44px]" : "pl-[40px]"
         }`}
         variants={inputVariants}
@@ -280,7 +280,7 @@ const Nav = () => {
       <motion.div
         variants={barVariants}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`absolute bottom-0 left-0 z-10 flex flex-col gap-2 bg-transparent mix-blend-darken`}
+        className={`absolute bottom-0 left-0 z-50 flex flex-col gap-2 bg-transparent mix-blend-darken`}
       >
         {/* Notification Icon */}
         <motion.button

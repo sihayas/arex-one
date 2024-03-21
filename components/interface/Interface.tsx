@@ -27,7 +27,7 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 640, height: 384 },
+      base: { width: 640, height: 400 },
       target: { width: 640, height: maxHeight },
     },
     sound: {
@@ -213,7 +213,11 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
               initial={{ filter: "blur(4px)", opacity: 0 }}
               animate={{ filter: "blur(0px)", opacity: 1 }}
               exit={{ filter: "blur(4px)", opacity: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{
+                type: "spring",
+                bounce: 0.2,
+                duration: 0.6,
+              }}
             >
               {activePage.name === "sound" && <Sound />}
               {activePage.name === "artifact" && <Artifact />}

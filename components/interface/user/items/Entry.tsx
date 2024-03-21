@@ -3,10 +3,11 @@ import React from "react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { getStarComponent } from "@/components/index/items/Entry";
+import { cardBackMask, getStarComponent } from "@/components/index/items/Entry";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
 import { Interaction } from "@/components/global/Interaction";
+import { StarIcon } from "@/components/icons";
 
 interface UserProps {
   artifact: ArtifactExtended;
@@ -39,7 +40,9 @@ const backArtMask = {
 export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   const { scrollContainerRef } = useInterfaceContext();
   const [hovered, setHovered] = React.useState(false);
-  const [isFlipped, setIsFlipped] = React.useState(false);
+  const [isFlipped, setIsFlipped] = React.useState(
+    index === 0 ? true : index === 1,
+  );
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -50,37 +53,34 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
 
   // First card translations
   const xZero = useSpring(
-    useTransform(scrollY, [0, 24], [-48, 0]),
+    useTransform(scrollY, [0, 24], [-16, 0]),
     springConfig,
   );
   const yZero = useSpring(
-    useTransform(scrollY, [0, 24], [-64, 0]),
+    useTransform(scrollY, [0, 24], [26, 0]),
     springConfig,
   );
-  const scaleZero = useSpring(
-    useTransform(scrollY, [0, 24], [0.74, 1]),
-    springConfig,
-  );
+
   const rotateZero = useSpring(
-    useTransform(scrollY, [0, 24], [0, rotate]),
+    useTransform(scrollY, [0, 24], [-2, rotate]),
     springConfig,
   );
 
   // Second card translations
   const xOne = useSpring(
-    useTransform(scrollY, [0, 24], [-190, 0]),
+    useTransform(scrollY, [0, 24], [-138, 0]),
     springConfig,
   );
   const yOne = useSpring(
-    useTransform(scrollY, [0, 24], [-472, 0]),
+    useTransform(scrollY, [0, 24], [-364, 0]),
     springConfig,
   );
   const scaleOne = useSpring(
-    useTransform(scrollY, [0, 24], [0.63, 1]),
+    useTransform(scrollY, [0, 24], [0.89, 1]),
     springConfig,
   );
   const rotateOne = useSpring(
-    useTransform(scrollY, [0, 24], [6, rotate]),
+    useTransform(scrollY, [0, 24], [4, rotate]),
     springConfig,
   );
 
@@ -111,9 +111,12 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
       style={{
         y: index === 0 ? yZero : index === 1 ? yOne : 0,
         x: index === 0 ? xZero : index === 1 ? xOne : 0,
-        scale: index === 0 ? scaleZero : index === 1 ? scaleOne : 1,
+        scale: index === 1 ? scaleOne : 1,
         zIndex: 10 - index,
         rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : rotateTwo,
+      }}
+      whileHover={{
+        zIndex: 100,
       }}
       className={`relative ${isEven ? "mr-auto" : "ml-auto"}`}
     >
@@ -142,7 +145,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
             style={{
               ...cardMask,
             }}
-            className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white"
+            className="backface-hidden absolute left-0 top-0 flex h-full w-full flex-col bg-white"
           >
             <Image
               className={`-mt-6`}
@@ -166,53 +169,10 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
               }}
               className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6"
             >
-              {getStarComponent(artifact.content!.rating!, 20, 20)}
+              <StarIcon color={`#000`} />
 
               <div className={`flex translate-y-[1px] flex-col`}>
-                <p className={`line-clamp-1 text-sm text-black`}>
-                  {sound.attributes.artistName}
-                </p>
-                <p
-                  className={`line-clamp-1 text-base font-semibold text-black`}
-                >
-                  {sound.attributes.name}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Back */}
-          <div
-            style={{
-              ...cardMask,
-              transform: "rotateX(180deg)",
-            }}
-            className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white p-6 pb-0"
-          >
-            {/* Header */}
-            <div className={`flex w-full gap-2`}>
-              <div
-                style={{
-                  ...backArtMask,
-                }}
-                className={`relative h-[72px] w-[72px] flex-shrink-0`}
-              >
-                <Image
-                  src={artwork}
-                  alt={`${name} by ${artistName} - artwork`}
-                  quality={100}
-                  width={72}
-                  height={72}
-                  draggable={false}
-                />
-                <div className="rounded-max outline-silver absolute bottom-0 right-0 w-fit bg-white p-2.5">
-                  {getStarComponent(artifact.content!.rating!)}
-                </div>
-              </div>
-
-              <div className={`flex flex-col pt-2`}>
-                <p className={`text-gray2 text-sm font-medium`}>11.02.63</p>
-                <p className={`mt-auto line-clamp-1 text-sm text-black`}>
+                <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
                   {artistName}
                 </p>
                 <p
@@ -222,8 +182,42 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
                 </p>
               </div>
             </div>
+          </div>
 
-            <p className={`line-clamp-[14] pt-2.5 text-base`}>
+          {/* Back */}
+          <div
+            style={{
+              ...cardBackMask,
+              transform: "rotateX(180deg)",
+            }}
+            className="backface-hidden absolute left-0 top-0 flex h-full  w-full flex-col bg-white p-6 pb-0 "
+          >
+            <div className={`flex flex-shrink-0 justify-between`}>
+              <StarIcon color={"#000"} />
+
+              <Image
+                className={`shadow-shadowKitHigh rounded-xl`}
+                src={artwork}
+                alt={`${name} by ${artistName} - artwork`}
+                quality={100}
+                width={88}
+                height={88}
+                draggable={false}
+              />
+            </div>
+
+            <div className={`flex flex-col pt-2`}>
+              <p
+                className={`text-gray2 mt-auto line-clamp-1 text-sm font-medium`}
+              >
+                {artistName}
+              </p>
+              <p className={`line-clamp-1 text-base font-semibold text-black`}>
+                {name}
+              </p>
+            </div>
+
+            <p className={`line-clamp-[11] pt-[9px] text-base`}>
               {artifact.content?.text}
             </p>
           </div>

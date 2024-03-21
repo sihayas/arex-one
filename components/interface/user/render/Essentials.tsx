@@ -16,7 +16,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   };
 
   return (
-    <div className={`ml-auto flex h-full w-full flex-col items-end -space-y-8`}>
+    <div className={`ml-auto flex h-full w-full flex-col items-end -space-y-6`}>
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const artwork = MusicKit.formatArtworkURL(
@@ -41,6 +41,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
               width={128}
               height={128}
               draggable={false}
+              loading={"lazy"}
             />
           </Fragment>
         );

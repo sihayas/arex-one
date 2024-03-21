@@ -16,7 +16,8 @@ const nextConfig = {
       "voirmedia.blob.core.windows.net",
       "voir.space",
     ],
-    unoptimized: true,
+    loader: "custom",
+    loaderFile: "./imageLoader.js",
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Enable WebAssembly experiments

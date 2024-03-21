@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useArtifactsQuery } from "@/lib/helper/sound";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { GetDimensions } from "@/components/interface/Interface";
@@ -10,6 +10,7 @@ import Avatar from "@/components/global/Avatar";
 import Tilt from "react-parallax-tilt";
 import { StarIcon } from "@/components/icons";
 import Image from "next/image";
+import { AlbumData, SongData } from "@/types/appleTypes";
 
 interface RenderArtifactsProps {
   soundId: string;
@@ -39,7 +40,8 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     range,
   );
   const { handleSelectArtifact } = useArtifact();
-  const sound = activePage.sound!.data;
+
+  const [sound, setSound] = useState<AlbumData | SongData | null>(null);
 
   // Capture the state of the virtuoso list
   const ref = React.useRef<VirtuosoHandle>(null);
@@ -64,7 +66,13 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     }
   };
 
-  if (!artifacts) return null;
+  useEffect(() => {
+    if (activePage.sound) {
+      setSound(activePage.sound.data);
+    }
+  }, [activePage]);
+
+  if (!artifacts || !sound) return null;
 
   const url = MusicKit.formatArtworkURL(
     sound.attributes.artwork,
@@ -73,7 +81,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   );
 
   return (
-    <div className={`mt-1 h-max w-full snap-start`}>
+    <div className={`mt-1 min-h-max w-full`}>
       <Virtuoso
         key={key}
         ref={ref}

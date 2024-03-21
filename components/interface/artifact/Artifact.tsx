@@ -25,7 +25,6 @@ import { createPortal } from "react-dom";
 export const Artifact = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
-  const { handleSelectSound } = useSound();
   const [isExpanded, setIsExpanded] = useState(false);
   const [artifactExtended, setArtifactExtended] =
     useState<ArtifactExtended | null>(null);
@@ -124,7 +123,7 @@ export const Artifact = () => {
             : "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
         }}
         whileTap={{ scale: 0.95 }}
-        transition={{ duration: 5 }}
+        transition={{ type: "spring", damping: 20, stiffness: 100 }}
         onClick={() => setIsExpanded(!isExpanded)}
         className={`shadow-soundArt relative mt-[104px] rounded-full`}
       >
