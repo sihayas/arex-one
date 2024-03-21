@@ -15,7 +15,6 @@ import Replies from "@/components/interface/artifact/render/Replies";
 import Chain from "@/components/interface/artifact/render/Chain";
 import { ArtifactExtended } from "@/types/globalTypes";
 
-import { getStarComponent } from "@/components/index/items/Entry";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
@@ -28,6 +27,8 @@ export const Artifact = () => {
   const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
   const { handleSelectSound } = useSound();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [artifactExtended, setArtifactExtended] =
+    useState<ArtifactExtended | null>(null);
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -38,7 +39,27 @@ export const Artifact = () => {
     pages[pages.length - 1].isOpen = latest >= 1;
   });
 
-  const artifactExtended = activePage.artifact?.data as ArtifactExtended;
+  useEffect(() => {
+    if (activePage.artifact) {
+      setArtifactExtended(activePage.artifact.data as ArtifactExtended);
+    }
+  }, [activePage]);
+
+  useEffect(() => {
+    if (!activePage.isOpen && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo(0, 0);
+    }
+  }, []);
+
+  const [tiltAngles, setTiltAngles] = useState({
+    tiltAngleX: 0,
+    tiltAngleY: 0,
+  });
+
+  const x = useSpring(0, { damping: 320, stiffness: 80 });
+  const y = useSpring(0, { damping: 320, stiffness: 80 });
+
+  if (!activePage.artifact || !artifactExtended) return null;
   // If opening from a notification, load the chain
   const chainId = activePage.artifact?.replyTo;
 
@@ -52,18 +73,6 @@ export const Artifact = () => {
     304 * 2.5,
     304 * 2.5,
   );
-
-  const handleSoundClick = () => {
-    handleSelectSound(artifactExtended.sound.appleData);
-  };
-
-  const [tiltAngles, setTiltAngles] = useState({
-    tiltAngleX: 0,
-    tiltAngleY: 0,
-  });
-
-  const x = useSpring(0, { damping: 320, stiffness: 80 });
-  const y = useSpring(0, { damping: 320, stiffness: 80 });
 
   // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
   // useEffect(() => {
@@ -104,11 +113,6 @@ export const Artifact = () => {
   // }, [isExpanded]);
 
   // Scroll to top on mount
-  useEffect(() => {
-    if (!activePage.isOpen && scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo(0, 0);
-    }
-  }, []);
 
   return (
     <>
@@ -120,7 +124,7 @@ export const Artifact = () => {
             : "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
         }}
         whileTap={{ scale: 0.95 }}
-        transition={{ type: "spring", damping: 15, stiffness: 100 }}
+        transition={{ duration: 5 }}
         onClick={() => setIsExpanded(!isExpanded)}
         className={`shadow-soundArt relative mt-[104px] rounded-full`}
       >

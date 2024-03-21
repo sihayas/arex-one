@@ -15,15 +15,10 @@ import {
   useScroll,
   useTransform,
   MotionValue,
+  AnimatePresence,
 } from "framer-motion";
 import { PageName } from "@/context/InterfaceContext";
 import { createPortal } from "react-dom";
-
-const componentMap: Record<PageName, React.ComponentType<any>> = {
-  sound: Sound,
-  artifact: Artifact,
-  user: User,
-};
 
 // Calculate & set base dimensions and target dimensions for the window per page
 export const GetDimensions = (pageName: PageName) => {
@@ -32,8 +27,8 @@ export const GetDimensions = (pageName: PageName) => {
 
   const dimensions = {
     user: {
-      base: { width: 592, height: 368 },
-      target: { width: 592, height: maxHeight },
+      base: { width: 640, height: 384 },
+      target: { width: 640, height: maxHeight },
     },
     sound: {
       base: { width: 496, height: 496 },
@@ -54,10 +49,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   const cmdkPortal = document.getElementById("cmdk");
   const isNotifications = activeAction === "notifications";
 
-  const activePageName: PageName = activePage.name as PageName;
-  const ActiveComponent = componentMap[activePageName];
-
-  const { base, target } = GetDimensions(activePageName);
+  const { base, target } = GetDimensions(activePage.name as PageName);
 
   const [scope, animate] = useAnimate(); // Window
   const [rootScope, animateRoot] = useAnimate(); // Root
@@ -67,6 +59,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     container: scrollContainerRef,
     layoutEffect: false,
   });
+
   const maxScroll = 1;
   const newWidth = useTransform(
     scrollY,
@@ -117,26 +110,16 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
   // Animate portal dimensions & bounce on page change
   useEffect(() => {
-    const { base, target } = GetDimensions(activePage.name as PageName);
-
     // Page change shapeshift & bounce
     const shapeShift = () => {
-      // Scale down
-      animate(
-        scope.current,
-        { scale: 0.9 },
-        { type: "spring", stiffness: 800, damping: 40 },
-      );
-
       // Bounce up and shift
       animate(
         scope.current,
         {
-          scale: [0.9, 1],
           width: activePage.isOpen ? `${target.width}px` : `${base.width}px`,
           height: activePage.isOpen ? `${target.height}px` : `${base.height}px`,
         },
-        { type: "spring", stiffness: 800, damping: 62 },
+        { type: "spring", stiffness: 800, damping: 80 },
       );
     };
     shapeShift();
@@ -156,11 +139,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       animate(
         scope.current,
         { [dimension]: newDimension.get() },
-        {
-          type: "spring",
-          stiffness: 240,
-          damping: 40,
-        },
+        { type: "spring", stiffness: 240, damping: 40 },
       );
     };
 
@@ -184,12 +163,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         boxShadow: expandInput
           ? "rgba(0, 0, 0, 0.0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.0) 0px 0px 0px 0px"
           : "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
-        scale: expandInput ? (isNotifications ? 1.05 : 0.9) : 1,
-        filter: expandInput
-          ? isNotifications
-            ? "blur(24px)"
-            : "blur(4px)"
-          : "blur(0px)",
+        scale: expandInput ? 0.9 : 1,
+        filter: expandInput && isNotifications ? "blur(24px)" : "blur(0px)",
       };
       const transitionConfig = {
         type: "spring" as const,
@@ -205,7 +180,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
 
   return (
     <motion.div
-      transformTemplate={template} // Prevent translateZ from being applied
+      key={`cmdk`}
+      // transformTemplate={template} // Prevent translateZ from being applied
       ref={rootScope}
       id={`cmdk`}
       className={`cmdk rounded-full`}
@@ -213,7 +189,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       {/* Shape-shift / Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`relative flex items-start justify-center overflow-hidden rounded-full bg-[#F6F6F6] ${
+        className={`relative flex items-start justify-center overflow-hidden rounded-full bg-[#F6F6F6] bg-opacity-75 ${
           expandInput ? "mix-blend-darken" : ""
         }`}
         shouldFilter={false}
@@ -230,7 +206,20 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
             height: `${target.height}px`,
           }}
         >
-          <ActiveComponent key={activePage.key} />
+          <AnimatePresence mode={`wait`}>
+            <motion.div
+              key={activePage.key}
+              className={`flex flex-col w-full h-full items-center`}
+              initial={{ filter: "blur(4px)", opacity: 0 }}
+              animate={{ filter: "blur(0px)", opacity: 1 }}
+              exit={{ filter: "blur(4px)", opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {activePage.name === "sound" && <Sound />}
+              {activePage.name === "artifact" && <Artifact />}
+              {activePage.name === "user" && <User />}
+            </motion.div>
+          </AnimatePresence>
         </motion.div>
         {/* Dial */}
         {cmdkPortal && createPortal(<Nav />, cmdkPortal)}

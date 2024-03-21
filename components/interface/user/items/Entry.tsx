@@ -85,15 +85,6 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   );
 
   // Third card translations
-  const xTwo = useSpring(useTransform(scrollY, [0, 24], [76, 0]), springConfig);
-  const yTwo = useSpring(
-    useTransform(scrollY, [0, 24], [-880, 0]),
-    springConfig,
-  );
-  const scaleTwo = useSpring(
-    useTransform(scrollY, [0, 24], [0.52, 1]),
-    springConfig,
-  );
   const rotateTwo = useSpring(
     useTransform(scrollY, [0, 24], [12, rotate]),
     springConfig,
@@ -118,16 +109,9 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   return (
     <motion.div
       style={{
-        y: index === 0 ? yZero : index === 1 ? yOne : index === 2 ? yTwo : 0,
-        x: index === 0 ? xZero : index === 1 ? xOne : index === 2 ? xTwo : 0,
-        scale:
-          index === 0
-            ? scaleZero
-            : index === 1
-            ? scaleOne
-            : index === 2
-            ? scaleTwo
-            : 1,
+        y: index === 0 ? yZero : index === 1 ? yOne : 0,
+        x: index === 0 ? xZero : index === 1 ? xOne : 0,
+        scale: index === 0 ? scaleZero : index === 1 ? scaleOne : 1,
         zIndex: 10 - index,
         rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : rotateTwo,
       }}
