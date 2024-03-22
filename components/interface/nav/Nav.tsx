@@ -18,7 +18,6 @@ import {
 import { useNavContext } from "@/context/NavContext";
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { createReply } from "@/lib/helper/artifact";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
@@ -38,7 +37,7 @@ const iconVariants = {
 };
 
 const Nav = () => {
-  const { replyTarget } = useThreadcrumb();
+  const { replyTarget } = useNavContext();
   const { user, activePage } = useInterfaceContext();
   const {
     inputValue,

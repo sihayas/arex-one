@@ -62,37 +62,6 @@ export const useUserDataQuery = (
   return { data, isLoading, isError, followState, handleFollowUnfollow };
 };
 
-export const followUser = async (followerId: string, followingId: string) => {
-  await axios.post(`/api/user/post/follow`, { followerId, followingId });
-  return { followingAtoB: true };
-};
-
-export const unfollowUser = async (followerId: string, followingId: string) => {
-  await axios.delete(`/api/user/post/unfollow`, {
-    params: {
-      unfollowerId: followerId,
-      unfollowingId: followingId,
-    },
-  });
-  return { followingAtoB: false };
-};
-
-export const useUserSettingsQuery = (userId: string) => {
-  const { data, isLoading, isError } = useQuery(
-    ["userSettings", userId],
-    async () => {
-      const response = await axios.get(`/api/user/get/settings`, {
-        params: {
-          userId,
-        },
-      });
-      return response.data;
-    },
-  );
-
-  return { data, isLoading, isError };
-};
-
 export const useEntriesQuery = (userId: string) => {
   return useInfiniteQuery(
     ["entries", userId],
@@ -127,6 +96,57 @@ export const useEntriesQuery = (userId: string) => {
       refetchOnWindowFocus: false,
     },
   );
+};
+
+export const followUser = async (followerId: string, followingId: string) => {
+  const response = await fetch(`/api/user/post/follow`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ followerId, followingId }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return { followingAtoB: true };
+};
+
+export const unfollowUser = async (followerId: string, followingId: string) => {
+  const response = await fetch(`/api/user/post/unfollow`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      unfollowerId: followerId,
+      unfollowingId: followingId,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return { followingAtoB: false };
+};
+
+export const useUserSettingsQuery = (userId: string) => {
+  const { data, isLoading, isError } = useQuery(
+    ["userSettings", userId],
+    async () => {
+      const response = await axios.get(`/api/user/get/settings`, {
+        params: {
+          userId,
+        },
+      });
+      return response.data;
+    },
+  );
+
+  return { data, isLoading, isError };
 };
 
 export const useNotificationsQuery = (userId: string | undefined) => {

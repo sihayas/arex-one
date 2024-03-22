@@ -1,56 +1,95 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 
-const Dash = ({
-  width = "2px",
-  color = "rgba(0, 0, 0, 0.1)",
-  className = "",
-  dotSize = "1",
-  spaceBetween = "8",
-}) => {
+const Dot = ({
+  index,
+  controls,
+  initialColor,
+}: {
+  index: number;
+  controls: any;
+  initialColor: string;
+}) => (
+  <motion.div
+    custom={index}
+    animate={controls}
+    style={{
+      width: "4px",
+      height: "4px",
+      margin: "4px 0",
+      borderRadius: "50%",
+      backgroundColor: initialColor,
+    }}
+  />
+);
+
+const Dash = ({ color = "rgba(0, 0, 0, 0.1)", className = "" }) => {
   const { isLoading } = useInterfaceContext();
   const controls = useAnimation();
+  const [dots, setDots] = useState([]);
+
+  // Dieter Rams orange color
+  const dieterRamsOrange = "#f5a623";
 
   useEffect(() => {
     if (isLoading) {
-      // Flashing orange when loading
-      controls.start({
-        stroke: ["#FFA500", "#FFA500"],
-        opacity: [1, 0.5, 1],
+      // Start or continue the animation when isLoading is true
+      controls.start((i) => ({
+        scale: [1, 1.5, 1],
+        backgroundColor: [color, dieterRamsOrange, color],
         transition: {
+          delay: i * 0.05,
           duration: 0.5,
           repeat: Infinity,
+          repeatType: "loop",
           ease: "linear",
         },
-      });
+      }));
     } else {
-      // Green for a second, then revert to normal
+      // Smoothly transition the animation to stop when isLoading is false
       controls.start({
-        stroke: ["#A6FF47", color],
-        transition: { duration: 1 },
+        scale: 1,
+        backgroundColor: ["#70FF00", color],
+        transition: { duration: 0.5, ease: "linear" },
       });
     }
-  }, [isLoading, color, controls]);
+  }, [isLoading, controls, dots.length, color]);
+
+  useEffect(() => {
+    const calculateDots = () => {
+      const dotSize = 4;
+      const gap = 8; // Space between dots
+      const totalSize = dotSize + gap;
+      const viewportHeight = window.innerHeight;
+      const numberOfDots = Math.floor(viewportHeight / totalSize);
+      setDots(Array.from({ length: numberOfDots }));
+    };
+
+    calculateDots();
+    window.addEventListener("resize", calculateDots);
+    return () => window.removeEventListener("resize", calculateDots);
+  }, []);
 
   return (
-    <svg
-      className={className}
-      style={{ width: width, height: "100%" }}
-      preserveAspectRatio="none"
+    <div
+      className={`${className} dots-container`}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100%",
+      }}
     >
-      <motion.line
-        x1="50%"
-        y1="0"
-        x2="50%"
-        y2="100%"
-        stroke={color}
-        strokeWidth={width}
-        strokeDasharray={`${dotSize}, ${spaceBetween}`}
-        strokeLinecap="round"
-        animate={controls}
-      />
-    </svg>
+      {dots.map((_, index) => (
+        <Dot
+          key={index}
+          index={index}
+          controls={controls}
+          initialColor={color}
+        />
+      ))}
+    </div>
   );
 };
 

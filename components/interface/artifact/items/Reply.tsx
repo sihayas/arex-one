@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { ReplyType } from "@/types/dbTypes";
 import Children from "@/components/interface/artifact/render/Children";
@@ -11,6 +10,7 @@ import { useInterfaceContext } from "@/context/InterfaceContext";
 import { LoopIcon, TinyCurveIcon } from "@/components/icons";
 import Image from "next/image";
 import Heart from "@/components/global/Heart";
+import { useNavContext } from "@/context/NavContext";
 
 interface ReplyProps {
   reply: ReplyType;
@@ -21,7 +21,7 @@ interface ReplyProps {
 
 export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const { user } = useInterfaceContext();
-  const { setReplyTarget, replyTarget } = useThreadcrumb();
+  const { setReplyTarget, replyTarget } = useNavContext();
   const { pages } = useInterfaceContext();
   const [showChildReplies, setShowChildReplies] = useState<boolean>(false);
 

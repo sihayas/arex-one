@@ -270,8 +270,9 @@ model Activity {
     // Polymorphic relations
     artifact Artifact? @relation("ActivityArtifact", fields: [referenceId], references: [id], map: "activity_artifact_id")
     heart    Heart?    @relation("ActivityHeart", fields: [referenceId], references: [id], map: "activity_heart_id")
-    follow   Follows?  @relation("ActivityFollow", fields: [referenceId], references: [id], map: "activity_follow_id")
     reply    Reply?    @relation("ActivityReply", fields: [referenceId], references: [id], map: "activity_reply_id")
+    follow    Follows?    @relation("ActivityFollow", fields: [referenceId], references: [id], map: "activity_follow_id")
+    
 
     isDeleted     Boolean        @default(false) @map(name: "is_deleted")
     notifications Notification[]

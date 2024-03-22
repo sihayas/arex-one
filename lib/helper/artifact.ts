@@ -1,8 +1,13 @@
 import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { ReplyTargetType } from "@/context/Threadcrumbs";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { FlagType } from "@prisma/client";
+import { Artifact, ReplyType } from "@/types/dbTypes";
+
+export type ReplyTargetType = {
+  artifact: Artifact;
+  reply: ReplyType | null;
+} | null;
 
 export const createEntry = async (submissionData: {
   text: string;

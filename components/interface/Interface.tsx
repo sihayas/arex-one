@@ -108,38 +108,16 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     animateParent();
   }, [isVisible, animateRoot, rootScope, expandInput]);
 
-  // Animate portal dimensions & bounce on page change
-  useEffect(() => {
-    // Page change shapeshift & bounce
-    const shapeShift = () => {
-      // Bounce up and shift
-      animate(
-        scope.current,
-        {
-          width: activePage.isOpen ? `${target.width}px` : `${base.width}px`,
-          height: activePage.isOpen ? `${target.height}px` : `${base.height}px`,
-        },
-        { type: "spring", stiffness: 800, damping: 80 },
-      );
-    };
-    shapeShift();
-  }, [
-    animate,
-    base.height,
-    base.width,
-    target.height,
-    target.width,
-    scope,
-    activePage,
-  ]);
-
-  // Animate portal dimensions while scrolling
+  // Shape-shifts the window while scrolling or if page changes. Page change
+  // changes the base.width and base.height in the newWidth and newHeight
+  // functions which in turn triggers the useEffect below so we don't need
+  // a separate useEffect for page change.
   useEffect(() => {
     const shiftDimension = (dimension: string, newDimension: MotionValue) => {
       animate(
         scope.current,
         { [dimension]: newDimension.get() },
-        { type: "spring", stiffness: 240, damping: 40 },
+        { type: "spring", stiffness: 250, damping: 35 },
       );
     };
 
@@ -200,7 +178,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         <motion.div
           id={`cmdk-scroll`}
           ref={scrollContainerRef}
-          className={`scrollbar-none flex snap-y snap-mandatory flex-col items-center overflow-y-scroll rounded-full`}
+          className={`scrollbar-none flex snap-y snap-mandatory flex-col items-center overflow-y-scroll overflow-x-hidden rounded-full`}
           style={{
             minWidth: `${target.width}px`,
             height: `${target.height}px`,
@@ -213,11 +191,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
               initial={{ filter: "blur(4px)", opacity: 0 }}
               animate={{ filter: "blur(0px)", opacity: 1 }}
               exit={{ filter: "blur(4px)", opacity: 0 }}
-              transition={{
-                type: "spring",
-                bounce: 0.2,
-                duration: 0.6,
-              }}
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             >
               {activePage.name === "sound" && <Sound />}
               {activePage.name === "artifact" && <Artifact />}

@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/global/prisma";
 import { ActivityType } from "@prisma/client";
 import { createHeartActivity } from "@/pages/api/mid/createActivity";

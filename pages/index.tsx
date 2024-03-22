@@ -278,7 +278,7 @@ export default function Home() {
       {activeFeed && (
         <motion.div
           ref={scrollContainerRef}
-          className={`scrollbar-none flex max-h-screen w-full flex-col items-center gap-32 overflow-scroll px-8 pb-32 pt-16`}
+          className={`scrollbar-none flex max-h-screen w-full flex-col items-center gap-24 overflow-scroll px-8 pb-32 pt-16`}
         >
           {/*  Blur Backdrop */}
           <div

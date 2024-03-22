@@ -3,7 +3,6 @@ import "styles/cmdk.css";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { ThreadcrumbProvider } from "@/context/Threadcrumbs";
 import { SoundDetailsProvider } from "@/context/SoundContext";
 import { Toaster } from "sonner";
 import { InterfaceContextProvider } from "@/context/InterfaceContext";
@@ -72,11 +71,9 @@ const App = ({ Component, pageProps }: AppProps<{}>) => {
       <InterfaceContextProvider>
         <NavProvider>
           <SoundDetailsProvider>
-            <ThreadcrumbProvider>
-              <main className={`${garamond12.variable} ${garamond08.variable}`}>
-                <Component {...pageProps} />
-              </main>
-            </ThreadcrumbProvider>
+            <main className={`${garamond12.variable} ${garamond08.variable}`}>
+              <Component {...pageProps} />
+            </main>
           </SoundDetailsProvider>
         </NavProvider>
       </InterfaceContextProvider>

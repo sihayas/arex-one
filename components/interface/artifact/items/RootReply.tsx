@@ -1,7 +1,5 @@
 import React, { useState, useCallback } from "react";
 
-import { useThreadcrumb } from "@/context/Threadcrumbs";
-
 import { ReplyType } from "@/types/dbTypes";
 
 import Children from "@/components/interface/artifact/render/Children";
@@ -10,6 +8,7 @@ import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useNavContext } from "@/context/NavContext";
 
 interface ReplyProps {
   reply: ReplyType;
@@ -18,7 +17,7 @@ interface ReplyProps {
 
 export default function RootReply({ reply, index }: ReplyProps) {
   const { user } = useInterfaceContext();
-  const { setReplyTarget, replyTarget } = useThreadcrumb();
+  const { setReplyTarget, replyTarget } = useNavContext();
   const { pages } = useInterfaceContext();
   const [showChildReplies, setShowChildReplies] = useState<boolean>(false);
 

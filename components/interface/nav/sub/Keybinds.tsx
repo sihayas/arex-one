@@ -1,4 +1,3 @@
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 import { Page, useInterfaceContext } from "@/context/InterfaceContext";
 import { useNavContext } from "@/context/NavContext";
 import { useSoundContext } from "@/context/SoundContext";
@@ -8,8 +7,8 @@ export const Keybinds = (
   handleInputTextChange: (value: string) => void,
   handleReplySubmit: () => void,
 ) => {
-  const { replyTarget, setReplyTarget } = useThreadcrumb();
   const { pages } = useInterfaceContext();
+  const { replyTarget, setReplyTarget } = useNavContext();
   const {
     inputValue,
     setInputValue,

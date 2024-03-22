@@ -6,6 +6,7 @@ import React, {
   SetStateAction,
   useEffect,
 } from "react";
+import { ReplyTargetType } from "@/lib/helper/artifact";
 
 export type NavContextType = {
   expandInput: boolean;
@@ -23,6 +24,8 @@ export type NavContextType = {
   setActiveAction: Dispatch<
     SetStateAction<"form" | "reply" | "notifications" | "none">
   >;
+  replyTarget: ReplyTargetType;
+  setReplyTarget: Dispatch<SetStateAction<ReplyTargetType>>;
 };
 
 // Create the context, initialized as undefined
@@ -50,6 +53,7 @@ export const NavProvider = ({ children }: NavProviderProps) => {
   const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
+  const [replyTarget, setReplyTarget] = useState<ReplyTargetType>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
   const [expandSignals, setExpandSignals] = useState(false);
@@ -84,6 +88,8 @@ export const NavProvider = ({ children }: NavProviderProps) => {
         setIsChangingEssential,
         activeAction,
         setActiveAction,
+        replyTarget,
+        setReplyTarget,
       }}
     >
       {children}

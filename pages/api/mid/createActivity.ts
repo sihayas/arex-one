@@ -28,16 +28,4 @@ export async function createReplyActivity(replyId: string) {
   });
 }
 
-export async function createFollowActivity(
-  followId: string,
-  followType: "followed" | "followed_back",
-) {
-  return prisma.activity.create({
-    data: {
-      type: ActivityType[followType],
-      referenceId: followId,
-    },
-  });
-}
-
 export const runtime = "edge";

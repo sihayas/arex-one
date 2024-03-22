@@ -1,12 +1,10 @@
 import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useThreadcrumb } from "@/context/Threadcrumbs";
 
 import { Artifact, UserType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 export const useArtifact = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
-  const { setThreadcrumbs } = useThreadcrumb();
 
   const handleSelectArtifact = (artifact: Artifact, replyId?: string) => {
     setIsVisible(true);
@@ -24,7 +22,6 @@ export const useArtifact = () => {
         isOpen: false,
       },
     ]);
-    setThreadcrumbs([artifact.id]);
     window.history.pushState(null, "");
   };
 
