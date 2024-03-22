@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useInterfaceContext } from "@/context/InterfaceContext";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useUserDataQuery } from "@/lib/helper/user";
@@ -7,6 +7,9 @@ import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
 
 const User = () => {
+  const [isFollowingAtoB, setIsFollowingAtoB] = useState(false);
+  const [isFollowingBtoA, setIsFollowingBtoA] = useState(false);
+
   const { user, activePage, pages, scrollContainerRef } = useInterfaceContext();
 
   const pageUser = activePage.user;
@@ -25,6 +28,13 @@ const User = () => {
   const { userData } = data || {};
 
   useEffect(() => {
+    if (userData) {
+      setIsFollowingAtoB(userData.isFollowingAtoB);
+      setIsFollowingBtoA(userData.isFollowingBtoA);
+    }
+  }, [userData]);
+
+  useEffect(() => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
   }, []);
 
@@ -36,28 +46,39 @@ const User = () => {
         <div className={`flex flex-col`}>
           {/* Page Username & Avatar*/}
           <div className={`flex items-center gap-8`}>
-            <Avatar
-              className="rounded-max shadow-shadowKitHigh h-18 w-18"
-              imageSrc={userData.image}
-              altText={`avatar`}
-              width={72}
-              height={72}
-              user={userData}
-            />
+            <div className={`relative flex-shrink-0`}>
+              <Avatar
+                className="rounded-max"
+                imageSrc={userData.image}
+                altText={`avatar`}
+                width={72}
+                height={72}
+                user={userData}
+              />
+              <div
+                className={`absolute center-x center-y w-[98px] h-[98px] outline outline-3 outline-white rounded-max shadow-shadowKitHigh`}
+              />
+            </div>
+
             <p className={`text-gray2 text-3xl font-bold`}>
               {userData.username}
             </p>
           </div>
           {/*  Signed User */}
-          <div className={`pl-[72px] flex items-center gap-8`}>
-            <Avatar
-              className="rounded-max shadow-shadowKitHigh w-8 h-8"
-              imageSrc={user.image}
-              altText={`avatar`}
-              width={32}
-              height={32}
-              user={userData}
-            />
+          <div className={`pl-[72px] flex items-center gap-8 relative`}>
+            <div className={`relative`}>
+              <div
+                className={`absolute center-x center-y w-[60px] h-[60px] outline outline-3 outline-white rounded-max shadow-shadowKitHigh`}
+              />
+              <Avatar
+                className="rounded-max flex-shrink-0"
+                imageSrc={user.image}
+                altText={`avatar`}
+                width={32}
+                height={32}
+                user={userData}
+              />
+            </div>
           </div>
         </div>
 
