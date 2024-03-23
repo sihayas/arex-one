@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 import Avatar from "@/components/global/Avatar";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/Interface";
 import { useArtifact } from "@/hooks/usePage";
 import { ReplyToReplyIcon, ReplyIcon } from "@/components/icons";
 
@@ -14,7 +14,11 @@ const Reply = ({ notificationsGroup }: any) => {
   const reply = notifications[0].activity.reply;
   const sound = reply.artifact?.sound.appleData;
 
-  const url = MusicKit.formatArtworkURL(sound.attributes.artwork, 96 * 2.5, 96 * 2.5);
+  const url = MusicKit.formatArtworkURL(
+    sound.attributes.artwork,
+    96 * 2.5,
+    96 * 2.5,
+  );
 
   return reply.replyTo && user ? (
     <div
@@ -56,7 +60,9 @@ const Reply = ({ notificationsGroup }: any) => {
         {/* Reply & Attribution */}
         <div className={`relative z-10 flex w-full items-end`}>
           <p className={`absolute -bottom-[12px] left-4 z-10`}>
-            <p className={`text-gray2 text-sm font-semibold`}>{reply.author.username}</p>
+            <p className={`text-gray2 text-sm font-semibold`}>
+              {reply.author.username}
+            </p>
           </p>
           <div
             className={`shadow-notification relative mb-1.5 ml-1 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
@@ -69,7 +75,9 @@ const Reply = ({ notificationsGroup }: any) => {
 
             {/* Bubbles */}
             <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
-              <div className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`} />
+              <div
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+              />
               <div
                 className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
               />
@@ -118,7 +126,9 @@ const Reply = ({ notificationsGroup }: any) => {
         {/* Reply & Attribution */}
         <div className={`relative z-10 flex w-full items-end`}>
           <p className={`absolute -bottom-[12px] left-4 z-10`}>
-            <p className={`text-gray2 text-sm font-semibold`}>{reply.author.username}</p>
+            <p className={`text-gray2 text-sm font-semibold`}>
+              {reply.author.username}
+            </p>
           </p>
           <div
             className={`shadow-notification relative mb-1.5 ml-1 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
@@ -131,7 +141,9 @@ const Reply = ({ notificationsGroup }: any) => {
 
             {/* Bubbles */}
             <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
-              <div className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`} />
+              <div
+                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
+              />
               <div
                 className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
               />

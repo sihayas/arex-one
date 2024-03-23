@@ -20,21 +20,6 @@ export const useUserDataQuery = (
   sessionUserId: string | undefined,
   pageUserId: string | undefined,
 ) => {
-  const [followState, setFollowState] = useState({
-    followingAtoB: null as boolean | null,
-    followingBtoA: null as boolean | null,
-    loadingFollow: false,
-  });
-
-  const handleFollowUnfollow = async (action: "follow" | "unfollow") => {
-    if (!sessionUserId || !pageUserId) return;
-    const newState =
-      action === "follow"
-        ? await followUser(sessionUserId, pageUserId) // Ensure these functions are adapted for `fetch`
-        : await unfollowUser(sessionUserId, pageUserId); // Ensure these functions are adapted for `fetch`
-    setFollowState((prevState) => ({ ...prevState, ...newState }));
-  };
-
   const { data, isLoading, isError } = useQuery(
     ["userData", pageUserId],
     async () => {
@@ -50,16 +35,12 @@ export const useUserDataQuery = (
       }
 
       const userData = await response.json();
-      setFollowState((prevState) => ({
-        ...prevState,
-        followingAtoB: userData.isFollowingAtoB,
-        followingBtoA: userData.isFollowingBtoA,
-      }));
+
       return { userData };
     },
   );
 
-  return { data, isLoading, isError, followState, handleFollowUnfollow };
+  return { data, isLoading, isError };
 };
 
 export const useEntriesQuery = (userId: string) => {
@@ -98,39 +79,32 @@ export const useEntriesQuery = (userId: string) => {
   );
 };
 
-export const followUser = async (followerId: string, followingId: string) => {
+export const followUser = async (authorId: string, userId: string) => {
   const response = await fetch(`/api/user/post/follow`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ followerId, followingId }),
+    body: JSON.stringify({ authorId, userId }),
   });
 
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
-
-  return { followingAtoB: true };
 };
 
-export const unfollowUser = async (followerId: string, followingId: string) => {
-  const response = await fetch(`/api/user/post/unfollow`, {
+export const unfollowUser = async (authorId: string, userId: string) => {
+  const response = await fetch(`/api/user/delete/follow`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      unfollowerId: followerId,
-      unfollowingId: followingId,
-    }),
+    body: JSON.stringify({ authorId, userId }),
   });
 
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
-
-  return { followingAtoB: false };
 };
 
 export const useUserSettingsQuery = (userId: string) => {
@@ -201,41 +175,4 @@ export const useNotificationsQuery = (userId: string | undefined) => {
       refetchOnMount: false,
     },
   );
-};
-
-export const changeEssential = async (
-  userId: string,
-  prevEssentialId: string | null,
-  appleId: string,
-  rank: number,
-) => {
-  const url = `/api/user/post/changeEssential`;
-  return axios.post(url, {
-    userId,
-    prevEssentialId,
-    appleId,
-    rank,
-  });
-};
-
-export const toggleSetting = async (
-  userId: string,
-  settingKey:
-    | "followerNotifications"
-    | "replyNotifications"
-    | "heartNotifications",
-) => {
-  const url = `/api/user/post/toggleSetting`;
-  return axios.post(url, {
-    userId,
-    settingKey,
-  });
-};
-
-export const changeBio = async (userId: string, bio: string) => {
-  const url = `/api/user/post/changeBio`;
-  return axios.post(url, {
-    userId,
-    bio,
-  });
 };

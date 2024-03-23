@@ -61,7 +61,11 @@ async function cacheArtifacts(ids: string[]): Promise<ArtifactData[]> {
     await Promise.all(
       missingArtifacts.map((artifact) => {
         artifacts[artifact.id] = artifact;
-        return setCache(`artifact:${artifact.id}:data`, JSON.stringify(artifact), 3600);
+        return setCache(
+          `artifact:${artifact.id}:data`,
+          JSON.stringify(artifact),
+          3600,
+        );
       }),
     );
   }

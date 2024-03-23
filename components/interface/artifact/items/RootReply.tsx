@@ -7,8 +7,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
-import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useNavContext } from "@/context/NavContext";
+import { useInterfaceContext } from "@/context/Interface";
+import { useNavContext } from "@/context/Nav";
 
 interface ReplyProps {
   reply: ReplyType;

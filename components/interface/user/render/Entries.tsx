@@ -3,7 +3,7 @@ import { useEntriesQuery } from "@/lib/helper/user";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { Entry } from "@/components/interface/user/items/Entry";
 import { ArtifactExtended } from "@/types/globalTypes";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/Interface";
 
 const Entries = ({ userId }: { userId: string }) => {
   const { scrollContainerRef } = useInterfaceContext();

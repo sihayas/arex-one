@@ -3,9 +3,9 @@ import { Activity } from "@/types/dbTypes";
 import React, { Fragment } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { ArtifactExtended } from "@/types/globalTypes";
-import { useInterfaceContext } from "@/context/InterfaceContext";
-import { Entry } from "@/components/index/items/Entry";
-import { Wisp } from "@/components/index/items/Wisp";
+import { useInterfaceContext } from "@/context/Interface";
+import { Entry } from "@/components/feed/items/Entry";
+import { Wisp } from "@/components/feed/items/Wisp";
 
 const Feed = ({
   userId,

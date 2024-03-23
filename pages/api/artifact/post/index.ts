@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/global/prisma";
-import { createArtifactActivity } from "@/pages/api/mid/createActivity";
+import { createArtifactActivity } from "@/pages/api/middleware";
 import { setCache, redis } from "@/lib/global/redis";
 import { ArtifactType, SoundType } from "@prisma/client";
 

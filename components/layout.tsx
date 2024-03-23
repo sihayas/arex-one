@@ -1,7 +1,7 @@
-import { Interface } from "./interface/Interface";
+import { Interface } from "./interface";
 import React, { useEffect, ReactNode } from "react";
-import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useNavContext } from "@/context/NavContext";
+import { useInterfaceContext } from "@/context/Interface";
+import { useNavContext } from "@/context/Nav";
 
 import { motion, useAnimate } from "framer-motion";
 

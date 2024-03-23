@@ -1,8 +1,10 @@
 import { prisma } from "@/lib/global/prisma";
 
+export const runtime = "edge";
+
 export default async function onRequestDelete(request: any) {
   try {
-    const { userId, authorId } = await request.json();
+    const { authorId, userId } = await request.json();
 
     if (authorId === userId) {
       throw new Error("You cannot unfollow yourself.");
@@ -16,11 +18,16 @@ export default async function onRequestDelete(request: any) {
         },
         isDeleted: false,
       },
+      include: {
+        activities: true, // Eagerly load the related Activity records
+      },
     });
 
-    if (!existingFollow) {
+    if (!existingFollow || !existingFollow.activities.length) {
       throw new Error("Follow relationship does not exist.");
     }
+
+    const activityId = existingFollow.activities[0].id;
 
     // Mark the follow relationship as deleted
     await prisma.$transaction([
@@ -29,11 +36,11 @@ export default async function onRequestDelete(request: any) {
         data: { isDeleted: true },
       }),
       prisma.activity.update({
-        where: { id: existingFollow.activityId },
+        where: { id: activityId },
         data: { isDeleted: true },
       }),
       prisma.notification.updateMany({
-        where: { activityId: existingFollow.activityId, isDeleted: false },
+        where: { activityId, isDeleted: false },
         data: { isDeleted: true },
       }),
     ]);

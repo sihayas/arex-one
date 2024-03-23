@@ -4,7 +4,7 @@ import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/Interface";
 import {
   FiveStar,
   FourHalfStar,

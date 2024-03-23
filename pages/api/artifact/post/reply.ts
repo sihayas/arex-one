@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/global/prisma";
-import { createReplyActivity } from "@/pages/api/mid/createActivity";
-import { createNotification } from "@/pages/api/mid/createNotification";
-import { createKey } from "@/pages/api/mid/createKey";
+import { createReplyActivity } from "@/pages/api/middleware";
+import { createNotification } from "@/pages/api/middleware";
+import { createKey } from "@/pages/api/middleware";
 import { ActivityType } from "@prisma/client";
 import { ReplyType } from "@/types/dbTypes";
 

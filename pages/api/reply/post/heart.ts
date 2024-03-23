@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/global/prisma";
 import { ActivityType } from "@prisma/client";
-import { createHeartActivity } from "@/pages/api/mid/createActivity";
-import { createKey } from "@/pages/api/mid/createKey";
+import { createKey } from "@/pages/api/middleware";
 
+import { createHeartActivity } from "@/pages/api/middleware";
 type Data = {
   success: boolean;
   message: string;

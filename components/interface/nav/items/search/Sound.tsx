@@ -1,26 +1,18 @@
 import Image from "next/image";
 import { Command } from "cmdk";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import { useSoundContext } from "@/context/SoundContext";
-import { useNavContext } from "@/context/NavContext";
-import { changeEssential } from "@/lib/helper/user";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useNavContext } from "@/context/Nav";
+import { useInterfaceContext } from "@/context/Interface";
 
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const { user } = useInterfaceContext();
 
   const {
-    prevEssentialId,
-    setPrevEssentialId,
-    rank,
-    setRank,
-    setSelectedFormSound,
-  } = useSoundContext();
-  const {
     setInputValue,
     isChangingEssential,
     setStoredInputValue,
     inputValue,
+    setSelectedFormSound,
   } = useNavContext();
 
   const soundType = sound.type;
@@ -35,25 +27,20 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
 
   const onSelect = async (appleId: string) => {
     // If essential is being changed and user exists
-    if (
-      isChangingEssential &&
-      user &&
-      prevEssentialId &&
-      soundType === "albums"
-    ) {
+    if (isChangingEssential && user && soundType === "albums") {
       // Change essential
-      const response = await changeEssential(
-        user.id,
-        prevEssentialId,
-        appleId,
-        rank,
-      );
+      // const response = await changeEssential(
+      //   user.id,
+      //   prevEssentialId,
+      //   appleId,
+      //   rank,
+      // );
       // If response is successful, reset values
-      if (response.status === 200) {
-        setPrevEssentialId("");
-        setInputValue("");
-        setRank(0);
-      }
+      // if (response.status === 200) {
+      //   setPrevEssentialId("");
+      //   setInputValue("");
+      //   setRank(0);
+      // }
     } else {
       // If not changing essential, store input value and prepare form
       setSelectedFormSound(sound);

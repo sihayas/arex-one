@@ -17,10 +17,13 @@ export default async function onRequestGet(request: any) {
   const start = (page - 1) * limit;
 
   if (!soundId || !userId) {
-    return new Response(JSON.stringify({ error: "Sound ID and User ID are required." }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Sound ID and User ID are required." }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   try {

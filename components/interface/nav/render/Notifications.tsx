@@ -1,8 +1,8 @@
 import Heart from "@/components/interface/nav/items/notification/Heart";
 import Reply from "@/components/interface/nav/items/notification/Reply";
 // import Follow from "@/components/interface/nav/items/notification/Follow";
-import { PageName, useInterfaceContext } from "@/context/InterfaceContext";
-import { GetDimensions } from "@/components/interface/Interface";
+import { PageName, useInterfaceContext } from "@/context/Interface";
+import { GetDimensions } from "@/components/interface";
 import { motion } from "framer-motion";
 
 const Notifications = () => {

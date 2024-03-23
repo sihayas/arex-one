@@ -4,11 +4,13 @@ import { Command } from "cmdk";
 import { useUser } from "@/hooks/usePage";
 
 const UserItem = ({ user }: { user: UserType }) => {
+  const { handleSelectUser } = useUser();
   return (
     <Command.Item
       onMouseDown={(e) => e.preventDefault()}
       className="w-full border-b p-4 border-silver"
       key={user.id}
+      onSelect={() => handleSelectUser(user)}
     >
       <div className="flex w-full items-center gap-4">
         <Image

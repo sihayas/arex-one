@@ -3,10 +3,10 @@ import "styles/cmdk.css";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { SoundDetailsProvider } from "@/context/SoundContext";
+import { SoundDetailsProvider } from "@/context/Sound";
 import { Toaster } from "sonner";
-import { InterfaceContextProvider } from "@/context/InterfaceContext";
-import { NavProvider } from "@/context/NavContext";
+import { InterfaceContextProvider } from "@/context/Interface";
+import { NavProvider } from "@/context/Nav";
 import localFont from "next/font/local";
 
 const garamond12 = localFont({

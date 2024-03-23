@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useNavContext } from "@/context/NavContext";
+import { useInterfaceContext } from "@/context/Interface";
+import { useNavContext } from "@/context/Nav";
 
 import { Command } from "cmdk";
-import Nav from "@/components/interface/nav/Nav";
+import Nav from "@/components/interface/nav";
 
 import Sound from "@/components/interface/sound/Sound";
-import Artifact from "@/components/interface/artifact/Artifact";
-import User from "@/components/interface/user/User";
+import Artifact from "@/components/interface/artifact";
+import User from "@/components/interface/user";
 
 import {
   motion,
@@ -17,7 +17,7 @@ import {
   MotionValue,
   AnimatePresence,
 } from "framer-motion";
-import { PageName } from "@/context/InterfaceContext";
+import { PageName } from "@/context/Interface";
 import { createPortal } from "react-dom";
 
 // Calculate & set base dimensions and target dimensions for the window per page

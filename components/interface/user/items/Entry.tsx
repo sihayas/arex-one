@@ -2,8 +2,8 @@ import React from "react";
 
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { useInterfaceContext } from "@/context/InterfaceContext";
-import { cardBackMask, getStarComponent } from "@/components/index/items/Entry";
+import { useInterfaceContext } from "@/context/Interface";
+import { cardBackMask, getStarComponent } from "@/components/feed/items/Entry";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
 import { Interaction } from "@/components/global/Interaction";

@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useSoundContext } from "@/context/SoundContext";
-import GetSearchResults from "@/lib/helper/search";
 import { debounce } from "lodash";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -15,15 +13,17 @@ import {
   TargetFormIcon,
   TargetCommandIcon,
 } from "@/components/icons";
-import { useNavContext } from "@/context/NavContext";
+import { useNavContext } from "@/context/Nav";
 import Avatar from "@/components/global/Avatar";
-import { useInterfaceContext } from "@/context/InterfaceContext";
-import { createReply } from "@/lib/helper/artifact";
+import { useInterfaceContext } from "@/context/Interface";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+import { createReply } from "@/lib/helper/nav";
+import { Search } from "@/lib/helper/nav";
 
 const iconVariants = {
   exit: {
@@ -48,7 +48,7 @@ const Nav = () => {
     activeAction,
     setActiveAction,
   } = useNavContext();
-  const { selectedFormSound } = useSoundContext();
+  const { selectedFormSound } = useNavContext();
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
 
   const isNotifications = activeAction === "notifications";
@@ -145,7 +145,7 @@ const Nav = () => {
   };
 
   // Render search results
-  const { data } = GetSearchResults(searchQuery);
+  const { data } = Search(searchQuery);
 
   const handleReplySubmit = () => {
     if (!replyTarget || !inputValue || !user) return;

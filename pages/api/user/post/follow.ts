@@ -1,10 +1,13 @@
 import { prisma } from "@/lib/global/prisma";
-import { createKey } from "@/pages/api/mid/createKey";
+import { createKey } from "@/pages/api/middleware";
+
 import { ActivityType } from "@/types/dbTypes";
+
+export const runtime = "edge";
 
 export default async function onRequestPost(request: any) {
   try {
-    const { userId, authorId } = await request.json();
+    const { authorId, userId } = await request.json();
 
     if (authorId === userId) {
       throw new Error("You cannot follow yourself.");
@@ -27,7 +30,6 @@ export default async function onRequestPost(request: any) {
       const newFollow = await tx.follows.create({
         data: { followerId: authorId, followingId: userId },
       });
-
       // Check if the followee is following the follower
       const inverseFollow = await tx.follows.findUnique({
         where: {
@@ -38,22 +40,18 @@ export default async function onRequestPost(request: any) {
           isDeleted: false,
         },
       });
-
       const followType = inverseFollow
         ? ActivityType.Followed
         : ActivityType.FollowedBack;
-
       const activity = await tx.activity.create({
         data: {
           type: followType,
           referenceId: newFollow.id,
         },
       });
-
-      const key = createKey(followType, newFollow.id);
       await tx.notification.create({
         data: {
-          key: key,
+          key: createKey(followType, newFollow.id),
           recipientId: userId,
           activityId: activity.id,
         },
@@ -67,7 +65,7 @@ export default async function onRequestPost(request: any) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Follow relationship already exists.", error);
+    console.error("Follow attempt exited with error:", error);
     return new Response(
       JSON.stringify({ error: "Follow relationship already exists." }),
       {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/Interface";
 
 const Dot = ({
   index,

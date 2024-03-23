@@ -10,14 +10,14 @@ import {
 } from "@/components/icons";
 import React, { useCallback } from "react";
 import { ArtifactExtended } from "@/types/globalTypes";
-import { useSoundContext } from "@/context/SoundContext";
-import { useInterfaceContext } from "@/context/InterfaceContext";
-import { useNavContext } from "@/context/NavContext";
+import { useSoundContext } from "@/context/Sound";
+import { useInterfaceContext } from "@/context/Interface";
+import { useNavContext } from "@/context/Nav";
 import { toast } from "sonner";
-import { createFlag, deleteEntry } from "@/lib/helper/artifact";
 
 import { FlagType } from "@prisma/client";
 import { useArtifact } from "@/hooks/usePage";
+import axios from "axios";
 
 const dotVariants = {
   hidden: { opacity: 0, scale: 0.75 },
@@ -65,9 +65,9 @@ type InteractionProps = {
 };
 
 export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
-  const { playContent, setSelectedFormSound } = useSoundContext();
+  const { playContent } = useSoundContext();
   const { setIsVisible, user } = useInterfaceContext();
-  const { setExpandInput } = useNavContext();
+  const { setExpandInput, setSelectedFormSound } = useNavContext();
   const { handleSelectArtifact } = useArtifact();
 
   const [isDeleting, setIsDeleting] = React.useState(false);
@@ -280,4 +280,46 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
       </div>
     </motion.div>
   );
+};
+
+export const deleteEntry = async (artifactId: string) => {
+  const endpoint = "/api/artifact/delete";
+
+  try {
+    const response = await axios.patch(endpoint, { artifactId });
+
+    if (response.status === 200) {
+      console.log("Deletion successful", response.data);
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error deleting data:", error);
+    throw new Error(`Error during deletion:`);
+  }
+};
+
+export const createFlag = async (
+  referenceId: string,
+  type: FlagType,
+  authorId: string,
+) => {
+  const endpoint = "/api/artifact/post/flag";
+
+  try {
+    const response = await axios.post(endpoint, {
+      referenceId,
+      type,
+      authorId,
+    });
+
+    if (response.status === 200) {
+      console.log("Flagging successful", response.data);
+      return response.data;
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Error flagging data:", error);
+    throw new Error(`Error during flagging:`);
+  }
 };

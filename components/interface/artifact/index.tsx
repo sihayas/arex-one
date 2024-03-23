@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/Interface";
 import {
   animate,
   AnimatePresence,

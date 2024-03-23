@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { useNavContext } from "@/context/NavContext";
+import { useNavContext } from "@/context/Nav";
 
 interface DialProps {
   setRatingValue: (rating: number) => void;

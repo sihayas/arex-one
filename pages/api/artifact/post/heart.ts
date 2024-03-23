@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/global/prisma";
-import { createHeartActivity } from "@/pages/api/mid/createActivity";
-import { createKey } from "@/pages/api/mid/createKey";
+import { createHeartActivity } from "@/pages/api/middleware";
+import { createKey } from "@/pages/api/middleware";
 
 export default async function onRequestPost(request: any) {
   const data = await request.json();

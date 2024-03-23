@@ -2,7 +2,7 @@ import React from "react";
 import Reply from "@/components/interface/artifact/items/Reply";
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "@/lib/helper/artifact";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/Interface";
 
 type RenderChildrenProps = {
   parentReplyId: string;

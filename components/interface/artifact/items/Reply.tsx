@@ -6,11 +6,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/Interface";
 import { LoopIcon, TinyCurveIcon } from "@/components/icons";
 import Image from "next/image";
 import Heart from "@/components/global/Heart";
-import { useNavContext } from "@/context/NavContext";
+import { useNavContext } from "@/context/Nav";
 
 interface ReplyProps {
   reply: ReplyType;

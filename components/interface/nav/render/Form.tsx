@@ -2,19 +2,23 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import { toast } from "sonner";
-import { createEntry } from "@/lib/helper/artifact";
-import { useSoundContext } from "@/context/SoundContext";
 
 import RatingDial from "@/components/interface/nav/items/search/RatingDial";
-import { useNavContext } from "@/context/NavContext";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useNavContext } from "@/context/Nav";
+import { useInterfaceContext } from "@/context/Interface";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
+import { createEntry } from "@/lib/helper/nav";
 
 const Form = () => {
   const { user } = useInterfaceContext();
-  const { selectedFormSound, setSelectedFormSound } = useSoundContext();
-  const { inputRef, inputValue, setInputValue, activeAction } = useNavContext();
+  const {
+    inputRef,
+    inputValue,
+    setInputValue,
+    selectedFormSound,
+    setSelectedFormSound,
+  } = useNavContext();
   const { handleSelectSound } = useSound();
 
   const formRef = useRef<HTMLFormElement>(null);

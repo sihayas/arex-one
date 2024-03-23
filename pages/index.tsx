@@ -1,14 +1,14 @@
 import Layout from "../components/layout";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import Dash from "@/components/index/items/Dash";
+import Dash from "@/components/feed/items/Dash";
 import { animate, motion, useSpring } from "framer-motion";
-import { useInterfaceContext } from "@/context/InterfaceContext";
-import Feed from "@/components/index/render/Feed";
+import { useInterfaceContext } from "@/context/Interface";
+import Feed from "@/components/feed";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
 import { AppleIcon, StarIcon } from "@/components/icons";
-import { cardMask, cardBackMask } from "@/components/index/items/Entry";
+import { cardMask, cardBackMask } from "@/components/feed/items/Entry";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
 

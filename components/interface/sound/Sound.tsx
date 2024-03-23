@@ -11,7 +11,7 @@ import {
 } from "framer-motion";
 
 import { AlbumData, SongData } from "@/types/appleTypes";
-import { useInterfaceContext } from "@/context/InterfaceContext";
+import { useInterfaceContext } from "@/context/Interface";
 
 import Dial from "@/components/interface/sound/sub/Dial";
 import DialMini from "@/components/interface/sound/sub/DialMini";

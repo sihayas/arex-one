@@ -1,8 +1,9 @@
+import Image from "next/image";
 import React, { Fragment } from "react";
 import { Essential } from "@/types/dbTypes";
-import Image from "next/image";
 import { useSound } from "@/hooks/usePage";
 import { AlbumData } from "@/types/appleTypes";
+import { motion } from "framer-motion";
 
 interface EssentialsProps {
   essentials: Essential[];
@@ -16,7 +17,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   };
 
   return (
-    <div className={`ml-auto flex h-full w-full flex-col items-end -space-y-6`}>
+    <>
       {essentials.map((essential, i) => {
         const sound = essential.appleData;
         const artwork = MusicKit.formatArtworkURL(
@@ -27,26 +28,35 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
 
         const rotationClass =
           i === 0 ? "rotate-3" : i === 2 ? "rotate-3" : "-rotate-3";
+        const transformClass = i === 1 ? "-translate-x-[88px]" : "";
 
         return (
-          <Fragment key={`essential-${i}`}>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            key={`essential-${essential.id}`}
+            className={`min-w-[128px] min-h-[128px] overflow-hidden rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh ${rotationClass} ${transformClass}`}
+          >
             <Image
-              className={`shadow-shadowKitHigh outline-silver cursor-pointer rounded-[20px] outline outline-1 ${rotationClass} ${
-                i === 1 ? "z-10 -translate-x-[88px]" : ""
-              }`}
               onClick={() => handleSoundClick(sound)}
               src={artwork}
               alt={`${sound.attributes.name} by ${sound.attributes.artistName} - artwork`}
-              quality={100}
               width={128}
               height={128}
               draggable={false}
-              loading={"lazy"}
             />
-          </Fragment>
+          </motion.div>
         );
       })}
-    </div>
+
+      {essentials.length === 0 && (
+        <>
+          <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh rotate-3" />
+          <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh -rotate-3 -translate-x-[88px]" />
+          <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh rotate-3" />
+        </>
+      )}
+    </>
   );
 };
 

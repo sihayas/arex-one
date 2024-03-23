@@ -1,6 +1,5 @@
-import { Page, useInterfaceContext } from "@/context/InterfaceContext";
-import { useNavContext } from "@/context/NavContext";
-import { useSoundContext } from "@/context/SoundContext";
+import { Page, useInterfaceContext } from "@/context/Interface";
+import { useNavContext } from "@/context/Nav";
 import { useSound } from "@/hooks/usePage";
 
 export const Keybinds = (
@@ -17,8 +16,9 @@ export const Keybinds = (
     storedInputValue,
     setStoredInputValue,
     activeAction,
+    selectedFormSound,
+    setSelectedFormSound,
   } = useNavContext();
-  const { selectedFormSound, setSelectedFormSound } = useSoundContext();
   const { handleSelectSound } = useSound();
 
   const activePage: Page = pages[pages.length - 1];
