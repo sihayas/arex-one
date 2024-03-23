@@ -1,25 +1,27 @@
 import { prisma } from "@/lib/global/prisma";
+import { fetchOrCacheUserFollowers } from "@/pages/api/cache/user";
+import { setCache } from "@/lib/global/redis";
 
 export const runtime = "edge";
 
-export default async function onRequestDelete(request: any) {
+export default async function onRequestPost(request: any) {
   try {
-    const { authorId, userId } = await request.json();
+    const { userId, pageUserId } = await request.json();
 
-    if (authorId === userId) {
+    if (userId === pageUserId) {
       throw new Error("You cannot unfollow yourself.");
     }
 
     const existingFollow = await prisma.follows.findUnique({
       where: {
         followerId_followingId: {
-          followerId: authorId,
-          followingId: userId,
+          followerId: userId,
+          followingId: pageUserId,
         },
         isDeleted: false,
       },
       include: {
-        activities: true, // Eagerly load the related Activity records
+        activities: true,
       },
     });
 
@@ -27,9 +29,11 @@ export default async function onRequestDelete(request: any) {
       throw new Error("Follow relationship does not exist.");
     }
 
+    console.log("Existing follow", existingFollow);
+
     const activityId = existingFollow.activities[0].id;
 
-    // Mark the follow relationship as deleted
+    // Mark the follow relationship in the database as deleted
     await prisma.$transaction([
       prisma.follows.update({
         where: { id: existingFollow.id },
@@ -44,6 +48,17 @@ export default async function onRequestDelete(request: any) {
         data: { isDeleted: true },
       }),
     ]);
+
+    // Update the user's followers cache
+    const userFollowers = await fetchOrCacheUserFollowers(pageUserId);
+    const updatedUserFollowers = userFollowers.filter(
+      (id: string) => id !== userId,
+    );
+    await setCache(
+      `user:${pageUserId}:followers`,
+      JSON.stringify(updatedUserFollowers),
+      3600,
+    );
 
     return new Response(
       JSON.stringify({ success: true, message: "Unfollowed successfully" }),

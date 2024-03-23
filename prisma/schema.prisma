@@ -255,8 +255,7 @@ model Reply {
 enum ActivityType {
     artifact
     heart
-    followed
-    followed_back
+    follow
     reply
 }
 
@@ -278,6 +277,7 @@ model Activity {
     notifications Notification[]
 
     @@index([referenceId])
+    @@unique([type, referenceId])
 }
 
 model Notification {

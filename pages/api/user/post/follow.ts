@@ -1,64 +1,74 @@
 import { prisma } from "@/lib/global/prisma";
 import { createKey } from "@/pages/api/middleware";
 
-import { ActivityType } from "@/types/dbTypes";
+import { ActivityType } from "@prisma/client";
+import { fetchOrCacheUserFollowers } from "@/pages/api/cache/user";
+import { setCache } from "@/lib/global/redis";
 
 export const runtime = "edge";
 
 export default async function onRequestPost(request: any) {
   try {
-    const { authorId, userId } = await request.json();
+    const { userId, pageUserId } = await request.json();
 
-    if (authorId === userId) {
+    if (userId === pageUserId) {
       throw new Error("You cannot follow yourself.");
     }
 
-    // Check if an active follow relationship already exists
-    const existingFollow = await prisma.follows.findFirst({
-      where: {
-        followerId: authorId,
-        followingId: userId,
-        isDeleted: false,
-      },
-    });
-
-    if (existingFollow) {
-      throw new Error("Follow relationship already exists.");
+    // Check if author is already following the user in cache.
+    const userFollowers = await fetchOrCacheUserFollowers(pageUserId);
+    if (userFollowers.includes(userId)) {
+      throw new Error("You are already following this user.");
     }
 
+    // Create or update a follow
     const result = await prisma.$transaction(async (tx) => {
-      const newFollow = await tx.follows.create({
-        data: { followerId: authorId, followingId: userId },
-      });
-      // Check if the followee is following the follower
-      const inverseFollow = await tx.follows.findUnique({
+      const follow = await tx.follows.upsert({
         where: {
           followerId_followingId: {
             followerId: userId,
-            followingId: authorId,
+            followingId: pageUserId,
           },
+        },
+        update: {
+          // If the follow relationship exists, update the isDeleted flag.
           isDeleted: false,
         },
-      });
-      const followType = inverseFollow
-        ? ActivityType.Followed
-        : ActivityType.FollowedBack;
-      const activity = await tx.activity.create({
-        data: {
-          type: followType,
-          referenceId: newFollow.id,
-        },
-      });
-      await tx.notification.create({
-        data: {
-          key: createKey(followType, newFollow.id),
-          recipientId: userId,
-          activityId: activity.id,
+        create: {
+          // Create a new follow relationship if it doesn't exist
+          followerId: userId,
+          followingId: pageUserId,
         },
       });
 
+      await tx.activity.upsert({
+        where: {
+          type_referenceId: {
+            type: ActivityType.follow,
+            referenceId: follow.id,
+          },
+        },
+        update: {
+          isDeleted: false,
+        },
+        create: {
+          type: ActivityType.follow,
+          referenceId: follow.id,
+        },
+      });
+
+      // Not sure how to handle updating the notification
+
       return { success: true, message: "Followed successfully" };
     });
+
+    // Serialize and update the followers cache of the pageUser
+    userFollowers.push(userId);
+    await setCache(
+      `user:${pageUserId}:followers`,
+      JSON.stringify(userFollowers),
+      3600,
+    );
 
     return new Response(JSON.stringify(result), {
       status: 200,

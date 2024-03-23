@@ -1,35 +1,37 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { followUser, unfollowUser } from "@/lib/helper/user";
+import { useInterfaceContext } from "@/context/Interface";
 
 type LinkButtonProps = {
   followingAtoB: boolean;
   followingBtoA: boolean;
   setFollowingAtoB: (value: boolean) => void;
-  authorId: string;
-  userId: string;
+  pageUserId: string;
 };
 
 export default function Link({
   followingAtoB,
   followingBtoA,
   setFollowingAtoB,
-  authorId,
-  userId,
+  pageUserId,
 }: LinkButtonProps) {
+  const { user } = useInterfaceContext();
   const [hovering, setHovering] = React.useState(false);
 
   const isUnlinked = !followingAtoB && !followingBtoA;
   const isLinked = followingAtoB || followingBtoA;
   const isInterlinked = followingAtoB && followingBtoA;
 
+  if (!user) return null;
+
   const handleLink = async () => {
     if (isUnlinked) {
-      await followUser(authorId, userId);
+      await followUser(user.id, pageUserId);
       setFollowingAtoB(true);
       console.log("followed");
     } else {
-      await unfollowUser(authorId, userId);
+      await unfollowUser(user.id, pageUserId);
       setFollowingAtoB(false);
       console.log("unfollowed");
     }

@@ -1,15 +1,15 @@
 import { prisma } from "@/lib/global/prisma";
 import { Essential } from "@/types/dbTypes";
 import { fetchAndCacheSoundsByType } from "../../cache/sounds";
-import { fetchOrCacheUser } from "../../cache/user";
+import { fetchOrCacheUser, fetchOrCacheUserFollowers } from "../../cache/user";
 
 export default async function onRequestGet(request: any) {
   const url = new URL(request.url);
 
-  const sessionUserId = url.searchParams.get("sessionUserId");
+  const userId = url.searchParams.get("userId");
   const pageUserId = url.searchParams.get("pageUserId");
 
-  if (!sessionUserId || !pageUserId) {
+  if (!userId || !pageUserId) {
     console.log("Missing parameters");
     return new Response(
       JSON.stringify({ error: "Required parameters are missing." }),
@@ -20,8 +20,10 @@ export default async function onRequestGet(request: any) {
   }
 
   try {
-    let sessionUserData = await fetchOrCacheUser(sessionUserId);
-    let pageUserData = await fetchOrCacheUser(pageUserId);
+    const pageUserData = await fetchOrCacheUser(pageUserId);
+
+    const userFollowers = await fetchOrCacheUserFollowers(userId);
+    const pageUserFollowers = await fetchOrCacheUserFollowers(pageUserId);
 
     pageUserData.essentials = await enrichEssentialsWithAlbumData(
       pageUserData.essentials,
@@ -29,8 +31,8 @@ export default async function onRequestGet(request: any) {
 
     const { soundCount } = await countUniqueAlbumsAndTracks(pageUserId);
 
-    const isFollowingAtoB = pageUserData.followedBy.includes(sessionUserId);
-    const isFollowingBtoA = sessionUserData.followedBy.includes(pageUserId);
+    const isFollowingAtoB = pageUserFollowers.includes(userId);
+    const isFollowingBtoA = userFollowers.includes(pageUserId);
 
     const response = {
       ...pageUserData,

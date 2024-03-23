@@ -37,11 +37,8 @@ export function createKey(type: ActivityType, targetId: string): string {
     case ActivityType.heart:
       key = `heart|${targetId}`;
       break;
-    case ActivityType.followed_back:
-      key = `followed_back|${targetId}`;
-      break;
-    case ActivityType.followed:
-      key = `followed|${targetId}`;
+    case ActivityType.follow:
+      key = `follow|${targetId}`;
       break;
     case ActivityType.reply:
       key = `reply|${targetId}`;

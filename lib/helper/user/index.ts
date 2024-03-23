@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { attachSoundData } from "@/lib/helper/feed";
 
 // Initial fetch of basic user and session data
@@ -17,16 +16,16 @@ export const useUserAndSessionQuery = () => {
 
 // Get user data, handle follow/unfollow, and fetch favorites
 export const useUserDataQuery = (
-  sessionUserId: string | undefined,
+  userId: string | undefined,
   pageUserId: string | undefined,
 ) => {
   const { data, isLoading, isError } = useQuery(
     ["userData", pageUserId],
     async () => {
-      if (!sessionUserId || !pageUserId) return null;
+      if (!userId || !pageUserId) return null;
       const response = await fetch(
-        `/api/user/get?sessionUserId=${encodeURIComponent(
-          sessionUserId,
+        `/api/user/get?userId=${encodeURIComponent(
+          userId,
         )}&pageUserId=${encodeURIComponent(pageUserId)}`,
       );
 
@@ -79,13 +78,13 @@ export const useEntriesQuery = (userId: string) => {
   );
 };
 
-export const followUser = async (authorId: string, userId: string) => {
+export const followUser = async (userId: string, pageUserId: string) => {
   const response = await fetch(`/api/user/post/follow`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ authorId, userId }),
+    body: JSON.stringify({ userId, pageUserId }),
   });
 
   if (!response.ok) {
@@ -93,13 +92,13 @@ export const followUser = async (authorId: string, userId: string) => {
   }
 };
 
-export const unfollowUser = async (authorId: string, userId: string) => {
-  const response = await fetch(`/api/user/delete/follow`, {
-    method: "DELETE",
+export const unfollowUser = async (userId: string, pageUserId: string) => {
+  const response = await fetch(`/api/user/post/unfollow`, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ authorId, userId }),
+    body: JSON.stringify({ userId, pageUserId }),
   });
 
   if (!response.ok) {

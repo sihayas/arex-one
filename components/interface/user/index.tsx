@@ -82,8 +82,7 @@ const User = () => {
               followingAtoB={followingAtoB}
               followingBtoA={followingBtoA}
               setFollowingAtoB={setFollowingAtoB}
-              authorId={user.id}
-              userId={pageUser.id}
+              pageUserId={pageUser.id}
             />
           </div>
         </div>

@@ -205,8 +205,7 @@ export interface Activity {
 export enum ActivityType {
   Artifact = "artifact",
   Heart = "heart",
-  Followed = "followed",
-  FollowedBack = "followed_back",
+  Follow = "follow",
   ReplyType = "reply",
 }
 
