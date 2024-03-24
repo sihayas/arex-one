@@ -33,7 +33,7 @@ const Results = ({ searchData }: SearchProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className={`mask -z-10 flex w-full flex-col overflow-scroll`}
+      className={`mask -z-10 flex w-full flex-col overflow-scroll pb-8`}
     >
       <Command.List>
         {allData.map((item, index) => {
@@ -48,17 +48,23 @@ const Results = ({ searchData }: SearchProps) => {
                       layoutId="bubble"
                       className="bg-silver shadow-shadowKitLow absolute inset-0 -z-10 m-2"
                       style={{ borderRadius: 16 }}
-                      transition={{
-                        type: "spring",
-                        bounce: 0.2,
-                        duration: 0.6,
-                      }}
                     />
                   )}
                 </div>
               );
             case "users":
-              return <UserItem key={index} user={item} />;
+              return (
+                <div key={item.id} className={`relative z-0`}>
+                  <UserItem user={item} />
+                  {active === item.id && (
+                    <motion.span
+                      layoutId="bubble"
+                      className="bg-silver shadow-shadowKitLow absolute inset-0 -z-10 m-2"
+                      style={{ borderRadius: 16 }}
+                    />
+                  )}
+                </div>
+              );
             default:
               return null;
           }

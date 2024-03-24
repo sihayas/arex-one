@@ -6,38 +6,41 @@ import Essentials from "@/components/interface/user/render/Essentials";
 import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
 import Link from "@/components/interface/user/items/Link";
+
 const User = () => {
-  const [followingAtoB, setFollowingAtoB] = useState(false);
-  const [followingBtoA, setFollowingBtoA] = useState(false);
-
   const { user, activePage, pages, scrollContainerRef } = useInterfaceContext();
-
-  const pageUser = activePage.user;
-  const { data, isLoading, isError } = useUserDataQuery(user?.id, pageUser?.id);
-
   const { scrollY } = useScroll({
     container: scrollContainerRef,
     layoutEffect: false,
   });
-
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;
   });
+  const [followingAtoB, setFollowingAtoB] = useState(false);
+  const [followingBtoA, setFollowingBtoA] = useState(false);
+  const pageUser = activePage.user;
+  const circleVariants = {
+    notFollowing: { pathLength: 0, stroke: "#E6E6E6" },
+    following: {
+      pathLength: 1,
+      stroke: followingAtoB && followingBtoA ? "#24FF00" : "#FFFFFF",
+    },
+  };
 
-  const { userData } = data || {};
+  const { data, isLoading, isError } = useUserDataQuery(user?.id, pageUser?.id);
 
   useEffect(() => {
-    if (userData) {
-      setFollowingAtoB(userData.isFollowingAtoB);
-      setFollowingBtoA(userData.isFollowingBtoA);
+    if (data) {
+      setFollowingAtoB(data.isFollowingAtoB);
+      setFollowingBtoA(data.isFollowingBtoA);
     }
-  }, [userData]);
+  }, [data]);
 
   useEffect(() => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
   }, []);
 
-  if (!userData || !user || !pageUser) return;
+  if (!data || !user || !pageUser) return;
 
   return (
     <>
@@ -47,48 +50,138 @@ const User = () => {
           <div className={`flex items-center gap-8`}>
             <div className={`relative flex-shrink-0`}>
               <Avatar
-                className="rounded-max"
-                imageSrc={userData.image}
+                className="rounded-max shadow-shadowKitLow"
+                imageSrc={data.image}
                 altText={`avatar`}
                 width={72}
                 height={72}
-                user={userData}
+                user={data}
               />
-              <div
-                className={`absolute center-x center-y w-[98px] h-[98px] outline outline-3 outline-white rounded-max shadow-shadowKitHigh`}
-              />
+              <motion.svg
+                className={`absolute center-x center-y z-10`}
+                width={104}
+                height={104}
+                viewBox="0 0 104 104"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <filter
+                    id="circleShadow"
+                    x="-10%"
+                    y="-10%"
+                    width="120%"
+                    height="120%"
+                  >
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+                    <feOffset dx="1" dy="1" result="offsetblur" />
+                    <feComponentTransfer>
+                      <feFuncA type="linear" slope="0.1" />
+                    </feComponentTransfer>
+                    <feMerge>
+                      <feMergeNode />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <motion.circle
+                  cx={52}
+                  cy={52}
+                  r={50.5}
+                  strokeWidth={3}
+                  strokeLinecap={"round"}
+                  variants={circleVariants}
+                  transition={{ type: "spring", stiffness: 100, damping: 40 }}
+                  initial="notFollowing"
+                  animate={followingBtoA ? "following" : "notFollowing"}
+                  filter="url(#circleShadow)"
+                />
+              </motion.svg>
+              <motion.svg
+                className={`absolute center-x center-y`}
+                width={104}
+                height={104}
+                viewBox="0 0 104 104"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <motion.circle
+                  cx={52}
+                  cy={52}
+                  r={50.5}
+                  stroke="#E6E6E6"
+                  strokeWidth={3}
+                />
+              </motion.svg>
             </div>
 
-            <p className={`text-gray2 text-3xl font-bold`}>
-              {userData.username}
-            </p>
+            <p className={`text-gray2 text-3xl font-bold`}>{data.username}</p>
           </div>
-          {/*  Signed User */}
-          <div className={`pl-[72px] flex items-center gap-8 relative w-full`}>
-            <div className={`relative flex-shrink-0`}>
-              <div
-                className={`absolute center-x center-y w-[60px] h-[60px] outline outline-3 outline-white rounded-max shadow-shadowKitHigh`}
-              />
-              <Avatar
-                className="rounded-max"
-                imageSrc={user.image}
-                altText={`avatar`}
-                width={32}
-                height={32}
-                user={userData}
+          {/* SignedIn User */}
+          {user.id !== pageUser.id && (
+            <div
+              className={`pl-[72px] flex items-center gap-8 relative w-full`}
+            >
+              <div className={`relative flex-shrink-0`}>
+                <Avatar
+                  className="rounded-max shadow-shadowKitLow"
+                  imageSrc={user.image}
+                  altText={`avatar`}
+                  width={32}
+                  height={32}
+                  user={data}
+                />
+                <motion.svg
+                  className={`absolute center-x center-y z-10 overflow-visible rotate-45`}
+                  width={64}
+                  height={64}
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <motion.circle
+                    cx={32}
+                    cy={32}
+                    r={30.5}
+                    stroke="white"
+                    strokeWidth={3}
+                    strokeLinecap={"round"}
+                    variants={circleVariants}
+                    transition={{ type: "spring", stiffness: 100, damping: 40 }}
+                    initial="notFollowing"
+                    animate={followingAtoB ? "following" : "notFollowing"}
+                    filter="url(#circleShadow)"
+                  />
+                </motion.svg>
+                <motion.svg
+                  className={`absolute center-x center-y`}
+                  width={64}
+                  height={64}
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <motion.circle
+                    cx={32}
+                    cy={32}
+                    r={30.5}
+                    stroke="#E6E6E6"
+                    strokeWidth={3}
+                  />
+                </motion.svg>
+              </div>
+              <Link
+                followingAtoB={followingAtoB}
+                followingBtoA={followingBtoA}
+                setFollowingAtoB={setFollowingAtoB}
+                pageUserId={pageUser.id}
               />
             </div>
-            <Link
-              followingAtoB={followingAtoB}
-              followingBtoA={followingBtoA}
-              setFollowingAtoB={setFollowingAtoB}
-              pageUserId={pageUser.id}
-            />
-          </div>
+          )}
         </div>
 
         <div className={`ml-auto flex flex-col items-end -space-y-6`}>
-          <Essentials essentials={userData.essentials} />
+          <Essentials essentials={data.essentials} />
         </div>
       </div>
 

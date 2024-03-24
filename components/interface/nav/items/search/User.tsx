@@ -7,9 +7,9 @@ const UserItem = ({ user }: { user: UserType }) => {
   const { handleSelectUser } = useUser();
   return (
     <Command.Item
+      value={user.id}
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full border-b p-4 border-silver"
-      key={user.id}
+      className="w-full border-b p-4 border-silver cursor-pointer"
       onSelect={() => handleSelectUser(user)}
     >
       <div className="flex w-full items-center gap-4">

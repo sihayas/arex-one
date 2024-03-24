@@ -28,21 +28,9 @@ const cardMask = {
   WebkitMaskRepeat: "no-repeat",
 };
 
-const backArtMask = {
-  maskImage: "url('/images/mask_art_card_back.svg')",
-  maskSize: "cover",
-  maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_card_back.svg')",
-  WebkitMaskSize: "cover",
-  WebkitMaskRepeat: "no-repeat",
-};
-
 export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   const { scrollContainerRef } = useInterfaceContext();
-  const [hovered, setHovered] = React.useState(false);
-  const [isFlipped, setIsFlipped] = React.useState(
-    index === 0 ? true : index === 1,
-  );
+  const [isFlipped, setIsFlipped] = React.useState(true);
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -142,14 +130,11 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
         >
           {/* Front */}
           <div
-            style={{
-              ...cardMask,
-            }}
+            style={{ ...cardMask }}
             className="backface-hidden absolute left-0 top-0 flex h-full w-full flex-col bg-white"
           >
             <Image
               className={`-mt-6`}
-              // onClick={handleSoundClick}
               src={artwork}
               alt={`${name} by ${artistName} - artwork`}
               quality={100}

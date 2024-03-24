@@ -20,7 +20,8 @@ export default function Link({
   const [hovering, setHovering] = React.useState(false);
 
   const isUnlinked = !followingAtoB && !followingBtoA;
-  const isLinked = followingAtoB || followingBtoA;
+  const isLinked =
+    (followingAtoB && !followingBtoA) || (!followingAtoB && followingBtoA);
   const isInterlinked = followingAtoB && followingBtoA;
 
   if (!user) return null;

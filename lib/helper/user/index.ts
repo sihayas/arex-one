@@ -19,27 +19,21 @@ export const useUserDataQuery = (
   userId: string | undefined,
   pageUserId: string | undefined,
 ) => {
-  const { data, isLoading, isError } = useQuery(
-    ["userData", pageUserId],
-    async () => {
-      if (!userId || !pageUserId) return null;
-      const response = await fetch(
-        `/api/user/get?userId=${encodeURIComponent(
-          userId,
-        )}&pageUserId=${encodeURIComponent(pageUserId)}`,
-      );
+  return useQuery(["userData", pageUserId], async () => {
+    if (!userId || !pageUserId) return null;
+    const response = await fetch(
+      `/api/user/get?userId=${encodeURIComponent(
+        userId,
+      )}&pageUserId=${encodeURIComponent(pageUserId)}`,
+    );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
 
-      const userData = await response.json();
-
-      return { userData };
-    },
-  );
-
-  return { data, isLoading, isError };
+    const data = await response.json();
+    return data; // Directly return the fetched data
+  });
 };
 
 export const useEntriesQuery = (userId: string) => {

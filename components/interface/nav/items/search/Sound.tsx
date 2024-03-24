@@ -5,48 +5,16 @@ import { useNavContext } from "@/context/Nav";
 import { useInterfaceContext } from "@/context/Interface";
 
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
-  const { user } = useInterfaceContext();
-
-  const {
-    setInputValue,
-    isChangingEssential,
-    setStoredInputValue,
-    inputValue,
-    setSelectedFormSound,
-  } = useNavContext();
-
+  const { setSelectedFormSound } = useNavContext();
   const soundType = sound.type;
-
   const artwork = sound.attributes.artwork.url
     .replace("{w}", "95")
     .replace("{h}", "95");
-
   const artistName = sound.attributes.artistName;
-
   const song = soundType === "songs" ? (sound as SongData) : null;
 
   const onSelect = async (appleId: string) => {
-    // If essential is being changed and user exists
-    if (isChangingEssential && user && soundType === "albums") {
-      // Change essential
-      // const response = await changeEssential(
-      //   user.id,
-      //   prevEssentialId,
-      //   appleId,
-      //   rank,
-      // );
-      // If response is successful, reset values
-      // if (response.status === 200) {
-      //   setPrevEssentialId("");
-      //   setInputValue("");
-      //   setRank(0);
-      // }
-    } else {
-      // If not changing essential, store input value and prepare form
-      setSelectedFormSound(sound);
-      setStoredInputValue(inputValue);
-      setInputValue("");
-    }
+    setSelectedFormSound(sound);
   };
 
   // Render command item
