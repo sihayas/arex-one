@@ -1,9 +1,12 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-export const useSoundInfoQuery = (appleId: string) =>
+export const useSoundInfoQuery = (appleId?: string) =>
   useQuery(
     ["sound", appleId],
     async () => {
+      if (!appleId) {
+        throw new Error("appleId is required");
+      }
       const url = `/api/sound/get?appleId=${encodeURIComponent(appleId)}`;
       const response = await fetch(url);
       if (!response.ok) {

@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
 
 import { Command } from "cmdk";
 import Nav from "@/components/interface/nav";
 
-import Sound from "@/components/interface/sound/Sound";
+import Sound from "@/components/interface/sound";
 import Artifact from "@/components/interface/artifact";
 import User from "@/components/interface/user";
 
@@ -48,6 +48,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   const { expandInput, activeAction } = useNavContext();
   const cmdkPortal = document.getElementById("cmdk");
   const isNotifications = activeAction === "notifications";
+  const isChanging = useRef(false);
 
   const { base, target } = GetDimensions(activePage.name as PageName);
 
@@ -117,7 +118,11 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       animate(
         scope.current,
         { [dimension]: newDimension.get() },
-        { type: "spring", stiffness: 250, damping: 35 },
+        {
+          type: "spring",
+          stiffness: 250,
+          damping: 35,
+        },
       );
     };
 
@@ -134,7 +139,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     };
   }, [animate, newWidth, newHeight, scope]);
 
-  // Animate portal styles
+  // Animate portal styles mainly for expandInput
   useEffect(() => {
     const animateShadow = () => {
       const animationConfig = {
@@ -164,7 +169,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       id={`cmdk`}
       className={`cmdk rounded-full`}
     >
-      {/* Shape-shift / Window, lies atop the rendered content */}
+      {/* Shape-shift Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
         className={`relative flex items-start justify-center overflow-hidden rounded-full bg-[#F6F6F6] bg-opacity-75 ${
@@ -187,11 +192,17 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           <AnimatePresence mode={`wait`}>
             <motion.div
               key={activePage.key}
-              className={`flex flex-col w-full h-full items-center`}
-              initial={{ filter: "blur(4px)", opacity: 0 }}
+              className={`flex flex-col w-full h-full items-center origin-[50%_25%]`}
+              initial={{ filter: "blur(24px)", opacity: 0 }}
               animate={{ filter: "blur(0px)", opacity: 1 }}
-              exit={{ filter: "blur(4px)", opacity: 0 }}
-              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              exit={{ filter: "blur(24px)", opacity: 0, scale: 0.75 }}
+              transition={{ ease: "easeInOut", duration: 0.25 }}
+              onAnimationStart={() => {
+                isChanging.current = true;
+              }}
+              onAnimationComplete={() => {
+                isChanging.current = false;
+              }}
             >
               {activePage.name === "sound" && <Sound />}
               {activePage.name === "artifact" && <Artifact />}

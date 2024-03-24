@@ -22,8 +22,8 @@ import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { createReply } from "@/lib/helper/nav";
-import { Search } from "@/lib/helper/nav";
+import { createReply } from "../../../lib/helper/interface/nav";
+import { Search } from "../../../lib/helper/interface/nav";
 
 const iconVariants = {
   exit: {

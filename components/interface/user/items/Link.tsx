@@ -1,6 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import { followUser, unfollowUser } from "@/lib/helper/user";
+import {
+  followUser,
+  unfollowUser,
+} from "../../../../lib/helper/interface/user";
 import { useInterfaceContext } from "@/context/Interface";
 
 type LinkButtonProps = {

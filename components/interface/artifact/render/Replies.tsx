@@ -1,5 +1,5 @@
 import { ReplyType } from "@/types/dbTypes";
-import { useRepliesQuery } from "@/lib/helper/artifact";
+import { useRepliesQuery } from "../../../../lib/helper/interface/artifact";
 import React from "react";
 import RootReply from "@/components/interface/artifact/items/RootReply";
 import { LayoutGroup, motion } from "framer-motion";

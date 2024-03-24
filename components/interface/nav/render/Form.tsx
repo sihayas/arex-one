@@ -8,7 +8,7 @@ import { useNavContext } from "@/context/Nav";
 import { useInterfaceContext } from "@/context/Interface";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
-import { createEntry } from "@/lib/helper/nav";
+import { createEntry } from "../../../../lib/helper/interface/nav";
 
 const Form = () => {
   const { user } = useInterfaceContext();

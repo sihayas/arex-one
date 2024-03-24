@@ -6,7 +6,7 @@ import React, {
   SetStateAction,
   useEffect,
 } from "react";
-import { ReplyTargetType } from "@/lib/helper/nav";
+import { ReplyTargetType } from "../lib/helper/interface/nav";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
 export type NavContextType = {

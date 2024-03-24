@@ -1,36 +1,98 @@
-import React, { Fragment } from "react";
-import { motion } from "framer-motion";
+import React, { Fragment, useEffect } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
+import { useInterfaceContext } from "@/context/Interface";
 
 type DialProps = {
   ratings: number[];
   average: number;
-  count: number;
+  onRangeChange: (newRange: number | null) => void;
 };
 
-const dialVariants = {
+const springDialConfig = {
+  type: "spring",
+  stiffness: 100,
+  damping: 10,
+  mass: 0.5,
+};
+const springTextConfig = {
+  type: "spring",
+  stiffness: 100,
+  damping: 10,
+  mass: 0.1,
+};
+const springSegmentConfig = {
+  type: "spring",
+  stiffness: 100,
+  damping: 10,
+  mass: 0.1,
+};
+const textVariants = {
   initial: {
-    scale: 1,
+    scale: 0,
+    opacity: 0,
+    x: "-50%",
+    y: "-50%",
+    left: "50%",
+    top: "50%",
   },
-  hover: {
-    scale: 2.889,
+  animate: {
+    scale: 1,
+    opacity: 1,
+    x: "-50%",
+    y: "-50%",
+    left: "50%",
+    top: "50%",
+  },
+  exit: {
+    scale: 0,
+    opacity: 0,
+    x: "-50%",
+    y: "-50%",
+    left: "50%",
+    top: "50%",
   },
 };
 
-const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
-  const strokeWidth = 8;
+const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
+  const { scrollContainerRef } = useInterfaceContext();
+  const { scrollY } = useScroll({
+    container: scrollContainerRef,
+    layoutEffect: false,
+  });
+  const [isOpen, setIsOpen] = React.useState(false);
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest < 1) {
+      setIsOpen(false);
+    } else {
+      setIsOpen(true);
+    }
+  });
+
+  const [isHovered, setIsHovered] = React.useState(false);
+  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+
+  useEffect(() => {
+    onRangeChange(activeIndex);
+  }, [activeIndex, onRangeChange]);
+
+  const strokeWidth = 6;
   const dotRadius = 1.5;
-  const radius = 156;
+  const radius = 74;
 
   const circumference = 2 * Math.PI * radius;
-  const viewBoxSize = radius * 2 + strokeWidth; // 32 = padding
+  const viewBoxSize = radius * 2 + strokeWidth;
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
-  const strokes = [8, 10, 12, 14, 16];
-  const colors = ["#000", "#000", "#000", "#000", "#000"];
+  const colors = ["#FFF", "#FFF", "#FFF", "#FFF", "#FFF"];
 
   // Account for excess stroke created by the linecap rounding
   const excessStroke = 40;
-
   // Change this to adjust spacing between segments
   const gap = strokeWidth * 2;
   // Increment by 4 relative to base gap of 8
@@ -85,12 +147,21 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
   const hoverStrokeWidth = strokeWidth * 1.5;
 
   return (
-    <motion.div className={`relative overflow-visible`}>
+    <motion.div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setHoveredIndex(null);
+      }}
+      className={`relative`}
+    >
       <motion.svg
+        whileHover={{ scale: 1.2 }}
+        animate={{ scale: !isOpen ? 2 : 1 }}
+        transition={springDialConfig}
         width={viewBoxSize}
         height={viewBoxSize}
         viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
-        variants={dialVariants}
         overflow={`visible`}
       >
         {ratings.map((rating, index) => {
@@ -104,26 +175,30 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
           return (
             <Fragment key={index}>
               <motion.circle
-                className={`cursor-pointer`}
-                cx={viewBoxSize / 2}
-                cy={viewBoxSize / 2}
-                r={radius}
-                fill="none"
-                stroke={colors[index % colors.length]}
-                strokeWidth={strokes[index % strokes.length]}
-                strokeLinecap="round"
-                initial={{
-                  strokeDasharray: "0 1",
-                  strokeDashoffset: 0,
+                onMouseEnter={() => {
+                  setHoveredIndex(index);
+                }}
+                onClick={() => {
+                  setActiveIndex((prev) => (prev === index ? null : index));
                 }}
                 animate={{
                   strokeDasharray: strokeDasharray,
                   strokeDashoffset: strokeDashoffset,
+                  opacity: !isOpen ? 1 : activeIndex === index ? 1 : 0.25,
                 }}
                 whileHover={{
                   strokeWidth: hoverStrokeWidth,
+                  stroke: colors[index % colors.length],
+                  opacity: 1,
                 }}
-                transition={{ type: "spring", stiffness: 160, damping: 60 }}
+                cx={viewBoxSize / 2}
+                cy={viewBoxSize / 2}
+                r={radius}
+                fill="none"
+                stroke={isOpen ? "#000" : "#FFF"}
+                strokeWidth={isOpen ? 6 : 6}
+                strokeLinecap="round"
+                transition={{ type: "spring", stiffness: 160, damping: 10 }}
               />
               <motion.circle
                 cx={dotPosition.x}
@@ -138,20 +213,48 @@ const Dial: React.FC<DialProps> = ({ ratings, average, count }) => {
                   cx: dotPosition.x,
                   cy: dotPosition.y,
                 }}
-                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                transition={springSegmentConfig}
               />
             </Fragment>
           );
         })}
       </motion.svg>
 
-      <motion.div
-        className={`center-x center-y absolute flex h-20 w-20 flex-col items-center justify-center gap-[13px] text-center text-white`}
-      >
-        <p className={`font-serif text-[64px] leading-[43px]`}>{average}</p>
-        <hr className={`w-4 rounded-full border-[1px] border-white`} />
-        <p className={`text-[15px] font-bold leading-[11px]`}>{count}</p>
-      </motion.div>
+      <AnimatePresence>
+        {/* Display Count */}
+        {hoveredIndex !== null && (
+          <motion.div
+            key={hoveredIndex}
+            className={`text-gray2 pointer-events-none absolute flex items-center justify-center gap-2  text-center font-serif text-[48px] leading-[32px] will-change-transform`}
+            variants={textVariants}
+            initial={`initial`}
+            animate={`animate`}
+            exit={`exit`}
+            transition={springTextConfig}
+          >
+            {ratings[hoveredIndex]}
+          </motion.div>
+        )}
+
+        {/* Display Rating */}
+        {hoveredIndex === null && (
+          <motion.div
+            style={{
+              left: "50%",
+              top: "50%",
+              x: "-50%",
+              y: "-50%",
+            }}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            transition={springTextConfig}
+            className={`text-gray2 pointer-events-none absolute flex flex-col items-center justify-center gap-4 text-center font-serif text-[48px] leading-[32px] will-change-transform`}
+          >
+            {average}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

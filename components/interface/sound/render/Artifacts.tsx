@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useArtifactsQuery } from "@/lib/helper/sound";
+import { useArtifactsQuery } from "../../../../lib/helper/interface/sound";
 import { useInterfaceContext } from "@/context/Interface";
 import { GetDimensions } from "@/components/interface";
 import { PageName } from "@/context/Interface";
-import { SortOrder } from "@/components/interface/sound/Sound";
+import { SortOrder } from "@/components/interface/sound";
 import { Virtuoso, StateSnapshot, VirtuosoHandle } from "react-virtuoso";
 import { useArtifact } from "@/hooks/usePage";
 import Avatar from "@/components/global/Avatar";
@@ -81,7 +81,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   );
 
   return (
-    <div className={`mt-1 min-h-max w-full`}>
+    <>
       <Virtuoso
         key={key}
         ref={ref}
@@ -132,7 +132,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
                 className="flex h-full w-full cursor-pointer flex-col bg-white p-6 pb-0 "
               >
                 <div className={`flex flex-shrink-0 justify-between`}>
-                  <StarIcon />
+                  <StarIcon color={"#000"} />
 
                   <Image
                     className={`shadow-shadowKitHigh rounded-xl`}
@@ -175,7 +175,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
           }
         }
       />
-    </div>
+    </>
   );
 };
 

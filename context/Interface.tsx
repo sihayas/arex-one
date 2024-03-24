@@ -11,7 +11,7 @@ import { Session } from "lucia";
 import {
   useUserAndSessionQuery,
   useNotificationsQuery,
-} from "@/lib/helper/user";
+} from "../lib/helper/interface/user";
 import { StateSnapshot } from "react-virtuoso";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
