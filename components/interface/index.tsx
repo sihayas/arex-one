@@ -164,15 +164,15 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   return (
     <motion.div
       key={`cmdk`}
-      // transformTemplate={template} // Prevent translateZ from being applied
+      // transformTemplate={template} // Prevent translateZ
       ref={rootScope}
       id={`cmdk`}
-      className={`cmdk rounded-full`}
+      className={`cmdk`}
     >
       {/* Shape-shift Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`relative flex items-start justify-center overflow-hidden rounded-full bg-[#F6F6F6] bg-opacity-75 ${
+        className={`relative flex items-start justify-center overflow-hidden rounded-[40px] bg-[#F6F6F6] bg-opacity-75 ${
           expandInput ? "mix-blend-darken" : ""
         }`}
         shouldFilter={false}
@@ -183,11 +183,11 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         <motion.div
           id={`cmdk-scroll`}
           ref={scrollContainerRef}
-          className={`scrollbar-none flex snap-y snap-mandatory flex-col items-center overflow-y-scroll overflow-x-hidden`}
+          className={`scrollbar-none flex flex-col items-center overflow-y-scroll overflow-x-hidden`}
           style={{
             minWidth: `${target.width}px`,
             height: `${target.height}px`,
-            borderRadius: 32,
+            borderRadius: 40,
           }}
         >
           <AnimatePresence mode={`wait`}>

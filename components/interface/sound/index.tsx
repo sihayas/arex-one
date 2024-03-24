@@ -109,12 +109,12 @@ const Sound = () => {
     <>
       {/* Art */}
       <motion.div
-        style={{
-          borderRadius: borderRad,
-          scale: scaleArt,
-          x: xArt,
-        }}
-        className="shadow-soundArt flex-shrink-0 origin-top-left overflow-hidden sticky top-0"
+        // style={{
+        //   borderRadius: borderRad,
+        //   scale: scaleArt,
+        //   x: xArt,
+        // }}
+        className="shadow-soundArt flex-shrink-0"
       >
         <Image
           src={artwork}
@@ -127,7 +127,7 @@ const Sound = () => {
         />
       </motion.div>
 
-      <div className={`min-h-max w-full`}>
+      <div className={`min-h-max w-full snap-start`}>
         <Artifacts soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
       </div>
 
