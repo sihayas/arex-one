@@ -46,7 +46,7 @@ const User = () => {
     <>
       <div className="flex w-full gap-4 p-8">
         <div className={`flex flex-col`}>
-          {/* Page Username & Avatar*/}
+          {/* Avatar & Interlink */}
           <div className={`flex items-center gap-8`}>
             <div className={`relative flex-shrink-0`}>
               <Avatar
@@ -57,127 +57,156 @@ const User = () => {
                 height={72}
                 user={data}
               />
-              <motion.svg
-                className={`absolute center-x center-y z-10`}
-                width={104}
-                height={104}
-                viewBox="0 0 104 104"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <filter
-                    id="circleShadow"
-                    x="-10%"
-                    y="-10%"
-                    width="120%"
-                    height="120%"
+              {user.id !== pageUser.id && (
+                <>
+                  <motion.svg
+                    className={`absolute center-x center-y z-10`}
+                    width={104}
+                    height={104}
+                    viewBox="0 0 104 104"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
-                    <feOffset dx="1" dy="1" result="offsetblur" />
-                    <feComponentTransfer>
-                      <feFuncA type="linear" slope="0.1" />
-                    </feComponentTransfer>
-                    <feMerge>
-                      <feMergeNode />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-                <motion.circle
-                  cx={52}
-                  cy={52}
-                  r={50.5}
-                  strokeWidth={3}
-                  strokeLinecap={"round"}
-                  variants={circleVariants}
-                  transition={{ type: "spring", stiffness: 100, damping: 40 }}
-                  initial="notFollowing"
-                  animate={followingBtoA ? "following" : "notFollowing"}
-                  filter="url(#circleShadow)"
-                />
-              </motion.svg>
-              <motion.svg
-                className={`absolute center-x center-y`}
-                width={104}
-                height={104}
-                viewBox="0 0 104 104"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <motion.circle
-                  cx={52}
-                  cy={52}
-                  r={50.5}
-                  stroke="#E6E6E6"
-                  strokeWidth={3}
-                />
-              </motion.svg>
+                    <defs>
+                      <filter
+                        id="circleShadow"
+                        x="-10%"
+                        y="-10%"
+                        width="120%"
+                        height="120%"
+                      >
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+                        <feOffset dx="1" dy="1" result="offsetblur" />
+                        <feComponentTransfer>
+                          <feFuncA type="linear" slope="0.1" />
+                        </feComponentTransfer>
+                        <feMerge>
+                          <feMergeNode />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
+                    </defs>
+                    <motion.circle
+                      cx={52}
+                      cy={52}
+                      r={50.5}
+                      strokeWidth={3}
+                      strokeLinecap={"round"}
+                      variants={circleVariants}
+                      transition={{
+                        type: "spring",
+                        stiffness: 100,
+                        damping: 40,
+                      }}
+                      initial="notFollowing"
+                      animate={followingBtoA ? "following" : "notFollowing"}
+                      filter="url(#circleShadow)"
+                    />
+                  </motion.svg>
+                  <motion.svg
+                    className={`absolute center-x center-y`}
+                    width={104}
+                    height={104}
+                    viewBox="0 0 104 104"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <motion.circle
+                      cx={52}
+                      cy={52}
+                      r={50.5}
+                      stroke="#E6E6E6"
+                      strokeWidth={3}
+                    />
+                  </motion.svg>
+                </>
+              )}
             </div>
 
             <p className={`text-gray2 text-3xl font-bold`}>{data.username}</p>
           </div>
           {/* SignedIn User */}
-          {user.id !== pageUser.id && (
-            <div
-              className={`pl-[72px] flex items-center gap-8 relative w-full`}
-            >
-              <div className={`relative flex-shrink-0`}>
-                <Avatar
-                  className="rounded-max shadow-shadowKitLow"
-                  imageSrc={user.image}
-                  altText={`avatar`}
-                  width={32}
-                  height={32}
-                  user={data}
+          <div
+            className={`pl-[72px] pb-[22px] min-h-[54px] flex items-center gap-8 relative w-full`}
+          >
+            {user.id !== pageUser.id && (
+              <>
+                <div className={`relative flex-shrink-0`}>
+                  <Avatar
+                    className="rounded-max shadow-shadowKitLow"
+                    imageSrc={user.image}
+                    altText={`avatar`}
+                    width={32}
+                    height={32}
+                    user={data}
+                  />
+                  <motion.svg
+                    className={`absolute center-x center-y z-10 overflow-visible rotate-45`}
+                    width={64}
+                    height={64}
+                    viewBox="0 0 64 64"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <motion.circle
+                      cx={32}
+                      cy={32}
+                      r={30.5}
+                      stroke="white"
+                      strokeWidth={3}
+                      strokeLinecap={"round"}
+                      variants={circleVariants}
+                      transition={{
+                        type: "spring",
+                        stiffness: 100,
+                        damping: 40,
+                      }}
+                      initial="notFollowing"
+                      animate={followingAtoB ? "following" : "notFollowing"}
+                      filter="url(#circleShadow)"
+                    />
+                  </motion.svg>
+                  <motion.svg
+                    className={`absolute center-x center-y`}
+                    width={64}
+                    height={64}
+                    viewBox="0 0 64 64"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <motion.circle
+                      cx={32}
+                      cy={32}
+                      r={30.5}
+                      stroke="#E6E6E6"
+                      strokeWidth={3}
+                    />
+                  </motion.svg>
+                </div>
+                <Link
+                  followingAtoB={followingAtoB}
+                  followingBtoA={followingBtoA}
+                  setFollowingAtoB={setFollowingAtoB}
+                  pageUserId={pageUser.id}
                 />
-                <motion.svg
-                  className={`absolute center-x center-y z-10 overflow-visible rotate-45`}
-                  width={64}
-                  height={64}
-                  viewBox="0 0 64 64"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <motion.circle
-                    cx={32}
-                    cy={32}
-                    r={30.5}
-                    stroke="white"
-                    strokeWidth={3}
-                    strokeLinecap={"round"}
-                    variants={circleVariants}
-                    transition={{ type: "spring", stiffness: 100, damping: 40 }}
-                    initial="notFollowing"
-                    animate={followingAtoB ? "following" : "notFollowing"}
-                    filter="url(#circleShadow)"
-                  />
-                </motion.svg>
-                <motion.svg
-                  className={`absolute center-x center-y`}
-                  width={64}
-                  height={64}
-                  viewBox="0 0 64 64"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <motion.circle
-                    cx={32}
-                    cy={32}
-                    r={30.5}
-                    stroke="#E6E6E6"
-                    strokeWidth={3}
-                  />
-                </motion.svg>
-              </div>
-              <Link
-                followingAtoB={followingAtoB}
-                followingBtoA={followingBtoA}
-                setFollowingAtoB={setFollowingAtoB}
-                pageUserId={pageUser.id}
-              />
+              </>
+            )}
+          </div>
+          {/* Stats */}
+          <div className="grid grid-cols-[repeat(3,_104px)]">
+            <div className={`flex flex-col`}>
+              <p className={`font-semibold text-gray3 text-sm`}>SOUND</p>
+              <p className={`text-gray2 text-xl`}>
+                {data._count.uniqueSounds || 0}
+              </p>
             </div>
-          )}
+            <div className={`flex flex-col`}>
+              <p className={`font-semibold text-gray3 text-sm`}>ENTRY</p>
+              <p className={`text-gray2 text-xl`}>
+                {data._count.artifact || 0}
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className={`ml-auto flex flex-col items-end -space-y-6`}>

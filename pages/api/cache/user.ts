@@ -10,7 +10,12 @@ async function fetchOrCacheUser(userId: string) {
       userData = await prisma.user.findUnique({
         where: { id: String(userId), isDeleted: false, isBanned: false },
         select: {
-          _count: { select: { artifact: true, followedBy: true } },
+          _count: {
+            select: {
+              artifact: { where: { isDeleted: false, type: "entry" } },
+              followedBy: { where: { isDeleted: false } },
+            },
+          },
           essentials: {
             select: {
               id: true,
@@ -26,7 +31,12 @@ async function fetchOrCacheUser(userId: string) {
         },
       });
 
-      if (userData) {
+      const { uniqueSounds } = await countUniqueSounds(userId);
+      if (userData && uniqueSounds) {
+        userData._count = {
+          ...userData._count,
+          uniqueSounds,
+        };
         await setCache(cacheKey, JSON.stringify(userData), 3600);
       }
     }
@@ -66,6 +76,22 @@ async function fetchOrCacheUserFollowers(userId: string) {
     console.error(`Error fetching or caching followers for ${userId}:`, error);
     throw error;
   }
+}
+
+async function countUniqueSounds(
+  userId: string,
+): Promise<{ uniqueSounds: number }> {
+  const [uniqueSoundCount] = await Promise.all([
+    prisma.artifact.groupBy({
+      by: ["soundId"],
+      where: { authorId: userId },
+      _count: { soundId: true },
+    }),
+  ]);
+
+  return {
+    uniqueSounds: uniqueSoundCount.length,
+  };
 }
 
 export { fetchOrCacheUser, fetchOrCacheUserFollowers };

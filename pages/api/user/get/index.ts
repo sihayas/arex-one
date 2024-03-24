@@ -22,29 +22,25 @@ export default async function onRequestGet(request: any) {
   try {
     const pageUserData = await fetchOrCacheUser(pageUserId);
 
+    pageUserData.essentials = await attachSoundData(pageUserData.essentials);
+
+    // Check if the user is following the page user
     const userFollowers = await fetchOrCacheUserFollowers(userId);
     const pageUserFollowers = await fetchOrCacheUserFollowers(pageUserId);
-
-    pageUserData.essentials = await enrichEssentialsWithAlbumData(
-      pageUserData.essentials,
-    );
-
-    const { soundCount } = await countUniqueAlbumsAndTracks(pageUserId);
-
-    const isFollowingAtoB = pageUserFollowers.includes(userId);
     const isFollowingBtoA = userFollowers.includes(pageUserId);
+    const isFollowingAtoB = pageUserFollowers.includes(userId);
 
-    const response = {
-      ...pageUserData,
-      isFollowingAtoB,
-      isFollowingBtoA,
-      soundCount,
-    };
-
-    return new Response(JSON.stringify(response), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        ...pageUserData,
+        isFollowingAtoB,
+        isFollowingBtoA,
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   } catch (error) {
     console.error("Error fetching user:", error);
     return new Response(JSON.stringify({ error: "Error fetching user." }), {
@@ -53,7 +49,7 @@ export default async function onRequestGet(request: any) {
   }
 }
 
-async function enrichEssentialsWithAlbumData(essentials: Essential[]) {
+async function attachSoundData(essentials: Essential[]) {
   if (essentials.length === 0) {
     return essentials;
   }
@@ -69,22 +65,6 @@ async function enrichEssentialsWithAlbumData(essentials: Essential[]) {
     ...essential,
     appleData: albumDataMap[essential.sound.appleId],
   }));
-}
-
-async function countUniqueAlbumsAndTracks(
-  userId: string,
-): Promise<{ soundCount: number }> {
-  const [uniqueAlbumCount] = await Promise.all([
-    prisma.artifact.groupBy({
-      by: ["soundId"],
-      where: { authorId: userId, type: "entry" },
-      _count: { soundId: true },
-    }),
-  ]);
-
-  return {
-    soundCount: uniqueAlbumCount.length,
-  };
 }
 
 export const runtime = "edge";
