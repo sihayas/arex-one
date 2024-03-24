@@ -144,8 +144,8 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
     const animateShadow = () => {
       const animationConfig = {
         boxShadow: expandInput
-          ? "rgba(0, 0, 0, 0.0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.0) 0px 0px 0px 0px"
-          : "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+          ? "rgba(0, 0, 0, 0.0) 0px 0px 0px 0px"
+          : "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px",
         scale: expandInput ? 0.9 : 1,
         filter: expandInput && isNotifications ? "blur(24px)" : "blur(0px)",
       };
@@ -183,10 +183,11 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         <motion.div
           id={`cmdk-scroll`}
           ref={scrollContainerRef}
-          className={`scrollbar-none flex snap-y snap-mandatory flex-col items-center overflow-y-scroll overflow-x-hidden rounded-full`}
+          className={`scrollbar-none flex snap-y snap-mandatory flex-col items-center overflow-y-scroll overflow-x-hidden`}
           style={{
             minWidth: `${target.width}px`,
             height: `${target.height}px`,
+            borderRadius: 32,
           }}
         >
           <AnimatePresence mode={`wait`}>

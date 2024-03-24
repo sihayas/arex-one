@@ -188,7 +188,6 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
                 }}
                 whileHover={{
                   strokeWidth: hoverStrokeWidth,
-                  stroke: colors[index % colors.length],
                   opacity: 1,
                 }}
                 cx={viewBoxSize / 2}
@@ -239,17 +238,15 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
         {/* Display Rating */}
         {hoveredIndex === null && (
           <motion.div
-            style={{
-              left: "50%",
-              top: "50%",
-              x: "-50%",
-              y: "-50%",
-            }}
             initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
+            animate={{
+              opacity: 1,
+              scale: !isOpen ? 1 : 1,
+              color: !isOpen ? "#FFF" : "#999",
+            }}
             exit={{ opacity: 0, scale: 0 }}
             transition={springTextConfig}
-            className={`text-gray2 pointer-events-none absolute flex flex-col items-center justify-center gap-4 text-center font-serif text-[48px] leading-[32px] will-change-transform`}
+            className={`text-gray2 pointer-events-none absolute flex flex-col items-center justify-center gap-4 text-center font-serif text-[48px] leading-[32px] will-change-transform center-x center-y`}
           >
             {average}
           </motion.div>

@@ -37,7 +37,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   });
 
   const isEven = index % 2 === 0;
-  const rotate = isEven ? -2 : 2;
+  const rotate = isEven ? -1 : 1;
 
   // First card translations
   const xZero = useSpring(
@@ -105,6 +105,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
       }}
       whileHover={{
         zIndex: 100,
+        rotate: 0,
       }}
       className={`relative ${isEven ? "mr-auto" : "ml-auto"}`}
     >

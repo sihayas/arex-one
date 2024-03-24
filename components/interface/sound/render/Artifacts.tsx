@@ -108,7 +108,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
               });
             }}
             className={`cloud-shadow -my-4 ${
-              index % 2 !== 0 ? "-rotate-1 pr-[128px]" : "rotate-1 pr-8"
+              index % 2 !== 0 ? "-rotate-1 pr-[128px]" : "rotate-1 pr-10"
             } ${index === 0 && "pt-12"}`}
           >
             {/* Scene */}

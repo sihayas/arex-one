@@ -53,7 +53,7 @@ const Sound = () => {
   };
 
   // Art
-  const xArt = useSpring(useTransform(scrollY, [0, 1], [0, -96]), xConfig);
+  const xArt = useSpring(useTransform(scrollY, [0, 1], [0, -64]), xConfig);
   const scaleArt = useSpring(
     useTransform(scrollY, [0, 1], [1, 0.375]),
     artConfig,
@@ -102,6 +102,8 @@ const Sound = () => {
     soundData.type === "albums"
       ? soundData.id
       : (soundData as SongData).relationships.albums.data[0].id;
+
+  console.log(data);
 
   return (
     <>
@@ -162,7 +164,7 @@ const Sound = () => {
             <Dial
               ratings={ratings || [1, 0, 0, 0, 0]}
               onRangeChange={handleRangeChange}
-              average={data.averageRating}
+              average={data.avg_rating}
             />
           </motion.div>,
           cmdk,
