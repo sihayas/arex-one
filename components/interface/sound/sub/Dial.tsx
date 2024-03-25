@@ -189,6 +189,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
                 whileHover={{
                   strokeWidth: hoverStrokeWidth,
                   opacity: 1,
+                  stroke: "#FFF",
                 }}
                 cx={viewBoxSize / 2}
                 cy={viewBoxSize / 2}

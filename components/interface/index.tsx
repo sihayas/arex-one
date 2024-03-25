@@ -48,7 +48,6 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   const { expandInput, activeAction } = useNavContext();
   const cmdkPortal = document.getElementById("cmdk");
   const isNotifications = activeAction === "notifications";
-  const isChanging = useRef(false);
 
   const { base, target } = GetDimensions(activePage.name as PageName);
 
@@ -172,7 +171,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       {/* Shape-shift Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`relative flex items-start justify-center overflow-hidden rounded-[40px] bg-[#F6F6F6] bg-opacity-75 ${
+        className={`relative flex items-start justify-center overflow-hidden rounded-[32px] bg-[#F6F6F6] bg-opacity-75 ${
           expandInput ? "mix-blend-darken" : ""
         }`}
         shouldFilter={false}
@@ -183,11 +182,11 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         <motion.div
           id={`cmdk-scroll`}
           ref={scrollContainerRef}
-          className={`scrollbar-none flex flex-col items-center overflow-y-scroll overflow-x-hidden`}
+          className={`scrollbar-none flex flex-col items-center overflow-y-scroll overflow-x-hidden snap-mandatory snap-y`}
           style={{
             minWidth: `${target.width}px`,
             height: `${target.height}px`,
-            borderRadius: 40,
+            borderRadius: 32,
           }}
         >
           <AnimatePresence mode={`wait`}>
@@ -198,16 +197,16 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
               animate={{ filter: "blur(0px)", opacity: 1 }}
               exit={{ filter: "blur(24px)", opacity: 0, scale: 0.75 }}
               transition={{ ease: "easeInOut", duration: 0.25 }}
-              onAnimationStart={() => {
-                isChanging.current = true;
-              }}
-              onAnimationComplete={() => {
-                isChanging.current = false;
-              }}
             >
-              {activePage.name === "sound" && <Sound />}
-              {activePage.name === "artifact" && <Artifact />}
-              {activePage.name === "user" && <User />}
+              {activePage.name === "sound" && (
+                <Sound key={`sound-${activePage.key}`} />
+              )}
+              {activePage.name === "artifact" && (
+                <Artifact key={`artifact-${activePage.key}`} />
+              )}
+              {activePage.name === "user" && (
+                <User key={`user-${activePage.key}`} />
+              )}
             </motion.div>
           </AnimatePresence>
         </motion.div>
