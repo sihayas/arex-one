@@ -576,6 +576,7 @@ export function FourHalfStar({ width = 16, height = 16, ...props }) {
       width={width}
       height={height}
       viewBox={`0 0 16 16`}
+      className={props.className}
       fill="none"
       {...props}
     >

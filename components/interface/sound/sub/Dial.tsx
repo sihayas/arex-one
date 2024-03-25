@@ -66,11 +66,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
   });
   const [isOpen, setIsOpen] = React.useState(false);
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest < 1) {
-      setIsOpen(false);
-    } else {
-      setIsOpen(true);
-    }
+    latest > 1 ? setIsOpen(true) : setIsOpen(false);
   });
 
   const [isHovered, setIsHovered] = React.useState(false);
@@ -82,6 +78,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
   }, [activeIndex, onRangeChange]);
 
   const strokeWidth = 6;
+  const strokes = [6, 7, 8, 9, 10];
   const dotRadius = 1.5;
   const radius = 74;
 
@@ -143,8 +140,6 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
     return { x, y };
   };
 
-  const hoverStrokeWidth = strokeWidth * 2;
-
   return (
     <motion.div
       onMouseEnter={() => setIsHovered(true)}
@@ -152,7 +147,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
         setIsHovered(false);
         setHoveredIndex(null);
       }}
-      className={`relative`}
+      className={`relative p-8`}
     >
       <motion.svg
         whileHover={{ scale: isOpen ? 1.25 : 2 }}
@@ -183,18 +178,18 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
                 animate={{
                   strokeDasharray: strokeDasharray,
                   strokeDashoffset: strokeDashoffset,
-                  stroke: isOpen ? "#999" : "#FFF",
+                  stroke: !isOpen
+                    ? "#FFF"
+                    : activeIndex === index
+                    ? "#FFF"
+                    : "#999",
+                  strokeWidth: activeIndex === index ? 10 : 6,
                 }}
-                whileHover={{
-                  strokeWidth: 10,
-                  stroke: isOpen ? "#FFF" : "#000",
-                }}
+                whileHover={{ strokeWidth: 10, stroke: "#FFF" }}
                 cx={viewBoxSize / 2}
                 cy={viewBoxSize / 2}
                 r={radius}
                 fill="none"
-                stroke={isOpen ? "#000" : "#FFF"}
-                strokeWidth={isOpen ? 6 : 6}
                 strokeLinecap="round"
                 transition={{ type: "spring", stiffness: 160, damping: 20 }}
               />

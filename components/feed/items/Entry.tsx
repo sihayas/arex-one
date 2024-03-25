@@ -135,7 +135,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
             style={{
               ...cardMask,
             }}
-            className="backface-hidden absolute left-0 top-0 flex h-full w-full cursor-pointer flex-col bg-white"
+            className="backface-hidden absolute left-0 top-0 flex h-full w-full flex-col bg-white"
           >
             <Image
               className={`-mt-6`}
@@ -147,7 +147,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               height={304}
               draggable={false}
             />
-            <div className="`text-base line-clamp-3 px-6 pt-[18px] text-black">
+            <div className="`text-base line-clamp-3 px-6 pt-[18px] text-black cursor-default">
               {artifact.content?.text}
             </div>
 
@@ -159,7 +159,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               }}
               className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6"
             >
-              <StarIcon color={`#000`} />
+              <StarIcon color={`#000`} className={`flex-shrink-0`} />
 
               <div className={`flex translate-y-[1px] flex-col`}>
                 <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
@@ -180,10 +180,10 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               ...cardBackMask,
               transform: "rotateX(180deg)",
             }}
-            className="backface-hidden absolute left-0 top-0 flex h-full  w-full cursor-pointer flex-col bg-white p-6 pb-0 "
+            className="backface-hidden absolute left-0 top-0 flex h-full  w-full flex-col bg-white p-6 pb-0 "
           >
             <div className={`flex flex-shrink-0 justify-between`}>
-              <StarIcon />
+              <StarIcon color={`#000`} className={`flex-shrink-0`} />
 
               <Image
                 className={`shadow-shadowKitHigh rounded-xl`}
@@ -207,7 +207,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               </p>
             </div>
 
-            <p className={`line-clamp-[11] pt-[9px] text-base`}>
+            <p className={`line-clamp-[11] pt-[9px] text-base cursor-default`}>
               {artifact.content?.text}
             </p>
           </div>

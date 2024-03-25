@@ -79,8 +79,8 @@ const Sound = () => {
     generalConfig,
   );
   // Dial transformations
-  const xDial = useSpring(useTransform(scrollY, [0, 1], [0, 32]), xConfig);
-  const yDial = useSpring(useTransform(scrollY, [0, 1], [-16, -32]), yConfig);
+  const xDial = useSpring(useTransform(scrollY, [0, 1], [-32, 0]), xConfig);
+  const yDial = useSpring(useTransform(scrollY, [0, 1], [16, 0]), yConfig);
   const showMetaData = useSpring(
     useTransform(scrollY, [0, 1], [0, 1]),
     generalConfig,
@@ -145,7 +145,7 @@ const Sound = () => {
 
       {/* Sort */}
       <div className={`absolute bottom-[176px] left-[176px]`}>
-        <Sort onSortOrderChange={handleSortOrderChange} />
+        {/*<Sort onSortOrderChange={handleSortOrderChange} />*/}
       </div>
 
       {/* Dial */}
@@ -154,7 +154,6 @@ const Sound = () => {
           <motion.div
             className={`absolute bottom-0 left-0 flex origin-bottom-left items-center justify-center will-change-transform drop-shadow-xl`}
             style={{ x: xDial, y: yDial }}
-            initial={{ x: !isOpen ? 0 : -96 }}
             exit={{
               opacity: 0,
               scale: 0,

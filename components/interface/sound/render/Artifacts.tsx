@@ -106,9 +106,9 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
               },
             });
           }}
-          className={`cloud-shadow -my-4 ${
-            index % 2 !== 0 ? "-rotate-1 mr-[128px]" : "rotate-1 mr-12"
-          } ${index === 0 && "pt-12"}`}
+          className={`cloud-shadow ${index % 2 !== 0 ? "mr-[128px]" : "mr-8"} ${
+            index === 0 && "pt-8"
+          }`}
         >
           {/* Scene */}
           <Tilt
@@ -167,12 +167,10 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
           </Tilt>
         </div>
       )}
-      components={
-        {
-          // Footer: () => isFetchingNextPage && <div>Loading more...</div>,
-          // EmptyPlaceholder: () => <div>No artifacts available</div>,
-        }
-      }
+      components={{
+        Footer: () => <div className={`p-4`} />,
+        // EmptyPlaceholder: () => <div>No artifacts available</div>,
+      }}
     />
   );
 };
