@@ -99,12 +99,12 @@ const Sound = () => {
     soundData.type === "albums"
       ? soundData.id
       : (soundData as SongData).relationships.albums.data[0].id;
-  const snap = activePage.isOpen ? "" : "snap-start";
+  const snapArt = activePage.isOpen ? "" : "snap-start";
 
   return (
     <>
       {/* Ghost Div Art PlaceHolder*/}
-      <div className={`min-w-[496px] min-h-[496px] z-10 ${snap}`} />
+      <div className={`min-w-[496px] min-h-[496px] z-10 ${snapArt}`} />
 
       {/* Art */}
       <motion.div

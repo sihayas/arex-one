@@ -89,7 +89,6 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
   const viewBoxSize = radius * 2 + strokeWidth;
 
   const totalRatings = ratings.reduce((sum, count) => sum + count, 0);
-  const colors = ["#FFF", "#FFF", "#FFF", "#FFF", "#FFF"];
 
   // Account for excess stroke created by the linecap rounding
   const excessStroke = 40;
@@ -144,7 +143,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
     return { x, y };
   };
 
-  const hoverStrokeWidth = strokeWidth * 1.5;
+  const hoverStrokeWidth = strokeWidth * 2;
 
   return (
     <motion.div
@@ -156,7 +155,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
       className={`relative`}
     >
       <motion.svg
-        whileHover={{ scale: 1.2 }}
+        whileHover={{ scale: isOpen ? 1.25 : 2 }}
         animate={{ scale: !isOpen ? 2 : 1 }}
         transition={springDialConfig}
         width={viewBoxSize}
@@ -173,7 +172,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
           const dotPosition = calculateDotPosition(segmentLength, dotOffset);
 
           return (
-            <Fragment key={index}>
+            <Fragment key={`dialSegment-${index}`}>
               <motion.circle
                 onMouseEnter={() => {
                   setHoveredIndex(index);
@@ -184,12 +183,11 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
                 animate={{
                   strokeDasharray: strokeDasharray,
                   strokeDashoffset: strokeDashoffset,
-                  opacity: !isOpen ? 1 : activeIndex === index ? 1 : 0.25,
+                  stroke: isOpen ? "#999" : "#FFF",
                 }}
                 whileHover={{
-                  strokeWidth: hoverStrokeWidth,
-                  opacity: 1,
-                  stroke: "#FFF",
+                  strokeWidth: 10,
+                  stroke: isOpen ? "#FFF" : "#000",
                 }}
                 cx={viewBoxSize / 2}
                 cy={viewBoxSize / 2}
@@ -198,7 +196,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
                 stroke={isOpen ? "#000" : "#FFF"}
                 strokeWidth={isOpen ? 6 : 6}
                 strokeLinecap="round"
-                transition={{ type: "spring", stiffness: 160, damping: 10 }}
+                transition={{ type: "spring", stiffness: 160, damping: 20 }}
               />
               <motion.circle
                 cx={dotPosition.x}

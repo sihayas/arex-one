@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useInterfaceContext } from "@/context/Interface";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { useUserDataQuery } from "../../../lib/helper/interface/user";
+import { useUserDataQuery } from "@/lib/helper/interface/user";
 import Essentials from "@/components/interface/user/render/Essentials";
 import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
@@ -16,9 +16,12 @@ const User = () => {
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;
   });
+
   const [followingAtoB, setFollowingAtoB] = useState(false);
   const [followingBtoA, setFollowingBtoA] = useState(false);
+
   const pageUser = activePage.user;
+
   const circleVariants = {
     notFollowing: { pathLength: 0, stroke: "#E6E6E6" },
     following: {
@@ -26,6 +29,10 @@ const User = () => {
       stroke: followingAtoB && followingBtoA ? "#24FF00" : "#FFFFFF",
     },
   };
+
+  useEffect(() => {
+    !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
+  }, []);
 
   const { data, isLoading, isError } = useUserDataQuery(user?.id, pageUser?.id);
 
@@ -35,10 +42,6 @@ const User = () => {
       setFollowingBtoA(data.isFollowingBtoA);
     }
   }, [data]);
-
-  useEffect(() => {
-    !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
-  }, []);
 
   if (!data || !user || !pageUser) return;
 
