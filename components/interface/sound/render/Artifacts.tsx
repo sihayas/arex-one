@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useArtifactsQuery } from "../../../../lib/helper/interface/sound";
+import { useArtifactsQuery } from "@/lib/helper/interface/sound";
 import { useInterfaceContext } from "@/context/Interface";
 import { GetDimensions } from "@/components/interface";
 import { PageName } from "@/context/Interface";

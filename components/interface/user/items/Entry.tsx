@@ -103,10 +103,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
         zIndex: 10 - index,
         rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : rotateTwo,
       }}
-      whileHover={{
-        zIndex: 100,
-        rotate: 0,
-      }}
+      whileHover={{ zIndex: 100 }}
       className={`relative ${isEven ? "mr-auto" : "ml-auto"}`}
     >
       <div

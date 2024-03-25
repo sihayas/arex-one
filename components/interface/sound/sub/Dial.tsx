@@ -31,32 +31,6 @@ const springSegmentConfig = {
   damping: 10,
   mass: 0.1,
 };
-const textVariants = {
-  initial: {
-    scale: 0,
-    opacity: 0,
-    x: "-50%",
-    y: "-50%",
-    left: "50%",
-    top: "50%",
-  },
-  animate: {
-    scale: 1,
-    opacity: 1,
-    x: "-50%",
-    y: "-50%",
-    left: "50%",
-    top: "50%",
-  },
-  exit: {
-    scale: 0,
-    opacity: 0,
-    x: "-50%",
-    y: "-50%",
-    left: "50%",
-    top: "50%",
-  },
-};
 
 const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
   const { scrollContainerRef } = useInterfaceContext();
@@ -78,7 +52,6 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
   }, [activeIndex, onRangeChange]);
 
   const strokeWidth = 6;
-  const strokes = [6, 7, 8, 9, 10];
   const dotRadius = 1.5;
   const radius = 74;
 
@@ -124,9 +97,8 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
   const calculateDotOffset = (index: number) => {
     const totalGapWidth = index * incrementFactor;
     const halfGapWidth = incrementFactor / 2;
-    const offset =
-      calculateCumulativeLength(index) + totalGapWidth + halfGapWidth;
-    return offset;
+
+    return calculateCumulativeLength(index) + totalGapWidth + halfGapWidth;
   };
 
   const calculateDotPosition = (length: number, offset: number) => {
@@ -179,7 +151,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
                   strokeDasharray: strokeDasharray,
                   strokeDashoffset: strokeDashoffset,
                   stroke: !isOpen
-                    ? "#FFF"
+                    ? "#000"
                     : activeIndex === index
                     ? "#FFF"
                     : "#999",
@@ -216,22 +188,21 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
       <AnimatePresence>
         {/* Display Count */}
         {hoveredIndex !== null && (
-          <motion.div
+          <motion.p
             key={hoveredIndex}
-            className={`text-gray2 pointer-events-none absolute flex items-center justify-center gap-2  text-center font-serif text-[48px] leading-[32px] will-change-transform`}
-            variants={textVariants}
-            initial={`initial`}
-            animate={`animate`}
-            exit={`exit`}
+            className={`text-gray2 pointer-events-none absolute flex items-center justify-center text-center font-serif text-[48px] leading-[32px] will-change-transform center-x center-y`}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
             transition={springTextConfig}
           >
             {ratings[hoveredIndex]}
-          </motion.div>
+          </motion.p>
         )}
 
         {/* Display Rating */}
         {hoveredIndex === null && (
-          <motion.div
+          <motion.p
             initial={{ opacity: 0, scale: 0 }}
             animate={{
               opacity: 1,
@@ -243,7 +214,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
             className={`text-gray2 pointer-events-none absolute flex flex-col items-center justify-center gap-4 text-center font-serif text-[48px] leading-[32px] will-change-transform center-x center-y`}
           >
             {average}
-          </motion.div>
+          </motion.p>
         )}
       </AnimatePresence>
     </motion.div>

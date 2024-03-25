@@ -45,12 +45,14 @@ const User = () => {
 
   if (!data || !user || !pageUser) return;
 
+  const isSelf = user.id === pageUser.id;
+
   return (
     <>
       <div className="flex w-full gap-4 p-8">
         <div className={`flex flex-col`}>
           {/* Avatar & Interlink */}
-          <div className={`flex items-center gap-8`}>
+          <div className={`flex items-center `}>
             <div className={`relative flex-shrink-0`}>
               <Avatar
                 className="rounded-max shadow-shadowKitLow"
@@ -60,7 +62,7 @@ const User = () => {
                 height={72}
                 user={data}
               />
-              {user.id !== pageUser.id && (
+              {!isSelf && (
                 <>
                   <motion.svg
                     className={`absolute center-x center-y z-10`}
@@ -126,13 +128,19 @@ const User = () => {
               )}
             </div>
 
-            <p className={`text-gray2 text-3xl font-bold`}>{data.username}</p>
+            <p
+              className={`text-gray2 text-3xl font-bold ${
+                isSelf ? "pl-4" : "pl-8"
+              }`}
+            >
+              {data.username}
+            </p>
           </div>
           {/* SignedIn User */}
           <div
             className={`pl-[72px] pb-[22px] min-h-[54px] flex items-center gap-8 relative w-full`}
           >
-            {user.id !== pageUser.id && (
+            {!isSelf && (
               <>
                 <div className={`relative flex-shrink-0`}>
                   <Avatar
