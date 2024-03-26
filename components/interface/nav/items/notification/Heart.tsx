@@ -38,11 +38,11 @@ const Heart = ({ notificationsGroup }: any) => {
       onClick={(event) => {
         event.stopPropagation();
       }}
-      className={`flex flex-col py-6 px-4`}
+      className={`flex flex-col py-6 px-4 pl-0`}
     >
       <div className={`flex items-center`}>
         <div
-          className={`w-8 h-8 bg-black flex-shrink-0 flex items-center justify-center rounded-full mr-4 shadow-notification`}
+          className={`w-8 h-8 bg-black flex-shrink-0 flex items-center justify-center rounded-full mr-4`}
         >
           <HeartIcon />
         </div>

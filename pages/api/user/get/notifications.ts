@@ -40,6 +40,7 @@ export default async function onRequestGet(request: any) {
         orderBy: { createdAt: "desc" },
         take: 3,
         select: {
+          isRead: true,
           activity: {
             select: {
               type: true,

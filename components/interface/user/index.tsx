@@ -58,8 +58,8 @@ const User = () => {
                 className="rounded-max shadow-shadowKitLow"
                 imageSrc={data.image}
                 altText={`avatar`}
-                width={72}
-                height={72}
+                width={isSelf ? 104 : 72}
+                height={isSelf ? 104 : 72}
                 user={data}
               />
               {!isSelf && (
@@ -137,10 +137,10 @@ const User = () => {
             </p>
           </div>
           {/* SignedIn User */}
-          <div
-            className={`pl-[72px] pb-[22px] min-h-[54px] flex items-center gap-8 relative w-full`}
-          >
-            {!isSelf && (
+          {!isSelf && (
+            <div
+              className={`pl-[72px] pb-[22px] min-h-[54px] flex items-center gap-8 relative w-full`}
+            >
               <>
                 <div className={`relative flex-shrink-0`}>
                   <Avatar
@@ -201,8 +201,8 @@ const User = () => {
                   pageUserId={pageUser.id}
                 />
               </>
-            )}
-          </div>
+            </div>
+          )}
           {/* Stats */}
           <div className="grid grid-cols-[repeat(3,_104px)]">
             <div className={`flex flex-col`}>

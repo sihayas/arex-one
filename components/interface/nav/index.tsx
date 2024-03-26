@@ -27,7 +27,7 @@ import { Search } from "../../../lib/helper/interface/nav";
 
 const Nav = () => {
   const { replyTarget } = useNavContext();
-  const { user, activePage } = useInterfaceContext();
+  const { user, activePage, notifs } = useInterfaceContext();
   const {
     inputValue,
     setInputValue,
@@ -39,33 +39,20 @@ const Nav = () => {
   } = useNavContext();
   const { selectedFormSound } = useNavContext();
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
+  const firstKey = Object.keys(notifs)[0];
+
+  const isFirstNotifRead =
+    //   @ts-ignore
+    firstKey && notifs[firstKey].notifications.length > 0
+      ? //   @ts-ignore
+        notifs[firstKey].notifications[0].isRead
+      : null;
 
   const isNotifications = activeAction === "notifications";
   const isForm = activeAction === "form";
   const isReply = activeAction === "reply";
 
   const pageHasData = activePage.sound || activePage.artifact;
-
-  const barVariants = {
-    collapsed: {
-      x: -40,
-      y: 40,
-      transition: {
-        type: "spring",
-        damping: 24,
-        stiffness: 180,
-      },
-    },
-    expanded: {
-      x: isReply ? -32 : -40,
-      y: isReply ? 32 : 40,
-      transition: {
-        type: "spring",
-        damping: 40,
-        stiffness: 400,
-      },
-    },
-  };
 
   // Debounce the search query
   const [searchQuery, setSearchQuery] = useState("");
@@ -187,16 +174,14 @@ const Nav = () => {
 
       {/* Text Input */}
       <motion.div
-        className={`absolute bottom-0 left-0 z-50 flex w-full items-center justify-center bg-transparent`}
+        className={`absolute bottom-0 left-0 z-50 flex w-full items-center justify-center bg-transparent mix-blend-darken bg-transparent`}
         variants={{
           collapsed: {
-            x: 8,
-            y: 36,
+            y: 40,
             width: 32,
             height: 32,
             borderRadius: 24,
             outline: "rgba(0,0,0,0.0)",
-            backgroundColor: "#F4F4F4A9",
             transition: {
               type: "spring",
               damping: 24,
@@ -211,7 +196,6 @@ const Nav = () => {
             height: isForm ? "auto" : 40,
             borderRadius: isReply ? 20 : 24,
             outline: "rgba(0,0,0,0.05)",
-            backgroundColor: isReply ? "#FFFFFF" : "transparent",
             paddingLeft: isReply ? 12 : 40,
             paddingRight: isReply ? 44 : 0,
             transition: {
@@ -222,6 +206,7 @@ const Nav = () => {
           },
         }}
         animate={expandInput ? "expanded" : "collapsed"}
+        whileHover={{ scale: 1.1 }}
       >
         {isReply && expandInput && replyTarget && (
           // Reply Target Avatar
@@ -234,6 +219,11 @@ const Nav = () => {
               className={`rounded-full`}
             />
           </div>
+        )}
+        {!expandInput && (
+          <SearchIcon
+            className={`flex-shrink-0 absolute left-0 pointer-events-none`}
+          />
         )}
         <TextareaAutosize
           id="entryText"
@@ -249,7 +239,7 @@ const Nav = () => {
         />
       </motion.div>
 
-      {/* Iconography */}
+      {/* Icon / Indicator / Avatar */}
       <motion.div
         variants={{
           collapsed: {
@@ -262,8 +252,8 @@ const Nav = () => {
             },
           },
           expanded: {
-            x: isReply ? -32 : -40,
-            y: isReply ? 32 : 40,
+            x: isReply ? -32 : -32,
+            y: isReply ? 32 : 32,
             transition: {
               type: "spring",
               damping: 40,
@@ -272,143 +262,149 @@ const Nav = () => {
           },
         }}
         animate={expandInput ? "expanded" : "collapsed"}
-        className={`absolute bottom-0 left-0 z-50 flex flex-col gap-2 bg-transparent mix-blend-darken`}
+        className={`absolute bottom-0 left-0 z-50 flex flex-col bg-transparent mix-blend-darken`}
       >
-        {/* Notification Icon */}
-        {/*<motion.button*/}
-        {/*  whileHover={{*/}
-        {/*    scale: 1.1,*/}
-        {/*  }}*/}
-        {/*  animate={expandInput ? { scale: 0, opacity: 0 } : { scale: 1 }}*/}
-        {/*  ref={notificationButtonRef}*/}
-        {/*  onClick={handleNotificationsClick}*/}
-        {/*  className={`flex w-10 items-center justify-center`}*/}
-        {/*>*/}
-        {/*  <div className={`rounded-full bg-[#F4F4F4] px-[11px] py-3`}>*/}
-        {/*    <NotificationIcon />*/}
-        {/*  </div>*/}
-        {/*</motion.button>*/}
+        {/* Notification Button */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          animate={expandInput ? { scale: 0, opacity: 0 } : { scale: 1 }}
+          ref={notificationButtonRef}
+          onClick={handleNotificationsClick}
+          className={`p-2`}
+        >
+          <motion.div
+            animate={{
+              backgroundColor: isFirstNotifRead ? "#999" : "#24FF00",
+              scale: isFirstNotifRead ? 1 : [1, 0.8, 1],
+            }}
+            transition={{
+              scale: isFirstNotifRead
+                ? {}
+                : {
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    ease: "easeInOut",
+                  },
+            }}
+            className={`rounded-full w-4 h-4`}
+          />
+        </motion.button>
 
-        <div className={`flex items-center gap-2`}>
-          {/* Target Container */}
-          <button
-            className={`relative flex h-10 w-10 items-center justify-center`}
+        {/* Dynamic Icons */}
+        <button className={`relative flex h-8 w-8 items-center justify-center`}>
+          {/* Avatar */}
+          <motion.div
+            className={`shadow-notification absolute rounded-full`}
+            animate={expandInput ? { scale: 0.5 } : { opacity: 1, scale: 1 }}
+            transition={{ type: "spring", damping: 24, stiffness: 400 }}
           >
-            {/* Avatar */}
-            <motion.div
-              className={`shadow-notification absolute rounded-full`}
-              animate={expandInput ? { scale: 0.5 } : { opacity: 1, scale: 1 }}
-              transition={{ type: "spring", damping: 24, stiffness: 400 }}
-            >
-              <Avatar
-                imageSrc={user!.image}
-                altText={`${user!.username}'s avatar`}
-                width={40}
-                height={40}
-                user={user!}
-              />
-            </motion.div>
+            <Avatar
+              imageSrc={user!.image}
+              altText={`${user!.username}'s avatar`}
+              width={32}
+              height={32}
+              user={user!}
+            />
+          </motion.div>
 
-            <AnimatePresence>
-              {/* Search Results */}
-              {expandInput && activeAction === "none" && !pageHasData && (
+          <AnimatePresence>
+            {/* Search Results */}
+            {expandInput && activeAction === "none" && !pageHasData && (
+              <motion.div
+                className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+              >
+                <TargetGoIcon />
+              </motion.div>
+            )}
+
+            {/* Form is Active */}
+            {expandInput &&
+              activeAction === "form" &&
+              (inputValue ? (
                 <motion.div
                   className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
                 >
-                  <TargetGoIcon />
+                  <TargetCommandIcon />
+                </motion.div>
+              ) : (
+                <motion.div
+                  className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                >
+                  <TargetFormIcon />
+                </motion.div>
+              ))}
+
+            {/* User is on a Sound page */}
+            {expandInput &&
+              activeAction === "none" &&
+              activePage.sound &&
+              !inputValue && (
+                <motion.div
+                  className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                >
+                  <TargetAddIcon />
                 </motion.div>
               )}
 
-              {/* Form is Active */}
-              {expandInput &&
-                activeAction === "form" &&
-                (inputValue ? (
-                  <motion.div
-                    className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                  >
-                    <TargetCommandIcon />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                  >
-                    <TargetFormIcon />
-                  </motion.div>
-                ))}
-
-              {/* User is on a Sound page */}
-              {expandInput &&
-                activeAction === "none" &&
-                activePage.sound &&
-                !inputValue && (
-                  <motion.div
-                    className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                  >
-                    <TargetAddIcon />
-                  </motion.div>
-                )}
-
-              {/* User is on an Artifact page */}
-              {expandInput &&
-                activeAction === "none" &&
-                activePage.artifact &&
-                !inputValue && (
-                  <motion.div
-                    className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
-                    initial={{ opacity: 0, scale: 2 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0 }}
-                  >
-                    <TargetArtifactIcon />
-                  </motion.div>
-                )}
-
-              {/* User is viewing notifications */}
-              {expandInput && activeAction === "notifications" && (
+            {/* User is on an Artifact page */}
+            {expandInput &&
+              activeAction === "none" &&
+              activePage.artifact &&
+              !inputValue && (
                 <motion.div
-                  className={`center-x center-y absolute rounded-full bg-[#CCC] w-6 h-6 flex items-center justify-center`}
+                  className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
                   initial={{ opacity: 0, scale: 2 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 2 }}
+                  exit={{ opacity: 0, scale: 0 }}
                 >
-                  <p
-                    className={`text-xs font-semibold text-white leading-[8px]`}
-                  >
-                    99
-                  </p>
+                  <TargetArtifactIcon />
                 </motion.div>
               )}
-            </AnimatePresence>
-          </button>
 
-          {/* Search Button */}
-          {/*<motion.button*/}
-          {/*  whileHover={{*/}
-          {/*    scale: 1.1,*/}
-          {/*  }}*/}
-          {/*  animate={expandInput ? "exit" : "initial"}*/}
-          {/*  variants={iconVariants}*/}
-          {/*  onClick={() => setExpandInput((prev) => !prev)}*/}
-          {/*  className="flex cursor-pointer items-center justify-center rounded-full px-[12px] py-2 bg-[#F4F4F4]"*/}
-          {/*>*/}
-          {/*  <SearchIcon />*/}
-          {/*</motion.button>*/}
-        </div>
+            {/* User is viewing notifications */}
+            {expandInput && activeAction === "notifications" && (
+              <motion.div
+                className={`center-x center-y absolute rounded-full bg-[#CCC] w-6 h-6 flex items-center justify-center`}
+                initial={{ opacity: 0, scale: 2 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 2 }}
+              >
+                <p className={`text-xs font-semibold text-white leading-[8px]`}>
+                  99
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </button>
       </motion.div>
     </>
   );
 };
 
 export default Nav;
+
+// {/* Search Button */}
+// {/*<motion.button*/}
+// {/*  whileHover={{*/}
+// {/*    scale: 1.1,*/}
+// {/*  }}*/}
+// {/*  animate={expandInput ? "exit" : "initial"}*/}
+// {/*  variants={iconVariants}*/}
+// {/*  onClick={() => setExpandInput((prev) => !prev)}*/}
+// {/*  className="flex cursor-pointer items-center justify-center rounded-full px-[12px] py-2 bg-[#F4F4F4]"*/}
+// {/*>*/}
+// {/*  <SearchIcon />*/}
+// {/*</motion.button>*/}

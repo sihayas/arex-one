@@ -114,6 +114,7 @@ export const InterfaceContextProvider = ({
   useEffect(() => {
     if (notifData) {
       setNotifs(notifData.data);
+      console.log(notifData.data);
     }
   }, [notifData]);
 

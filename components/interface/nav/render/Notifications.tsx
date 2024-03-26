@@ -24,22 +24,16 @@ const Notifications = () => {
     <motion.div
       initial={{
         y: offset,
-        x: -52,
+        x: -32,
         opacity: 0,
-        scale: 0,
-        filter: "blur(8px)",
       }}
       animate={{
         y: 0,
         opacity: 1,
-        scale: 1,
-        filter: "blur(0px)",
       }}
       exit={{
         y: offset,
         opacity: 0,
-        scale: 0,
-        filter: "blur(8px)",
       }}
       transition={{
         type: "spring",
@@ -47,10 +41,10 @@ const Notifications = () => {
         stiffness: 200,
         mass: 0.8,
       }}
-      className={`mask-top absolute left-0 z-10 flex h-[calc(50vh)] w-[448px] origin-top-left flex-col overflow-y-scroll pt-20`}
-      style={{
-        bottom: `calc(-50vh + ${offset}px)`,
-      }}
+      className={`mask-top absolute left-0 bottom-0 z-10 flex h-[calc(50vh)] w-[448px] origin-bottom-left flex-col overflow-y-scroll pt-20 overflow-x-hidden`}
+      // style={{
+      //   bottom: `calc(-50vh + ${offset}px)`,
+      // }}
     >
       {Object.entries(notifs).map(([key, notificationGroup], index) => {
         const notificationType = key.split("|")[0].toUpperCase();

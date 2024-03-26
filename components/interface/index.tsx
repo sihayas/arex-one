@@ -81,22 +81,19 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           x: "-50%",
           y: "-50%",
           opacity: isVisible ? 1 : 0,
-          scale: isVisible ? 1 : 0.9,
+          scale: isVisible ? 1 : 0.8,
           pointerEvents: isVisible ? "auto" : "none",
           zIndex: isVisible ? 10 : -10,
         },
         {
           scale: {
             type: "spring" as const,
-            stiffness: 180,
-            damping: 22,
+            stiffness: 300,
+            damping: 28,
             delay: isVisible ? 0.15 : 0,
           },
           opacity: {
-            type: "spring" as const,
-            mass: 1,
-            stiffness: 180,
-            damping: 22,
+            ease: "easeInOut",
             delay: isVisible ? 0.15 : 0,
           },
           visibility: {
@@ -146,7 +143,6 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           ? "rgba(0, 0, 0, 0.0) 0px 0px 0px 0px"
           : "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px",
         scale: expandInput ? 0.9 : 1,
-        filter: expandInput && isNotifications ? "blur(24px)" : "blur(0px)",
       };
       const transitionConfig = {
         type: "spring" as const,

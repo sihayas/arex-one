@@ -26,11 +26,11 @@ const Reply = ({ notificationsGroup }: any) => {
         event.stopPropagation();
         handleSelectArtifact(reply?.artifact, reply.id);
       }}
-      className={`flex flex-col rounded-3xl px-4 py-6`}
+      className={`flex flex-col rounded-3xl px-4 py-6 pl-0`}
     >
       <div className={`flex items-center`}>
         <div
-          className={`shadow-notification mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-black`}
+          className={`mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-black`}
         >
           <ReplyToReplyIcon />
         </div>
