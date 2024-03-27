@@ -1,4 +1,4 @@
-import { Interface } from "./interface";
+import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode } from "react";
 import { useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";

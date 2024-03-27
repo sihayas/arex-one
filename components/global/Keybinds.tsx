@@ -50,7 +50,6 @@ export const Keybinds = (
     ) {
       handleReplySubmit();
     }
-
     // Switch to album page from form
     else if (e.key === "Enter" && selectedFormSound && inputValue === "") {
       e.preventDefault();
@@ -59,7 +58,6 @@ export const Keybinds = (
       inputRef.current?.blur();
       window.history.pushState(null, "");
     }
-
     // Wipe selectedFormSound and replyTarget
     else if (
       e.key === "Backspace" &&

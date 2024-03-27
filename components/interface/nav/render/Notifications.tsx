@@ -1,5 +1,5 @@
 import { PageName, useInterfaceContext } from "@/context/Interface";
-import { GetDimensions } from "@/components/interface";
+import { GetDimensions } from "@/components/interface/Interface";
 import { motion } from "framer-motion";
 import Notification from "@/components/interface/nav/items/Notification";
 

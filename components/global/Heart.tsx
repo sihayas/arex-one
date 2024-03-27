@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { LoveIcon, BubbleIcon, ReplyIcon } from "../icons";
+import { LoveIcon, ReplyIcon } from "../icons";
 
 interface HeartButtonProps {
   handleHeartClick: (
@@ -107,3 +107,22 @@ const Heart: React.FC<HeartButtonProps> = ({
 };
 
 export default Heart;
+
+function BubbleIcon({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={28}
+      height={28}
+      fill="none"
+      {...props}
+    >
+      <path
+        fill={props.color}
+        fillRule="evenodd"
+        d="M14 28c7.732 0 14-6.268 14-14S21.732 0 14 0 0 6.268 0 14c0 2.434.621 4.723 1.714 6.717a4 4 0 1 0 5.569 5.569A13.937 13.937 0 0 0 14 28Z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}

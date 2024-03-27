@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useArtifactsQuery } from "@/lib/helper/interface/sound";
 import { useInterfaceContext } from "@/context/Interface";
-import { GetDimensions } from "@/components/interface";
+import { GetDimensions } from "@/components/interface/Interface";
 import { PageName } from "@/context/Interface";
 import { SortOrder } from "@/components/interface/sound/Sound";
 import { Virtuoso, StateSnapshot, VirtuosoHandle } from "react-virtuoso";

@@ -8,7 +8,6 @@ import {
   TargetAddIcon,
   TargetGoIcon,
   TargetArtifactIcon,
-  NotificationIcon,
   SearchIcon,
   TargetFormIcon,
   TargetCommandIcon,
@@ -18,7 +17,7 @@ import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/Interface";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
-import { Keybinds } from "@/components/interface/nav/items/Keybinds";
+import { Keybinds } from "@/components/global/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
@@ -140,11 +139,6 @@ const Nav = () => {
             height: 0,
             boxShadow:
               "0px 0px 0px 0px rgba(0, 0, 0, 0.0), 0px 0px 0px 0px rgba(0, 0, 0,0.0)",
-            transition: {
-              type: "spring",
-              damping: 24,
-              stiffness: 180,
-            },
           },
           expanded: {
             opacity: 1,
@@ -152,19 +146,17 @@ const Nav = () => {
             height: 472,
             boxShadow:
               "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
-            transition: {
-              type: "spring",
-              damping: 40,
-              stiffness: 400,
-            },
           },
+        }}
+        transition={{
+          type: "spring",
+          damping: 25,
+          stiffness: 250,
         }}
         animate={
           expandInput && !isNotifications && !isReply ? "expanded" : "collapsed"
         }
-        className={`absolute bottom-0 left-0 z-40 flex h-[472px] w-[368px] origin-bottom-left -translate-x-10 translate-y-10 flex-col rounded-[20px] bg-[#FFFFFFF5] ${
-          !expandInput && "mix-blend-darken"
-        }`}
+        className={`absolute -bottom-10 -left-10 z-40 flex h-[472px] w-[368px] origin-bottom-left flex-col rounded-[20px] bg-[#FFFFFFF5]`}
       >
         <AnimatePresence>
           {isForm && expandInput && <Form />}
@@ -209,8 +201,8 @@ const Nav = () => {
           </div>
         )}
         {!expandInput && (
-          <SearchIcon
-            className={`flex-shrink-0 absolute left-0 pointer-events-none`}
+          <motion.div
+            className={`flex-shrink-0 absolute left-1 pointer-events-none w-4 h-4 bg-gray3 rounded`}
           />
         )}
         <TextareaAutosize

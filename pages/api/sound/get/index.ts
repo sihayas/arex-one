@@ -27,7 +27,7 @@ export default async function onRequestGet(request: Request) {
   }
 
   try {
-    const soundInfo: SoundInfo | null = await prisma.sound.findUnique({
+    let soundInfo: SoundInfo | null = await prisma.sound.findUnique({
       where: { appleId },
       select: {
         avg_rating: true,
@@ -35,14 +35,11 @@ export default async function onRequestGet(request: Request) {
       },
     });
 
+    // If soundInfo is not found, set default values
     if (!soundInfo) {
-      return new Response(JSON.stringify({ error: "Sound not found." }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
+      soundInfo = { avg_rating: 0, ratings_count: 0 };
     }
 
-    // Use prisma.raw for raw queries, adjust as necessary for your Prisma version
     const ratingsDistributionResult: Ratings[] = await prisma.$queryRaw<
       Ratings[]
     >`
@@ -58,16 +55,11 @@ export default async function onRequestGet(request: Request) {
       WHERE s.appleId = ${appleId} AND a.type = 'entry'
     `;
 
-    const ratings = ratingsDistributionResult[0];
+    let ratings = ratingsDistributionResult[0];
 
+    // If ratings are not found, set default values
     if (!ratings) {
-      return new Response(
-        JSON.stringify({ error: "No rating distribution data found." }),
-        {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      ratings = { "0.5-1": 0, "1.5-2": 0, "2.5-3": 0, "3.5-4": 0, "4.5-5": 0 };
     }
 
     // Construct the response object

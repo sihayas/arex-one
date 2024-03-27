@@ -5,7 +5,12 @@ import { useNavContext } from "@/context/Nav";
 import { useInterfaceContext } from "@/context/Interface";
 
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
-  const { setSelectedFormSound } = useNavContext();
+  const {
+    setSelectedFormSound,
+    inputValue,
+    setInputValue,
+    setStoredInputValue,
+  } = useNavContext();
   const soundType = sound.type;
   const artwork = sound.attributes.artwork.url
     .replace("{w}", "95")
@@ -15,6 +20,8 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
 
   const onSelect = async (appleId: string) => {
     setSelectedFormSound(sound);
+    setStoredInputValue(inputValue);
+    setInputValue("");
   };
 
   // Render command item
@@ -27,7 +34,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
     >
       <Image
         id={sound.id}
-        className="shadow-shadowKitLow rounded-lg"
+        className="rounded-lg"
         src={artwork}
         alt={`${sound.attributes.name} artwork`}
         width={38}

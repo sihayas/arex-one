@@ -9,7 +9,7 @@ const UserItem = ({ user }: { user: UserType }) => {
     <Command.Item
       value={user.id}
       onMouseDown={(e) => e.preventDefault()}
-      className="w-full border-b p-4 border-silver cursor-pointer"
+      className="w-full p-4 cursor-pointer"
       onSelect={() => handleSelectUser(user)}
     >
       <div className="flex w-full items-center gap-4">

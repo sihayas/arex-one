@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useInterfaceContext } from "@/context/Interface";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useUserDataQuery } from "@/lib/helper/interface/user";
 import Essentials from "@/components/interface/user/render/Essentials";
 import Entries from "@/components/interface/user/render/Entries";
@@ -15,6 +21,10 @@ const User = () => {
   });
   useMotionValueEvent(scrollY, "change", (latest) => {
     pages[pages.length - 1].isOpen = latest >= 1;
+  });
+  const opacity = useSpring(useTransform(scrollY, [0, 1], [1, 0]), {
+    stiffness: 100,
+    damping: 20,
   });
 
   const [followingAtoB, setFollowingAtoB] = useState(false);
@@ -49,7 +59,12 @@ const User = () => {
 
   return (
     <>
-      <div className="flex w-full gap-4 p-8">
+      <motion.div
+        style={{
+          opacity,
+        }}
+        className="flex w-full gap-4 p-8"
+      >
         <div className={`flex flex-col`}>
           {/* Avatar & Interlink */}
           <div className={`flex items-center `}>
@@ -227,7 +242,7 @@ const User = () => {
         <div className={`ml-auto flex flex-col items-end -space-y-6`}>
           <Essentials essentials={data.essentials} />
         </div>
-      </div>
+      </motion.div>
 
       <div className={`-mt-[242px] flex flex-col -space-y-5 w-[420px]`}>
         <Entries userId={pageUser.id} />

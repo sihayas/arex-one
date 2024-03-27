@@ -153,7 +153,6 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         mass: 1,
         stiffness: 180,
         damping: 22,
-        delay: expandInput ? 0 : 0.15,
       };
       animate(scope.current, animationConfig, transitionConfig);
     };

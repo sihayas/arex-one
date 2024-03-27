@@ -128,27 +128,14 @@ const Form = () => {
     >
       <form ref={formRef} onSubmit={handleSubmit} className={`flex p-8`}>
         <motion.div
-          initial={{
-            scale: 0.75,
-            rotateX: -30,
-            rotateY: -15,
-            opacity: 0,
-            filter: "blur(8px)",
-          }}
-          animate={{
-            scale: 1,
-            rotateX: 0,
-            rotateY: 0,
-            rotateZ: -1,
-            opacity: 1,
-            filter: "blur(0px)",
-          }}
+          whileHover={{ scale: 1.05 }}
+          initial={{ scale: 0.75, opacity: 0, filter: "blur(8px)", rotate: 0 }}
+          animate={{ scale: 1, opacity: 1, filter: "blur(0px)", rotate: -2 }}
           transition={{
             type: "spring",
             stiffness: 48,
             damping: 12,
-            mass: 2,
-            delay: 0.24,
+            mass: 1.5,
           }}
           className={`relative flex h-[304px] w-[304px] origin-center flex-col overflow-hidden rounded-2xl bg-white shadow-test will-change-transform`}
           style={{ perspective: 1000 }}
