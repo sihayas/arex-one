@@ -3,7 +3,7 @@ import { useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
 
 import { Command } from "cmdk";
-import Nav from "@/components/interface/nav";
+import Nav from "@/components/interface/nav/Nav";
 
 import Sound from "@/components/interface/sound";
 import Artifact from "@/components/interface/artifact";

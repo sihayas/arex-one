@@ -56,7 +56,7 @@ const Nav = () => {
 
   // Debounce the search query
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSetSearchQuery = debounce(setSearchQuery, 250);
+  const debouncedSetSearchQuery = debounce(setSearchQuery, 150);
   const handleInputTextChange = (value: string) => {
     setInputValue(value);
     debouncedSetSearchQuery(value);
@@ -162,7 +162,7 @@ const Nav = () => {
         animate={
           expandInput && !isNotifications && !isReply ? "expanded" : "collapsed"
         }
-        className={`absolute bottom-0 left-0 z-40 flex h-[472px] w-[368px] origin-bottom-left -translate-x-10 translate-y-10 flex-col rounded-[20px] bg-[#F4F4F4A9] ${
+        className={`absolute bottom-0 left-0 z-40 flex h-[472px] w-[368px] origin-bottom-left -translate-x-10 translate-y-10 flex-col rounded-[20px] bg-[#FFFFFFF5] ${
           !expandInput && "mix-blend-darken"
         }`}
       >
@@ -174,30 +174,19 @@ const Nav = () => {
 
       {/* Text Input */}
       <motion.div
-        className={`absolute bottom-0 left-0 z-50 flex w-full items-center justify-center bg-transparent mix-blend-darken bg-transparent`}
+        className={`absolute -bottom-8 left-1 z-50 flex w-full items-center justify-center bg-transparent mix-blend-darken bg-transparent h-8`}
         variants={{
           collapsed: {
-            y: 40,
             width: 32,
-            height: 32,
             borderRadius: 24,
-            outline: "rgba(0,0,0,0.0)",
             transition: {
               type: "spring",
               damping: 24,
               stiffness: 180,
             },
           },
-
           expanded: {
-            x: isReply ? 16 : -40,
-            y: isReply ? -16 : 40,
             width: isNotifications ? 56 : 368,
-            height: isForm ? "auto" : 40,
-            borderRadius: isReply ? 20 : 24,
-            outline: "rgba(0,0,0,0.05)",
-            paddingLeft: isReply ? 12 : 40,
-            paddingRight: isReply ? 44 : 0,
             transition: {
               type: "spring",
               damping: 40,
@@ -206,7 +195,6 @@ const Nav = () => {
           },
         }}
         animate={expandInput ? "expanded" : "collapsed"}
-        whileHover={{ scale: 1.1 }}
       >
         {isReply && expandInput && replyTarget && (
           // Reply Target Avatar
@@ -227,7 +215,7 @@ const Nav = () => {
         )}
         <TextareaAutosize
           id="entryText"
-          className={`w-full resize-none bg-transparent text-base text-black outline-none`}
+          className={`w-full resize-none bg-transparent text-base text-black outline-none `}
           value={expandInput ? inputValue : ""}
           onChange={(e) => handleInputTextChange(e.target.value)}
           onBlur={onBlur}
@@ -240,29 +228,8 @@ const Nav = () => {
       </motion.div>
 
       {/* Icon / Indicator / Avatar */}
-      <motion.div
-        variants={{
-          collapsed: {
-            x: -40,
-            y: 40,
-            transition: {
-              type: "spring",
-              damping: 24,
-              stiffness: 180,
-            },
-          },
-          expanded: {
-            x: isReply ? -32 : -32,
-            y: isReply ? 32 : 32,
-            transition: {
-              type: "spring",
-              damping: 40,
-              stiffness: 400,
-            },
-          },
-        }}
-        animate={expandInput ? "expanded" : "collapsed"}
-        className={`absolute bottom-0 left-0 z-50 flex flex-col bg-transparent mix-blend-darken`}
+      <div
+        className={`absolute -bottom-8 -left-8 z-50 flex flex-col bg-transparent mix-blend-darken`}
       >
         {/* Notification Button */}
         <motion.button
@@ -290,7 +257,6 @@ const Nav = () => {
             className={`rounded-full w-4 h-4`}
           />
         </motion.button>
-
         {/* Dynamic Icons */}
         <button className={`relative flex h-8 w-8 items-center justify-center`}>
           {/* Avatar */}
@@ -389,7 +355,7 @@ const Nav = () => {
             )}
           </AnimatePresence>
         </button>
-      </motion.div>
+      </div>
     </>
   );
 };
