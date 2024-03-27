@@ -55,7 +55,7 @@ const User = () => {
           <div className={`flex items-center `}>
             <div className={`relative flex-shrink-0`}>
               <Avatar
-                className="rounded-max shadow-shadowKitLow"
+                className="rounded-max border border-silver"
                 imageSrc={data.image}
                 altText={`avatar`}
                 width={isSelf ? 104 : 72}
@@ -144,7 +144,7 @@ const User = () => {
               <>
                 <div className={`relative flex-shrink-0`}>
                   <Avatar
-                    className="rounded-max shadow-shadowKitLow"
+                    className="rounded-max border border-silver"
                     imageSrc={user.image}
                     altText={`avatar`}
                     width={32}
@@ -204,7 +204,11 @@ const User = () => {
             </div>
           )}
           {/* Stats */}
-          <div className="grid grid-cols-[repeat(3,_104px)]">
+          <div
+            className={`grid grid-cols-[repeat(3,_104px)] ${
+              isSelf && "pt-[22px]"
+            }`}
+          >
             <div className={`flex flex-col`}>
               <p className={`font-semibold text-gray3 text-sm`}>SOUND</p>
               <p className={`text-gray2 text-xl`}>
@@ -225,7 +229,7 @@ const User = () => {
         </div>
       </div>
 
-      <div className={`-mt-[242px] flex flex-col -space-y-4 p-12 w-full`}>
+      <div className={`-mt-[242px] flex flex-col -space-y-5 w-[420px]`}>
         <Entries userId={pageUser.id} />
       </div>
     </>

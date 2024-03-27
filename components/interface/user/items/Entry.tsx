@@ -41,14 +41,13 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
 
   // First card translations
   const xZero = useSpring(
-    useTransform(scrollY, [0, 24], [-16, 0]),
+    useTransform(scrollY, [0, 24], [-78, 0]),
     springConfig,
   );
   const yZero = useSpring(
-    useTransform(scrollY, [0, 24], [26, 0]),
+    useTransform(scrollY, [0, 24], [72, 0]),
     springConfig,
   );
-
   const rotateZero = useSpring(
     useTransform(scrollY, [0, 24], [-2, rotate]),
     springConfig,
@@ -56,11 +55,11 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
 
   // Second card translations
   const xOne = useSpring(
-    useTransform(scrollY, [0, 24], [-138, 0]),
+    useTransform(scrollY, [0, 24], [-80, 0]),
     springConfig,
   );
   const yOne = useSpring(
-    useTransform(scrollY, [0, 24], [-364, 0]),
+    useTransform(scrollY, [0, 24], [-306, 0]),
     springConfig,
   );
   const scaleOne = useSpring(
@@ -69,12 +68,6 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
   );
   const rotateOne = useSpring(
     useTransform(scrollY, [0, 24], [4, rotate]),
-    springConfig,
-  );
-
-  // Third card translations
-  const rotateTwo = useSpring(
-    useTransform(scrollY, [0, 24], [12, rotate]),
     springConfig,
   );
 
@@ -101,7 +94,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
         x: index === 0 ? xZero : index === 1 ? xOne : 0,
         scale: index === 1 ? scaleOne : 1,
         zIndex: 10 - index,
-        rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : rotateTwo,
+        rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : 0,
       }}
       whileHover={{ zIndex: 100 }}
       className={`relative ${isEven ? "mr-auto" : "ml-auto"}`}

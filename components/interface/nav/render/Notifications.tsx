@@ -38,7 +38,7 @@ const Notifications = () => {
         bottom: `calc(-50vh + ${offset}px)`, // Levels to bottom of screen
         paddingTop: `calc((100vh - (100vh - ${height}px)/2) - 248px)`,
       }}
-      className={`absolute left-0 z-10 flex w-[416px] origin-bottom-left flex-col overflow-y-scroll gap-4 -mx-8 px-8`}
+      className={`absolute left-0 z-10 flex w-[416px] origin-bottom-left flex-col overflow-y-scroll gap-4 -mx-8 px-8 scrollbar-none`}
     >
       {Object.entries(notifs).map(([key, notificationGroup], index) => {
         const notificationType = key.split("|")[0].toUpperCase();

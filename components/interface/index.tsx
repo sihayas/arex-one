@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
 
 import { Command } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
 
-import Sound from "@/components/interface/sound";
-import Artifact from "@/components/interface/artifact";
-import User from "@/components/interface/user";
+import Sound from "@/components/interface/sound/Sound";
+import Artifact from "@/components/interface/artifact/Artifact";
+import User from "@/components/interface/user/User";
 
 import {
   motion,
@@ -29,14 +29,17 @@ export const GetDimensions = (pageName: PageName) => {
     user: {
       base: { width: 640, height: 400 },
       target: { width: 640, height: maxHeight },
+      scrollTo: { width: 516, height: maxHeight },
     },
     sound: {
       base: { width: 496, height: 496 },
       target: { width: 688, height: maxHeight },
+      scrollTo: { width: 688, height: maxHeight },
     },
     artifact: {
       base: { width: 512, height: 640 },
       target: { width: 512, height: maxHeight },
+      scrollTo: { width: 512, height: maxHeight },
     },
   };
 
@@ -49,7 +52,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   const cmdkPortal = document.getElementById("cmdk");
   const isNotifications = activeAction === "notifications";
 
-  const { base, target } = GetDimensions(activePage.name as PageName);
+  const { base, target, scrollTo } = GetDimensions(activePage.name as PageName);
 
   const [scope, animate] = useAnimate(); // Window
   const [rootScope, animateRoot] = useAnimate(); // Root
@@ -64,12 +67,12 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
   const newWidth = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.width, target.width],
+    [base.width, scrollTo.width],
   );
   const newHeight = useTransform(
     scrollY,
     [0, maxScroll],
-    [base.height, target.height],
+    [base.height, scrollTo.height],
   );
 
   // Animate portal visibility
@@ -143,6 +146,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           ? "rgba(0, 0, 0, 0.0) 0px 0px 0px 0px"
           : "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px",
         scale: expandInput ? 0.99 : 1,
+        filter: expandInput ? "blur(4px)" : "blur(0px)",
       };
       const transitionConfig = {
         type: "spring" as const,

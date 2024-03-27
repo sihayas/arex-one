@@ -3,7 +3,7 @@ import { useArtifactsQuery } from "@/lib/helper/interface/sound";
 import { useInterfaceContext } from "@/context/Interface";
 import { GetDimensions } from "@/components/interface";
 import { PageName } from "@/context/Interface";
-import { SortOrder } from "@/components/interface/sound";
+import { SortOrder } from "@/components/interface/sound/Sound";
 import { Virtuoso, StateSnapshot, VirtuosoHandle } from "react-virtuoso";
 import { useArtifact } from "@/hooks/usePage";
 import Avatar from "@/components/global/Avatar";
