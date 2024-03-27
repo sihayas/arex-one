@@ -1,13 +1,15 @@
 import Image from "next/image";
 import React from "react";
 
-import Avatar from "@/components/global/Avatar";
-import { useInterfaceContext } from "@/context/Interface";
 import { useArtifact } from "@/hooks/usePage";
-import { ReplyToReplyIcon, ReplyIcon } from "@/components/icons";
+import { ReplyToReplyIcon } from "@/components/icons";
+import { motion } from "framer-motion";
+import {
+  notificationVariants,
+  notificationSpring,
+} from "@/components/interface/nav/render/Notifications";
 
-const Reply = ({ notificationsGroup }: any) => {
-  const { user } = useInterfaceContext();
+const Reply = ({ notificationsGroup, index }: any) => {
   const { handleSelectArtifact } = useArtifact();
 
   const notifications = notificationsGroup.notifications;
@@ -16,142 +18,59 @@ const Reply = ({ notificationsGroup }: any) => {
 
   const url = MusicKit.formatArtworkURL(
     sound.attributes.artwork,
-    96 * 2.5,
-    96 * 2.5,
+    32 * 2.5,
+    32 * 2.5,
   );
 
-  return reply.replyTo && user ? (
-    <div
+  return (
+    <motion.div
+      variants={notificationVariants}
+      transition={notificationSpring}
+      key={reply.id}
       onClick={(event) => {
         event.stopPropagation();
-        handleSelectArtifact(reply?.artifact, reply.id);
       }}
-      className={`flex flex-col rounded-3xl px-4 py-6 pl-0`}
+      className={`flex flex-col flex-shrink-0 -space-y-3 origin-bottom-left`}
     >
-      <div className={`flex items-center`}>
-        <div
-          className={`mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-black`}
-        >
-          <ReplyToReplyIcon />
-        </div>
-        {/* Art & Avatar */}
-        <div className={`relative h-16 w-12 flex-shrink-0`}>
-          <div className={`h-16 w-12 -rotate-3`}>
-            <Image
-              className="shadow-notification rounded-xl"
-              src={url}
-              alt={`Artwork`}
-              loading="lazy"
-              quality={100}
-              style={{ objectFit: "cover" }}
-              fill={true}
-            />
-          </div>
-
-          <Avatar
-            className={`shadow-notification absolute -bottom-2 -right-2 outline outline-2 outline-white`}
-            imageSrc={reply.author.image}
-            altText={`${reply.author.username}'s avatar`}
-            user={reply.author}
-            width={32}
-            height={32}
-          />
-        </div>
-        {/* Reply & Attribution */}
-        <div className={`relative z-10 flex w-full items-end`}>
-          <p className={`absolute -bottom-[12px] left-4 z-10`}>
-            <p className={`text-gray2 text-sm font-semibold`}>
-              {reply.author.username}
-            </p>
-          </p>
-          <div
-            className={`shadow-notification relative mb-1.5 ml-1 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
-          >
-            <div
-              className={`line-clamp-6 w-full cursor-pointer break-words text-base text-black`}
-            >
-              {reply.text}
-            </div>
-
-            {/* Bubbles */}
-            <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
-              <div
-                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
-              />
-              <div
-                className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
-              />
-            </div>
-          </div>
-        </div>
+      {/* Text */}
+      <div
+        className={`ml-12 bg-[#F6F6F6] px-4 pb-[18px] pt-[10px] max-w-[calc(100%-48px)] shadow-shadowKitLow rounded-3xl`}
+      >
+        <p className={`text-sm text-gray2 line-clamp-4`}>{reply.text}</p>
       </div>
-    </div>
-  ) : (
-    <div
-      onClick={(event) => {
-        event.stopPropagation();
-        handleSelectArtifact(reply?.artifact, reply.id);
-      }}
-      className={`flex flex-col rounded-3xl px-4 py-6`}
-    >
-      <div className={`flex items-center`}>
+      {/* Metadata & Attribution */}
+      <div
+        className={`flex flex-shrink-0 items-center bg-white rounded-xl shadow-notification`}
+      >
+        {/* Artwork */}
+        <Image
+          className="flex-shrink-0 rounded-l-xl"
+          src={url}
+          alt={`Artwork`}
+          loading="lazy"
+          quality={100}
+          width={48}
+          height={48}
+        />
+
+        {/* Avatar */}
+        <Image
+          className="outline-2 outline-white outline rounded-full flex-shrink-0 ml-4"
+          src={reply.author.image}
+          alt={``}
+          width={18}
+          height={18}
+          quality={100}
+        />
+
+        {/* Attribution*/}
+        <p className={`text-base text-black ml-2`}>{reply.author.username}</p>
+
         <div
-          className={`shadow-notification mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-black`}
-        >
-          <ReplyIcon />
-        </div>
-        {/* Art & Avatar */}
-        <div className={`relative h-16 w-12 flex-shrink-0`}>
-          <div className={`h-16 w-12 -rotate-3`}>
-            <Image
-              className="shadow-notification rounded-xl"
-              src={url}
-              alt={`Artwork`}
-              loading="lazy"
-              quality={100}
-              style={{ objectFit: "cover" }}
-              fill={true}
-            />
-          </div>
-
-          <Avatar
-            className={`shadow-notification absolute -bottom-2 -right-2 outline outline-2 outline-white`}
-            imageSrc={reply.author.image}
-            altText={`${reply.author.username}'s avatar`}
-            user={reply.author}
-            width={32}
-            height={32}
-          />
-        </div>
-        {/* Reply & Attribution */}
-        <div className={`relative z-10 flex w-full items-end`}>
-          <p className={`absolute -bottom-[12px] left-4 z-10`}>
-            <p className={`text-gray2 text-sm font-semibold`}>
-              {reply.author.username}
-            </p>
-          </p>
-          <div
-            className={`shadow-notification relative mb-1.5 ml-1 w-fit rounded-[18px] bg-white px-[10px] pb-[7px] pt-[6px]`}
-          >
-            <div
-              className={`line-clamp-6 w-full cursor-pointer break-words text-base text-black`}
-            >
-              {reply.text}
-            </div>
-
-            {/* Bubbles */}
-            <div className={`absolute -bottom-1 -left-1 h-3 w-3`}>
-              <div
-                className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}
-              />
-              <div
-                className={`left -0 absolute bottom-0 h-1 w-1 rounded-full bg-white`}
-              />
-            </div>
-          </div>
-        </div>
+          className={`ml-auto w-4 h-4 bg-black flex-shrink-0 rounded-full mr-4`}
+        />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

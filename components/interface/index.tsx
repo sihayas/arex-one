@@ -142,7 +142,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         boxShadow: expandInput
           ? "rgba(0, 0, 0, 0.0) 0px 0px 0px 0px"
           : "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px",
-        scale: expandInput ? 0.9 : 1,
+        scale: expandInput ? 0.99 : 1,
       };
       const transitionConfig = {
         type: "spring" as const,
@@ -178,7 +178,9 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
         <motion.div
           id={`cmdk-scroll`}
           ref={scrollContainerRef}
-          className={`scrollbar-none flex flex-col items-center overflow-y-scroll overflow-x-hidden snap-mandatory snap-y`}
+          className={`scrollbar-none flex flex-col items-center overflow-y-scroll overflow-x-hidden snap-mandatory snap-y ${
+            isNotifications && "pointer-events-none"
+          }`}
           style={{
             minWidth: `${target.width}px`,
             height: `${target.height}px`,
