@@ -2,7 +2,7 @@ import { Lucia } from "lucia";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 
 import { Apple, AppleCredentials } from "arctic";
-import { prismaClient } from "../prisma";
+import { prismaClient } from "./prisma";
 
 declare module "lucia" {
   interface Register {

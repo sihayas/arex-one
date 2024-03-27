@@ -1,4 +1,4 @@
-import { searchAlbums } from "@/lib/global/musicKit";
+import { searchAlbums } from "@/lib/global/musickit";
 import { prisma } from "@/lib/global/prisma";
 
 export default async function onRequest(request: any) {

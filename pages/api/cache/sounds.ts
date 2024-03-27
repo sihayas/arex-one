@@ -1,6 +1,6 @@
 import { setCache, getCache } from "@/lib/global/redis";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import { fetchSoundsByType, fetchSoundsByTypes } from "@/lib/global/musicKit";
+import { fetchSoundsByType, fetchSoundsByTypes } from "@/lib/global/musickit";
 
 export default async function onRequestGet(request: any) {
   try {
