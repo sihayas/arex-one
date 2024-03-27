@@ -1,37 +1,40 @@
 import Image from "next/image";
 import React from "react";
 
-import { HeartIcon } from "@/components/icons";
 import { motion } from "framer-motion";
 import {
   notificationVariants,
   notificationSpring,
 } from "@/components/interface/nav/render/Notifications";
 
-const Heart = ({ notificationsGroup, index }: any) => {
-  const notifications = notificationsGroup.notifications.slice(0, 4);
+const Notification = ({ notificationsGroup, notificationType }: any) => {
   const count = Math.min(notificationsGroup.count, 4);
+  const notifications = notificationsGroup.notifications.slice(0, 4);
 
-  const sound =
-    notifications[0].activity.heart.artifact?.sound.appleData ||
-    notifications[0].activity.heart.reply?.artifact.sound.appleData;
+  const isHeart = notificationType === "HEART";
+  const isReply = notificationType === "REPLY";
 
-  const url = MusicKit.formatArtworkURL(
+  const heart = isHeart ? notifications[0].activity.heart : null;
+  const reply = isHeart
+    ? notifications[0].activity.heart.reply
+    : notifications[0].activity.reply;
+  const username = isHeart ? heart.author.username : reply.author.username;
+
+  const sound = heart
+    ? heart.artifact?.sound.appleData || heart.reply?.artifact.sound.appleData
+    : reply?.artifact.sound.appleData;
+  const artworkUrl = MusicKit.formatArtworkURL(
     sound.attributes.artwork,
     48 * 2.5,
     48 * 2.5,
   );
 
-  const name = notifications[0].activity.heart.author.username;
-  const reply = notifications[0].activity.heart.reply;
-
   let avatarData1, avatarData2;
 
   notifications.forEach((notification: any, index: number) => {
-    const { image, id } = notification.activity.heart.author;
+    const { image, id } = isHeart ? heart.author : reply.author;
     const avatarData = { image, id };
 
-    // Assign avatar data based on index
     if (index === 0) avatarData1 = avatarData;
     else if (index === 1) avatarData2 = avatarData;
   });
@@ -40,13 +43,12 @@ const Heart = ({ notificationsGroup, index }: any) => {
     <motion.div
       variants={notificationVariants}
       transition={notificationSpring}
-      key={notifications[0].activity.heart.id}
       onClick={(event) => {
         event.stopPropagation();
       }}
       className={`flex flex-col flex-shrink-0 -space-y-2 origin-bottom-left`}
     >
-      {/* Text */}
+      {/* Reply Text */}
       {reply && (
         <div
           className={`ml-auto bg-[#F6F6F6] px-4 pb-[18px] pt-[10px] w-[calc(100%-48px)] shadow-shadowKitLow rounded-xl rounded-br-none`}
@@ -60,7 +62,7 @@ const Heart = ({ notificationsGroup, index }: any) => {
       >
         <Image
           className="flex-shrink-0 rounded-l-xl"
-          src={url}
+          src={artworkUrl}
           alt={`Artwork`}
           loading="lazy"
           quality={100}
@@ -103,9 +105,12 @@ const Heart = ({ notificationsGroup, index }: any) => {
         </div>
 
         {/* Attribution*/}
-        <p className={`text-base text-black ml-2`}>{name}</p>
+        <p className={`text-base text-black ml-2`}>{username}</p>
 
         <div
+          style={{
+            backgroundColor: isReply ? "#000000" : "#FF5EC4",
+          }}
           className={`ml-auto w-4 h-4 bg-[#FF5EC4] flex-shrink-0 rounded-full mr-4`}
         />
       </div>
@@ -113,4 +118,4 @@ const Heart = ({ notificationsGroup, index }: any) => {
   );
 };
 
-export default Heart;
+export default Notification;
