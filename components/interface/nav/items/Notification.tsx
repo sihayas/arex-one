@@ -46,12 +46,12 @@ const Notification = ({ notificationsGroup, notificationType }: any) => {
       onClick={(event) => {
         event.stopPropagation();
       }}
-      className={`flex flex-col flex-shrink-0 -space-y-2 origin-bottom-left`}
+      className={`flex flex-col flex-shrink-0 -space-y-3 origin-bottom-left`}
     >
       {/* Reply Text */}
       {reply && (
         <div
-          className={`ml-auto bg-[#F6F6F6] px-4 pb-[18px] pt-[10px] w-[calc(100%-48px)] shadow-shadowKitLow rounded-xl rounded-br-none`}
+          className={`ml-auto bg-[#F6F6F6] px-4 pb-[18px] pt-[10px] w-[calc(100%-48px)] shadow-shadowKitLow rounded-2xl rounded-br-none`}
         >
           <p className={`text-sm text-gray2 line-clamp-4`}>{reply.text}</p>
         </div>

@@ -13,9 +13,9 @@ import {
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/Interface";
 
-import Dial from "@/components/interface/sound/sub/Dial";
+import Dial from "@/components/interface/sound/items/Dial";
 import { createPortal } from "react-dom";
-import Sort from "@/components/interface/sound/sub/Sort";
+import Sort from "@/components/interface/sound/items/Sort";
 import { useSoundInfoQuery } from "@/lib/helper/interface/sound";
 
 const xConfig = { damping: 20, stiffness: 160 };

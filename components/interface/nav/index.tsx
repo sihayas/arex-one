@@ -18,7 +18,7 @@ import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/Interface";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
-import { Keybinds } from "@/components/interface/nav/sub/Keybinds";
+import { Keybinds } from "@/components/interface/nav/items/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
