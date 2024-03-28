@@ -46,7 +46,7 @@ const Avatar: React.FC<UserAvatarProps> = ({
   return (
     <Image
       onClick={() => handleSelectUser(user)}
-      className={`rounded-full ${className} cursor-pointer`}
+      className={`rounded-full ${className} cursor-pointer aspect-square`}
       src={imageSrc}
       alt={altText}
       height={height}

@@ -35,7 +35,7 @@ const luciaAdapter = new PrismaAdapter(client.session, client.user);
 export const lucia = new Lucia(luciaAdapter, {
   sessionCookie: {
     name: "session",
-    expires: false, // session cookies have very long lifespan (2 years)
+    expires: false, // session cookies have very long lifespan (2 years),
     attributes: {
       secure: true,
       sameSite: "strict",

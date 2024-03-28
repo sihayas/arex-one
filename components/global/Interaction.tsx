@@ -7,6 +7,7 @@ import {
   DeleteIcon,
   ReportIcon,
   ExpandIcon,
+  TargetExpandIcon,
 } from "@/components/icons";
 import React, { useCallback } from "react";
 import { ArtifactExtended } from "@/types/globalTypes";
@@ -16,8 +17,9 @@ import { useNavContext } from "@/context/Nav";
 import { toast } from "sonner";
 
 import { FlagType } from "@prisma/client";
-import { useArtifact } from "@/hooks/usePage";
+import { useArtifact, useSound } from "@/hooks/usePage";
 import axios from "axios";
+import { AlbumData } from "@/types/appleTypes";
 
 const dotVariants = {
   hidden: { opacity: 0, scale: 0.75 },
@@ -69,19 +71,24 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
   const { setIsVisible, user } = useInterfaceContext();
   const { setExpandInput, setSelectedFormSound } = useNavContext();
   const { handleSelectArtifact } = useArtifact();
+  const { handleSelectSound } = useSound();
 
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [isFlagging, setIsFlagging] = React.useState(false);
 
   const [isHovered, setIsHovered] = React.useState(false);
-  const sound = artifact.appleData;
+  const sound = artifact.sound.appleData;
 
-  const handleOpen = () => {
+  const handleOpenArtifact = () => {
     handleSelectArtifact(artifact);
   };
 
   const handlePlayContent = async () => {
     playContent(sound.id, sound.type);
+  };
+
+  const handleOpenSound = () => {
+    handleSelectSound(sound);
   };
 
   const handleCreate = () => {
@@ -215,6 +222,43 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
             <Dot key={index} />
           ))}
 
+          <motion.div
+            className={`rounded-full overflow-hidden`}
+            whileHover={{
+              scale: 1.25,
+              boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+            }}
+            whileTap={{ scale: 0.75 }}
+          >
+            <motion.button
+              onClick={handleOpenSound}
+              variants={dotVariants}
+              className={`bg-[#E5E5E5] flex h-8 w-8 items-center justify-center ${
+                isMirrored && "-scale-x-[1]"
+              }`}
+            >
+              <TargetExpandIcon color={"#999"} />
+            </motion.button>
+          </motion.div>
+
+          <motion.div
+            className="bg-gray4 h-1 w-1 rounded-full"
+            variants={dotVariants}
+          />
+
+          {/* Play button */}
+          {/*<motion.div whileHover={{ scale: 1.25 }} whileTap={{ scale: 0.75 }}>*/}
+          {/*  <motion.button*/}
+          {/*    onClick={handlePlayContent}*/}
+          {/*    variants={dotVariants}*/}
+          {/*    className={`bg-[#E5E5E5] flex h-8 w-8 items-center justify-center rounded-full ${*/}
+          {/*      isMirrored && "-scale-x-[1]"*/}
+          {/*    }`}*/}
+          {/*  >*/}
+          {/*    <PlayIcon />*/}
+          {/*  </motion.button>*/}
+          {/*</motion.div>*/}
+
           {/* Create button */}
           <motion.div whileHover={{ scale: 1.25 }} whileTap={{ scale: 0.75 }}>
             <motion.div
@@ -227,31 +271,6 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
               <AddIcon />
             </motion.div>
           </motion.div>
-
-          <motion.div
-            className="bg-gray4 h-1 w-1 rounded-full"
-            variants={dotVariants}
-          />
-
-          {/* Play button */}
-          <motion.div
-            whileHover={{
-              scale: 1.25,
-            }}
-            whileTap={{
-              scale: 0.75,
-            }}
-          >
-            <motion.button
-              onClick={handlePlayContent}
-              variants={dotVariants}
-              className={`bg-[#E5E5E5] flex h-8 w-8 items-center justify-center rounded-full ${
-                isMirrored && "-scale-x-[1]"
-              }`}
-            >
-              <PlayIcon />
-            </motion.button>
-          </motion.div>
         </motion.div>
 
         <motion.div
@@ -261,16 +280,12 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
             scale: !isHovered ? 0 : 1,
             opacity: !isHovered ? 0 : 1,
           }}
-          whileTap={{
-            scale: 0.75,
-          }}
-          onClick={handleOpen}
+          whileTap={{ scale: 0.75 }}
+          onClick={handleOpenArtifact}
           className={`relative h-8 w-8 origin-top-left`}
         >
           <motion.div
-            whileHover={{
-              scale: 1.25,
-            }}
+            whileHover={{ scale: 1.25 }}
             className={`absolute -left-[11px] -top-[11px]`}
           >
             <ExpandIcon />

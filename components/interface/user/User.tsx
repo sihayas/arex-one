@@ -59,18 +59,13 @@ const User = () => {
 
   return (
     <>
-      <motion.div
-        style={{
-          opacity,
-        }}
-        className="flex w-full gap-4 p-8"
-      >
+      <motion.div style={{ opacity }} className="flex w-full gap-4 p-8">
         <div className={`flex flex-col`}>
           {/* Avatar & Interlink */}
           <div className={`flex items-center `}>
             <div className={`relative flex-shrink-0`}>
               <Avatar
-                className="rounded-max border border-silver"
+                className="rounded-max border border-silver aspect-square"
                 imageSrc={data.image}
                 altText={`avatar`}
                 width={isSelf ? 104 : 72}

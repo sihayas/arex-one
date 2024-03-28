@@ -9,6 +9,7 @@ import { useInterfaceContext } from "@/context/Interface";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
 import { createEntry } from "../../../../lib/helper/interface/nav";
+import { fetchSourceAlbum } from "@/lib/global/musickit";
 
 const Form = () => {
   const { user } = useInterfaceContext();
@@ -28,6 +29,8 @@ const Form = () => {
   const userId = user!.id;
 
   const appleData = selectedFormSound;
+
+  const source = fetchSourceAlbum(appleData?.id);
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement> | null) => {

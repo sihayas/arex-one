@@ -8,9 +8,8 @@ import {
   TargetAddIcon,
   TargetGoIcon,
   TargetArtifactIcon,
-  SearchIcon,
-  TargetFormIcon,
   TargetCommandIcon,
+  TargetExpandIcon,
 } from "@/components/icons";
 import { useNavContext } from "@/context/Nav";
 import Avatar from "@/components/global/Avatar";
@@ -298,7 +297,7 @@ const Nav = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
                 >
-                  <TargetFormIcon />
+                  <TargetExpandIcon />
                 </motion.div>
               ))}
 

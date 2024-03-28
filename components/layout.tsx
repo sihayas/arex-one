@@ -30,19 +30,11 @@ export default function Layout({ children }: { children: ReactNode }) {
         opacity: isVisible ? 0 : 1,
       };
       const transitionConfig = {
-        scale: {
-          type: "spring" as const,
-          mass: 0.75,
-          stiffness: 200,
-          damping: 22,
-          delay: isVisible ? 0 : 0.15,
-        },
-        opacity: {
-          type: "spring" as const,
-          stiffness: 400,
-          damping: 22,
-          delay: isVisible ? 0 : 0.15,
-        },
+        type: "spring" as const,
+        mass: 0.75,
+        stiffness: 200,
+        damping: 22,
+        delay: isVisible ? 0 : 0.15,
       };
       animate(scope.current, animationConfig, transitionConfig);
     };

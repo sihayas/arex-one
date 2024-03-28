@@ -1,14 +1,101 @@
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { AlbumData } from "@/types/appleTypes";
 
 const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
 export const baseURL = "https://api.music.apple.com/v1/catalog/us";
 
-// Helper function to check if the title contains unwanted keywords
-const isUnwanted = (title: string) => {
-  const unwantedKeywords = ["remix", "edition", "mix"];
-  return unwantedKeywords.some((keyword) =>
-    title.toLowerCase().includes(keyword),
-  );
+// Fetch all related albums and select a single source album
+export const fetchSourceAlbum = async (albumId: string | undefined) => {
+  const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN;
+  const url = `${baseURL}/albums/${albumId}?views=other-versions`;
+
+  if (!albumId) {
+    console.log("No album ID provided.");
+    return null;
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch album views");
+    }
+
+    const data = await response.json();
+
+    // Combine main album and other versions into a single array
+    const mainAlbum = data.data[0];
+    const otherVersions = mainAlbum.views["other-versions"].data;
+    const allAlbums = [mainAlbum, ...otherVersions];
+
+    let tempAlbums = allAlbums;
+
+    // Filter out albums with encapsulated terms (e.g. [Deluxe Edition], (Remastered))
+    let filteredAlbums = tempAlbums.filter((album) => {
+      const albumNameLower = album.attributes.name.toLowerCase();
+      const editionRegex = /(\[[^\]]+\]|\([^\)]+\))\s*$/;
+      return !editionRegex.test(albumNameLower);
+    });
+
+    // If filtering results in no albums, revert to considering all albums
+    if (filteredAlbums.length === 0) {
+      filteredAlbums = allAlbums;
+    }
+
+    // Further filter albums based on content rating, if applicable
+    if (
+      filteredAlbums.length > 1 &&
+      filteredAlbums.every((album) => "contentRating" in album.attributes)
+    ) {
+      const explicitAlbums = filteredAlbums.filter(
+        (album) => album.attributes.contentRating === "explicit",
+      );
+      filteredAlbums =
+        explicitAlbums.length > 0
+          ? explicitAlbums
+          : filteredAlbums.filter(
+              (album) => album.attributes.contentRating === "clean",
+            );
+    }
+
+    // Sort by release date to find the earliest one
+    filteredAlbums.sort(
+      (a, b) =>
+        new Date(a.attributes.releaseDate).getTime() -
+        new Date(b.attributes.releaseDate).getTime(),
+    );
+    const earliestReleaseDate = filteredAlbums[0]?.attributes.releaseDate;
+    const earliestAlbums = filteredAlbums.filter(
+      (album) => album.attributes.releaseDate === earliestReleaseDate,
+    );
+
+    // Directly find the album with the smallest track count among the earliest albums
+    if (earliestAlbums.length > 0) {
+      const albumWithSmallestTrackCount = earliestAlbums.reduce(
+        (minAlbum, currentAlbum) =>
+          currentAlbum.attributes.trackCount < minAlbum.attributes.trackCount
+            ? currentAlbum
+            : minAlbum,
+        earliestAlbums[0],
+      );
+
+      console.log(
+        "Album with smallest track count:",
+        albumWithSmallestTrackCount,
+      );
+
+      return albumWithSmallestTrackCount;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching album views:", error);
+    return null;
+  }
 };
 
 export const searchAlbums = async (keyword: string) => {
@@ -20,9 +107,7 @@ export const searchAlbums = async (keyword: string) => {
 
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${token}` },
   });
 
   if (!response.ok) {
@@ -32,16 +117,10 @@ export const searchAlbums = async (keyword: string) => {
   const jsonData = await response.json();
 
   // Limit to 12 results
-  const songs = jsonData.results.songs.data
-    .filter((song: SongData) => !isUnwanted(song.attributes.albumName))
-    .slice(0, 8);
+  const songs = jsonData.results.songs.data;
 
   const albums = jsonData.results.albums.data
-    .filter(
-      (album: AlbumData) =>
-        !album.attributes.isSingle && // Check if the album is not a single
-        !isUnwanted(album.attributes.name), // Check if the album title contains unwanted keywords
-    )
+    .filter((album: AlbumData) => !album.attributes.isSingle)
     .slice(0, 4);
 
   return { filteredSongs: songs, filteredAlbums: albums };
