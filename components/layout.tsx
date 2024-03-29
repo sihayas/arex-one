@@ -2,7 +2,6 @@ import { Interface } from "./interface/Interface";
 import React, { useEffect, ReactNode } from "react";
 import { useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
-
 import { motion, useAnimate } from "framer-motion";
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -91,57 +90,51 @@ export default function Layout({ children }: { children: ReactNode }) {
         {children}
       </motion.main>
 
-      {/* System */}
-      {/*<motion.div*/}
-      {/*  className={`fixed bottom-8 left-8 flex-col flex items-start gap-2`}*/}
-      {/*>*/}
-      {/*  <motion.button*/}
-      {/*    whileHover={{*/}
-      {/*      opacity: 1,*/}
-      {/*      fontWeight: 600,*/}
-      {/*      color: user ? "#000" : "#FFF",*/}
-      {/*    }}*/}
-      {/*    className="opacity-25 cursor-pointer uppercase text-sm tracking-widest"*/}
-      {/*  >*/}
-      {/*    ethos*/}
-      {/*  </motion.button>*/}
+      {/*System */}
+      <motion.div
+        className={`fixed bottom-8 left-8 flex-col flex items-start gap-2`}
+      >
+        <motion.button
+          whileHover={{
+            opacity: 1,
+            fontWeight: 600,
+          }}
+          className="opacity-75 cursor-pointer uppercase text-sm tracking-widest text-white"
+        >
+          about
+        </motion.button>
 
-      {/*  <motion.button*/}
-      {/*    whileHover={{*/}
-      {/*      opacity: 1,*/}
-      {/*      fontWeight: 600,*/}
-      {/*      color: user ? "#000" : "#FFF",*/}
-      {/*    }}*/}
-      {/*    className="opacity-25 cursor-pointer uppercase text-sm tracking-widest"*/}
-      {/*  >*/}
-      {/*    contact*/}
-      {/*  </motion.button>*/}
+        <motion.button
+          whileHover={{
+            opacity: 1,
+            fontWeight: 600,
+          }}
+          className="opacity-75 cursor-pointer uppercase text-sm tracking-widest text-white"
+        >
+          contact
+        </motion.button>
 
-      {/*  /!* System Interactions *!/*/}
-      {/*  {user && (*/}
-      {/*    <motion.button*/}
-      {/*      whileHover={{*/}
-      {/*        opacity: 1,*/}
-      {/*        fontWeight: 600,*/}
-      {/*      }}*/}
-      {/*      className="text-[#FF0000] opacity-50  cursor-pointer uppercase text-sm tracking-widest"*/}
-      {/*      onClick={handleLogout}*/}
-      {/*    >*/}
-      {/*      disconnect*/}
-      {/*    </motion.button>*/}
-      {/*  )}*/}
+        {/* System Interactions */}
+        {user && (
+          <motion.button
+            whileHover={{ opacity: 1, fontWeight: 600 }}
+            className="text-[#FF0000] cursor-pointer uppercase text-sm tracking-widest"
+            onClick={handleLogout}
+          >
+            disconnect
+          </motion.button>
+        )}
 
-      {/*  <motion.button*/}
-      {/*    whileHover={{*/}
-      {/*      opacity: 1,*/}
-      {/*      fontWeight: 600,*/}
-      {/*      color: user ? "#000" : "#FFF",*/}
-      {/*    }}*/}
-      {/*    className="opacity-25 cursor-pointer uppercase text-sm tracking-widest"*/}
-      {/*  >*/}
-      {/*    privacy & safety*/}
-      {/*  </motion.button>*/}
-      {/*</motion.div>*/}
+        <motion.button
+          whileHover={{
+            opacity: 1,
+            fontWeight: 600,
+          }}
+          className="opacity-75 text-white cursor-pointer uppercase text-sm tracking-widest"
+        >
+          privacy & safety
+        </motion.button>
+      </motion.div>
     </>
   );
 }
