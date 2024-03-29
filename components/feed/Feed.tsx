@@ -34,33 +34,30 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
   };
 
   return (
-    <>
-      <Virtuoso
-        // ref={ref}
-        style={{ height: "100vh", width: "100%" }}
-        data={allActivities}
-        overscan={200}
-        computeItemKey={(key: number) => `item-${key.toString()}`}
-        endReached={handleEndReached}
-        itemContent={(index, activity) => (
-          <div
-            className={`flex items-center justify-center pt-[96px]`}
-            key={activity.id}
-          >
-            {activity.artifact && activity.artifact.type === "entry" ? (
-              <Entry artifact={activity.artifact as ArtifactExtended} />
-            ) : activity.artifact && activity.artifact.type === "wisp" ? (
-              <Wisp artifact={activity.artifact as ArtifactExtended} />
-            ) : (
-              "No artifact available for this activity."
-            )}
-          </div>
-        )}
-        components={{
-          Footer: () => <div className={`p-4`} />,
-        }}
-      />
-    </>
+    <Virtuoso
+      style={{ height: "100vh", width: "100%" }}
+      data={allActivities}
+      overscan={200}
+      computeItemKey={(key: number) => `item-${key.toString()}`}
+      endReached={handleEndReached}
+      itemContent={(index, activity) => (
+        <div
+          className={`flex items-center justify-center pt-[96px]`}
+          key={activity.id}
+        >
+          {activity.artifact && activity.artifact.type === "entry" ? (
+            <Entry artifact={activity.artifact as ArtifactExtended} />
+          ) : activity.artifact && activity.artifact.type === "wisp" ? (
+            <Wisp artifact={activity.artifact as ArtifactExtended} />
+          ) : (
+            "No artifact available for this activity."
+          )}
+        </div>
+      )}
+      components={{
+        Footer: () => <div className={`p-4`} />,
+      }}
+    />
   );
 };
 

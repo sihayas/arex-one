@@ -52,6 +52,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
   }, [activeIndex, onRangeChange]);
 
   const strokeWidth = 6;
+  const strokeWidths = [4, 5, 6, 7, 8];
   const dotRadius = 1.5;
   const radius = 74;
 

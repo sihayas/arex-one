@@ -19,7 +19,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   return (
     <>
       {essentials.map((essential, i) => {
-        const sound = essential.appleData;
+        const { appleData: sound } = essential;
         const artwork = MusicKit.formatArtworkURL(
           sound.attributes.artwork,
           128 * 2.5,
@@ -27,7 +27,7 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
         );
 
         const rotationClass =
-          i === 0 ? "rotate-3" : i === 2 ? "rotate-3" : "-rotate-3";
+          i % 3 === 0 ? "rotate-3" : i % 3 === 2 ? "-rotate-3" : "";
         const transformClass = i === 1 ? "-translate-x-[88px]" : "";
 
         return (
@@ -50,11 +50,11 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
       })}
 
       {essentials.length === 0 && (
-        <>
+        <div className="flex justify-center gap-4">
           <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh rotate-3" />
           <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh -rotate-3 -translate-x-[88px]" />
           <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh rotate-3" />
-        </>
+        </div>
       )}
     </>
   );

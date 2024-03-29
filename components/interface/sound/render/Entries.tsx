@@ -12,6 +12,7 @@ import Image from "next/image";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { getStarComponent } from "@/components/global/Star";
 import { motion } from "framer-motion";
+import { cardBackMask } from "@/components/feed/items/Entry";
 
 interface RenderArtifactsProps {
   soundId: string;
@@ -19,16 +20,7 @@ interface RenderArtifactsProps {
   range: number | null;
 }
 
-const cardBackMask = {
-  maskImage: "url('/images/mask_card_back.svg')",
-  maskSize: "cover",
-  maskRepeat: "no-repeat",
-  WebkitMaskImage: "url('/images/mask_card_back.svg')",
-  WebkitMaskSize: "cover",
-  WebkitMaskRepeat: "no-repeat",
-};
-
-const Artifacts: React.FC<RenderArtifactsProps> = ({
+const Entries: React.FC<RenderArtifactsProps> = ({
   soundId,
   sortOrder = "newest",
   range = null,
@@ -49,7 +41,6 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     activePage.sound?.snapshot?.state,
   );
   const key = activePage.sound?.snapshot?.key;
-
   const { target } = GetDimensions(activePage.name as PageName);
 
   const artifacts = data
@@ -172,7 +163,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
   );
 };
 
-export default Artifacts;
+export default Entries;
 
 // const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
 //     artifact.heartedByUser,

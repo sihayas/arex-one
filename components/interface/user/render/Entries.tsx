@@ -31,19 +31,15 @@ const Entries = ({ userId }: { userId: string }) => {
     }
   });
 
-  return (
-    <>
-      {activities.map((activity, index) => {
-        return (
-          <Entry
-            artifact={activity.artifact as ArtifactExtended}
-            key={activity.id}
-            index={index}
-          />
-        );
-      })}
-    </>
-  );
+  return activities.map((activity, index) => {
+    return (
+      <Entry
+        artifact={activity.artifact as ArtifactExtended}
+        key={activity.id}
+        index={index}
+      />
+    );
+  });
 };
 
 export default Entries;

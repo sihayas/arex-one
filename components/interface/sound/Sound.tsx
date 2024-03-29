@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-import Artifacts from "./render/Artifacts";
+import Entries from "./render/Entries";
 import {
   motion,
   useMotionValueEvent,
@@ -129,7 +129,7 @@ const Sound = () => {
 
       {/* Add Snap-Start here*/}
       <div className={`min-h-max w-full max-w-full snap-start`}>
-        <Artifacts soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
+        <Entries soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
       </div>
 
       {/* Titles */}
