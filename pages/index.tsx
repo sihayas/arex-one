@@ -306,7 +306,7 @@ export default function Home() {
           ) : null}
 
           <div
-            className={`absolute z-20 -translate-x-[188px] flex items-center flex-row-reverse`}
+            className={`absolute z-20 -translate-x-[180px] flex items-center flex-row-reverse`}
           >
             <Avatar
               className="shadow-shadowKitMedium rounded-full"
@@ -323,7 +323,7 @@ export default function Home() {
             </p>
           </div>
 
-          <Dash className="absolute z-0 -translate-x-[188px]" />
+          <Dash className="absolute z-0 -translate-x-[180px]" />
         </motion.div>
       )}
 

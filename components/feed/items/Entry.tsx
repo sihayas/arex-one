@@ -98,7 +98,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
   );
 
   return (
-    <motion.div className={`-ml-14 relative flex w-[360px] items-end gap-4`}>
+    <motion.div className={`-ml-12 relative flex w-[352px] items-end gap-2`}>
       <Avatar
         className={`border-silver z-10 border`}
         imageSrc={artifact.author.image}
