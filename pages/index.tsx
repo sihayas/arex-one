@@ -7,10 +7,11 @@ import { useInterfaceContext } from "@/context/Interface";
 import Feed from "@/components/feed/Feed";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
-import { AppleIcon, StarIcon } from "@/components/icons";
+import { AppleIcon } from "@/components/icons";
 import { cardMask, cardBackMask } from "@/components/feed/items/Entry";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
+import { getStarComponent } from "@/components/global/Star";
 
 type Feed = "personal" | "bloom" | "recent" | null;
 
@@ -176,7 +177,8 @@ export default function Home() {
         {/*              </div>*/}
         {/*            </div>*/}
 
-        {/*            <StarIcon />*/}
+        {/*{getStarComponent(4)}*/}
+
         {/*          </div>*/}
         {/*        </div>*/}
 

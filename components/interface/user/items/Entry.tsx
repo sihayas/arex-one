@@ -3,11 +3,11 @@ import React from "react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useInterfaceContext } from "@/context/Interface";
-import { cardBackMask, getStarComponent } from "@/components/feed/items/Entry";
+import { cardBackMask } from "@/components/feed/items/Entry";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
 import { Interaction } from "@/components/global/Interaction";
-import { StarIcon } from "@/components/icons";
+import { getStarComponent } from "@/components/global/Star";
 
 interface UserProps {
   artifact: ArtifactExtended;
@@ -145,7 +145,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
               }}
               className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6"
             >
-              <StarIcon color={`#000`} />
+              {getStarComponent(artifact.content?.rating)}
 
               <div className={`flex translate-y-[1px] flex-col`}>
                 <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
@@ -169,7 +169,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
             className="backface-hidden absolute left-0 top-0 flex h-full  w-full flex-col bg-white p-6 pb-0 "
           >
             <div className={`flex flex-shrink-0 justify-between`}>
-              <StarIcon color={"#000"} />
+              {getStarComponent(artifact.content?.rating)}
 
               <Image
                 className={`shadow-shadowKitHigh rounded-xl`}

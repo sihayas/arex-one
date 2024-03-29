@@ -1,16 +1,12 @@
 import { useFeedQuery } from "@/lib/helper/feed";
-import { Activity } from "@/types/dbTypes";
-import React, { Fragment } from "react";
-import { useMotionValueEvent, useScroll } from "framer-motion";
+
+import React from "react";
+
 import { ArtifactExtended } from "@/types/globalTypes";
 import { useInterfaceContext } from "@/context/Interface";
 import { Entry } from "@/components/feed/items/Entry";
 import { Wisp } from "@/components/feed/items/Wisp";
 import { Virtuoso } from "react-virtuoso";
-import Tilt from "react-parallax-tilt";
-import { StarIcon } from "@/components/icons";
-import Image from "next/image";
-import Avatar from "@/components/global/Avatar";
 
 const Feed = ({ userId, type }: { userId: string; type: string }) => {
   const { setIsLoading } = useInterfaceContext();

@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useInterfaceContext } from "@/context/Interface";
 import {
-  animate,
   AnimatePresence,
-  LayoutGroup,
   motion,
   useMotionValueEvent,
   useScroll,
   useSpring,
 } from "framer-motion";
-import { useSound } from "@/hooks/usePage";
+
 import Avatar from "@/components/global/Avatar";
 import Replies from "@/components/interface/artifact/render/Replies";
 import Chain from "@/components/interface/artifact/render/Chain";
@@ -18,9 +16,9 @@ import { ArtifactExtended } from "@/types/globalTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
-import { StarIcon } from "@/components/icons";
 import { Interaction } from "@/components/global/Interaction";
 import { createPortal } from "react-dom";
+import { getStarComponent } from "@/components/global/Star";
 
 export const Artifact = () => {
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
@@ -166,9 +164,6 @@ export const Artifact = () => {
                   borderRadius: isExpanded
                     ? "12px 12px 12px 12px"
                     : "32px 32px 0px 0px",
-                  boxShadow: isExpanded
-                    ? `#${color}1A 0px 1px 1px 0px inset, #${color}40 0px 50px 100px -20px, #${color}4D 0px 30px 60px -30px`
-                    : `#${color}00 0px 1px 1px 0px inset, #${color}00 0px 50px 100px -20px, #${color}00 0px 30px 60px -30px`,
                 }}
                 className={`outline-silver overflow-hidden outline outline-1`}
               >
@@ -190,9 +185,12 @@ export const Artifact = () => {
                   className={`mb-[26px] mt-[calc(142px+32px)] w-[448px] mix-blend-darken`}
                 >
                   <div
-                    className={`bg-silver flex h-[52px] w-full items-center gap-2 rounded-2xl px-4 shadow-shadowKitLow`}
+                    className={`bg-silver flex h-[52px] w-full items-center gap-2 rounded-2xl px-4 shadow-shadowKitLow flex-shrink-0`}
                   >
-                    <StarIcon color={"#999"} />
+                    <div className={`opacity-50`}>
+                      {getStarComponent(artifactExtended.content?.rating)}
+                    </div>
+
                     <div className={`text-gray2 flex flex-col`}>
                       <p className={`line-clamp-1 text-sm font-medium`}>
                         {appleData.attributes.artistName}
@@ -246,7 +244,10 @@ export const Artifact = () => {
                 className={`absolute center-x bottom-0 flex w-[304px] items-center justify-between bg-white px-6 pb-5`}
               >
                 <div className={`flex items-center gap-2`}>
-                  <StarIcon color={`#000`} />
+                  <div className={`flex-shrink-0 `}>
+                    {getStarComponent(artifactExtended.content?.rating)}
+                  </div>
+
                   <div className={`flex flex-col`}>
                     <p
                       className={`text-gray2 line-clamp-1 text-sm font-medium`}
@@ -261,22 +262,14 @@ export const Artifact = () => {
                   </div>
                 </div>
 
-                <div className={`flex flex-shrink-0 items-center gap-2`}>
-                  <p
-                    className={`text-gray2 line-clamp-1 text-base font-semibold`}
-                  >
-                    {artifactExtended.author.username}
-                  </p>
-
-                  <Avatar
-                    className={`border-silver border`}
-                    imageSrc={artifactExtended.author.image}
-                    altText={`${artifactExtended.author.username}'s avatar`}
-                    width={32}
-                    height={32}
-                    user={artifactExtended.author}
-                  />
-                </div>
+                <Avatar
+                  className={`border-silver border`}
+                  imageSrc={artifactExtended.author.image}
+                  altText={`${artifactExtended.author.username}'s avatar`}
+                  width={32}
+                  height={32}
+                  user={artifactExtended.author}
+                />
               </div>
             )}
 

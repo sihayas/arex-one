@@ -5,23 +5,11 @@ import Heart from "@/components/global/Heart";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/Interface";
-import {
-  FiveStar,
-  FourHalfStar,
-  FourStar,
-  HalfStar,
-  OneHalfStar,
-  OneStar,
-  StarIcon,
-  ThreeHalfStar,
-  ThreeStar,
-  TwoHalfStar,
-  TwoStar,
-} from "@/components/icons";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
 import { Interaction } from "@/components/global/Interaction";
 import useHandleHeartClick from "@/hooks/useHeart";
+import { getStarComponent } from "@/components/global/Star";
 
 interface EntryProps {
   artifact: ArtifactExtended;
@@ -43,29 +31,6 @@ export const cardBackMask = {
   WebkitMaskImage: "url('/images/mask_card_back.svg')",
   WebkitMaskSize: "cover",
   WebkitMaskRepeat: "no-repeat",
-};
-
-const starComponents = {
-  0.5: HalfStar,
-  1: OneStar,
-  1.5: OneHalfStar,
-  2: TwoStar,
-  2.5: TwoHalfStar,
-  3: ThreeStar,
-  3.5: ThreeHalfStar,
-  4: FourStar,
-  4.5: FourHalfStar,
-  5: FiveStar,
-};
-
-export const getStarComponent = (
-  rating: number,
-  width: number = 16,
-  height: number = 16,
-) => {
-  //@ts-ignore
-  const StarComponent = starComponents[Math.ceil(rating * 2) / 2];
-  return StarComponent ? <StarComponent width={width} height={height} /> : null;
 };
 
 export const Entry: React.FC<EntryProps> = ({ artifact }) => {
@@ -109,7 +74,10 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
       />
 
       {/* Applying drop-shadow directly to Tilt breaks the flip effect! */}
-      <div
+      <motion.div
+        whileTap={{ scale: 0.95 }}
+        animate={{ scale: isFlipped ? [0.8, 1] : [0.8, 1] }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
         onClick={() => {
           setIsFlipped(!isFlipped);
         }}
@@ -126,7 +94,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
           glareEnable={true}
           glareMaxOpacity={0.45}
           glareBorderRadius={"32px"}
-          scale={1.02}
+          scale={1.05}
           transitionEasing={"cubic-bezier(0.1, 0.8, 0.2, 1)"}
           className={`transform-style-3d relative h-[432px] w-[304px]`}
         >
@@ -151,8 +119,8 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6">
-              <StarIcon color={`#000`} className={`flex-shrink-0`} />
+            <div className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6 flex-shrink-0">
+              <div>{getStarComponent(artifact.content?.rating)}</div>
 
               <div className={`flex translate-y-[1px] flex-col`}>
                 <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
@@ -169,15 +137,12 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
 
           {/* Back */}
           <div
-            style={{
-              ...cardBackMask,
-              transform: "rotateX(180deg)",
-            }}
+            style={{ ...cardBackMask, transform: "rotateX(180deg)" }}
             className="backface-hidden absolute left-0 top-0 flex h-full  w-full flex-col bg-white p-6 pb-0 "
           >
             <div className={`flex flex-shrink-0 justify-between`}>
               <div className={`flex-col flex`}>
-                <StarIcon color={`#000`} className={`flex-shrink-0`} />
+                <div>{getStarComponent(artifact.content!.rating)}</div>
 
                 <p
                   className={`text-gray2 mt-auto line-clamp-1 text-sm font-medium pt-6`}
@@ -207,7 +172,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
             </p>
           </div>
         </Tilt>
-      </div>
+      </motion.div>
 
       {/* Interactions */}
       <Interaction artifact={artifact} />
