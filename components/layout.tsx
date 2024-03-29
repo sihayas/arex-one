@@ -79,16 +79,17 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       {/* Interface */}
-      {user && activePage && <Interface isVisible={isVisible} />}
+      {user && activePage && <Interface />}
 
       {/* Feed */}
-      <main
+      <motion.main
+        transformTemplate={template} // Prevent translateZ
         ref={scope}
         id="main-content"
         className={`flex origin-center items-center justify-center`}
       >
         {children}
-      </main>
+      </motion.main>
 
       {/* System */}
       {/*<motion.div*/}
@@ -143,4 +144,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       {/*</motion.div>*/}
     </>
   );
+}
+function template({ x, y, scale }: { x: number; y: number; scale: number }) {
+  // Assuming x and y are percentages and scale is a unit-less number
+  return `scale(${scale})`;
 }

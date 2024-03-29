@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Dash from "@/components/feed/items/Dash";
 import { animate, motion, useSpring } from "framer-motion";
 import { useInterfaceContext } from "@/context/Interface";
-import Feed from "@/components/feed";
+import Feed from "@/components/feed/Feed";
 import Link from "next/link";
 import Avatar from "@/components/global/Avatar";
 import { AppleIcon, StarIcon } from "@/components/icons";
@@ -15,7 +15,7 @@ import Image from "next/image";
 type Feed = "personal" | "bloom" | "recent" | null;
 
 export default function Home() {
-  const { user } = useInterfaceContext();
+  const { user, isVisible } = useInterfaceContext();
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
   const [activeFeed, setActiveFeed] = React.useState<Feed>("personal");
@@ -276,37 +276,21 @@ export default function Home() {
       </Head>
 
       {activeFeed && (
-        <motion.div
-          ref={scrollContainerRef}
-          className={`scrollbar-none flex max-h-screen w-full flex-col items-center gap-24 overflow-scroll px-8 pb-32 pt-16`}
-        >
+        <motion.div ref={scrollContainerRef} className={`h-screen w-screen`}>
           {/*  Blur Backdrop */}
-          <div
+          <motion.div
             className={`center-x pointer-events-none absolute top-0 z-0 h-full w-full bg-white/50 backdrop-blur-[72px]`}
           />
-
           {activeFeed === "bloom" ? (
-            <Feed
-              userId={user.id}
-              scrollContainerRef={scrollContainerRef}
-              type={"bloom"}
-            />
+            <Feed userId={user.id} type={"bloom"} />
           ) : activeFeed === "personal" ? (
-            <Feed
-              userId={user.id}
-              scrollContainerRef={scrollContainerRef}
-              type={"personal"}
-            />
+            <Feed userId={user.id} type={"personal"} />
           ) : activeFeed === "recent" ? (
-            <Feed
-              userId={user.id}
-              scrollContainerRef={scrollContainerRef}
-              type={"recent"}
-            />
+            <Feed userId={user.id} type={"recent"} />
           ) : null}
 
           <div
-            className={`absolute z-20 -translate-x-[180px] flex items-center flex-row-reverse`}
+            className={`absolute left-1/2 top-8 z-20 -translate-x-[204px] flex items-center flex-row-reverse`}
           >
             <Avatar
               className="shadow-shadowKitMedium rounded-full"
@@ -323,7 +307,7 @@ export default function Home() {
             </p>
           </div>
 
-          <Dash className="absolute z-0 -translate-x-[180px]" />
+          <Dash className="absolute left-1/2 top-8 -translate-x-[182px]" />
         </motion.div>
       )}
 

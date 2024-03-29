@@ -54,10 +54,10 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
 
       <motion.div
         onClick={() => handleSelectArtifact(artifact)}
-        className={`relative z-10 flex flex-col -space-y-4 cloud-shadow`}
+        className={`relative z-10 flex flex-col -space-y-4  mb-2`}
       >
         <Image
-          className={`-rotate-2 ml-3 -z-10 outline-4 outline-white outline rounded-[20px]`}
+          className={`-rotate-2 ml-3 -z-10 outline-4 outline-white outline rounded-[20px] shadow-shadowKitLow`}
           onClick={handleSoundClick}
           src={artwork}
           alt={`${sound.attributes.name} by ${sound.attributes.artistName} - artwork`}
@@ -67,7 +67,9 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
           draggable={false}
         />
 
-        <div className={`bg-white px-3 py-1.5 rounded-2xl`}>
+        <div
+          className={`bg-white px-3 py-1.5 rounded-2xl relative shadow-shadowKitHigh`}
+        >
           <p className={`text-base text-black`}>{artifact.content?.text}</p>
           <div className={`absolute z-0 h-3 w-3 -bottom-1 -left-1`}>
             <div
@@ -86,8 +88,10 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         style={{
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
+          width: 92,
+          height: 92,
         }}
-        className={`absolute left-[52px] -z-10 h-[400px] w-[304px]`}
+        className={`absolute left-[60px] -top-1 -z-10 -rotate-2`}
       />
     </div>
   );

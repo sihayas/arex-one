@@ -46,8 +46,8 @@ export const GetDimensions = (pageName: PageName) => {
   return dimensions[pageName];
 };
 
-export function Interface({ isVisible }: { isVisible: boolean }) {
-  const { scrollContainerRef, activePage } = useInterfaceContext();
+export function Interface() {
+  const { scrollContainerRef, activePage, isVisible } = useInterfaceContext();
   const { expandInput, activeAction } = useNavContext();
   const cmdkPortal = document.getElementById("cmdk");
   const isNotifications = activeAction === "notifications";
@@ -84,24 +84,13 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
           x: "-50%",
           y: "-50%",
           opacity: isVisible ? 1 : 0,
-          scale: isVisible ? 1 : 0.8,
+          scale: isVisible ? 1 : 0.5,
           pointerEvents: isVisible ? "auto" : "none",
-          zIndex: isVisible ? 10 : -10,
         },
         {
-          scale: {
-            type: "spring" as const,
-            stiffness: 300,
-            damping: 28,
-            delay: isVisible ? 0.15 : 0,
-          },
-          opacity: {
-            ease: "easeInOut",
-            delay: isVisible ? 0.15 : 0,
-          },
-          visibility: {
-            delay: isVisible ? 0.15 : 0.25,
-          },
+          type: "spring" as const,
+          duration: 0.75,
+          bounce: 0.15,
         },
       );
     };
@@ -165,7 +154,7 @@ export function Interface({ isVisible }: { isVisible: boolean }) {
       // transformTemplate={template} // Prevent translateZ
       ref={rootScope}
       id={`cmdk`}
-      className={`cmdk`}
+      className={`cmdk z-10`}
     >
       {/* Shape-shift Window, lies atop the rendered content */}
       <Command

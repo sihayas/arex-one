@@ -24,7 +24,7 @@ const Dot = ({
   />
 );
 
-const Dash = ({ color = "rgba(0, 0, 0, 0.1)", className = "" }) => {
+const Dash = ({ color = "rgba(0, 0, 0, 0.05)", className = "" }) => {
   const { isLoading } = useInterfaceContext();
   const controls = useAnimation();
   const [dots, setDots] = useState([]);

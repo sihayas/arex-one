@@ -132,13 +132,11 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
         >
           {/* Front */}
           <div
-            style={{
-              ...cardMask,
-            }}
+            style={{ ...cardMask }}
             className="backface-hidden absolute left-0 top-0 flex h-full w-full flex-col bg-white"
           >
             <Image
-              className={`-mt-6`}
+              className={`-mt-6 mx-auto`}
               // onClick={handleSoundClick}
               src={url}
               alt={`${name} by ${artistName} - artwork`}
@@ -146,19 +144,14 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               width={304}
               height={304}
               draggable={false}
+              priority={true}
             />
             <div className="`text-base line-clamp-3 px-6 pt-[18px] text-black cursor-default">
               {artifact.content?.text}
             </div>
 
             {/* Footer */}
-            <div
-              style={{
-                backgroundImage:
-                  "linear-gradient(to top, #fff 68.91%, transparent)",
-              }}
-              className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6"
-            >
+            <div className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6">
               <StarIcon color={`#000`} className={`flex-shrink-0`} />
 
               <div className={`flex translate-y-[1px] flex-col`}>
@@ -222,7 +215,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
-        className="absolute -top-[26px] left-[46px] z-10 -m-12 p-12 mix-blend-multiply"
+        className="absolute bottom-[432px] left-[46px] z-10 -m-12 p-12 mix-blend-multiply"
         heartCount={heartCount}
         replyCount={artifact._count.replies}
       />
@@ -241,7 +234,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
           background: `#${color}`,
           backgroundRepeat: "repeat, no-repeat",
         }}
-        className={`absolute left-[52px] -z-10 h-[432px] w-[304px]`}
+        className={`absolute left-[48px] -z-50 h-[432px] w-[304px]`}
       />
     </motion.div>
   );

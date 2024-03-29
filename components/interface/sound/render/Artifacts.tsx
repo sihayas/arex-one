@@ -40,7 +40,6 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
     range,
   );
   const { handleSelectArtifact } = useArtifact();
-
   const [sound, setSound] = useState<AlbumData | SongData | null>(null);
 
   // Capture the state of the virtuoso list
@@ -110,7 +109,6 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
             index === 0 && "pt-8"
           }`}
         >
-          {/* Scene */}
           <Tilt
             perspective={1000}
             tiltMaxAngleX={6}
@@ -125,9 +123,7 @@ const Artifacts: React.FC<RenderArtifactsProps> = ({
           >
             {/* Back */}
             <div
-              style={{
-                ...cardBackMask,
-              }}
+              style={{ ...cardBackMask }}
               className="flex h-full w-full cursor-pointer flex-col bg-white p-6 pb-0 "
             >
               <div className={`flex flex-shrink-0 justify-between`}>

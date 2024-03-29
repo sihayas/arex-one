@@ -174,7 +174,14 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
         {/* Delete button */}
         {user?.id === artifact.author.id && (
           <>
-            <motion.div whileHover={{ scale: 1.25 }} whileTap={{ scale: 0.75 }}>
+            <motion.div
+              className={`rounded-full overflow-hidden`}
+              whileHover={{
+                scale: 1.25,
+                boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+              }}
+              whileTap={{ scale: 0.75 }}
+            >
               <motion.div
                 onClick={() => handleDelete(artifact.id)}
                 variants={dotVariants}
@@ -198,7 +205,14 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
         )}
 
         {/* Flag button */}
-        <motion.div whileHover={{ scale: 1.25 }} whileTap={{ scale: 0.75 }}>
+        <motion.div
+          className={`rounded-full overflow-hidden`}
+          whileHover={{
+            scale: 1.25,
+            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+          }}
+          whileTap={{ scale: 0.75 }}
+        >
           <motion.div
             onClick={handleFlag}
             variants={dotVariants}
@@ -260,7 +274,14 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
           {/*</motion.div>*/}
 
           {/* Create button */}
-          <motion.div whileHover={{ scale: 1.25 }} whileTap={{ scale: 0.75 }}>
+          <motion.div
+            className={`rounded-full overflow-hidden`}
+            whileHover={{
+              scale: 1.25,
+              boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+            }}
+            whileTap={{ scale: 0.75 }}
+          >
             <motion.div
               onClick={handleCreate}
               variants={dotVariants}
