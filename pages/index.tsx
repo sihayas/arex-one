@@ -97,7 +97,7 @@ export default function Home() {
             <motion.div
               initial={{
                 opacity: 0,
-                scale: 0.2,
+                scale: 2,
                 filter: "brightness(200%)",
                 rotate: -8,
               }}
@@ -125,10 +125,12 @@ export default function Home() {
                 perspective={1000}
                 // tiltAngleXManual={tiltAngles.tiltAngleX}
                 // tiltAngleYManual={tiltAngles.tiltAngleY}
+                reset={false}
                 tiltReverse={true}
                 glareEnable={true}
                 glareMaxOpacity={0.45}
                 glareBorderRadius={"32px"}
+                glareReverse={true}
                 scale={1.02}
                 transitionEasing={"cubic-bezier(0.1, 0.8, 0.2, 1)"}
                 className={`transform-style-3d relative h-[432px] w-[304px]`}

@@ -3,23 +3,13 @@ import React, { useEffect, ReactNode } from "react";
 import { useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
 import { motion, useAnimate } from "framer-motion";
+import Link from "next/link";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user } = useInterfaceContext();
   const { isVisible, setIsVisible, activePage } = useInterfaceContext();
   const { inputRef } = useNavContext();
   const [scope, animate] = useAnimate();
-
-  const handleLogout = async () => {
-    // Make a POST request to the logout API endpoint
-    const response = await fetch("/api/oauth/apple/logout", {
-      method: "POST",
-    });
-    // Handle the response, e.g., redirect to home
-    if (response.ok) {
-      window.location.href = "/";
-    }
-  };
 
   useEffect(() => {
     const animateMainContent = () => {
@@ -30,9 +20,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       };
       const transitionConfig = {
         type: "spring" as const,
-        mass: 0.75,
-        stiffness: 200,
-        damping: 22,
+        duration: 0.5,
+        bounce: 0.2,
         delay: isVisible ? 0 : 0.15,
       };
       animate(scope.current, animationConfig, transitionConfig);
@@ -40,7 +29,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     animateMainContent();
   }, [isVisible, animate, scope]);
 
-  // CMD + K to toggle interface
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
@@ -67,9 +55,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     const handleDoubleClick = () => {
       setIsVisible((prevIsVisible) => !prevIsVisible);
     };
-
     document.body.addEventListener("dblclick", handleDoubleClick);
-
     return () => {
       document.body.removeEventListener("dblclick", handleDoubleClick);
     };
@@ -92,53 +78,53 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       {/*System */}
       <motion.div
-        className={`fixed bottom-8 left-8 flex-col flex items-start gap-2`}
+        className={`fixed top-4 left-4 flex-col flex items-start gap-2`}
       >
         <motion.button
-          whileHover={{
-            opacity: 1,
-            fontWeight: 600,
-          }}
-          className="opacity-75 cursor-pointer uppercase text-sm tracking-widest text-white"
+          whileHover={{ opacity: 1, fontWeight: 600 }}
+          className="opacity-75 text-white cursor-pointer uppercase text-sm tracking-widest"
         >
-          about
+          privacy
         </motion.button>
-
         <motion.button
-          whileHover={{
-            opacity: 1,
-            fontWeight: 600,
-          }}
+          whileHover={{ opacity: 1, fontWeight: 600 }}
           className="opacity-75 cursor-pointer uppercase text-sm tracking-widest text-white"
         >
           contact
         </motion.button>
-
-        {/* System Interactions */}
-        {user && (
-          <motion.button
+        <Link href={`/diary`}>
+          <motion.div
             whileHover={{ opacity: 1, fontWeight: 600 }}
-            className="text-[#FF0000] cursor-pointer uppercase text-sm tracking-widest"
-            onClick={handleLogout}
+            className="opacity-75 cursor-pointer uppercase text-sm tracking-widest text-white"
           >
-            disconnect
-          </motion.button>
-        )}
-
-        <motion.button
-          whileHover={{
-            opacity: 1,
-            fontWeight: 600,
-          }}
-          className="opacity-75 text-white cursor-pointer uppercase text-sm tracking-widest"
-        >
-          privacy & safety
-        </motion.button>
+            system diary
+          </motion.div>
+        </Link>
       </motion.div>
     </>
   );
 }
+
 function template({ x, y, scale }: { x: number; y: number; scale: number }) {
   // Assuming x and y are percentages and scale is a unit-less number
   return `scale(${scale})`;
 }
+
+// {user && (
+//     <motion.button
+//         whileHover={{ opacity: 1, fontWeight: 600 }}
+//         className="text-[#FF0000] cursor-pointer uppercase text-sm tracking-widest"
+//         onClick={async () => {
+//           // Make a POST request to the logout API endpoint
+//           const response = await fetch("/api/oauth/apple/logout", {
+//             method: "POST",
+//           });
+//           // Handle the response, e.g., redirect to home
+//           if (response.ok) {
+//             window.location.href = "/";
+//           }
+//         }}
+//     >
+//       disconnect
+//     </motion.button>
+// )}

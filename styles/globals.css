@@ -164,3 +164,12 @@ input {
     color: white;
     transform: translateZ(60px);
 }
+
+h1 {
+    color:#999
+}
+
+h6 {
+    font-size: 15px;
+    font-weight: 500;
+}

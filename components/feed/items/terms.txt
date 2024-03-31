@@ -1,0 +1,76 @@
+Welcome to Voir.
+
+Voir is a social network for sound, in essence allowing users to
+share, discover and listen to music with those of kind. When you sign up to use Voir, you
+agree to be bound by the terms of this agreement. If you do not agree to any of
+these terms, DO NOT USE VOIR.
+
+These terms may be updated at any time, and continued use of Voir constitutes
+acceptance of the updated terms. We will make sure to update the date of the last
+revision at the top of this document to reflect any changes.
+
+Data
+
+In order to use Voir, users must authenticate and sign up via their Apple Music account
+which not only allows for a more secure and seamless sign up experience, but also allows
+the user access to their Apple Music account. This information includes, but
+  is not limited to, the user's Apple account ID, email address, and name.
+
+
+  Idemnification
+
+    By using Voir, you agree to indemnify and hold harmless Voir, and its
+    affiliates from any and all claims, damages, losses, and expenses that may arise from
+    your use of Voir. This includes, but is not limited to, any claims made by third
+    parties due to your use of Voir, your violation of these terms, or your violation of
+    any rights of another. This indemnification includes any legal fees that may arise from such claims.
+
+    Liability
+
+    Voir is provided on an "as is" and "as available" basis. The service (including its
+    officers, employees, and affiliates) will not be liable for any damages, including
+    direct, indirect, incidental, consequential, or punitive damages arising out of your
+    use of or inability to use Voir. By using Voir, you agree to assume all risk of using
+    the service. In jurisdictions where such disclaimers are not allowed, liability will
+    be limited to the smallest extent permitted by law.
+
+    
+
+    Termination
+
+    Voir reserves the right to terminate your access to Voir at any time, without notice,
+    for any reason. Voir also reserves the right to modify or discontinue Voir at any time,
+    without notice. Voir will not be liable to you or any third party for any termination or
+    modification of Voir.
+
+    Governing Law
+
+    These terms are governed by the laws of the State of California. Any disputes arising
+    from these terms will be resolved in the state or federal courts of California.
+
+    Contact
+
+    If you have any questions about these terms, please contact us at
+
+        Voir
+        1234 Main Street
+        San Francisco, CA 94111
+
+    Last updated: 12/1/2018
+
+
+
+
+Apple Music
+
+In order to access and use Voir, an Apple Music subscription is required. To enable a more immersive, seamless style of usage, Voir integrates with the Apple Music API for both music metadata (albums, artists, songs, release dates, artworks) and to allow Apple Music users to effortlessly stream music directly through their already existing Apple Music subscription.
+
+Voir is not affiliated with Apple Music in any way other than through the aforementioned uses of its API through a developer liscence.
+
+To learn more about Apple Music, visit the following link:
+https://www.apple.com/legal/internet-services/itunes/
+
+Data
+
+
+Children  Children under the age of 13 are prohibited from using Voir, and when applicable, minors under the age of majority in their respective locales must receive parental consent to use Voir.

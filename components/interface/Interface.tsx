@@ -89,8 +89,9 @@ export function Interface() {
         },
         {
           type: "spring" as const,
-          duration: 0.75,
-          bounce: 0.15,
+          duration: 0.5,
+          bounce: 0.2,
+          delay: isVisible ? 0.15 : 0,
         },
       );
     };
