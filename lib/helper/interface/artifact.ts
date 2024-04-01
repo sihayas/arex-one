@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 // Get replies for an Artifact or a Reply on Artifact page
@@ -16,16 +15,16 @@ export const useRepliesQuery = (
       const params = isArtifactReplies
         ? { artifactId, userId, page: pageParam, limit: 6 }
         : { replyId, userId, page: pageParam, limit: 6 };
-
-      const { data } = await axios.get(url, { params });
-
-      const { replies, pagination } = data.data;
-
-      if (!replies || !pagination) {
-        throw new Error("Unexpected server response structure");
-      }
-
-      return { data: replies, pagination };
+      //
+      // const { data } = await axios.get(url, { params });
+      //
+      // const { replies, pagination } = data.data;
+      //
+      // if (!replies || !pagination) {
+      //   throw new Error("Unexpected server response structure");
+      // }
+      //
+      // return { data: replies, pagination };
     },
     {
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
@@ -43,21 +42,21 @@ export const useChainQuery = (userId: string, replyId: string | undefined) =>
       const url = `/api/artifact/get/chain`;
       const params = { replyId, userId, cursor: pageParam };
 
-      const { data } = await axios.get(url, { params });
-
-      const replies = data.replies;
-      const cursor = data.pagination.nextPage;
-
-      console.log(cursor);
-
-      if (!replies) {
-        throw new Error("Unexpected server response structure");
-      }
-
-      return { data: replies, nextPage: cursor };
+      // const { data } = await axios.get(url, { params });
+      //
+      // const replies = data.replies;
+      // const cursor = data.pagination.nextPage;
+      //
+      // console.log(cursor);
+      //
+      // if (!replies) {
+      //   throw new Error("Unexpected server response structure");
+      // }
+      //
+      // return { data: replies, nextPage: cursor };
     },
     {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
+      // getNextPageParam: (lastPage) => lastPage.nextPage,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,

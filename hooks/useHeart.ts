@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 
 const useHandleHeartClick = (
   initialHeartByUser: boolean,
@@ -24,15 +23,15 @@ const useHandleHeartClick = (
     setHeartCount(newHeartCount);
 
     try {
-      const response = await axios.post(apiUrl, {
-        [idKey]: idValue,
-        userId,
-        authorId,
-      });
-
-      if (!response.data.success) {
-        throw new Error("Failed to update hearts");
-      }
+      // const response = await axios.post(apiUrl, {
+      //   [idKey]: idValue,
+      //   userId,
+      //   authorId,
+      // });
+      //
+      // if (!response.data.success) {
+      //   throw new Error("Failed to update hearts");
+      // }
     } catch (error) {
       // Revert state on failure or error
       setHearted(hearted);

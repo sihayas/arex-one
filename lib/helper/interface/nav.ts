@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Artifact, ReplyType } from "@/types/dbTypes";
 import { useNavContext } from "@/context/Nav";
 import { useQuery } from "@tanstack/react-query";
@@ -41,10 +40,10 @@ export const createReply = async (
   };
 
   try {
-    const res = await axios.post("/api/artifact/post/reply", requestBody);
-    if (res.status !== 200) {
-      console.error(`Error adding reply: ${res.status}`);
-    }
+    // const res = await axios.post("/api/artifact/post/reply", requestBody);
+    // if (res.status !== 200) {
+    //   console.error(`Error adding reply: ${res.status}`);
+    // }
   } catch (error) {
     console.error("Error adding reply:", error);
   }
@@ -82,14 +81,14 @@ export const createEntry = async (submissionData: {
   const endpoint = "/api/artifact/post";
 
   try {
-    const response = await axios.post(endpoint, submissionData);
-
-    if (response.status === 201) {
-      console.log("Submission successful", response.data);
-      return response.data;
-    } else {
-      throw new Error(`Unexpected response status: ${response.status}`);
-    }
+    // const response = await axios.post(endpoint, submissionData);
+    //
+    // if (response.status === 201) {
+    //   console.log("Submission successful", response.data);
+    //   return response.data;
+    // } else {
+    //   throw new Error(`Unexpected response status: ${response.status}`);
+    // }
   } catch (error) {
     console.error("Error submitting data:", error);
     throw new Error(`Error during submission:`);

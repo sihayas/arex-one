@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { attachSoundData } from "@/lib/helper/feed";
 
