@@ -3,7 +3,7 @@ import React from "react";
 import { ArtifactExtended } from "@/types/globalTypes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useInterfaceContext } from "@/context/Interface";
-import { cardBackMask } from "@/components/feed/items/Entry";
+import { cardBackMask } from "@/components/index/items/Entry";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
 import { Interaction } from "@/components/global/Interaction";
@@ -45,7 +45,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     springConfig,
   );
   const yZero = useSpring(
-    useTransform(scrollY, [0, 24], [72, 0]),
+    useTransform(scrollY, [0, 24], [112, 0]),
     springConfig,
   );
   const rotateZero = useSpring(
@@ -162,14 +162,24 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
 
           {/* Back */}
           <div
-            style={{
-              ...cardBackMask,
-              transform: "rotateX(180deg)",
-            }}
+            style={{ ...cardBackMask, transform: "rotateX(180deg)" }}
             className="backface-hidden absolute left-0 top-0 flex h-full  w-full flex-col bg-white p-6 pb-0 "
           >
-            <div className={`flex flex-shrink-0 justify-between`}>
-              {getStarComponent(artifact.content?.rating)}
+            <div className={`flex flex-shrink-0 justify-between gap-2`}>
+              <div className={`flex-col flex`}>
+                <div>{getStarComponent(artifact.content!.rating)}</div>
+
+                <p
+                  className={`text-gray2 line-clamp-1 text-sm font-medium mt-auto`}
+                >
+                  {artistName}
+                </p>
+                <p
+                  className={`line-clamp-2 text-base font-semibold text-black`}
+                >
+                  {name}
+                </p>
+              </div>
 
               <Image
                 className={`shadow-shadowKitHigh rounded-xl`}
@@ -182,18 +192,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
               />
             </div>
 
-            <div className={`flex flex-col pt-2`}>
-              <p
-                className={`text-gray2 mt-auto line-clamp-1 text-sm font-medium`}
-              >
-                {artistName}
-              </p>
-              <p className={`line-clamp-1 text-base font-semibold text-black`}>
-                {name}
-              </p>
-            </div>
-
-            <p className={`line-clamp-[11] pt-[9px] text-base`}>
+            <p className={`line-clamp-[12] pt-[18px] text-base cursor-default`}>
               {artifact.content?.text}
             </p>
           </div>

@@ -33,7 +33,7 @@ export interface Settings {
   push: boolean;
   isPrivate: boolean;
   isMinus: boolean;
-  followerNotifications: boolean;
+  followNotifications: boolean;
   replyNotifications: boolean;
   heartNotifications: boolean;
   createdAt: Date;

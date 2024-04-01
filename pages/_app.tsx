@@ -63,7 +63,7 @@ const App = ({ Component, pageProps }: AppProps<{}>) => {
   }, []);
 
   if (!musicKitReady) {
-    return <div>Loading MusicKit...</div>; // Or any other loading indicator
+    return <div></div>; // Or any other loading indicator
   }
 
   return (

@@ -11,9 +11,11 @@ import { Session } from "lucia";
 import {
   useUserAndSessionQuery,
   useNotificationsQuery,
-} from "../lib/helper/interface/user";
+  useSettingsQuery,
+} from "@/lib/helper/interface/user";
 import { StateSnapshot } from "react-virtuoso";
 import { AlbumData, SongData } from "@/types/appleTypes";
+import { Settings } from "@/types/dbTypes";
 
 export type Page = {
   key: string;
@@ -36,6 +38,10 @@ export type PageName = "sound" | "user" | "artifact";
 export type InterfaceContext = {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  isAuthenticating: boolean;
+  setIsAuthenticating: React.Dispatch<React.SetStateAction<boolean>>;
   pages: Page[];
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
   navigateBack: (pageNumber?: number) => void;
@@ -44,12 +50,12 @@ export type InterfaceContext = {
   setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
   session: Session | null;
   setSession: React.Dispatch<React.SetStateAction<any>>;
-  isLoading: boolean;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   notifs: any[];
   setNotifs: React.Dispatch<React.SetStateAction<any[]>>;
   activePage: Page;
   setActivePage: React.Dispatch<React.SetStateAction<Page>>;
+  settings: Settings | null;
+  setSettings: React.Dispatch<React.SetStateAction<Settings | null>>;
 };
 
 type InterfaceContextProviderProps = {
@@ -75,48 +81,51 @@ export const useInterfaceContext = (): InterfaceContext => {
 export const InterfaceContextProvider = ({
   children,
 }: InterfaceContextProviderProps) => {
-  // Control the visibility of the window
   const [isVisible, setIsVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Create a ref for animations scrolling within the window
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [user, setUser] = useState<UserType | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [notifs, setNotifs] = useState<any[]>([]);
+  const [settings, setSettings] = useState<Settings | null>(null);
 
-  // Initialize the pages array
   const [pages, setPages] = useState<Page[]>([]);
   const [activePage, setActivePage] = React.useState<Page>(
     pages[pages.length - 1],
   );
 
-  // Track the active page
-  useEffect(() => {
-    const newActivePage = pages[pages.length - 1];
-    setActivePage(newActivePage);
-  }, [pages]);
+  // Create a ref for animations scrolling within the window
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize the user and session
-  const [user, setUser] = useState<UserType | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [notifs, setNotifs] = useState<any[]>([]);
-
   const { data } = useUserAndSessionQuery();
-
   useEffect(() => {
     if (data) {
       setUser(data.user);
       setSession(data.session);
+      setIsAuthenticating(false);
+      setIsLoading(false);
+    } else {
+      setIsAuthenticating(false);
+      setIsLoading(false);
     }
   }, [data]);
 
   // Initialize notifications
   const { data: notifData } = useNotificationsQuery(user?.id);
-
   useEffect(() => {
     if (notifData) {
       setNotifs(notifData.data);
-      console.log(notifData.data);
     }
   }, [notifData]);
+
+  const { data: settingsData } = useSettingsQuery(user?.id);
+  useEffect(() => {
+    if (settingsData) {
+      setSettings(settingsData);
+    }
+  }, [settingsData]);
 
   // Initialize the interface
   useEffect(() => {
@@ -145,6 +154,12 @@ export const InterfaceContextProvider = ({
     });
   }, []);
 
+  // Track the active page
+  useEffect(() => {
+    const newActivePage = pages[pages.length - 1];
+    setActivePage(newActivePage);
+  }, [pages]);
+
   // Store pages in web browser history
   useEffect(() => {
     const handlePopState = () => {
@@ -164,20 +179,25 @@ export const InterfaceContextProvider = ({
       value={{
         isVisible,
         setIsVisible,
-        pages,
-        setPages,
-        navigateBack,
+        isLoading,
+        setIsLoading,
+        isAuthenticating,
+        setIsAuthenticating,
+
         scrollContainerRef,
         user,
         setUser,
         session,
         setSession,
-        isLoading,
-        setIsLoading,
         notifs,
         setNotifs,
+        settings,
+        setSettings,
+        pages,
+        setPages,
         activePage,
         setActivePage,
+        navigateBack,
       }}
     >
       {children}

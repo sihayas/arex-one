@@ -16,7 +16,6 @@ interface DatabaseUserAttributes {
   apple_id: number;
   username: string;
   image: string;
-  notifications: Notification[];
 }
 
 // Apple
@@ -48,7 +47,6 @@ export const lucia = new Lucia(luciaAdapter, {
       appleId: attributes.apple_id,
       username: attributes.username,
       image: attributes.image,
-      notifications: attributes.notifications,
     };
   },
 });

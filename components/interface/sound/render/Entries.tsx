@@ -12,7 +12,7 @@ import Image from "next/image";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { getStarComponent } from "@/components/global/Star";
 import { motion } from "framer-motion";
-import { cardBackMask } from "@/components/feed/items/Entry";
+import { cardBackMask } from "@/components/index/items/Entry";
 
 interface RenderArtifactsProps {
   soundId: string;

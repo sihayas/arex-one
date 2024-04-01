@@ -50,11 +50,11 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
       })}
 
       {essentials.length === 0 && (
-        <div className="flex justify-center gap-4">
+        <>
           <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh rotate-3" />
           <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh -rotate-3 -translate-x-[88px]" />
           <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh rotate-3" />
-        </div>
+        </>
       )}
     </>
   );

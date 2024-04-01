@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/global/prisma";
-import { createKey } from "@/pages/api/middleware";
 
 import { ActivityType } from "@prisma/client";
 import { fetchOrCacheUserFollowers } from "@/pages/api/cache/user";
@@ -58,7 +57,6 @@ export default async function onRequestPost(request: any) {
       });
 
       // Not sure how to handle updating the notification
-
       return { success: true, message: "Followed successfully" };
     });
 

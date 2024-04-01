@@ -109,22 +109,3 @@ function template({ x, y, scale }: { x: number; y: number; scale: number }) {
   // Assuming x and y are percentages and scale is a unit-less number
   return `scale(${scale})`;
 }
-
-// {user && (
-//     <motion.button
-//         whileHover={{ opacity: 1, fontWeight: 600 }}
-//         className="text-[#FF0000] cursor-pointer uppercase text-sm tracking-widest"
-//         onClick={async () => {
-//           // Make a POST request to the logout API endpoint
-//           const response = await fetch("/api/oauth/apple/logout", {
-//             method: "POST",
-//           });
-//           // Handle the response, e.g., redirect to home
-//           if (response.ok) {
-//             window.location.href = "/";
-//           }
-//         }}
-//     >
-//       disconnect
-//     </motion.button>
-// )}

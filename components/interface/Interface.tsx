@@ -151,6 +151,9 @@ export function Interface() {
 
   return (
     <motion.div
+      initial={{
+        opacity: 0,
+      }}
       key={`cmdk`}
       // transformTemplate={template} // Prevent translateZ
       ref={rootScope}

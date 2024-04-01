@@ -14,7 +14,7 @@ export const useUserAndSessionQuery = () => {
   });
 };
 
-// Get user data, handle follow/unfollow, and fetch favorites
+// Get user profile data
 export const useUserDataQuery = (
   userId: string | undefined,
   pageUserId: string | undefined,
@@ -72,48 +72,18 @@ export const useEntriesQuery = (userId: string) => {
   );
 };
 
-export const followUser = async (userId: string, pageUserId: string) => {
-  const response = await fetch(`/api/user/post/follow`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userId, pageUserId }),
+export const useSettingsQuery = (userId: string | undefined) => {
+  return useQuery(["userSettings", userId], async () => {
+    if (!userId) return null;
+    const response = await fetch(
+      `/api/user/get/settings?userId=${encodeURIComponent(userId)}`,
+    );
+    if (!response.ok) {
+      throw new Error("Fetching user settings failed");
+    }
+    const data = await response.json();
+    return data;
   });
-
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-};
-
-export const unfollowUser = async (userId: string, pageUserId: string) => {
-  const response = await fetch(`/api/user/post/unfollow`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userId, pageUserId }),
-  });
-
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-};
-
-export const useUserSettingsQuery = (userId: string) => {
-  const { data, isLoading, isError } = useQuery(
-    ["userSettings", userId],
-    async () => {
-      const response = await axios.get(`/api/user/get/settings`, {
-        params: {
-          userId,
-        },
-      });
-      return response.data;
-    },
-  );
-
-  return { data, isLoading, isError };
 };
 
 export const useNotificationsQuery = (userId: string | undefined) => {
@@ -168,4 +138,59 @@ export const useNotificationsQuery = (userId: string | undefined) => {
       refetchOnMount: false,
     },
   );
+};
+
+export const followUser = async (userId: string, pageUserId: string) => {
+  const response = await fetch(`/api/user/post/follow`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId, pageUserId }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+};
+
+export const unfollowUser = async (userId: string, pageUserId: string) => {
+  const response = await fetch(`/api/user/post/unfollow`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId, pageUserId }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+};
+
+export const updateNotificationSetting = async (
+  userId: string | undefined,
+  settingType: string,
+  value: boolean,
+) => {
+  const response = await fetch(`/api/user/post/notificationSetting`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userId,
+      settingType,
+      value,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || "Network response was not ok");
+  }
+
+  // Optionally, return the updated settings if needed
+  const updatedSettings = await response.json();
+  return updatedSettings;
 };

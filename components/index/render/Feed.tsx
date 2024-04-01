@@ -4,8 +4,8 @@ import React from "react";
 
 import { ArtifactExtended } from "@/types/globalTypes";
 import { useInterfaceContext } from "@/context/Interface";
-import { Entry } from "@/components/feed/items/Entry";
-import { Wisp } from "@/components/feed/items/Wisp";
+import { Entry } from "@/components/index/items/Entry";
+import { Wisp } from "@/components/index/items/Wisp";
 import { Virtuoso } from "react-virtuoso";
 
 const Feed = ({ userId, type }: { userId: string; type: string }) => {
