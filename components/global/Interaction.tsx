@@ -103,17 +103,17 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
         return;
       }
 
-      toast.promise(
-        deleteEntry(artifactId).then(() => {
-          setIsDeleting(false);
-          // For example, updating the UI or state to reflect the deletion
-        }),
-        {
-          loading: "Deleting...",
-          success: "Deletion successful!",
-          error: "Error deleting artifact",
-        },
-      );
+      // toast.promise(
+      //   deleteEntry(artifactId).then(() => {
+      //     setIsDeleting(false);
+      //     // For example, updating the UI or state to reflect the deletion
+      //   }),
+      //   {
+      //     loading: "Deleting...",
+      //     success: "Deletion successful!",
+      //     error: "Error deleting artifact",
+      //   },
+      // );
     },
     [isDeleting],
   );
@@ -126,12 +126,12 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
     }
 
     try {
-      const response = await createFlag(
-        artifact.id,
-        FlagType.artifact,
-        user!.id,
-      );
-      console.log("Content flagged successfully!", response);
+      // const response = await createFlag(
+      //   artifact.id,
+      //   FlagType.artifact,
+      //   user!.id,
+      // );
+      // console.log("Content flagged successfully!", response);
       setIsFlagging(false);
     } catch (error) {
       console.error("Error flagging content", error);

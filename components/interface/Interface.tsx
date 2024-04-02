@@ -84,7 +84,7 @@ export function Interface() {
           x: "-50%",
           y: "-50%",
           opacity: isVisible ? 1 : 0,
-          scale: isVisible ? 1 : 0.5,
+          scale: isVisible ? 1 : 0.9,
           pointerEvents: isVisible ? "auto" : "none",
         },
         {

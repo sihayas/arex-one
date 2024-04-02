@@ -13,6 +13,7 @@ import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
 import Link from "@/components/interface/user/items/Link";
 import Image from "next/image";
+import sharp from "sharp";
 
 const User = () => {
   const { user, activePage, pages, scrollContainerRef } = useInterfaceContext();
@@ -40,25 +41,27 @@ const User = () => {
   const handleFileChange = async (event: any) => {
     const file = event.target.files[0];
     if (!file) {
+      console.error("No file selected.");
       return;
     }
 
-    const blobName = `uploads/${Date.now()}-${file.name}`;
-    const contentType = file.type; // MIME type of the file
+    const formData = new FormData();
+    formData.append("file", file);
 
     try {
-      // Convert file to ArrayBuffer or Blob for upload
-      const fileBuffer = await file.arrayBuffer();
+      // Send the file to your backend service for processing and uploading
+      const response = await fetch("/api/user/post/avi", {
+        method: "POST",
+        body: formData,
+      });
 
-      // Call the upload function
-      const uploadedImageUrl = await uploadToAzureBlobStorage(
-        blobName,
-        fileBuffer,
-        contentType,
-      );
+      if (!response.ok) {
+        throw new Error("Failed to process and upload image");
+      }
 
+      const { uploadedImageUrl } = await response.json();
       console.log("Uploaded Image URL:", uploadedImageUrl);
-      // Here, you can update the state or UI with the uploaded image URL
+      // Update your state or UI here with the new image URL
     } catch (error) {
       console.error("Upload failed:", error);
     }

@@ -27,7 +27,7 @@ export const useRepliesQuery = (
       // return { data: replies, pagination };
     },
     {
-      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
+      // getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,

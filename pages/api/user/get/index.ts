@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/global/prisma";
 import { Essential } from "@/types/dbTypes";
 import { fetchAndCacheSoundsByType } from "../../cache/sounds";
 import { fetchOrCacheUser, fetchOrCacheUserFollowers } from "../../cache/user";

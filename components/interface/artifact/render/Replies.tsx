@@ -10,44 +10,44 @@ type RenderRepliesProps = {
 };
 
 function Replies({ userId, artifactId }: RenderRepliesProps) {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useRepliesQuery(userId, artifactId);
-
-  const replies = data ? data.pages.flatMap((page) => page.data) : [];
+  // const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  //   useRepliesQuery(userId, artifactId);
+  //
+  // const replies = data ? data.pages.flatMap((page) => page.data) : [];
 
   // Add layout group to the 2nd fragment
   return (
     <>
-      {replies.length > 0 ? (
-        <>
-          {replies.map((reply: ReplyType, index: number) => (
-            <RootReply key={reply.id} index={index} reply={reply} />
-          ))}
-        </>
-      ) : (
-        <div className="text-xl font-semibold text-gray3 text-center uppercase">
-          unchained
-        </div>
-      )}
+      {/*{replies.length > 0 ? (*/}
+      {/*  <>*/}
+      {/*    {replies.map((reply: ReplyType, index: number) => (*/}
+      {/*      <RootReply key={reply.id} index={index} reply={reply} />*/}
+      {/*    ))}*/}
+      {/*  </>*/}
+      {/*) : (*/}
+      {/*  <div className="text-xl font-semibold text-gray3 text-center uppercase">*/}
+      {/*    unchained*/}
+      {/*  </div>*/}
+      {/*)}*/}
 
-      {/* End */}
-      {hasNextPage && (
-        <button
-          className={`w-full`}
-          onClick={() => fetchNextPage()}
-          disabled={isFetchingNextPage}
-        >
-          {isFetchingNextPage ? (
-            ""
-          ) : (
-            <div
-              className={`text-gray2 pt-8 text-sm uppercase text-center w-full`}
-            >
-              load more
-            </div>
-          )}
-        </button>
-      )}
+      {/*/!* End *!/*/}
+      {/*{hasNextPage && (*/}
+      {/*  <button*/}
+      {/*    className={`w-full`}*/}
+      {/*    onClick={() => fetchNextPage()}*/}
+      {/*    disabled={isFetchingNextPage}*/}
+      {/*  >*/}
+      {/*    {isFetchingNextPage ? (*/}
+      {/*      ""*/}
+      {/*    ) : (*/}
+      {/*      <div*/}
+      {/*        className={`text-gray2 pt-8 text-sm uppercase text-center w-full`}*/}
+      {/*      >*/}
+      {/*        load more*/}
+      {/*      </div>*/}
+      {/*    )}*/}
+      {/*  </button>*/}
+      {/*)}*/}
     </>
   );
 }
