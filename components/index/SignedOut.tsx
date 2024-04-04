@@ -12,8 +12,6 @@ const SignedOut = () => {
   const url =
     "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/49/3d/ab/493dab54-f920-9043-6181-80993b8116c9/19UMGIM53909.rgb.jpg/800x800.jpg";
 
-  const { user, isAuthenticating } = useInterfaceContext();
-
   // const [tiltAngles, setTiltAngles] = useState({
   //   tiltAngleX: 0,
   //   tiltAngleY: 0,
@@ -53,7 +51,6 @@ const SignedOut = () => {
   //   };
   // }, [x, y]);
 
-  if (!isAuthenticating) return;
   return (
     <motion.div
       className={`flex h-screen w-screen flex-col items-center py-16 justify-between`}

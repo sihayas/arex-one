@@ -1,9 +1,12 @@
+import { S3 } from "@/lib/global/r2client";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+
 export const runtime = "edge";
-export async function onRequestPost(request: any) {
+
+export default async function onRequest(request: any) {
   try {
-    const formData = await request.formData();
-    const file = formData.get("file");
-    if (!file || typeof file !== "object") {
+    const file = await request.blob();
+    if (!file) {
       return new Response(
         JSON.stringify({ error: "Invalid or missing file" }),
         {
@@ -13,52 +16,28 @@ export async function onRequestPost(request: any) {
       );
     }
 
-    // Convert file to ArrayBuffer for upload
     const arrayBuffer = await file.arrayBuffer();
+    const body = new Uint8Array(arrayBuffer);
 
-    const blobName = `uploads/${Date.now()}-${file.name}`;
-    const contentType = file.type; // Use the original file's MIME type
-
-    // Function to get the Azure upload URL
-    const uploadUrl = await getAzureUploadUrl(blobName);
-
-    // Perform the upload to Azure Blob Storage
-    const azureResponse = await fetch(uploadUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": contentType,
-        "x-ms-blob-type": "BlockBlob",
-      },
-      body: arrayBuffer,
+    const uploadCommand = new PutObjectCommand({
+      Bucket: "audition",
+      Key: `uploads/test-${Date.now()}`,
+      Body: body,
+      ContentType: file.type,
     });
 
-    if (!azureResponse.ok) {
-      throw new Error(
-        `Failed to upload to Azure. Status: ${azureResponse.status}`,
-      );
-    }
+    const uploadResponse = await S3.send(uploadCommand);
 
-    // Return the URL of the uploaded image
-    return new Response(
-      JSON.stringify({ success: true, url: uploadUrl.split("?")[0] }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    console.log("Upload successful", uploadResponse);
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
-    console.error("Error uploading image:", error);
-    return new Response(JSON.stringify({ error: "Error uploading image" }), {
+    console.error("Error uploading file:", error);
+    return new Response(JSON.stringify({ error: "Error uploading file" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
-}
-// Include your actual function for getting the Azure upload URL
-async function getAzureUploadUrl(blobName: string) {
-  const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-  const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME;
-  const sasToken = process.env.AZURE_SAS_TOKEN;
-
-  return `https://${accountName}.blob.core.windows.net/${containerName}/${blobName}?${sasToken}`;
 }

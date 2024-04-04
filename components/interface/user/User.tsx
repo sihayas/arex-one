@@ -12,8 +12,8 @@ import Essentials from "@/components/interface/user/render/Essentials";
 import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
 import Link from "@/components/interface/user/items/Link";
-import Image from "next/image";
-import sharp from "sharp";
+// import Image from "next/image";
+import Compressor from "compressorjs";
 
 const User = () => {
   const { user, activePage, pages, scrollContainerRef } = useInterfaceContext();
@@ -38,33 +38,69 @@ const User = () => {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = async (event: any) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) {
       console.error("No file selected.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const targetSize = 640;
+      canvas.width = targetSize;
+      canvas.height = targetSize;
 
-    try {
-      // Send the file to your backend service for processing and uploading
-      const response = await fetch("/api/user/post/avi", {
-        method: "POST",
-        body: formData,
-      });
+      // Determine the scale needed to fit the image to the target size
+      const scale = Math.max(
+        canvas.width / img.width,
+        canvas.height / img.height,
+      );
+      const scaledWidth = img.width * scale;
+      const scaledHeight = img.height * scale;
 
-      if (!response.ok) {
-        throw new Error("Failed to process and upload image");
-      }
+      // Calculate the offset to center the image
+      const offsetX = (canvas.width - scaledWidth) / 2;
+      const offsetY = (canvas.height - scaledHeight) / 2;
 
-      const { uploadedImageUrl } = await response.json();
-      console.log("Uploaded Image URL:", uploadedImageUrl);
-      // Update your state or UI here with the new image URL
-    } catch (error) {
-      console.error("Upload failed:", error);
-    }
+      // Draw the image centered on the canvas, cropped to fit
+      ctx.drawImage(img, offsetX, offsetY, scaledWidth, scaledHeight);
+
+      canvas.toBlob((blob) => {
+        new Compressor(blob, {
+          quality: 0.8,
+          success(result) {
+            fetch("/api/user/post/avi", {
+              method: "PUT",
+              headers: {
+                "Content-Type": result.type,
+              },
+              body: result,
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(
+                    `Failed to upload image: ${response.statusText}`,
+                  );
+                }
+                console.log("Upload successful");
+              })
+              .catch((error) => {
+                console.error("Error uploading file:", error);
+              });
+          },
+          error(err) {
+            console.error("Compression error:", err.message);
+          },
+        });
+      }, file.type);
+    };
+    img.onerror = (error) => {
+      console.error("Error loading image:", error);
+    };
   };
 
   const pageUser = activePage.user;
@@ -101,12 +137,13 @@ const User = () => {
               className={`relative flex-shrink-0 `}
               onClick={handleAvatarClick}
             >
-              <Image
+              <Avatar
                 className="rounded-max shadow-shadowKitLow aspect-square"
-                src={data.image}
-                alt={`avatar`}
+                imageSrc={data.image}
+                altText={`avatar`}
                 width={96}
                 height={96}
+                user={data}
               />
               <input
                 type="file"

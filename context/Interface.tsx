@@ -40,8 +40,6 @@ export type InterfaceContext = {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  isAuthenticating: boolean;
-  setIsAuthenticating: React.Dispatch<React.SetStateAction<boolean>>;
   pages: Page[];
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
   navigateBack: (pageNumber?: number) => void;
@@ -82,7 +80,6 @@ export const InterfaceContextProvider = ({
   children,
 }: InterfaceContextProviderProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   const [user, setUser] = useState<UserType | null>(null);
@@ -104,10 +101,8 @@ export const InterfaceContextProvider = ({
     if (data) {
       setUser(data.user);
       setSession(data.session);
-      setIsAuthenticating(false);
       setIsLoading(false);
     } else {
-      setIsAuthenticating(false);
       setIsLoading(false);
     }
   }, [data]);
@@ -181,9 +176,6 @@ export const InterfaceContextProvider = ({
         setIsVisible,
         isLoading,
         setIsLoading,
-        isAuthenticating,
-        setIsAuthenticating,
-
         scrollContainerRef,
         user,
         setUser,

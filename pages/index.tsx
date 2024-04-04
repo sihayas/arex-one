@@ -7,9 +7,7 @@ import SignedOut from "@/components/index/SignedOut";
 import SignedIn from "@/components/index/SignedIn";
 
 export default function Home() {
-  const { user, isAuthenticating } = useInterfaceContext();
-
-  if (isAuthenticating) return;
+  const { user } = useInterfaceContext();
 
   return (
     <Layout>
