@@ -10,6 +10,7 @@ const nextConfig = {
       "is4-ssl.mzstatic.com",
       "is5-ssl.mzstatic.com",
       "voir.space",
+      "https://assets.app.space",
     ],
     loader: "custom",
     loaderFile: "./imageLoader.js",

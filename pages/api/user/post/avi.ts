@@ -43,7 +43,7 @@ export default async function onRequest(request: any) {
     await S3.send(uploadCommand);
 
     // Cache and update user image
-    const imageUrl = `https://assets.app.space/${fileName}`;
+    const imageUrl = `https://assets.voir.space/${fileName}`;
     await prisma.user.update({
       where: { id: userId },
       data: { image: imageUrl },
