@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/global/prisma";
-
 import { ActivityType } from "@prisma/client";
 import { fetchOrCacheUserFollowers } from "@/pages/api/cache/user";
 import { setCache } from "@/lib/global/redis";

@@ -1,5 +1,6 @@
 import { S3 } from "@/lib/global/r2client";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { prisma } from "@/lib/global/prisma";
 
 export const runtime = "edge";
 
@@ -26,9 +27,8 @@ export default async function onRequest(request: any) {
       ContentType: file.type,
     });
 
-    const uploadResponse = await S3.send(uploadCommand);
+    await S3.send(uploadCommand);
 
-    console.log("Upload successful", uploadResponse);
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
