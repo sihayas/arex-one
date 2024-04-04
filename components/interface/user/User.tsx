@@ -83,7 +83,8 @@ const User = () => {
         new Compressor(blob, {
           quality: 0.8,
           success(result) {
-            fetch("/api/user/post/avi", {
+            const userId = user?.id;
+            fetch(`/api/user/post/avi?userId=${userId}`, {
               method: "PUT",
               headers: {
                 "Content-Type": result.type,
@@ -123,6 +124,8 @@ const User = () => {
   };
 
   const { data } = useUserDataQuery(user?.id, pageUser?.id);
+
+  console.log(data);
 
   useEffect(() => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
