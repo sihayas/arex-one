@@ -38,8 +38,10 @@ const User = () => {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
     if (!file) {
       console.error("No file selected.");
       return;
@@ -50,6 +52,10 @@ const User = () => {
     img.onload = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        console.error("Failed to get canvas context");
+        return;
+      }
       const targetSize = 640;
       canvas.width = targetSize;
       canvas.height = targetSize;
@@ -70,6 +76,10 @@ const User = () => {
       ctx.drawImage(img, offsetX, offsetY, scaledWidth, scaledHeight);
 
       canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error("Failed to convert canvas to blob");
+          return;
+        }
         new Compressor(blob, {
           quality: 0.8,
           success(result) {
