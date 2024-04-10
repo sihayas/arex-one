@@ -19,7 +19,7 @@ export interface UserType {
   followedBy: Follows[];
   essentials: Essential[];
   notifications: Notification[];
-  artifact: Artifact[];
+  entry: Entry[];
   replies: ReplyType[];
   hearts: Heart[];
   views: View[];
@@ -79,7 +79,7 @@ export interface Sound {
   album?: Sound;
   songs: Sound[];
   essentials: Essential[];
-  artifact: Artifact[];
+  entry: Entry[];
   metrics: Metrics[];
   createdAt: Date;
   updatedAt: Date;
@@ -115,14 +115,14 @@ export interface View {
   metrics: Metrics[];
 }
 
-export enum ArtifactType {
-  Entry = "entry",
+export enum EntryType {
+  Artifact = "artifact",
   Wisp = "wisp",
 }
 
-export interface Artifact {
+export interface Entry {
   id: string;
-  type: ArtifactType;
+  type: EntryType;
   authorId: string;
   soundId: string;
   sound: Sound;
@@ -147,17 +147,17 @@ export interface Content {
   rating?: number;
   loved?: boolean;
   replay?: boolean;
-  artifact: Artifact;
-  artifactId: string;
+  entry: Entry;
+  entryId: string;
 }
 
 export interface Heart {
   id: string;
   authorId: string;
-  artifactId?: string;
+  entryId?: string;
   replyId?: string;
   author: UserType;
-  artifact?: Artifact;
+  entry?: Entry;
   reply?: ReplyType;
   activities: Activity[];
   createdAt: Date;
@@ -170,11 +170,11 @@ export interface ReplyType {
   text: string;
   rootId?: string;
   replyToId?: string;
-  artifactId: string;
+  entryId: string;
   authorId: string;
   isDeleted: boolean;
   replyTo?: ReplyType;
-  artifact: Artifact;
+  entry: Entry;
   author: UserType;
   replies: ReplyType[];
   hearts: Heart[];
@@ -194,7 +194,7 @@ export interface Activity {
   referenceId: string;
   createdAt: Date;
   updatedAt: Date;
-  artifact?: Artifact;
+  entry?: Entry;
   heart?: Heart;
   follow?: Follows;
   reply?: ReplyType;
@@ -203,7 +203,7 @@ export interface Activity {
 }
 
 export enum ActivityType {
-  Artifact = "artifact",
+  Entry = "entry",
   Heart = "heart",
   Follow = "follow",
   ReplyType = "reply",

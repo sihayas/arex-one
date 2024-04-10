@@ -19,14 +19,14 @@ export const useSoundInfoQuery = (appleId?: string) =>
   );
 
 // Fetch entries on sound page
-export const useArtifactsQuery = (
+export const useEntriesQuery = (
   soundId: string,
   userId: string | undefined,
   sort: string,
   range: number | null,
 ) =>
   useInfiniteQuery(
-    ["artifacts", soundId, sort, range],
+    ["entries", soundId, sort, range],
     async ({ pageParam = 1 }) => {
       const queryParams = new URLSearchParams({
         soundId,
@@ -36,19 +36,19 @@ export const useArtifactsQuery = (
         range: range?.toString() ?? "",
         limit: "12",
       }).toString();
-      const url = `/api/sound/get/artifacts?${queryParams}`;
+      const url = `/api/sound/get/entries?${queryParams}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      const { artifacts, pagination } = data.data;
+      const { entries, pagination } = data.data;
 
-      if (!artifacts || !pagination) {
+      if (!entries || !pagination) {
         throw new Error("Unexpected server response structure");
       }
 
-      return { data: artifacts, pagination };
+      return { data: entries, pagination };
     },
     {
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,

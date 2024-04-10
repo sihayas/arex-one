@@ -234,7 +234,7 @@ const User = () => {
                     ENTRY
                   </p>
                   <p className={`text-gray2 text-xl  leading-[15px]`}>
-                    {data._count.artifact || 0}
+                    {data._count.entry || 0}
                   </p>
                 </div>
               </div>
@@ -312,7 +312,7 @@ const User = () => {
       </motion.div>
 
       <div className={`-mt-[242px] flex flex-col -space-y-5 w-[420px]`}>
-        <Entries userId={pageUser.id} />
+        <Entries pageUserId={pageUser.id} />
       </div>
     </>
   );

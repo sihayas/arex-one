@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { UserType, Artifact } from "@/types/dbTypes";
+import { UserType, Entry } from "@/types/dbTypes";
 
 import { Session } from "lucia";
 import {
@@ -29,11 +29,11 @@ export type Page = {
       key: number;
     };
   };
-  artifact?: { data: Artifact; replyTo?: string };
+  entry?: { data: Entry; replyTo?: string };
   isOpen: boolean;
 };
 
-export type PageName = "sound" | "user" | "artifact";
+export type PageName = "sound" | "user" | "entry";
 
 export type InterfaceContext = {
   isVisible: boolean;
@@ -108,19 +108,19 @@ export const InterfaceContextProvider = ({
   }, [data]);
 
   // Initialize notifications
-  const { data: notifData } = useNotificationsQuery(user?.id);
-  useEffect(() => {
-    if (notifData) {
-      setNotifs(notifData.data);
-    }
-  }, [notifData]);
-
-  const { data: settingsData } = useSettingsQuery(user?.id);
-  useEffect(() => {
-    if (settingsData) {
-      setSettings(settingsData);
-    }
-  }, [settingsData]);
+  // const { data: notifData } = useNotificationsQuery(user?.id);
+  // useEffect(() => {
+  //   if (notifData) {
+  //     setNotifs(notifData.data);
+  //   }
+  // }, [notifData]);
+  //
+  // const { data: settingsData } = useSettingsQuery(user?.id);
+  // useEffect(() => {
+  //   if (settingsData) {
+  //     setSettings(settingsData);
+  //   }
+  // }, [settingsData]);
 
   // Initialize the interface
   useEffect(() => {

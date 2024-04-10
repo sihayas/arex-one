@@ -3,8 +3,10 @@ import { generateId } from "lucia";
 
 import { parseJWT } from "oslo/jwt";
 import { parse } from "cookie";
-import { prisma } from "@/lib/global/prisma";
-import { lucia } from "@/lib/global/auth";
+import { initializeLucia } from "@/lib/global/auth";
+import { PrismaD1 } from "@prisma/adapter-d1";
+import { PrismaClient } from "@prisma/client";
+import { D1Database } from "@cloudflare/workers-types";
 
 const allowedOrigins = [
   "https://voir.space",
@@ -19,7 +21,6 @@ interface JWTPayload {
 export default async function onRequestPost(request: any) {
   const origin = request.headers.get("origin");
 
-  // Handle OPTIONS request for CORS Preflight
   if (request.method === "OPTIONS") {
     let headers = new Headers({
       "Access-Control-Allow-Origin": origin || "*",
@@ -36,7 +37,6 @@ export default async function onRequestPost(request: any) {
     return new Response(null, { status: 204, headers });
   }
 
-  // Assuming `request.json()` is used for parsing JSON body
   // On first login, Apple sends the user's data as JSON in the request body
   const contentType = request.headers.get("Content-Type") || "";
   let requestBody;
@@ -79,6 +79,25 @@ export default async function onRequestPost(request: any) {
     return new Response("Invalid request parameters", { status: 400 });
   }
 
+  const DB = process.env.DB as unknown as D1Database;
+  if (!DB) {
+    return new Response(
+      JSON.stringify({
+        error: "Unauthorized, missing DB in environment",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        status: 401,
+      },
+    );
+  }
+
+  const adapter = new PrismaD1(DB);
+  const prisma = new PrismaClient({ adapter });
+
+  const lucia = initializeLucia(DB);
   try {
     const tokens = await apple.validateAuthorizationCode(code);
     if (!tokens) {
@@ -109,7 +128,7 @@ export default async function onRequestPost(request: any) {
           apple_id: payload.sub,
           username: `user-${userId}`,
           image:
-            "https://voirmedia.blob.core.windows.net/voir-media/default_avi.jpg",
+            "https://assets.voir.space/profile_image%2F720sse7txjp4wrb-20ae95ac-f3ed-4cc1-8181-a28ea49b1583.jpg",
         },
       });
 
@@ -119,7 +138,6 @@ export default async function onRequestPost(request: any) {
     const headers = new Headers();
 
     // TODO: Fix the redirect internal server error.
-
     // headers.append("Location", "/");
     headers.append(
       "Set-Cookie",

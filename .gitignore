@@ -19,8 +19,7 @@
 
 # development
 /certificates
-wrangler.toml
-.dev.vars
+/migrations
 
 # misc
 /archive
@@ -37,7 +36,6 @@ yarn-error.log*
 .env
 .dev.vars
 wrangler.toml
-.wrangler
 
 # vercel
 .vercel

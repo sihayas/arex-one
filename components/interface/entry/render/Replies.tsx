@@ -1,15 +1,15 @@
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "../../../../lib/helper/interface/artifact";
 import React from "react";
-import RootReply from "@/components/interface/artifact/items/RootReply";
+import RootReply from "@/components/interface/entry/items/RootReply";
 import { LayoutGroup, motion } from "framer-motion";
 
 type RenderRepliesProps = {
   userId: string;
-  artifactId: string;
+  entryId: string;
 };
 
-function Replies({ userId, artifactId }: RenderRepliesProps) {
+function Replies({ userId, entryId }: RenderRepliesProps) {
   // const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
   //   useRepliesQuery(userId, artifactId);
   //

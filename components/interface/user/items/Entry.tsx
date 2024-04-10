@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ArtifactExtended } from "@/types/globalTypes";
+import { EntryExtended } from "@/types/globalTypes";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useInterfaceContext } from "@/context/Interface";
 import { cardBackMask } from "@/components/index/items/Entry";
@@ -10,7 +10,7 @@ import { Interaction } from "@/components/global/Interaction";
 import { getStarComponent } from "@/components/global/Star";
 
 interface UserProps {
-  artifact: ArtifactExtended;
+  entry: EntryExtended;
   index: number;
 }
 
@@ -28,7 +28,7 @@ const cardMask = {
   WebkitMaskRepeat: "no-repeat",
 };
 
-export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
+export const Entry: React.FC<UserProps> = ({ entry, index }) => {
   const { scrollContainerRef } = useInterfaceContext();
   const [isFlipped, setIsFlipped] = React.useState(true);
 
@@ -71,7 +71,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     springConfig,
   );
 
-  const sound = artifact.sound.appleData;
+  const sound = entry.sound.appleData;
 
   if (!sound) return;
 
@@ -83,9 +83,9 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
     304 * 2.5,
   );
 
-  const apiUrl = artifact.heartedByUser
-    ? "/api/artifact/post/heart"
-    : "/api/artifact/post/heart";
+  const apiUrl = entry.heartedByUser
+    ? "/api/entry/post/heart"
+    : "/api/entry/post/heart";
 
   return (
     <motion.div
@@ -134,7 +134,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
               draggable={false}
             />
             <div className="`text-base line-clamp-3 px-6 pt-[18px] text-black">
-              {artifact.content?.text}
+              {entry.content?.text}
             </div>
 
             {/* Footer */}
@@ -145,7 +145,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
               }}
               className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6"
             >
-              {getStarComponent(artifact.content?.rating)}
+              {getStarComponent(entry.content?.rating)}
 
               <div className={`flex translate-y-[1px] flex-col`}>
                 <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
@@ -167,7 +167,7 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
           >
             <div className={`flex flex-shrink-0 justify-between gap-2`}>
               <div className={`flex-col flex`}>
-                <div>{getStarComponent(artifact.content!.rating)}</div>
+                <div>{getStarComponent(entry.content!.rating)}</div>
 
                 <p
                   className={`text-gray2 line-clamp-1 text-sm font-medium mt-auto`}
@@ -193,13 +193,13 @@ export const Entry: React.FC<UserProps> = ({ artifact, index }) => {
             </div>
 
             <p className={`line-clamp-[12] pt-[18px] text-base cursor-default`}>
-              {artifact.content?.text}
+              {entry.content?.text}
             </p>
           </div>
         </Tilt>
       </div>
 
-      <Interaction artifact={artifact} isMirrored={isEven} />
+      <Interaction entry={entry} isMirrored={isEven} />
     </motion.div>
   );
 };

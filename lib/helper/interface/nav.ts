@@ -1,11 +1,11 @@
-import { Artifact, ReplyType } from "@/types/dbTypes";
+import { Entry, ReplyType } from "@/types/dbTypes";
 import { useNavContext } from "@/context/Nav";
 import { useQuery } from "@tanstack/react-query";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { toast } from "sonner";
 
 export type ReplyTargetType = {
-  artifact: Artifact;
+  entry: Entry;
   reply: ReplyType | null;
 } | null;
 
@@ -16,12 +16,12 @@ export const createReply = async (
 ) => {
   if (!replyTarget) return console.error("No reply target found.");
 
-  const artifact = replyTarget.artifact;
+  const entry = replyTarget.entry;
   const reply = replyTarget.reply;
 
   // Replying directly to an artifact
-  const artifactId = artifact.id;
-  const artifactAuthorId = artifact.author.id;
+  const artifactId = entry.id;
+  const artifactAuthorId = entry.author.id;
   const rootId = reply ? reply.rootId : null; //*
 
   // Replying to a reply

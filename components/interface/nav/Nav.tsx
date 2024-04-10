@@ -7,7 +7,7 @@ import Form from "./render/Form";
 import {
   TargetAddIcon,
   TargetGoIcon,
-  TargetArtifactIcon,
+  TargetEntryIcon,
   TargetCommandIcon,
   TargetExpandIcon,
 } from "@/components/icons";
@@ -50,7 +50,7 @@ const Nav = () => {
   const isForm = activeAction === "form";
   const isReply = activeAction === "reply";
 
-  const pageHasData = activePage.sound || activePage.artifact;
+  const pageHasData = activePage.sound || activePage.entry;
 
   // Debounce the search query
   const [searchQuery, setSearchQuery] = useState("");
@@ -191,8 +191,8 @@ const Nav = () => {
           // Reply Target Avatar
           <div className={`absolute right-2 top-2`}>
             <Image
-              src={replyTarget?.artifact.author.image}
-              alt={`${replyTarget?.artifact.author.username}'s avatar`}
+              src={replyTarget?.entry.author.image}
+              alt={`${replyTarget?.entry.author.username}'s avatar`}
               width={24}
               height={24}
               className={`rounded-full`}
@@ -319,7 +319,7 @@ const Nav = () => {
             {/* User is on an Artifact page */}
             {expandInput &&
               activeAction === "none" &&
-              activePage.artifact &&
+              activePage.entry &&
               !inputValue && (
                 <motion.div
                   className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
@@ -327,7 +327,7 @@ const Nav = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0 }}
                 >
-                  <TargetArtifactIcon />
+                  <TargetEntryIcon />
                 </motion.div>
               )}
 

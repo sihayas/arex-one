@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 
 import { ReplyType } from "@/types/dbTypes";
 
-import Children from "@/components/interface/artifact/render/Children";
+import Children from "@/components/interface/entry/render/Children";
 import { AnimatePresence, motion } from "framer-motion";
 import useHandleHeartClick from "@/hooks/useHeart";
 
@@ -25,9 +25,9 @@ export default function RootReply({ reply, index }: ReplyProps) {
   const replyCount = reply._count ? reply._count.replies : 0;
 
   const handleReplyParent = useCallback(() => {
-    const artifact = activePage.artifact!.data;
-    setReplyTarget({ artifact, reply });
-  }, [reply, setReplyTarget, activePage.artifact]);
+    const entry = activePage.entry!.data;
+    setReplyTarget({ entry, reply });
+  }, [reply, setReplyTarget, activePage.entry]);
 
   const url = reply.heartedByUser
     ? "/api/reply/delete/heart"

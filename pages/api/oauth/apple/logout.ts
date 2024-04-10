@@ -1,7 +1,23 @@
-import { Request } from "@cloudflare/workers-types";
-import { lucia } from "@/lib/global/auth";
+import { D1Database, Request } from "@cloudflare/workers-types";
+import { initializeLucia } from "@/lib/global/auth";
 
 export default async function onRequestPost(request: Request) {
+  const DB = process.env.DB as unknown as D1Database;
+  if (!DB) {
+    return new Response(
+      JSON.stringify({
+        error: "Unauthorized, missing DB in environment",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        status: 401,
+      },
+    );
+  }
+
+  const lucia = initializeLucia(DB);
   try {
     const cookieHeader = request.headers.get("Cookie");
     const sessionId = lucia.readSessionCookie(cookieHeader ?? "");

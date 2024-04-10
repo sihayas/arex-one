@@ -1,19 +1,19 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-// Get replies for an Artifact or a Reply on Artifact page
+// Get replies for an Entry or a Reply on Entry page
 export const useRepliesQuery = (
   userId: string,
-  artifactId?: string | undefined,
+  entryId?: string | undefined,
   replyId?: string | undefined,
 ) =>
   useInfiniteQuery(
-    ["replies", artifactId || replyId],
+    ["replies", entryId || replyId],
     async ({ pageParam = 1 }) => {
-      const isArtifactReplies = !!artifactId;
+      const isEntryReplies = !!entryId;
 
-      const url = `/api/artifact/get/replies`;
-      const params = isArtifactReplies
-        ? { artifactId, userId, page: pageParam, limit: 6 }
+      const url = `/api/entry/get/replies`;
+      const params = isEntryReplies
+        ? { entryId, userId, page: pageParam, limit: 6 }
         : { replyId, userId, page: pageParam, limit: 6 };
       //
       // const { data } = await axios.get(url, { params });
@@ -39,7 +39,7 @@ export const useChainQuery = (userId: string, replyId: string | undefined) =>
   useInfiniteQuery(
     ["replies", replyId],
     async ({ pageParam = undefined }) => {
-      const url = `/api/artifact/get/chain`;
+      const url = `/api/entry/get/chain`;
       const params = { replyId, userId, cursor: pageParam };
 
       // const { data } = await axios.get(url, { params });

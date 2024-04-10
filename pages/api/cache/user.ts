@@ -1,8 +1,28 @@
 import { getCache, setCache } from "@/lib/global/redis";
-import { prisma } from "@/lib/global/prisma";
+import { D1Database } from "@cloudflare/workers-types";
+import { PrismaD1 } from "@prisma/adapter-d1";
+import { PrismaClient } from "@prisma/client";
 
 // Caches user data + image for 1 hour
 async function fetchOrCacheUser(userId: string) {
+  const DB = process.env.DB as unknown as D1Database;
+  if (!DB) {
+    return new Response(
+      JSON.stringify({
+        error: "Unauthorized, missing DB in environment",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        status: 401,
+      },
+    );
+  }
+
+  const adapter = new PrismaD1(DB);
+  const prisma = new PrismaClient({ adapter });
+
   try {
     const cacheKey = `user:${userId}:data`;
     const imageCacheKey = `user:${userId}:image`;
@@ -12,19 +32,19 @@ async function fetchOrCacheUser(userId: string) {
 
     if (!userData) {
       userData = await prisma.user.findUnique({
-        where: { id: String(userId), isDeleted: false, isBanned: false },
+        where: { id: String(userId), status: "active" },
         select: {
           _count: {
             select: {
-              artifact: { where: { isDeleted: false, type: "entry" } },
-              followedBy: { where: { isDeleted: false } },
+              entries: { where: { is_deleted: false } },
+              followed_by: { where: { is_deleted: false } },
             },
           },
           essentials: {
             select: {
               id: true,
               rank: true,
-              sound: { select: { appleId: true } },
+              sound: { select: { apple_id: true } },
             },
             orderBy: { rank: "desc" },
           },
@@ -35,6 +55,7 @@ async function fetchOrCacheUser(userId: string) {
         },
       });
 
+      // @ts-ignore
       const { uniqueSounds } = await countUniqueSounds(userId);
       if (userData && uniqueSounds) {
         userData._count = { ...userData._count, uniqueSounds };
@@ -52,7 +73,7 @@ async function fetchOrCacheUser(userId: string) {
     if (!userImage) {
       const image = await prisma.user
         .findUnique({
-          where: { id: userId, isDeleted: false },
+          where: { id: userId, status: "active" },
           select: { image: true },
         })
         .then((u) => (u ? u.image : null));
@@ -72,6 +93,23 @@ async function fetchOrCacheUser(userId: string) {
 
 // Caches user followers for 1 hour
 async function fetchOrCacheUserFollowers(userId: string) {
+  const DB = process.env.DB as unknown as D1Database;
+  if (!DB) {
+    return new Response(
+      JSON.stringify({
+        error: "Unauthorized, missing DB in environment",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        status: 401,
+      },
+    );
+  }
+
+  const adapter = new PrismaD1(DB);
+  const prisma = new PrismaClient({ adapter });
   try {
     const cacheKey = `user:${userId}:followers`;
     let userFollowers = await getCache(cacheKey);
@@ -79,15 +117,15 @@ async function fetchOrCacheUserFollowers(userId: string) {
     if (!userFollowers) {
       userFollowers = await prisma.user
         .findUnique({
-          where: { id: userId, isDeleted: false },
+          where: { id: userId, status: "active" },
           select: {
-            followedBy: {
-              where: { isDeleted: false },
-              select: { followerId: true },
+            followed_by: {
+              where: { is_deleted: false },
+              select: { follower_id: true },
             },
           },
         })
-        .then((u) => (u ? u.followedBy.map((f) => f.followerId) : null));
+        .then((u) => (u ? u.followed_by.map((f) => f.follower_id) : null));
 
       if (userFollowers) {
         await setCache(cacheKey, JSON.stringify(userFollowers), 3600);
@@ -101,20 +139,39 @@ async function fetchOrCacheUserFollowers(userId: string) {
   }
 }
 
-async function countUniqueSounds(
-  userId: string,
-): Promise<{ uniqueSounds: number }> {
-  const [uniqueSoundCount] = await Promise.all([
-    prisma.artifact.groupBy({
-      by: ["soundId"],
-      where: { authorId: userId },
-      _count: { soundId: true },
-    }),
-  ]);
+async function countUniqueSounds(userId: string) {
+  const DB = process.env.DB as unknown as D1Database;
+  if (!DB) {
+    return new Response(
+      JSON.stringify({
+        error: "Unauthorized, missing DB in environment",
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        status: 401,
+      },
+    );
+  }
 
-  return {
-    uniqueSounds: uniqueSoundCount.length,
-  };
+  const adapter = new PrismaD1(DB);
+  const prisma = new PrismaClient({ adapter });
+
+  try {
+    const [uniqueSoundCount] = await Promise.all([
+      prisma.entry.groupBy({
+        by: ["sound_id"],
+        where: { author_id: userId },
+        _count: { sound_id: true },
+      }),
+    ]);
+
+    return { uniqueSounds: uniqueSoundCount.length };
+  } catch (error) {
+    console.error(`Error counting unique sounds for ${userId}:`, error);
+    throw error;
+  }
 }
 
 export { fetchOrCacheUser, fetchOrCacheUserFollowers };

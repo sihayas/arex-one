@@ -2,7 +2,7 @@ import { useFeedQuery } from "@/lib/helper/feed";
 
 import React from "react";
 
-import { ArtifactExtended } from "@/types/globalTypes";
+import { EntryExtended } from "@/types/globalTypes";
 import { useInterfaceContext } from "@/context/Interface";
 import { Entry } from "@/components/index/items/Entry";
 import { Wisp } from "@/components/index/items/Wisp";
@@ -45,10 +45,10 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
           className={`flex items-center justify-center pt-[96px]`}
           key={activity.id}
         >
-          {activity.artifact && activity.artifact.type === "entry" ? (
-            <Entry artifact={activity.artifact as ArtifactExtended} />
-          ) : activity.artifact && activity.artifact.type === "wisp" ? (
-            <Wisp artifact={activity.artifact as ArtifactExtended} />
+          {activity.entry && activity.entry.type === "artifact" ? (
+            <Entry entry={activity.entry as EntryExtended} />
+          ) : activity.entry && activity.entry.type === "wisp" ? (
+            <Wisp entry={activity.entry as EntryExtended} />
           ) : (
             "No artifact available for this activity."
           )}

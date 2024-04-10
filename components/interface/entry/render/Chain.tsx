@@ -1,7 +1,7 @@
 import { ReplyType } from "@/types/dbTypes";
 import { useChainQuery } from "@/lib/helper/interface/artifact";
 import React, { useEffect, useState } from "react";
-import RootReply from "@/components/interface/artifact/items/RootReply";
+import RootReply from "@/components/interface/entry/items/RootReply";
 import Reply from "../items/Reply";
 
 type RenderRepliesProps = {

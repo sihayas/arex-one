@@ -85,13 +85,13 @@ export const Keybinds = (
     // Prepare reply parent
     else if (
       e.key === "Enter" &&
-      activePage.artifact &&
+      activePage.entry &&
       activeAction === "none" &&
       !inputValue
     ) {
       e.preventDefault();
       //@ts-ignore
-      setReplyTarget({ artifact: activePage.artifact.data, reply: null });
+      setReplyTarget({ entry: activePage.entry.data, reply: null });
     }
   };
 

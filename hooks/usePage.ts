@@ -1,22 +1,22 @@
 import { useInterfaceContext } from "@/context/Interface";
 
-import { Artifact, UserType } from "@/types/dbTypes";
+import { Entry, UserType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
 
-export const useArtifact = () => {
+export const useEntry = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
-  const handleSelectArtifact = (artifact: Artifact, replyId?: string) => {
+  const handleSelectEntry = (entry: Entry, replyId?: string) => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
       {
-        key: artifact.id,
-        name: "artifact",
-        threadcrumbs: [artifact.id],
+        key: entry.id,
+        name: "entry",
+        threadcrumbs: [entry.id],
         scrollPosition: 0,
-        artifact: {
-          data: artifact,
+        entry: {
+          data: entry,
           replyTo: replyId,
         },
         isOpen: false,
@@ -25,7 +25,7 @@ export const useArtifact = () => {
     window.history.pushState(null, "");
   };
 
-  return { handleSelectArtifact };
+  return { handleSelectEntry };
 };
 
 export const useUser = () => {

@@ -6,7 +6,7 @@ import { Command } from "cmdk";
 import Nav from "@/components/interface/nav/Nav";
 
 import Sound from "@/components/interface/sound/Sound";
-import Artifact from "@/components/interface/artifact/Artifact";
+import Entry from "@/components/interface/entry/Entry";
 import User from "@/components/interface/user/User";
 
 import {
@@ -36,7 +36,7 @@ export const GetDimensions = (pageName: PageName) => {
       target: { width: 688, height: maxHeight },
       scrollTo: { width: 688, height: maxHeight },
     },
-    artifact: {
+    entry: {
       base: { width: 512, height: 640 },
       target: { width: 512, height: maxHeight },
       scrollTo: { width: 512, height: maxHeight },
@@ -195,8 +195,8 @@ export function Interface() {
               {activePage.name === "sound" && (
                 <Sound key={`sound-${activePage.key}`} />
               )}
-              {activePage.name === "artifact" && (
-                <Artifact key={`artifact-${activePage.key}`} />
+              {activePage.name === "entry" && (
+                <Entry key={`entry-${activePage.key}`} />
               )}
               {activePage.name === "user" && (
                 <User key={`user-${activePage.key}`} />

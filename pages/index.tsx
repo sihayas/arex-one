@@ -9,6 +9,8 @@ import SignedIn from "@/components/index/SignedIn";
 export default function Home() {
   const { user } = useInterfaceContext();
 
+  console.log("user", user);
+
   return (
     <Layout>
       <Head>

@@ -83,11 +83,6 @@ export const fetchSourceAlbum = async (albumId: string | undefined) => {
         earliestAlbums[0],
       );
 
-      console.log(
-        "Album with smallest track count:",
-        albumWithSmallestTrackCount,
-      );
-
       return albumWithSmallestTrackCount;
     } else {
       return null;

@@ -135,7 +135,7 @@ export function TargetExpandIcon({ ...props }) {
   );
 }
 
-export function TargetArtifactIcon({ ...props }) {
+export function TargetEntryIcon({ ...props }) {
   return (
     <svg
       width={12}

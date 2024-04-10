@@ -10,14 +10,13 @@ import {
   TargetExpandIcon,
 } from "@/components/icons";
 import React, { useCallback } from "react";
-import { ArtifactExtended } from "@/types/globalTypes";
+import { EntryExtended } from "@/types/globalTypes";
 import { useSoundContext } from "@/context/Sound";
 import { useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
 import { toast } from "sonner";
 
-import { FlagType } from "@prisma/client";
-import { useArtifact, useSound } from "@/hooks/usePage";
+import { useEntry, useSound } from "@/hooks/usePage";
 
 const dotVariants = {
   hidden: { opacity: 0, scale: 0.75 },
@@ -60,25 +59,25 @@ const Dot = () => {
 };
 
 type InteractionProps = {
-  artifact: ArtifactExtended;
+  entry: EntryExtended;
   isMirrored?: boolean;
 };
 
-export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
+export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
   const { playContent } = useSoundContext();
   const { setIsVisible, user } = useInterfaceContext();
   const { setExpandInput, setSelectedFormSound } = useNavContext();
-  const { handleSelectArtifact } = useArtifact();
+  const { handleSelectEntry } = useEntry();
   const { handleSelectSound } = useSound();
 
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [isFlagging, setIsFlagging] = React.useState(false);
 
   const [isHovered, setIsHovered] = React.useState(false);
-  const sound = artifact.sound.appleData;
+  const sound = entry.sound.appleData;
 
-  const handleOpenArtifact = () => {
-    handleSelectArtifact(artifact);
+  const handleOpenEntry = () => {
+    handleSelectEntry(entry);
   };
 
   const handlePlayContent = async () => {
@@ -96,7 +95,7 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
   };
 
   const handleDelete = useCallback(
-    async (artifactId: string) => {
+    async (entryId: string) => {
       if (!isDeleting) {
         setIsDeleting(true);
         setTimeout(() => setIsDeleting(false), 3000); // 3 seconds to confirm
@@ -170,7 +169,7 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
         ))}
 
         {/* Delete button */}
-        {user?.id === artifact.author.id && (
+        {user?.id === entry.author.id && (
           <>
             <motion.div
               className={`rounded-full overflow-hidden`}
@@ -181,7 +180,7 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
               whileTap={{ scale: 0.75 }}
             >
               <motion.div
-                onClick={() => handleDelete(artifact.id)}
+                onClick={() => handleDelete(entry.id)}
                 variants={dotVariants}
                 className={`flex items-center justify-center rounded-full bg-[#F20000] bg-opacity-25 p-2 text-xs font-medium uppercase leading-[8px] text-[#F20000]`}
               >
@@ -300,7 +299,7 @@ export const Interaction = ({ artifact, isMirrored }: InteractionProps) => {
             opacity: !isHovered ? 0 : 1,
           }}
           whileTap={{ scale: 0.75 }}
-          onClick={handleOpenArtifact}
+          onClick={handleOpenEntry}
           className={`relative h-8 w-8 origin-top-left`}
         >
           <motion.div

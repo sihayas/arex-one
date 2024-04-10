@@ -35,12 +35,17 @@ export const useUserDataQuery = (
   });
 };
 
-export const useEntriesQuery = (userId: string) => {
+export const useEntriesQuery = (
+  userId: string | undefined,
+  pageUserId: string,
+) => {
   return useInfiniteQuery(
     ["entries", userId],
     async ({ pageParam = 1 }) => {
+      if (!userId || !pageUserId) return null;
       const queryParams = new URLSearchParams({
         userId,
+        pageUserId,
         page: pageParam.toString(),
         limit: "8",
       });

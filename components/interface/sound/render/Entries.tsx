@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useArtifactsQuery } from "@/lib/helper/interface/sound";
+import { useEntriesQuery } from "@/lib/helper/interface/sound";
 import { useInterfaceContext } from "@/context/Interface";
 import { GetDimensions } from "@/components/interface/Interface";
 import { PageName } from "@/context/Interface";
 import { SortOrder } from "@/components/interface/sound/Sound";
 import { Virtuoso, StateSnapshot, VirtuosoHandle } from "react-virtuoso";
-import { useArtifact } from "@/hooks/usePage";
+import { useEntry } from "@/hooks/usePage";
 import Avatar from "@/components/global/Avatar";
 import Tilt from "react-parallax-tilt";
 import Image from "next/image";
@@ -14,25 +14,25 @@ import { getStarComponent } from "@/components/global/Star";
 import { motion } from "framer-motion";
 import { cardBackMask } from "@/components/index/items/Entry";
 
-interface RenderArtifactsProps {
+interface RenderEntriesProps {
   soundId: string;
   sortOrder: SortOrder;
   range: number | null;
 }
 
-const Entries: React.FC<RenderArtifactsProps> = ({
+const Entries: React.FC<RenderEntriesProps> = ({
   soundId,
   sortOrder = "newest",
   range = null,
 }) => {
   const { user, activePage } = useInterfaceContext();
-  const { data, fetchNextPage, hasNextPage } = useArtifactsQuery(
+  const { data, fetchNextPage, hasNextPage } = useEntriesQuery(
     soundId,
     user?.id,
     sortOrder,
     range,
   );
-  const { handleSelectArtifact } = useArtifact();
+  const { handleSelectEntry } = useEntry();
   const [sound, setSound] = useState<AlbumData | SongData | null>(null);
 
   // Capture the state of the virtuoso list
@@ -43,8 +43,8 @@ const Entries: React.FC<RenderArtifactsProps> = ({
   const key = activePage.sound?.snapshot?.key;
   const { target } = GetDimensions(activePage.name as PageName);
 
-  const artifacts = data
-    ? data.pages.flatMap((page) => page.data.map((item: any) => item.artifact))
+  const entries = data
+    ? data.pages.flatMap((page) => page.data.map((item: any) => item.entry))
     : [];
 
   const handleEndReached = () => {
@@ -63,7 +63,7 @@ const Entries: React.FC<RenderArtifactsProps> = ({
     }
   }, [activePage]);
 
-  if (!artifacts || !sound) return null;
+  if (!entries || !sound) return null;
 
   const url = MusicKit.formatArtworkURL(
     sound.attributes.artwork,
@@ -76,12 +76,12 @@ const Entries: React.FC<RenderArtifactsProps> = ({
       key={key}
       ref={ref}
       style={{ height: target.height }}
-      data={artifacts}
+      data={entries}
       overscan={200}
       restoreStateFrom={state.current}
       computeItemKey={(key: number) => `item-${key.toString()}`}
       endReached={handleEndReached}
-      itemContent={(index, artifact) => (
+      itemContent={(index, entry) => (
         <motion.div
           onClick={() => {
             ref.current?.getState((snapshot) => {
@@ -90,8 +90,8 @@ const Entries: React.FC<RenderArtifactsProps> = ({
                 key: index,
               };
             });
-            handleSelectArtifact({
-              ...artifact,
+            handleSelectEntry({
+              ...entry,
               sound: {
                 data: activePage.sound?.data,
               },
@@ -119,7 +119,7 @@ const Entries: React.FC<RenderArtifactsProps> = ({
               className="flex h-full w-full flex-col bg-white p-6 pb-0 "
             >
               <div className={`flex flex-shrink-0 justify-between`}>
-                {getStarComponent(artifact.content?.rating)}
+                {getStarComponent(entry.content?.rating)}
 
                 <Image
                   className={`shadow-shadowKitHigh rounded-xl`}
@@ -135,21 +135,21 @@ const Entries: React.FC<RenderArtifactsProps> = ({
               <div className={`flex items-center gap-2 pt-2`}>
                 <Avatar
                   className={`border-silver border`}
-                  imageSrc={artifact.author.image}
-                  altText={`${artifact.author.username}'s avatar`}
+                  imageSrc={entry.author.image}
+                  altText={`${entry.author.username}'s avatar`}
                   width={32}
                   height={32}
-                  user={artifact.author}
+                  user={entry.author}
                 />
                 <div
                   className={`text-base font-semibold leading-[10px] text-black`}
                 >
-                  {artifact.author.username}
+                  {entry.author.username}
                 </div>
               </div>
 
               <p className={`line-clamp-[11] pt-[9px] text-base`}>
-                {artifact.content?.text}
+                {entry.content?.text}
               </p>
             </div>
           </Tilt>

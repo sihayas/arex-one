@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
-import { ArtifactExtended } from "@/types/globalTypes";
+import { EntryExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 import { useInterfaceContext } from "@/context/Interface";
 import Tilt from "react-parallax-tilt";
@@ -12,7 +12,7 @@ import useHandleHeartClick from "@/hooks/useHeart";
 import { getStarComponent } from "@/components/global/Star";
 
 interface EntryProps {
-  artifact: ArtifactExtended;
+  entry: EntryExtended;
 }
 
 export const cardMask = {
@@ -33,11 +33,11 @@ export const cardBackMask = {
   WebkitMaskRepeat: "no-repeat",
 };
 
-export const Entry: React.FC<EntryProps> = ({ artifact }) => {
+export const Entry: React.FC<EntryProps> = ({ entry }) => {
   const { user } = useInterfaceContext();
   const [isFlipped, setIsFlipped] = useState(false);
 
-  const appleData = artifact.sound.appleData;
+  const appleData = entry.sound.appleData;
 
   const name = appleData.attributes.name;
   const artistName = appleData.attributes.artistName;
@@ -48,17 +48,17 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
     304 * 2.5,
   );
 
-  const apiUrl = artifact.heartedByUser
-    ? "/api/artifact/delete/heart"
-    : "/api/artifact/post/heart";
+  const apiUrl = entry.heartedByUser
+    ? "/api/entry/delete/heart"
+    : "/api/entry/post/heart";
 
   const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    artifact.heartedByUser,
-    artifact._count.hearts,
+    entry.heartedByUser,
+    entry._count.hearts,
     apiUrl,
-    "artifactId",
-    artifact.id,
-    artifact.author.id,
+    "entryId",
+    entry.id,
+    entry.author.id,
     user?.id,
   );
 
@@ -66,11 +66,11 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
     <motion.div className={`-ml-12 relative flex w-[352px] items-end gap-2`}>
       <Avatar
         className={`border-silver z-10 border`}
-        imageSrc={artifact.author.image}
-        altText={`${artifact.author.username}'s avatar`}
+        imageSrc={entry.author.image}
+        altText={`${entry.author.username}'s avatar`}
         width={40}
         height={40}
-        user={artifact.author}
+        user={entry.author}
       />
 
       {/* Applying drop-shadow directly to Tilt breaks the flip effect! */}
@@ -118,12 +118,12 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
               priority={true}
             />
             <div className="`text-base line-clamp-3 px-6 pt-[18px] text-black cursor-default">
-              {artifact.content?.text}
+              {entry.content?.text}
             </div>
 
             {/* Footer */}
             <div className="absolute bottom-0 left-0 flex h-[72px] w-full items-center gap-3 p-6 flex-shrink-0">
-              <div>{getStarComponent(artifact.content?.rating)}</div>
+              <div>{getStarComponent(entry.content?.rating)}</div>
 
               <div className={`flex translate-y-[1px] flex-col`}>
                 <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
@@ -145,7 +145,7 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
           >
             <div className={`flex flex-shrink-0 justify-between`}>
               <div className={`flex-col flex`}>
-                <div>{getStarComponent(artifact.content!.rating)}</div>
+                <div>{getStarComponent(entry.content!.rating)}</div>
 
                 <p
                   className={`text-gray2 mt-auto line-clamp-1 text-sm font-medium pt-6`}
@@ -171,27 +171,27 @@ export const Entry: React.FC<EntryProps> = ({ artifact }) => {
             </div>
 
             <p className={`line-clamp-[12] pt-[18px] text-base cursor-default`}>
-              {artifact.content?.text}
+              {entry.content?.text}
             </p>
           </div>
         </Tilt>
       </motion.div>
 
       {/* Interactions */}
-      <Interaction artifact={artifact} />
+      <Interaction entry={entry} />
 
       <Heart
         handleHeartClick={handleHeartClick}
         hearted={hearted}
         className="absolute bottom-[432px] left-[46px] z-10 -m-12 p-12 mix-blend-multiply"
         heartCount={heartCount}
-        replyCount={artifact._count.replies}
+        replyCount={entry._count.replies}
       />
 
       <p
         className={`text-gray2 absolute -bottom-7 left-[68px] font-medium mix-blend-darken`}
       >
-        {artifact.author.username}
+        {entry.author.username}
       </p>
 
       {/* Ambien */}

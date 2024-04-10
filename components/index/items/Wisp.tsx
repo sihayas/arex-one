@@ -4,14 +4,14 @@ import React from "react";
 
 import Avatar from "@/components/global/Avatar";
 
-import { ArtifactExtended } from "@/types/globalTypes";
+import { EntryExtended } from "@/types/globalTypes";
 import { motion } from "framer-motion";
 
-import { useArtifact, useSound } from "@/hooks/usePage";
+import { useEntry, useSound } from "@/hooks/usePage";
 import Image from "next/image";
 
 interface WispProps {
-  artifact: ArtifactExtended;
+  entry: EntryExtended;
 }
 
 const maskStyle = {
@@ -23,11 +23,11 @@ const maskStyle = {
   WebkitMaskRepeat: "no-repeat",
 };
 
-export const Wisp: React.FC<WispProps> = ({ artifact }) => {
-  const { handleSelectArtifact } = useArtifact();
+export const Wisp: React.FC<WispProps> = ({ entry }) => {
+  const { handleSelectEntry } = useEntry();
   const { handleSelectSound } = useSound();
 
-  const sound = artifact.sound.appleData;
+  const sound = entry.sound.appleData;
 
   const artwork = MusicKit.formatArtworkURL(
     sound.attributes.artwork,
@@ -45,15 +45,15 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
     <div className={`-ml-14 relative flex w-[352px] items-end gap-2`}>
       <Avatar
         className={`border-silver z-10 h-[42px] border`}
-        imageSrc={artifact.author.image}
-        altText={`${artifact.author.username}'s avatar`}
+        imageSrc={entry.author.image}
+        altText={`${entry.author.username}'s avatar`}
         width={42}
         height={42}
-        user={artifact.author}
+        user={entry.author}
       />
 
       <motion.div
-        onClick={() => handleSelectArtifact(artifact)}
+        onClick={() => handleSelectEntry(entry)}
         className={`relative z-10 flex flex-col -space-y-4  mb-2`}
       >
         <Image
@@ -70,7 +70,7 @@ export const Wisp: React.FC<WispProps> = ({ artifact }) => {
         <div
           className={`bg-white px-3 py-1.5 rounded-2xl relative shadow-shadowKitHigh`}
         >
-          <p className={`text-base text-black`}>{artifact.content?.text}</p>
+          <p className={`text-base text-black`}>{entry.content?.text}</p>
           <div className={`absolute z-0 h-3 w-3 -bottom-1 -left-1`}>
             <div
               className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}

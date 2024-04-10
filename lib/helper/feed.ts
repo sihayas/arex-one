@@ -6,7 +6,7 @@ export const useFeedQuery = (userId: string, type: string, limit = 6) => {
   let url;
 
   if (type === "personal") {
-    url = `/api/feed/get/personal`;
+    url = `/api/user/get/feed`;
   } else if (type === "bloom") {
     url = `/api/feed/get/bloom`;
   } else if (type === "recent") {
@@ -60,14 +60,14 @@ const useGenericFeedQuery = (
   );
 };
 
-// Helper function to extract artifact from activity
-export function extractArtifact(activity: Activity) {
-  return activity.type === ActivityType.Artifact
-    ? activity.artifact
+// Helper function to extract entry from activity
+export function extractEntry(activity: Activity) {
+  return activity.type === ActivityType.Entry
+    ? activity.entry
     : activity.type === ActivityType.ReplyType
-    ? activity.reply?.artifact
+    ? activity.reply?.entry
     : activity.type === ActivityType.Heart
-    ? activity.heart?.artifact || activity.heart?.reply?.artifact
+    ? activity.heart?.entry || activity.heart?.reply?.entry
     : null;
 }
 
@@ -77,9 +77,9 @@ export const attachSoundData = async (activityData: Activity[]) => {
   const songIds: string[] = [];
 
   activityData.forEach((activity) => {
-    const artifact = extractArtifact(activity);
-    if (artifact) {
-      const { type, appleId } = artifact.sound;
+    const entry = extractEntry(activity);
+    if (entry) {
+      const { type, appleId } = entry.sound;
       if (type === "albums") albumIds.push(appleId);
       else if (type === "songs") songIds.push(appleId);
     }
@@ -100,15 +100,15 @@ export const attachSoundData = async (activityData: Activity[]) => {
   const albumMap = new Map(albums.map((album: AlbumData) => [album.id, album]));
   const songMap = new Map(songs.map((song: SongData) => [song.id, song]));
 
-  // Attach album and track data to activity artifacts
+  // Attach album and track data to activity entries
   activityData.forEach((activity) => {
-    const artifact = extractArtifact(activity);
-    if (artifact) {
-      const { type, appleId } = artifact.sound;
+    const entry = extractEntry(activity);
+    if (entry) {
+      const { type, appleId } = entry.sound;
       if (type === "albums")
-        artifact.sound.appleData = albumMap.get(appleId) as AlbumData;
+        entry.sound.appleData = albumMap.get(appleId) as AlbumData;
       else if (type === "songs")
-        artifact.sound.appleData = songMap.get(appleId) as SongData;
+        entry.sound.appleData = songMap.get(appleId) as SongData;
     }
   });
 

@@ -1,12 +1,12 @@
 import React from "react";
-import { useEntriesQuery } from "../../../../lib/helper/interface/user";
+import { useEntriesQuery } from "@/lib/helper/interface/user";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { Entry } from "@/components/interface/user/items/Entry";
-import { ArtifactExtended } from "@/types/globalTypes";
+import { EntryExtended } from "@/types/globalTypes";
 import { useInterfaceContext } from "@/context/Interface";
 
-const Entries = ({ userId }: { userId: string }) => {
-  const { scrollContainerRef } = useInterfaceContext();
+const Entries = ({ pageUserId }: { pageUserId: string }) => {
+  const { scrollContainerRef, user } = useInterfaceContext();
 
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,
@@ -14,7 +14,7 @@ const Entries = ({ userId }: { userId: string }) => {
   });
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useEntriesQuery(userId);
+    useEntriesQuery(user?.id, pageUserId);
 
   const activities = data ? data.pages.flatMap((page) => page.data) : [];
 
@@ -34,7 +34,7 @@ const Entries = ({ userId }: { userId: string }) => {
   return activities.map((activity, index) => {
     return (
       <Entry
-        artifact={activity.artifact as ArtifactExtended}
+        entry={activity.entry as EntryExtended}
         key={activity.id}
         index={index}
       />

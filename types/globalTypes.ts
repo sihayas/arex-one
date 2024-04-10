@@ -1,6 +1,6 @@
-import { Artifact } from "@/types/dbTypes";
+import { Entry } from "@/types/dbTypes";
 
-export interface ArtifactExtended extends Artifact {
+export interface EntryExtended extends Entry {
   _count: {
     hearts: number;
     replies: number;

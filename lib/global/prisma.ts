@@ -1,20 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
-import { Client } from "@planetscale/database";
+import { PrismaD1 } from "@prisma/adapter-d1";
+import { D1Database } from "@cloudflare/workers-types";
 
-export function prismaClient() {
-  const env = process.env;
-
-  const client = new Client({
-    url: env.DATABASE_URL,
-    fetch(url, init) {
-      // @ts-ignore
-      delete init["cache"];
-      return fetch(url, init);
-    },
-  });
-  const adapter = new PrismaPlanetScale(client);
-  return new PrismaClient({ adapter: adapter });
+export interface Env {
+  DB: D1Database;
 }
 
-export const prisma = prismaClient();
+export function prismaClient(env: Env) {
+  const adapter = new PrismaD1(env.DB);
+  return new PrismaClient({ adapter: adapter });
+}

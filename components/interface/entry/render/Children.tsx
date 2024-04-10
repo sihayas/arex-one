@@ -1,5 +1,5 @@
 import React from "react";
-import Reply from "@/components/interface/artifact/items/Reply";
+import Reply from "@/components/interface/entry/items/Reply";
 import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "../../../../lib/helper/interface/artifact";
 import { useInterfaceContext } from "@/context/Interface";
