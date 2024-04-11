@@ -21,7 +21,7 @@ export const useUserDataQuery = (
   return useQuery(["userData", pageUserId], async () => {
     if (!userId || !pageUserId) return null;
     const response = await fetch(
-      `/api/user/get?userId=${encodeURIComponent(
+      `/api/user/get/profile?userId=${encodeURIComponent(
         userId,
       )}&pageUserId=${encodeURIComponent(pageUserId)}`,
     );

@@ -79,9 +79,6 @@ export default async function onRequestGet(request: any) {
       followingIds.forEach((id) => pipeline.smembers(`user:${id}:entries`));
       const results: [Error | null, string[]][] = await pipeline.exec();
 
-      // All the entry ids from the cache
-      const entryIdsFromCache = results.map((result) => result[1]).flat();
-
       // Cross-reference the following ids with the cache results. If for a
       // certain index/user the ids returned are empty, check DB
       const missingEntriesIds = followingIds.filter(
@@ -192,8 +189,10 @@ export default async function onRequestGet(request: any) {
         select: { hearts: { select: { entry_id: true, reply_id: true } } },
       });
       if (user && user.hearts.length) {
-        const entryIds = user.hearts.map((heart) => heart.entry_id);
-        await redis.sadd(heartsKey, ...entryIds);
+        const heartIds = user.hearts.map(
+          (heart) => heart.entry_id || heart.reply_id,
+        );
+        await redis.sadd(heartsKey, ...heartIds);
       }
     }
 

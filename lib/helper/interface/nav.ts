@@ -40,7 +40,7 @@ export const createReply = async (
   };
 
   try {
-    // const res = await axios.post("/api/artifact/post/reply", requestBody);
+    // const res = await axios.post("/api/reply/post/", requestBody);
     // if (res.status !== 200) {
     //   console.error(`Error adding reply: ${res.status}`);
     // }

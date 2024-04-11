@@ -1,7 +1,6 @@
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
 import { PrismaClient } from "@prisma/client";
-import { cacheEntries } from "@/pages/api/cache/entries";
 import { redis } from "@/lib/global/redis";
 
 export default async function onRequestGet(request: any) {

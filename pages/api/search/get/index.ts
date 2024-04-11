@@ -1,5 +1,4 @@
 import { searchAlbums } from "@/lib/global/musickit";
-import { prisma } from "@/lib/global/prisma";
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
 import { PrismaClient } from "@prisma/client";

@@ -19,15 +19,14 @@ model User {
   password_hash String?
   status        String?        @default("active")
   following     Follows[]      @relation("follower")
-  followed_by   Follows[]      @relation("following")
-  essentials    Essential[]
+  followers     Follows[]      @relation("following")
+  essentials    Sound[]
   notifications Notification[]
   entries       Entry[]
-  feed_items    FeedItem[]
   replies       Reply[]
-  hearts        Heart[]
+  actions       Action[]
   settings      Settings?
-  flags         Flag[]
+
 
   sessions      Session[]
   oauthAccounts OauthAccount[]
@@ -73,8 +72,8 @@ model Settings {
 }
 
 model Entry {
-  id       String     @id @default(cuid())
-  type     String     // 'artifact' or 'wisp', determines if a rating exists
+  id        String     @id @default(cuid())
+  type      String     // 'artifact' or 'wisp', determines if a rating exists
   author_id String
   sound_id  String
 
@@ -86,47 +85,15 @@ model Entry {
   sound   Sound  @relation(fields: [sound_id], references: [id])
   author  User   @relation(fields: [author_id], references: [id])
 
-  feed_items FeedItem[]
-  hearts  Heart[]
   replies Reply[]
+
   is_deleted Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  flags      Flag[]
 
   @@index([author_id])
   @@index([sound_id])
 }
-
-model FeedItem {
-  id        String   @id @default(cuid())
-  user_id   String   // ID of the user who will see this entry in their feed
-  entry_id   String   // ID of the entry to be shown in the feed
-
-  user      User     @relation(fields: [user_id], references: [id])
-  entry     Entry    @relation(fields: [entry_id], references: [id])
-  created_at DateTime @default(now())
-
-  @@index([user_id])
-  @@index([entry_id])
-}
-
-model Essential {
-  id      String @id @default(cuid())
-  user_id  String
-  sound_id String
-  rank    Int?
-
-  user  User  @relation(fields: [user_id], references: [id])
-  sound Sound @relation(fields: [sound_id], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@index([user_id])
-  @@index([sound_id])
-}
-
 
 model Follows {
   id          String @id @default(cuid())
@@ -143,8 +110,6 @@ model Follows {
   @@index([following_id])
 }
 
-
-
 model Sound {
   id           String     @id @default(cuid())
   apple_id     String     @unique
@@ -157,8 +122,9 @@ model Sound {
   album_name    String?    // song only
 
   album_id      String?    // song only
-  album        Sound?     @relation("AlbumSongs", fields: [album_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  Songs        Sound[]    @relation("AlbumSongs")
+  album         Sound?     @relation("AlbumSongs", fields: [album_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  songs         Sound[]    @relation("AlbumSongs")
+  essentials   User[]
 
   ratings_count Int   @default(0)
   ratings_sum   Int   @default(0)
@@ -168,7 +134,6 @@ model Sound {
   created_at    DateTime   @default(now())
   updated_at    DateTime   @updatedAt
 
-  essentials   Essential[]
   entries      Entry[]
 
   @@unique([id])
@@ -177,43 +142,42 @@ model Sound {
   @@index([album_id])
 }
 
-
-model Heart {
+model Action {
   id          String  @id @default(cuid())
   author_id   String
-  entry_id    String?
-  reply_id    String?
+  reference_id   String
+  reference_type String  // 'entry', 'sound'
+  type        String  // 'heart', 'flag'
 
-  author     User       @relation(fields: [author_id], references: [id])
-  entry      Entry?     @relation(fields: [entry_id], references: [id])
-  reply      Reply?     @relation(fields: [reply_id], references: [id])
+  author      User       @relation(fields: [author_id], references: [id])
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  is_deleted Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  is_deleted  Boolean  @default(false)
 
   @@index([author_id])
-  @@index([entry_id])
-  @@index([reply_id])
+  @@unique([author_id, reference_id, type, reference_type])
 }
 
+
+
 model Reply {
-  id         String  @id @default(cuid())
-  text       String
+  id           String  @id @default(cuid())
+  text         String
   reply_to_id  String?
-  root_id     String?
-  entry_id    String
-  author_id   String
+  root_id      String?
+  entry_id     String
+  author_id    String
 
   reply_to     Reply?   @relation("ReplyParent", fields: [reply_to_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  replies     Reply[]  @relation("ReplyParent")
+  replies      Reply[]  @relation("ReplyParent")
+
   root        Reply?   @relation("RootToReplies", fields: [root_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  root_replies Reply[]  @relation("RootToReplies")
+  root_replies Reply[] @relation("RootToReplies")
+
   author      User     @relation(fields: [author_id], references: [id])
   entry       Entry    @relation(fields: [entry_id], references: [id])
-  hearts      Heart[]
 
-  flags      Flag[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -222,6 +186,8 @@ model Reply {
 
   @@index([reply_to_id])
   @@index([root_id])
+  @@index([entry_id])
+  @@index([author_id])
 
 }
 
@@ -240,8 +206,8 @@ model Activity {
 
 model Notification {
   id          String   @id @default(cuid())
-  recipient   User     @relation(fields: [recipent_id], references: [id])
-  recipent_id String
+  recipient   User     @relation(fields: [recipient_id], references: [id])
+  recipient_id String
   activity    Activity @relation(fields: [activity_id], references: [id])
   activity_id  String
 
@@ -251,22 +217,7 @@ model Notification {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  @@index([recipent_id])
+  @@index([recipient_id])
   @@index([activity_id])
 }
 
-model Flag {
-  id          String   @id @default(cuid())
-  author_id   String
-  reference_id String
-  type        String   // 'entry' or 'reply'
-  resolved    Boolean  @default(false)
-  created_at   DateTime @default(now())
-
-  flagged_by User @relation(fields: [author_id], references: [id])
-  entry Entry? @relation(fields: [reference_id], references: [id])
-  reply Reply? @relation(fields: [reference_id], references: [id])
-
-  @@index([author_id])
-  @@index([reference_id])
-}

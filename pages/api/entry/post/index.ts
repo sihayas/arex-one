@@ -2,7 +2,6 @@ import { redis } from "@/lib/global/redis";
 import { Entry, PrismaClient } from "@prisma/client";
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
-import { fetchOrCacheUserFollowers } from "@/pages/api/cache/user";
 
 export default async function onRequestPost(request: any) {
   const DB = process.env.DB as unknown as D1Database;
@@ -55,7 +54,7 @@ export default async function onRequestPost(request: any) {
         soundInDatabase = await prisma.sound.upsert({
           where: { apple_id: album.id },
           update: {
-            Songs: {
+            songs: {
               create: {
                 apple_id: sound.id,
                 type: "songs",
@@ -73,7 +72,7 @@ export default async function onRequestPost(request: any) {
             artist_name: album.attributes.artistName,
             release_date: album.attributes.releaseDate,
             upc: album.attributes.upc,
-            Songs: {
+            songs: {
               create: {
                 apple_id: sound.id,
                 type: "songs",
@@ -126,15 +125,55 @@ export default async function onRequestPost(request: any) {
     }
 
     // Cache entry in users profile entries
-    const unixTimestamp = Math.floor(Date.now() / 1000);
+    const unixTimestamp = new Date(entry.created_at).getTime();
     await redis.zadd(`user:${userId}:entries`, {
       score: unixTimestamp,
       member: entry.id,
     });
 
-    // Fetch user followers and update their feed
-    const followersCache = await fetchOrCacheUserFollowers(userId);
-    const followers = [...followersCache, userId];
+    // Update the feed cache of followers
+    const cacheKey = `user:${userId}:followers`;
+    const userFollowers = await redis.get(cacheKey);
+    let followers: string[] | null = userFollowers
+      ? //   @ts-ignore
+        JSON.parse(userFollowers)
+      : null;
+
+    // If the followers are not cached, fetch them from the database
+    if (!followers) {
+      followers = await prisma.user
+        .findUnique({
+          where: { id: userId, status: "active" },
+          select: {
+            followers: {
+              where: { is_deleted: false },
+              select: { follower_id: true },
+            },
+          },
+        })
+        .then((u) => (u ? u.followers.map((f) => f.follower_id) : null));
+
+      // No followers so no feeds to update, update user entries and return
+      if (!followers) {
+        const unixTimestamp = new Date(entry.created_at).getTime();
+        await redis.zadd(`user:${userId}:entries`, {
+          score: unixTimestamp,
+          member: entry.id,
+        });
+        return new Response(
+          JSON.stringify({
+            message: "Entry successfully marked as deleted.",
+          }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+      await redis.set(cacheKey, JSON.stringify(followers));
+    }
+
+    followers.push(userId);
 
     // For each user, update their feed cache including self using timestamp
     // as score and entry id as member
