@@ -1,43 +1,36 @@
 import { PrismaClient } from "@prisma/client";
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
-import { redis } from "@/lib/global/redis";
+import {
+  entryHeartCountKey,
+  userHeartsKey,
+  userNotifsKey,
+  userUnreadNotifsCount,
+  redis,
+} from "@/lib/global/redis";
+import { createResponse } from "@/pages/api/middleware";
 
 export default async function onRequestPost(request: any) {
-  const { id, userId, authorId, type, referenceType } = await request.json();
+  const { targetId, userId, authorId, type, referenceType, soundId } =
+    await request.json();
 
   if (authorId === userId) {
-    return new Response(JSON.stringify({ success: false }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return createResponse({ error: "Can't act on your own." }, 400);
   }
 
   const DB = process.env.DB as unknown as D1Database;
   if (!DB) {
-    return new Response(
-      JSON.stringify({
-        error: "Unauthorized, missing DB in environment",
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 401,
-      },
-    );
+    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
   }
 
-  const adapter = new PrismaD1(DB);
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
-    // Mark the entry as deleted
     const deletedAction = await prisma.action.update({
       where: {
         author_id_reference_id_type_reference_type: {
           author_id: userId,
-          reference_id: id,
+          reference_id: targetId,
           type: type,
           reference_type: referenceType,
         },
@@ -45,35 +38,41 @@ export default async function onRequestPost(request: any) {
       data: { is_deleted: true },
     });
 
-    if (!deletedAction) {
-      return new Response(
-        JSON.stringify({ success: false, message: "Action doesn't exist." }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
-    }
-
-    // Remove heart from cache
     if (type === "heart") {
-      const heartsKey = `user:${userId}:hearts`;
-      await redis.srem(heartsKey, id);
+      // Delete from database
+      const deletedActivity = await prisma.activity.update({
+        where: {
+          reference_id_type_author_id: {
+            reference_id: deletedAction.id,
+            type: "heart",
+            author_id: userId,
+          },
+        },
+        data: { is_deleted: true },
+      });
+      const deletedNotification = await prisma.notification.update({
+        where: {
+          recipient_id_activity_id: {
+            recipient_id: authorId,
+            activity_id: deletedActivity.id,
+          },
+        },
+        data: { is_deleted: true },
+      });
 
-      // Handle activity & notifications
-      const key = `heart|${id}`;
+      // Handle target author cache
+      // Delete from notifications cache
+      await redis.zrem(userNotifsKey(authorId), deletedNotification.id);
+      await redis.decr(userUnreadNotifsCount(authorId)); // -1 to count
+      await redis.decr(entryHeartCountKey(targetId)); // -1 to  count
+
+      // Handle user cache
+      await redis.srem(userHeartsKey(userId), targetId); // -IDs to hearts
     }
-
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return createResponse({ success: "Un-hearted successfully" }, 200);
   } catch (error) {
     console.error("Error deleting heart:", error);
-    return new Response(JSON.stringify({ error: "Failed to create heart." }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return createResponse({ error: "Failed to delete heart." }, 500);
   }
 }
 

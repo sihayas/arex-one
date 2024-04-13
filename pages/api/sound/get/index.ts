@@ -14,8 +14,8 @@
 // }
 
 import { fetchSoundsByType, fetchSoundsByTypes } from "@/lib/global/musickit";
-import { AlbumData } from "@/types/appleTypes";
-import { redis } from "@/lib/global/redis";
+import { AlbumData, SongData } from "@/types/appleTypes";
+import { getCache, redis, setCache } from "@/lib/global/redis";
 
 export const runtime = "edge";
 
@@ -108,7 +108,7 @@ export async function fetchAndCacheSoundsByTypes(
   for (const type in idTypes) {
     if (isKeyOfResponseData(type)) {
       for (const id of idTypes[type]) {
-        const cacheKey = `sound:${type}:${id}:data`;
+        const cacheKey = `sound:${id}:data`;
         const cachedData = await getCache(cacheKey);
         const parsedData = cachedData ? cachedData : null;
 
@@ -128,7 +128,7 @@ export async function fetchAndCacheSoundsByTypes(
     };
     const fetchedData = await fetchSoundsByTypes(fetchIds);
     for (const item of fetchedData) {
-      const cacheKey = `sound:${item.type}:${item.id}:data`;
+      const cacheKey = `sound:${item.id}:data`;
       await setCache(cacheKey, JSON.stringify(item), 3600);
       // @ts-ignore
       responseData[item.type].set(item.id, item);
@@ -146,7 +146,7 @@ export async function fetchAndCacheSoundsByType(ids: any, type: string) {
 
   // Check the cache for all IDs at once
   const cacheResponses = await Promise.all(
-    idsArray.map((id: string) => getCache(`sound:${type}:${id}:data`)),
+    idsArray.map((id: string) => getCache(`sound:${id}:data`)),
   );
 
   const promises = cacheResponses.map(async (cachedData, index) => {
@@ -165,14 +165,11 @@ export async function fetchAndCacheSoundsByType(ids: any, type: string) {
   // Fetch data not found in cache
   if (needToFetch.length > 0) {
     const fetchedData = await fetchSoundsByType(type, needToFetch);
-    fetchedData.forEach((data: AlbumData, index: number) => {
-      await redis.setex(
-        `sound:${type}:${data.id}:data`,
-        3600,
-        JSON.stringify(data),
-      );
+    for (const data of fetchedData) {
+      const index: number = fetchedData.indexOf(data);
+      await redis.setex(`sound:${data.id}:data`, 3600, JSON.stringify(data));
       responseDataMap.set(needToFetch[index], data);
-    });
+    }
   }
 
   return Array.from(responseDataMap.values()).filter(Boolean);

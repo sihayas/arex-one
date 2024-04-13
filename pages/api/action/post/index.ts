@@ -1,77 +1,73 @@
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
 import { PrismaClient } from "@prisma/client";
-import { redis } from "@/lib/global/redis";
+import {
+  entryHeartCountKey,
+  userHeartsKey,
+  userNotifsKey,
+  userUnreadNotifsCount,
+  redis,
+} from "@/lib/global/redis";
+import { createResponse } from "@/pages/api/middleware";
 
 export default async function onRequestPost(request: any) {
-  const data = await request.json();
-  const { id, userId, authorId, type, referenceType } = await request.json();
+  const { targetId, userId, authorId, type, referenceType, soundId } =
+    await request.json();
 
   if (authorId === userId) {
-    return new Response(
-      JSON.stringify({ success: false, message: "Cannot heart your own." }),
-      {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return createResponse({ error: "Cannot act on your own." }, 400);
   }
 
   const DB = process.env.DB as unknown as D1Database;
   if (!DB) {
-    return new Response(
-      JSON.stringify({
-        error: "Unauthorized, missing DB in environment",
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 401,
-      },
-    );
+    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
   }
 
-  const adapter = new PrismaD1(DB);
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
     const action = await prisma.action.create({
       data: {
         author_id: userId,
-        reference_id: id,
+        reference_id: targetId,
         type: type,
         reference_type: referenceType,
       },
     });
 
-    if (!action) {
-      return new Response(
-        JSON.stringify({ success: false, message: "Failed to create action." }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
+    if (type === "heart") {
+      const key = `heart|${soundId}|${targetId}|${userId}`;
+      const activity = await prisma.activity.create({
+        data: {
+          author_id: userId,
+          reference_id: action.id,
+          type: "heart",
         },
-      );
-    }
+      });
+      const notification = await prisma.notification.create({
+        data: {
+          key: key,
+          recipient_id: authorId,
+          activity_id: activity.id,
+        },
+      });
 
-    if (type !== "heart") {
-      // Update user hearts cache
-      const heartsKey = `user:${userId}:hearts`;
-      await redis.sadd(heartsKey, id);
+      // Handle target author cache
+      // Add to notifications cache
+      await redis.zadd(userNotifsKey(authorId), {
+        score: new Date(notification.created_at).getTime(),
+        member: notification.id,
+      });
+      await redis.incr(userUnreadNotifsCount(authorId)); // Increment count
+      await redis.incr(entryHeartCountKey(targetId)); // Increment count
 
-      const key = `heart|${id}`;
+      // Handle user cache
+      await redis.sadd(userHeartsKey(userId), targetId); // + ID to hearts
     }
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return createResponse({ success: "Hearted successfully" }, 200);
   } catch (error) {
     console.error("Error creating heart:", error);
-    return new Response(JSON.stringify({ error: "Failed to create heart." }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return createResponse({ error: "Failed to create heart." }, 500);
   }
 }
 

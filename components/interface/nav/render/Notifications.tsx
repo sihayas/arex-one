@@ -27,6 +27,30 @@ const Notifications = () => {
   const { height } = activePage.isOpen ? target : base;
   const offset = height / 2;
 
+  const aggregatedNotifications = {};
+
+  notifs.forEach((notificationJson) => {
+    const notification = JSON.parse(notificationJson);
+
+    // 'heart|soundId|targetId|userId'
+    const keyParts = notification.key.split("|");
+    const type = keyParts[0];
+    const targetId = keyParts[2]; // This is the 'targetId'
+
+    // Create a unique key for aggregation
+    const aggregateKey = `${type}|${targetId}`;
+
+    // Initialize the array if it doesn't exist
+    if (!aggregatedNotifications[aggregateKey]) {
+      aggregatedNotifications[aggregateKey] = [];
+    }
+
+    // Add the notification to the correct array
+    aggregatedNotifications[aggregateKey].push(notification);
+  });
+
+  console.log(aggregatedNotifications);
+
   return (
     <motion.div
       variants={containerVariants}
@@ -40,17 +64,22 @@ const Notifications = () => {
       }}
       className={`absolute left-0 z-10 flex w-[416px] origin-bottom-left flex-col overflow-y-scroll gap-4 -mx-8 px-8 scrollbar-none`}
     >
-      {Object.entries(notifs).map(([key, notificationGroup], index) => {
-        const notificationType = key.split("|")[0].toUpperCase();
-        return (
-          <Notification
-            key={key}
-            index={index}
-            notificationType={notificationType}
-            notificationsGroup={notificationGroup}
-          />
-        );
-      })}
+      {Object.entries(aggregatedNotifications).map(
+        ([key, notificationGroup], index) => {
+          // Split the key to extract the type and targetId if needed
+          const parts = key.split("|");
+          const notificationType = parts[0].toUpperCase();
+
+          return (
+            <Notification
+              key={key}
+              index={index}
+              notificationType={notificationType}
+              notificationsGroup={notificationGroup}
+            />
+          );
+        },
+      )}
     </motion.div>
   );
 };

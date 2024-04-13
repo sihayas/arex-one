@@ -1,49 +1,42 @@
 import { Essential } from "@/types/dbTypes";
 import { fetchAndCacheSoundsByType } from "@/pages/api/sound/get";
-import { redis } from "@/lib/global/redis";
+import {
+  userFollowersKey,
+  userProfileKey,
+  redis,
+  userImageKey,
+} from "@/lib/global/redis";
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
 import { PrismaClient } from "@prisma/client";
+import { createResponse } from "@/pages/api/middleware";
 
 export default async function onRequestGet(request: any) {
-  const url = new URL(request.url);
-
-  const userId = url.searchParams.get("userId");
-  const pageUserId = url.searchParams.get("pageUserId");
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("userId");
+  const pageUserId = searchParams.get("pageUserId");
+  const isOwnProfile = userId === pageUserId;
 
   if (!userId || !pageUserId) {
-    console.log("Missing parameters");
-    return new Response(
-      JSON.stringify({ error: "Required parameters are missing." }),
-      {
-        status: 400,
-      },
-    );
+    return createResponse({ error: "Missing userId or pageUserId" }, 400);
   }
 
   const DB = process.env.DB as unknown as D1Database;
   if (!DB) {
-    return new Response(
-      JSON.stringify({
-        error: "Unauthorized, missing DB in environment",
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 401,
-      },
-    );
+    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
   }
-
-  const adapter = new PrismaD1(DB);
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
-    const cacheKey = `user:${pageUserId}:profile`;
-    let pageUserData = await redis.get(cacheKey);
+    const pipeline = redis.pipeline();
+    pipeline.hgetall(userProfileKey(pageUserId));
+    pipeline.get(userImageKey(pageUserId));
+    isOwnProfile && pipeline.get(userFollowersKey(userId));
+    isOwnProfile && pipeline.get(userFollowersKey(pageUserId));
+    let [pageUserProfile, userImage, userFollowers, pageUserFollowers] =
+      await pipeline.exec();
 
-    if (!pageUserData) {
+    if (!pageUserProfile) {
       // Cache miss
       const dbData = await prisma.user.findUnique({
         where: { id: pageUserId, status: "active" },
@@ -65,33 +58,31 @@ export default async function onRequestGet(request: any) {
       });
 
       if (!dbData) {
-        return new Response(JSON.stringify({ error: "User not found." }), {
-          status: 404,
-        });
+        return createResponse({ error: "User not found in DB." }, 404);
       }
 
-      await redis.hset(cacheKey, {
+      await redis.hset(userProfileKey(pageUserId), {
         id: pageUserId,
         username: dbData.username,
         bio: dbData.bio,
-        followers: dbData._count.followers,
-        entries: dbData._count.entries,
+        followers_count: dbData._count.followers,
+        entries_count: dbData._count.entries,
+        essentials: JSON.stringify(dbData.essentials),
       });
     } else {
       // @ts-ignore
-      pageUserData = JSON.parse(pageUserData);
+      pageUserProfile = JSON.parse(pageUserData);
     }
 
     // @ts-ignore
-    pageUserData.essentials = await attachSoundData(pageUserData.essentials);
+    pageUserProfile.essentials = await attachSoundData(pageUserData.essentials);
 
     let isFollowingAtoB = false;
     let isFollowingBtoA = false;
 
     // Determine follow status
-    if (pageUserId !== userId) {
+    if (!isOwnProfile) {
       // Check if the page user is following the session user
-      let userFollowers = await redis.get(`user:${userId}:followers`);
       if (!userFollowers) {
         // Cache miss
         userFollowers = await prisma.user
@@ -101,13 +92,12 @@ export default async function onRequestGet(request: any) {
           })
           .then((u) => u?.followers || []);
 
-        await redis.setex(`user:${userId}:followers`, 3600, userFollowers);
+        await redis.set(`user:${userId}:followers`, userFollowers);
       } else {
         // @ts-ignore
         userFollowers = JSON.parse(userFollowers);
       }
 
-      let pageUserFollowers = await redis.get(`user:${pageUserId}:followers`);
       if (!pageUserFollowers) {
         // Cache miss
         pageUserFollowers = await prisma.user
@@ -118,7 +108,7 @@ export default async function onRequestGet(request: any) {
           .then((u) => u?.followers || []);
 
         await redis.setex(
-          `user:${pageUserId}:followers`,
+          userFollowersKey(pageUserId),
           3600,
           pageUserFollowers,
         );
@@ -136,9 +126,10 @@ export default async function onRequestGet(request: any) {
     return new Response(
       JSON.stringify({
         // @ts-ignore
-        ...pageUserData,
+        ...pageUserProfile,
         isFollowingAtoB,
         isFollowingBtoA,
+        userImage,
       }),
       {
         status: 200,

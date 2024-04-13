@@ -1,56 +1,35 @@
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
 import { PrismaClient } from "@prisma/client";
-import { redis } from "@/lib/global/redis";
+import {
+  entryDataKey,
+  userEntriesKey,
+  userFeedKey,
+  userHeartsKey,
+  redis,
+} from "@/lib/global/redis";
+import { createResponse } from "@/pages/api/middleware";
 
 export default async function onRequestGet(request: any) {
-  const url = new URL(request.url);
-  const userId = url.searchParams.get("userId");
-  const page = Number(url.searchParams.get("page")) || 1;
-  const limit = Number(url.searchParams.get("limit")) || 6;
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("userId");
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 8;
+  const start = (page - 1) * limit;
+  const end = page * limit - 1;
 
-  if (
-    !userId ||
-    isNaN(page) ||
-    page < 1 ||
-    isNaN(limit) ||
-    limit < 1 ||
-    limit > 100
-  ) {
-    return new Response(
-      JSON.stringify({ error: "Invalid user ID, page number or limit." }),
-      {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+  if (!userId) {
+    return createResponse({ error: "Missing parameters" }, 400);
   }
 
   const DB = process.env.DB as unknown as D1Database;
   if (!DB) {
-    return new Response(
-      JSON.stringify({
-        error: "Unauthorized, missing DB in environment",
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 401,
-      },
-    );
+    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
   }
-
-  const adapter = new PrismaD1(DB);
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
-    const feedKey = `user:${userId}:feed`;
-
-    const start = (page - 1) * limit;
-    const end = page * limit - 1;
-
-    let entryIds = await redis.zrange(feedKey, start, end, {
+    let entryIds = await redis.zrange(userFeedKey(userId), start, end, {
       rev: true,
     });
 
@@ -63,12 +42,9 @@ export default async function onRequestGet(request: any) {
 
       // If the user is not following anyone, return an empty feed
       if (!following || following.following.length === 0) {
-        return new Response(
-          JSON.stringify({ data: { activities: [], pagination: null } }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          },
+        return createResponse(
+          { data: { activities: [], pagination: null } },
+          200,
         );
       }
 
@@ -76,7 +52,7 @@ export default async function onRequestGet(request: any) {
 
       // Get the entry id's from the cache for each user
       const pipeline = redis.pipeline();
-      followingIds.forEach((id) => pipeline.smembers(`user:${id}:entries`));
+      followingIds.forEach((id) => pipeline.smembers(userEntriesKey(id)));
       const results: [Error | null, string[]][] = await pipeline.exec();
 
       // Cross-reference the following ids with the cache results. If for a
@@ -87,7 +63,7 @@ export default async function onRequestGet(request: any) {
 
       // All entries were found in cache, aggregate them
       if (!missingEntriesIds.length) {
-        entryIds = await redis.zrange(feedKey, start, end, {
+        entryIds = await redis.zrange(userFeedKey(userId), start, end, {
           rev: true,
         });
       }
@@ -103,11 +79,11 @@ export default async function onRequestGet(request: any) {
         const pipeline = redis.pipeline();
         dbEntries.forEach((entry) => {
           const unixTimestamp = new Date(entry.created_at).getTime();
-          pipeline.zadd(`user:${entry.author_id}:entries`, {
+          pipeline.zadd(userEntriesKey(entry.author_id), {
             score: unixTimestamp,
             member: entry.id,
           });
-          pipeline.zadd(`user:${userId}:feed`, {
+          pipeline.zadd(userFeedKey(userId), {
             score: unixTimestamp,
             member: entry.id,
           });
@@ -115,20 +91,20 @@ export default async function onRequestGet(request: any) {
         await pipeline.exec();
 
         // Refresh the entryIds from the updated cache
-        entryIds = await redis.zrange(feedKey, start, end, {
+        entryIds = await redis.zrange(userFeedKey(userId), start, end, {
           rev: true,
         });
       }
     }
 
     // Pagination
-    const totalEntries = await redis.zcard(feedKey);
+    const totalEntries = await redis.zcard(userFeedKey(userId));
     const hasMorePages = totalEntries > end + 1;
     if (hasMorePages) entryIds.pop();
 
     // User has a feed, fetch the entries from the cache
     const pipeline = redis.pipeline();
-    entryIds.forEach((entryId) => pipeline.hgetall(`entry:${entryId}:data`));
+    entryIds.forEach((entryId: any) => pipeline.hgetall(entryDataKey(entryId)));
     const results = await pipeline.exec();
 
     let entries = results.map((result: any) => result[1]);
@@ -159,7 +135,7 @@ export default async function onRequestGet(request: any) {
       // Cache the missing entries in Redis
       const pipeline = redis.pipeline();
       dbEntries.forEach((entry) => {
-        pipeline.hset(`entry:${entry.id}:data`, {
+        pipeline.hset(entryDataKey(entry.id), {
           id: entry.id,
           sound_id: entry.sound_id,
           type: entry.type,
@@ -179,20 +155,21 @@ export default async function onRequestGet(request: any) {
     }
 
     // Check if the user has liked any of the entries
-    const heartsKey = `user:${userId}:hearts`;
-    let hearts = await redis.smembers(heartsKey);
-
+    let hearts = await redis.smembers(userHeartsKey(userId));
     // If the user has no hearts cached, attempt to populate it
     if (!hearts.length) {
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: { hearts: { select: { entry_id: true, reply_id: true } } },
+        select: {
+          actions: {
+            where: { type: "heart" },
+            select: { reference_id: true },
+          },
+        },
       });
-      if (user && user.hearts.length) {
-        const heartIds = user.hearts.map(
-          (heart) => heart.entry_id || heart.reply_id,
-        );
-        await redis.sadd(heartsKey, ...heartIds);
+      if (user && user.actions.length) {
+        const entryIds = user.actions.map((action) => action.reference_id);
+        await redis.sadd(userHeartsKey(userId), ...entryIds);
       }
     }
 
@@ -201,24 +178,18 @@ export default async function onRequestGet(request: any) {
         entry.heartedByUser = hearts.includes(entry.id);
       });
 
-    return new Response(
-      JSON.stringify({
+    return createResponse(
+      {
         data: {
           activities: entries,
           pagination: { nextPage: hasMorePages ? page + 1 : null },
         },
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
       },
+      200,
     );
   } catch (error) {
     console.error("Failed to fetch feed:", error);
-    return new Response(JSON.stringify({ error: "Failed to load feed data" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return createResponse({ error: "Failed to fetch feed." }, 500);
   }
 }
 

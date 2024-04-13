@@ -22,6 +22,7 @@ model User {
   followers     Follows[]      @relation("following")
   essentials    Sound[]
   notifications Notification[]
+  activities    Activity[]
   entries       Entry[]
   replies       Reply[]
   actions       Action[]
@@ -45,15 +46,6 @@ model Session {
   @@index([user_id])
 }
 
-model OauthAccount {
-  providerId     String
-  providerUserId String
-  userId         String
-  user           User   @relation(references: [id], fields: [userId], onDelete: Cascade)
-
-  @@id([providerId, providerUserId])
-  @@index([userId])
-}
 
 model Settings {
   id     String  @id @default(cuid())
@@ -66,9 +58,10 @@ model Settings {
   reply_notifications    Boolean @default(true)
   heart_notifications    Boolean @default(true)
 
+  user      User     @relation(fields: [user_id], references: [id])
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user      User     @relation(fields: [user_id], references: [id])
 }
 
 model Entry {
@@ -88,9 +81,9 @@ model Entry {
   replies Reply[]
 
   is_deleted Boolean  @default(false)
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-
   @@index([author_id])
   @@index([sound_id])
 }
@@ -105,6 +98,8 @@ model Follows {
 
   is_deleted Boolean @default(false)
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   @@unique([follower_id, following_id])
   @@index([follower_id])
   @@index([following_id])
@@ -131,11 +126,11 @@ model Sound {
   avg_rating    Float @default(0)
   bayesian_avg  Float @default(0)
 
-  created_at    DateTime   @default(now())
-  updated_at    DateTime   @updatedAt
 
   entries      Entry[]
 
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
   @@unique([id])
   @@index([id])
   @@index([apple_id])
@@ -151,15 +146,13 @@ model Action {
 
   author      User       @relation(fields: [author_id], references: [id])
 
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
   is_deleted  Boolean  @default(false)
 
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
   @@index([author_id])
   @@unique([author_id, reference_id, type, reference_type])
 }
-
-
 
 model Reply {
   id           String  @id @default(cuid())
@@ -179,45 +172,59 @@ model Reply {
   entry       Entry    @relation(fields: [entry_id], references: [id])
 
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
 
   is_deleted Boolean @default(false)
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   @@index([reply_to_id])
   @@index([root_id])
   @@index([entry_id])
   @@index([author_id])
-
 }
 
 
 model Activity {
-  id           String    @id @default(cuid())
-  type         String    // 'entry', 'heart', 'reply', 'follow'
+  id            String    @id @default(cuid())
+  type          String    // 'entry', 'heart', 'reply', 'follow'
   reference_id  String
+  author_id     String
+
+  notifications Notification[]
+  author        User       @relation(fields: [author_id], references: [id])
+
+  is_deleted    Boolean   @default(false)
 
   created_at    DateTime  @default(now())
-  is_deleted    Boolean   @default(false)
-  notifications Notification[]
-
-  @@index([reference_id]) // Composite index for performance
+  updated_at    DateTime  @updatedAt
+  @@index([author_id])
+  @@unique([reference_id, type, author_id])
 }
 
 model Notification {
-  id          String   @id @default(cuid())
-  recipient   User     @relation(fields: [recipient_id], references: [id])
+  id           String   @id @default(cuid())
+  recipient    User     @relation(fields: [recipient_id], references: [id])
   recipient_id String
-  activity    Activity @relation(fields: [activity_id], references: [id])
+  activity     Activity @relation(fields: [activity_id], references: [id])
   activity_id  String
 
   key        String?
-  is_deleted Boolean  @default(false)
   is_read    Boolean  @default(false)
+  is_deleted Boolean  @default(false)
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  @@index([recipient_id])
   @@index([activity_id])
+  @@unique([recipient_id, activity_id])
 }
 
+model OauthAccount {
+  providerId     String
+  providerUserId String
+  userId         String
+  user           User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  @@id([providerId, providerUserId])
+  @@index([userId])
+}

@@ -1,53 +1,36 @@
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
 import { PrismaClient } from "@prisma/client";
-import { redis } from "@/lib/global/redis";
+import {
+  entryDataKey,
+  userEntriesKey,
+  userHeartsKey,
+  redis,
+} from "@/lib/global/redis";
+import { createResponse } from "@/pages/api/middleware";
 
 export default async function onRequestGet(request: any) {
-  const url = new URL(request.url);
-  const searchParams = url.searchParams;
-
+  const { searchParams } = new URL(request.url);
   const userId = searchParams.get("userId");
   const pageUserId = searchParams.get("pageUserId");
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 8;
+  const start = (page - 1) * limit;
+  const end = page * limit - 1;
 
   if (!userId || !pageUserId) {
-    console.log("Missing parameters");
-    return new Response(
-      JSON.stringify({ error: "Required parameters are missing." }),
-      {
-        status: 400,
-      },
-    );
+    return createResponse({ error: "Missing parameters" }, 400);
   }
-  const page = Number(searchParams.get("page")) || 1;
-  const limit = Number(searchParams.get("limit")) || 6;
 
   const DB = process.env.DB as unknown as D1Database;
   if (!DB) {
-    return new Response(
-      JSON.stringify({
-        error: "Unauthorized, missing DB in environment",
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 401,
-      },
-    );
+    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
   }
-
-  const adapter = new PrismaD1(DB);
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
-    const entriesKey = `user:${userId}:entries`;
-
-    const start = (page - 1) * limit;
-    const end = page * limit - 1;
-
     // Fetch entry IDs from cache
-    let entryIds = await redis.zrange(entriesKey, start, end, {
+    let entryIds = await redis.zrange(userEntriesKey(userId), start, end, {
       rev: true,
     });
 
@@ -61,43 +44,35 @@ export default async function onRequestGet(request: any) {
 
       // Exit early if no entries are found
       if (!entries.length) {
-        return new Response(
-          JSON.stringify({
-            data: {
-              activities: [],
-              pagination: { nextPage: null },
-            },
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          },
+        return createResponse(
+          { data: { activities: [], pagination: { nextPage: null } } },
+          200,
         );
       }
 
+      // Cache the entries in Redis
       const pipeline = redis.pipeline();
       entries.forEach((entry) => {
-        const unixTimestamp = new Date(entry.created_at).getTime();
-        pipeline.zadd(`user:${entry.author_id}:entries`, {
-          score: unixTimestamp,
+        pipeline.zadd(userEntriesKey(userId), {
+          score: new Date(entry.created_at).getTime(),
           member: entry.id,
         });
       });
       await pipeline.exec();
 
-      entryIds = await redis.zrange(`user:${userId}:entries`, 0, -1, {
+      entryIds = await redis.zrange(userEntriesKey(userId), start, end, {
         rev: true,
       });
     }
 
     // Pagination
-    const totalEntries = await redis.zcard(entriesKey);
+    const totalEntries = await redis.zcard(userEntriesKey(userId));
     const hasMorePages = totalEntries > end + 1;
     if (hasMorePages) entryIds.pop();
 
-    // User has entries, fetch the entries from the cache
+    // User has entries, fetch entry data from the cache
     const pipeline = redis.pipeline();
-    entryIds.forEach((entryId) => pipeline.hgetall(`entry:${entryId}:data`));
+    entryIds.forEach((entryId: any) => pipeline.hgetall(entryDataKey(entryId)));
     const results = await pipeline.exec();
 
     let entries = results.map((result: any) => result[1]);
@@ -128,12 +103,13 @@ export default async function onRequestGet(request: any) {
       // Cache the missing entries in Redis
       const pipeline = redis.pipeline();
       dbEntries.forEach((entry) => {
-        pipeline.hset(`entry:${entry.id}:data`, {
+        pipeline.hset(entryDataKey(entry.id), {
           id: entry.id,
           sound_id: entry.sound_id,
           type: entry.type,
           author_id: entry.author_id,
           text: entry.text,
+          // Extra fields for artifacts
           rating: entry.rating,
           loved: entry.loved,
           replay: entry.replay,
@@ -151,18 +127,23 @@ export default async function onRequestGet(request: any) {
 
     if (pageUserId !== userId) {
       // Check if the user has liked any of the entries
-      const heartsKey = `user:${userId}:hearts`;
-      let hearts = await redis.smembers(heartsKey);
+      let hearts = await redis.smembers(userHeartsKey(userId));
 
-      // If the user has no hearts cached, attempt to populate it
+      // If the user has no hearts cached, check the database
       if (!hearts.length) {
         const user = await prisma.user.findUnique({
           where: { id: userId },
-          select: { hearts: { select: { entry_id: true, reply_id: true } } },
+          select: {
+            actions: {
+              where: { type: "heart" },
+              select: { reference_id: true },
+            },
+          },
         });
-        if (user && user.hearts.length) {
-          const entryIds = user.hearts.map((heart) => heart.entry_id);
-          await redis.sadd(heartsKey, ...entryIds);
+
+        if (user && user.actions.length) {
+          const entryIds = user.actions.map((action) => action.reference_id);
+          await redis.sadd(userHeartsKey(userId), ...entryIds);
         }
       }
 
@@ -173,27 +154,18 @@ export default async function onRequestGet(request: any) {
         });
     }
 
-    return new Response(
-      JSON.stringify({
+    return createResponse(
+      {
         data: {
-          activities: entries,
+          entries: entries,
           pagination: { nextPage: hasMorePages ? page + 1 : null },
         },
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
       },
+      200,
     );
   } catch (error) {
     console.error("Error fetching user entries:", error);
-    return new Response(
-      JSON.stringify({ error: "Error fetching user entries." }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return createResponse({ error: "Error fetching user entries." }, 500);
   }
 }
 

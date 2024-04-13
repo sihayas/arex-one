@@ -1,26 +1,23 @@
-import { redis } from "@/lib/global/redis";
+import {
+  entryDataKey,
+  redis,
+  userEntriesKey,
+  userFeedKey,
+  userFollowersKey,
+  userProfileKey,
+} from "@/lib/global/redis";
 import { Entry, PrismaClient } from "@prisma/client";
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
+import { createResponse } from "@/pages/api/middleware";
 
 export default async function onRequestPost(request: any) {
   const DB = process.env.DB as unknown as D1Database;
   if (!DB) {
-    return new Response(
-      JSON.stringify({
-        error: "Unauthorized, missing DB in environment",
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 401,
-      },
-    );
+    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
   }
 
-  const adapter = new PrismaD1(DB);
-  const prisma = new PrismaClient({ adapter });
+  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   const { rating, loved, text, userId, sound } = await request.json();
   const appleId = sound.id;
@@ -125,15 +122,13 @@ export default async function onRequestPost(request: any) {
     }
 
     // Cache entry in users profile entries
-    const unixTimestamp = new Date(entry.created_at).getTime();
-    await redis.zadd(`user:${userId}:entries`, {
-      score: unixTimestamp,
+    await redis.zadd(userEntriesKey(userId), {
+      score: new Date(entry.created_at).getTime(),
       member: entry.id,
     });
 
     // Update the feed cache of followers
-    const cacheKey = `user:${userId}:followers`;
-    const userFollowers = await redis.get(cacheKey);
+    const userFollowers = await redis.get(userFollowersKey(userId));
     let followers: string[] | null = userFollowers
       ? //   @ts-ignore
         JSON.parse(userFollowers)
@@ -155,39 +150,33 @@ export default async function onRequestPost(request: any) {
 
       // No followers so no feeds to update, update user entries and return
       if (!followers) {
-        const unixTimestamp = new Date(entry.created_at).getTime();
-        await redis.zadd(`user:${userId}:entries`, {
-          score: unixTimestamp,
+        await redis.zadd(userEntriesKey(userId), {
+          score: new Date(entry.created_at).getTime(),
           member: entry.id,
         });
-        return new Response(
-          JSON.stringify({
-            message: "Entry successfully marked as deleted.",
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          },
+
+        return createResponse(
+          { success: "Entry successfully marked as deleted." },
+          200,
         );
       }
-      await redis.set(cacheKey, JSON.stringify(followers));
+      await redis.set(userFollowersKey(userId), JSON.stringify(followers));
     }
 
     followers.push(userId);
 
-    // For each user, update their feed cache including self using timestamp
-    // as score and entry id as member
+    // For each follower, update their feed cache.
     const pipeline = redis.pipeline();
-    for (const follower of followers) {
-      pipeline.zadd(`user:${follower}:feed`, {
-        score: unixTimestamp,
+    for (const followerId of followers) {
+      pipeline.zadd(userFeedKey(followerId), {
+        score: new Date(entry.created_at).getTime(),
         member: entry.id,
       });
     }
     await pipeline.exec();
 
     // Cache entry data in hash
-    await redis.hset(`entry:${entry.id}:data`, {
+    await redis.hset(entryDataKey(entry.id), {
       id: entry.id,
       sound_id: soundInDatabase.id,
       type: entry.type,
@@ -198,30 +187,28 @@ export default async function onRequestPost(request: any) {
       loved: entry.loved,
       replay: entry.replay,
       created_at: entry.created_at.toISOString(),
+      likes_count: 0,
+      chains_count: 0,
     });
 
-    prisma.activity.create({
-      data: { type: "entry", reference_id: entry.id },
+    // Update user profile entries count
+    await redis.hincrby(userProfileKey(userId), "entries_count", 1);
+    await prisma.activity.create({
+      data: { type: "entry", reference_id: entry.id, author_id: userId },
     });
 
-    return new Response(
-      JSON.stringify({
+    return createResponse(
+      {
         success: true,
         message: "+ Entry created successfully",
         entryType: entry.type,
         timestamp: entry.created_at,
-      }),
-      {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
       },
+      201,
     );
   } catch (error) {
     console.error("Failed to create review:", error);
-    return new Response(JSON.stringify({ error: "Failed to create review." }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return createResponse({ error: "Failed to create review." }, 500);
   }
 }
 
