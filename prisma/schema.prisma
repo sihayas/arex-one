@@ -21,20 +21,20 @@ model User {
   following     Follows[]      @relation("follower")
   followers     Follows[]      @relation("following")
   essentials    Sound[]
-  notifications Notification[]
+  notifications_sent     Notification[] @relation("notifier")
+  notifications_received Notification[] @relation("notifee")
   activities    Activity[]
   entries       Entry[]
   replies       Reply[]
   actions       Action[]
   settings      Settings?
 
-
   sessions      Session[]
   oauthAccounts OauthAccount[]
 
-  updated_at     DateTime?       @updatedAt
-  last_active    DateTime?
-  date_joined    DateTime     @default(now())
+  updated_at  DateTime? @updatedAt
+  last_active DateTime?
+  date_joined DateTime  @default(now())
 }
 
 model Session {
@@ -46,137 +46,128 @@ model Session {
   @@index([user_id])
 }
 
-
 model Settings {
-  id     String  @id @default(cuid())
+  id      String  @id @default(cuid())
   user_id String  @unique
-  email  Boolean @default(true)
-  push   Boolean @default(true)
+  email   Boolean @default(true)
+  push    Boolean @default(true)
 
-  is_minus               Boolean @default(false)
-  follow_notifications   Boolean @default(true)
-  reply_notifications    Boolean @default(true)
-  heart_notifications    Boolean @default(true)
+  is_minus             Boolean @default(false)
+  follow_notifications Boolean @default(true)
+  reply_notifications  Boolean @default(true)
+  heart_notifications  Boolean @default(true)
 
-  user      User     @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 model Entry {
-  id        String     @id @default(cuid())
-  type      String     // 'artifact' or 'wisp', determines if a rating exists
+  id        String @id @default(cuid())
+  type      String // 'artifact' or 'wisp'
   author_id String
   sound_id  String
 
-  text    String?
-  rating  Float?     // Exists only for 'artifact' types
-  loved   Boolean?   @default(false) // Exists only for 'artifact' types
-  replay  Boolean?   @default(false) // Exists only for 'artifact' types
+  text   String?
+  rating Float? // Exists only for 'artifact' types
+  loved  Boolean? @default(false) // Exists only for 'artifact' types
+  replay Boolean? @default(false) // Exists only for 'artifact' types
 
-  sound   Sound  @relation(fields: [sound_id], references: [id])
-  author  User   @relation(fields: [author_id], references: [id])
+  sound  Sound @relation(fields: [sound_id], references: [id])
+  author User  @relation(fields: [author_id], references: [id])
+  actions Action[]
+  activity Activity?
+
 
   replies Reply[]
-
-  is_deleted Boolean  @default(false)
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  @@index([author_id])
-  @@index([sound_id])
-}
-
-model Follows {
-  id          String @id @default(cuid())
-  follower_id  String
-  following_id String
-
-  follower   User       @relation("follower", fields: [follower_id], references: [id])
-  following  User       @relation("following", fields: [following_id], references: [id])
 
   is_deleted Boolean @default(false)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  @@index([author_id])
+  @@index([sound_id])
+}
+
+model Follows {
+  id           String @id @default(cuid())
+  follower_id  String
+  following_id String
+
+  follower  User @relation("follower", fields: [follower_id], references: [id])
+  following User @relation("following", fields: [following_id], references: [id])
+
+  is_deleted Boolean @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
   @@unique([follower_id, following_id])
   @@index([follower_id])
   @@index([following_id])
 }
 
 model Sound {
-  id           String     @id @default(cuid())
-  apple_id     String     @unique
-  upc          String?    @unique  // album only
-  isrc         String?    @unique  // song only
-  type         String     // 'songs', 'albums'
+  id           String  @id @default(cuid())
+  apple_id     String  @unique
+  upc          String? @unique // album only
+  isrc         String? @unique // song only
+  type         String // 'songs', 'albums'
   name         String
-  artist_name   String
-  release_date  String
-  album_name    String?    // song only
+  artist_name  String
+  release_date String
+  album_name   String? // song only
 
-  album_id      String?    // song only
-  album         Sound?     @relation("AlbumSongs", fields: [album_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  songs         Sound[]    @relation("AlbumSongs")
-  essentials   User[]
+  album_id   String? // song only
+  album      Sound?  @relation("AlbumSongs", fields: [album_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  songs      Sound[] @relation("AlbumSongs")
+  essentials User[]
 
   ratings_count Int   @default(0)
   ratings_sum   Int   @default(0)
   avg_rating    Float @default(0)
   bayesian_avg  Float @default(0)
 
+  entries Entry[]
 
-  entries      Entry[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  created_at    DateTime   @default(now())
-  updated_at    DateTime   @updatedAt
   @@unique([id])
   @@index([id])
   @@index([apple_id])
   @@index([album_id])
 }
 
-model Action {
-  id          String  @id @default(cuid())
-  author_id   String
-  reference_id   String
-  reference_type String  // 'entry', 'sound'
-  type        String  // 'heart', 'flag'
 
-  author      User       @relation(fields: [author_id], references: [id])
-
-  is_deleted  Boolean  @default(false)
-
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  @@index([author_id])
-  @@unique([author_id, reference_id, type, reference_type])
-}
 
 model Reply {
-  id           String  @id @default(cuid())
-  text         String
-  reply_to_id  String?
-  root_id      String?
-  entry_id     String
-  author_id    String
+  id          String  @id @default(cuid())
+  text        String
+  reply_to_id String?
+  root_id     String?
+  entry_id    String
+  author_id   String
 
-  reply_to     Reply?   @relation("ReplyParent", fields: [reply_to_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  replies      Reply[]  @relation("ReplyParent")
+  reply_to Reply?  @relation("parent", fields: [reply_to_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  replies  Reply[] @relation("parent")
 
-  root        Reply?   @relation("RootToReplies", fields: [root_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  root_replies Reply[] @relation("RootToReplies")
+  root         Reply?  @relation("root", fields: [root_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  root_replies Reply[] @relation("root")
+  actions      Action[]
 
-  author      User     @relation(fields: [author_id], references: [id])
-  entry       Entry    @relation(fields: [entry_id], references: [id])
+  activity     Activity?
 
-
+  author User  @relation(fields: [author_id], references: [id])
+  entry  Entry @relation(fields: [entry_id], references: [id])
 
   is_deleted Boolean @default(false)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
   @@index([reply_to_id])
   @@index([root_id])
   @@index([entry_id])
@@ -184,40 +175,74 @@ model Reply {
 }
 
 
-model Activity {
-  id            String    @id @default(cuid())
-  type          String    // 'entry', 'heart', 'reply', 'follow'
-  reference_id  String
-  author_id     String
+model Action {
+  id             String @id @default(cuid())
+  author_id      String
+  entry_id       String?
+  reply_id       String?
+  type           String // 'heart', 'flag'
 
-  notifications Notification[]
-  author        User       @relation(fields: [author_id], references: [id])
+  author   User @relation(fields: [author_id], references: [id])
+  entry    Entry? @relation(fields: [entry_id], references: [id])
+  reply    Reply? @relation(fields: [reply_id], references: [id])
+  activity Activity?
 
-  is_deleted    Boolean   @default(false)
-
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
-  @@index([author_id])
-  @@unique([reference_id, type, author_id])
-}
-
-model Notification {
-  id           String   @id @default(cuid())
-  recipient    User     @relation(fields: [recipient_id], references: [id])
-  recipient_id String
-  activity     Activity @relation(fields: [activity_id], references: [id])
-  activity_id  String
-
-  key        String?
-  is_read    Boolean  @default(false)
-  is_deleted Boolean  @default(false)
+  is_deleted Boolean @default(false)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  @@index([activity_id])
-  @@unique([recipient_id, activity_id])
+  @@index([author_id])
+  @@index([entry_id])
+  @@index([reply_id])
+  // Every action is unique to the author, entry, and type
+  @@unique([author_id, entry_id, type])
+  @@unique([author_id, reply_id, type])
 }
+
+model Activity {
+  id           String  @id @default(cuid())
+  author_id    String
+  action_id    String?  @unique
+  reply_id     String?  @unique
+  entry_id     String?  @unique
+
+  notifications Notification[]
+  author        User    @relation(fields: [author_id], references: [id])
+
+  action        Action? @relation(fields: [action_id], references: [id])
+  reply         Reply?  @relation(fields: [reply_id], references: [id])
+  entry         Entry?  @relation(fields: [entry_id], references: [id])
+
+
+  is_deleted Boolean @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([author_id])
+}
+
+model Notification {
+  id           String   @id @default(cuid())
+  recipient    User     @relation(name: "notifee", fields: [recipient_id], references: [id])
+  recipient_id String
+  author       User     @relation(name: "notifier", fields: [author_id], references: [id])
+  author_id    String   // ID of the user who triggered the notification
+  activity     Activity @relation(fields: [activity_id], references: [id])
+  activity_id  String   @unique
+
+  key          String?
+  is_read      Boolean @default(false)
+  is_deleted   Boolean @default(false)
+
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@index([author_id])
+  @@index([recipient_id])
+}
+
 
 model OauthAccount {
   providerId     String

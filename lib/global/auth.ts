@@ -52,28 +52,3 @@ const credentials: AppleCredentials = {
 };
 const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
 export const apple = new Apple(credentials, redirectURI);
-
-// Lucia
-// const client = prismaClient();
-// const luciaAdapter = new PrismaAdapter(client.session, client.user);
-// export const lucia = new Lucia(luciaAdapter, {
-//   sessionCookie: {
-//     name: "session",
-//     expires: false, // session cookies have very long lifespan (2 years),
-//     attributes: {
-//       secure: true,
-//       sameSite: "strict",
-//       domain: "voir.space",
-//     },
-//   },
-//   getUserAttributes: (attributes) => {
-//     return {
-//       id: attributes.id,
-//       appleId: attributes.apple_id,
-//       username: attributes.username,
-//       image: attributes.image,
-//     };
-//   },
-// });
-
-// Apple

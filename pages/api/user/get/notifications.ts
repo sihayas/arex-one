@@ -10,22 +10,39 @@ import {
 import { createResponse } from "@/pages/api/middleware";
 
 interface AggregatedNotification {
+  type: string;
+  soundId: string;
+  targetId: string;
+  content: string;
   count: number;
-  notifications: Notification[];
-  images: { soundImageUrl: string; authorImageUrl: string }[];
+  notifications: string[];
+  authors: string[];
+  lastTimestamp: Date;
 }
 
 interface NotificationAccumulator {
   [key: string]: AggregatedNotification;
 }
 
+interface NotificationResponse {
+  id: string;
+  key: string | null;
+  author_id: string;
+  created_at: Date;
+  activity: {
+    action: {
+      type: string;
+      reply: { text: string } | null;
+      entry: { rating: number | null } | null;
+    } | null;
+    reply: { text: string } | null;
+  };
+}
+
 export default async function onRequestGet(request: any) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get("userId");
-  // const page = Number(url.searchParams.get("page")) || 1;
-  // const limit = Number(url.searchParams.get("limit")) || 8;
-  // const start = (page - 1) * limit;
-  // const end = page * limit - 1;
+  const cursor = parseFloat(searchParams.get("cursor") || "0");
 
   if (!userId) {
     return createResponse({ error: "Invalid userId" }, 400);
@@ -45,102 +62,147 @@ export default async function onRequestGet(request: any) {
 
     let notifs;
 
-    if (unreadCount > 0) {
-      const start = 0;
-      const end = Math.min(unreadCount, 10) - 1;
-
-      const limit = end - start + 1;
-
-      // Retrieve at max 10 notifications from the sorted set cache
+    if (unreadCount) {
+      // There are unread notifications, fetch IDs from sorted set
+      const limit = Math.min(unreadCount, 24);
       let notificationIds: string[] = await redis.zrange(
         userNotifsKey(userId),
-        start,
-        end,
+        cursor,
+        cursor + limit - 1,
       );
 
-      // Get notifications from the DB using the IDs
-      const notifications: Notification[] = await prisma.notification.findMany({
+      // Fetch notification details from the database
+      const notifications = await prisma.notification.findMany({
         where: {
-          recipient_id: userId,
           is_deleted: false,
           id: { in: notificationIds },
         },
-        take: limit,
+        select: {
+          id: true,
+          created_at: true,
+          author_id: true,
+          key: true,
+          activity: {
+            select: {
+              reply: {
+                select: {
+                  text: true,
+                },
+              },
+              action: {
+                select: {
+                  type: true,
+                  reply: {
+                    select: {
+                      text: true,
+                    },
+                  },
+                  entry: {
+                    select: {
+                      rating: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
-      notifs = await groupNotifications(notifications, userId);
+      // Aggregate notifications and cache the results
+      const aggregatedNotifs = await batchNotifs(notifications, userId);
+      notifs = aggregatedNotifs.accumulator;
+      const newCursor = aggregatedNotifs.lastTimestamp; // Cursor
 
-      await redis.decrby(userNotifsKey(userId), limit); // Decrement the unread count
-      return createResponse({ data: notifs }, 200);
+      await redis.decrby(userUnreadNotifsCount(userId), notificationIds.length);
+      return createResponse({ data: notifs, cursor: newCursor }, 200);
     }
 
-    return createResponse({ data: notifs }, 200);
+    if (!unreadCount) {
+      // No unread notifications, fetch from cached aggregated notifications
+      const limit = 12;
+      const cachedAggregatedNotifs = await redis.zrange(
+        userAggNotifsKey(userId),
+        cursor + 0.001,
+        "+inf",
+        { byScore: true, offset: 0, count: limit },
+      );
+
+      notifs = cachedAggregatedNotifs.map((aggregatedNotif: any) => {
+        return JSON.parse(aggregatedNotif) as AggregatedNotification;
+      });
+
+      const newCursor =
+        notifs.length > 0
+          ? notifs[cachedAggregatedNotifs.length - 1].lastTimestamp
+          : cursor;
+      return createResponse({ data: notifs, cursor: newCursor }, 200);
+    }
   } catch (error) {
     console.error("Error fetching notifications:", error);
     return createResponse({ error: "Error fetching notifications" }, 500);
   }
 }
 
-async function groupNotifications(
-  notifications: Notification[],
-  userId: string,
-) {
-  const accumulator: NotificationAccumulator = {};
+async function batchNotifs(notifs: NotificationResponse[], userId: string) {
+  const contentLookup: {
+    [key: string]: (notif: NotificationResponse) => string;
+  } = {
+    reply: (notif: NotificationResponse) => notif.activity!.reply!.text,
+    heart_entry: (notif: NotificationResponse) =>
+      notif.activity!.action!.entry!.rating!.toString(),
+    heart_reply: (notif: NotificationResponse) =>
+      notif.activity!.action!.reply!.text,
+  };
 
-  notifications.forEach((notif) => {
-    if (!notif.key) return;
+  const { accumulator, lastTimestamp } = notifs.reduce(
+    ({ accumulator, lastTimestamp }, notif) => {
+      const batchKey = notif.key;
+      if (!batchKey) return { accumulator, lastTimestamp };
 
-    const keyParts = notif.key.split("|");
-    const type = keyParts[0];
-    const targetId = keyParts[2];
-    const aggregateKey = `${type}|${targetId}`;
+      const [type, targetId, soundId] = batchKey.split("|");
+      const authorId = notif.author_id;
 
-    if (!accumulator[aggregateKey]) {
-      accumulator[aggregateKey] = {
-        count: 1,
-        notifications: [notif], // Initialize with current notification
-        images: [], // Array to store image URLs
+      if (!accumulator[batchKey]) {
+        accumulator[batchKey] = {
+          count: 1,
+          type: type,
+          authors: [],
+          soundId: soundId,
+          notifications: [],
+          targetId: targetId,
+          content: contentLookup[type] ? contentLookup[type](notif) : "",
+          lastTimestamp: notif.created_at,
+        };
+      } else {
+        accumulator[batchKey].notifications.push(notif.id);
+        accumulator[batchKey].count++;
+        if (accumulator[batchKey].count < 3) {
+          accumulator[batchKey].authors.push(authorId);
+        }
+      }
+
+      return {
+        accumulator,
+        lastTimestamp: Math.max(
+          lastTimestamp,
+          new Date(accumulator[batchKey].lastTimestamp).getTime(),
+        ),
       };
-    } else {
-      accumulator[aggregateKey].count++;
-      accumulator[aggregateKey].notifications.push(notif);
-    }
-  });
+    },
+    { accumulator: {} as NotificationAccumulator, lastTimestamp: 0 },
+  );
 
-  // Asynchronous fetching of image URLs
-  for (let key in accumulator) {
-    // Cache the aggregated notifications before fetching image URLs
-    const aggData = accumulator[key];
+  for (let batchKey in accumulator) {
+    const aggNotifs = accumulator[batchKey];
+    const timestamp = new Date(aggNotifs.lastTimestamp).getTime();
     await redis.zadd(userAggNotifsKey(userId), {
-      score: new Date(aggData.notifications[0].created_at).getTime(),
-      member: JSON.stringify(aggData),
+      score: timestamp,
+      member: JSON.stringify(aggNotifs),
     });
-
-    if (accumulator[key].images.length < 3) {
-      const soundId = key.split("|")[1];
-      const authorId = key.split("|")[3];
-      const soundImageUrlKey = `sound:${soundId}:image`;
-      const authorImageUrlKey = `author:${authorId}:image`;
-
-      const pipeline = redis.pipeline();
-      pipeline.get(soundImageUrlKey);
-      pipeline.get(authorImageUrlKey);
-      const results = await pipeline.exec();
-
-      const soundResult: any = results[0];
-      const authorResult: any = results[1];
-
-      const soundImageUrl = soundResult[1];
-      const authorImageUrl = authorResult[1];
-
-      accumulator[key].images.push({
-        soundImageUrl,
-        authorImageUrl,
-      });
-    }
   }
 
-  return accumulator;
+  return { accumulator, lastTimestamp };
 }
 
 export const runtime = "edge";

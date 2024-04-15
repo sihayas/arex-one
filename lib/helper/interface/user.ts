@@ -47,7 +47,6 @@ export const useEntriesQuery = (
         userId,
         pageUserId,
         page: pageParam.toString(),
-        limit: "8",
       });
       const url = `/api/user/get/entries?${queryParams.toString()}`;
 
@@ -69,7 +68,7 @@ export const useEntriesQuery = (
       return { data: mergedData, pagination };
     },
     {
-      getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
+      getNextPageParam: (lastPage) => lastPage?.pagination?.nextPage || null,
       enabled: !!userId,
       refetchOnWindowFocus: false,
     },
@@ -91,52 +90,36 @@ export const useSettingsQuery = (userId: string | undefined) => {
 };
 
 export const useNotificationsQuery = (userId: string | undefined) => {
-  return useQuery(
+  return useInfiniteQuery(
     ["notifications", userId],
-    async () => {
-      const response = await fetch(
-        `/api/user/get/notifications?userId=${userId}`,
-      );
+    async ({ pageParam = 0 }) => {
+      if (!userId) return null;
+      const queryParams = new URLSearchParams({
+        userId,
+        cursor: pageParam,
+      });
+      const url = `/api/user/get/notifications?${queryParams.toString()}`;
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
 
-      const { notifications } = data.data;
+      const { notifications, nextCursor } = data.data;
 
       if (!notifications) {
         throw new Error("Unexpected server response structure");
       }
 
-      // Collect first activities and directly attach sound data
-      const firstActivities = Object.values(notifications).reduce(
-        (acc, group) => {
-          //@ts-ignore
-          if (group.notifications.length > 0) {
-            //@ts-ignore
-            acc.push(group.notifications[0].activity);
-          }
-          return acc;
-        },
-        [],
-      );
-
-      //@ts-ignore
-      const updatedActivities = await attachSoundData(firstActivities);
-
-      // Directly reattach updated activities to their respective notifications
-      let updateIndex = 0;
-      for (const group of Object.values(notifications)) {
-        //@ts-ignore
-        if (group.notifications.length > 0) {
-          //@ts-ignore
-          group.notifications[0].activity = updatedActivities[updateIndex++];
-        }
-      }
-
-      return { data: notifications };
+      return { data: notifications, nextPageParam: nextCursor }; // Supplying the next cursor for the next query
     },
     {
+      getNextPageParam: (lastPage) => lastPage?.nextPageParam,
       enabled: !!userId,
       refetchOnWindowFocus: false,
       refetchOnMount: false,

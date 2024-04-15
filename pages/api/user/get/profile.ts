@@ -11,6 +11,8 @@ import { PrismaD1 } from "@prisma/adapter-d1";
 import { PrismaClient } from "@prisma/client";
 import { createResponse } from "@/pages/api/middleware";
 
+export type PipelineResponse = [Error | null, any][];
+
 export default async function onRequestGet(request: any) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get("userId");
@@ -29,14 +31,25 @@ export default async function onRequestGet(request: any) {
 
   try {
     const pipeline = redis.pipeline();
+
     pipeline.hgetall(userProfileKey(pageUserId));
     pipeline.get(userImageKey(pageUserId));
-    isOwnProfile && pipeline.get(userFollowersKey(userId));
-    isOwnProfile && pipeline.get(userFollowersKey(pageUserId));
-    let [pageUserProfile, userImage, userFollowers, pageUserFollowers] =
-      await pipeline.exec();
+    if (!isOwnProfile) {
+      pipeline.get(userFollowersKey(userId));
+      pipeline.get(userFollowersKey(pageUserId));
+    }
 
-    if (!pageUserProfile) {
+    const results: PipelineResponse = await pipeline.exec();
+
+    let [pageUserProfileErr, pageUserProfile] = results[0];
+    let [userImageErr, userImage] = results[1];
+    let [userFollowersErr, userFollowers] = results[2] || [null, null];
+    let [pageUserFollowersErr, pageUserFollowers] = results[3] || [null, null];
+
+    // Get profile data
+    if (pageUserProfile) {
+      pageUserProfile = JSON.parse(pageUserProfile);
+    } else {
       // Cache miss
       const dbData = await prisma.user.findUnique({
         where: { id: pageUserId, status: "active" },
@@ -69,63 +82,58 @@ export default async function onRequestGet(request: any) {
         entries_count: dbData._count.entries,
         essentials: JSON.stringify(dbData.essentials),
       });
-    } else {
-      // @ts-ignore
-      pageUserProfile = JSON.parse(pageUserData);
     }
 
-    // @ts-ignore
-    pageUserProfile.essentials = await attachSoundData(pageUserData.essentials);
-
+    // Determine follow status
     let isFollowingAtoB = false;
     let isFollowingBtoA = false;
 
-    // Determine follow status
     if (!isOwnProfile) {
-      // Check if the page user is following the session user
-      if (!userFollowers) {
-        // Cache miss
+      // Cache aside user followers
+      if (userFollowers) {
+        userFollowers = JSON.parse(userFollowers);
+      } else {
         userFollowers = await prisma.user
           .findUnique({
             where: { id: userId },
             select: { followers: { select: { id: true } } },
           })
-          .then((u) => u?.followers || []);
+          .then((u) => u?.followers.map((follower) => follower.id) || []);
 
-        await redis.set(`user:${userId}:followers`, userFollowers);
-      } else {
-        // @ts-ignore
-        userFollowers = JSON.parse(userFollowers);
+        await redis.set(
+          userFollowersKey(userId),
+          JSON.stringify(userFollowers),
+        );
       }
 
-      if (!pageUserFollowers) {
-        // Cache miss
+      // Cache aside page user followers
+      if (pageUserFollowers) {
+        pageUserFollowers = JSON.parse(pageUserFollowers);
+      } else {
         pageUserFollowers = await prisma.user
           .findUnique({
             where: { id: pageUserId },
             select: { followers: { select: { id: true } } },
           })
-          .then((u) => u?.followers || []);
+          .then((u) => u?.followers.map((follower) => follower.id) || []);
 
-        await redis.setex(
+        await redis.set(
           userFollowersKey(pageUserId),
-          3600,
-          pageUserFollowers,
+          JSON.stringify(pageUserFollowers),
         );
-      } else {
-        // @ts-ignore
-        pageUserFollowers = JSON.parse(pageUserFollowers);
       }
 
-      // @ts-ignore
       isFollowingBtoA = userFollowers.includes(pageUserId);
-      // @ts-ignore
       isFollowingAtoB = pageUserFollowers.includes(userId);
     }
 
+    // Attach sound data to essentials
+    pageUserProfile.essentials = await attachSoundData(
+      pageUserProfile.essentials,
+    );
+
     return new Response(
       JSON.stringify({
-        // @ts-ignore
         ...pageUserProfile,
         isFollowingAtoB,
         isFollowingBtoA,

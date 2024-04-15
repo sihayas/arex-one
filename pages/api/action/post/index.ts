@@ -11,7 +11,7 @@ import {
 import { createResponse } from "@/pages/api/middleware";
 
 export default async function onRequestPost(request: any) {
-  const { targetId, userId, authorId, type, referenceType, soundId } =
+  const { targetId, userId, authorId, actionType, targetType, soundId } =
     await request.json();
 
   if (authorId === userId) {
@@ -25,30 +25,30 @@ export default async function onRequestPost(request: any) {
 
   const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
+  const isEntry = targetType === "entry";
+  const isReply = targetType === "reply";
+
   try {
     const action = await prisma.action.create({
       data: {
         author_id: userId,
-        reference_id: targetId,
-        type: type,
-        reference_type: referenceType,
+        type: actionType,
+        ...(isEntry && { entry_id: targetId }),
+        ...(isReply && { reply_id: targetId }),
       },
     });
 
-    if (type === "heart") {
-      const key = `heart|${soundId}|${targetId}|${userId}`;
+    if (actionType === "heart") {
+      const key = `heart_${targetType}|${targetId}|${soundId}`;
       const activity = await prisma.activity.create({
-        data: {
-          author_id: userId,
-          reference_id: action.id,
-          type: "heart",
-        },
+        data: { author_id: userId, action_id: action.id },
       });
       const notification = await prisma.notification.create({
         data: {
           key: key,
           recipient_id: authorId,
           activity_id: activity.id,
+          author_id: userId,
         },
       });
 

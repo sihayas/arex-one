@@ -17,7 +17,6 @@ export async function onRequestPatch(request: any) {
   if (!DB) {
     return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
   }
-
   const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
@@ -56,10 +55,7 @@ export async function onRequestPatch(request: any) {
       if (!followers) {
         await redis.zrem(userEntriesKey(userId), entryId);
 
-        return createResponse(
-          { success: "Entry successfully marked as deleted." },
-          200,
-        );
+        return createResponse({ success: "Entry deleted." }, 200);
       }
       await redis.set(userFollowersKey(userId), JSON.stringify(followers));
     }
@@ -77,13 +73,10 @@ export async function onRequestPatch(request: any) {
     await redis.hincrby(userProfileKey(userId), "entries_count", -1);
     await pipeline.exec();
 
-    return createResponse(
-      { success: "Entry successfully marked as deleted." },
-      200,
-    );
+    return createResponse({ success: "Entry deleted." }, 200);
   } catch (error) {
-    console.error("Failed to mark the artifact as deleted:", error);
-    return createResponse({ error: "Failed to mark artifact as deleted" }, 500);
+    console.error("Failed to delete:", error);
+    return createResponse({ error: "Failed to delete:" }, 500);
   }
 }
 
