@@ -27,7 +27,10 @@ model User {
   entries       Entry[]
   replies       Reply[]
   actions       Action[]
-  settings      Settings?
+
+  follow_notifications Boolean @default(true)
+  reply_notifications  Boolean @default(true)
+  heart_notifications  Boolean @default(true)
 
   sessions      Session[]
   oauthAccounts OauthAccount[]
@@ -44,23 +47,6 @@ model Session {
   user       User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
-}
-
-model Settings {
-  id      String  @id @default(cuid())
-  user_id String  @unique
-  email   Boolean @default(true)
-  push    Boolean @default(true)
-
-  is_minus             Boolean @default(false)
-  follow_notifications Boolean @default(true)
-  reply_notifications  Boolean @default(true)
-  heart_notifications  Boolean @default(true)
-
-  user User @relation(fields: [user_id], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
 }
 
 model Entry {
@@ -125,8 +111,6 @@ model Sound {
   songs      Sound[] @relation("AlbumSongs")
   essentials User[]
 
-  ratings_count Int   @default(0)
-  ratings_sum   Int   @default(0)
   avg_rating    Float @default(0)
   bayesian_avg  Float @default(0)
 

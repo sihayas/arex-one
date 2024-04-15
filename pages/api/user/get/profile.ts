@@ -1,4 +1,3 @@
-import { Essential } from "@/types/dbTypes";
 import { fetchAndCacheSoundsByType } from "@/pages/api/sound/get";
 import {
   userFollowersKey,
@@ -8,7 +7,7 @@ import {
 } from "@/lib/global/redis";
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Sound } from "@prisma/client";
 import { createResponse } from "@/pages/api/middleware";
 
 export type PipelineResponse = [Error | null, any][];
@@ -67,6 +66,9 @@ export default async function onRequestGet(request: any) {
               },
             },
           },
+          follow_notifications: true,
+          heart_notifications: true,
+          reply_notifications: true,
         },
       });
 
@@ -74,6 +76,7 @@ export default async function onRequestGet(request: any) {
         return createResponse({ error: "User not found in DB." }, 404);
       }
 
+      // Cache aside user profile
       await redis.hset(userProfileKey(pageUserId), {
         id: pageUserId,
         username: dbData.username,
@@ -152,21 +155,23 @@ export default async function onRequestGet(request: any) {
   }
 }
 
-async function attachSoundData(essentials: Essential[]) {
+async function attachSoundData(essentials: Sound[]) {
   if (essentials.length === 0) {
     return essentials;
   }
 
-  const albumIds = essentials.map((e) => e.sound.appleId).join(",");
-  const albumData = await fetchAndCacheSoundsByType(albumIds, "albums");
-  const albumDataMap = Object.fromEntries(
-    // @ts-ignore
-    albumData.map((album) => [album.id, album]),
+  const albumData = await fetchAndCacheSoundsByType(
+    essentials.map((sound) => sound.apple_id).join(","),
+    "albums",
   );
 
-  return essentials.map((essential) => ({
-    ...essential,
-    appleData: albumDataMap[essential.sound.appleId],
+  const albumDataMap = Object.fromEntries(
+    albumData.map((album: any) => [album.id, album]),
+  );
+
+  return essentials.map((sound) => ({
+    ...sound,
+    appleData: albumDataMap[sound.apple_id],
   }));
 }
 

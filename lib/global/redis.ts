@@ -5,6 +5,18 @@ export const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN ?? "",
 });
 
+// -- Redis Sound Keys --
+
+// Key for mapping Apple Music ID to internal Sound ID
+export const soundAppleIdMapKey = () => `sound:apple_id_map`;
+
+// Key for sound data in Redis.
+export const soundDataKey = (soundId: string) => `sound:${soundId}:data`;
+
+// Key for sound entry ids in Redis.
+export const soundEntriesKey = (soundId: string) =>
+  `sound:${soundId}:entry_ids`;
+
 // -- Redis User Keys --
 
 // User profile, a hash of user profile.

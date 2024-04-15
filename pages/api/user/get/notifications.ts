@@ -1,6 +1,6 @@
 import { D1Database } from "@cloudflare/workers-types";
 import { PrismaD1 } from "@prisma/adapter-d1";
-import { Notification, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import {
   userAggNotifsKey,
   userNotifsKey,
@@ -73,10 +73,7 @@ export default async function onRequestGet(request: any) {
 
       // Fetch notification details from the database
       const notifications = await prisma.notification.findMany({
-        where: {
-          is_deleted: false,
-          id: { in: notificationIds },
-        },
+        where: { is_deleted: false, id: { in: notificationIds } },
         select: {
           id: true,
           created_at: true,
@@ -128,15 +125,18 @@ export default async function onRequestGet(request: any) {
         { byScore: true, offset: 0, count: limit },
       );
 
-      notifs = cachedAggregatedNotifs.map((aggregatedNotif: any) => {
-        return JSON.parse(aggregatedNotif) as AggregatedNotification;
-      });
+      // If there are cached aggregated notifications, return them
+      if (cachedAggregatedNotifs.length) {
+        notifs = cachedAggregatedNotifs.map((aggregatedNotif: any) => {
+          return JSON.parse(aggregatedNotif) as AggregatedNotification;
+        });
 
-      const newCursor =
-        notifs.length > 0
-          ? notifs[cachedAggregatedNotifs.length - 1].lastTimestamp
-          : cursor;
-      return createResponse({ data: notifs, cursor: newCursor }, 200);
+        const newCursor =
+          notifs.length > 0
+            ? notifs[cachedAggregatedNotifs.length - 1].lastTimestamp
+            : cursor;
+        return createResponse({ data: notifs, cursor: newCursor }, 200);
+      }
     }
   } catch (error) {
     console.error("Error fetching notifications:", error);

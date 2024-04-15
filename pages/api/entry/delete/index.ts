@@ -10,7 +10,7 @@ import {
 } from "@/lib/global/redis";
 import { createResponse } from "@/pages/api/middleware";
 
-export async function onRequestPatch(request: any) {
+export default async function onRequestPatch(request: any) {
   const { entryId, userId } = await request.json();
 
   const DB = process.env.DB as unknown as D1Database;

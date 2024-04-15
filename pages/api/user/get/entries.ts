@@ -128,26 +128,25 @@ export default async function onRequestGet(request: any) {
     if (pageUserId !== userId) {
       // Check if the user has liked any of the entries
       let hearts = await redis.smembers(userHeartsKey(userId));
-
-      // If the user has no hearts cached, check the database
+      // If the user has no hearts cached, attempt to populate it
       if (!hearts.length) {
         const user = await prisma.user.findUnique({
           where: { id: userId },
           select: {
             actions: {
               where: { type: "heart" },
-              select: { reference_id: true },
+              select: { entry_id: true, reply_id: true },
             },
           },
         });
-
         if (user && user.actions.length) {
-          const entryIds = user.actions.map((action) => action.reference_id);
+          const entryIds = user.actions.map(
+            (action) => action.reply_id || action.entry_id,
+          );
           await redis.sadd(userHeartsKey(userId), ...entryIds);
         }
       }
 
-      // Attach heartedByUser property to each entry
       hearts.length &&
         entries.forEach((entry) => {
           entry.heartedByUser = hearts.includes(entry.id);

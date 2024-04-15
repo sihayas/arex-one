@@ -163,12 +163,14 @@ export default async function onRequestGet(request: any) {
         select: {
           actions: {
             where: { type: "heart" },
-            select: { reference_id: true },
+            select: { entry_id: true, reply_id: true },
           },
         },
       });
       if (user && user.actions.length) {
-        const entryIds = user.actions.map((action) => action.reference_id);
+        const entryIds = user.actions.map(
+          (action) => action.reply_id || action.entry_id,
+        );
         await redis.sadd(userHeartsKey(userId), ...entryIds);
       }
     }

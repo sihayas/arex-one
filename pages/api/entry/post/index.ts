@@ -194,7 +194,7 @@ export default async function onRequestPost(request: any) {
     // Update user profile entries count
     await redis.hincrby(userProfileKey(userId), "entries_count", 1);
     await prisma.activity.create({
-      data: { type: "entry", reference_id: entry.id, author_id: userId },
+      data: { entry_id: entry.id, author_id: userId },
     });
 
     return createResponse(
