@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV === "development") {
+  const { setupDevPlatform } = require("@cloudflare/next-on-pages/next-dev");
+  setupDevPlatform();
+}
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -10,7 +15,7 @@ const nextConfig = {
       "is4-ssl.mzstatic.com",
       "is5-ssl.mzstatic.com",
       "voir.space",
-      "https://assets.app.space",
+      "https://assets.voir.space",
     ],
     loader: "custom",
     loaderFile: "./imageLoader.js",

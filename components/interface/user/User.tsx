@@ -1,28 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useInterfaceContext } from "@/context/Interface";
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import { useUserDataQuery } from "@/lib/helper/interface/user";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { useUserProfileQuery } from "@/lib/helper/interface/user";
 import Essentials from "@/components/interface/user/render/Essentials";
-import Entries from "@/components/interface/user/render/Entries";
+// import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
 import Link from "@/components/interface/user/items/Link";
 // import Image from "next/image";
 import Compressor from "compressorjs";
 
 const User = () => {
-  const { user, activePage, pages, scrollContainerRef } = useInterfaceContext();
+  const { user, activePage, scrollContainerRef } = useInterfaceContext();
   const { scrollY } = useScroll({
     container: scrollContainerRef,
     layoutEffect: false,
-  });
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    pages[pages.length - 1].isOpen = latest >= 1;
   });
   const opacity = useSpring(useTransform(scrollY, [0, 1], [1, 0]), {
     stiffness: 100,
@@ -123,9 +114,7 @@ const User = () => {
     },
   };
 
-  const { data } = useUserDataQuery(user?.id, pageUser?.id);
-
-  console.log(data);
+  const { data } = useUserProfileQuery(user?.id, pageUser?.id);
 
   useEffect(() => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
@@ -224,7 +213,7 @@ const User = () => {
                     SOUND
                   </p>
                   <p className={`text-gray2 text-xl leading-[15px]`}>
-                    {data._count.uniqueSounds || 0}
+                    {data._count.followers || 0}
                   </p>
                 </div>
                 <div className={`flex flex-col gap-2.5`}>
@@ -234,7 +223,7 @@ const User = () => {
                     ENTRY
                   </p>
                   <p className={`text-gray2 text-xl  leading-[15px]`}>
-                    {data._count.entry || 0}
+                    {data._count.entries || 0}
                   </p>
                 </div>
               </div>
@@ -312,7 +301,7 @@ const User = () => {
       </motion.div>
 
       <div className={`-mt-[242px] flex flex-col -space-y-5 w-[420px]`}>
-        <Entries pageUserId={pageUser.id} />
+        {/*<Entries pageUserId={pageUser.id} />*/}
       </div>
     </>
   );

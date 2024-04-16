@@ -22,12 +22,6 @@ export const soundEntriesKey = (soundId: string) =>
 // User profile, a hash of user profile.
 export const userProfileKey = (userId: string) => `user:${userId}:profile`;
 
-// User image, a string of the image URL.
-export const userImageKey = (userId: string) => `user:${userId}:image`;
-
-// User settings, a hash of user settings.
-export const userSettingsKey = (userId: string) => `user:${userId}:settings`;
-
 // User feed, a sorted set of IDS.
 export const userFeedKey = (userId: string) => `user:${userId}:feed`;
 

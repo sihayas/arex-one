@@ -8,30 +8,23 @@ export const useUserAndSessionQuery = () => {
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    const data = await response.json();
-    return data;
+    return await response.json();
   });
 };
 
 // Get user profile data
-export const useUserDataQuery = (
+export const useUserProfileQuery = (
   userId: string | undefined,
   pageUserId: string | undefined,
 ) => {
   return useQuery(["userData", pageUserId], async () => {
     if (!userId || !pageUserId) return null;
     const response = await fetch(
-      `/api/user/get/profile?userId=${encodeURIComponent(
-        userId,
-      )}&pageUserId=${encodeURIComponent(pageUserId)}`,
+      `/api/user/get/profile?userId=${userId}&pageUserId=${pageUserId}`,
     );
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const data = await response.json();
-    return data; // Directly return the fetched data
+    if (!response.ok) throw new Error("Network response was not ok");
+    const jsonData = await response.json();
+    return jsonData;
   });
 };
 

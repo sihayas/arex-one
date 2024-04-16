@@ -99,15 +99,6 @@ export default async function onRequestPost(request: any) {
         },
       });
 
-      // Update the sound's ratings
-      await prisma.sound.update({
-        where: { id: soundInDatabase.id },
-        data: {
-          ratings_count: soundInDatabase.ratings_count + 1,
-          ratings_sum: soundInDatabase.ratings_sum + rating,
-        },
-      });
-
       // Add sound to average queue in redis
       await redis.sadd("averageQueue", JSON.stringify(appleId));
     } else {

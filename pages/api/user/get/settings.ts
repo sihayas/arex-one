@@ -30,6 +30,8 @@ export default async function onRequestGet(request: any) {
       const dbData = await prisma.user.findUnique({
         where: { id: userId, status: "active" },
         select: {
+          id: true,
+          image: true,
           username: true,
           bio: true,
           essentials: { select: { apple_id: true } },
@@ -56,11 +58,12 @@ export default async function onRequestGet(request: any) {
       // Cache aside user profile
       await redis.hset(userProfileKey(userId), {
         id: userId,
+        image: dbData.image,
         username: dbData.username,
         bio: dbData.bio,
+        essentials: JSON.stringify(dbData.essentials),
         followers_count: dbData._count.followers,
         entries_count: dbData._count.entries,
-        essentials: JSON.stringify(dbData.essentials),
         follow_notifications: dbData.follow_notifications,
         heart_notifications: dbData.heart_notifications,
         reply_notifications: dbData.reply_notifications,
