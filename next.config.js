@@ -1,12 +1,3 @@
-if (process.env.NODE_ENV === "development") {
-  const { setupDevPlatform } = require("@cloudflare/next-on-pages/next-dev");
-  setupDevPlatform({
-    persist: {
-      path: "../../.wrangler/state/v3",
-    },
-  }).catch((e) => console.error(e));
-}
-
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
