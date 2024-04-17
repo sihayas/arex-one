@@ -59,6 +59,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.24.1",
+    "@flydotio/dockerfile": "^0.5.5",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "prisma": "^5.12.1",
