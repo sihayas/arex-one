@@ -8,7 +8,8 @@ export const useUserAndSessionQuery = () => {
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    return await response.json();
+    const data = await response.json();
+    return data;
   });
 };
 
@@ -23,8 +24,8 @@ export const useUserProfileQuery = (
       `/api/user/get/profile?userId=${userId}&pageUserId=${pageUserId}`,
     );
     if (!response.ok) throw new Error("Network response was not ok");
-    const jsonData = await response.json();
-    return jsonData;
+    const data = await response.json();
+    return data;
   });
 };
 
@@ -32,40 +33,40 @@ export const useEntriesQuery = (
   userId: string | undefined,
   pageUserId: string,
 ) => {
-  return useInfiniteQuery(
-    ["entries", userId],
-    async ({ pageParam = 1 }) => {
-      if (!userId || !pageUserId) return null;
-      const queryParams = new URLSearchParams({
-        userId,
-        pageUserId,
-        page: pageParam.toString(),
-      });
-      const url = `/api/user/get/entries?${queryParams.toString()}`;
-
-      const response = await fetch(url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const jsonResponse = await response.json();
-      const { activities, pagination } = jsonResponse.data;
-
-      const mergedData = await attachSoundData(activities);
-
-      return { data: mergedData, pagination };
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage?.pagination?.nextPage || null,
-      enabled: !!userId,
-      refetchOnWindowFocus: false,
-    },
-  );
+  // return useInfiniteQuery(
+  //   ["entries", userId],
+  //   async ({ pageParam = 1 }) => {
+  //     if (!userId || !pageUserId) return null;
+  //     const queryParams = new URLSearchParams({
+  //       userId,
+  //       pageUserId,
+  //       page: pageParam.toString(),
+  //     });
+  //     const url = `/api/user/get/entries?${queryParams.toString()}`;
+  //
+  //     const response = await fetch(url, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
+  //
+  //     const jsonResponse = await response.json();
+  //     const { activities, pagination } = jsonResponse.data;
+  //
+  //     const mergedData = await attachSoundData(activities);
+  //
+  //     return { data: mergedData, pagination };
+  //   },
+  //   {
+  //     getNextPageParam: (lastPage) => lastPage?.pagination?.nextPage || null,
+  //     enabled: !!userId,
+  //     refetchOnWindowFocus: false,
+  //   },
+  // );
 };
 
 export const useSettingsQuery = (userId: string | undefined) => {
@@ -153,24 +154,24 @@ export const updateNotificationSetting = async (
   settingType: string,
   value: boolean,
 ) => {
-  const response = await fetch(`/api/user/post/notificationSetting`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      userId,
-      settingType,
-      value,
-    }),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Network response was not ok");
-  }
-
-  // Optionally, return the updated settings if needed
-  const updatedSettings = await response.json();
-  return updatedSettings;
+  // const response = await fetch(`/api/user/post/notificationSetting`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     userId,
+  //     settingType,
+  //     value,
+  //   }),
+  // });
+  //
+  // if (!response.ok) {
+  //   const errorData = await response.json();
+  //   throw new Error(errorData.error || "Network response was not ok");
+  // }
+  //
+  // // Optionally, return the updated settings if needed
+  // const updatedSettings = await response.json();
+  // return updatedSettings;
 };

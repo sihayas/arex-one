@@ -17,7 +17,7 @@
     "paths": {
       "@/*": ["./*"],
       "musickit-js": ["./types/musickit-js"]
-    }
+    },
     // "noImplicitAny": false
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

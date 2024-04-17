@@ -52,8 +52,6 @@ export type InterfaceContext = {
   setNotifs: React.Dispatch<React.SetStateAction<any[]>>;
   activePage: Page;
   setActivePage: React.Dispatch<React.SetStateAction<Page>>;
-  settings: Settings | null;
-  setSettings: React.Dispatch<React.SetStateAction<Settings | null>>;
 };
 
 type InterfaceContextProviderProps = {
@@ -85,7 +83,6 @@ export const InterfaceContextProvider = ({
   const [user, setUser] = useState<UserType | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
-  const [settings, setSettings] = useState<Settings | null>(null);
 
   const [pages, setPages] = useState<Page[]>([]);
   const [activePage, setActivePage] = React.useState<Page>(
@@ -99,7 +96,9 @@ export const InterfaceContextProvider = ({
   const { data } = useUserAndSessionQuery();
   useEffect(() => {
     if (data) {
+      // @ts-ignore
       setUser(data.user);
+      // @ts-ignore
       setSession(data.session);
       setIsLoading(false);
     } else {
@@ -183,8 +182,6 @@ export const InterfaceContextProvider = ({
         setSession,
         notifs,
         setNotifs,
-        settings,
-        setSettings,
         pages,
         setPages,
         activePage,
