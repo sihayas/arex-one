@@ -1,25 +1,26 @@
 import { fetchAndCacheSoundsByType } from "@/pages/api/sound/get";
 import { userFollowersKey, userProfileKey, redis } from "@/lib/global/redis";
-import { D1Database } from "@cloudflare/workers-types";
-import { PrismaD1 } from "@prisma/adapter-d1";
-import { PrismaClient, Sound } from "@prisma/client";
-import { createResponse } from "@/pages/api/middleware";
 
-export default async function onRequestGet(request: any) {
-  const { searchParams } = new URL(request.url);
-  const userId = searchParams.get("userId");
-  const pageUserId = searchParams.get("pageUserId");
+import { Sound } from "@prisma/client";
+import { prisma } from "@/lib/global/prisma";
+
+import { NextApiRequest, NextApiResponse } from "next";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  const userId = Array.isArray(req.query.userId)
+    ? req.query.userId[0]
+    : req.query.userId;
+  const pageUserId = Array.isArray(req.query.pageUserId)
+    ? req.query.pageUserId[0]
+    : req.query.pageUserId;
   const isOwnProfile = userId === pageUserId;
 
   if (!userId || !pageUserId) {
-    return createResponse({ error: "Missing userId or pageUserId" }, 400);
+    return res.status(400).json({ error: "Missing parameters" });
   }
-
-  const DB = process.env.DB as unknown as D1Database;
-  if (!DB) {
-    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
-  }
-  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
     const pipeline = redis.pipeline();
@@ -62,7 +63,14 @@ export default async function onRequestGet(request: any) {
           image: true,
           username: true,
           bio: true,
-          essentials: { select: { apple_id: true } },
+          essentials: {
+            select: {
+              id: true,
+              rank: true,
+              sound: { select: { apple_id: true } },
+            },
+            orderBy: { rank: "desc" },
+          },
           _count: {
             select: {
               followers: true,
@@ -80,7 +88,7 @@ export default async function onRequestGet(request: any) {
       });
 
       if (!dbData) {
-        return createResponse({ error: "User not found in DB." }, 404);
+        return res.status(404).json({ error: "User not found in DB." });
       }
 
       // Cache aside user profile
@@ -163,13 +171,12 @@ export default async function onRequestGet(request: any) {
       pageUserProfile.essentials,
     );
 
-    return createResponse(
-      { ...pageUserProfile, isFollowingAtoB, isFollowingBtoA },
-      200,
-    );
+    return res
+      .status(200)
+      .json({ ...pageUserProfile, isFollowingAtoB, isFollowingBtoA });
   } catch (error) {
     console.error("Error fetching user profile:", error);
-    return createResponse({ error: "Error fetching user profile:" }, 500);
+    return res.status(500).json({ error: "Error fetching user profile." });
   }
 }
 
@@ -194,5 +201,3 @@ async function attachSoundData(essentials: Sound[]) {
       }))
     : [];
 }
-
-export const runtime = "edge";

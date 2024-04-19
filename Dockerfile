@@ -20,6 +20,9 @@ FROM base as build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp openssl pkg-config python-is-python3
 
+RUN --mount=type=secret,id=NEXT_PUBLIC_APPLE_JWT \
+    NEXT_PUBLIC_APPLE_JWT="$(cat /run/secrets/NEXT_PUBLIC_APPLE_JWT)"
+
 # Install node modules
 COPY --link .npmrc package-lock.json package.json ./
 RUN npm ci --include=dev
@@ -46,6 +49,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y openssl && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
+
 # Copy built application
 COPY --from=build /app /app
 
@@ -58,5 +62,4 @@ ENTRYPOINT [ "/app/docker-entrypoint.js" ]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-ENV DATABASE_URL="file:///data/sqlite.db"
 CMD [ "npm", "run", "start" ]

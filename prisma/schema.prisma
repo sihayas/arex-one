@@ -1,17 +1,16 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider     = "sqlite"
+  provider     = "mysql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model User {
-  apple_id      String         @unique
   id            String         @id
+  apple_id      String         @unique
   email         String?        @unique
   username      String?        @unique
   bio           String?
@@ -20,7 +19,7 @@ model User {
   status        String?        @default("active")
   following     Follows[]      @relation("follower")
   followers     Follows[]      @relation("following")
-  essentials    Sound[]
+  essentials    Essential[]
   notifications_sent     Notification[] @relation("notifier")
   notifications_received Notification[] @relation("notifee")
   activities    Activity[]
@@ -42,11 +41,57 @@ model User {
 
 model Session {
   id         String   @id
-  user_id    String
-  expires_at DateTime
-  user       User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  user       User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Sound {
+  id           String  @id @default(cuid())
+  apple_id     String  @unique
+  upc          String? @unique // album only
+  isrc         String? @unique // song only
+  type         String // 'songs', 'albums'
+  name         String
+  artist_name  String
+  release_date String
+  album_name   String? // song only
+
+  album_id   String? // song only
+  album      Sound?  @relation("AlbumSongs", fields: [album_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  songs      Sound[] @relation("AlbumSongs")
+  essentials Essential[]
+
+  avg_rating    Float @default(0)
+  bayesian_avg  Float @default(0)
+
+  entries Entry[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([id])
+  @@index([id])
+  @@index([apple_id])
+  @@index([album_id])
+}
+
+model Essential {
+  id      String @id @default(cuid())
+  user_id  String
+  sound_id String
+  rank    Int?
+
+  user  User  @relation(fields: [user_id], references: [id])
+  sound Sound @relation(fields: [sound_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([user_id])
+  @@index([sound_id])
 }
 
 model Entry {
@@ -95,35 +140,7 @@ model Follows {
   @@index([following_id])
 }
 
-model Sound {
-  id           String  @id @default(cuid())
-  apple_id     String  @unique
-  upc          String? @unique // album only
-  isrc         String? @unique // song only
-  type         String // 'songs', 'albums'
-  name         String
-  artist_name  String
-  release_date String
-  album_name   String? // song only
 
-  album_id   String? // song only
-  album      Sound?  @relation("AlbumSongs", fields: [album_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  songs      Sound[] @relation("AlbumSongs")
-  essentials User[]
-
-  avg_rating    Float @default(0)
-  bayesian_avg  Float @default(0)
-
-  entries Entry[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@unique([id])
-  @@index([id])
-  @@index([apple_id])
-  @@index([album_id])
-}
 
 
 

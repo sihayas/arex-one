@@ -1,50 +1,32 @@
-import { D1Database, Request } from "@cloudflare/workers-types";
-import { initializeLucia } from "@/lib/global/auth";
+import { lucia, validateRequest } from "@/lib/global/auth";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function onRequestPost(request: Request) {
-  const DB = process.env.DB as unknown as D1Database;
-  if (!DB) {
-    return new Response(
-      JSON.stringify({
-        error: "Unauthorized, missing DB in environment",
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 401,
-      },
-    );
-  }
-
-  const lucia = initializeLucia(DB);
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   try {
-    const cookieHeader = request.headers.get("Cookie");
-    const sessionId = lucia.readSessionCookie(cookieHeader ?? "");
-    if (!sessionId) {
-      return new Response(null, {
-        status: 401,
-      });
+    if (req.method !== "POST") {
+      // Log and return a 405 Method Not Allowed error if not a POST request
+      console.error("Invalid request method:", req.method);
+      res.status(405).end("Method Not Allowed");
+      return;
     }
 
-    await lucia.invalidateSession(sessionId);
+    // Make sure there is a session to log out of
+    const { session } = await validateRequest(req, res);
 
-    // Create a new blank session cookie to clear the session
-    const blankSessionCookie = lucia.createBlankSessionCookie();
-    return new Response(
-      JSON.stringify({ message: "Successfully logged out" }),
-      {
-        status: 200,
-        headers: {
-          "Set-Cookie": blankSessionCookie.serialize(),
-          "Content-Type": "application/json",
-        },
-      },
-    );
+    if (!session) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    await lucia.invalidateSession(session.id);
+
+    const sessionCookie = lucia.createBlankSessionCookie();
+    res.appendHeader("Set-Cookie", sessionCookie.serialize());
+    res.status(200).json({ message: "Successfully logged out" });
   } catch (error) {
-    console.error("Error in logout handler:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    console.error("Error in sign-out handler:", error);
+    res.status(500).end("Internal Server Error");
   }
 }
-
-export const runtime = "edge";

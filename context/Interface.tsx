@@ -96,9 +96,7 @@ export const InterfaceContextProvider = ({
   const { data } = useUserAndSessionQuery();
   useEffect(() => {
     if (data) {
-      // @ts-ignore
       setUser(data.user);
-      // @ts-ignore
       setSession(data.session);
       setIsLoading(false);
     } else {

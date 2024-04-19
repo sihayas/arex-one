@@ -6,5 +6,3 @@ export function createResponse(body: any, status: number): Response {
     },
   });
 }
-
-export const runtime = "edge";

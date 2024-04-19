@@ -1,73 +1,55 @@
-import { apple } from "@/lib/global/auth";
+import { apple, lucia } from "@/lib/global/auth";
+import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
 
+import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "@/lib/global/prisma";
 import { parseJWT } from "oslo/jwt";
-import { parse } from "cookie";
-import { initializeLucia } from "@/lib/global/auth";
-import { PrismaD1 } from "@prisma/adapter-d1";
-import { PrismaClient } from "@prisma/client";
-import { D1Database } from "@cloudflare/workers-types";
 
 const allowedOrigins = [
   "https://voir.space",
   "https://dev.voir.space",
   "https://www.voir.space",
+  "https://audition.fly.dev",
 ];
 
 interface JWTPayload {
   sub: string;
 }
 
-export default async function onRequestPost(request: any) {
-  const origin = request.headers.get("origin");
-
-  if (request.method === "OPTIONS") {
-    let headers = new Headers({
-      "Access-Control-Allow-Origin": origin || "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      "Access-Control-Allow-Credentials": "true",
-    });
-
-    // Only send CORS headers if the origin is allowed
-    if (!origin || !allowedOrigins.includes(origin)) {
-      headers.delete("Access-Control-Allow-Origin");
-    }
-
-    return new Response(null, { status: 204, headers });
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  // Handle OPTIONS request for CORS Preflight
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", "https://voir.space");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization",
+    );
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.status(204).end();
+    return;
   }
 
-  // On first login, Apple sends the user's data as JSON in the request body
-  const contentType = request.headers.get("Content-Type") || "";
-  let requestBody;
-  if (contentType.includes("application/json")) {
-    try {
-      requestBody = await request.json();
-    } catch (e) {
-      console.error("Failed to parse request body as JSON", e);
-      return new Response("Bad Request: Body must be JSON", { status: 400 });
-    }
-  } else if (contentType.includes("application/x-www-form-urlencoded")) {
-    try {
-      const formData = await request.text();
-      requestBody = Object.fromEntries(new URLSearchParams(formData));
-    } catch (e) {
-      console.error("Failed to parse request body as URL-encoded form", e);
-      return new Response("Bad Request: Body must be URL-encoded form", {
-        status: 400,
-      });
-    }
-  } else {
-    console.error("Invalid content type. Received:", contentType);
-    return new Response("Invalid content type", { status: 415 });
+  if (req.method !== "POST") {
+    res.status(405).end("Method Not Allowed");
+    return;
   }
 
-  const { code, state } = requestBody;
+  if (typeof req.url !== "string") {
+    console.error("req.url is undefined");
+    res.status(500).end();
+    return;
+  }
+
+  // On first login, Apple sends the user's data as JSON in the request body (also user
+  const { code, state } = req.body;
 
   // Cross-check the state from the request body with the stored cookie/state
-  const STATE_COOKIE_NAME = "apple_oauth_state";
-  const cookies = parse(request.headers.get("Cookie") || "");
-  const storedState = cookies[STATE_COOKIE_NAME];
+  const storedState = req.cookies.apple_oauth_state;
 
   if (!code || !state || !storedState || state !== storedState) {
     console.error("Invalid request parameters. Details:", {
@@ -76,51 +58,40 @@ export default async function onRequestPost(request: any) {
       storedState: storedState ? "Received" : "Missing",
       stateMatch: state === storedState ? "Match" : "Mismatch",
     });
-    return new Response("Invalid request parameters", { status: 400 });
+    res.status(400).end("Invalid request parameters");
+    return;
   }
 
-  const DB = process.env.DB as unknown as D1Database;
-  if (!DB) {
-    return new Response(
-      JSON.stringify({
-        error: "Unauthorized, missing DB in environment",
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        status: 401,
-      },
-    );
-  }
-
-  const adapter = new PrismaD1(DB);
-  const prisma = new PrismaClient({ adapter });
-
-  const lucia = initializeLucia(DB);
   try {
+    // Validate and return Apple tokens
     const tokens = await apple.validateAuthorizationCode(code);
     if (!tokens) {
       console.log("Failed to validate authorization code");
-      return new Response(null, { status: 400 });
+      res.status(400).end();
+      return;
     }
 
     const jwt = parseJWT(tokens.idToken);
     if (!jwt || !jwt.payload) {
       console.error("Invalid JWT");
-      return new Response("Invalid JWT", { status: 400 });
+      res.status(400).end("Invalid JWT");
+      return;
     }
 
     const payload = jwt.payload as JWTPayload;
 
-    const existingUser = await prisma.user.findUnique({
+    // Check for existing user
+    const existingUser = await prisma.user.findFirst({
+      // @ts-ignore
       where: { apple_id: payload.sub },
     });
 
     let session;
     if (existingUser) {
+      console.log("Existing user found, creating new session.");
       session = await lucia.createSession(existingUser.id, {});
     } else {
+      console.log("No existing user found, creating new user.");
       const userId = generateId(15);
       await prisma.user.create({
         data: {
@@ -135,20 +106,18 @@ export default async function onRequestPost(request: any) {
       session = await lucia.createSession(userId, {});
     }
 
-    const headers = new Headers();
-
-    // TODO: Fix the redirect internal server error.
-    // headers.append("Location", "/");
-    headers.append(
+    // Set session cookie and redirect
+    res.appendHeader(
       "Set-Cookie",
       lucia.createSessionCookie(session.id).serialize(),
     );
-
-    return new Response(null, { status: 200, headers });
+    res.status(200).json({ message: "Cookie set successfully" });
   } catch (e) {
-    console.error("Error:", e);
-    return new Response("Internal Server Error", { status: 500 });
+    if (e instanceof OAuth2RequestError) {
+      const { message, description, request } = e;
+      console.error(message, description, request);
+    }
+    res.status(500).end();
+    return;
   }
 }
-
-export const runtime = "edge";

@@ -1,6 +1,3 @@
-import { D1Database } from "@cloudflare/workers-types";
-import { PrismaD1 } from "@prisma/adapter-d1";
-import { PrismaClient } from "@prisma/client";
 import {
   redis,
   userEntriesKey,
@@ -9,15 +6,10 @@ import {
   userProfileKey,
 } from "@/lib/global/redis";
 import { createResponse } from "@/pages/api/middleware";
+import { prisma } from "@/lib/global/prisma";
 
 export default async function onRequestPatch(request: any) {
   const { entryId, userId } = await request.json();
-
-  const DB = process.env.DB as unknown as D1Database;
-  if (!DB) {
-    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
-  }
-  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
     // Mark the entry as deleted

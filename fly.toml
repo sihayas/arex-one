@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for arex-one on 2024-04-17T00:00:02-04:00
+# fly.toml app configuration file generated for audition on 2024-04-18T01:01:24-04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'arex-one'
+app = 'audition'
 primary_region = 'ewr'
 
 [build]

@@ -1,13 +1,12 @@
-import { D1Database } from "@cloudflare/workers-types";
-import { PrismaD1 } from "@prisma/adapter-d1";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/global/prisma";
+
 import {
   userAggNotifsKey,
   userNotifsKey,
   userUnreadNotifsCount,
   redis,
 } from "@/lib/global/redis";
-import { createResponse } from "@/pages/api/middleware";
+import { NextApiRequest, NextApiResponse } from "next";
 
 interface AggregatedNotification {
   type: string;
@@ -39,20 +38,19 @@ interface NotificationResponse {
   };
 }
 
-export default async function onRequestGet(request: any) {
-  const { searchParams } = new URL(request.url);
-  const userId = searchParams.get("userId");
-  const cursor = parseFloat(searchParams.get("cursor") || "0");
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  const userId = Array.isArray(req.query.userId)
+    ? req.query.userId[0]
+    : req.query.userId;
+
+  const cursor = Number(req.query.cursor) || 0;
 
   if (!userId) {
-    return createResponse({ error: "Invalid userId" }, 400);
+    return res.status(400).json({ error: "Missing parameters" });
   }
-
-  const DB = process.env.DB as unknown as D1Database;
-  if (!DB) {
-    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
-  }
-  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
     const unreadCount = parseInt(
@@ -112,7 +110,7 @@ export default async function onRequestGet(request: any) {
       const newCursor = aggregatedNotifs.lastTimestamp; // Cursor
 
       await redis.decrby(userUnreadNotifsCount(userId), notificationIds.length);
-      return createResponse({ data: notifs, cursor: newCursor }, 200);
+      return res.status(200).json({ notifs: notifs, cursor: newCursor });
     }
 
     if (!unreadCount) {
@@ -135,12 +133,13 @@ export default async function onRequestGet(request: any) {
           notifs.length > 0
             ? notifs[cachedAggregatedNotifs.length - 1].lastTimestamp
             : cursor;
-        return createResponse({ data: notifs, cursor: newCursor }, 200);
+
+        return res.status(200).json({ notifs: notifs, cursor: newCursor });
       }
     }
   } catch (error) {
     console.error("Error fetching notifications:", error);
-    return createResponse({ error: "Error fetching notifications" }, 500);
+    return res.status(500).json({ error: "Error fetching notifications." });
   }
 }
 
@@ -204,5 +203,3 @@ async function batchNotifs(notifs: NotificationResponse[], userId: string) {
 
   return { accumulator, lastTimestamp };
 }
-
-export const runtime = "edge";

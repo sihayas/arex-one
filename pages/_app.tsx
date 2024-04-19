@@ -47,7 +47,7 @@ const App = ({ Component, pageProps }: AppProps<{}>) => {
     script.async = true;
     script.onload = () => {
       window.MusicKit.configure({
-        developerToken: process.env.NEXT_PUBLIC_MUSICKIT_TOKEN,
+        developerToken: process.env.NEXT_PUBLIC_APPLE_JWT,
         app: {
           name: "Voir",
           build: "0001",

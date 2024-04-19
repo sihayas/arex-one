@@ -33,7 +33,6 @@ const useGenericFeedQuery = (
       const queryParams = new URLSearchParams({
         userId,
         page: pageParam.toString(),
-        limit: limit.toString(),
       });
       const response = await fetch(`${url}?${queryParams.toString()}`);
 

@@ -1,38 +1,34 @@
 import { searchAlbums } from "@/lib/global/musickit";
-import { D1Database } from "@cloudflare/workers-types";
-import { PrismaD1 } from "@prisma/adapter-d1";
-import { PrismaClient } from "@prisma/client";
-import { createResponse } from "@/pages/api/middleware";
+import { prisma } from "@/lib/global/prisma";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function onRequest(request: any) {
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get("query");
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  const { query } = req.query;
 
-  const DB = process.env.DB as unknown as D1Database;
-  if (!DB) {
-    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
+  if (typeof query === "undefined") {
+    res.status(400).json({ error: "Query parameter is required" });
+    return;
   }
-  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
-  if (!query) {
-    return createResponse({ error: "Query parameter is required" }, 400);
-  }
+  // Convert query to string if it's an array
+  const keyword = typeof query === "string" ? query : query.join(" ");
 
   // Fetch filtered albums and songs from Apple's database
-  const appleResponse = await searchAlbums(query);
+  const appleResponse = await searchAlbums(keyword);
 
   // Fetch users related to the search query from our own database
   const usersResponse = await prisma.user.findMany({
     where: {
-      OR: [{ username: { contains: query } }],
+      OR: [{ username: { contains: keyword } }],
     },
   });
 
   // Combine Apple's data and users from our own database
-  return createResponse(
-    { appleData: appleResponse, users: usersResponse },
-    200,
-  );
-}
 
-export const runtime = "edge";
+  return res
+    .status(200)
+    .json({ appleData: appleResponse, users: usersResponse });
+}

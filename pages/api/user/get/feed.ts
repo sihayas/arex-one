@@ -1,6 +1,4 @@
-import { D1Database } from "@cloudflare/workers-types";
-import { PrismaD1 } from "@prisma/adapter-d1";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/global/prisma";
 import {
   entryDataKey,
   userEntriesKey,
@@ -8,25 +6,24 @@ import {
   userHeartsKey,
   redis,
 } from "@/lib/global/redis";
-import { createResponse } from "@/pages/api/middleware";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function onRequestGet(request: any) {
-  const { searchParams } = new URL(request.url);
-  const userId = searchParams.get("userId");
-  const page = Number(searchParams.get("page")) || 1;
-  const limit = Number(searchParams.get("limit")) || 8;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  const userId = Array.isArray(req.query.userId)
+    ? req.query.userId[0]
+    : req.query.userId;
+
+  const page = Number(req.query.page) || 1;
+  const limit = 8;
   const start = (page - 1) * limit;
   const end = page * limit - 1;
 
   if (!userId) {
-    return createResponse({ error: "Missing parameters" }, 400);
+    return res.status(400).json({ error: "Missing parameters" });
   }
-
-  const DB = process.env.DB as unknown as D1Database;
-  if (!DB) {
-    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
-  }
-  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
     let entryIds = await redis.zrange(userFeedKey(userId), start, end, {
@@ -42,10 +39,7 @@ export default async function onRequestGet(request: any) {
 
       // If the user is not following anyone, return an empty feed
       if (!following || following.following.length === 0) {
-        return createResponse(
-          { data: { activities: [], pagination: null } },
-          200,
-        );
+        return res.status(200).json({ entries: [], pagination: null });
       }
 
       const followingIds = following.following.map((user) => user.id);
@@ -180,19 +174,12 @@ export default async function onRequestGet(request: any) {
         entry.heartedByUser = hearts.includes(entry.id);
       });
 
-    return createResponse(
-      {
-        data: {
-          activities: entries,
-          pagination: { nextPage: hasMorePages ? page + 1 : null },
-        },
-      },
-      200,
-    );
+    return res.status(200).json({
+      entries: entries,
+      pagination: { nextPage: hasMorePages ? page + 1 : null },
+    });
   } catch (error) {
-    console.error("Failed to fetch feed:", error);
-    return createResponse({ error: "Failed to fetch feed." }, 500);
+    console.error("Error fetching feed", error);
+    return res.status(500).json({ error: "Error fetching feed." });
   }
 }
-
-export const runtime = "edge";

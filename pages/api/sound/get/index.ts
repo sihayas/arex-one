@@ -8,9 +8,7 @@ import {
   soundDataKey,
 } from "@/lib/global/redis";
 import { createResponse } from "@/pages/api/middleware";
-import { D1Database } from "@cloudflare/workers-types";
-import { PrismaClient } from "@prisma/client";
-import { PrismaD1 } from "@prisma/adapter-d1";
+import { prisma } from "@/lib/global/prisma";
 
 interface SoundData {
   name: string;
@@ -37,12 +35,6 @@ export default async function onRequestGet(request: Request) {
   if (!appleId) {
     return createResponse({ error: "Missing parameters" }, 400);
   }
-
-  const DB = process.env.DB as unknown as D1Database;
-  if (!DB) {
-    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
-  }
-  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   try {
     // Check cache for sound id in database

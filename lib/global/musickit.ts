@@ -1,11 +1,10 @@
 import { AlbumData } from "@/types/appleTypes";
 
-const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN || "";
+const token = process.env.NEXT_PUBLIC_APPLE_JWT || "";
 export const baseURL = "https://api.music.apple.com/v1/catalog/us";
 
 // Fetch all related albums and select a single source album
 export const fetchSourceAlbum = async (albumId: string | undefined) => {
-  const token = process.env.NEXT_PUBLIC_MUSICKIT_TOKEN;
   const url = `${baseURL}/albums/${albumId}?views=other-versions`;
 
   if (!albumId) {

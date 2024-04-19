@@ -1,12 +1,13 @@
-import { Lucia } from "lucia";
+import { Lucia, Session, User } from "lucia";
+import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 
 import { Apple, AppleCredentials } from "arctic";
-import { D1Adapter } from "@lucia-auth/adapter-sqlite";
-import { D1Database } from "@cloudflare/workers-types";
+import { PrismaClient } from "@prisma/client";
+import { IncomingMessage, ServerResponse } from "node:http";
 
 declare module "lucia" {
   interface Register {
-    Auth: ReturnType<typeof initializeLucia>;
+    Lucia: typeof lucia;
     DatabaseUserAttributes: DatabaseUserAttributes;
   }
 }
@@ -18,32 +19,7 @@ interface DatabaseUserAttributes {
   image: string;
 }
 
-export function initializeLucia(D1: D1Database) {
-  const adapter = new D1Adapter(D1, {
-    user: "user",
-    session: "session",
-  });
-  return new Lucia(adapter, {
-    sessionCookie: {
-      name: "session",
-      expires: false,
-      attributes: {
-        secure: true,
-        sameSite: "strict",
-        domain: "voir.space",
-      },
-    },
-    getUserAttributes: (attributes) => {
-      return {
-        id: attributes.id,
-        appleId: attributes.apple_id,
-        username: attributes.username,
-        image: attributes.image,
-      };
-    },
-  });
-}
-
+// Apple
 const credentials: AppleCredentials = {
   clientId: process.env.APPLE_CLIENT_ID ?? "",
   teamId: process.env.APPLE_TEAM_ID ?? "",
@@ -52,3 +28,58 @@ const credentials: AppleCredentials = {
 };
 const redirectURI = process.env.APPLE_REDIRECT_URI ?? "";
 export const apple = new Apple(credentials, redirectURI);
+
+// Lucia
+const client = new PrismaClient();
+const luciaAdapter = new PrismaAdapter(client.session, client.user);
+export const lucia = new Lucia(luciaAdapter, {
+  sessionCookie: {
+    name: "session",
+    expires: false, // session cookies have very long lifespan (2 years),
+    attributes: {
+      secure: true,
+      sameSite: "strict",
+      domain: "voir.space",
+    },
+  },
+  getUserAttributes: (attributes) => {
+    return {
+      id: attributes.id,
+      appleId: attributes.apple_id,
+      username: attributes.username,
+      image: attributes.image,
+    };
+  },
+});
+
+export async function validateRequest(
+  req: IncomingMessage,
+  res: ServerResponse,
+): Promise<{ user: User; session: Session } | { user: null; session: null }> {
+  const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
+
+  if (!sessionId) {
+    return {
+      user: null,
+      session: null,
+    };
+  }
+
+  const result = await lucia.validateSession(sessionId);
+
+  // Re-set the session on every response
+  if (result.session && result.session.fresh) {
+    res.appendHeader(
+      "Set-Cookie",
+      lucia.createSessionCookie(result.session.id).serialize(),
+    );
+  }
+
+  if (!result.session) {
+    res.appendHeader(
+      "Set-Cookie",
+      lucia.createBlankSessionCookie().serialize(),
+    );
+  }
+  return result;
+}

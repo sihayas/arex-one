@@ -1,6 +1,3 @@
-import { PrismaClient } from "@prisma/client";
-import { D1Database } from "@cloudflare/workers-types";
-import { PrismaD1 } from "@prisma/adapter-d1";
 import {
   entryHeartCountKey,
   userHeartsKey,
@@ -9,6 +6,7 @@ import {
   redis,
 } from "@/lib/global/redis";
 import { createResponse } from "@/pages/api/middleware";
+import { prisma } from "@/lib/global/prisma";
 
 export default async function onRequestPost(request: any) {
   const { targetId, userId, authorId, actionType, targetType, soundId } =
@@ -17,13 +15,6 @@ export default async function onRequestPost(request: any) {
   if (authorId === userId) {
     return createResponse({ error: "Cannot act on your own." }, 400);
   }
-
-  const DB = process.env.DB as unknown as D1Database;
-  if (!DB) {
-    return createResponse({ error: "Unauthorized, DB missing in env" }, 401);
-  }
-
-  const prisma = new PrismaClient({ adapter: new PrismaD1(DB) });
 
   const isEntry = targetType === "entry";
 
