@@ -32,84 +32,101 @@ export default async function handler(
 
     // User has no entry ids in their feed cache, attempt to populate it
     if (!entryIds.length) {
-      const following = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { following: { select: { id: true } } },
+      let followingIds = [];
+      // Get the following ids
+      const user = await prisma.user.findUnique({
+        where: { id: userId, status: "active" },
+        select: {
+          following: {
+            where: { is_deleted: false },
+            select: { following_id: true },
+          },
+        },
       });
 
-      // If the user is not following anyone, return an empty feed
-      if (!following || following.following.length === 0) {
-        return res.status(200).json({ entries: [], pagination: null });
-      }
+      // Push the user's following ids to the array
+      user && followingIds.push(...user.following.map((f) => f.following_id));
+      followingIds.push(userId);
 
-      const followingIds = following.following.map((user) => user.id);
-
-      // Get the entry id's from the cache for each user
+      // Get the entries set with scores from the cache for each following
       const pipeline = redis.pipeline();
-      followingIds.forEach((id) => pipeline.smembers(userEntriesKey(id)));
+      followingIds.forEach((id) =>
+        pipeline.zrange(userEntriesKey(id), 0, -1, { withScores: true }),
+      );
       const results: [Error | null, string[]][] = await pipeline.exec();
 
-      // Cross-reference the following ids with the cache results. If for a
-      // certain index/user the ids returned are empty, check DB
+      // The filter function returns an array of the IDs of the users for whom no entries were found in the cache (missingEntriesIds).
       const missingEntriesIds = followingIds.filter(
         (id, index) => results[index][1].length === 0,
       );
 
-      // All entries were found in cache, aggregate them
-      if (!missingEntriesIds.length) {
-        entryIds = await redis.zrange(userFeedKey(userId), start, end, {
-          rev: true,
-        });
-      }
+      let allEntries: { id: string; timestamp: number }[] = [];
+      const entryPipeline = redis.pipeline();
 
-      // Some following users have no entries in cache, fetch them from DB
-      if (missingEntriesIds.length > 0) {
+      // Some following users have no entries in cache, fetch from DB & cache
+      if (missingEntriesIds.length) {
         const dbEntries = await prisma.entry.findMany({
           where: { author_id: { in: missingEntriesIds } },
           orderBy: { created_at: "desc" },
           select: { id: true, author_id: true, created_at: true },
         });
 
-        const pipeline = redis.pipeline();
         dbEntries.forEach((entry) => {
-          const unixTimestamp = new Date(entry.created_at).getTime();
-          pipeline.zadd(userEntriesKey(entry.author_id), {
-            score: unixTimestamp,
+          // Add the entry to the allEntries array
+          allEntries.push({
+            id: entry.id,
+            timestamp: new Date(entry.created_at).getTime(),
+          });
+          // Cache the entry in the user's entries set
+          entryPipeline.zadd(userEntriesKey(entry.author_id), {
+            score: new Date(entry.created_at).getTime(),
             member: entry.id,
           });
-          pipeline.zadd(userFeedKey(userId), {
-            score: unixTimestamp,
-            member: entry.id,
-          });
-        });
-        await pipeline.exec();
-
-        // Refresh the entryIds from the updated cache
-        entryIds = await redis.zrange(userFeedKey(userId), start, end, {
-          rev: true,
         });
       }
+
+      // Entries found in cache, aggregate and add to allEntries array
+      results.forEach((result, index) => {
+        if (result[1].length > 0) {
+          for (let i = 0; i < result[1].length; i += 2) {
+            allEntries.push({
+              id: result[1][i],
+              timestamp: Number(result[1][i + 1]),
+            });
+          }
+        }
+      });
+
+      // Update the user's feed in Redis with the aggregated entries
+      allEntries.forEach((entry) => {
+        entryPipeline.zadd(userFeedKey(userId), {
+          score: entry.timestamp,
+          member: entry.id,
+        });
+      });
+
+      await pipeline.exec();
+
+      // Refresh the entryIds from the updated cache
+      entryIds = await redis.zrange(userFeedKey(userId), start, end, {
+        rev: true,
+      });
     }
 
-    // Pagination
-    const totalEntries = await redis.zcard(userFeedKey(userId));
-    const hasMorePages = totalEntries > end + 1;
-    if (hasMorePages) entryIds.pop();
-
-    // User has a feed, fetch the entries from the cache
+    // User has a feed, fetch the entry data from the cache
     const pipeline = redis.pipeline();
     entryIds.forEach((entryId: any) => pipeline.hgetall(entryDataKey(entryId)));
     const results = await pipeline.exec();
 
     let entries = results.map((result: any) => result[1]);
 
-    // Fetch from DB if any Redis entries are missing
+    // Map missing entries to their IDs, others to null
     const missingEntryIds: string[] = entries
-      // Map missing entries to their IDs, others to null
       .map((entry: any, index: number) => (entry ? null : entryIds[index]))
       // Keep only string IDs, removing nulls
       .filter((id): id is string => id !== null);
 
+    // Fetch from DB if any entries data are missing
     if (missingEntryIds.length > 0) {
       const dbEntries = await prisma.entry.findMany({
         where: { id: { in: missingEntryIds } },
@@ -123,6 +140,14 @@ export default async function handler(
           loved: true,
           replay: true,
           created_at: true,
+          _count: {
+            select: {
+              actions: {
+                where: { type: "heart" },
+              },
+              replies: true,
+            },
+          },
         },
       });
 
@@ -139,9 +164,12 @@ export default async function handler(
           loved: entry.loved,
           replay: entry.replay,
           created_at: entry.created_at.toISOString(),
+          likes_count: entry._count.actions,
+          chains_count: entry._count.replies,
         });
       });
       await pipeline.exec();
+
       entries = entries.map(
         (entry, index) =>
           entry || dbEntries.find((dbEntry) => dbEntry.id === entryIds[index]),
@@ -169,10 +197,16 @@ export default async function handler(
       }
     }
 
+    // Add the heartedByUser property to each entry
     hearts.length &&
       entries.forEach((entry) => {
         entry.heartedByUser = hearts.includes(entry.id);
       });
+
+    // Pagination
+    const totalEntries = await redis.zcard(userFeedKey(userId));
+    const hasMorePages = totalEntries > end + 1;
+    if (hasMorePages) entryIds.pop();
 
     return res.status(200).json({
       entries: entries,

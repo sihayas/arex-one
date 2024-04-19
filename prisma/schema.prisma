@@ -100,7 +100,7 @@ model Entry {
   author_id String
   sound_id  String
 
-  text   String?
+  text   String? @db.LongText
   rating Float? // Exists only for 'artifact' types
   loved  Boolean? @default(false) // Exists only for 'artifact' types
   replay Boolean? @default(false) // Exists only for 'artifact' types

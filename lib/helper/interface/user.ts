@@ -3,15 +3,21 @@ import { attachSoundData } from "@/lib/helper/feed";
 
 // Initial fetch of basic user and session data
 export const useUserAndSessionQuery = () => {
-  return useQuery(["userAndSession"], async () => {
-    const response = await fetch("/api/oauth/me");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    console.log("data", data);
-    return data;
-  });
+  return useQuery(
+    ["userAndSession"],
+    async () => {
+      const response = await fetch("/api/oauth/me");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      return data;
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
+  );
 };
 
 // Get user profile data
@@ -19,15 +25,22 @@ export const useUserProfileQuery = (
   userId: string | undefined,
   pageUserId: string | undefined,
 ) => {
-  return useQuery(["userData", pageUserId], async () => {
-    if (!userId || !pageUserId) return null;
-    const response = await fetch(
-      `/api/user/get/profile?userId=${userId}&pageUserId=${pageUserId}`,
-    );
-    if (!response.ok) throw new Error("Network response was not ok");
-    const data = await response.json();
-    return data;
-  });
+  return useQuery(
+    ["userData", pageUserId],
+    async () => {
+      if (!userId || !pageUserId) return null;
+      const response = await fetch(
+        `/api/user/get/profile?userId=${userId}&pageUserId=${pageUserId}`,
+      );
+      if (!response.ok) throw new Error("Network response was not ok");
+      const data = await response.json();
+      return data;
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
+  );
 };
 
 export const useEntriesQuery = (
@@ -68,20 +81,6 @@ export const useEntriesQuery = (
   //     refetchOnWindowFocus: false,
   //   },
   // );
-};
-
-export const useSettingsQuery = (userId: string | undefined) => {
-  return useQuery(["userSettings", userId], async () => {
-    if (!userId) return null;
-    const response = await fetch(
-      `/api/user/get/settings?userId=${encodeURIComponent(userId)}`,
-    );
-    if (!response.ok) {
-      throw new Error("Fetching user settings failed");
-    }
-    const data = await response.json();
-    return data;
-  });
 };
 
 export const useNotificationsQuery = (userId: string | undefined) => {

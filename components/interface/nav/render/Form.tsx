@@ -8,7 +8,7 @@ import { useNavContext } from "@/context/Nav";
 import { useInterfaceContext } from "@/context/Interface";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
-import { createEntry } from "../../../../lib/helper/interface/nav";
+import { createEntry } from "@/lib/helper/interface/nav";
 import { fetchSourceAlbum } from "@/lib/global/musickit";
 
 const Form = () => {
@@ -25,46 +25,30 @@ const Form = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [rating, setRating] = useState(0);
   const [loved, setLoved] = useState(false);
+  const [replay, setReplay] = useState(false);
 
-  const userId = user!.id;
-
-  const appleData = selectedFormSound;
-
-  const source = fetchSourceAlbum(appleData?.id);
+  const userId = user?.id;
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement> | null) => {
-      event?.preventDefault();
-
-      const gatherSubmissionData = () => {
-        return {
+      const source = await fetchSourceAlbum(selectedFormSound?.id);
+      if (!source || !userId) return;
+      toast.promise(
+        createEntry({
           text: inputValue,
           rating,
+          replay,
           loved,
           userId,
-          sound: appleData,
-        };
-      };
-
-      const submissionData = gatherSubmissionData();
-
-      if (!submissionData) {
-        toast.error(
-          "Error: Sound data is missing. Please make a valid selection.",
-        );
-        return;
-      }
-
-      toast.promise(
-        // @ts-ignore
-        createEntry(submissionData).then(() => {
+          sound: source,
+        }).then(() => {
           setSelectedFormSound(null);
           setInputValue("");
         }),
         {
-          loading: "Sending...",
-          success: "Sent!",
-          error: "Error submitting review",
+          loading: "Sending to the heavens...",
+          success: "Sent",
+          error: "Error",
         },
       );
     },
@@ -75,7 +59,7 @@ const Form = () => {
       userId,
       setSelectedFormSound,
       setInputValue,
-      appleData,
+      selectedFormSound,
     ],
   );
 
@@ -100,25 +84,22 @@ const Form = () => {
     };
   }, [handleSubmit, inputRef]);
 
-  if (!selectedFormSound) return;
-
   const handleRatingChange = (rating: number) => {
     setRating(rating);
   };
 
-  if (!appleData) return;
+  if (!selectedFormSound) return;
 
   const artwork = MusicKit.formatArtworkURL(
-    appleData.attributes.artwork,
+    selectedFormSound.attributes.artwork,
     322 * 2.5,
     322 * 2.5,
   );
-  const name = appleData.attributes.name;
-  const artist = appleData.attributes.artistName;
+  const name = selectedFormSound.attributes.name;
+  const artist = selectedFormSound.attributes.artistName;
 
   // handle sound click and prevent default
   const handleSoundClick = (event: React.MouseEvent<HTMLImageElement>) => {
-    event.preventDefault();
     handleSelectSound(selectedFormSound);
   };
 
@@ -163,7 +144,7 @@ const Form = () => {
                 exit={{ opacity: 0, scale: 0.5 }}
                 transition={{ duration: 0.24 }}
                 key={rating}
-                className={`center-x center-y absolute text-2xl font-bold leading-[16px] tracking-tighter text-white`}
+                className={`center-x center-y absolute text-xl font-bold leading-[16px] tracking-tighter text-white`}
               >
                 {rating}
               </motion.div>

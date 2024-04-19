@@ -42,7 +42,7 @@ const SignedIn: React.FC<SignedInProps> = ({ user }) => {
           user={user}
         />
         <p
-          className={`absolute right-14 text-base text-black font-medium mix-blend-darken`}
+          className={`absolute right-14 text-base text-black font-medium mix-blend-darken w-max`}
         >
           @{user.username}
         </p>

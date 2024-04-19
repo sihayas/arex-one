@@ -50,6 +50,7 @@ export const Keybinds = (
     ) {
       handleReplySubmit();
     }
+
     // Switch to album page from form
     else if (e.key === "Enter" && selectedFormSound && inputValue === "") {
       e.preventDefault();
@@ -58,6 +59,7 @@ export const Keybinds = (
       inputRef.current?.blur();
       window.history.pushState(null, "");
     }
+
     // Wipe selectedFormSound and replyTarget
     else if (
       e.key === "Backspace" &&
@@ -71,6 +73,7 @@ export const Keybinds = (
       setStoredInputValue("");
       inputRef.current?.focus();
     }
+
     // Prepare form if on sound page
     else if (
       e.key === "Enter" &&
@@ -82,6 +85,7 @@ export const Keybinds = (
       const sound = activePage.sound.data;
       setSelectedFormSound(sound);
     }
+
     // Prepare reply parent
     else if (
       e.key === "Enter" &&

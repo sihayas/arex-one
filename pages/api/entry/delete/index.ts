@@ -5,11 +5,14 @@ import {
   userFollowersKey,
   userProfileKey,
 } from "@/lib/global/redis";
-import { createResponse } from "@/pages/api/middleware";
 import { prisma } from "@/lib/global/prisma";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function onRequestPatch(request: any) {
-  const { entryId, userId } = await request.json();
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  const { entryId, userId } = await req.body();
 
   try {
     // Mark the entry as deleted
@@ -19,7 +22,7 @@ export default async function onRequestPatch(request: any) {
     });
 
     if (!deletedEntry) {
-      return createResponse({ error: "Unable to delete entry." }, 404);
+      return res.status(404).json({ error: "Unable to delete entry." });
     }
 
     // Update the feed cache of followers
@@ -46,16 +49,15 @@ export default async function onRequestPatch(request: any) {
       // No followers so no feeds to update, update user entries and return
       if (!followers) {
         await redis.zrem(userEntriesKey(userId), entryId);
-
-        return createResponse({ success: "Entry deleted." }, 200);
+        return res.status(200).json({ success: "Entry deleted." });
       }
       await redis.set(userFollowersKey(userId), JSON.stringify(followers));
     }
 
     followers.push(userId);
 
-    const pipeline = redis.pipeline();
     // Remove the entry from the feed of each follower
+    const pipeline = redis.pipeline();
     followers.forEach((followerId) => {
       pipeline.zrem(userFeedKey(followerId), entryId);
     });
@@ -65,11 +67,9 @@ export default async function onRequestPatch(request: any) {
     await redis.hincrby(userProfileKey(userId), "entries_count", -1);
     await pipeline.exec();
 
-    return createResponse({ success: "Entry deleted." }, 200);
+    return res.status(200).json({ success: "Entry deleted." });
   } catch (error) {
-    console.error("Failed to delete:", error);
-    return createResponse({ error: "Failed to delete:" }, 500);
+    console.error("Error deleting entry:", error);
+    return res.status(500).json({ error: "Error deleting entry." });
   }
 }
-
-export const runtime = "edge";

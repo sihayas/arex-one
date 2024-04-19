@@ -7,8 +7,8 @@ import {
   setCache,
   soundDataKey,
 } from "@/lib/global/redis";
-import { createResponse } from "@/pages/api/middleware";
 import { prisma } from "@/lib/global/prisma";
+import { NextApiRequest, NextApiResponse } from "next";
 
 interface SoundData {
   name: string;
@@ -28,12 +28,16 @@ interface SoundData {
   "5": number;
 }
 
-export default async function onRequestGet(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const appleId = searchParams.get("appleId");
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  const appleId = Array.isArray(req.query.appleId)
+    ? req.query.appleId[0]
+    : req.query.appleId;
 
   if (!appleId) {
-    return createResponse({ error: "Missing parameters" }, 400);
+    return res.status(400).json({ error: "Missing parameters" });
   }
 
   try {
@@ -51,7 +55,7 @@ export default async function onRequestGet(request: Request) {
       });
 
       if (!sound) {
-        return createResponse({ error: "Sound not found in DB." }, 404);
+        return res.status(204).end();
       }
 
       // Cache the sound id mapping
@@ -120,11 +124,11 @@ GROUP BY s.name, s.artist_name, s.release_date
         release_date: releaseDate,
       };
       await redis.hset(soundDataKey(soundId), soundData);
-      return createResponse({ data: soundData }, 200);
+      return res.status(200).json({ soundData });
     }
   } catch (error) {
     console.error("Error fetching sound data.", error);
-    return createResponse({ error: "Error fetching sound data." }, 500);
+    return res.status(500).json({ error: "Error fetching sound data." });
   }
 }
 
@@ -216,5 +220,3 @@ export async function fetchAndCacheSoundsByType(ids: any, type: string) {
 
   return Array.from(responseDataMap.values()).filter(Boolean);
 }
-
-export const runtime = "edge";

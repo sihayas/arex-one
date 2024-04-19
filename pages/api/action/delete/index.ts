@@ -5,15 +5,18 @@ import {
   userUnreadNotifsCount,
   redis,
 } from "@/lib/global/redis";
-import { createResponse } from "@/pages/api/middleware";
 import { prisma } from "@/lib/global/prisma";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function onRequestPost(request: any) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const { targetId, userId, authorId, actionType, targetType, soundId } =
-    await request.json();
+    await req.body();
 
   if (authorId === userId) {
-    return createResponse({ error: "Cannot act on your own." }, 400);
+    return res.status(400).json({ error: "Cannot act on your own" });
   }
 
   const isEntry = targetType === "entry";
@@ -57,11 +60,9 @@ export default async function onRequestPost(request: any) {
 
     // Handle user cache
     await redis.srem(userHeartsKey(userId), targetId); // -IDs to hearts
-    return createResponse({ success: "Un-hearted successfully" }, 200);
+    return res.status(200).json({ error: "Deleted action successfully" });
   } catch (error) {
-    console.error("Error deleting heart:", error);
-    return createResponse({ error: "Failed to delete heart." }, 500);
+    console.error("Error deleting action:", error);
+    return res.status(500).json({ error: "Error deleting action." });
   }
 }
-
-export const runtime = "edge";

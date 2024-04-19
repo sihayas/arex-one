@@ -73,22 +73,28 @@ export const Search = (searchQuery: string) => {
 export const createEntry = async (submissionData: {
   text: string;
   rating: number;
+  replay: boolean;
   loved: boolean;
   userId: string;
   sound: AlbumData | SongData;
 }) => {
-  // No rating means it's a wisp
-  const endpoint = "/api/artifact/post";
+  const endpoint = "/api/entry/post/";
 
   try {
-    // const response = await axios.post(endpoint, submissionData);
-    //
-    // if (response.status === 201) {
-    //   console.log("Submission successful", response.data);
-    //   return response.data;
-    // } else {
-    //   throw new Error(`Unexpected response status: ${response.status}`);
-    // }
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(submissionData),
+    });
+
+    if (response.status === 201) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
   } catch (error) {
     console.error("Error submitting data:", error);
     throw new Error(`Error during submission:`);
