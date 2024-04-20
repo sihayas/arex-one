@@ -11,12 +11,12 @@ import { Virtuoso } from "react-virtuoso";
 const Feed = ({ userId, type }: { userId: string; type: string }) => {
   const { setIsLoading } = useInterfaceContext();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeedQuery(
-    userId,
-    type,
-  );
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useFeedQuery(userId);
 
-  const allActivities = data ? data.pages.flatMap((page) => page.data) : [];
+  const entries = data ? data.pages.flatMap((page) => page.data) : [];
+
+  console.log("Feed entries:", entries);
 
   const handleEndReached = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -36,22 +36,22 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
   return (
     <Virtuoso
       style={{ height: "100vh", width: "100%" }}
-      data={allActivities}
+      data={entries}
       overscan={200}
       computeItemKey={(key: number) => `item-${key.toString()}`}
       endReached={handleEndReached}
-      itemContent={(index, activity) => (
+      itemContent={(index, entry) => (
         <div
           className={`flex items-center justify-center pt-[96px]`}
-          key={activity.id}
+          key={entry.id}
         >
-          {activity.entry && activity.entry.type === "artifact" ? (
-            <Entry entry={activity.entry as EntryExtended} />
-          ) : activity.entry && activity.entry.type === "wisp" ? (
-            <Wisp entry={activity.entry as EntryExtended} />
-          ) : (
-            "No artifact available for this activity."
-          )}
+          {/*{entry.type === "artifact" ? (*/}
+          {/*  <Entry entry={entry as EntryExtended} />*/}
+          {/*) : entry.type === "wisp" ? (*/}
+          {/*  <Wisp entry={entry as EntryExtended} />*/}
+          {/*) : (*/}
+          {/*  "No artifact available for this activity."*/}
+          {/*)}*/}
         </div>
       )}
       components={{

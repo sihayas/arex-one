@@ -116,8 +116,6 @@ const User = () => {
 
   const { data } = useUserProfileQuery(user?.id, pageUser?.id);
 
-  console.log(data, "user");
-
   useEffect(() => {
     !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
   }, []);

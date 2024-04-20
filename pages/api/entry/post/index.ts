@@ -142,7 +142,11 @@ export default async function handler(
     // Cache entry data in hash
     pipeline.hset(entryDataKey(entry.id), {
       id: entry.id,
-      sound_id: soundInDatabase.id,
+      sound: {
+        id: soundInDatabase.id,
+        apple_id: soundInDatabase.apple_id,
+        type: sound.type,
+      },
       type: entry.type,
       author_id: userId,
       text: entry.text,

@@ -1,55 +1,31 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Activity, ActivityType } from "@/types/dbTypes";
 import { AlbumData, SongData } from "@/types/appleTypes";
+import { Entry, Sound } from "@prisma/client";
 
-export const useFeedQuery = (userId: string, type: string, limit = 6) => {
-  let url;
+type SoundExtended = Sound & { appleData: AlbumData | SongData };
+type EntryExtended = Entry & { sound: SoundExtended };
 
-  if (type === "personal") {
-    url = `/api/user/get/feed`;
-  } else if (type === "bloom") {
-    url = `/api/feed/get/bloom`;
-  } else if (type === "recent") {
-    url = `/api/feed/get/recent`;
-  }
-
-  if (!url) throw new Error("Invalid type passed to useTestQuery");
-
-  const result = useGenericFeedQuery("feed", url, userId, limit);
-
-  return { ...result };
-};
-
-// Common logic for fetching feed data
-const useGenericFeedQuery = (
-  key: string,
-  url: string,
-  userId: string,
-  limit: number,
-) => {
+export const useFeedQuery = (userId: string) => {
   return useInfiniteQuery(
-    [key, userId],
+    ["feed", userId],
     async ({ pageParam = 1 }) => {
       const queryParams = new URLSearchParams({
         userId,
         page: pageParam.toString(),
       });
-      const response = await fetch(`${url}?${queryParams.toString()}`);
+      const response = await fetch(
+        `/api/user/get/feed?${queryParams.toString()}`,
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
-      const jsonData = await response.json();
-      const { activities, pagination } = jsonData.data;
+      const data = await response.json();
+      const pagination = data.pagination;
+      const entries = await attachSoundData(data.entries);
 
-      if (!activities || !pagination) {
-        throw new Error("Unexpected server response structure");
-      }
-
-      const mergedData = await attachSoundData(activities);
-
-      return { data: mergedData, pagination };
+      return { data: entries, pagination: pagination };
     },
     {
       getNextPageParam: (lastPage) => lastPage.pagination?.nextPage || null,
@@ -59,40 +35,28 @@ const useGenericFeedQuery = (
   );
 };
 
-// Helper function to extract entry from activity
-export function extractEntry(activity: Activity) {
-  return activity.type === ActivityType.Entry
-    ? activity.entry
-    : activity.type === ActivityType.ReplyType
-    ? activity.reply?.entry
-    : activity.type === ActivityType.Heart
-    ? activity.heart?.entry || activity.heart?.reply?.entry
-    : null;
-}
-
-// Utility function to attach album and song data to activities
-export const attachSoundData = async (activityData: Activity[]) => {
+export const attachSoundData = async (entries: EntryExtended[]) => {
   const albumIds: string[] = [];
   const songIds: string[] = [];
 
-  activityData.forEach((activity) => {
-    const entry = extractEntry(activity);
-    if (entry) {
-      const { type, appleId } = entry.sound;
-      if (type === "albums") albumIds.push(appleId);
-      else if (type === "songs") songIds.push(appleId);
-    }
+  entries.forEach((entry: EntryExtended) => {
+    const { type, apple_id } = entry.sound;
+    if (type === "albums") albumIds.push(apple_id);
+    else if (type === "songs") songIds.push(apple_id);
   });
 
   // Fetch album and track data
   const idTypes = { albums: albumIds, songs: songIds };
-  const url = new URL(`/api/cache/sounds`, location.origin);
-  url.searchParams.append("idTypes", JSON.stringify(idTypes));
+  const response = await fetch("/api/cache/sounds", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(idTypes),
+  });
 
-  const response = await fetch(url.toString());
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
+
   const { albums, songs } = await response.json();
 
   // Create maps for albums and tracks
@@ -100,16 +64,13 @@ export const attachSoundData = async (activityData: Activity[]) => {
   const songMap = new Map(songs.map((song: SongData) => [song.id, song]));
 
   // Attach album and track data to activity entries
-  activityData.forEach((activity) => {
-    const entry = extractEntry(activity);
-    if (entry) {
-      const { type, appleId } = entry.sound;
-      if (type === "albums")
-        entry.sound.appleData = albumMap.get(appleId) as AlbumData;
-      else if (type === "songs")
-        entry.sound.appleData = songMap.get(appleId) as SongData;
-    }
+  entries.forEach((entry) => {
+    const { type, apple_id } = entry.sound;
+    if (type === "albums")
+      entry.sound.appleData = albumMap.get(apple_id) as AlbumData;
+    else if (type === "songs")
+      entry.sound.appleData = songMap.get(apple_id) as SongData;
   });
 
-  return activityData;
+  return entries;
 };

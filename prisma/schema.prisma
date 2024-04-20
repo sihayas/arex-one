@@ -140,10 +140,6 @@ model Follows {
   @@index([following_id])
 }
 
-
-
-
-
 model Reply {
   id          String  @id @default(cuid())
   text        String

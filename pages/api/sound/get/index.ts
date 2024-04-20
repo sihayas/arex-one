@@ -1,11 +1,12 @@
 import { fetchSoundsByType, fetchSoundsByTypes } from "@/lib/global/musickit";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import {
-  soundAppleIdMapKey,
   getCache,
   redis,
   setCache,
   soundDataKey,
+  soundDbToAppleIdMap,
+  soundAppleToDbIdMap,
 } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -42,10 +43,7 @@ export default async function handler(
 
   try {
     // Check cache for sound id in database
-    let soundId: string | null = await redis.hget(
-      soundAppleIdMapKey(),
-      appleId,
-    );
+    let soundId: string | null = await redis.hget(soundToAppleIdMap(), appleId);
 
     if (!soundId) {
       //   Check if sound exists in database
@@ -59,8 +57,11 @@ export default async function handler(
       }
 
       // Cache the sound id mapping
-      await redis.hset(soundAppleIdMapKey(), {
+      await redis.hset(soundDbToAppleIdMap(), {
         [appleId]: sound.id,
+      });
+      await redis.hset(soundAppleToDbIdMap(), {
+        [sound.id]: appleId,
       });
 
       soundId = sound.id;

@@ -8,7 +8,9 @@ export const redis = new Redis({
 // -- Redis Sound Keys --
 
 // Key for mapping Apple Music ID to internal Sound ID
-export const soundAppleIdMapKey = () => `sound:apple_id_map`;
+export const soundDbToAppleIdMap = () => `sound:db_to_apple:map`;
+
+export const soundAppleToDbIdMap = () => `sound:apple_to_db:map`;
 
 // Key for sound data in Redis.
 export const soundDataKey = (soundId: string) => `sound:${soundId}:data`;
