@@ -43,7 +43,10 @@ export default async function handler(
 
   try {
     // Check cache for sound id in database
-    let soundId: string | null = await redis.hget(soundToAppleIdMap(), appleId);
+    let soundId: string | null = await redis.hget(
+      soundDbToAppleIdMap(),
+      appleId,
+    );
 
     if (!soundId) {
       //   Check if sound exists in database

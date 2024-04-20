@@ -1,10 +1,18 @@
 import Image from "next/image";
 import { useUser } from "@/hooks/usePage";
 import React from "react";
-import { UserType } from "@/types/dbTypes";
+import { Author } from "@/types/global";
+
+type UserType = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  avatar: string;
+};
 
 interface UserAvatarProps {
-  user: UserType;
+  user: Author;
   imageSrc: string;
   altText: string;
   height?: number;

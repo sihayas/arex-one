@@ -24,7 +24,7 @@ model User {
   notifications_received Notification[] @relation("notifee")
   activities    Activity[]
   entries       Entry[]
-  replies       Reply[]
+  chains        Chain[]
   actions       Action[]
 
   follow_notifications Boolean @default(true)
@@ -111,7 +111,7 @@ model Entry {
   activity Activity?
 
 
-  replies Reply[]
+  chains Chain[]
 
   is_deleted Boolean @default(false)
 
@@ -140,19 +140,19 @@ model Follows {
   @@index([following_id])
 }
 
-model Reply {
+model Chain {
   id          String  @id @default(cuid())
   text        String
-  reply_to_id String?
+  chain_to_id String?
   root_id     String?
   entry_id    String
   author_id   String
 
-  reply_to Reply?  @relation("parent", fields: [reply_to_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  replies  Reply[] @relation("parent")
+  chain_to Chain?  @relation("parent", fields: [chain_to_id], references: [id], onDelete:Restrict, onUpdate: Restrict)
+  chains   Chain[] @relation("parent")
 
-  root         Reply?  @relation("root", fields: [root_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  root_replies Reply[] @relation("root")
+  root         Chain?  @relation("root", fields: [root_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  root_chains Chain[] @relation("root")
   actions      Action[]
 
   activity     Activity?
@@ -165,7 +165,7 @@ model Reply {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  @@index([reply_to_id])
+  @@index([chain_to_id])
   @@index([root_id])
   @@index([entry_id])
   @@index([author_id])
@@ -181,7 +181,7 @@ model Action {
 
   author   User @relation(fields: [author_id], references: [id])
   entry    Entry? @relation(fields: [entry_id], references: [id])
-  reply    Reply? @relation(fields: [reply_id], references: [id])
+  chain    Chain? @relation(fields: [reply_id], references: [id])
   activity Activity?
 
   is_deleted Boolean @default(false)
@@ -208,7 +208,7 @@ model Activity {
   author        User    @relation(fields: [author_id], references: [id])
 
   action        Action? @relation(fields: [action_id], references: [id])
-  reply         Reply?  @relation(fields: [reply_id], references: [id])
+  chain         Chain?  @relation(fields: [reply_id], references: [id])
   entry         Entry?  @relation(fields: [entry_id], references: [id])
 
 

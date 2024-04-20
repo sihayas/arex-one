@@ -1,12 +1,8 @@
 import React from "react";
-
 // import useHandleHeartClick from "@/hooks/useHeart";
-
 import Avatar from "@/components/global/Avatar";
-
-import { EntryExtended } from "@/types/globalTypes";
+import { EntryExtended } from "@/types/global";
 import { motion } from "framer-motion";
-
 import { useEntry, useSound } from "@/hooks/usePage";
 import Image from "next/image";
 

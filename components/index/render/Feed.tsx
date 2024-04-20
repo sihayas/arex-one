@@ -1,8 +1,5 @@
-import { useFeedQuery } from "@/lib/helper/feed";
-
 import React from "react";
-
-import { EntryExtended } from "@/types/globalTypes";
+import { useFeedQuery } from "@/lib/helper/feed";
 import { useInterfaceContext } from "@/context/Interface";
 import { Entry } from "@/components/index/items/Entry";
 import { Wisp } from "@/components/index/items/Wisp";
@@ -15,20 +12,18 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
     useFeedQuery(userId);
 
   const entries = data ? data.pages.flatMap((page) => page.data) : [];
-
   console.log("Feed entries:", entries);
 
   const handleEndReached = () => {
     if (hasNextPage && !isFetchingNextPage) {
-      // Check if not already fetching
-      setIsLoading(true); // Start loading before fetching
+      setIsLoading(true);
       fetchNextPage()
         .then(() => {
-          setIsLoading(false); // Stop loading on success
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching next page:", error);
-          setIsLoading(false); // Ensure loading is stopped on failure
+          setIsLoading(false);
         });
     }
   };
@@ -45,13 +40,13 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
           className={`flex items-center justify-center pt-[96px]`}
           key={entry.id}
         >
-          {/*{entry.type === "artifact" ? (*/}
-          {/*  <Entry entry={entry as EntryExtended} />*/}
-          {/*) : entry.type === "wisp" ? (*/}
-          {/*  <Wisp entry={entry as EntryExtended} />*/}
-          {/*) : (*/}
-          {/*  "No artifact available for this activity."*/}
-          {/*)}*/}
+          {entry.type === "artifact" ? (
+            <Entry entry={entry} />
+          ) : entry.type === "wisp" ? (
+            <Wisp entry={entry} />
+          ) : (
+            "No artifact available for this activity."
+          )}
         </div>
       )}
       components={{

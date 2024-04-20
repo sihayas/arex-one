@@ -1,9 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { AlbumData, SongData } from "@/types/appleTypes";
-import { Entry, Sound } from "@prisma/client";
-
-type SoundExtended = Sound & { appleData: AlbumData | SongData };
-type EntryExtended = Entry & { sound: SoundExtended };
+import { EntryExtended } from "@/types/global";
 
 export const useFeedQuery = (userId: string) => {
   return useInfiniteQuery(
@@ -40,9 +37,8 @@ export const attachSoundData = async (entries: EntryExtended[]) => {
   const songIds: string[] = [];
 
   entries.forEach((entry: EntryExtended) => {
-    const { type, apple_id } = entry.sound;
-    if (type === "albums") albumIds.push(apple_id);
-    else if (type === "songs") songIds.push(apple_id);
+    if (entry.sound_type === "albums") albumIds.push(entry.sound_apple_id);
+    else if (entry.sound_type === "songs") songIds.push(entry.sound_apple_id);
   });
 
   // Fetch album and track data
@@ -65,12 +61,43 @@ export const attachSoundData = async (entries: EntryExtended[]) => {
 
   // Attach album and track data to activity entries
   entries.forEach((entry) => {
-    const { type, apple_id } = entry.sound;
-    if (type === "albums")
-      entry.sound.appleData = albumMap.get(apple_id) as AlbumData;
-    else if (type === "songs")
-      entry.sound.appleData = songMap.get(apple_id) as SongData;
+    if (entry.sound_type === "albums")
+      entry.sound_data = albumMap.get(entry.sound_apple_id) as AlbumData;
+    else if (entry.sound_type === "songs")
+      entry.sound_data = songMap.get(entry.sound_apple_id) as SongData;
   });
 
   return entries;
+};
+
+interface Entry {
+  id: string;
+  sound: { id: string; apple_id: string; type: string };
+  type: string;
+  author_id: string;
+  text: string | null;
+  created_at: Date;
+  _count: { actions: number; chains: number };
+  rating: number | null;
+  loved: boolean | null;
+  replay: boolean | null;
+}
+
+export const formatEntry = (entry: Entry) => {
+  return {
+    id: entry.id,
+    sound_id: entry.sound.id,
+    sound_apple_id: entry.sound.apple_id,
+    sound_type: entry.sound.type,
+    type: entry.type,
+    author_id: entry.author_id,
+    text: entry.text,
+    created_at: entry.created_at.toISOString(),
+    actions_count: entry._count.actions,
+    chains_count: entry._count.chains,
+    // Extra fields for artifacts
+    rating: entry.rating,
+    loved: entry.loved,
+    replay: entry.replay,
+  };
 };

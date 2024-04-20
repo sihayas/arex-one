@@ -8,11 +8,8 @@ import {
   userProfileKey,
 } from "@/lib/global/redis";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Entry, Sound } from "@prisma/client";
-import { AlbumData, SongData } from "@/types/appleTypes";
-
-type SoundExtended = Sound & { appleData: AlbumData | SongData };
-type EntryExtended = Entry & { sound: SoundExtended };
+import { formatEntry } from "@/lib/helper/feed";
+import { EntryExtended } from "@/types/global";
 
 export default async function handler(
   req: NextApiRequest,
@@ -78,10 +75,14 @@ export default async function handler(
       // Filter out the following ids with no entries set in cache
       const idsWithMissingEntries = followingIds.filter((id, index) => {
         const set = entries[index];
-        if (set && set[1]) {
-          return set[1].length === 0;
+        // Check if the data array is empty or the set is undefined
+        if (!set || !set[1] || set[1].length === 0) {
+          return true;
         }
+        return false;
       });
+
+      console.log("idsWithMissingEntries", idsWithMissingEntries);
 
       // Some following users have no entries in cache, check from DB & cache
       if (idsWithMissingEntries.length) {
@@ -136,9 +137,11 @@ export default async function handler(
     entryIds.forEach((entryId: any) =>
       entryPipeline.hgetall(entryDataKey(entryId)),
     );
-    const entryResults = await entryPipeline.exec();
+    const entryResults: [Error | null, string[]][] = await entryPipeline.exec();
 
-    let entries = entryResults.map((result: any) => result[1]);
+    let entries = entryResults.map((result: any) =>
+      result ? result[1] : null,
+    );
 
     // Map missing entries to their IDs, others to null
     const missingEntryIds: string[] = entries
@@ -160,7 +163,7 @@ export default async function handler(
           replay: true,
           created_at: true,
           _count: {
-            select: { actions: { where: { type: "heart" } }, replies: true },
+            select: { actions: { where: { type: "heart" } }, chains: true },
           },
         },
       });
@@ -168,30 +171,17 @@ export default async function handler(
       // Cache the missing entries in Redis
       const pipeline = redis.pipeline();
       dbEntries.forEach((entry) => {
-        pipeline.hset(entryDataKey(entry.id), {
-          id: entry.id,
-          sound: {
-            id: entry.sound.id,
-            apple_id: entry.sound.apple_id,
-            type: entry.sound.type,
-          },
-          type: entry.type,
-          author_id: userId,
-          text: entry.text,
-          // Extra fields for artifacts
-          rating: entry.rating,
-          loved: entry.loved,
-          replay: entry.replay,
-          created_at: entry.created_at.toISOString(),
-          likes_count: entry._count.actions,
-          chains_count: entry._count.replies,
-        });
+        const formattedEntry = formatEntry(entry);
+        pipeline.hset(entryDataKey(entry.id), formattedEntry);
       });
       await pipeline.exec();
 
       entries = entries.map(
         (entry, index) =>
-          entry || dbEntries.find((dbEntry) => dbEntry.id === entryIds[index]),
+          entry ||
+          formatEntry(
+            dbEntries.find((dbEntry) => dbEntry.id === entryIds[index])!,
+          ),
       );
     }
 
@@ -282,12 +272,10 @@ export default async function handler(
         await redis.sadd(userHeartsKey(userId), ...entryIds);
       }
     }
-
     // Add the heartedByUser property to each entry
-    hearts.length &&
-      entries.forEach((entry) => {
-        entry.heartedByUser = hearts.includes(entry.id);
-      });
+    entries.forEach((entry) => {
+      entry.heartedByUser = hearts.includes(entry.id);
+    });
 
     // Pagination
     const totalEntries = await redis.zcard(userFeedKey(userId));

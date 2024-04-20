@@ -26,7 +26,7 @@ const starComponents = {
 };
 
 export const getStarComponent = (
-  rating: number | undefined,
+  rating: number | null,
   width: number = 24,
   height: number = 24,
 ) => {
