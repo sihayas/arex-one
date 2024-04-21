@@ -198,10 +198,8 @@ const User = () => {
               )}
             </div>
 
-            <div className={`flex flex-col gap-6 pl-8`}>
-              <p className={`text-gray2 text-3xl font-bold leading-[22px]`}>
-                {data.username}
-              </p>
+            <div className={`flex flex-col gap-6 pl-8 max-h-[96px]`}>
+              <p className={`text-gray2 text-3xl font-bold`}>{data.username}</p>
               {/* Stats */}
               <div className={`grid grid-cols-[repeat(2,_104px)]`}>
                 <div className={`flex flex-col gap-2.5`}>
