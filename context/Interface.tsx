@@ -5,35 +5,26 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { UserType, Entry } from "@/types/dbTypes";
 
 import { Session } from "lucia";
-import {
-  useUserAndSessionQuery,
-  useNotificationsQuery,
-  useSettingsQuery,
-} from "@/lib/helper/interface/user";
+import { useUserAndSessionQuery } from "@/lib/helper/interface/user";
 import { StateSnapshot } from "react-virtuoso";
-import { AlbumData, SongData } from "@/types/appleTypes";
-import { Settings } from "@/types/dbTypes";
+import { AlbumData } from "@/types/appleTypes";
+import { Author, EntryExtended } from "@/types/global";
+import { DatabaseUserAttributes } from "@/lib/global/auth";
 
 export type Page = {
   key: string;
-  name: string;
-  scrollPosition: number;
-  user?: UserType;
-  sound?: {
-    data: AlbumData | SongData;
-    snapshot?: {
-      state: StateSnapshot; // To retain scroll position
-      key: number;
-    };
+  type: PageType;
+  data: Author | DatabaseUserAttributes | EntryExtended | AlbumData;
+  snapshot?: {
+    key: number;
+    state: StateSnapshot; // To retain scroll position
   };
-  entry?: { data: Entry; replyTo?: string };
   isOpen: boolean;
 };
 
-export type PageName = "sound" | "user" | "entry";
+export type PageType = "sound" | "user" | "entry";
 
 export type InterfaceContext = {
   isVisible: boolean;
@@ -44,8 +35,8 @@ export type InterfaceContext = {
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
   navigateBack: (pageNumber?: number) => void;
   scrollContainerRef: React.MutableRefObject<HTMLDivElement | null>;
-  user: UserType | null;
-  setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
+  user: DatabaseUserAttributes | null;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
   session: Session | null;
   setSession: React.Dispatch<React.SetStateAction<any>>;
   notifs: any[];
@@ -80,7 +71,7 @@ export const InterfaceContextProvider = ({
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [user, setUser] = useState<UserType | null>(null);
+  const [user, setUser] = useState<DatabaseUserAttributes | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [notifs, setNotifs] = useState<any[]>([]);
 
@@ -125,9 +116,8 @@ export const InterfaceContextProvider = ({
       setPages([
         {
           key: user.id,
-          name: "user",
-          user: user,
-          scrollPosition: 0,
+          type: "user",
+          data: user,
           isOpen: false,
         },
       ]);

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Tilt from "react-parallax-tilt";
-import { cardBackMask, cardMask } from "@/components/index/items/Entry";
+import { cardBackMask, cardMask } from "@/components/global/Entry";
 import Image from "next/image";
 import { getStarComponent } from "@/components/global/Star";
 import Link from "next/link";

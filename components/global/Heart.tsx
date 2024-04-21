@@ -1,26 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { LoveIcon, ReplyIcon } from "../icons";
+import { EntryExtended } from "@/types/global";
+import useHandleHeartClick from "@/hooks/useHeart";
+import { useInterfaceContext } from "@/context/Interface";
 
 interface HeartButtonProps {
-  handleHeartClick: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => Promise<void>;
-  hearted: boolean;
+  entry: EntryExtended;
   className?: string;
-  heartCount?: number;
   replyCount?: number;
   isMirrored?: boolean; // For use with sub-replies
 }
 
 const Heart: React.FC<HeartButtonProps> = ({
-  handleHeartClick,
-  hearted,
+  entry,
   className,
-  heartCount,
-  replyCount,
   isMirrored,
 }) => {
+  const { user } = useInterfaceContext();
+  const apiUrl = entry.heartedByUser
+    ? "/api/entry/delete/heart"
+    : "/api/entry/post/heart";
+
+  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
+    entry.heartedByUser,
+    entry.actions_count,
+    apiUrl,
+    "entryId",
+    entry.id,
+    entry.author.id,
+    user?.id,
+  );
+
   const [heartColor, setHeartColor] = useState(hearted ? "#FFF" : "#999");
   const [bubbleColor, setBubbleColor] = useState(
     hearted ? "#FF4DC9" : "#E5E5E5",
@@ -43,7 +54,7 @@ const Heart: React.FC<HeartButtonProps> = ({
     <motion.button
       className={`${className} -m-2 flex gap-1 p-2 cursor-default`}
       onClick={(event) => {
-        handleHeartClick(event);
+        handleHeartClick();
         event.stopPropagation();
       }}
       onMouseEnter={handleMouseEnter}
@@ -100,7 +111,9 @@ const Heart: React.FC<HeartButtonProps> = ({
         <p className={`text-sm font-medium leading-[9px]`}>{heartCount}</p>
         <div className={`bg-gray2 mx-1 h-0.5 w-0.5 rounded-full`} />
         <ReplyIcon color={"#999"} className={`scale-75`} />
-        <p className={`ml-1 text-sm font-medium leading-[9px]`}>{replyCount}</p>
+        <p className={`ml-1 text-sm font-medium leading-[9px]`}>
+          {entry.chains_count}
+        </p>
       </motion.div>
     </motion.button>
   );

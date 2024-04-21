@@ -32,7 +32,6 @@ const Avatar: React.FC<UserAvatarProps> = ({
   quality = 100,
   user,
   style,
-  onClick,
 }) => {
   const { handleSelectUser } = useUser();
 

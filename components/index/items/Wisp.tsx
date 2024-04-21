@@ -23,7 +23,7 @@ export const Wisp: React.FC<WispProps> = ({ entry }) => {
   const { handleSelectEntry } = useEntry();
   const { handleSelectSound } = useSound();
 
-  const sound = entry.sound.appleData;
+  const sound = entry.sound_data;
 
   const artwork = MusicKit.formatArtworkURL(
     sound.attributes.artwork,
@@ -66,7 +66,7 @@ export const Wisp: React.FC<WispProps> = ({ entry }) => {
         <div
           className={`bg-white px-3 py-1.5 rounded-2xl relative shadow-shadowKitHigh`}
         >
-          <p className={`text-base text-black`}>{entry.content?.text}</p>
+          <p className={`text-base text-black`}>{entry.text}</p>
           <div className={`absolute z-0 h-3 w-3 -bottom-1 -left-1`}>
             <div
               className={`absolute right-0 top-0 h-2 w-2 rounded-full bg-white`}

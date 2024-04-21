@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ExpandCurveIcon,
   TinyCurveIcon,
-  PlayIcon,
   AddIcon,
   DeleteIcon,
   ReportIcon,
@@ -10,11 +9,9 @@ import {
   TargetExpandIcon,
 } from "@/components/icons";
 import React, { useCallback } from "react";
-import { EntryExtended } from "@/types/globalTypes";
-import { useSoundContext } from "@/context/Sound";
+import { EntryExtended } from "@/types/global";
 import { useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
-import { toast } from "sonner";
 
 import { useEntry, useSound } from "@/hooks/usePage";
 
@@ -64,7 +61,6 @@ type InteractionProps = {
 };
 
 export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
-  const { playContent } = useSoundContext();
   const { setIsVisible, user } = useInterfaceContext();
   const { setExpandInput, setSelectedFormSound } = useNavContext();
   const { handleSelectEntry } = useEntry();
@@ -74,17 +70,14 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
   const [isFlagging, setIsFlagging] = React.useState(false);
 
   const [isHovered, setIsHovered] = React.useState(false);
-  const sound = entry.sound.appleData;
+  const sound = entry.sound_data;
 
   const handleOpenEntry = () => {
     handleSelectEntry(entry);
   };
 
-  const handlePlayContent = async () => {
-    playContent(sound.id, sound.type);
-  };
-
   const handleOpenSound = () => {
+    // @ts-ignore
     handleSelectSound(sound);
   };
 
@@ -101,18 +94,6 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
         setTimeout(() => setIsDeleting(false), 3000); // 3 seconds to confirm
         return;
       }
-
-      // toast.promise(
-      //   deleteEntry(artifactId).then(() => {
-      //     setIsDeleting(false);
-      //     // For example, updating the UI or state to reflect the deletion
-      //   }),
-      //   {
-      //     loading: "Deleting...",
-      //     success: "Deletion successful!",
-      //     error: "Error deleting artifact",
-      //   },
-      // );
     },
     [isDeleting],
   );
@@ -123,14 +104,7 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
       setTimeout(() => setIsFlagging(false), 3000);
       return;
     }
-
     try {
-      // const response = await createFlag(
-      //   artifact.id,
-      //   FlagType.artifact,
-      //   user!.id,
-      // );
-      // console.log("Content flagged successfully!", response);
       setIsFlagging(false);
     } catch (error) {
       console.error("Error flagging content", error);
@@ -142,8 +116,8 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
     <motion.div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`absolute -bottom-[38px] z-10 flex cursor-pointer items-end mix-blend-multiply ${
-        isMirrored ? "-scale-x-[1] -left-[38px]" : " -right-[38px]"
+      className={`absolute -bottom-10 z-10 flex cursor-pointer items-end mix-blend-darken ${
+        isMirrored ? "-scale-x-[1] -left-10" : " -right-10"
       }`}
     >
       <motion.div

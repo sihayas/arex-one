@@ -6,8 +6,8 @@ import Essentials from "@/components/interface/user/render/Essentials";
 // import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
 import Link from "@/components/interface/user/items/Link";
-// import Image from "next/image";
 import Compressor from "compressorjs";
+import Entries from "@/components/interface/user/render/Entries";
 
 const User = () => {
   const { user, activePage, scrollContainerRef } = useInterfaceContext();
@@ -19,6 +19,9 @@ const User = () => {
     stiffness: 100,
     damping: 20,
   });
+
+  const pageUser = activePage.data;
+  const isSelf = user?.id === pageUser.id;
 
   const [followingAtoB, setFollowingAtoB] = useState(false);
   const [followingBtoA, setFollowingBtoA] = useState(false);
@@ -105,7 +108,6 @@ const User = () => {
     };
   };
 
-  const pageUser = activePage.user;
   const circleVariants = {
     notFollowing: { pathLength: 0, stroke: "#E6E6E6" },
     following: {
@@ -117,9 +119,6 @@ const User = () => {
   const { data } = useUserProfileQuery(user?.id, pageUser?.id);
 
   useEffect(() => {
-    !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
-  }, []);
-  useEffect(() => {
     if (data) {
       setFollowingAtoB(data.isFollowingAtoB);
       setFollowingBtoA(data.isFollowingBtoA);
@@ -127,7 +126,6 @@ const User = () => {
   }, [data]);
 
   if (!data || !user || !pageUser) return;
-  const isSelf = user.id === pageUser.id;
 
   return (
     <>
@@ -300,8 +298,8 @@ const User = () => {
         </div>
       </motion.div>
 
-      <div className={`-mt-[242px] flex flex-col -space-y-5 w-[420px]`}>
-        {/*<Entries pageUserId={pageUser.id} />*/}
+      <div className={`-mt-[242px] w-full`}>
+        <Entries pageUserId={pageUser.id} />
       </div>
     </>
   );

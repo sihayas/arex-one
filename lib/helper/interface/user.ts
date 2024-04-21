@@ -43,44 +43,36 @@ export const useUserProfileQuery = (
   );
 };
 
-export const useEntriesQuery = (
-  userId: string | undefined,
-  pageUserId: string,
-) => {
-  // return useInfiniteQuery(
-  //   ["entries", userId],
-  //   async ({ pageParam = 1 }) => {
-  //     if (!userId || !pageUserId) return null;
-  //     const queryParams = new URLSearchParams({
-  //       userId,
-  //       pageUserId,
-  //       page: pageParam.toString(),
-  //     });
-  //     const url = `/api/user/get/entries?${queryParams.toString()}`;
-  //
-  //     const response = await fetch(url, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-  //
-  //     const jsonResponse = await response.json();
-  //     const { activities, pagination } = jsonResponse.data;
-  //
-  //     const mergedData = await attachSoundData(activities);
-  //
-  //     return { data: mergedData, pagination };
-  //   },
-  //   {
-  //     getNextPageParam: (lastPage) => lastPage?.pagination?.nextPage || null,
-  //     enabled: !!userId,
-  //     refetchOnWindowFocus: false,
-  //   },
-  // );
+export const useEntriesQuery = (userId: string, pageUserId: string) => {
+  return useInfiniteQuery(
+    ["entries", userId],
+    async ({ pageParam = 1 }) => {
+      const queryParams = new URLSearchParams({
+        userId,
+        pageUserId,
+        page: pageParam.toString(),
+      });
+
+      const response = await fetch(
+        `/api/user/get/entries?${queryParams.toString()}`,
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      const pagination = data.pagination;
+      const entries = await attachSoundData(data.entries);
+
+      return { data: entries, pagination };
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage?.pagination?.nextPage || null,
+      enabled: !!userId && !!pageUserId,
+      refetchOnWindowFocus: false,
+    },
+  );
 };
 
 export const useNotificationsQuery = (userId: string | undefined) => {

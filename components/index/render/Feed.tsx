@@ -1,9 +1,10 @@
 import React from "react";
 import { useFeedQuery } from "@/lib/helper/feed";
 import { useInterfaceContext } from "@/context/Interface";
-import { Entry } from "@/components/index/items/Entry";
+import { Entry } from "@/components/global/Entry";
 import { Wisp } from "@/components/index/items/Wisp";
 import { Virtuoso } from "react-virtuoso";
+import Avatar from "@/components/global/Avatar";
 
 const Feed = ({ userId, type }: { userId: string; type: string }) => {
   const { setIsLoading } = useInterfaceContext();
@@ -12,7 +13,8 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
     useFeedQuery(userId);
 
   const entries = data ? data.pages.flatMap((page) => page.data) : [];
-  console.log("Feed entries:", entries);
+
+  console.log("entries", entries);
 
   const handleEndReached = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -35,20 +37,38 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
       overscan={200}
       computeItemKey={(key: number) => `item-${key.toString()}`}
       endReached={handleEndReached}
-      itemContent={(index, entry) => (
-        <div
-          className={`flex items-center justify-center pt-[96px]`}
-          key={entry.id}
-        >
-          {entry.type === "artifact" ? (
-            <Entry entry={entry} />
-          ) : entry.type === "wisp" ? (
-            <Wisp entry={entry} />
-          ) : (
-            "No artifact available for this activity."
-          )}
-        </div>
-      )}
+      itemContent={(index, entry) => {
+        const color = entry.sound_data.attributes.artwork.bgColor;
+        return (
+          <div
+            className={`flex items-center justify-center pt-[96px]`}
+            key={entry.id}
+          >
+            <div className={`-ml-12 relative flex w-[352px] items-end gap-2`}>
+              <Avatar
+                className={`border-silver z-10 border`}
+                imageSrc={entry.author.image}
+                altText={`${entry.author.username}'s avatar`}
+                width={40}
+                height={40}
+                user={entry.author}
+              />
+
+              {entry.type === "artifact" && <Entry entry={entry} />}
+
+              <p
+                className={`text-gray2 absolute -bottom-7 left-[68px] font-medium mix-blend-darken`}
+              >
+                {entry.author.username}
+              </p>
+              <div
+                style={{ background: `#${color}` }}
+                className={`ambien absolute left-[48px] -z-50 h-[432px] w-[304px]`}
+              />
+            </div>
+          </div>
+        );
+      }}
       components={{
         Footer: () => <div className={`p-4`} />,
       }}

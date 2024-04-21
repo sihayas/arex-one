@@ -176,6 +176,7 @@ export default async function handler(
       });
       await pipeline.exec();
 
+      // Merge the cached entries with the DB entries
       entries = entries.map(
         (entry, index) =>
           entry ||

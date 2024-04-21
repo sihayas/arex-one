@@ -12,11 +12,12 @@ declare module "lucia" {
   }
 }
 
-interface DatabaseUserAttributes {
+export interface DatabaseUserAttributes {
   id: string;
-  apple_id: number;
-  username: string;
   image: string;
+  username: string;
+  bio: string;
+  essentials: string;
 }
 
 // Apple
@@ -45,9 +46,8 @@ export const lucia = new Lucia(luciaAdapter, {
   getUserAttributes: (attributes) => {
     return {
       id: attributes.id,
-      appleId: attributes.apple_id,
-      username: attributes.username,
       image: attributes.image,
+      username: attributes.username,
     };
   },
 });

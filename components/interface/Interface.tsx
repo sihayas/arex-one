@@ -17,11 +17,11 @@ import {
   MotionValue,
   AnimatePresence,
 } from "framer-motion";
-import { PageName } from "@/context/Interface";
+import { PageType } from "@/context/Interface";
 import { createPortal } from "react-dom";
 
 // Calculate & set base dimensions and target dimensions for the window per page
-export const GetDimensions = (pageName: PageName) => {
+export const GetDimensions = (pageType: PageType) => {
   const viewportHeight = window.innerHeight;
   const maxHeight = viewportHeight - 2 * 64;
 
@@ -43,7 +43,7 @@ export const GetDimensions = (pageName: PageName) => {
     },
   };
 
-  return dimensions[pageName];
+  return dimensions[pageType];
 };
 
 export function Interface() {
@@ -52,7 +52,7 @@ export function Interface() {
   const cmdkPortal = document.getElementById("cmdk");
   const isNotifications = activeAction === "notifications";
 
-  const { base, target, scrollTo } = GetDimensions(activePage.name as PageName);
+  const { base, target, scrollTo } = GetDimensions(activePage.type as PageType);
 
   const [scope, animate] = useAnimate(); // Window
   const [rootScope, animateRoot] = useAnimate(); // Root
@@ -100,7 +100,7 @@ export function Interface() {
 
   // Shape-shifts the window while scrolling or if page changes. Page change
   // changes the base.width and base.height in the newWidth and newHeight
-  // functions which in turn triggers the useEffect below so we don't need
+  // functions which in turn triggers the useEffect below, so we don't need
   // a separate useEffect for page change.
   useEffect(() => {
     const shiftDimension = (dimension: string, newDimension: MotionValue) => {
@@ -192,13 +192,13 @@ export function Interface() {
               exit={{ filter: "blur(24px)", opacity: 0, scale: 0.75 }}
               transition={{ ease: "easeInOut", duration: 0.25 }}
             >
-              {activePage.name === "sound" && (
+              {activePage.type === "sound" && (
                 <Sound key={`sound-${activePage.key}`} />
               )}
-              {activePage.name === "entry" && (
+              {activePage.type === "entry" && (
                 <Entry key={`entry-${activePage.key}`} />
               )}
-              {activePage.name === "user" && (
+              {activePage.type === "user" && (
                 <User key={`user-${activePage.key}`} />
               )}
             </motion.div>

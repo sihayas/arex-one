@@ -6,11 +6,12 @@ import Feed from "@/components/index/render/Feed";
 import { UserType } from "@/types/dbTypes";
 import { SettingsIcon } from "@/components/icons";
 import Settings from "@/components/index/render/Settings";
+import { DatabaseUserAttributes } from "@/lib/global/auth";
 
 type Feed = "personal" | "bloom" | "recent";
 
 type SignedInProps = {
-  user: UserType;
+  user: DatabaseUserAttributes;
 };
 
 const SignedIn: React.FC<SignedInProps> = ({ user }) => {

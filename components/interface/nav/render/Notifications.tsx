@@ -1,4 +1,4 @@
-import { PageName, useInterfaceContext } from "@/context/Interface";
+import { PageType, useInterfaceContext } from "@/context/Interface";
 import { GetDimensions } from "@/components/interface/Interface";
 import { motion } from "framer-motion";
 import Notification from "@/components/interface/nav/items/Notification";
@@ -22,7 +22,7 @@ export const notificationSpring = {
 
 const Notifications = () => {
   const { notifs, activePage } = useInterfaceContext();
-  const { base, target } = GetDimensions(activePage.name as PageName);
+  const { base, target } = GetDimensions(activePage.type);
 
   const { height } = activePage.isOpen ? target : base;
   const offset = height / 2;

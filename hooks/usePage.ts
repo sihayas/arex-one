@@ -1,26 +1,18 @@
 import { useInterfaceContext } from "@/context/Interface";
 
-import { Entry, UserType } from "@/types/dbTypes";
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { AlbumData } from "@/types/appleTypes";
+import { Author } from "@/types/global";
+import { DatabaseUserAttributes } from "@/lib/global/auth";
+import { EntryExtended } from "@/types/global";
 
 export const useEntry = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
-  const handleSelectEntry = (entry: Entry, replyId?: string) => {
+  const handleSelectEntry = (entry: EntryExtended) => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
-      {
-        key: entry.id,
-        name: "entry",
-        threadcrumbs: [entry.id],
-        scrollPosition: 0,
-        entry: {
-          data: entry,
-          replyTo: replyId,
-        },
-        isOpen: false,
-      },
+      { key: entry.id, type: "entry", data: entry, isOpen: false },
     ]);
     window.history.pushState(null, "");
   };
@@ -31,17 +23,11 @@ export const useEntry = () => {
 export const useUser = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
-  const handleSelectUser = (author: UserType) => {
+  const handleSelectUser = (author: Author | DatabaseUserAttributes) => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
-      {
-        key: author.id,
-        name: "user",
-        user: author,
-        scrollPosition: 0,
-        isOpen: false,
-      },
+      { key: author.id, type: "user", data: author, isOpen: false },
     ]);
     window.history.pushState(null, "");
   };
@@ -52,15 +38,14 @@ export const useUser = () => {
 export const useSound = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
-  const handleSelectSound = (sound: AlbumData | SongData) => {
+  const handleSelectSound = (sound: AlbumData) => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
       {
         key: sound.id,
-        name: "sound",
-        sound: { data: sound },
-        scrollPosition: 0,
+        type: "sound",
+        data: sound,
         isOpen: false,
       },
     ]);

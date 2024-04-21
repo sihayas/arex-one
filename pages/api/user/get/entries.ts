@@ -3,9 +3,11 @@ import {
   userEntriesKey,
   userHeartsKey,
   redis,
+  userProfileKey,
 } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
+import { formatEntry } from "@/lib/helper/feed";
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,7 +35,7 @@ export default async function handler(
       rev: true,
     });
 
-    // Fetch entries from database if not cached
+    // (1) User has no entry ids stored in their set, attempt to populate it
     if (!entryIds.length) {
       const entries = await prisma.entry.findMany({
         where: { author_id: userId },
@@ -49,7 +51,7 @@ export default async function handler(
         });
       }
 
-      // Cache the entries in Redis
+      // Cache the users entries set
       const pipeline = redis.pipeline();
       entries.forEach((entry) => {
         pipeline.zadd(userEntriesKey(userId), {
@@ -64,23 +66,20 @@ export default async function handler(
       });
     }
 
-    // Pagination
-    const totalEntries = await redis.zcard(userEntriesKey(userId));
-    const hasMorePages = totalEntries > end + 1;
-    if (hasMorePages) entryIds.pop();
+    // (2) User has entries, fetch entry data from the cache
+    const entryPipeline = redis.pipeline();
+    entryIds.forEach((entryId: any) =>
+      entryPipeline.hgetall(entryDataKey(entryId)),
+    );
+    const entryResults: [Error | null, string[]][] = await entryPipeline.exec();
 
-    // User has entries, fetch entry data from the cache
-    const pipeline = redis.pipeline();
-    entryIds.forEach((entryId: any) => pipeline.hgetall(entryDataKey(entryId)));
-    const results = await pipeline.exec();
+    let entries = entryResults.map((result: any) =>
+      result ? result[1] : null,
+    );
 
-    let entries = results.map((result: any) => result[1]);
-
-    // Fetch from DB if any Redis entries are missing
+    // Map missing entries to their IDs, others to null
     const missingEntryIds: string[] = entries
-      // Map missing entries to their IDs, others to null
       .map((entry: any, index: number) => (entry ? null : entryIds[index]))
-      // Keep only string IDs, removing nulls
       .filter((id): id is string => id !== null);
 
     if (missingEntryIds.length > 0) {
@@ -88,7 +87,7 @@ export default async function handler(
         where: { id: { in: missingEntryIds } },
         select: {
           id: true,
-          sound_id: true,
+          sound: { select: { id: true, apple_id: true, type: true } },
           type: true,
           author_id: true,
           text: true,
@@ -96,35 +95,33 @@ export default async function handler(
           loved: true,
           replay: true,
           created_at: true,
+          _count: {
+            select: { actions: { where: { type: "heart" } }, chains: true },
+          },
         },
       });
 
       // Cache the missing entries in Redis
       const pipeline = redis.pipeline();
       dbEntries.forEach((entry) => {
-        pipeline.hset(entryDataKey(entry.id), {
-          id: entry.id,
-          sound_id: entry.sound_id,
-          type: entry.type,
-          author_id: entry.author_id,
-          text: entry.text,
-          // Extra fields for artifacts
-          rating: entry.rating,
-          loved: entry.loved,
-          replay: entry.replay,
-          created_at: entry.created_at.toISOString(),
-        });
+        const formattedEntry = formatEntry(entry);
+        pipeline.hset(entryDataKey(entry.id), formattedEntry);
       });
       await pipeline.exec();
 
       // Merge the cached entries with the DB entries
       entries = entries.map(
         (entry, index) =>
-          entry || dbEntries.find((dbEntry) => dbEntry.id === entryIds[index]),
+          entry ||
+          formatEntry(
+            dbEntries.find((dbEntry) => dbEntry.id === entryIds[index])!,
+          ),
       );
     }
 
     if (pageUserId !== userId) {
+      // (3) Attach author data to each entry
+
       // Check if the user has liked any of the entries
       let hearts = await redis.smembers(userHeartsKey(userId));
       // If the user has no hearts cached, attempt to populate it
@@ -146,11 +143,16 @@ export default async function handler(
         }
       }
 
-      hearts.length &&
-        entries.forEach((entry) => {
-          entry.heartedByUser = hearts.includes(entry.id);
-        });
+      // Add the heartedByUser property to each entry
+      entries.forEach((entry) => {
+        entry.heartedByUser = hearts.includes(entry.id);
+      });
     }
+
+    // Pagination
+    const totalEntries = await redis.zcard(userEntriesKey(userId));
+    const hasMorePages = totalEntries > end + 1;
+    if (hasMorePages) entryIds.pop();
 
     return res.status(200).json({
       entries: entries,

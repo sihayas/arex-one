@@ -1,19 +1,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-import Avatar from "@/components/global/Avatar";
 import Heart from "@/components/global/Heart";
 import { motion } from "framer-motion";
-import { useInterfaceContext } from "@/context/Interface";
 import Tilt from "react-parallax-tilt";
 import { Interaction } from "@/components/global/Interaction";
-import useHandleHeartClick from "@/hooks/useHeart";
 import { getStarComponent } from "@/components/global/Star";
 import { EntryExtended } from "@/types/global";
-
-interface EntryProps {
-  entry: EntryExtended;
-}
 
 export const cardMask = {
   maskImage: "url('/images/mask_card_front.svg')",
@@ -33,67 +26,43 @@ export const cardBackMask = {
   WebkitMaskRepeat: "no-repeat",
 };
 
-export const Entry: React.FC<EntryProps> = ({ entry }) => {
-  const { user } = useInterfaceContext();
-  const [isFlipped, setIsFlipped] = useState(false);
+interface EntryProps {
+  entry: EntryExtended;
+  flip?: boolean;
+}
+
+export const Entry: React.FC<EntryProps> = ({ entry, flip }) => {
+  const [isFlipped, setIsFlipped] = useState(flip ? flip : false);
 
   const appleData = entry.sound_data;
 
   const name = appleData.attributes.name;
   const artistName = appleData.attributes.artistName;
-  const color = appleData.attributes.artwork.bgColor;
   const url = MusicKit.formatArtworkURL(
     appleData.attributes.artwork,
     304 * 2.5,
     304 * 2.5,
   );
 
-  const apiUrl = entry.heartedByUser
-    ? "/api/entry/delete/heart"
-    : "/api/entry/post/heart";
-
-  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    entry.heartedByUser,
-    entry.actions_count,
-    apiUrl,
-    "entryId",
-    entry.id,
-    entry.author.id,
-    user?.id,
-  );
-
+  // IMPORTANT: Drop-shadow breaks the backface-visibility of the card.
   return (
-    <motion.div className={`-ml-12 relative flex w-[352px] items-end gap-2`}>
-      <Avatar
-        className={`border-silver z-10 border`}
-        imageSrc={entry.author.image}
-        altText={`${entry.author.username}'s avatar`}
-        width={40}
-        height={40}
-        user={entry.author}
-      />
-
-      {/* Applying drop-shadow directly to Tilt breaks the flip effect! */}
+    <div className={`relative`}>
       <motion.div
         whileTap={{ scale: 0.95 }}
         animate={{ scale: isFlipped ? [0.8, 1] : [0.8, 1] }}
-        initial={{
-          scale: 1,
-        }}
+        initial={{ scale: 1 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
         onClick={() => {
           setIsFlipped(!isFlipped);
         }}
         className={`cloud-shadow z-20`}
       >
-        {/* Scene */}
         <Tilt
           flipVertically={isFlipped}
           perspective={1000}
           tiltMaxAngleX={6}
           tiltMaxAngleY={6}
           tiltReverse={true}
-          // reset={false}
           glareEnable={true}
           glareMaxOpacity={0.45}
           glareBorderRadius={"32px"}
@@ -176,34 +145,11 @@ export const Entry: React.FC<EntryProps> = ({ entry }) => {
           </div>
         </Tilt>
       </motion.div>
-
-      {/* Interactions */}
-      {/*<Interaction entry={entry} />*/}
-
+      <Interaction entry={entry} />
       <Heart
-        handleHeartClick={handleHeartClick}
-        hearted={hearted}
-        className="absolute bottom-[432px] left-[46px] z-10 -m-12 p-12 mix-blend-multiply"
-        heartCount={heartCount}
-        replyCount={entry.chains_count}
+        className="absolute bottom-[428px] -left-2 z-10 -m-12 p-12 mix-blend-multiply"
+        entry={entry}
       />
-
-      <p
-        className={`text-gray2 absolute -bottom-7 left-[68px] font-medium mix-blend-darken`}
-      >
-        {entry.author.username}
-      </p>
-
-      {/* Ambien */}
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        style={{
-          background: `#${color}`,
-          backgroundRepeat: "repeat, no-repeat",
-        }}
-        className={`absolute left-[48px] -z-50 h-[432px] w-[304px]`}
-      />
-    </motion.div>
+    </div>
   );
 };
