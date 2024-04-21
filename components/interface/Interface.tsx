@@ -27,8 +27,8 @@ export const GetDimensions = (pageType: PageType) => {
 
   const dimensions = {
     user: {
-      base: { width: 640, height: 400 },
-      target: { width: 640, height: maxHeight },
+      base: { width: 656, height: 416 },
+      target: { width: 656, height: maxHeight },
       scrollTo: { width: 516, height: maxHeight },
     },
     sound: {

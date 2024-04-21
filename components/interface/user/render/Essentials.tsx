@@ -4,6 +4,7 @@ import { Essential } from "@/types/dbTypes";
 import { useSound } from "@/hooks/usePage";
 import { AlbumData } from "@/types/appleTypes";
 import { motion } from "framer-motion";
+import { LaurelIcon } from "@/components/icons";
 
 interface EssentialsProps {
   essentials: Essential[];
@@ -51,9 +52,13 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
 
       {essentials.length === 0 && (
         <>
-          <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh rotate-3" />
-          <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh -rotate-3 -translate-x-[88px]" />
-          <div className="w-32 h-32 bg-white rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh rotate-3" />
+          <LaurelIcon className={`mt-[60px] -rotate-[24deg] -translate-x-4`} />
+          <div className="w-28 h-28 bg-white rounded-[20px] shadow-shadowKitHigh -rotate-12 mt-4" />
+          <div className="w-28 h-28 bg-white rounded-[20px] shadow-shadowKitHigh z-10" />
+          <div className="w-28 h-28 bg-white rounded-[20px] shadow-shadowKitHigh rotate-12 mt-4" />
+          <LaurelIcon
+            className={`-scale-x-[1] mt-[60px] rotate-[24deg] translate-x-4`}
+          />
         </>
       )}
     </>

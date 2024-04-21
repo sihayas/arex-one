@@ -20,12 +20,9 @@ const Entries = ({ pageUserId }: { pageUserId: string }) => {
   });
 
   // First card translations
-  const xZero = useSpring(
-    useTransform(scrollY, [0, 24], [-80, 0]),
-    springConfig,
-  );
+  const xZero = useSpring(useTransform(scrollY, [0, 24], [8, 0]), springConfig);
   const yZero = useSpring(
-    useTransform(scrollY, [0, 24], [112, 0]),
+    useTransform(scrollY, [0, 24], [122, 0]),
     springConfig,
   );
   const rotateZero = useSpring(
@@ -34,20 +31,13 @@ const Entries = ({ pageUserId }: { pageUserId: string }) => {
   );
 
   // Second card translations
-  const xOne = useSpring(
-    useTransform(scrollY, [0, 24], [-80, 0]),
-    springConfig,
-  );
+  const xOne = useSpring(useTransform(scrollY, [0, 24], [-8, 0]), springConfig);
   const yOne = useSpring(
-    useTransform(scrollY, [0, 24], [-328, 0]),
-    springConfig,
-  );
-  const scaleOne = useSpring(
-    useTransform(scrollY, [0, 24], [0.89, 1]),
+    useTransform(scrollY, [0, 24], [-303, 0]),
     springConfig,
   );
   const rotateOne = useSpring(
-    useTransform(scrollY, [0, 24], [4, 0]),
+    useTransform(scrollY, [0, 24], [2, 0]),
     springConfig,
   );
 
@@ -92,9 +82,8 @@ const Entries = ({ pageUserId }: { pageUserId: string }) => {
             style={{
               y: index === 0 ? yZero : index === 1 ? yOne : 0,
               x: index === 0 ? xZero : index === 1 ? xOne : 0,
-              scale: index === 1 ? scaleOne : 1,
-              rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : 0,
               zIndex: 10 - index,
+              rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : 0,
             }}
             onClick={() => {
               ref.current?.getState((snapshot) => {
