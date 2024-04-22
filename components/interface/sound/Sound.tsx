@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 import Entries from "./render/Entries";
@@ -10,7 +10,7 @@ import {
   useTransform,
 } from "framer-motion";
 
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { AlbumData } from "@/types/appleTypes";
 import { useInterfaceContext } from "@/context/Interface";
 
 import Dial from "@/components/interface/sound/items/Dial";
@@ -26,48 +26,16 @@ const artConfig = { damping: 34, stiffness: 200 };
 export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
 const Sound = () => {
+  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+  const [range, setRange] = useState<number | null>(null);
+  const [ratings, setRatings] = useState<number[]>([]);
+
   const { scrollContainerRef, activePage, pages } = useInterfaceContext();
   const { scrollY } = useScroll({
     container: scrollContainerRef,
     layoutEffect: false,
   });
 
-  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
-  const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
-    setSortOrder(newSortOrder);
-  };
-
-  const [range, setRange] = useState<number | null>(null);
-  const handleRangeChange = (newRange: number | null) => {
-    setRange(newRange);
-  };
-
-  const [soundData, setSoundData] = useState<AlbumData | SongData | null>(null);
-  const [ratings, setRatings] = useState<number[]>([]);
-
-  useEffect(() => {
-    !activePage.isOpen && scrollContainerRef.current?.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    if (activePage.sound) {
-      setSoundData(activePage.sound.data);
-    }
-  }, [activePage]);
-
-  const { data } = useSoundInfoQuery(soundData?.id);
-
-  useEffect(() => {
-    if (data) {
-      setRatings(Object.values(data.ratings).map(Number));
-    }
-  }, [data]);
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    pages[pages.length - 1].isOpen = latest >= 1;
-  });
-
-  // Art transformations
   const xArt = useSpring(useTransform(scrollY, [0, 1], [0, 32]), xConfig);
   const yArt = useSpring(useTransform(scrollY, [0, 1], [0, 32]), yConfig);
   const scaleArt = useSpring(
@@ -78,7 +46,6 @@ const Sound = () => {
     useTransform(scrollY, [0, 1], [32, 40]),
     generalConfig,
   );
-  // Dial transformations
   const xDial = useSpring(useTransform(scrollY, [0, 1], [-32, 0]), xConfig);
   const yDial = useSpring(useTransform(scrollY, [0, 1], [16, 0]), yConfig);
   const showMetaData = useSpring(
@@ -86,19 +53,24 @@ const Sound = () => {
     generalConfig,
   );
 
-  if (!soundData || !data) return null;
+  const soundData = activePage.data as AlbumData;
+  const { data } = useSoundInfoQuery(soundData.id);
+
+  const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
+    setSortOrder(newSortOrder);
+  };
+  const handleRangeChange = (newRange: number | null) => {
+    setRange(newRange);
+  };
+
+  if (!data) return null;
 
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
-  const isOpen = activePage.isOpen;
   const artwork = MusicKit.formatArtworkURL(
     soundData.attributes.artwork,
     800,
     800,
   );
-  const appleAlbumId =
-    soundData.type === "albums"
-      ? soundData.id
-      : (soundData as SongData).relationships.albums.data[0].id;
   const snapArt = activePage.isOpen ? "" : "snap-start";
 
   return (
@@ -129,7 +101,7 @@ const Sound = () => {
 
       {/* Add Snap-Start here*/}
       <div className={`min-h-max w-full max-w-full snap-start`}>
-        <Entries soundId={appleAlbumId} sortOrder={sortOrder} range={range} />
+        <Entries soundId={soundData.id} sortOrder={sortOrder} range={range} />
       </div>
 
       {/* Titles */}

@@ -13,8 +13,6 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
 
   const entries = data ? data.pages.flatMap((page) => page.data) : [];
 
-  console.log("entries", entries);
-
   const handleEndReached = () => {
     if (hasNextPage && !isFetchingNextPage) {
       setIsLoading(true);

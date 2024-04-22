@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useInterfaceContext } from "@/context/Interface";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useSpring,
-} from "framer-motion";
+import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 
 import Avatar from "@/components/global/Avatar";
 import Replies from "@/components/interface/entry/render/Replies";
 import Chain from "@/components/interface/entry/render/Chain";
-import { EntryExtended } from "@/types/globalTypes";
+import { EntryExtended } from "@/types/global";
 
-import { AlbumData, SongData } from "@/types/appleTypes";
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
 import { Interaction } from "@/components/global/Interaction";
@@ -21,53 +14,33 @@ import { createPortal } from "react-dom";
 import { getStarComponent } from "@/components/global/Star";
 
 export const Entry = () => {
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
-  const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
+  const [tiltAngles, setTiltAngles] = useState({
+    tiltAngleX: 0,
+    tiltAngleY: 0,
+  });
   const [isExpanded, setIsExpanded] = useState(false);
-  const [entryExtended, setEntryExtended] = useState<EntryExtended | null>(
-    null,
-  );
 
+  const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
   const { scrollY } = useScroll({
     container: scrollContainerRef,
     layoutEffect: false,
   });
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    pages[pages.length - 1].isOpen = latest >= 1;
-  });
-
-  useEffect(() => {
-    if (activePage.entry) {
-      setEntryExtended(activePage.entry.data as EntryExtended);
-    }
-  }, [activePage]);
-
-  useEffect(() => {
-    if (!activePage.isOpen && scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo(0, 0);
-    }
-  }, []);
-
-  const [tiltAngles, setTiltAngles] = useState({
-    tiltAngleX: 0,
-    tiltAngleY: 0,
-  });
-
   const x = useSpring(0, { damping: 320, stiffness: 80 });
   const y = useSpring(0, { damping: 320, stiffness: 80 });
 
-  if (!activePage.entry || !entryExtended) return null;
+  const entry = activePage.data as EntryExtended;
+
   // If opening from a notification, load the chain
-  const chainId = activePage.entry?.replyTo;
+  // const chainId = activePage.data?.replyTo;
 
-  const album = entryExtended.sound.appleData as AlbumData;
-  const song = entryExtended.sound.appleData as SongData;
-  const appleData = album ? album : song;
-
-  const color = appleData.attributes.artwork.bgColor;
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
+  const sound = entry.sound_data;
+  const name = sound.attributes.name;
+  const artistName = sound.attributes.artistName;
+  const color = sound.attributes.artwork.bgColor;
   const artwork = MusicKit.formatArtworkURL(
-    appleData.attributes.artwork,
+    sound.attributes.artwork,
     304 * 2.5,
     304 * 2.5,
   );
@@ -109,8 +82,6 @@ export const Entry = () => {
   //     setTiltAngles({ tiltAngleX: 0, tiltAngleY: 0 });
   //   }
   // }, [isExpanded]);
-
-  // Scroll to top on mount
 
   return (
     <>
@@ -170,7 +141,7 @@ export const Entry = () => {
               >
                 <Image
                   src={artwork}
-                  alt={`${appleData.attributes.name} by ${appleData.attributes.artistName} - artwork`}
+                  alt={`${name} by ${artistName} - artwork`}
                   quality={100}
                   width={304}
                   height={304}
@@ -189,15 +160,15 @@ export const Entry = () => {
                     className={`bg-silver flex h-[52px] w-full items-center gap-2 rounded-2xl px-4 shadow-shadowKitLow flex-shrink-0`}
                   >
                     <div className={`opacity-50`}>
-                      {getStarComponent(entryExtended.content?.rating)}
+                      {getStarComponent(entry.rating)}
                     </div>
 
                     <div className={`text-gray2 flex flex-col`}>
                       <p className={`line-clamp-1 text-sm font-medium`}>
-                        {appleData.attributes.artistName}
+                        {artistName}
                       </p>
                       <p className={`line-clamp-1 text-base font-semibold`}>
-                        {appleData.attributes.name}
+                        {name}
                       </p>
                     </div>
                   </div>
@@ -224,15 +195,15 @@ export const Entry = () => {
                           <p
                             className={`text-gray2 line-clamp-1 text-base font-semibold`}
                           >
-                            {entryExtended.author.username}
+                            {entry.author.username}
                           </p>
                           <Avatar
                             className={`shadow-shadowKitHigh outline outline-4 outline-white`}
-                            imageSrc={entryExtended.author.image}
-                            altText={`${entryExtended.author.username}'s avatar`}
+                            imageSrc={entry.author.image}
+                            altText={`${entry.author.username}'s avatar`}
                             width={40}
                             height={40}
-                            user={entryExtended.author}
+                            user={entry.author}
                           />
                         </div>
                       </motion.div>
@@ -246,30 +217,30 @@ export const Entry = () => {
               >
                 <div className={`flex items-center gap-2`}>
                   <div className={`flex-shrink-0 `}>
-                    {getStarComponent(entryExtended.content?.rating)}
+                    {getStarComponent(entry.rating)}
                   </div>
 
                   <div className={`flex flex-col`}>
                     <p
                       className={`text-gray2 line-clamp-1 text-sm font-medium`}
                     >
-                      {appleData.attributes.artistName}
+                      {artistName}
                     </p>
                     <p
                       className={`line-clamp-1 text-base font-semibold text-black`}
                     >
-                      {appleData.attributes.name}
+                      {name}
                     </p>
                   </div>
                 </div>
 
                 <Avatar
                   className={`border-silver border`}
-                  imageSrc={entryExtended.author.image}
-                  altText={`${entryExtended.author.username}'s avatar`}
+                  imageSrc={entry.author.image}
+                  altText={`${entry.author.username}'s avatar`}
                   width={32}
                   height={32}
-                  user={entryExtended.author}
+                  user={entry.author}
                 />
               </div>
             )}
@@ -284,30 +255,30 @@ export const Entry = () => {
             >
               {isExpanded ? (
                 <p className={`m-8 mt-0 w-[448px] text-base origin-bottom`}>
-                  {entryExtended.content?.text}
+                  {entry.text}
                 </p>
               ) : (
                 <p className={`m-6 -mt-[6px] line-clamp-3 w-[256px] text-base`}>
-                  {entryExtended.content?.text}
+                  {entry.text}
                 </p>
               )}
             </motion.div>
           </motion.div>
         </Tilt>
-        {!isExpanded && <Interaction entry={entryExtended} />}
+        {!isExpanded && <Interaction entry={entry} />}
       </motion.div>
 
       {/* If viewing a specific chain i.e. from notification */}
-      {chainId && (
-        <div className={`-ml-8 flex flex-col-reverse pr-8`}>
-          <p className={`text-sm`}>highlighted chain</p>
-          <Chain replyId={chainId} userId={user!.id} />
-        </div>
-      )}
+      {/*{chainId && (*/}
+      {/*  <div className={`-ml-8 flex flex-col-reverse pr-8`}>*/}
+      {/*    <p className={`text-sm`}>highlighted chain</p>*/}
+      {/*    <Chain replyId={chainId} userId={user!.id} />*/}
+      {/*  </div>*/}
+      {/*)}*/}
 
       {/* Chains */}
       <div className={`min-h-full min-w-full px-8 pb-96 pt-8`}>
-        <Replies entryId={entryExtended.id} userId={user!.id} />
+        <Replies entryId={entry.id} userId={user!.id} />
       </div>
     </>
   );

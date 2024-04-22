@@ -19,15 +19,11 @@ export const useUserProfileQuery = (
       const data = await response.json();
       data.essentials = JSON.parse(data.essentials);
 
-      console.log("Received essentials: ", data.essentials);
-
       if (data.essentials.length) {
         const songIds: string[] = [];
         const albumIds = data.essentials.map(
           (essential: EssentialExtended) => essential.sound.apple_id,
         );
-
-        console.log("albumIds", albumIds);
 
         const albumResponse = await fetch("/api/cache/sounds", {
           method: "POST",

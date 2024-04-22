@@ -10,6 +10,9 @@ import Entries from "@/components/interface/user/render/Entries";
 import { ListenedIcon, CardsIcon } from "@/components/icons";
 
 const User = () => {
+  const [followingAtoB, setFollowingAtoB] = useState(false);
+  const [followingBtoA, setFollowingBtoA] = useState(false);
+
   const { user, activePage, scrollContainerRef } = useInterfaceContext();
   const { scrollY } = useScroll({
     container: scrollContainerRef,
@@ -23,10 +26,10 @@ const User = () => {
   const pageUser = activePage.data;
   const isSelf = user?.id === pageUser.id;
 
-  const [followingAtoB, setFollowingAtoB] = useState(false);
-  const [followingBtoA, setFollowingBtoA] = useState(false);
-
   const fileInputRef = useRef(null);
+
+  const { data } = useUserProfileQuery(user?.id, pageUser?.id);
+
   const handleAvatarClick = () => {
     // @ts-ignore
     fileInputRef.current.click();
@@ -107,8 +110,6 @@ const User = () => {
       console.error("Error loading image:", error);
     };
   };
-
-  const { data } = useUserProfileQuery(user?.id, pageUser?.id);
 
   useEffect(() => {
     if (data) {

@@ -41,7 +41,7 @@ const Connected: React.FC<SignedInProps> = ({ user }) => {
           altText={`avatar`}
           width={48}
           height={48}
-          user={user}
+          user={user as Author}
         />
         <p
           className={`absolute right-14 text-base text-black font-medium mix-blend-darken w-max`}
