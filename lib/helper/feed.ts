@@ -42,11 +42,10 @@ export const attachSoundData = async (entries: EntryExtended[]) => {
   });
 
   // Fetch album and track data
-  const idTypes = { albums: albumIds, songs: songIds };
   const response = await fetch("/api/cache/sounds", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(idTypes),
+    body: JSON.stringify({ albums: albumIds, songs: songIds }),
   });
 
   if (!response.ok) {
@@ -68,36 +67,4 @@ export const attachSoundData = async (entries: EntryExtended[]) => {
   });
 
   return entries;
-};
-
-interface Entry {
-  id: string;
-  sound: { id: string; apple_id: string; type: string };
-  type: string;
-  author_id: string;
-  text: string | null;
-  created_at: Date;
-  _count: { actions: number; chains: number };
-  rating: number | null;
-  loved: boolean | null;
-  replay: boolean | null;
-}
-
-export const formatEntry = (entry: Entry) => {
-  return {
-    id: entry.id,
-    sound_id: entry.sound.id,
-    sound_apple_id: entry.sound.apple_id,
-    sound_type: entry.sound.type,
-    type: entry.type,
-    author_id: entry.author_id,
-    text: entry.text,
-    created_at: entry.created_at.toISOString(),
-    actions_count: entry._count.actions,
-    chains_count: entry._count.chains,
-    // Extra fields for artifacts
-    rating: entry.rating,
-    loved: entry.loved,
-    replay: entry.replay,
-  };
 };

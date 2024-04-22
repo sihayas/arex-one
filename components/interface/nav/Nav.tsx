@@ -19,9 +19,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Keybinds } from "@/components/global/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
-import { createReply } from "../../../lib/helper/interface/nav";
-import { Search } from "../../../lib/helper/interface/nav";
+import { createReply } from "@/lib/helper/interface/nav";
+import { Search } from "@/lib/helper/interface/nav";
 
 const Nav = () => {
   const { replyTarget } = useNavContext();
@@ -47,10 +46,11 @@ const Nav = () => {
       : null;
 
   const isNotifications = activeAction === "notifications";
+  const isEssential = activeAction === "essential";
   const isForm = activeAction === "form";
   const isReply = activeAction === "reply";
 
-  const pageHasData = activePage.sound || activePage.entry;
+  const pageHasData = activePage.data;
 
   // Debounce the search query
   const [searchQuery, setSearchQuery] = useState("");
@@ -64,10 +64,8 @@ const Nav = () => {
   const { data } = Search(searchQuery);
 
   const handleReplySubmit = () => {
-    if (!replyTarget || !inputValue || !user) return;
-
     toast.promise(
-      createReply(replyTarget, inputValue, user.id).then(() => {
+      createReply(replyTarget, inputValue, user!.id).then(() => {
         setInputValue("");
       }),
       {
@@ -165,7 +163,7 @@ const Nav = () => {
 
       {/* Text Input */}
       <motion.div
-        className={`absolute -bottom-8 left-1 z-50 flex w-full items-center justify-center bg-transparent mix-blend-darken bg-transparent h-8`}
+        className={`absolute -bottom-8 left-1 z-50 flex w-full items-center justify-center bg-transparent mix-blend-darken h-8`}
         variants={{
           collapsed: {
             width: 32,
@@ -304,7 +302,7 @@ const Nav = () => {
             {/* User is on a Sound page */}
             {expandInput &&
               activeAction === "none" &&
-              activePage.sound &&
+              activePage.type === "sound" &&
               !inputValue && (
                 <motion.div
                   className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}
@@ -319,7 +317,7 @@ const Nav = () => {
             {/* User is on an Artifact page */}
             {expandInput &&
               activeAction === "none" &&
-              activePage.entry &&
+              activePage.type === "entry" &&
               !inputValue && (
                 <motion.div
                   className={`center-x center-y absolute rounded-full bg-[#CCC] p-1.5`}

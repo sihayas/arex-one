@@ -11,12 +11,12 @@ datasource db {
 model User {
   id            String         @id
   apple_id      String         @unique
+  username      String        @unique
+  image         String
   email         String?        @unique
-  username      String?        @unique
   bio           String?
-  image         String?
   password_hash String?
-  status        String?        @default("active")
+  status        String        @default("active")
   following     Follows[]      @relation("follower")
   followers     Follows[]      @relation("following")
   essentials    Essential[]
@@ -79,10 +79,10 @@ model Sound {
 }
 
 model Essential {
-  id      String @id @default(cuid())
+  id       String @id @default(cuid())
   user_id  String
   sound_id String
-  rank    Int?
+  rank     Int?
 
   user  User  @relation(fields: [user_id], references: [id])
   sound Sound @relation(fields: [sound_id], references: [id])

@@ -1,7 +1,15 @@
-import { setCache, getCache } from "@/lib/global/redis";
+import { redis } from "@/lib/global/redis";
 import { AlbumData, SongData } from "@/types/appleTypes";
 import { fetchSoundsByTypes } from "@/lib/global/musickit";
 import { NextApiRequest, NextApiResponse } from "next";
+
+type ResponseData = {
+  albums: Map<string, AlbumData | null>;
+  songs: Map<string, SongData | null>;
+};
+
+const isKeyOfResponseData = (key: string): key is keyof ResponseData =>
+  ["albums", "songs"].includes(key);
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,12 +36,13 @@ export default async function handler(
       if (isKeyOfResponseData(type)) {
         for (const id of idTypes[type]) {
           const cacheKey = `sound:${type}:${id}:data`;
-          const cachedData = await getCache(cacheKey);
+          const cachedData = await redis.get(cacheKey);
           const parsedData = cachedData ? cachedData : null;
 
           if (!cachedData) {
             needToFetch[type].set(id, null);
           } else {
+            // @ts-ignore
             responseData[type].set(id, parsedData);
           }
         }
@@ -48,7 +57,7 @@ export default async function handler(
       const fetchedData = await fetchSoundsByTypes(fetchIds);
       for (const item of fetchedData) {
         const cacheKey = `sound:${item.type}:${item.id}:data`;
-        await setCache(cacheKey, JSON.stringify(item), 3600);
+        await redis.setex(cacheKey, 3600, JSON.stringify(item));
         //@ts-ignore
         responseData[item.type].set(item.id, item);
       }
@@ -63,11 +72,3 @@ export default async function handler(
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
-
-type ResponseData = {
-  albums: Map<string, AlbumData | null>;
-  songs: Map<string, SongData | null>;
-};
-
-const isKeyOfResponseData = (key: string): key is keyof ResponseData =>
-  ["albums", "songs"].includes(key);

@@ -31,10 +31,10 @@ interface NotificationResponse {
   activity: {
     action: {
       type: string;
-      reply: { text: string } | null;
+      chain: { text: string } | null;
       entry: { rating: number | null } | null;
     } | null;
-    reply: { text: string } | null;
+    chain: { text: string } | null;
   };
 }
 
@@ -79,7 +79,7 @@ export default async function handler(
           key: true,
           activity: {
             select: {
-              reply: {
+              chain: {
                 select: {
                   text: true,
                 },
@@ -87,7 +87,7 @@ export default async function handler(
               action: {
                 select: {
                   type: true,
-                  reply: {
+                  chain: {
                     select: {
                       text: true,
                     },
@@ -147,11 +147,11 @@ async function batchNotifs(notifs: NotificationResponse[], userId: string) {
   const contentLookup: {
     [key: string]: (notif: NotificationResponse) => string;
   } = {
-    reply: (notif: NotificationResponse) => notif.activity!.reply!.text,
+    reply: (notif: NotificationResponse) => notif.activity!.chain!.text,
     heart_entry: (notif: NotificationResponse) =>
       notif.activity!.action!.entry!.rating!.toString(),
     heart_reply: (notif: NotificationResponse) =>
-      notif.activity!.action!.reply!.text,
+      notif.activity!.action!.chain!.text,
   };
 
   const { accumulator, lastTimestamp } = notifs.reduce(

@@ -1,5 +1,15 @@
-import { Entry } from "@prisma/client";
+import { Entry, Essential, Sound } from "@prisma/client";
 import { AlbumData, SongData } from "@/types/appleTypes";
+
+// Bare author stored in cache
+export type Author = {
+  id: string;
+  image: string;
+  username: string;
+  bio: string;
+  essentials: string;
+  _count: string;
+};
 
 export type EntryExtended = Entry & {
   sound_id: string;
@@ -9,22 +19,10 @@ export type EntryExtended = Entry & {
   heartedByUser: boolean;
   actions_count: number;
   chains_count: number;
-  author: {
-    id: string;
-    image: string;
-    username: string;
-    bio: string;
-    essentials: string;
-    _count: string;
-  };
+  author: Author;
 };
 
-// Bare author stored in cache
-export interface Author {
-  id: string;
-  image: string;
-  username: string;
-  bio: string;
-  essentials: string;
-  _count: string;
-}
+export type EssentialExtended = Essential & {
+  sound: Sound;
+  sound_data: AlbumData;
+};

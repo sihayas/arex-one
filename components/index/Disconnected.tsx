@@ -8,7 +8,7 @@ import { AppleIcon } from "@/components/icons";
 import React from "react";
 import { useInterfaceContext } from "@/context/Interface";
 
-const SignedOut = () => {
+const Disconnected = () => {
   const url =
     "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/49/3d/ab/493dab54-f920-9043-6181-80993b8116c9/19UMGIM53909.rgb.jpg/800x800.jpg";
 
@@ -275,4 +275,4 @@ const SignedOut = () => {
   );
 };
 
-export default SignedOut;
+export default Disconnected;

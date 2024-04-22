@@ -6,7 +6,6 @@ export const redis = new Redis({
 });
 
 // -- Redis Sound Keys --
-
 // Key for mapping Apple Music ID to internal Sound ID
 export const soundDbToAppleIdMap = () => `sound:db_to_apple:map`;
 
@@ -20,7 +19,6 @@ export const soundEntriesKey = (soundId: string) =>
   `sound:${soundId}:entry_ids`;
 
 // -- Redis User Keys --
-
 // User profile, a hash of user profile.
 export const userProfileKey = (userId: string) => `user:${userId}:profile`;
 
@@ -54,44 +52,3 @@ export const entryHeartCountKey = (userId: string) =>
 
 // Key for entry data in Redis.
 export const entryDataKey = (entryId: string) => `entry:${entryId}:data`;
-
-// Set data in Redis cache with an expiration time
-export const setCache = async (
-  key: string,
-  value: any,
-  ttl: number,
-): Promise<void> => {
-  await redis.setex(key, ttl, value);
-};
-
-// Get data from Redis cache
-export const getCache = async (key: string): Promise<any | null> => {
-  const data = await redis.get(key);
-  // @ts-ignore
-  return data ? data : null;
-};
-
-// Utility function to fetch and clear the set atomically
-export async function fetchAndClearUpdateSet(
-  setKey: string,
-): Promise<string[]> {
-  const fetchAndClearScript = `
-    local ids = redis.call('SMEMBERS', KEYS[1])
-    redis.call('DEL', KEYS[1])
-    return ids
-  `;
-
-  try {
-    // @ts-ignore
-    const result = await redis.eval(fetchAndClearScript, 1, setKey);
-
-    if (Array.isArray(result)) {
-      return result.map((id) => String(id));
-    }
-
-    throw new Error("Expected an array from Redis eval");
-  } catch (error) {
-    console.error("Error executing Lua script:", error);
-    throw error;
-  }
-}

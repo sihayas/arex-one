@@ -7,14 +7,15 @@ import { UserType } from "@/types/dbTypes";
 import { SettingsIcon } from "@/components/icons";
 import Settings from "@/components/index/render/Settings";
 import { DatabaseUserAttributes } from "@/lib/global/auth";
+import { Author } from "@/types/global";
 
 type Feed = "personal" | "bloom" | "recent";
 
 type SignedInProps = {
-  user: DatabaseUserAttributes;
+  user: DatabaseUserAttributes | Author;
 };
 
-const SignedIn: React.FC<SignedInProps> = ({ user }) => {
+const Connected: React.FC<SignedInProps> = ({ user }) => {
   const [activeFeed] = React.useState<Feed>("personal");
   const [showSettings, setShowSettings] = React.useState<boolean>(false);
   return (
@@ -93,4 +94,4 @@ const SignedIn: React.FC<SignedInProps> = ({ user }) => {
   );
 };
 
-export default SignedIn;
+export default Connected;

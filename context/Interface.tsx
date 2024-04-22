@@ -7,7 +7,7 @@ import React, {
 } from "react";
 
 import { Session } from "lucia";
-import { useUserAndSessionQuery } from "@/lib/helper/interface/user";
+import { useUserAndSessionQuery } from "@/lib/helper/session";
 import { StateSnapshot } from "react-virtuoso";
 import { AlbumData } from "@/types/appleTypes";
 import { Author, EntryExtended } from "@/types/global";

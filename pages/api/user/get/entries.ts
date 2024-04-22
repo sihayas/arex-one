@@ -7,7 +7,7 @@ import {
 } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
-import { formatEntry } from "@/lib/helper/feed";
+import { formatEntry } from "@/lib/helper/cache";
 
 export default async function handler(
   req: NextApiRequest,

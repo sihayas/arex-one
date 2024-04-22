@@ -2,7 +2,6 @@ import React from "react";
 import { useFeedQuery } from "@/lib/helper/feed";
 import { useInterfaceContext } from "@/context/Interface";
 import { Entry } from "@/components/global/Entry";
-import { Wisp } from "@/components/index/items/Wisp";
 import { Virtuoso } from "react-virtuoso";
 import Avatar from "@/components/global/Avatar";
 

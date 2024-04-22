@@ -64,7 +64,7 @@ export default async function handler(
     // Remove the entry from the user's entries
     pipeline.zrem(userEntriesKey(userId), entryId);
     // Decrement the user's entries count
-    await redis.hincrby(userProfileKey(userId), "entries_count", -1);
+    await redis.hincrby(userProfileKey(userId), "artifacts_count", -1);
     await pipeline.exec();
 
     return res.status(200).json({ success: "Entry deleted." });

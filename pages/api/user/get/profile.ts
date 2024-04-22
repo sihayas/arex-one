@@ -1,5 +1,5 @@
-import { fetchAndCacheSoundsByType } from "@/pages/api/sound/get";
 import { userFollowersKey, userProfileKey, redis } from "@/lib/global/redis";
+import { formatProfile } from "@/lib/helper/cache";
 
 import { Sound } from "@prisma/client";
 import { prisma } from "@/lib/global/prisma";
@@ -67,7 +67,7 @@ export default async function handler(
             select: {
               id: true,
               rank: true,
-              sound: { select: { apple_id: true } },
+              sound: { select: { apple_id: true, id: true } },
             },
             orderBy: { rank: "desc" },
           },
@@ -81,9 +81,6 @@ export default async function handler(
               },
             },
           },
-          follow_notifications: true,
-          heart_notifications: true,
-          reply_notifications: true,
         },
       });
 
@@ -91,30 +88,10 @@ export default async function handler(
         return res.status(404).json({ error: "User not found in DB." });
       }
 
-      // Cache aside user profile
-      await redis.hset(userProfileKey(pageUserId), {
-        id: pageUserId,
-        image: dbData.image,
-        username: dbData.username,
-        bio: dbData.bio,
-        essentials: JSON.stringify(dbData.essentials),
-        _count: JSON.stringify(dbData._count),
-        follow_notifications: dbData.follow_notifications,
-        heart_notifications: dbData.heart_notifications,
-        reply_notifications: dbData.reply_notifications,
-      });
-
-      pageUserProfile = {
-        id: pageUserId,
-        image: dbData.image,
-        username: dbData.username,
-        bio: dbData.bio,
-        essentials: dbData.essentials,
-        _count: dbData._count,
-        follow_notifications: dbData.follow_notifications,
-        heart_notifications: dbData.heart_notifications,
-        reply_notifications: dbData.reply_notifications,
-      };
+      // Cache user profile
+      const formattedProfile = formatProfile(dbData);
+      await redis.hset(userProfileKey(pageUserId), formattedProfile);
+      pageUserProfile = formattedProfile;
     }
 
     // Determine follow status
@@ -166,11 +143,6 @@ export default async function handler(
     isFollowingBtoA = userFollowers.includes(pageUserId);
     isFollowingAtoB = pageUserFollowers.includes(userId);
 
-    // Attach sound data to essentials
-    pageUserProfile.essentials = await attachSoundData(
-      pageUserProfile.essentials,
-    );
-
     return res
       .status(200)
       .json({ ...pageUserProfile, isFollowingAtoB, isFollowingBtoA });
@@ -178,26 +150,4 @@ export default async function handler(
     console.error("Error fetching user profile:", error);
     return res.status(500).json({ error: "Error fetching user profile." });
   }
-}
-
-async function attachSoundData(essentials: Sound[]) {
-  if (essentials.length === 0) {
-    return essentials;
-  }
-
-  const albumData = await fetchAndCacheSoundsByType(
-    essentials.map((sound) => sound.apple_id).join(","),
-    "albums",
-  );
-
-  const albumDataMap = albumData
-    ? Object.fromEntries(albumData.map((album: any) => [album.id, album]))
-    : {};
-
-  return essentials
-    ? essentials.map((sound) => ({
-        ...sound,
-        appleData: albumDataMap[sound.apple_id],
-      }))
-    : [];
 }

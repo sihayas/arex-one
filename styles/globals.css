@@ -173,3 +173,11 @@ h6 {
     font-size: 15px;
     font-weight: 500;
 }
+.hide-scrollbar::-webkit-scrollbar {
+    width: 0;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

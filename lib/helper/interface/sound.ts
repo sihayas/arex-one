@@ -18,7 +18,6 @@ export const useSoundInfoQuery = (appleId?: string) =>
     { enabled: !!appleId, refetchOnWindowFocus: false },
   );
 
-// Fetch entries on sound page
 export const useEntriesQuery = (
   soundId: string,
   userId: string | undefined,

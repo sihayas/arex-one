@@ -153,28 +153,3 @@ export const fetchSoundsByTypes = async (idTypes: Record<string, string[]>) => {
   const data = await response.json();
   return data.data;
 };
-
-// Fetch one or more sounds by a single type (song or album), returns albums
-export const fetchSoundsByType = async (type: string, ids: string[]) => {
-  if (ids.length === 0) return [];
-
-  const endpoint =
-    type === "songs"
-      ? `${type}/${ids.join(",")}/albums`
-      : `${type}?ids=${ids.join(",")}`;
-
-  const response = await fetch(`${baseURL}/${endpoint}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const data = await response.json();
-  return data.data;
-};

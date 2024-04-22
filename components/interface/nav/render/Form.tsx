@@ -100,6 +100,7 @@ const Form = () => {
 
   // handle sound click and prevent default
   const handleSoundClick = (event: React.MouseEvent<HTMLImageElement>) => {
+    // @ts-ignore
     handleSelectSound(selectedFormSound);
   };
 

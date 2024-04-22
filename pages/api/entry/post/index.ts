@@ -9,7 +9,7 @@ import {
 import { Entry } from "@prisma/client";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
-import { formatEntry } from "@/lib/helper/feed";
+import { formatEntry } from "@/lib/helper/cache";
 
 export default async function handler(
   req: NextApiRequest,
@@ -168,7 +168,7 @@ export default async function handler(
       member: entry.id,
     });
     // Update user profile entries count
-    pipeline.hincrby(userProfileKey(userId), "entries_count", 1);
+    pipeline.hincrby(userProfileKey(userId), "artifacts_count", 1);
     await pipeline.exec();
 
     await prisma.activity.create({

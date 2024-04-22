@@ -17,11 +17,9 @@ export type NavContextType = {
   setInputValue: Dispatch<SetStateAction<string>>;
   storedInputValue: string;
   setStoredInputValue: Dispatch<SetStateAction<string>>;
-  isChangingEssential: boolean;
-  setIsChangingEssential: Dispatch<SetStateAction<boolean>>;
-  activeAction: "form" | "reply" | "notifications" | "none";
+  activeAction: "form" | "reply" | "notifications" | "essential" | "none";
   setActiveAction: Dispatch<
-    SetStateAction<"form" | "reply" | "notifications" | "none">
+    SetStateAction<"form" | "reply" | "notifications" | "essential" | "none">
   >;
   replyTarget: ReplyTargetType;
   setReplyTarget: Dispatch<SetStateAction<ReplyTargetType>>;
@@ -64,10 +62,8 @@ export const NavProvider = ({ children }: NavProviderProps) => {
 
   const [replyTarget, setReplyTarget] = useState<ReplyTargetType>(null);
 
-  const [isChangingEssential, setIsChangingEssential] = useState(false);
-
   const [activeAction, setActiveAction] = useState<
-    "form" | "reply" | "notifications" | "none"
+    "form" | "reply" | "notifications" | "essential" | "none"
   >("none");
 
   // Whenever expandInput changes and is true, focus the input
@@ -88,8 +84,6 @@ export const NavProvider = ({ children }: NavProviderProps) => {
         setInputValue,
         storedInputValue,
         setStoredInputValue,
-        isChangingEssential,
-        setIsChangingEssential,
         activeAction,
         setActiveAction,
         replyTarget,

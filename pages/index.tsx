@@ -3,8 +3,8 @@ import Head from "next/head";
 import React from "react";
 import { useInterfaceContext } from "@/context/Interface";
 
-import SignedOut from "@/components/index/SignedOut";
-import SignedIn from "@/components/index/SignedIn";
+import Disconnected from "@/components/index/Disconnected";
+import Connected from "@/components/index/Connected";
 
 export default function Home() {
   const { user } = useInterfaceContext();
@@ -14,7 +14,7 @@ export default function Home() {
         <title>Rx</title>
       </Head>
 
-      {!user ? <SignedOut /> : <SignedIn user={user} />}
+      {!user ? <Disconnected /> : <Connected user={user} />}
 
       {/*<Player />*/}
     </Layout>

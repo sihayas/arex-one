@@ -1,9 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import {
-  followUser,
-  unfollowUser,
-} from "../../../../lib/helper/interface/user";
+
 import { useInterfaceContext } from "@/context/Interface";
 
 type LinkButtonProps = {
@@ -31,11 +28,11 @@ export default function Link({
 
   const handleLink = async () => {
     if (isUnlinked) {
-      await followUser(user.id, pageUserId);
+      // handle follow
       setFollowingAtoB(true);
       console.log("followed");
     } else {
-      await unfollowUser(user.id, pageUserId);
+      // handle unfollow
       setFollowingAtoB(false);
       console.log("unfollowed");
     }

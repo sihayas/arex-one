@@ -65,6 +65,7 @@ const Entries = ({ pageUserId }: { pageUserId: string }) => {
 
   return (
     <Virtuoso
+      className={`hide-scrollbar`}
       key={key}
       ref={ref}
       style={{ height: target.height }}

@@ -8,8 +8,8 @@ import {
   userProfileKey,
 } from "@/lib/global/redis";
 import { NextApiRequest, NextApiResponse } from "next";
-import { formatEntry } from "@/lib/helper/feed";
 import { EntryExtended } from "@/types/global";
+import { formatEntry, formatProfile } from "@/lib/helper/cache";
 
 export default async function handler(
   req: NextApiRequest,
@@ -213,7 +213,7 @@ export default async function handler(
             select: {
               id: true,
               rank: true,
-              sound: { select: { apple_id: true } },
+              sound: { select: { apple_id: true, id: true } },
             },
             orderBy: { rank: "desc" },
           },
@@ -229,14 +229,7 @@ export default async function handler(
       // Cache the missing author data in Redis
       const pipeline = redis.pipeline();
       dbAuthors.forEach((author) => {
-        pipeline.hset(userProfileKey(author.id), {
-          id: author.id,
-          image: author.image,
-          username: author.username,
-          bio: author.bio,
-          essentials: JSON.stringify(author.essentials),
-          _count: JSON.stringify(author._count),
-        });
+        pipeline.hset(userProfileKey(author.id), formatProfile(author));
       });
       await pipeline.exec();
 

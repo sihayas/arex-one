@@ -1,66 +1,107 @@
 import Image from "next/image";
-import React, { Fragment } from "react";
-import { Essential } from "@/types/dbTypes";
+import React, { useEffect } from "react";
 import { useSound } from "@/hooks/usePage";
 import { AlbumData } from "@/types/appleTypes";
 import { motion } from "framer-motion";
 import { LaurelIcon } from "@/components/icons";
+import { EssentialExtended } from "@/types/global";
 
 interface EssentialsProps {
-  essentials: Essential[];
+  essentials: EssentialExtended[];
 }
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
   const { handleSelectSound } = useSound();
+  const [essential_one, setEssentialOne] =
+    React.useState<EssentialExtended | null>(null);
+  const [essential_two, setEssentialTwo] =
+    React.useState<EssentialExtended | null>(null);
+  const [essential_three, setEssentialThree] =
+    React.useState<EssentialExtended | null>(null);
 
-  const handleSoundClick = (sound: AlbumData) => {
-    handleSelectSound(sound);
-  };
+  // Use useEffect to update state based on changes to the 'essentials' prop
+  useEffect(() => {
+    essentials.forEach((essential: EssentialExtended) => {
+      if (essential.rank === 0) {
+        setEssentialOne(essential);
+      } else if (essential.rank === 1) {
+        setEssentialTwo(essential);
+      } else if (essential.rank === 2) {
+        setEssentialThree(essential);
+      }
+    });
+  }, [essentials]);
 
   return (
     <>
-      {essentials.map((essential, i) => {
-        const { appleData: sound } = essential;
-        const artwork = MusicKit.formatArtworkURL(
-          sound.attributes.artwork,
-          128 * 2.5,
-          128 * 2.5,
-        );
-
-        const rotationClass =
-          i % 3 === 0 ? "rotate-3" : i % 3 === 2 ? "-rotate-3" : "";
-        const transformClass = i === 1 ? "-translate-x-[88px]" : "";
-
-        return (
+      <LaurelIcon className="mt-[60px] -rotate-[24deg] -translate-x-4" />
+      <div className="w-28 h-28 rounded-[20px] shadow-shadowKitHigh -rotate-12 mt-4">
+        {essential_one && (
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            key={`essential-${essential.id}`}
-            className={`min-w-[128px] min-h-[128px] overflow-hidden rounded-[20px] outline outline-1 outline-silver shadow-shadowKitHigh ${rotationClass} ${transformClass}`}
+            key={essential_one.id}
+            className="w-28 h-28 rounded-[20px] shadow-shadowKitHigh"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
             <Image
-              onClick={() => handleSoundClick(sound)}
-              src={artwork}
-              alt={`${sound.attributes.name} by ${sound.attributes.artistName} - artwork`}
-              width={128}
-              height={128}
-              draggable={false}
+              src={MusicKit.formatArtworkURL(
+                essential_one.sound_data.attributes.artwork,
+                112 * 2.5,
+                112 * 2.5,
+              )}
+              alt={essential_one.sound_data.attributes.name}
+              width={112}
+              height={112}
+              className="rounded-[20px]"
             />
           </motion.div>
-        );
-      })}
-
-      {essentials.length === 0 && (
-        <>
-          <LaurelIcon className={`mt-[60px] -rotate-[24deg] -translate-x-4`} />
-          <div className="w-28 h-28 bg-white rounded-[20px] shadow-shadowKitHigh -rotate-12 mt-4" />
-          <div className="w-28 h-28 bg-white rounded-[20px] shadow-shadowKitHigh z-10" />
-          <div className="w-28 h-28 bg-white rounded-[20px] shadow-shadowKitHigh rotate-12 mt-4" />
-          <LaurelIcon
-            className={`-scale-x-[1] mt-[60px] rotate-[24deg] translate-x-4`}
-          />
-        </>
-      )}
+        )}
+      </div>
+      <div className="w-28 h-28 rounded-[20px] shadow-shadowKitHigh z-10">
+        {essential_two && (
+          <motion.div
+            key={essential_two.id}
+            className="w-28 h-28 rounded-[20px] shadow-shadowKitHigh"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Image
+              src={MusicKit.formatArtworkURL(
+                essential_two.sound_data.attributes.artwork,
+                112 * 2.5,
+                112 * 2.5,
+              )}
+              alt={essential_two.sound_data.attributes.name}
+              width={112}
+              height={112}
+              className="rounded-[20px]"
+            />
+          </motion.div>
+        )}
+      </div>
+      <div className="w-28 h-28 rounded-[20px] shadow-shadowKitHigh rotate-12 mt-4">
+        {essential_three && (
+          <motion.div
+            key={essential_three.id}
+            className="w-28 h-28 rounded-[20px] shadow-shadowKitHigh"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Image
+              src={MusicKit.formatArtworkURL(
+                essential_three.sound_data.attributes.artwork,
+                112 * 2.5,
+                112 * 2.5,
+              )}
+              alt={essential_three.sound_data.attributes.name}
+              width={112}
+              height={112}
+              className="rounded-[20px]"
+            />
+          </motion.div>
+        )}
+      </div>
+      <LaurelIcon className="-scale-x-[1] mt-[60px] rotate-[24deg] translate-x-4" />
     </>
   );
 };
