@@ -1,6 +1,6 @@
-import { useInterfaceContext } from "@/context/Interface";
+import { PageSound, useInterfaceContext } from "@/context/Interface";
 
-import { AlbumData } from "@/types/appleTypes";
+import { AlbumData } from "@/types/apple";
 import { Author } from "@/types/global";
 import { DatabaseUserAttributes } from "@/lib/global/auth";
 import { EntryExtended } from "@/types/global";
@@ -8,49 +8,44 @@ import { EntryExtended } from "@/types/global";
 export const useEntry = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
-  const handleSelectEntry = (entry: EntryExtended) => {
+  const openEntryPage = (entry: EntryExtended) => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
-      { key: entry.id, type: "entry", data: entry, isOpen: false },
+      { type: "entry", key: entry.id, data: entry, isOpen: false },
     ]);
     window.history.pushState(null, "");
   };
 
-  return { handleSelectEntry };
+  return { openEntryPage };
 };
 
 export const useUser = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
-  const handleSelectUser = (author: Author | DatabaseUserAttributes) => {
+  const openUserPage = (author: Author | DatabaseUserAttributes) => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
-      { key: author.id, type: "user", data: author, isOpen: false },
+      { type: "user", key: author.id, data: author, isOpen: false },
     ]);
     window.history.pushState(null, "");
   };
 
-  return { handleSelectUser };
+  return { openUserPage };
 };
 
 export const useSound = () => {
   const { setPages, setIsVisible } = useInterfaceContext();
 
-  const handleSelectSound = (sound: AlbumData) => {
+  const openSoundPage = (sound: PageSound) => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
-      {
-        key: sound.id,
-        type: "sound",
-        data: sound,
-        isOpen: false,
-      },
+      { type: "sound", key: sound.id, data: sound, isOpen: false },
     ]);
     window.history.pushState(null, "");
   };
 
-  return { handleSelectSound };
+  return { openSoundPage };
 };

@@ -1,51 +1,47 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { attachSoundData } from "@/lib/helper/feed";
 
-export const useSoundInfoQuery = (appleId?: string) =>
+export const useSoundInfoQuery = (soundId: string) =>
   useQuery(
-    ["sound", appleId],
+    ["sound", soundId],
     async () => {
-      if (!appleId) {
-        throw new Error("appleId is required");
-      }
-      const url = `/api/sound/get?appleId=${encodeURIComponent(appleId)}`;
+      const url = `/api/sound/get?soundId=${encodeURIComponent(soundId)}`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      return data.data;
+      return data;
     },
-    { enabled: !!appleId, refetchOnWindowFocus: false },
+    { enabled: !!soundId, refetchOnWindowFocus: false },
   );
 
 export const useEntriesQuery = (
   soundId: string,
-  userId: string | undefined,
+  userId: string,
   sort: string,
-  range: number | null,
+  range: string,
 ) =>
   useInfiniteQuery(
-    ["entries", soundId, sort, range],
+    ["entries", userId, soundId, sort, range],
     async ({ pageParam = 1 }) => {
       const queryParams = new URLSearchParams({
         soundId,
-        page: pageParam.toString(),
+        userId,
         sort,
-        userId: userId ?? "",
-        range: range?.toString() ?? "",
-        limit: "12",
-      }).toString();
-      const url = `/api/sound/get/entries?${queryParams}`;
-      const response = await fetch(url);
+        range: range?.toString(),
+        page: pageParam.toString(),
+      });
+      const response = await fetch(
+        `/api/sound/get/entries?${queryParams.toString()}`,
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
-      const { entries, pagination } = data.data;
 
-      if (!entries || !pagination) {
-        throw new Error("Unexpected server response structure");
-      }
+      const data = await response.json();
+      const pagination = data.pagination;
+      const entries = await attachSoundData(data.entries);
 
       return { data: entries, pagination };
     },

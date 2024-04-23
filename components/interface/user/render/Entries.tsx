@@ -12,14 +12,14 @@ const springConfig = { damping: 34, stiffness: 224 };
 
 const Entries = ({ pageUserId }: { pageUserId: string }) => {
   const { user, activePage, scrollContainerRef } = useInterfaceContext();
-  const { handleSelectEntry } = useEntry();
+  const { openEntryPage } = useEntry();
   const { target } = GetDimensions(activePage.type);
 
   const { scrollY } = useScroll({
     container: scrollContainerRef,
   });
 
-  // First card translations
+  // first card translations
   const xZero = useSpring(useTransform(scrollY, [0, 24], [8, 0]), springConfig);
   const yZero = useSpring(
     useTransform(scrollY, [0, 24], [122, 0]),
@@ -30,7 +30,7 @@ const Entries = ({ pageUserId }: { pageUserId: string }) => {
     springConfig,
   );
 
-  // Second card translations
+  // second card translations
   const xOne = useSpring(useTransform(scrollY, [0, 24], [-8, 0]), springConfig);
   const yOne = useSpring(
     useTransform(scrollY, [0, 24], [-303, 0]),
@@ -90,7 +90,7 @@ const Entries = ({ pageUserId }: { pageUserId: string }) => {
               ref.current?.getState((snapshot) => {
                 activePage.snapshot = { state: snapshot, key: index };
               });
-              handleSelectEntry(authoredEntry);
+              openEntryPage(authoredEntry);
             }}
           >
             <Entry entry={authoredEntry} flip={index === 0 || index === 1} />

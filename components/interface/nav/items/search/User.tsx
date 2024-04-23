@@ -1,16 +1,16 @@
-import { UserType } from "@/types/dbTypes";
 import Image from "next/image";
 import { Command } from "cmdk";
 import { useUser } from "@/hooks/usePage";
+import { Author } from "@/types/global";
 
-const UserItem = ({ user }: { user: UserType }) => {
-  const { handleSelectUser } = useUser();
+const UserItem = ({ user }: { user: Author }) => {
+  const { openUserPage } = useUser();
   return (
     <Command.Item
       value={user.id}
       onMouseDown={(e) => e.preventDefault()}
       className="w-full p-4 cursor-pointer"
-      onSelect={() => handleSelectUser(user)}
+      onSelect={() => openUserPage(user)}
     >
       <div className="flex w-full items-center gap-4">
         <Image

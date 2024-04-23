@@ -7,16 +7,10 @@ export const redis = new Redis({
 
 // -- Redis Sound Keys --
 // Key for mapping Apple Music ID to internal Sound ID
-export const soundDbToAppleIdMap = () => `sound:db_to_apple:map`;
-
 export const soundAppleToDbIdMap = () => `sound:apple_to_db:map`;
 
 // Key for sound data in Redis.
 export const soundDataKey = (soundId: string) => `sound:${soundId}:data`;
-
-// Key for sound entry ids in Redis.
-export const soundEntriesKey = (soundId: string) =>
-  `sound:${soundId}:entry_ids`;
 
 // -- Redis User Keys --
 // User profile, a hash of user profile.
@@ -32,7 +26,7 @@ export const userNotifsKey = (userId: string) => `user:${userId}:notifs`;
 export const userAggNotifsKey = (userId: string) => `user:${userId}:agg_notifs`;
 
 // User entries, a sorted set of IDS.
-export const userEntriesKey = (userId: string) => `user:${userId}:entries`;
+export const userEntriesKey = (userId: string) => `user:${userId}:entry_ids`;
 
 // User hearts, a list of IDS.
 export const userHeartsKey = (userId: string) => `user:${userId}:hearts`;

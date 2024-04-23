@@ -1,4 +1,4 @@
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/apple";
 
 import { Command, useCommandState } from "cmdk";
 

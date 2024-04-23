@@ -1,9 +1,7 @@
 import React, { useState, useCallback } from "react";
 
-import { ReplyType } from "@/types/dbTypes";
 import Children from "@/components/interface/entry/render/Children";
 import { AnimatePresence, motion } from "framer-motion";
-import useHandleHeartClick from "@/hooks/useHeart";
 
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/Interface";
@@ -11,8 +9,10 @@ import { LoopIcon, TinyCurveIcon } from "@/components/icons";
 import Image from "next/image";
 import Heart from "@/components/global/Heart";
 import { useNavContext } from "@/context/Nav";
+import { EntryExtended } from "@/types/global";
 
 interface ReplyProps {
+  // @ts-ignore
   reply: ReplyType;
   level: number;
   isChild: boolean;
@@ -20,7 +20,6 @@ interface ReplyProps {
 }
 
 export default function Reply({ reply, level, isChild, index }: ReplyProps) {
-  const { user } = useInterfaceContext();
   const { setReplyTarget, replyTarget } = useNavContext();
   const { pages } = useInterfaceContext();
   const [showChildReplies, setShowChildReplies] = useState<boolean>(false);
@@ -29,7 +28,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
   const replyCount = reply._count ? reply._count.replies : 0;
 
   const handleReplyParent = useCallback(() => {
-    const entry = activePage.entry?.data;
+    const entry = activePage.data;
 
     if (entry) {
       if (replyTarget?.reply === reply) {
@@ -38,21 +37,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
         setReplyTarget({ entry, reply });
       }
     }
-  }, [reply, setReplyTarget, activePage.entry, replyTarget?.reply]);
-
-  const url = reply.heartedByUser
-    ? "/api/reply/delete/heart"
-    : "/api/reply/post/heart";
-
-  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    reply.heartedByUser,
-    reply._count.hearts,
-    url,
-    "replyId",
-    reply.id,
-    reply.author.id,
-    user?.id,
-  );
+  }, [reply, setReplyTarget, activePage.data, replyTarget?.reply]);
 
   // Styles
   const isEven = level % 2 === 0;
@@ -63,8 +48,8 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
     : "-bottom-1 -right-1 transform scale-x-[-1]";
   const dashLinePosition = isEven ? "right-0" : "left-0";
 
-  // Layout prop is what dictates animating the container to expand/contract when
-  // replies are loaded or unloaded. The parent/root is in Replies.tsx
+  // Layout prop is what dictates animating the container to expand/contract
+  // when replies are loaded or unloaded. The parent/root is in Replies.tsx
   return (
     <motion.div
       initial={{
@@ -137,16 +122,7 @@ export default function Reply({ reply, level, isChild, index }: ReplyProps) {
             </p>
 
             {/* Heart */}
-            <Heart
-              handleHeartClick={handleHeartClick}
-              hearted={hearted}
-              className={`absolute -top-7 ${
-                isEven ? "-right-2 -scale-x-[1]" : "-left-2"
-              }`}
-              heartCount={heartCount}
-              replyCount={reply._count.replies}
-              isMirrored={isEven}
-            />
+            <Heart entry={activePage.data as EntryExtended} />
 
             <AnimatePresence>
               {/* Expand Dot */}

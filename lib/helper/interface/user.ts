@@ -1,7 +1,7 @@
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { attachSoundData } from "@/lib/helper/feed";
 import { EssentialExtended } from "@/types/global";
-import { AlbumData } from "@/types/appleTypes";
+import { AlbumData } from "@/types/apple";
 
 export const useUserProfileQuery = (
   userId: string | undefined,
@@ -85,6 +85,7 @@ export const useEntriesQuery = (userId: string, pageUserId: string) => {
       getNextPageParam: (lastPage) => lastPage?.pagination?.nextPage || null,
       enabled: !!userId && !!pageUserId,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
     },
   );
 };

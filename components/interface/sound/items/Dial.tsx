@@ -208,7 +208,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
             animate={{
               opacity: 1,
               scale: !isOpen ? 1 : 1,
-              color: !isOpen ? "#FFF" : "#999",
+              color: !isOpen ? "#000" : "#999",
             }}
             exit={{ opacity: 0, scale: 0 }}
             transition={springTextConfig}

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Command } from "cmdk";
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/apple";
 import { useNavContext } from "@/context/Nav";
 
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {

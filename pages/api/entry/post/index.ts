@@ -11,6 +11,10 @@ import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { formatEntry } from "@/lib/helper/cache";
 
+const rangeRating = (rating: number) => {
+  return rating <= 2 ? "low" : rating >= 2.5 && rating <= 3.5 ? "mid" : "high";
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -27,9 +31,9 @@ export default async function handler(
       where: { apple_id: appleId },
     });
 
-    // Create the relationship if the sound doesn't exist
+    // create the relationship if the sound doesn't exist
     if (!soundInDatabase) {
-      // If it's an album, create the album
+      // if it's an album, create the album
       if (isAlbum) {
         soundInDatabase = await prisma.sound.create({
           data: {
@@ -42,7 +46,7 @@ export default async function handler(
           },
         });
       } else {
-        // If it's a song, create the album and the song
+        // if it's a song, create the album and the song
         soundInDatabase = await prisma.sound.upsert({
           where: { apple_id: album.id },
           update: {
@@ -79,7 +83,7 @@ export default async function handler(
       }
     }
 
-    // Sound exists/created, continue creating the respective entry ->
+    // sound exists/created, continue creating the respective entry ->
     let entry: Entry;
     if (!isWisp) {
       entry = await prisma.entry.create({
@@ -94,7 +98,7 @@ export default async function handler(
         },
       });
 
-      // Add sound to average queue in redis
+      // add sound to average queue in redis
       await redis.sadd("averageQueue", JSON.stringify(appleId));
     } else {
       entry = await prisma.entry.create({
@@ -107,10 +111,10 @@ export default async function handler(
       });
     }
 
-    // Update the feed cache of followers
+    // update the feed cache of followers
     let followers: string[] = (await redis.get(userFollowersKey(userId))) || [];
 
-    // If the followers are not cached, fetch them from the database
+    // if the followers are not cached, fetch them from the database
     if (!followers.length) {
       const dbFollowers = await prisma.user
         .findUnique({
@@ -125,49 +129,54 @@ export default async function handler(
         .then((u) => (u ? u.followers.map((f) => f.follower_id) : null));
 
       if (dbFollowers) {
-        // Cache the followers
+        // cache the followers
         await redis.set(userFollowersKey(userId), JSON.stringify(followers));
         followers = dbFollowers;
       }
     }
 
-    // For each follower, update their feed.
+    const unixTime = new Date(entry.created_at).getTime();
+    // for each follower, update their feed.
     followers.push(userId);
     const pipeline = redis.pipeline();
     for (const followerId of followers) {
       pipeline.zadd(userFeedKey(followerId), {
-        score: new Date(entry.created_at).getTime(),
+        score: unixTime,
         member: entry.id,
       });
     }
-    const entryData = {
-      id: entry.id,
-      sound: {
-        id: soundInDatabase.id,
-        apple_id: soundInDatabase.apple_id,
-        type: soundInDatabase.type,
-      },
-      type: entry.type,
-      author_id: userId,
-      text: entry.text,
-      created_at: entry.created_at,
-      _count: {
-        actions: 0,
-        chains: 0,
-      },
-      // Extra fields for artifacts
-      rating: entry.rating,
-      loved: entry.loved,
-      replay: entry.replay,
-    };
-    // Cache entry data in hash
-    pipeline.hset(entryDataKey(entry.id), formatEntry(entryData));
-    // Cache entry id in users profile entries
+    // cache entry data in hash
+    pipeline.hset(
+      entryDataKey(entry.id),
+      formatEntry({
+        id: entry.id,
+        sound: {
+          id: soundInDatabase.id,
+          apple_id: soundInDatabase.apple_id,
+          type: soundInDatabase.type,
+        },
+        type: entry.type,
+        author_id: userId,
+        text: entry.text,
+        created_at: entry.created_at,
+        _count: { actions: 0, chains: 0 },
+        // Extra fields for artifacts
+        rating: entry.rating,
+        loved: entry.loved,
+        replay: entry.replay,
+      }),
+    );
+    // cache entry id in users profile entries
     pipeline.zadd(userEntriesKey(userId), {
-      score: new Date(entry.created_at).getTime(),
+      score: unixTime,
       member: entry.id,
     });
-    // Update user profile entries count
+    // cache entry ids in sound entries
+    pipeline.zadd(
+      `sound:${soundInDatabase.id}:entry_ids:newest:${rangeRating(rating)}`,
+      { score: unixTime, member: entry.id },
+    );
+    // update user profile entries count
     pipeline.hincrby(userProfileKey(userId), "artifacts_count", 1);
     await pipeline.exec();
 

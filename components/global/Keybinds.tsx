@@ -19,7 +19,7 @@ export const Keybinds = (
     selectedFormSound,
     setSelectedFormSound,
   } = useNavContext();
-  const { handleSelectSound } = useSound();
+  const { openSoundPage } = useSound();
 
   const activePage: Page = pages[pages.length - 1];
 
@@ -54,7 +54,7 @@ export const Keybinds = (
     // Switch to album page from form
     else if (e.key === "Enter" && selectedFormSound && inputValue === "") {
       e.preventDefault();
-      handleSelectSound(selectedFormSound);
+      // openSoundPage(selectedFormSound);
       setSelectedFormSound(null);
       inputRef.current?.blur();
       window.history.pushState(null, "");
@@ -77,19 +77,19 @@ export const Keybinds = (
     // Prepare form if on sound page
     else if (
       e.key === "Enter" &&
-      activePage.sound &&
+      activePage.type === "sound" &&
       activeAction === "none" &&
       !inputValue
     ) {
       e.preventDefault();
-      const sound = activePage.sound.data;
-      setSelectedFormSound(sound);
+      const sound = activePage.data;
+      // setSelectedFormSound(sound);
     }
 
     // Prepare reply parent
     else if (
       e.key === "Enter" &&
-      activePage.entry &&
+      activePage.type === "entry" &&
       activeAction === "none" &&
       !inputValue
     ) {

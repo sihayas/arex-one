@@ -9,14 +9,22 @@ import React, {
 import { Session } from "lucia";
 import { useUserAndSessionQuery } from "@/lib/helper/session";
 import { StateSnapshot } from "react-virtuoso";
-import { AlbumData } from "@/types/appleTypes";
 import { Author, EntryExtended } from "@/types/global";
 import { DatabaseUserAttributes } from "@/lib/global/auth";
+
+export type PageSound = {
+  id: string;
+  apple_id: string;
+  name: string;
+  artist_name: string;
+  release_date: string;
+  artwork: string;
+};
 
 export type Page = {
   key: string;
   type: PageType;
-  data: Author | DatabaseUserAttributes | EntryExtended | AlbumData;
+  data: Author | DatabaseUserAttributes | EntryExtended | PageSound;
   snapshot?: {
     key: number;
     state: StateSnapshot; // To retain scroll position

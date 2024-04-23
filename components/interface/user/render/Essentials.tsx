@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { useSound } from "@/hooks/usePage";
-import { AlbumData } from "@/types/appleTypes";
+import { AlbumData } from "@/types/apple";
 import { motion } from "framer-motion";
 import { LaurelIcon } from "@/components/icons";
 import { EssentialExtended } from "@/types/global";
@@ -11,7 +11,7 @@ interface EssentialsProps {
 }
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
-  const { handleSelectSound } = useSound();
+  const { openSoundPage } = useSound();
   const [essential_one, setEssentialOne] =
     React.useState<EssentialExtended | null>(null);
   const [essential_two, setEssentialTwo] =

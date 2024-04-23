@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/apple";
 
 // Form can either be for a song or an album. Interface sound can only be an
 // album obviously

@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/apple";
 import { EntryExtended } from "@/types/global";
 
 export const useFeedQuery = (userId: string) => {

@@ -3,14 +3,6 @@ import { useUser } from "@/hooks/usePage";
 import React from "react";
 import { Author } from "@/types/global";
 
-type UserType = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  avatar: string;
-};
-
 interface UserAvatarProps {
   user: Author;
   imageSrc: string;
@@ -33,7 +25,7 @@ const Avatar: React.FC<UserAvatarProps> = ({
   user,
   style,
 }) => {
-  const { handleSelectUser } = useUser();
+  const { openUserPage } = useUser();
 
   if (!imageSrc) {
     return (
@@ -52,7 +44,7 @@ const Avatar: React.FC<UserAvatarProps> = ({
   }
   return (
     <Image
-      onClick={() => handleSelectUser(user)}
+      onClick={() => openUserPage(user)}
       className={`rounded-full ${className} cursor-pointer aspect-square`}
       src={imageSrc}
       alt={altText}

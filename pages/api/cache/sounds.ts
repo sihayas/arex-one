@@ -1,5 +1,5 @@
 import { redis } from "@/lib/global/redis";
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/apple";
 import { fetchSoundsByTypes } from "@/lib/global/musickit";
 import { NextApiRequest, NextApiResponse } from "next";
 

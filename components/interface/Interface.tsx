@@ -32,7 +32,7 @@ export const GetDimensions = (pageType: PageType) => {
       scrollTo: { width: 516, height: maxHeight },
     },
     sound: {
-      base: { width: 496, height: 496 },
+      base: { width: 688, height: 688 },
       target: { width: 688, height: maxHeight },
       scrollTo: { width: 688, height: maxHeight },
     },
@@ -107,11 +107,7 @@ export function Interface() {
       animate(
         scope.current,
         { [dimension]: newDimension.get() },
-        {
-          type: "spring",
-          stiffness: 250,
-          damping: 35,
-        },
+        { type: "spring", stiffness: 250, damping: 35 },
       );
     };
 

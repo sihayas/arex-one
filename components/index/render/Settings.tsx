@@ -56,7 +56,7 @@ const Settings = () => {
       <motion.p
         variants={notificationVariants}
         transition={notificationSpring}
-        className={`font-semibold text-gray3 uppercase text-base`}
+        className={`font-medium text-gray3 uppercase text-sm`}
       >
         Notifications
       </motion.p>
@@ -128,7 +128,7 @@ const Settings = () => {
       <motion.p
         variants={notificationVariants}
         transition={notificationSpring}
-        className={`font-semibold text-gray3 uppercase text-base`}
+        className={`font-medium text-gray3 uppercase text-sm`}
       >
         Manage Account
       </motion.p>

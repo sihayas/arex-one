@@ -1,5 +1,5 @@
 import { Entry, Essential, Sound } from "@prisma/client";
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { AlbumData, SongData } from "@/types/apple";
 
 // Bare author stored in cache
 export type Author = {

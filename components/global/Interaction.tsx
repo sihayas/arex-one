@@ -46,39 +46,40 @@ const containerVariants = {
   },
 };
 
-const Dot = () => {
-  return (
-    <motion.div
-      className="bg-[#E5E5E5] h-1 w-1 rounded-full"
-      variants={dotVariants}
-    />
-  );
-};
-
 type InteractionProps = {
   entry: EntryExtended;
   isMirrored?: boolean;
 };
 
 export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
-  const { setIsVisible, user } = useInterfaceContext();
-  const { setExpandInput, setSelectedFormSound } = useNavContext();
-  const { handleSelectEntry } = useEntry();
-  const { handleSelectSound } = useSound();
-
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [isFlagging, setIsFlagging] = React.useState(false);
-
   const [isHovered, setIsHovered] = React.useState(false);
-  const sound = entry.sound_data;
+
+  const { setIsVisible, user } = useInterfaceContext();
+  const { setExpandInput, setSelectedFormSound } = useNavContext();
+  const { openEntryPage } = useEntry();
+  const { openSoundPage } = useSound();
+
+  const sound = {
+    id: entry.sound_id,
+    apple_id: entry.sound_apple_id,
+    name: entry.sound_data.attributes.name,
+    artist_name: entry.sound_data.attributes.artistName,
+    release_date: entry.sound_data.attributes.releaseDate,
+    artwork: MusicKit.formatArtworkURL(
+      entry.sound_data.attributes.artwork,
+      320 * 2.5,
+      320 * 2.5,
+    ),
+  };
 
   const handleOpenEntry = () => {
-    handleSelectEntry(entry);
+    openEntryPage(entry);
   };
 
   const handleOpenSound = () => {
-    // @ts-ignore
-    handleSelectSound(sound);
+    openSoundPage(sound);
   };
 
   const handleCreate = () => {
@@ -127,6 +128,7 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
           scale: !isHovered ? 1 : 0.5,
           opacity: !isHovered ? 1 : 0,
         }}
+        initial={false}
         className={`absolute bottom-0 right-0`}
       >
         <ExpandCurveIcon color={"#CCC"} />
@@ -139,7 +141,12 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
         animate={isHovered ? "visible" : "hidden"}
       >
         {Array.from({ length: 2 }).map((_, index) => (
-          <Dot key={index} />
+          <motion.div
+            key={index}
+            initial={false}
+            className="bg-[#E5E5E5] h-1 w-1 rounded-full"
+            variants={dotVariants}
+          />
         ))}
 
         {/* Delete button */}
@@ -204,7 +211,12 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
           animate={isHovered ? "visible" : "hidden"}
         >
           {Array.from({ length: 9 }).map((_, index) => (
-            <Dot key={index} />
+            <motion.div
+              key={index}
+              initial={false}
+              className="bg-[#E5E5E5] h-1 w-1 rounded-full"
+              variants={dotVariants}
+            />
           ))}
 
           <motion.div

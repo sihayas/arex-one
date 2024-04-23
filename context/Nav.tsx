@@ -7,7 +7,7 @@ import React, {
   useEffect,
 } from "react";
 import { ReplyTargetType } from "../lib/helper/interface/nav";
-import { AlbumData, SongData } from "@/types/appleTypes";
+import { PageSound } from "@/context/Interface";
 
 export type NavContextType = {
   expandInput: boolean;
@@ -23,18 +23,14 @@ export type NavContextType = {
   >;
   replyTarget: ReplyTargetType;
   setReplyTarget: Dispatch<SetStateAction<ReplyTargetType>>;
-  selectedFormSound: AlbumData | SongData | null;
-  setSelectedFormSound: React.Dispatch<
-    React.SetStateAction<AlbumData | SongData | null>
-  >;
+  selectedFormSound: PageSound | null;
+  setSelectedFormSound: React.Dispatch<React.SetStateAction<PageSound | null>>;
 };
 
-// Create the context, initialized as undefined
 export const NavContext = React.createContext<NavContextType | undefined>(
   undefined,
 );
 
-// Export a custom hook to consume the context
 export const useNavContext = (): NavContextType => {
   const context = useContext(NavContext);
   if (!context) {
@@ -43,22 +39,19 @@ export const useNavContext = (): NavContextType => {
   return context;
 };
 
-// Define the props for the InputProvider component
 type NavProviderProps = {
   children: React.ReactNode;
 };
 
-// Define the provider for the context
 export const NavProvider = ({ children }: NavProviderProps) => {
-  // Input states
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [expandInput, setExpandInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
 
-  const [selectedFormSound, setSelectedFormSound] = useState<
-    AlbumData | SongData | null
-  >(null);
+  const [selectedFormSound, setSelectedFormSound] = useState<PageSound | null>(
+    null,
+  );
 
   const [replyTarget, setReplyTarget] = useState<ReplyTargetType>(null);
 

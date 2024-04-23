@@ -1,4 +1,4 @@
-import { AlbumData } from "@/types/appleTypes";
+import { AlbumData } from "@/types/apple";
 
 const token = process.env.NEXT_PUBLIC_APPLE_JWT || "";
 export const baseURL = "https://api.music.apple.com/v1/catalog/us";

@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { toast } from "sonner";
 
-import RatingDial from "@/components/interface/nav/items/search/RatingDial";
+import RatingDial from "@/components/interface/nav/items/RatingDial";
 import { useNavContext } from "@/context/Nav";
 import { useInterfaceContext } from "@/context/Interface";
 import { AnimatePresence, motion } from "framer-motion";
@@ -12,6 +12,11 @@ import { createEntry } from "@/lib/helper/interface/nav";
 import { fetchSourceAlbum } from "@/lib/global/musickit";
 
 const Form = () => {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [rating, setRating] = useState(0);
+  const [loved, setLoved] = useState(false);
+  const [replay, setReplay] = useState(false);
+
   const { user } = useInterfaceContext();
   const {
     inputRef,
@@ -20,26 +25,20 @@ const Form = () => {
     selectedFormSound,
     setSelectedFormSound,
   } = useNavContext();
-  const { handleSelectSound } = useSound();
-
-  const formRef = useRef<HTMLFormElement>(null);
-  const [rating, setRating] = useState(0);
-  const [loved, setLoved] = useState(false);
-  const [replay, setReplay] = useState(false);
-
-  const userId = user?.id;
+  const { openSoundPage } = useSound();
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement> | null) => {
-      const source = await fetchSourceAlbum(selectedFormSound?.id);
-      if (!source || !userId) return;
+      // determine a source album
+      const source = await fetchSourceAlbum(selectedFormSound?.apple_id);
+      if (!source || !user) return;
       toast.promise(
         createEntry({
           text: inputValue,
           rating,
           replay,
           loved,
-          userId,
+          userId: user.id,
           sound: source,
         }).then(() => {
           setSelectedFormSound(null);
@@ -56,14 +55,15 @@ const Form = () => {
       rating,
       loved,
       inputValue,
-      userId,
+      user,
+      replay,
       setSelectedFormSound,
       setInputValue,
       selectedFormSound,
     ],
   );
 
-  // CMD+Enter to Submit. Focus on input if letter is pressed.
+  // cmd+enter to submit. focus on input if letter is pressed.
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
@@ -90,18 +90,8 @@ const Form = () => {
 
   if (!selectedFormSound) return;
 
-  const artwork = MusicKit.formatArtworkURL(
-    selectedFormSound.attributes.artwork,
-    322 * 2.5,
-    322 * 2.5,
-  );
-  const name = selectedFormSound.attributes.name;
-  const artist = selectedFormSound.attributes.artistName;
-
-  // handle sound click and prevent default
   const handleSoundClick = (event: React.MouseEvent<HTMLImageElement>) => {
-    // @ts-ignore
-    handleSelectSound(selectedFormSound);
+    openSoundPage(selectedFormSound);
   };
 
   return (
@@ -128,8 +118,8 @@ const Form = () => {
           <Image
             onClick={handleSoundClick}
             className={`cursor-pointer`}
-            src={artwork}
-            alt={`${name} artwork`}
+            src={selectedFormSound.artwork}
+            alt={` artwork`}
             loading="lazy"
             quality={100}
             style={{ objectFit: "cover" }}
@@ -156,10 +146,10 @@ const Form = () => {
             className={`absolute bottom-0 left-0 flex flex-col p-4 drop-shadow`}
           >
             <h3 className={`line-clamp-1 text-base font-bold text-white`}>
-              {name}
+              {selectedFormSound.name}
             </h3>
             <h4 className={`line-clamp-1 text-base font-medium text-white`}>
-              {artist}
+              {selectedFormSound.artist_name}
             </h4>
           </div>
         </motion.div>

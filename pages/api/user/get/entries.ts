@@ -3,7 +3,6 @@ import {
   userEntriesKey,
   userHeartsKey,
   redis,
-  userProfileKey,
 } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -120,8 +119,6 @@ export default async function handler(
     }
 
     if (pageUserId !== userId) {
-      // (3) Attach author data to each entry
-
       // Check if the user has liked any of the entries
       let hearts = await redis.smembers(userHeartsKey(userId));
       // If the user has no hearts cached, attempt to populate it
