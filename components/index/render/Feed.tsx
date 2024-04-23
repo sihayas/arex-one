@@ -29,7 +29,6 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
 
   return (
     <Virtuoso
-      style={{ height: "100vh", width: "100%" }}
       data={entries}
       overscan={200}
       computeItemKey={(key: number) => `item-${key.toString()}`}
@@ -54,7 +53,7 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
               {entry.type === "artifact" && <Entry entry={entry} />}
 
               <p
-                className={`text-gray2 absolute -bottom-7 left-[68px] font-medium mix-blend-darken`}
+                className={`text-gray2 absolute -bottom-7 left-[68px] font-medium mix-blend-darken z-0`}
               >
                 {entry.author.username}
               </p>

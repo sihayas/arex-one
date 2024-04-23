@@ -44,13 +44,17 @@ export const Entry: React.FC<EntryProps> = ({ entry, flip }) => {
     304 * 2.5,
   );
 
-  // IMPORTANT: Drop-shadow breaks the backface-visibility of the card.
+  // IMPORTANT: drop-shadow breaks the backface-visibility of the card.
   return (
-    <div className={`relative`}>
+    <div className={`relative z-10`}>
+      <Heart
+        className="absolute bottom-[428px] -left-2 -z-10 -m-12 p-12"
+        entry={entry}
+      />
       <motion.div
         whileTap={{ scale: 0.95 }}
-        // animate={{ scale: isFlipped ? [0.8, 1] : [0.8, 1] }}
-        initial={{ scale: 1 }}
+        animate={{ scale: isFlipped ? [0.8, 1] : [0.8, 1] }}
+        initial="none"
         transition={{ duration: 0.25, ease: "easeOut" }}
         onClick={() => {
           setIsFlipped(!isFlipped);
@@ -146,10 +150,6 @@ export const Entry: React.FC<EntryProps> = ({ entry, flip }) => {
         </Tilt>
       </motion.div>
       <Interaction entry={entry} />
-      <Heart
-        className="absolute bottom-[428px] -left-2 z-10 -m-12 p-12 mix-blend-multiply"
-        entry={entry}
-      />
     </div>
   );
 };

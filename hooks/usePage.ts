@@ -1,6 +1,5 @@
 import { PageSound, useInterfaceContext } from "@/context/Interface";
 
-import { AlbumData } from "@/types/apple";
 import { Author } from "@/types/global";
 import { DatabaseUserAttributes } from "@/lib/global/auth";
 import { EntryExtended } from "@/types/global";

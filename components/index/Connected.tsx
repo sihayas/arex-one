@@ -3,7 +3,6 @@ import Avatar from "@/components/global/Avatar";
 import Dash from "@/components/index/items/Dash";
 import React from "react";
 import Feed from "@/components/index/render/Feed";
-import { UserType } from "@/types/dbTypes";
 import { SettingsIcon } from "@/components/icons";
 import Settings from "@/components/index/render/Settings";
 import { DatabaseUserAttributes } from "@/lib/global/auth";

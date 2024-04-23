@@ -132,6 +132,22 @@ const User = () => {
         className={`relative flex items-center justify-between w-full`}
         onClick={handleAvatarClick}
       >
+        {/* Username */}
+        <p
+          className={`text-gray2 text-base font-semibold w-full text-end -translate-x-4`}
+        >
+          {data.username}
+        </p>
+
+        <Avatar
+          className="rounded-max shadow-shadowKitLow aspect-square flex-shrink-0"
+          imageSrc={data.image}
+          altText={`avatar`}
+          width={64}
+          height={64}
+          user={data}
+        />
+
         {/* Stats */}
         <div className={`flex items-center justify-center gap-8 w-full `}>
           <div className={`flex items-center gap-2`}>
@@ -147,20 +163,7 @@ const User = () => {
             </p>
           </div>
         </div>
-        <Avatar
-          className="rounded-max shadow-shadowKitLow aspect-square flex-shrink-0"
-          imageSrc={data.image}
-          altText={`avatar`}
-          width={64}
-          height={64}
-          user={data}
-        />
-        {/* Username */}
-        <p
-          className={`text-gray2 text-base font-semibold w-full translate-x-2`}
-        >
-          {data.username}
-        </p>
+
         <input
           type="file"
           ref={fileInputRef}

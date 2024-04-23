@@ -117,7 +117,7 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
     <motion.div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`absolute -bottom-10 z-10 flex cursor-pointer items-end mix-blend-darken ${
+      className={`absolute -bottom-10 flex cursor-pointer items-end mix-blend-darken -z-10 ${
         isMirrored ? "-scale-x-[1] -left-10" : " -right-10"
       }`}
     >

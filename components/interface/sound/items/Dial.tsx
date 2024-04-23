@@ -33,28 +33,27 @@ const springSegmentConfig = {
 };
 
 const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
+  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+
   const { scrollContainerRef } = useInterfaceContext();
   const { scrollY } = useScroll({
     container: scrollContainerRef,
     layoutEffect: false,
   });
-  const [isOpen, setIsOpen] = React.useState(false);
   useMotionValueEvent(scrollY, "change", (latest) => {
     latest > 1 ? setIsOpen(true) : setIsOpen(false);
   });
-
-  const [isHovered, setIsHovered] = React.useState(false);
-  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
-  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
   useEffect(() => {
     onRangeChange(activeIndex);
   }, [activeIndex, onRangeChange]);
 
-  const strokeWidth = 6;
-  const strokeWidths = [4, 5, 6, 7, 8];
-  const dotRadius = 1.5;
-  const radius = 74;
+  const strokeWidth = 3;
+  const dotRadius = 1;
+  const radius = 48;
 
   const circumference = 2 * Math.PI * radius;
   const viewBoxSize = radius * 2 + strokeWidth;
@@ -156,7 +155,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
                     : activeIndex === index
                     ? "#FFF"
                     : "#999",
-                  strokeWidth: activeIndex === index ? 10 : 6,
+                  strokeWidth: activeIndex === index ? 6 : 3,
                 }}
                 whileHover={{ strokeWidth: 10, stroke: "#FFF" }}
                 cx={viewBoxSize / 2}
@@ -170,7 +169,7 @@ const Dial: React.FC<DialProps> = ({ ratings, onRangeChange, average }) => {
                 cx={dotPosition.x}
                 cy={dotPosition.y}
                 r={dotRadius}
-                fill={`#999`}
+                fill={`#CCC`}
                 initial={{
                   cx: viewBoxSize / 2,
                   cy: viewBoxSize / 2,

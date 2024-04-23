@@ -81,13 +81,13 @@ const Entries: React.FC<RenderEntriesProps> = ({
 
   return (
     <Virtuoso
-      key={key}
+      // key={key}
       ref={ref}
       style={{ height: target.height }}
       data={entries}
       overscan={200}
-      restoreStateFrom={state.current}
-      computeItemKey={(key: number) => `item-${key.toString()}`}
+      // restoreStateFrom={state.current}
+      // computeItemKey={(key: number) => `item-${key.toString()}`}
       endReached={handleEndReached}
       itemContent={(index, entry) => (
         <motion.div
@@ -98,12 +98,12 @@ const Entries: React.FC<RenderEntriesProps> = ({
             zIndex: index === 0 ? 20 : index === 1 ? -10 : 0,
             rotate: index === 0 ? rotateZero : index === 1 ? rotateOne : 0,
           }}
-          onClick={() => {
-            ref.current?.getState((snapshot) => {
-              activePage.snapshot = { state: snapshot, key: index };
-            });
-            openEntryPage(entry);
-          }}
+          // onClick={() => {
+          //   ref.current?.getState((snapshot) => {
+          //     activePage.snapshot = { state: snapshot, key: index };
+          //   });
+          //   openEntryPage(entry);
+          // }}
           className={`w-fit ml-auto pr-[72px] pt-[72px]`}
         >
           <Entry entry={entry} flip={true} />

@@ -40,8 +40,8 @@ const Sound = () => {
     useTransform(scrollY, [0, 1], [20, 40]),
     generalConfig,
   );
-  const xDial = useSpring(useTransform(scrollY, [0, 1], [-24, 0]), artConfig);
-  const yDial = useSpring(useTransform(scrollY, [0, 1], [16, 0]), artConfig);
+  const xDial = useSpring(useTransform(scrollY, [0, 1], [-32, 0]), artConfig);
+  const yDial = useSpring(useTransform(scrollY, [0, 1], [32, 0]), artConfig);
 
   const pageSound = activePage.data as PageSound;
   const { data } = useSoundInfoQuery(pageSound.id);
@@ -135,7 +135,7 @@ const Sound = () => {
             exit={{ opacity: 0, scale: 0 }}
           >
             <Dial
-              ratings={ratings || [1, 0, 0, 0, 0]}
+              ratings={ratings}
               onRangeChange={handleRangeChange}
               average={data.avg_rating}
             />

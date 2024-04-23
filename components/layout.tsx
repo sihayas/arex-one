@@ -16,7 +16,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       const animationConfig = {
         scale: isVisible ? 0.9 : 1,
         pointerEvents: isVisible ? "none" : "auto",
-        opacity: isVisible ? 0 : 1,
+        opacity: isVisible ? 0.5 : 1,
+        filter: isVisible ? "blur(12px)" : "blur(0px)",
       };
       const transitionConfig = {
         type: "spring" as const,
@@ -71,7 +72,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         transformTemplate={template} // Prevent translateZ
         ref={scope}
         id="main-content"
-        className={`flex origin-center items-center justify-center`}
+        className={`flex origin-center items-center justify-center `}
       >
         {children}
       </motion.main>

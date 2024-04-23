@@ -20,7 +20,7 @@ import {
 import { PageType } from "@/context/Interface";
 import { createPortal } from "react-dom";
 
-// Calculate & set base dimensions and target dimensions for the window per page
+// calculate & set base dimensions and target dimensions for the window per page
 export const GetDimensions = (pageType: PageType) => {
   const viewportHeight = window.innerHeight;
   const maxHeight = viewportHeight - 2 * 64;
@@ -52,7 +52,7 @@ export function Interface() {
   const cmdkPortal = document.getElementById("cmdk");
   const isNotifications = activeAction === "notifications";
 
-  const { base, target, scrollTo } = GetDimensions(activePage.type as PageType);
+  const { base, target, scrollTo } = GetDimensions(activePage.type);
 
   const [scope, animate] = useAnimate(); // Window
   const [rootScope, animateRoot] = useAnimate(); // Root
@@ -147,9 +147,7 @@ export function Interface() {
 
   return (
     <motion.div
-      initial={{
-        opacity: 0,
-      }}
+      initial={{ opacity: 0 }}
       key={`cmdk`}
       // transformTemplate={template} // Prevent translateZ
       ref={rootScope}
