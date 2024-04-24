@@ -53,8 +53,8 @@ export const Entry: React.FC<EntryProps> = ({ entry, flip }) => {
       />
       <motion.div
         whileTap={{ scale: 0.95 }}
-        animate={{ scale: isFlipped ? [0.8, 1] : [0.8, 1] }}
-        initial="none"
+        // animate={{ scale: isFlipped ? [0.8, 1] : [0.8, 1] }}
+        // initial="none"
         transition={{ duration: 0.25, ease: "easeOut" }}
         onClick={() => {
           setIsFlipped(!isFlipped);

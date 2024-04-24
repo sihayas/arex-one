@@ -22,7 +22,7 @@ const Entries = ({ pageUserId }: { pageUserId: string }) => {
   // first card translations
   const xZero = useSpring(useTransform(scrollY, [0, 24], [8, 0]), springConfig);
   const yZero = useSpring(
-    useTransform(scrollY, [0, 24], [122, 0]),
+    useTransform(scrollY, [0, 24], [50, 0]),
     springConfig,
   );
   const rotateZero = useSpring(
@@ -33,7 +33,7 @@ const Entries = ({ pageUserId }: { pageUserId: string }) => {
   // second card translations
   const xOne = useSpring(useTransform(scrollY, [0, 24], [-8, 0]), springConfig);
   const yOne = useSpring(
-    useTransform(scrollY, [0, 24], [-303, 0]),
+    useTransform(scrollY, [0, 24], [-375, 0]),
     springConfig,
   );
   const rotateOne = useSpring(
@@ -79,7 +79,7 @@ const Entries = ({ pageUserId }: { pageUserId: string }) => {
         const authoredEntry = { ...entry, author: activePage.data as Author };
         return (
           <motion.div
-            className={`relative w-fit px-28 ${isEven ? "mr-auto" : "ml-auto"}`}
+            className={`relative w-fit mx-auto pt-[72px]`}
             style={{
               y: index === 0 ? yZero : index === 1 ? yOne : 0,
               x: index === 0 ? xZero : index === 1 ? xOne : 0,

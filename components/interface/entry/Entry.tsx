@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useInterfaceContext } from "@/context/Interface";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 
 import Avatar from "@/components/global/Avatar";
 import Replies from "@/components/interface/entry/render/Replies";
@@ -10,10 +10,11 @@ import { EntryExtended } from "@/types/global";
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
 import { Interaction } from "@/components/global/Interaction";
-import { createPortal } from "react-dom";
 import { getStarComponent } from "@/components/global/Star";
+import { TailIcon } from "@/components/icons";
 
 export const Entry = () => {
+  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const [tiltAngles, setTiltAngles] = useState({
     tiltAngleX: 0,
     tiltAngleY: 0,
@@ -34,11 +35,9 @@ export const Entry = () => {
   // If opening from a notification, load the chain
   // const chainId = activePage.data?.replyTo;
 
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
   const sound = entry.sound_data;
   const name = sound.attributes.name;
   const artistName = sound.attributes.artistName;
-  const color = sound.attributes.artwork.bgColor;
   const artwork = MusicKit.formatArtworkURL(
     sound.attributes.artwork,
     304 * 2.5,
@@ -87,7 +86,7 @@ export const Entry = () => {
     <>
       <motion.div
         animate={{
-          y: isExpanded ? -104 : 0,
+          y: isExpanded ? 32 : 104,
           boxShadow: !isExpanded
             ? "rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px"
             : "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
@@ -95,8 +94,30 @@ export const Entry = () => {
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", damping: 20, stiffness: 100 }}
         onClick={() => setIsExpanded(!isExpanded)}
-        className={`shadow-soundArt relative mt-[104px] rounded-full`}
+        className={`shadow-soundArt relative rounded-full`}
       >
+        <motion.div
+          animate={{ x: isExpanded ? 68 : -16, y: isExpanded ? 362 : 248 }}
+          transition={{ type: "spring", damping: 40, stiffness: 100 }}
+          className={`absolute left-0 top-0 z-10 cloud-shadow -rotate-2`}
+        >
+          <Avatar
+            className={`outline outline-4 outline-white shadow-shadowKitHigh z-0`}
+            user={entry.author}
+            imageSrc={entry.author.image}
+            altText={entry.author.username}
+            width={40}
+            height={40}
+          />
+          <div
+            className={`absolute -top-5 left-4 py-1.5 px-3 bg-white rounded-[18px] z-10 w-max text-sm font-medium flex items-center gap-2`}
+          >
+            {getStarComponent(entry.rating)}
+
+            {entry.author.username}
+            <TailIcon className={`absolute -bottom-1 left-2`} />
+          </div>
+        </motion.div>
         <Tilt
           tiltAngleXManual={0}
           tiltAngleYManual={0}
@@ -113,22 +134,19 @@ export const Entry = () => {
         >
           <motion.div
             animate={{
-              width: isExpanded ? 512 : 304,
-              height: isExpanded ? 864 : 432,
+              width: isExpanded ? 480 : 304,
+              height: isExpanded ? "auto" : 432,
               borderRadius: isExpanded
-                ? "32px 32px 20px 20px"
+                ? "20px 20px 20px 20px"
                 : "32px 32px 32px 32px",
             }}
             transition={{ type: "spring", damping: 70, stiffness: 600 }}
-            className={`relative flex flex-col items-center overflow-hidden rounded-3xl bg-white`}
+            className={`relative flex flex-col items-center bg-white overflow-hidden`}
           >
             {/* Art */}
             <motion.div
               className={`origin-top`}
-              animate={{
-                y: isExpanded ? 66 : -24,
-                scale: isExpanded ? 1.25 : 1,
-              }}
+              animate={{ y: isExpanded ? 88 : -24 }}
               transition={{ type: "spring", damping: 20, stiffness: 100 }}
             >
               <motion.div
@@ -136,6 +154,9 @@ export const Entry = () => {
                   borderRadius: isExpanded
                     ? "12px 12px 12px 12px"
                     : "32px 32px 0px 0px",
+                  boxShadow: !isExpanded
+                    ? "0px 8px 16px 0px rgba(0, 0, 0, 0.0), 0px 0px 4px 0px rgba(0, 0, 0, 0.0)"
+                    : "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
                 }}
                 className={`outline-silver overflow-hidden outline outline-1`}
               >
@@ -150,111 +171,53 @@ export const Entry = () => {
               </motion.div>
             </motion.div>
 
-            {/* Attribution */}
-            {isExpanded ? (
+            {/* Footer / Attribution */}
+            {!isExpanded ? (
+              <div
+                className={`absolute center-x bottom-0 flex w-[304px] items-center gap-2 bg-white px-6 pb-5`}
+              >
+                <div className={`flex-shrink-0`}>
+                  {getStarComponent(entry.rating)}
+                </div>
+
+                <div className={`flex flex-col`}>
+                  <p className={`text-gray2 line-clamp-1 text-sm font-medium`}>
+                    {artistName}
+                  </p>
+                  <p
+                    className={`line-clamp-1 text-base font-semibold text-black`}
+                  >
+                    {name}
+                  </p>
+                </div>
+              </div>
+            ) : (
               <>
                 <div
-                  className={`mb-[26px] mt-[calc(142px+32px)] w-[448px] mix-blend-darken`}
+                  className={`text-black flex flex-col w-[432px] mt-[107px] mb-[7px]`}
                 >
-                  <div
-                    className={`bg-silver flex h-[52px] w-full items-center gap-2 rounded-2xl px-4 shadow-shadowKitLow flex-shrink-0`}
-                  >
-                    <div className={`opacity-50`}>
-                      {getStarComponent(entry.rating)}
-                    </div>
-
-                    <div className={`text-gray2 flex flex-col`}>
-                      <p className={`line-clamp-1 text-sm font-medium`}>
-                        {artistName}
-                      </p>
-                      <p className={`line-clamp-1 text-base font-semibold`}>
-                        {name}
-                      </p>
-                    </div>
-                  </div>
+                  <p className={`line-clamp-1 text-xl`}>{artistName}</p>
+                  <p className={`line-clamp-2 text-2xl font-semibold`}>
+                    {name}
+                  </p>
                 </div>
-
-                {/* Avatar */}
-                {cmdk &&
-                  createPortal(
-                    <AnimatePresence>
-                      <motion.div
-                        initial={{ opacity: 0, filter: "blur(4px)" }}
-                        animate={{ opacity: 1, filter: "blur(0px)" }}
-                        exit={{ opacity: 0, filter: "blur(4px)" }}
-                        transition={{
-                          type: "spring",
-                          damping: 40,
-                          stiffness: 100,
-                        }}
-                        className={`absolute right-0 top-[527px] w-full -translate-x-full`}
-                      >
-                        <div
-                          className={`absolute -right-5 flex items-center gap-2`}
-                        >
-                          <p
-                            className={`text-gray2 line-clamp-1 text-base font-semibold`}
-                          >
-                            {entry.author.username}
-                          </p>
-                          <Avatar
-                            className={`shadow-shadowKitHigh outline outline-4 outline-white`}
-                            imageSrc={entry.author.image}
-                            altText={`${entry.author.username}'s avatar`}
-                            width={40}
-                            height={40}
-                            user={entry.author}
-                          />
-                        </div>
-                      </motion.div>
-                    </AnimatePresence>,
-                    cmdk,
-                  )}
               </>
-            ) : (
-              <div
-                className={`absolute center-x bottom-0 flex w-[304px] items-center justify-between bg-white px-6 pb-5`}
-              >
-                <div className={`flex items-center gap-2`}>
-                  <div className={`flex-shrink-0 `}>
-                    {getStarComponent(entry.rating)}
-                  </div>
-
-                  <div className={`flex flex-col`}>
-                    <p
-                      className={`text-gray2 line-clamp-1 text-sm font-medium`}
-                    >
-                      {artistName}
-                    </p>
-                    <p
-                      className={`line-clamp-1 text-base font-semibold text-black`}
-                    >
-                      {name}
-                    </p>
-                  </div>
-                </div>
-
-                <Avatar
-                  className={`border-silver border`}
-                  imageSrc={entry.author.image}
-                  altText={`${entry.author.username}'s avatar`}
-                  width={32}
-                  height={32}
-                  user={entry.author}
-                />
-              </div>
             )}
 
             {/* Content */}
             <motion.div
-              initial={{ opacity: 0, filter: "blur(1px)" }}
+              initial={{ opacity: 0, filter: "blur(4px)" }}
               animate={{ opacity: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, filter: "blur(1px)" }}
+              exit={{ opacity: 0, filter: "blur(4px)" }}
               key={isExpanded ? "expanded" : "collapsed"}
-              transition={{ type: "spring", damping: 20, stiffness: 100 }}
+              transition={{
+                type: "spring",
+                damping: 20,
+                stiffness: 100,
+              }}
             >
               {isExpanded ? (
-                <p className={`m-8 mt-0 w-[448px] text-base origin-bottom`}>
+                <p className={`m-8 mt-0 w-[432px] text-base origin-bottom`}>
                   {entry.text}
                 </p>
               ) : (

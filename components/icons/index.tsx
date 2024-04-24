@@ -1,6 +1,6 @@
 import React from "react";
 
-// Reply/Chain Icons
+// reply/chain icons
 export function ReplyIcon({ ...props }) {
   return (
     <svg
@@ -40,7 +40,7 @@ export function LoopIcon({ ...props }) {
   );
 }
 
-// Heart button
+// heart button
 export function LoveIcon({ ...props }) {
   return (
     <svg
@@ -59,7 +59,7 @@ export function LoveIcon({ ...props }) {
   );
 }
 
-// Nav Icons
+// nav icons
 export function TargetGoIcon({ ...props }) {
   return (
     <svg
@@ -171,7 +171,7 @@ export function TargetCommandIcon({ ...props }) {
   );
 }
 
-// Sort Icons
+// sort icons
 export function StarlightIcon({ ...props }) {
   return (
     <svg
@@ -252,7 +252,7 @@ export function FireIcon({ ...props }) {
   );
 }
 
-// Star Icons
+// star icons
 export function HalfStar({ width = 24, height = 24, ...props }) {
   return (
     <svg
@@ -523,7 +523,7 @@ export function FiveStar({ width = 24, height = 24, ...props }) {
   );
 }
 
-// Sign In/System Icons
+// sign in/system icons
 export function AppleIcon({ ...props }) {
   return (
     <svg
@@ -564,7 +564,7 @@ export function SettingsIcon({ ...props }) {
   );
 }
 
-// Player Icons
+// player icons
 export function PlayIcon({ width = 14, height = 14, ...props }) {
   return (
     <svg
@@ -615,7 +615,7 @@ export function NextTrackIcon({ ...props }) {
   );
 }
 
-// Interaction Icons
+// interaction icons
 export function TinyCurveIcon({ width = 18, height = 18, ...props }) {
   return (
     <svg
@@ -761,8 +761,7 @@ export function ExpandIcon({ width = 16, height = 16, ...props }) {
   );
 }
 
-// Profile Icons
-
+// profile icons
 export function LaurelIcon({ width = 32, height = 84, ...props }) {
   return (
     <svg
@@ -943,6 +942,27 @@ export function CardsIcon({ width = 24, height = 24, ...props }) {
           <rect width={24} height={24} fill="white" />
         </clipPath>
       </defs>
+    </svg>
+  );
+}
+
+// miscellaneous icons
+
+export function TailIcon({ width = 15, height = 6, ...props }) {
+  return (
+    <svg
+      width={15}
+      height={6}
+      viewBox="0 0 15 6"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={props.className}
+      {...props}
+    >
+      <path
+        d="M4.5 4.06751C5 2.03375 1.66667 0.508439 0 0L15 0C13.1667 1.35584 9.08614 4.53215 7 5.59282C6 6.10126 3.88165 6.58264 4.5 4.06751Z"
+        fill="#FFF"
+      />
     </svg>
   );
 }

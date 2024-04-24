@@ -29,7 +29,7 @@ export const GetDimensions = (pageType: PageType) => {
     user: {
       base: { width: 656, height: 416 },
       target: { width: 656, height: maxHeight },
-      scrollTo: { width: 516, height: maxHeight },
+      scrollTo: { width: 448, height: maxHeight },
     },
     sound: {
       base: { width: 688, height: 688 },
@@ -37,9 +37,9 @@ export const GetDimensions = (pageType: PageType) => {
       scrollTo: { width: 688, height: maxHeight },
     },
     entry: {
-      base: { width: 512, height: 640 },
-      target: { width: 512, height: maxHeight },
-      scrollTo: { width: 512, height: maxHeight },
+      base: { width: 544, height: 640 },
+      target: { width: 544, height: maxHeight },
+      scrollTo: { width: 544, height: maxHeight },
     },
   };
 

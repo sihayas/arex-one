@@ -3,11 +3,12 @@ import { useInterfaceContext } from "@/context/Interface";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useUserProfileQuery } from "@/lib/helper/interface/user";
 import Essentials from "@/components/interface/user/render/Essentials";
-// import Entries from "@/components/interface/user/render/Entries";
 import Avatar from "@/components/global/Avatar";
 import Compressor from "compressorjs";
 import Entries from "@/components/interface/user/render/Entries";
 import { ListenedIcon, CardsIcon } from "@/components/icons";
+
+const generalConfig = { damping: 20, stiffness: 100 };
 
 const User = () => {
   const [followingAtoB, setFollowingAtoB] = useState(false);
@@ -18,6 +19,11 @@ const User = () => {
     container: scrollContainerRef,
     layoutEffect: false,
   });
+  const translateY = useSpring(
+    useTransform(scrollY, [0, 1], [-80, 0]),
+    generalConfig,
+  );
+
   const opacity = useSpring(useTransform(scrollY, [0, 1], [1, 0]), {
     stiffness: 100,
     damping: 20,
@@ -173,9 +179,9 @@ const User = () => {
         />
       </motion.div>
 
-      <div className={`w-full -mt-[80px]`}>
+      <motion.div style={{ translateY }} className={`w-full`}>
         <Entries pageUserId={pageUser.id} />
-      </div>
+      </motion.div>
     </>
   );
 };

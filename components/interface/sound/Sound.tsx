@@ -113,7 +113,10 @@ const Sound = () => {
       {/* Add Snap-Start here*/}
       <motion.div
         style={{ translateY }}
-        transition={{ type: "spring", damping: 40, stiffness: 100 }}
+        initial={{ filter: "blur(20px)", scale: 0, opacity: 0 }}
+        animate={{ filter: "blur(0px)", scale: 1, opacity: 1 }}
+        exit={{ filter: "blur(20px)", scale: 0, opacity: 0 }}
+        transition={{ type: "spring", damping: 30, stiffness: 100 }}
         className={`min-h-max w-full max-w-full snap-start`}
       >
         <Entries soundId={pageSound.id} sortOrder={sortOrder} range={range} />
