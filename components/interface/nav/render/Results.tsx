@@ -4,7 +4,6 @@ import { Command, useCommandState } from "cmdk";
 
 import UserItem from "@/components/interface/nav/items/search/User";
 import Sound from "@/components/interface/nav/items/search/Sound";
-import { UserType } from "@/types/dbTypes";
 import { LayoutGroup, motion } from "framer-motion";
 
 interface SearchProps {
@@ -25,8 +24,10 @@ const Results = ({ searchData }: SearchProps) => {
   const allData = [
     ...filteredAlbums.map((album: AlbumData) => ({ ...album, type: "albums" })),
     ...filteredSongs.map((song: SongData) => ({ ...song, type: "songs" })),
-    ...userData.map((user: UserType) => ({ ...user, type: "users" })),
+    ...userData.map((user: any) => ({ ...user, type: "users" })),
   ];
+
+  console.log(allData);
 
   return (
     <motion.div

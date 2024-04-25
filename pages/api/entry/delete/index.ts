@@ -1,4 +1,5 @@
 import {
+  entryDataKey,
   redis,
   userEntriesKey,
   userFeedKey,
@@ -25,16 +26,13 @@ export default async function handler(
       return res.status(404).json({ error: "Unable to delete entry." });
     }
 
-    // Update the feed cache of followers
+    // update the feed cache of followers
     const userFollowers = await redis.get(userFollowersKey(userId));
-    let followers: string[] | null = userFollowers
-      ? //   @ts-ignore
-        JSON.parse(userFollowers)
-      : null;
+    let followers: string[] = [userId];
 
-    // If the followers are not cached, fetch them from the database
-    if (!followers) {
-      followers = await prisma.user
+    // if the followers are not cached, fetch them from the database
+    if (!userFollowers) {
+      const dbFollowers = await prisma.user
         .findUnique({
           where: { id: userId, status: "active" },
           select: {
@@ -46,25 +44,27 @@ export default async function handler(
         })
         .then((u) => (u ? u.followers.map((f) => f.follower_id) : null));
 
-      // No followers so no feeds to update, update user entries and return
-      if (!followers) {
-        await redis.zrem(userEntriesKey(userId), entryId);
-        return res.status(200).json({ success: "Entry deleted." });
+      if (dbFollowers) {
+        followers.push(...dbFollowers);
+        await redis.set(userFollowersKey(userId), JSON.stringify(dbFollowers));
       }
-      await redis.set(userFollowersKey(userId), JSON.stringify(followers));
     }
 
-    followers.push(userId);
-
-    // Remove the entry from the feed of each follower
+    // for each follower, update their feed.
     const pipeline = redis.pipeline();
     followers.forEach((followerId) => {
       pipeline.zrem(userFeedKey(followerId), entryId);
     });
-    // Remove the entry from the user's entries
+    // remove entry data
+    pipeline.hdel(entryDataKey(entryId));
+    // remove entry id in user profile entries
     pipeline.zrem(userEntriesKey(userId), entryId);
-    // Decrement the user's entries count
-    await redis.hincrby(userProfileKey(userId), "artifacts_count", -1);
+    // decrement the user's entries count
+    pipeline.hincrby(userProfileKey(userId), "artifacts_count", -1);
+    // remove entry ids from sound entries
+    //TODO
+    pipeline.zrem(userEntriesKey(userId), entryId);
+
     await pipeline.exec();
 
     return res.status(200).json({ success: "Entry deleted." });

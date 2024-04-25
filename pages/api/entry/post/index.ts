@@ -20,7 +20,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { userId, sound, text, rating, loved, replay } = req.body;
+  const { userId, text, rating, replay, loved, sound } = req.body;
   const isAlbum = sound.type === "albums";
   const isWisp = rating === 0 || sound.type !== "albums";
 
@@ -29,37 +29,42 @@ export default async function handler(
 
     // no sound id was passed, check if it exists in the database
     if (!soundId) {
-      // check map to confirm if it exists
+      // check map to confirm
       soundId = await redis.hget(soundAppleToDbIdMap(), sound.apple_id);
 
+      // fallback to db, create the hash map of each apple id to the db id
       if (!soundId) {
-        // if it's an album
-        if (isAlbum) {
-          const result = await prisma.sound.create({
-            data: {
-              apple_id: sound.apple_id,
-              type: "albums",
-              name: sound.name,
-              artist_name: sound.artist_name,
-              release_date: sound.release_date,
-              upc: sound.identifier,
-            },
+        const sounds = await prisma.sound.findMany({
+          select: { id: true, apple_id: true },
+        });
+
+        if (sounds) {
+          const soundAppleToDbId: Record<string, string> = {};
+          sounds.forEach((s) => {
+            soundAppleToDbId[s.apple_id] = s.id;
           });
-          soundId = result.id;
-        } else {
-          // if it's a song
-          const result = await prisma.sound.create({
-            data: {
-              apple_id: sound.apple_id,
-              type: "songs",
-              name: sound.name,
-              artist_name: sound.artist_name,
-              release_date: sound.release_date,
-              isrc: sound.identifier,
-            },
-          });
-          soundId = result.id;
+          await redis.hset(soundAppleToDbIdMap(), soundAppleToDbId);
+
+          // check if the sound id exists in the database
+          soundId = soundAppleToDbId[sound.apple_id];
         }
+      }
+
+      if (!soundId) {
+        const result = await prisma.sound.create({
+          data: {
+            apple_id: sound.apple_id,
+            name: sound.name,
+            artist_name: sound.artist_name,
+            release_date: sound.release_date,
+            [isAlbum ? "upc" : "isrc"]: sound.identifier,
+            type: sound.type,
+          },
+        });
+        await redis.hset(soundAppleToDbIdMap(), {
+          [sound.apple_id]: result.id,
+        });
+        soundId = result.id;
       }
     }
 
@@ -77,7 +82,6 @@ export default async function handler(
           replay,
         },
       });
-
       // add album to average queue in redis
       await redis.sadd("averageQueue", JSON.stringify(soundId));
     } else {
@@ -92,10 +96,11 @@ export default async function handler(
     }
 
     // update the feed cache of followers
-    let followers: string[] = (await redis.get(userFollowersKey(userId))) || [];
+    const userFollowers = await redis.get(userFollowersKey(userId));
+    let followers: string[] = [userId];
 
     // if the followers are not cached, fetch them from the database
-    if (!followers.length) {
+    if (!userFollowers) {
       const dbFollowers = await prisma.user
         .findUnique({
           where: { id: userId, status: "active" },
@@ -109,23 +114,21 @@ export default async function handler(
         .then((u) => (u ? u.followers.map((f) => f.follower_id) : null));
 
       if (dbFollowers) {
-        // cache the followers
-        await redis.set(userFollowersKey(userId), JSON.stringify(followers));
-        followers = dbFollowers;
+        followers.push(...dbFollowers);
+        await redis.set(userFollowersKey(userId), JSON.stringify(dbFollowers));
       }
     }
 
     const unixTime = new Date(entry.created_at).getTime();
     // for each follower, update their feed.
-    followers.push(userId);
     const pipeline = redis.pipeline();
-    for (const followerId of followers) {
+    followers.forEach((followerId) => {
       pipeline.zadd(userFeedKey(followerId), {
         score: unixTime,
         member: entry.id,
       });
-    }
-    // cache entry data in hash
+    });
+    // cache entry data
     pipeline.hset(
       entryDataKey(entry.id),
       formatEntry({

@@ -1,6 +1,6 @@
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { attachSoundData } from "@/lib/helper/feed";
-import { EssentialExtended } from "@/types/global";
+import { EssentialExtended, SoundData } from "@/types/global";
 import { AlbumData } from "@/types/apple";
 
 export const useUserProfileQuery = (
@@ -38,13 +38,13 @@ export const useUserProfileQuery = (
         const { albums } = await albumResponse.json();
 
         const albumMap = new Map(
-          albums.map((album: AlbumData) => [album.id, album]),
+          albums.map((album: SoundData) => [album.id, album]),
         );
 
         data.essentials.forEach((essential: EssentialExtended) => {
           essential.sound_data = albumMap.get(
             essential.sound.apple_id,
-          ) as AlbumData;
+          ) as SoundData;
         });
       }
 

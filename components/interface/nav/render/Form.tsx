@@ -17,31 +17,21 @@ const Form = () => {
   const [replay, setReplay] = useState(false);
 
   const { user } = useInterfaceContext();
-  const {
-    inputRef,
-    inputValue,
-    setInputValue,
-    selectedFormSound,
-    setSelectedFormSound,
-  } = useNavContext();
+  const { inputRef, inputValue, setInputValue, formSound, setFormSound } =
+    useNavContext();
   const { openSoundPage } = useSound();
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement> | null,
   ) => {
-    if (!selectedFormSound || !user) return;
+    if (!formSound || !user) return;
     toast.promise(
-      createEntry({
-        text: inputValue,
-        rating,
-        replay,
-        loved,
-        userId: user.id,
-        sound: selectedFormSound,
-      }).then(() => {
-        setSelectedFormSound(null);
-        setInputValue("");
-      }),
+      createEntry(inputValue, rating, replay, loved, user.id, formSound).then(
+        () => {
+          setFormSound(null);
+          setInputValue("");
+        },
+      ),
       {
         loading: "Sending to the heavens...",
         success: "Heaven-sent.",
@@ -55,8 +45,8 @@ const Form = () => {
   };
 
   const handleSoundClick = (event: React.MouseEvent<HTMLImageElement>) => {
-    if (!selectedFormSound) return;
-    openSoundPage(selectedFormSound);
+    if (!formSound) return;
+    openSoundPage(formSound);
   };
 
   // cmd+enter to submit. focus on input if letter is pressed.
@@ -80,7 +70,7 @@ const Form = () => {
     };
   }, [handleSubmit, inputRef]);
 
-  if (!selectedFormSound) return;
+  if (!formSound) return;
 
   return (
     <motion.div
@@ -106,7 +96,7 @@ const Form = () => {
           <Image
             onClick={handleSoundClick}
             className={`cursor-pointer`}
-            src={selectedFormSound.artwork}
+            src={formSound.artwork}
             alt={` artwork`}
             loading="lazy"
             quality={100}
@@ -134,10 +124,10 @@ const Form = () => {
             className={`absolute bottom-0 left-0 flex flex-col p-4 drop-shadow`}
           >
             <h3 className={`line-clamp-1 text-base font-bold text-white`}>
-              {selectedFormSound.name}
+              {formSound.name}
             </h3>
             <h4 className={`line-clamp-1 text-base font-medium text-white`}>
-              {selectedFormSound.artist_name}
+              {formSound.artist_name}
             </h4>
           </div>
         </motion.div>

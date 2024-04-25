@@ -96,22 +96,6 @@ export interface SongAttributes {
   url: string;
 }
 
-export interface TrackData {
-  attributes: {
-    durationInMillis: number;
-    hasLyrics: boolean;
-    isAppleDigitalMaster: boolean;
-    isrc: string;
-    name: string;
-    releaseDate: string;
-    trackNumber: number;
-    url: string;
-  };
-  href: string;
-  id: string;
-  type: string;
-}
-
 export interface ArtistData {
   attributes: {
     editorialNotes: {

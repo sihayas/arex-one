@@ -14,6 +14,7 @@ import { PageSound, useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
 
 import { useEntry, useSound } from "@/hooks/usePage";
+import { AlbumData, SongData } from "@/types/apple";
 
 const dotVariants = {
   hidden: { opacity: 0, scale: 0.75 },
@@ -57,23 +58,9 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
   const [isHovered, setIsHovered] = React.useState(false);
 
   const { setIsVisible, user } = useInterfaceContext();
-  const { setExpandInput, setSelectedFormSound } = useNavContext();
+  const { setExpandInput, setFormSound } = useNavContext();
   const { openEntryPage } = useEntry();
   const { openSoundPage } = useSound();
-
-  const pageSound: PageSound = {
-    id: entry.sound_id,
-    type: entry.sound_type,
-    apple_id: entry.sound_apple_id,
-    name: entry.sound_data.attributes.name,
-    artist_name: entry.sound_data.attributes.artistName,
-    release_date: entry.sound_data.attributes.releaseDate,
-    artwork: MusicKit.formatArtworkURL(
-      entry.sound_data.attributes.artwork,
-      320 * 2.5,
-      320 * 2.5,
-    ),
-  };
 
   const handleOpenEntry = () => {
     openEntryPage(entry);
@@ -84,7 +71,7 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
   };
 
   const handleCreate = () => {
-    setSelectedFormSound(pageSound);
+    setFormSound(pageSound);
     setIsVisible(true);
     setExpandInput(true);
   };
@@ -112,6 +99,19 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
       console.error("Error flagging content", error);
       setIsFlagging(false);
     }
+  };
+
+  const pageSound: PageSound = {
+    id: entry.sound_id,
+    apple_id: entry.sound_apple_id,
+    type: entry.sound_type,
+    name: entry.sound_data.name,
+    artist_name: entry.sound_data.artist_name,
+    release_date: entry.sound_data.release_date,
+    artwork: entry.sound_data.artwork_url
+      .replace("{w}", "800")
+      .replace("{h}", "800"),
+    identifier: entry.sound_data.identifier,
   };
 
   return (
@@ -301,45 +301,3 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
     </motion.div>
   );
 };
-
-// export const deleteEntry = async (artifactId: string) => {
-//   const endpoint = "/api/artifact/delete";
-//
-//   try {
-//     const response = await axios.patch(endpoint, { artifactId });
-//
-//     if (response.status === 200) {
-//       console.log("Deletion successful", response.data);
-//       return response.data;
-//     }
-//   } catch (error) {
-//     console.error("Error deleting data:", error);
-//     throw new Error(`Error during deletion:`);
-//   }
-// };
-
-// export const createFlag = async (
-//   referenceId: string,
-//   type: FlagType,
-//   authorId: string,
-// ) => {
-//   const endpoint = "/api/artifact/post/flag";
-//
-//   try {
-//     const response = await axios.post(endpoint, {
-//       referenceId,
-//       type,
-//       authorId,
-//     });
-//
-//     if (response.status === 200) {
-//       console.log("Flagging successful", response.data);
-//       return response.data;
-//     } else {
-//       throw new Error(`Unexpected response status: ${response.status}`);
-//     }
-//   } catch (error) {
-//     console.error("Error flagging data:", error);
-//     throw new Error(`Error during flagging:`);
-//   }
-// };

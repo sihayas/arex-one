@@ -34,15 +34,11 @@ interface EntryProps {
 export const Entry: React.FC<EntryProps> = ({ entry, flip }) => {
   const [isFlipped, setIsFlipped] = useState(flip ? flip : false);
 
-  const appleData = entry.sound_data;
-
-  const name = appleData.attributes.name;
-  const artistName = appleData.attributes.artistName;
-  const url = MusicKit.formatArtworkURL(
-    appleData.attributes.artwork,
-    304 * 2.5,
-    304 * 2.5,
-  );
+  const name = entry.sound_data.name;
+  const artistName = entry.sound_data.artist_name;
+  const url = entry.sound_data.artwork_url
+    .replace("{w}", "760")
+    .replace("{h}", "760");
 
   // IMPORTANT: drop-shadow breaks the backface-visibility of the card.
   return (

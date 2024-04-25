@@ -11,7 +11,7 @@ interface EssentialsProps {
 }
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
-  const { openSoundPage } = useSound();
+  console.log(essentials);
   const [essential_one, setEssentialOne] =
     React.useState<EssentialExtended | null>(null);
   const [essential_two, setEssentialTwo] =
@@ -44,12 +44,10 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
             whileTap={{ scale: 0.9 }}
           >
             <Image
-              src={MusicKit.formatArtworkURL(
-                essential_one.sound_data.attributes.artwork,
-                112 * 2.5,
-                112 * 2.5,
-              )}
-              alt={essential_one.sound_data.attributes.name}
+              src={essential_one.sound_data.artwork_url
+                .replace("{w}", "280")
+                .replace("{h}", "280")}
+              alt={essential_one.sound_data.name}
               width={112}
               height={112}
               className="rounded-[20px]"
@@ -66,12 +64,10 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
             whileTap={{ scale: 0.9 }}
           >
             <Image
-              src={MusicKit.formatArtworkURL(
-                essential_two.sound_data.attributes.artwork,
-                112 * 2.5,
-                112 * 2.5,
-              )}
-              alt={essential_two.sound_data.attributes.name}
+              src={essential_two.sound_data.artwork_url
+                .replace("{w}", "280")
+                .replace("{h}", "280")}
+              alt={essential_two.sound_data.name}
               width={112}
               height={112}
               className="rounded-[20px]"
@@ -88,12 +84,10 @@ const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
             whileTap={{ scale: 0.9 }}
           >
             <Image
-              src={MusicKit.formatArtworkURL(
-                essential_three.sound_data.attributes.artwork,
-                112 * 2.5,
-                112 * 2.5,
-              )}
-              alt={essential_three.sound_data.attributes.name}
+              src={essential_three.sound_data.artwork_url
+                .replace("{w}", "280")
+                .replace("{h}", "280")}
+              alt={essential_three.sound_data.name}
               width={112}
               height={112}
               className="rounded-[20px]"

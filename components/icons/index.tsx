@@ -785,7 +785,7 @@ export function LaurelIcon({ width = 32, height = 84, ...props }) {
         >
           <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur" />
           <feOffset in="blur" dx="1" dy="1" result="offsetBlur" />
-          <feFlood flood-color="black" flood-opacity="0.3" result="color" />
+          <feFlood floodColor="black" floodOpacity="0.3" result="color" />
           <feComposite
             in="color"
             in2="offsetBlur"

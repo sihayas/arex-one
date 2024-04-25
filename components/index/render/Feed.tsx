@@ -34,7 +34,7 @@ const Feed = ({ userId, type }: { userId: string; type: string }) => {
       computeItemKey={(key: number) => `item-${key.toString()}`}
       endReached={handleEndReached}
       itemContent={(index, entry) => {
-        const color = entry.sound_data.attributes.artwork.bgColor;
+        const color = entry.sound_data.artwork_bgColor;
         return (
           <div
             className={`flex items-center justify-center pt-[96px]`}

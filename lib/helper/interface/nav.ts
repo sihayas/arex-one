@@ -1,7 +1,7 @@
 import { useNavContext } from "@/context/Nav";
 import { useQuery } from "@tanstack/react-query";
 import { PageSound } from "@/context/Interface";
-import { fetchSourceAlbum, getSoundDatabaseId } from "@/lib/global/musickit";
+import { fetchSourceAlbum } from "@/lib/global/musickit";
 
 export const createReply = async (text: string, userId: string) => {
   try {
@@ -15,13 +15,13 @@ export const createReply = async (text: string, userId: string) => {
 };
 
 export const Search = (searchQuery: string) => {
-  const { inputValue, activeAction, selectedFormSound } = useNavContext();
+  const { inputValue, activeAction, formSound } = useNavContext();
   const { data, isInitialLoading, isFetching, error } = useQuery(
     ["albums", searchQuery],
     () =>
       fetch(`/api/search/get/?query=${searchQuery}`).then((res) => res.json()),
     {
-      enabled: !selectedFormSound && !!inputValue && activeAction === "none",
+      enabled: !formSound && !!inputValue && activeAction === "none",
       retry: false,
       refetchOnWindowFocus: false,
     },
@@ -35,31 +35,59 @@ export const Search = (searchQuery: string) => {
   };
 };
 
-export const createEntry = async (formData: {
-  text: string;
-  rating: number;
-  replay: boolean;
-  loved: boolean;
-  userId: string;
-  sound: PageSound;
-}) => {
-  // determine a source album
-  let source = await fetchSourceAlbum(formData.sound.apple_id);
+export const createEntry = async (
+  text: string,
+  rating: number,
+  replay: boolean,
+  loved: boolean,
+  userId: string,
+  sound: PageSound,
+) => {
+  let source;
+  const isAlbum = sound.type === "albums";
+  const isSong = sound.type === "songs";
 
-  if (source) {
-    formData.sound.apple_id = source.id;
-    formData.sound.name = source.attributes.name;
-    formData.sound.artist_name = source.attributes.artistName;
-    formData.sound.release_date = source.attributes.releaseDate;
-    formData.sound.type = source.type;
-    formData.sound.identifier = source.attributes.upc;
+  // usually not present when coming from a search item
+  const sendSoundData = !sound.id;
+
+  // determine the "source" album only if it's an album and no db_id is set
+  if (sendSoundData && sound.type === "albums") {
+    source = await fetchSourceAlbum(sound.apple_id);
   }
+
+  // create the object
+  const entry = {
+    user_id: userId,
+    text,
+    rating,
+    replay,
+    loved,
+
+    sound: {
+      id: sound.id, // nullable
+      // sound data, only if db_id is not set, to create the sound
+      ...(sendSoundData && {
+        apple_id: isAlbum ? source.id : sound.apple_id,
+        name: isAlbum ? source.attributes.name : sound.name,
+        artist_name: isAlbum ? source.attributes.artistName : sound.artist_name,
+        release_date: isAlbum
+          ? source.attributes.releaseDate
+          : sound.release_date,
+        identifier: isAlbum ? source.attributes.isrc : sound.identifier,
+        type: sound.type,
+        ...(isSong && {
+          song_album_id: source.relationships.albums.data[0].id,
+          song_album_name: source.relationships.albums.data[0].attributes.name,
+        }),
+      }),
+    },
+  };
 
   try {
     const response = await fetch("/api/entry/post/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(entry),
     });
 
     if (response.status === 201) {

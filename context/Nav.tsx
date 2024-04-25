@@ -6,7 +6,6 @@ import React, {
   SetStateAction,
   useEffect,
 } from "react";
-import { ReplyTargetType } from "../lib/helper/interface/nav";
 import { PageSound } from "@/context/Interface";
 
 export type NavContextType = {
@@ -21,10 +20,10 @@ export type NavContextType = {
   setActiveAction: Dispatch<
     SetStateAction<"form" | "reply" | "notifications" | "essential" | "none">
   >;
-  replyTarget: ReplyTargetType;
-  setReplyTarget: Dispatch<SetStateAction<ReplyTargetType>>;
-  selectedFormSound: PageSound | null;
-  setSelectedFormSound: React.Dispatch<React.SetStateAction<PageSound | null>>;
+  // replyTarget: ReplyTargetType;
+  // setReplyTarget: Dispatch<SetStateAction<ReplyTargetType>>;
+  formSound: PageSound | null;
+  setFormSound: React.Dispatch<React.SetStateAction<PageSound | null>>;
 };
 
 export const NavContext = React.createContext<NavContextType | undefined>(
@@ -49,11 +48,9 @@ export const NavProvider = ({ children }: NavProviderProps) => {
   const [inputValue, setInputValue] = useState("");
   const [storedInputValue, setStoredInputValue] = useState("");
 
-  const [selectedFormSound, setSelectedFormSound] = useState<PageSound | null>(
-    null,
-  );
+  const [formSound, setFormSound] = useState<PageSound | null>(null);
 
-  const [replyTarget, setReplyTarget] = useState<ReplyTargetType>(null);
+  const [replyTarget, setReplyTarget] = useState<any>(null);
 
   const [activeAction, setActiveAction] = useState<
     "form" | "reply" | "notifications" | "essential" | "none"
@@ -79,10 +76,10 @@ export const NavProvider = ({ children }: NavProviderProps) => {
         setStoredInputValue,
         activeAction,
         setActiveAction,
-        replyTarget,
-        setReplyTarget,
-        selectedFormSound,
-        setSelectedFormSound,
+        // replyTarget,
+        // setReplyTarget,
+        formSound,
+        setFormSound,
       }}
     >
       {children}

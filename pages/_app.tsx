@@ -3,7 +3,6 @@ import "styles/cmdk.css";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { SoundDetailsProvider } from "@/context/Sound";
 import { Toaster } from "sonner";
 import { InterfaceContextProvider } from "@/context/Interface";
 import { NavProvider } from "@/context/Nav";
@@ -48,10 +47,7 @@ const App = ({ Component, pageProps }: AppProps<{}>) => {
     script.onload = () => {
       window.MusicKit.configure({
         developerToken: process.env.NEXT_PUBLIC_APPLE_JWT,
-        app: {
-          name: "Voir",
-          build: "0001",
-        },
+        app: { name: "Voir", build: "0001" },
       });
       setMusicKitReady(true);
     };
@@ -70,11 +66,9 @@ const App = ({ Component, pageProps }: AppProps<{}>) => {
     <QueryClientProvider client={queryClient}>
       <InterfaceContextProvider>
         <NavProvider>
-          <SoundDetailsProvider>
-            <main className={`${garamond12.variable} ${garamond08.variable}`}>
-              <Component {...pageProps} />
-            </main>
-          </SoundDetailsProvider>
+          <main className={`${garamond12.variable} ${garamond08.variable}`}>
+            <Component {...pageProps} />
+          </main>
         </NavProvider>
       </InterfaceContextProvider>
       <Toaster />

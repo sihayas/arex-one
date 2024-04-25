@@ -5,12 +5,8 @@ import { useNavContext } from "@/context/Nav";
 import { PageSound } from "@/context/Interface";
 
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
-  const {
-    setSelectedFormSound,
-    inputValue,
-    setInputValue,
-    setStoredInputValue,
-  } = useNavContext();
+  const { setFormSound, inputValue, setInputValue, setStoredInputValue } =
+    useNavContext();
 
   const soundType = sound.type;
   const artwork = MusicKit.formatArtworkURL(
@@ -18,6 +14,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
     48 * 2.5,
     48 * 2.5,
   );
+
   const album = soundType === "albums" && (sound as AlbumData);
   const song = soundType === "songs" && (sound as SongData);
   const identifier = song
@@ -29,8 +26,8 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   if (!identifier) return null;
 
   const pageSound: PageSound = {
-    type: soundType,
     apple_id: sound.id,
+    type: soundType,
     name: sound.attributes.name,
     artist_name: sound.attributes.artistName,
     release_date: sound.attributes.releaseDate,
@@ -40,15 +37,13 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       320 * 2.5,
     ),
     identifier: identifier,
-    ...(song && {
-      song_relationships: {
-        album_id: song.relationships.albums.data[0].id,
-      },
-    }),
+    song_relationships: {
+      album_id: (song && song.relationships.albums.data[0].id) || "",
+    },
   };
 
   const onSelect = async () => {
-    setSelectedFormSound(pageSound);
+    setFormSound(pageSound);
     setStoredInputValue(inputValue);
     setInputValue("");
   };

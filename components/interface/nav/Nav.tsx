@@ -35,7 +35,7 @@ const Nav = () => {
     activeAction,
     setActiveAction,
   } = useNavContext();
-  const { selectedFormSound } = useNavContext();
+  const { formSound } = useNavContext();
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
   const firstKey = Object.keys(notifs)[0];
 
@@ -95,10 +95,8 @@ const Nav = () => {
 
   // Active Action
   useEffect(() => {
-    setActiveAction(
-      selectedFormSound ? "form" : replyTarget ? "reply" : "none",
-    );
-  }, [selectedFormSound, replyTarget, setActiveAction]);
+    setActiveAction(formSound ? "form" : replyTarget ? "reply" : "none");
+  }, [formSound, replyTarget, setActiveAction]);
 
   // Close notifications on click outside
   useEffect(() => {

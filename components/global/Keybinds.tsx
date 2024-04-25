@@ -7,7 +7,6 @@ export const Keybinds = (
   handleReplySubmit: () => void,
 ) => {
   const { pages } = useInterfaceContext();
-  const { replyTarget, setReplyTarget } = useNavContext();
   const {
     inputValue,
     setInputValue,
@@ -16,8 +15,8 @@ export const Keybinds = (
     storedInputValue,
     setStoredInputValue,
     activeAction,
-    selectedFormSound,
-    setSelectedFormSound,
+    formSound,
+    setFormSound,
   } = useNavContext();
   const { openSoundPage } = useSound();
 
@@ -28,7 +27,7 @@ export const Keybinds = (
     if (
       e.key === "Enter" &&
       expandInput &&
-      selectedFormSound &&
+      formSound &&
       inputRef.current?.value !== ""
     ) {
       e.preventDefault();
@@ -46,16 +45,17 @@ export const Keybinds = (
       e.key === "Enter" &&
       (e.metaKey || e.ctrlKey) &&
       inputRef.current === document.activeElement &&
+      //   @ts-ignore
       replyTarget
     ) {
       handleReplySubmit();
     }
 
     // Switch to album page from form
-    else if (e.key === "Enter" && selectedFormSound && inputValue === "") {
+    else if (e.key === "Enter" && formSound && inputValue === "") {
       e.preventDefault();
       // openSoundPage(selectedFormSound);
-      setSelectedFormSound(null);
+      setFormSound(null);
       inputRef.current?.blur();
       window.history.pushState(null, "");
     }
@@ -67,7 +67,8 @@ export const Keybinds = (
       activeAction !== "none"
     ) {
       e.preventDefault();
-      setSelectedFormSound(null);
+      setFormSound(null);
+      // @ts-ignore
       setReplyTarget(null);
       setInputValue(storedInputValue);
       setStoredInputValue("");
