@@ -1,12 +1,15 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { attachSoundData } from "@/lib/helper/feed";
 
-export const useSoundInfoQuery = (appleId: string, soundId: string) =>
+export const useSoundInfoQuery = (
+  appleId: string,
+  soundId: string | undefined,
+) =>
   useQuery(
     ["sound", appleId, soundId],
     async () => {
       const response = await fetch(
-        `/api/sound/get?soundId=${encodeURIComponent(soundId)}`,
+        `/api/sound/get?soundId=${soundId}&appleId=${appleId}`,
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -14,7 +17,7 @@ export const useSoundInfoQuery = (appleId: string, soundId: string) =>
       const data = await response.json();
       return data;
     },
-    { enabled: !!appleId, refetchOnWindowFocus: false },
+    { enabled: !!appleId, refetchOnWindowFocus: false, refetchOnMount: false },
   );
 
 export const useEntriesQuery = (

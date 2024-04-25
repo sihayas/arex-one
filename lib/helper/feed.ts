@@ -1,6 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { AlbumData, SongData } from "@/types/apple";
-import { EntryExtended } from "@/types/global";
+import { EntryExtended, SoundData } from "@/types/global";
 
 export const useFeedQuery = (userId: string) => {
   return useInfiniteQuery(
@@ -55,15 +54,15 @@ export const attachSoundData = async (entries: EntryExtended[]) => {
   const { albums, songs } = await response.json();
 
   // Create maps for albums and tracks
-  const albumMap = new Map(albums.map((album: AlbumData) => [album.id, album]));
-  const songMap = new Map(songs.map((song: SongData) => [song.id, song]));
+  const albumMap = new Map(albums.map((album: SoundData) => [album.id, album]));
+  const songMap = new Map(songs.map((song: SoundData) => [song.id, song]));
 
   // Attach album and track data to activity entries
   entries.forEach((entry) => {
     if (entry.sound_type === "albums")
-      entry.sound_data = albumMap.get(entry.sound_apple_id) as AlbumData;
+      entry.sound_data = albumMap.get(entry.sound_apple_id) as SoundData;
     else if (entry.sound_type === "songs")
-      entry.sound_data = songMap.get(entry.sound_apple_id) as SongData;
+      entry.sound_data = songMap.get(entry.sound_apple_id) as SoundData;
   });
 
   return entries;

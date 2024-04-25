@@ -10,7 +10,6 @@ import {
 import { Entry } from "@prisma/client";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
-import { formatEntry } from "@/lib/helper/cache";
 
 const rangeRating = (rating: number) => {
   return rating <= 2 ? "low" : rating >= 2.5 && rating <= 3.5 ? "mid" : "high";
@@ -127,8 +126,6 @@ export default async function handler(
       }
     }
 
-    console.log("userFollowers", followers);
-
     const unixTime = new Date(entry.created_at).getTime();
     // for each follower, update their feed.
     const pipeline = redis.pipeline();
@@ -139,22 +136,22 @@ export default async function handler(
       });
     });
     // cache entry data
-    pipeline.hset(
-      entryDataKey(entry.id),
-      formatEntry({
-        id: entry.id,
-        sound: { id: soundId, apple_id: sound.apple_id, type: sound.type },
-        type: entry.type,
-        author_id: userId,
-        text: entry.text,
-        created_at: entry.created_at,
-        _count: { actions: 0, chains: 0 },
-        // Extra fields for artifacts
-        rating: entry.rating,
-        loved: entry.loved,
-        replay: entry.replay,
-      }),
-    );
+    pipeline.hset(entryDataKey(entry.id), {
+      id: entry.id,
+      sound_id: soundId,
+      sound_apple_id: sound.apple_id,
+      sound_type: sound.type,
+      type: entry.type,
+      author_id: userId,
+      text: entry.text,
+      created_at: entry.created_at,
+      actions_count: 0,
+      chains_count: 0,
+      // Extra fields for artifacts
+      rating: entry.rating,
+      loved: entry.loved,
+      replay: entry.replay,
+    });
     // cache entry id in users profile entries
     pipeline.zadd(userEntriesKey(userId), {
       score: unixTime,

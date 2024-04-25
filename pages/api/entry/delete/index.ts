@@ -27,11 +27,17 @@ export default async function handler(
     }
 
     // update the feed cache of followers
-    const userFollowers = await redis.get(userFollowersKey(userId));
-    let followers: string[] = [userId];
+    let followers = [userId];
+    const userFollowers: string[] | null = await redis.get(
+      userFollowersKey(userId),
+    );
+
+    if (userFollowers) {
+      followers.push(...userFollowers);
+    }
 
     // if the followers are not cached, fetch them from the database
-    if (!userFollowers) {
+    if (!userFollowers?.length) {
       const dbFollowers = await prisma.user
         .findUnique({
           where: { id: userId, status: "active" },
@@ -46,7 +52,7 @@ export default async function handler(
 
       if (dbFollowers) {
         followers.push(...dbFollowers);
-        await redis.set(userFollowersKey(userId), JSON.stringify(dbFollowers));
+        await redis.set(userFollowersKey(userId), dbFollowers);
       }
     }
 

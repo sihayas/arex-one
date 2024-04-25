@@ -1,5 +1,5 @@
 import { AlbumData, SongData } from "@/types/apple";
-import { redis, soundDataKey } from "@/lib/global/redis";
+import { redis, soundAppleToDbIdMap, soundDataKey } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -26,15 +26,42 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const soundId = Array.isArray(req.query.soundId)
+  let soundId = Array.isArray(req.query.soundId)
     ? req.query.soundId[0]
     : req.query.soundId;
+  const appleId = Array.isArray(req.query.appleId)
+    ? req.query.appleId[0]
+    : req.query.appleId;
 
-  if (!soundId) {
+  if (!appleId) {
     return res.status(400).json({ error: "Missing parameters" });
   }
 
   try {
+    if (!soundId) {
+      // check map to confirm
+      const cachedId = await redis.hget(soundAppleToDbIdMap(), appleId);
+
+      // fallback to db, create the hash map of apple id to the db id
+      if (!cachedId) {
+        const soundInDb = await prisma.sound.findFirst({
+          where: { apple_id: appleId },
+          select: { id: true },
+        });
+
+        if (soundInDb) {
+          await redis.hset(soundAppleToDbIdMap(), {
+            [appleId]: soundInDb.id,
+          });
+          soundId = soundInDb.id;
+        }
+      }
+    }
+
+    // sound does not exist in the database, exit
+    if (!soundId) {
+      return res.status(200).json({ message: "No sound data available yet." });
+    }
     let soundData = await redis.hgetall(soundDataKey(soundId));
 
     if (!soundData) {

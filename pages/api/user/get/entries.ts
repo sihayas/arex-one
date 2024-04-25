@@ -103,7 +103,22 @@ export default async function handler(
       // Cache the missing entries in Redis
       const pipeline = redis.pipeline();
       dbEntries.forEach((entry) => {
-        const formattedEntry = formatEntry(entry);
+        const formattedEntry = {
+          id: entry.id,
+          sound_id: entry.sound.id,
+          sound_apple_id: entry.sound.apple_id,
+          sound_type: entry.sound.type,
+          type: entry.type,
+          author_id: entry.author_id,
+          text: entry.text,
+          created_at: entry.created_at.toISOString(),
+          actions_count: entry._count.actions,
+          chains_count: entry._count.chains,
+          // Extra fields for artifacts
+          rating: entry.rating,
+          loved: entry.loved,
+          replay: entry.replay,
+        };
         pipeline.hset(entryDataKey(entry.id), formattedEntry);
       });
       await pipeline.exec();
