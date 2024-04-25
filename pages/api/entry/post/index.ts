@@ -21,6 +21,10 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const { userId, text, rating, replay, loved, sound } = req.body;
+
+  if (!userId || !text || !sound) {
+    return res.status(400).json({ error: "missing required fields." });
+  }
   const isAlbum = sound.type === "albums";
   const isWisp = rating === 0 || sound.type !== "albums";
 
@@ -32,24 +36,22 @@ export default async function handler(
       // check map to confirm
       soundId = await redis.hget(soundAppleToDbIdMap(), sound.apple_id);
 
-      // fallback to db, create the hash map of each apple id to the db id
+      // fallback to db, create the hash map of apple id to the db id
       if (!soundId) {
-        const sounds = await prisma.sound.findMany({
-          select: { id: true, apple_id: true },
+        const soundInDb = await prisma.sound.findFirst({
+          where: { apple_id: sound.apple_id },
+          select: { id: true },
         });
 
-        if (sounds) {
-          const soundAppleToDbId: Record<string, string> = {};
-          sounds.forEach((s) => {
-            soundAppleToDbId[s.apple_id] = s.id;
+        if (soundInDb) {
+          await redis.hset(soundAppleToDbIdMap(), {
+            [sound.apple_id]: soundInDb.id,
           });
-          await redis.hset(soundAppleToDbIdMap(), soundAppleToDbId);
-
-          // check if the sound id exists in the database
-          soundId = soundAppleToDbId[sound.apple_id];
+          soundId = soundInDb.id;
         }
       }
 
+      // sound does not exist in the database, create it
       if (!soundId) {
         const result = await prisma.sound.create({
           data: {
@@ -83,7 +85,7 @@ export default async function handler(
         },
       });
       // add album to average queue in redis
-      await redis.sadd("averageQueue", JSON.stringify(soundId));
+      await redis.sadd("averageQueue", soundId);
     } else {
       entry = await prisma.entry.create({
         data: {
@@ -96,11 +98,17 @@ export default async function handler(
     }
 
     // update the feed cache of followers
-    const userFollowers = await redis.get(userFollowersKey(userId));
-    let followers: string[] = [userId];
+    let followers = [userId];
+    const userFollowers: string[] | null = await redis.get(
+      userFollowersKey(userId),
+    );
 
-    // if the followers are not cached, fetch them from the database
-    if (!userFollowers) {
+    if (userFollowers) {
+      followers.push(...userFollowers);
+    }
+
+    // if the followers are not cached, check the database
+    if (!userFollowers?.length) {
       const dbFollowers = await prisma.user
         .findUnique({
           where: { id: userId, status: "active" },
@@ -115,9 +123,11 @@ export default async function handler(
 
       if (dbFollowers) {
         followers.push(...dbFollowers);
-        await redis.set(userFollowersKey(userId), JSON.stringify(dbFollowers));
+        await redis.set(userFollowersKey(userId), dbFollowers);
       }
     }
+
+    console.log("userFollowers", followers);
 
     const unixTime = new Date(entry.created_at).getTime();
     // for each follower, update their feed.
@@ -133,7 +143,7 @@ export default async function handler(
       entryDataKey(entry.id),
       formatEntry({
         id: entry.id,
-        sound: { id: sound.id, apple_id: sound.apple_id, type: sound.type },
+        sound: { id: soundId, apple_id: sound.apple_id, type: sound.type },
         type: entry.type,
         author_id: userId,
         text: entry.text,

@@ -1,7 +1,6 @@
 import { Entry, Essential, Sound } from "@prisma/client";
-import { AlbumData, SongData } from "@/types/apple";
 
-// apple sound data stored in cache
+// filtered apple sound data stored in cache
 export type SoundData = {
   id: string;
   type: string;

@@ -57,7 +57,7 @@ export const createEntry = async (
 
   // create the object
   const entry = {
-    user_id: userId,
+    userId,
     text,
     rating,
     replay,

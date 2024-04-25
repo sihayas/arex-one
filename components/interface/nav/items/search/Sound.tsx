@@ -37,9 +37,6 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
       320 * 2.5,
     ),
     identifier: identifier,
-    song_relationships: {
-      album_id: (song && song.relationships.albums.data[0].id) || "",
-    },
   };
 
   const onSelect = async () => {
