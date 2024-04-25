@@ -9,11 +9,11 @@ datasource db {
 }
 
 model User {
-  id            String         @id
-  apple_id      String         @unique
+  id            String        @id
+  apple_id      String        @unique
   username      String        @unique
   image         String
-  email         String?        @unique
+  email         String?       @unique
   bio           String?
   password_hash String?
   status        String        @default("active")
@@ -27,6 +27,7 @@ model User {
   chains        Chain[]
   actions       Action[]
 
+  // settings
   follow_notifications Boolean @default(true)
   reply_notifications  Boolean @default(true)
   heart_notifications  Boolean @default(true)
@@ -56,17 +57,17 @@ model Sound {
   type         String // 'songs', 'albums'
   name         String
   artist_name  String
-  release_date String
-  album_name   String? // song only
+  release_date DateTime
 
+  album_name String? // song only
   album_id   String? // song only
-  album      Sound?  @relation("AlbumSongs", fields: [album_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  songs      Sound[] @relation("AlbumSongs")
-  essentials Essential[]
+  album      Sound?  @relation("album_songs", fields: [album_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  songs      Sound[] @relation("album_songs")
 
   avg_rating    Float @default(0)
   bayesian_avg  Float @default(0)
 
+  essentials Essential[]
   entries Entry[]
 
   created_at DateTime @default(now())
@@ -141,35 +142,27 @@ model Follows {
 }
 
 model Chain {
-  id          String  @id @default(cuid())
-  text        String
-  chain_to_id String?
-  root_id     String?
-  entry_id    String
-  author_id   String
+  id           String   @id @default(cuid())
+  text         String
+  parent_id    String?  // References the immediate parent in the chain
+  root_id      String?  // References the root of the chain
 
-  chain_to Chain?  @relation("parent", fields: [chain_to_id], references: [id], onDelete:Restrict, onUpdate: Restrict)
-  chains   Chain[] @relation("parent")
+  author_id    String
+  entry_id     String
 
-  root         Chain?  @relation("root", fields: [root_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  root_chains Chain[] @relation("root")
+  author       User     @relation(fields: [author_id], references: [id])
+  entry        Entry    @relation(fields: [entry_id], references: [id])
+  activity     Activity?
   actions      Action[]
 
-  activity     Activity?
+  is_deleted   Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 
-  author User  @relation(fields: [author_id], references: [id])
-  entry  Entry @relation(fields: [entry_id], references: [id])
-
-  is_deleted Boolean @default(false)
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@index([chain_to_id])
-  @@index([root_id])
-  @@index([entry_id])
   @@index([author_id])
+  @@index([entry_id])
 }
+
 
 
 model Action {

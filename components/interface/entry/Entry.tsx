@@ -155,8 +155,9 @@ export const Entry = () => {
                     ? "12px 12px 12px 12px"
                     : "32px 32px 0px 0px",
                   boxShadow: !isExpanded
-                    ? "0px 8px 16px 0px rgba(0, 0, 0, 0.0), 0px 0px 4px 0px rgba(0, 0, 0, 0.0)"
-                    : "0px 8px 16px 0px rgba(0, 0, 0, 0.08), 0px 0px 4px 0px rgba(0, 0, 0, 0.04)",
+                    ? "rgba(50, 50, 93, 0.0) 0px 13px 27px -5px, rgba(0, 0," +
+                      " 0, 0.0) 0px 8px 16px -8px"
+                    : "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px",
                 }}
                 className={`outline-silver overflow-hidden outline outline-1`}
               >

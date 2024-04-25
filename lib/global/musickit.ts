@@ -1,9 +1,10 @@
 import { AlbumData } from "@/types/apple";
+import { useQuery } from "@tanstack/react-query";
 
 const token = process.env.NEXT_PUBLIC_APPLE_JWT || "";
 export const baseURL = "https://api.music.apple.com/v1/catalog/us";
 
-// Fetch all related albums and select a single source album
+// fetch all related albums and select a single source album
 export const fetchSourceAlbum = async (albumId: string | undefined) => {
   const url = `${baseURL}/albums/${albumId}?views=other-versions`;
 
@@ -125,7 +126,7 @@ export const searchAlbums = async (keyword: string) => {
   return { filteredSongs: songs, filteredAlbums: albums };
 };
 
-// Fetch one or more sounds by multiple types (songs and albums)
+// fetch one or more sounds by multiple types (songs and albums)
 export const fetchSoundsByTypes = async (idTypes: Record<string, string[]>) => {
   const idParams = Object.entries(idTypes)
     .flatMap(([type, ids]) =>
@@ -152,4 +153,24 @@ export const fetchSoundsByTypes = async (idTypes: Record<string, string[]>) => {
 
   const data = await response.json();
   return data.data;
+};
+
+// get a sound database id from the apple id which is a route that checks redis cache
+export const getSoundDatabaseId = async (appleId: string) => {
+  const response = await fetch(
+    `/api/sound/get/map?appleId=${encodeURIComponent(appleId)}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
 };

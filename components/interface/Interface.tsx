@@ -23,7 +23,7 @@ import { createPortal } from "react-dom";
 // calculate & set base dimensions and target dimensions for the window per page
 export const GetDimensions = (pageType: PageType) => {
   const viewportHeight = window.innerHeight;
-  const maxHeight = viewportHeight - 2 * 64;
+  const maxHeight = viewportHeight - 2 * 40;
 
   const dimensions = {
     user: {

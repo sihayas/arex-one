@@ -10,7 +10,7 @@ import {
 } from "@/components/icons";
 import React, { useCallback } from "react";
 import { EntryExtended } from "@/types/global";
-import { useInterfaceContext } from "@/context/Interface";
+import { PageSound, useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
 
 import { useEntry, useSound } from "@/hooks/usePage";
@@ -61,8 +61,9 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
   const { openEntryPage } = useEntry();
   const { openSoundPage } = useSound();
 
-  const sound = {
+  const pageSound: PageSound = {
     id: entry.sound_id,
+    type: entry.sound_type,
     apple_id: entry.sound_apple_id,
     name: entry.sound_data.attributes.name,
     artist_name: entry.sound_data.attributes.artistName,
@@ -79,11 +80,11 @@ export const Interaction = ({ entry, isMirrored }: InteractionProps) => {
   };
 
   const handleOpenSound = () => {
-    openSoundPage(sound);
+    openSoundPage(pageSound);
   };
 
   const handleCreate = () => {
-    setSelectedFormSound(sound);
+    setSelectedFormSound(pageSound);
     setIsVisible(true);
     setExpandInput(true);
   };

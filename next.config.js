@@ -11,6 +11,7 @@ const nextConfig = {
       "is5-ssl.mzstatic.com",
       "voir.space",
       "https://assets.voir.space",
+      "i.pinimg.com",
     ],
     loader: "custom",
     loaderFile: "./imageLoader.js",

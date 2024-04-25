@@ -38,6 +38,7 @@ export interface AlbumAttributes {
   releaseDate: string;
   trackCount: number;
   url: string;
+  upc: string;
 }
 
 export interface AlbumRelationships {

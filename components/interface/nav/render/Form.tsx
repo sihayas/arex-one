@@ -9,7 +9,6 @@ import { useInterfaceContext } from "@/context/Interface";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSound } from "@/hooks/usePage";
 import { createEntry } from "@/lib/helper/interface/nav";
-import { fetchSourceAlbum } from "@/lib/global/musickit";
 
 const Form = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -27,41 +26,38 @@ const Form = () => {
   } = useNavContext();
   const { openSoundPage } = useSound();
 
-  const handleSubmit = useCallback(
-    async (event: React.FormEvent<HTMLFormElement> | null) => {
-      // determine a source album
-      const source = await fetchSourceAlbum(selectedFormSound?.apple_id);
-      if (!source || !user) return;
-      toast.promise(
-        createEntry({
-          text: inputValue,
-          rating,
-          replay,
-          loved,
-          userId: user.id,
-          sound: source,
-        }).then(() => {
-          setSelectedFormSound(null);
-          setInputValue("");
-        }),
-        {
-          loading: "Sending to the heavens...",
-          success: "Sent",
-          error: "Error",
-        },
-      );
-    },
-    [
-      rating,
-      loved,
-      inputValue,
-      user,
-      replay,
-      setSelectedFormSound,
-      setInputValue,
-      selectedFormSound,
-    ],
-  );
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement> | null,
+  ) => {
+    if (!selectedFormSound || !user) return;
+    toast.promise(
+      createEntry({
+        text: inputValue,
+        rating,
+        replay,
+        loved,
+        userId: user.id,
+        sound: selectedFormSound,
+      }).then(() => {
+        setSelectedFormSound(null);
+        setInputValue("");
+      }),
+      {
+        loading: "Sending to the heavens...",
+        success: "Heaven-sent.",
+        error: "Error",
+      },
+    );
+  };
+
+  const handleRatingChange = (rating: number) => {
+    setRating(rating);
+  };
+
+  const handleSoundClick = (event: React.MouseEvent<HTMLImageElement>) => {
+    if (!selectedFormSound) return;
+    openSoundPage(selectedFormSound);
+  };
 
   // cmd+enter to submit. focus on input if letter is pressed.
   useEffect(() => {
@@ -74,8 +70,8 @@ const Form = () => {
         setLoved(true);
         handleSubmit(null);
       } else if (event.key.match(/^[a-zA-Z]$/)) {
-        // Check if the key is a letter
-        inputRef.current?.focus(); // Focus on the input if it is
+        // focus on input if letter is pressed
+        inputRef.current?.focus();
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -84,15 +80,7 @@ const Form = () => {
     };
   }, [handleSubmit, inputRef]);
 
-  const handleRatingChange = (rating: number) => {
-    setRating(rating);
-  };
-
   if (!selectedFormSound) return;
-
-  const handleSoundClick = (event: React.MouseEvent<HTMLImageElement>) => {
-    openSoundPage(selectedFormSound);
-  };
 
   return (
     <motion.div

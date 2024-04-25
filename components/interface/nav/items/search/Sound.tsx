@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Command } from "cmdk";
 import { AlbumData, SongData } from "@/types/apple";
 import { useNavContext } from "@/context/Nav";
+import { PageSound } from "@/context/Interface";
 
 const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
   const {
@@ -10,26 +11,54 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
     setInputValue,
     setStoredInputValue,
   } = useNavContext();
-  const soundType = sound.type;
-  const artwork = sound.attributes.artwork.url
-    .replace("{w}", "95")
-    .replace("{h}", "95");
-  const artistName = sound.attributes.artistName;
-  const song = soundType === "songs" ? (sound as SongData) : null;
 
-  const onSelect = async (appleId: string) => {
-    setSelectedFormSound(sound);
+  const soundType = sound.type;
+  const artwork = MusicKit.formatArtworkURL(
+    sound.attributes.artwork,
+    48 * 2.5,
+    48 * 2.5,
+  );
+  const album = soundType === "albums" && (sound as AlbumData);
+  const song = soundType === "songs" && (sound as SongData);
+  const identifier = song
+    ? song.attributes.isrc
+    : album
+    ? album.attributes.upc
+    : null;
+
+  if (!identifier) return null;
+
+  const pageSound: PageSound = {
+    type: soundType,
+    apple_id: sound.id,
+    name: sound.attributes.name,
+    artist_name: sound.attributes.artistName,
+    release_date: sound.attributes.releaseDate,
+    artwork: MusicKit.formatArtworkURL(
+      sound.attributes.artwork,
+      320 * 2.5,
+      320 * 2.5,
+    ),
+    identifier: identifier,
+    ...(song && {
+      song_relationships: {
+        album_id: song.relationships.albums.data[0].id,
+      },
+    }),
+  };
+
+  const onSelect = async () => {
+    setSelectedFormSound(pageSound);
     setStoredInputValue(inputValue);
     setInputValue("");
   };
 
-  // Render command item
   return (
     <Command.Item
       value={sound.id}
       onMouseDown={(e) => e.preventDefault()}
       className="z-10 flex w-full items-center gap-4 p-4 will-change-transform"
-      onSelect={() => onSelect(sound.id)}
+      onSelect={() => onSelect()}
     >
       <Image
         id={sound.id}
@@ -43,7 +72,7 @@ const Sound = ({ sound }: { sound: AlbumData | SongData }) => {
 
       <div className="flex flex-col justify-center overflow-hidden">
         <div className="text-gray flex items-center gap-1 text-sm">
-          <div className={`line-clamp-1`}>{artistName}</div>
+          <div className={`line-clamp-1`}>{sound.attributes.artistName}</div>
           {song && (
             <>
               <div>&middot;</div>

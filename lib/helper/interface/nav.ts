@@ -1,44 +1,9 @@
-import { Entry, ReplyType } from "@/types/dbTypes";
 import { useNavContext } from "@/context/Nav";
 import { useQuery } from "@tanstack/react-query";
-import { AlbumData, SongData } from "@/types/apple";
-import { toast } from "sonner";
+import { PageSound } from "@/context/Interface";
+import { fetchSourceAlbum, getSoundDatabaseId } from "@/lib/global/musickit";
 
-export type ReplyTargetType = {
-  entry: Entry;
-  reply: ReplyType | null;
-} | null;
-
-export const createReply = async (
-  replyTarget: ReplyTargetType,
-  text: string,
-  userId: string,
-) => {
-  if (!replyTarget) return console.error("No reply target found.");
-
-  const entry = replyTarget.entry;
-  const reply = replyTarget.reply;
-
-  // Replying directly to an artifact
-  const artifactId = entry.id;
-  const artifactAuthorId = entry.author.id;
-  const rootId = reply ? reply.rootId : null; //*
-
-  // Replying to a reply
-  const toReplyId = reply ? reply.id : null; //**
-  const toReplyAuthorId = reply ? reply.author.id : null;
-  const toReplyParentId = reply ? reply.replyToId : null;
-  const requestBody = {
-    artifactId,
-    artifactAuthorId,
-    rootId,
-    toReplyId,
-    toReplyAuthorId,
-    toReplyParentId,
-    text,
-    userId,
-  };
-
+export const createReply = async (text: string, userId: string) => {
   try {
     // const res = await axios.post("/api/reply/post/", requestBody);
     // if (res.status !== 200) {
@@ -70,23 +35,31 @@ export const Search = (searchQuery: string) => {
   };
 };
 
-export const createEntry = async (submissionData: {
+export const createEntry = async (formData: {
   text: string;
   rating: number;
   replay: boolean;
   loved: boolean;
   userId: string;
-  sound: AlbumData | SongData;
+  sound: PageSound;
 }) => {
-  const endpoint = "/api/entry/post/";
+  // determine a source album
+  let source = await fetchSourceAlbum(formData.sound.apple_id);
+
+  if (source) {
+    formData.sound.apple_id = source.id;
+    formData.sound.name = source.attributes.name;
+    formData.sound.artist_name = source.attributes.artistName;
+    formData.sound.release_date = source.attributes.releaseDate;
+    formData.sound.type = source.type;
+    formData.sound.identifier = source.attributes.upc;
+  }
 
   try {
-    const response = await fetch(endpoint, {
+    const response = await fetch("/api/entry/post/", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(submissionData),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
     });
 
     if (response.status === 201) {

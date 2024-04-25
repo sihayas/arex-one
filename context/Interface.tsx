@@ -13,12 +13,18 @@ import { Author, EntryExtended } from "@/types/global";
 import { DatabaseUserAttributes } from "@/lib/global/auth";
 
 export type PageSound = {
-  id: string;
+  type: string;
   apple_id: string;
   name: string;
   artist_name: string;
   release_date: string;
   artwork: string;
+  identifier: string; // upc or isrc
+  id?: string; // database id
+  song_relationships?: {
+    // to establish a relationship between songs>albums
+    album_id: string;
+  };
 };
 
 export type Page = {

@@ -1,6 +1,7 @@
 import {
   entryDataKey,
   redis,
+  soundAppleToDbIdMap,
   userEntriesKey,
   userFeedKey,
   userFollowersKey,
@@ -19,67 +20,46 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { rating, loved, text, userId, sound, replay } = req.body;
-  const appleId = sound.id;
+  const { userId, sound, text, rating, loved, replay } = req.body;
   const isAlbum = sound.type === "albums";
   const isWisp = rating === 0 || sound.type !== "albums";
-  const album =
-    sound.type === "songs" ? sound.relationships.albums.data[0] : sound;
 
   try {
-    let soundInDatabase = await prisma.sound.findUnique({
-      where: { apple_id: appleId },
-    });
+    let soundId = sound.id;
 
-    // create the relationship if the sound doesn't exist
-    if (!soundInDatabase) {
-      // if it's an album, create the album
-      if (isAlbum) {
-        soundInDatabase = await prisma.sound.create({
-          data: {
-            apple_id: album.id,
-            type: "albums",
-            name: album.attributes.name,
-            artist_name: album.attributes.artistName,
-            release_date: album.attributes.releaseDate,
-            upc: album.attributes.upc,
-          },
-        });
-      } else {
-        // if it's a song, create the album and the song
-        soundInDatabase = await prisma.sound.upsert({
-          where: { apple_id: album.id },
-          update: {
-            songs: {
-              create: {
-                apple_id: sound.id,
-                type: "songs",
-                name: sound.attributes.name,
-                artist_name: sound.attributes.artistName,
-                release_date: sound.attributes.releaseDate,
-                isrc: sound.attributes.isrc,
-              },
+    // no sound id was passed, check if it exists in the database
+    if (!soundId) {
+      // check map to confirm if it exists
+      soundId = await redis.hget(soundAppleToDbIdMap(), sound.apple_id);
+
+      if (!soundId) {
+        // if it's an album
+        if (isAlbum) {
+          const result = await prisma.sound.create({
+            data: {
+              apple_id: sound.apple_id,
+              type: "albums",
+              name: sound.name,
+              artist_name: sound.artist_name,
+              release_date: sound.release_date,
+              upc: sound.identifier,
             },
-          },
-          create: {
-            apple_id: album.id,
-            type: "albums",
-            name: album.attributes.name,
-            artist_name: album.attributes.artistName,
-            release_date: album.attributes.releaseDate,
-            upc: album.attributes.upc,
-            songs: {
-              create: {
-                apple_id: sound.id,
-                type: "songs",
-                name: sound.attributes.name,
-                artist_name: sound.attributes.artistName,
-                release_date: sound.attributes.releaseDate,
-                isrc: sound.attributes.isrc,
-              },
+          });
+          soundId = result.id;
+        } else {
+          // if it's a song
+          const result = await prisma.sound.create({
+            data: {
+              apple_id: sound.apple_id,
+              type: "songs",
+              name: sound.name,
+              artist_name: sound.artist_name,
+              release_date: sound.release_date,
+              isrc: sound.identifier,
             },
-          },
-        });
+          });
+          soundId = result.id;
+        }
       }
     }
 
@@ -90,7 +70,7 @@ export default async function handler(
         data: {
           type: "artifact",
           author: { connect: { id: userId } },
-          sound: { connect: { apple_id: appleId } },
+          sound: { connect: { id: soundId } },
           text,
           rating,
           loved,
@@ -98,14 +78,14 @@ export default async function handler(
         },
       });
 
-      // add sound to average queue in redis
-      await redis.sadd("averageQueue", JSON.stringify(appleId));
+      // add album to average queue in redis
+      await redis.sadd("averageQueue", JSON.stringify(soundId));
     } else {
       entry = await prisma.entry.create({
         data: {
           type: "wisp",
           author: { connect: { id: userId } },
-          sound: { connect: { apple_id: appleId } },
+          sound: { connect: { id: soundId } },
           text,
         },
       });
@@ -150,11 +130,7 @@ export default async function handler(
       entryDataKey(entry.id),
       formatEntry({
         id: entry.id,
-        sound: {
-          id: soundInDatabase.id,
-          apple_id: soundInDatabase.apple_id,
-          type: soundInDatabase.type,
-        },
+        sound: { id: sound.id, apple_id: sound.apple_id, type: sound.type },
         type: entry.type,
         author_id: userId,
         text: entry.text,
@@ -171,13 +147,13 @@ export default async function handler(
       score: unixTime,
       member: entry.id,
     });
-    // cache entry ids in sound entries
-    pipeline.zadd(
-      `sound:${soundInDatabase.id}:entry_ids:newest:${rangeRating(rating)}`,
-      { score: unixTime, member: entry.id },
-    );
     // update user profile entries count
     pipeline.hincrby(userProfileKey(userId), "artifacts_count", 1);
+    // cache entry ids in sound entries
+    pipeline.zadd(`sound:${soundId}:entry_ids:newest:${rangeRating(rating)}`, {
+      score: unixTime,
+      member: entry.id,
+    });
     await pipeline.exec();
 
     await prisma.activity.create({

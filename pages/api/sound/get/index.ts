@@ -4,6 +4,7 @@ import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 
 interface SoundData {
+  id: string;
   name: string;
   avg_rating: number;
   bayesian_avg: number;
@@ -41,6 +42,7 @@ export default async function handler(
         SoundData[]
       >`
 SELECT
+  s.id,
   s.name,
   s.artist_name,
   s.release_date,
@@ -76,19 +78,24 @@ GROUP BY s.name, s.artist_name, s.release_date, s.avg_rating, s.bayesian_avg;
         ratings["5"],
         //@ts-ignore
       ].reduce((acc, rating) => acc + (parseFloat(rating) || 0), 0);
-      let avgRating = ratings.avg_rating;
-      let bayesianAvg = ratings.bayesian_avg;
+      let id = ratingsDistributionResult[0].id;
       let name = ratingsDistributionResult[0].name;
       let artistName = ratingsDistributionResult[0].artist_name;
       let releaseDate = ratingsDistributionResult[0].release_date;
 
+      let avgRating = ratings.avg_rating;
+      let bayesianAvg = ratings.bayesian_avg;
+
       const formattedData = {
-        avg_rating: avgRating.toString(),
-        ratings_count: totalRatings.toString(),
-        bayesian_avg: bayesianAvg.toString(),
+        id: id,
         name: name,
         artist_name: artistName,
         release_date: releaseDate,
+
+        avg_rating: avgRating.toString(),
+        ratings_count: totalRatings.toString(),
+        bayesian_avg: bayesianAvg.toString(),
+
         rating_half: ratings["0.5"].toString(),
         rating_one: ratings["1"].toString(),
         rating_one_half: ratings["1.5"].toString(),
@@ -101,6 +108,7 @@ GROUP BY s.name, s.artist_name, s.release_date, s.avg_rating, s.bayesian_avg;
         rating_five: ratings["5"].toString(),
       };
 
+      // cache the data
       await redis.hset(soundDataKey(soundId), formattedData);
       soundData = formattedData;
     }

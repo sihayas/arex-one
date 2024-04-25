@@ -44,7 +44,7 @@ const Sound = () => {
   const yDial = useSpring(useTransform(scrollY, [0, 1], [32, 0]), artConfig);
 
   const pageSound = activePage.data as PageSound;
-  const { data } = useSoundInfoQuery(pageSound.id);
+  const { data } = useSoundInfoQuery(pageSound.apple_id, pageSound?.id);
 
   console.log("Data: ", data);
 
@@ -119,7 +119,7 @@ const Sound = () => {
         transition={{ type: "spring", damping: 30, stiffness: 100 }}
         className={`min-h-max w-full max-w-full snap-start`}
       >
-        <Entries soundId={pageSound.id} sortOrder={sortOrder} range={range} />
+        <Entries soundId={data.id} sortOrder={sortOrder} range={range} />
       </motion.div>
 
       <div className={`min-w-[688px] min-h-[688px] z-20`} />

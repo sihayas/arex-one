@@ -21,6 +21,7 @@ import Notifications from "@/components/interface/nav/render/Notifications";
 import Image from "next/image";
 import { createReply } from "@/lib/helper/interface/nav";
 import { Search } from "@/lib/helper/interface/nav";
+import { Author } from "@/types/global";
 
 const Nav = () => {
   const { replyTarget } = useNavContext();
@@ -64,16 +65,16 @@ const Nav = () => {
   const { data } = Search(searchQuery);
 
   const handleReplySubmit = () => {
-    toast.promise(
-      createReply(replyTarget, inputValue, user!.id).then(() => {
-        setInputValue("");
-      }),
-      {
-        loading: "Sending reply...",
-        success: "Reply sent successfully!",
-        error: "Error submitting reply",
-      },
-    );
+    // toast.promise(
+    //   createReply(replyTarget, inputValue, user!.id).then(() => {
+    //     setInputValue("");
+    //   }),
+    //   {
+    //     loading: "Sending reply...",
+    //     success: "Reply sent successfully!",
+    //     error: "Error submitting reply",
+    //   },
+    // );
   };
 
   const handleKeyDown = Keybinds(handleInputTextChange, handleReplySubmit);
@@ -228,23 +229,23 @@ const Nav = () => {
           onClick={handleNotificationsClick}
           className={`p-2`}
         >
-          <motion.div
-            animate={{
-              backgroundColor: isFirstNotifRead ? "#999" : "#24FF00",
-              scale: isFirstNotifRead ? 1 : [1, 0.8, 1],
-            }}
-            transition={{
-              scale: isFirstNotifRead
-                ? {}
-                : {
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    ease: "easeInOut",
-                  },
-            }}
-            className={`rounded-full w-4 h-4`}
-          />
+          {/*<motion.div*/}
+          {/*  animate={{*/}
+          {/*    backgroundColor: isFirstNotifRead ? "#999" : "#24FF00",*/}
+          {/*    scale: isFirstNotifRead ? 1 : [1, 0.8, 1],*/}
+          {/*  }}*/}
+          {/*  transition={{*/}
+          {/*    scale: isFirstNotifRead*/}
+          {/*      ? {}*/}
+          {/*      : {*/}
+          {/*          // duration: 2,*/}
+          {/*          // repeat: Infinity,*/}
+          {/*          // repeatType: "loop",*/}
+          {/*          // ease: "easeInOut",*/}
+          {/*        },*/}
+          {/*  }}*/}
+          {/*  className={`rounded-full w-4 h-4`}*/}
+          {/*/>*/}
         </motion.button>
         {/* Dynamic Icons */}
         <button className={`relative flex h-8 w-8 items-center justify-center`}>
@@ -259,7 +260,7 @@ const Nav = () => {
               altText={`${user!.username}'s avatar`}
               width={32}
               height={32}
-              user={user!}
+              user={user as Author}
             />
           </motion.div>
 
