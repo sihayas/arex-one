@@ -1,4 +1,3 @@
-import { ReplyType } from "@/types/dbTypes";
 import { useRepliesQuery } from "../../../../lib/helper/interface/artifact";
 import React from "react";
 import RootReply from "@/components/interface/entry/items/RootReply";

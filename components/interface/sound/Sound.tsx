@@ -16,22 +16,21 @@ const artConfig = { damping: 34, stiffness: 200 };
 
 export type SortOrder = "newest" | "starlight" | "appraisal" | "critical";
 
-const Sound = () => {
+const Sound = ({ pageSound }: { pageSound: PageSound }) => {
+  const [soundData, setSoundData] = useState<PageSound | null>(null);
   const [range, setRange] = useState<number | null>(null);
   const [ratings, setRatings] = useState<number[]>([]);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
 
-  const { scrollContainerRef, activePage } = useInterfaceContext();
+  const { scrollContainerRef } = useInterfaceContext();
   const { scrollY } = useScroll({
     container: scrollContainerRef,
     layoutEffect: false,
   });
-
   const translateY = useSpring(
     useTransform(scrollY, [0, 1], [-688, 0]),
     generalConfig,
   );
-
   const scaleArt = useSpring(
     useTransform(scrollY, [0, 1], [1, 0.658]),
     artConfig,
@@ -43,25 +42,21 @@ const Sound = () => {
   const xDial = useSpring(useTransform(scrollY, [0, 1], [-32, 0]), artConfig);
   const yDial = useSpring(useTransform(scrollY, [0, 1], [32, 0]), artConfig);
 
-  const pageSound = activePage.data as PageSound;
-  const { data } = useSoundInfoQuery(pageSound.apple_id, pageSound?.id);
+  const { data } = useSoundInfoQuery(pageSound.apple_id, pageSound.id);
 
   useEffect(() => {
-    if (!data) return;
-
-    const getRatingValue = (key: string) => parseInt(data[key], 10) || 0;
-
-    const ratingArray = [
-      getRatingValue("rating_half") + getRatingValue("rating_one"),
-      getRatingValue("rating_one_half") + getRatingValue("rating_two"),
-      getRatingValue("rating_two_half") + getRatingValue("rating_three"),
-      getRatingValue("rating_three_half") + getRatingValue("rating_four"),
-      getRatingValue("rating_four_half") + getRatingValue("rating_five"),
-    ];
-
-    setRatings(ratingArray);
-
-    console.log("Rating Array: ", ratingArray);
+    if (data) {
+      setSoundData(data);
+      const getRatingValue = (key: string) => parseInt(data[key], 10) || 0;
+      const ratingArray = [
+        getRatingValue("rating_half") + getRatingValue("rating_one"),
+        getRatingValue("rating_one_half") + getRatingValue("rating_two"),
+        getRatingValue("rating_two_half") + getRatingValue("rating_three"),
+        getRatingValue("rating_three_half") + getRatingValue("rating_four"),
+        getRatingValue("rating_four_half") + getRatingValue("rating_five"),
+      ];
+      setRatings(ratingArray);
+    }
   }, [data]);
 
   const handleSortOrderChange = (newSortOrder: typeof sortOrder) => {
@@ -73,7 +68,7 @@ const Sound = () => {
 
   const cmdk = document.getElementById("cmdk") as HTMLDivElement;
 
-  if (!data) return null;
+  if (!soundData) return null;
 
   return (
     <>
@@ -91,7 +86,7 @@ const Sound = () => {
         >
           <Image
             src={pageSound.artwork}
-            alt={`${data.name}'s artwork`}
+            alt={`${soundData.name}'s artwork`}
             width={312}
             height={312}
             quality={100}
@@ -103,8 +98,10 @@ const Sound = () => {
         <motion.div
           className={`text-gray2 absolute top-[328px] z-10 flex w-full flex-col text-end`}
         >
-          <p className={`text-gray2 text-xl font-medium`}>{data.artist_name}</p>
-          <p className={`text-xl font-bold`}>{data.name}</p>
+          <p className={`text-gray2 text-xl font-medium`}>
+            {soundData.artist_name}
+          </p>
+          <p className={`text-xl font-bold`}>{soundData.name}</p>
         </motion.div>
       </motion.div>
 
@@ -117,7 +114,8 @@ const Sound = () => {
         transition={{ type: "spring", damping: 30, stiffness: 100 }}
         className={`min-h-max w-full max-w-full snap-start`}
       >
-        <Entries soundId={data.id} sortOrder={sortOrder} range={range} />
+        {/*@ts-ignore*/}
+        <Entries soundId={soundData.id} sortOrder={sortOrder} range={range} />
       </motion.div>
 
       <div className={`min-w-[688px] min-h-[688px] z-20`} />

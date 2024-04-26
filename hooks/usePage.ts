@@ -41,7 +41,7 @@ export const useSound = () => {
     setIsVisible(true);
     setPages((prevPages) => [
       ...prevPages,
-      { type: "sound", key: sound.id, data: sound, isOpen: false },
+      { type: "sound", key: sound.apple_id, data: sound, isOpen: false },
     ]);
     window.history.pushState(null, "");
   };

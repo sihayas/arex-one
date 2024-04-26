@@ -13,15 +13,14 @@ import { Interaction } from "@/components/global/Interaction";
 import { getStarComponent } from "@/components/global/Star";
 import { TailIcon } from "@/components/icons";
 
-export const Entry = () => {
-  const cmdk = document.getElementById("cmdk") as HTMLDivElement;
+export const Entry = ({ pageEntry }: { pageEntry: EntryExtended }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [tiltAngles, setTiltAngles] = useState({
     tiltAngleX: 0,
     tiltAngleY: 0,
   });
-  const [isExpanded, setIsExpanded] = useState(false);
 
-  const { activePage, scrollContainerRef, pages, user } = useInterfaceContext();
+  const { scrollContainerRef, pages, user } = useInterfaceContext();
   const { scrollY } = useScroll({
     container: scrollContainerRef,
     layoutEffect: false,
@@ -30,19 +29,13 @@ export const Entry = () => {
   const x = useSpring(0, { damping: 320, stiffness: 80 });
   const y = useSpring(0, { damping: 320, stiffness: 80 });
 
-  const entry = activePage.data as EntryExtended;
-
   // If opening from a notification, load the chain
   // const chainId = activePage.data?.replyTo;
 
-  const sound = entry.sound_data;
-  const name = sound.attributes.name;
-  const artistName = sound.attributes.artistName;
-  const artwork = MusicKit.formatArtworkURL(
-    sound.attributes.artwork,
-    304 * 2.5,
-    304 * 2.5,
-  );
+  const sound = pageEntry.sound_data;
+  const name = sound.name;
+  const artistName = sound.artist_name;
+  const artwork = sound.artwork_url.replace("{w}", "760").replace("{h}", "760");
 
   // useMotionValueEvent breaks the tilt effect on re-renders so use onChange instead.
   // useEffect(() => {
@@ -82,6 +75,8 @@ export const Entry = () => {
   //   }
   // }, [isExpanded]);
 
+  if (!pageEntry || !user) return null;
+
   return (
     <>
       <motion.div
@@ -103,18 +98,18 @@ export const Entry = () => {
         >
           <Avatar
             className={`outline outline-4 outline-white shadow-shadowKitHigh z-0`}
-            user={entry.author}
-            imageSrc={entry.author.image}
-            altText={entry.author.username}
+            user={pageEntry.author}
+            imageSrc={pageEntry.author.image}
+            altText={pageEntry.author.username}
             width={40}
             height={40}
           />
           <div
             className={`absolute -top-5 left-4 py-1.5 px-3 bg-white rounded-[18px] z-10 w-max text-sm font-medium flex items-center gap-2`}
           >
-            {getStarComponent(entry.rating)}
+            {getStarComponent(pageEntry.rating)}
 
-            {entry.author.username}
+            {pageEntry.author.username}
             <TailIcon className={`absolute -bottom-1 left-2`} />
           </div>
         </motion.div>
@@ -178,7 +173,7 @@ export const Entry = () => {
                 className={`absolute center-x bottom-0 flex w-[304px] items-center gap-2 bg-white px-6 pb-5`}
               >
                 <div className={`flex-shrink-0`}>
-                  {getStarComponent(entry.rating)}
+                  {getStarComponent(pageEntry.rating)}
                 </div>
 
                 <div className={`flex flex-col`}>
@@ -219,17 +214,17 @@ export const Entry = () => {
             >
               {isExpanded ? (
                 <p className={`m-8 mt-0 w-[432px] text-base origin-bottom`}>
-                  {entry.text}
+                  {pageEntry.text}
                 </p>
               ) : (
                 <p className={`m-6 -mt-[6px] line-clamp-3 w-[256px] text-base`}>
-                  {entry.text}
+                  {pageEntry.text}
                 </p>
               )}
             </motion.div>
           </motion.div>
         </Tilt>
-        {!isExpanded && <Interaction entry={entry} />}
+        {!isExpanded && <Interaction entry={pageEntry} />}
       </motion.div>
 
       {/* If viewing a specific chain i.e. from notification */}
@@ -242,7 +237,7 @@ export const Entry = () => {
 
       {/* Chains */}
       <div className={`min-h-full min-w-full px-8 pb-96 pt-8`}>
-        <Replies entryId={entry.id} userId={user!.id} />
+        <Replies entryId={pageEntry.id} userId={user.id} />
       </div>
     </>
   );

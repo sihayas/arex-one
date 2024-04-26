@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useInterfaceContext } from "@/context/Interface";
+import { PageSound, useInterfaceContext } from "@/context/Interface";
 import { useNavContext } from "@/context/Nav";
 
 import { Command } from "cmdk";
@@ -19,6 +19,7 @@ import {
 } from "framer-motion";
 import { PageType } from "@/context/Interface";
 import { createPortal } from "react-dom";
+import { Author, EntryExtended } from "@/types/global";
 
 // calculate & set base dimensions and target dimensions for the window per page
 export const GetDimensions = (pageType: PageType) => {
@@ -157,7 +158,7 @@ export function Interface() {
       {/* Shape-shift Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`relative flex items-start justify-center overflow-hidden rounded-[32px] bg-[#F6F6F6] bg-opacity-90 ${
+        className={`relative flex items-start justify-center overflow-hidden rounded-[32px] bg-[#F6F6F6] bg-opacity-95 ${
           expandInput ? "mix-blend-darken" : ""
         }`}
         shouldFilter={false}
@@ -187,13 +188,22 @@ export function Interface() {
               transition={{ ease: "easeInOut", duration: 0.25 }}
             >
               {activePage.type === "sound" && (
-                <Sound key={`sound-${activePage.key}`} />
+                <Sound
+                  key={`sound-${activePage.key}`}
+                  pageSound={activePage.data as PageSound}
+                />
               )}
               {activePage.type === "entry" && (
-                <Entry key={`entry-${activePage.key}`} />
+                <Entry
+                  key={`entry-${activePage.key}`}
+                  pageEntry={activePage.data as EntryExtended}
+                />
               )}
               {activePage.type === "user" && (
-                <User key={`user-${activePage.key}`} />
+                <User
+                  key={`user-${activePage.key}`}
+                  pageUser={activePage.data as Author}
+                />
               )}
             </motion.div>
           </AnimatePresence>

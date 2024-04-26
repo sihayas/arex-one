@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useInterfaceContext } from "@/context/Interface";
+import { PageSound, useInterfaceContext } from "@/context/Interface";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useUserProfileQuery } from "@/lib/helper/interface/user";
 import Essentials from "@/components/interface/user/render/Essentials";
@@ -11,13 +11,13 @@ import { Author } from "@/types/global";
 
 const generalConfig = { damping: 20, stiffness: 100 };
 
-const User = () => {
+const User = ({ pageUser }: { pageUser: Author }) => {
   const [userData, setUserData] = useState<Author | null>(null);
   const [followingAtoB, setFollowingAtoB] = useState(false);
   const [followingBtoA, setFollowingBtoA] = useState(false);
   const fileInputRef = useRef(null);
 
-  const { user, activePage, scrollContainerRef } = useInterfaceContext();
+  const { user, scrollContainerRef } = useInterfaceContext();
   const { scrollY } = useScroll({
     container: scrollContainerRef,
     layoutEffect: false,
@@ -31,8 +31,7 @@ const User = () => {
     damping: 20,
   });
 
-  const pageUser = activePage.data;
-  const { data } = useUserProfileQuery(user?.id, pageUser?.id);
+  const { data } = useUserProfileQuery(user?.id, pageUser.id);
 
   useEffect(() => {
     if (data) {
@@ -41,8 +40,6 @@ const User = () => {
       setFollowingBtoA(data.isFollowingBtoA);
     }
   }, [data]);
-
-  if (!userData || !pageUser) return;
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -125,6 +122,8 @@ const User = () => {
     fileInputRef.current.click();
   };
 
+  if (!userData) return;
+
   return (
     <>
       <motion.div style={{ opacity }} className={`flex p-8 pb-0 space-x-6`}>
@@ -179,7 +178,6 @@ const User = () => {
       </motion.div>
 
       <motion.div style={{ translateY }} className={`w-full`}>
-        {/* @ts-ignore*/}
         <Entries pageUserId={pageUser.id} />
       </motion.div>
     </>
