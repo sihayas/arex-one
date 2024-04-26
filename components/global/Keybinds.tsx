@@ -54,7 +54,7 @@ export const Keybinds = (
     // Switch to album page from form
     else if (e.key === "Enter" && formSound && inputValue === "") {
       e.preventDefault();
-      // openSoundPage(selectedFormSound);
+      openSoundPage(formSound);
       setFormSound(null);
       inputRef.current?.blur();
       window.history.pushState(null, "");

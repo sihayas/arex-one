@@ -1,16 +1,21 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { attachSoundData } from "@/lib/helper/feed";
+import { fetchSourceAlbum } from "@/lib/global/musickit";
 
-export const useSoundInfoQuery = (
-  appleId: string,
-  soundId: string | undefined,
-) =>
+export const useSoundInfoQuery = (appleId: string, soundId?: string) =>
   useQuery(
     ["sound", appleId, soundId],
     async () => {
-      const response = await fetch(
-        `/api/sound/get?soundId=${soundId}&appleId=${appleId}`,
-      );
+      let source;
+      if (!soundId) {
+        // unsure of the database id
+        source = await fetchSourceAlbum(appleId);
+        appleId = source.id;
+      }
+      const queryUrl = `/api/sound/get?appleId=${appleId}${
+        soundId ? `&soundId=${soundId}` : ""
+      }`;
+      const response = await fetch(queryUrl);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }

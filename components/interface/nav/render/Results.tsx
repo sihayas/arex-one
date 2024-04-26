@@ -27,8 +27,6 @@ const Results = ({ searchData }: SearchProps) => {
     ...userData.map((user: any) => ({ ...user, type: "users" })),
   ];
 
-  console.log(allData);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}

@@ -1,7 +1,5 @@
 import Image from "next/image";
 import React, { useEffect } from "react";
-import { useSound } from "@/hooks/usePage";
-import { AlbumData } from "@/types/apple";
 import { motion } from "framer-motion";
 import { LaurelIcon } from "@/components/icons";
 import { EssentialExtended } from "@/types/global";
@@ -11,7 +9,6 @@ interface EssentialsProps {
 }
 
 const Essentials: React.FC<EssentialsProps> = ({ essentials }) => {
-  console.log(essentials);
   const [essential_one, setEssentialOne] =
     React.useState<EssentialExtended | null>(null);
   const [essential_two, setEssentialTwo] =

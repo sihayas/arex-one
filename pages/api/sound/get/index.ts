@@ -37,11 +37,15 @@ export default async function handler(
   }
 
   try {
+    console.log("INITIAL soundId", soundId, "appleId", appleId);
     if (!soundId) {
       // check map to confirm
       const cachedId = await redis.hget(soundAppleToDbIdMap(), appleId);
+      if (cachedId) {
+        soundId = cachedId.toString();
+      }
 
-      // fallback to db, create the hash map of apple id to the db id
+      // fallback to db, create the map of apple id to the db id
       if (!cachedId) {
         const soundInDb = await prisma.sound.findFirst({
           where: { apple_id: appleId },
@@ -62,6 +66,7 @@ export default async function handler(
       return res.status(200).json({ message: "No sound data available yet." });
     }
 
+    // sound exists in the database, fetch the data
     let soundData = await redis.hgetall(soundDataKey(soundId));
 
     if (!soundData) {

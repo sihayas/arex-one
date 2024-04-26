@@ -47,6 +47,7 @@ const Sound = ({ pageSound }: { pageSound: PageSound }) => {
   useEffect(() => {
     if (data) {
       setSoundData(data);
+      console.log(data, "returned sound data");
       const getRatingValue = (key: string) => parseInt(data[key], 10) || 0;
       const ratingArray = [
         getRatingValue("rating_half") + getRatingValue("rating_one"),
