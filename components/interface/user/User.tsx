@@ -7,12 +7,15 @@ import Avatar from "@/components/global/Avatar";
 import Compressor from "compressorjs";
 import Entries from "@/components/interface/user/render/Entries";
 import { ListenedIcon, CardsIcon } from "@/components/icons";
+import { Author } from "@/types/global";
 
 const generalConfig = { damping: 20, stiffness: 100 };
 
 const User = () => {
+  const [userData, setUserData] = useState<Author | null>(null);
   const [followingAtoB, setFollowingAtoB] = useState(false);
   const [followingBtoA, setFollowingBtoA] = useState(false);
+  const fileInputRef = useRef(null);
 
   const { user, activePage, scrollContainerRef } = useInterfaceContext();
   const { scrollY } = useScroll({
@@ -23,23 +26,23 @@ const User = () => {
     useTransform(scrollY, [0, 1], [-80, 0]),
     generalConfig,
   );
-
   const opacity = useSpring(useTransform(scrollY, [0, 1], [1, 0]), {
     stiffness: 100,
     damping: 20,
   });
 
   const pageUser = activePage.data;
-  const isSelf = user?.id === pageUser.id;
-
-  const fileInputRef = useRef(null);
-
   const { data } = useUserProfileQuery(user?.id, pageUser?.id);
 
-  const handleAvatarClick = () => {
-    // @ts-ignore
-    fileInputRef.current.click();
-  };
+  useEffect(() => {
+    if (data) {
+      setUserData(data);
+      setFollowingAtoB(data.isFollowingAtoB);
+      setFollowingBtoA(data.isFollowingBtoA);
+    }
+  }, [data]);
+
+  if (!userData || !pageUser) return;
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -117,19 +120,15 @@ const User = () => {
     };
   };
 
-  useEffect(() => {
-    if (data) {
-      setFollowingAtoB(data.isFollowingAtoB);
-      setFollowingBtoA(data.isFollowingBtoA);
-    }
-  }, [data]);
-
-  if (!data || !user || !pageUser) return;
+  const handleAvatarClick = () => {
+    // @ts-ignore
+    fileInputRef.current.click();
+  };
 
   return (
     <>
       <motion.div style={{ opacity }} className={`flex p-8 pb-0 space-x-6`}>
-        <Essentials essentials={data.essentials} />
+        <Essentials essentials={userData.essentials} />
       </motion.div>
 
       {/* Avatar & Interlink */}
@@ -142,12 +141,12 @@ const User = () => {
         <p
           className={`text-gray2 text-base font-semibold w-full text-end -translate-x-4`}
         >
-          {data.username}
+          {userData.username}
         </p>
 
         <Avatar
           className="rounded-max shadow-shadowKitLow aspect-square flex-shrink-0"
-          imageSrc={data.image}
+          imageSrc={userData.image}
           altText={`avatar`}
           width={64}
           height={64}
@@ -159,13 +158,13 @@ const User = () => {
           <div className={`flex items-center gap-2`}>
             <ListenedIcon />
             <p className={`text-gray2 text-base font-semibold`}>
-              {data.followers_count || 0}
+              {userData.followers_count || 0}
             </p>
           </div>
           <div className={`flex items-center gap-2`}>
             <CardsIcon />
             <p className={`text-gray2 text-base font-semibold`}>
-              {data.artifacts_count || 0}
+              {userData.artifacts_count || 0}
             </p>
           </div>
         </div>
@@ -180,6 +179,7 @@ const User = () => {
       </motion.div>
 
       <motion.div style={{ translateY }} className={`w-full`}>
+        {/* @ts-ignore*/}
         <Entries pageUserId={pageUser.id} />
       </motion.div>
     </>

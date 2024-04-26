@@ -157,7 +157,7 @@ export function Interface() {
       {/* Shape-shift Window, lies atop the rendered content */}
       <Command
         id={`cmdk-inner`}
-        className={`relative flex items-start justify-center overflow-hidden rounded-[32px] bg-[#F6F6F6] bg-opacity-75 ${
+        className={`relative flex items-start justify-center overflow-hidden rounded-[32px] bg-[#F6F6F6] bg-opacity-90 ${
           expandInput ? "mix-blend-darken" : ""
         }`}
         shouldFilter={false}

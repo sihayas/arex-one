@@ -20,8 +20,9 @@ export type Author = {
   image: string;
   username: string;
   bio: string;
-  essentials: string;
-  _count: string;
+  essentials: EssentialExtended[];
+  followers_count: number;
+  artifacts_count: number;
 };
 
 export type EntryExtended = Entry & {
