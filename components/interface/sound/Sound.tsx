@@ -46,8 +46,6 @@ const Sound = () => {
   const pageSound = activePage.data as PageSound;
   const { data } = useSoundInfoQuery(pageSound.apple_id, pageSound?.id);
 
-  console.log("Data: ", data);
-
   useEffect(() => {
     if (!data) return;
 

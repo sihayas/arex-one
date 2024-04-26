@@ -1,4 +1,3 @@
-import { AlbumData, SongData } from "@/types/apple";
 import { redis, soundAppleToDbIdMap, soundDataKey } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -58,10 +57,11 @@ export default async function handler(
       }
     }
 
-    // sound does not exist in the database, exit
+    // sound does not exist in the database at all, exit
     if (!soundId) {
       return res.status(200).json({ message: "No sound data available yet." });
     }
+
     let soundData = await redis.hgetall(soundDataKey(soundId));
 
     if (!soundData) {
@@ -88,7 +88,7 @@ SELECT
 FROM Entry e
 JOIN Sound s ON e.sound_id = s.id
 WHERE s.id = ${soundId} AND e.type = 'artifact' AND e.rating IS NOT NULL
-GROUP BY s.name, s.artist_name, s.release_date, s.avg_rating, s.bayesian_avg;
+GROUP BY s.id, s.name, s.artist_name, s.release_date, s.avg_rating, s.bayesian_avg;
 `;
 
       let ratings = ratingsDistributionResult[0];
@@ -146,8 +146,3 @@ GROUP BY s.name, s.artist_name, s.release_date, s.avg_rating, s.bayesian_avg;
     return res.status(500).json({ error: "Error fetching sound data." });
   }
 }
-
-type ResponseData = {
-  albums: Map<string, AlbumData | null>;
-  songs: Map<string, SongData | null>;
-};
