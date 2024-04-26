@@ -37,7 +37,6 @@ export default async function handler(
   }
 
   try {
-    console.log("INITIAL soundId", soundId, "appleId", appleId);
     if (!soundId) {
       // check map to confirm
       const cachedId = await redis.hget(soundAppleToDbIdMap(), appleId);

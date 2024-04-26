@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { LoveIcon, ReplyIcon } from "../icons";
 import { EntryExtended } from "@/types/global";
-import useHandleHeartClick from "@/hooks/useHeart";
 import { useInterfaceContext } from "@/context/Interface";
 
 interface HeartButtonProps {
   entry: EntryExtended;
   className?: string;
-  replyCount?: number;
   isMirrored?: boolean; // For use with sub-replies
 }
 
@@ -17,35 +15,48 @@ const Heart: React.FC<HeartButtonProps> = ({
   className,
   isMirrored,
 }) => {
-  const { user } = useInterfaceContext();
-  const apiUrl = entry.heartedByUser
-    ? "/api/entry/delete/heart"
-    : "/api/entry/post/heart";
-
-  const { hearted, handleHeartClick, heartCount } = useHandleHeartClick(
-    entry.heartedByUser,
-    entry.actions_count,
-    apiUrl,
-    "entryId",
-    entry.id,
-    entry.author.id,
-    user?.id,
-  );
-
+  const [hearted, setHearted] = useState(entry.heartedByUser);
+  const [heartCount, setHeartCount] = useState(entry.actions_count);
   const [heartColor, setHeartColor] = useState(hearted ? "#FFF" : "#999");
   const [bubbleColor, setBubbleColor] = useState(
     hearted ? "#FF4DC9" : "#E5E5E5",
   );
   const controls = useAnimation();
 
-  useEffect(() => {
-    setHeartColor(hearted ? "#FFF" : "#999");
-  }, [hearted]);
+  const { user } = useInterfaceContext();
+  const heart = async () => {
+    if (!user) return;
+    const apiUrl = entry.heartedByUser
+      ? "/api/action/delete/"
+      : "/api/action/post/";
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "heart",
+          target: "entry",
+          targetId: entry.id,
+          authorId: entry.author.id,
+          userId: user.id,
+        }),
+      });
+      if (response.ok) {
+        setHearted(!hearted);
+        setHeartCount(hearted ? heartCount - 1 : heartCount + 1);
+        setBubbleColor(hearted ? "#E5E5E5" : "#FF4DC9");
+        setHeartColor(hearted ? "#999" : "#FFF");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const handleMouseEnter = () => {
     controls.start("hover").catch((error) => {});
   };
-
   const handleMouseLeave = () => {
     controls.start("initial").catch((error) => {});
   };
@@ -54,7 +65,7 @@ const Heart: React.FC<HeartButtonProps> = ({
     <motion.button
       className={`${className} -m-2 flex gap-1 p-2 cursor-default`}
       onClick={(event) => {
-        handleHeartClick();
+        heart();
         event.stopPropagation();
       }}
       onMouseEnter={handleMouseEnter}

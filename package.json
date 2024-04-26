@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npx prisma generate"
+    "postinstall": "npx prisma generate",
+    "heart": "ts-node scripts/prismaHeart.ts"
   },
   "dependencies": {
     "@lucia-auth/adapter-mysql": "^3.0.2",
