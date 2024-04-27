@@ -14,9 +14,8 @@ import {
 import { useNavContext } from "@/context/Nav";
 import Avatar from "@/components/global/Avatar";
 import { useInterfaceContext } from "@/context/Interface";
-import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
-import { Keybinds } from "@/components/global/Keybinds";
+import { Keybinds } from "@/components/interface/nav/Keybinds";
 import Notifications from "@/components/interface/nav/render/Notifications";
 import Image from "next/image";
 import { createReply } from "@/lib/helper/interface/nav";
@@ -24,6 +23,7 @@ import { Search } from "@/lib/helper/interface/nav";
 import { Author } from "@/types/global";
 
 const Nav = () => {
+  // @ts-ignore
   const { replyTarget } = useNavContext();
   const { user, activePage, notifs } = useInterfaceContext();
   const {
@@ -253,13 +253,13 @@ const Nav = () => {
             animate={expandInput ? { scale: 0.5 } : { opacity: 1, scale: 1 }}
             transition={{ type: "spring", damping: 24, stiffness: 400 }}
           >
-            <Avatar
-              imageSrc={user!.image}
-              altText={`${user!.username}'s avatar`}
-              width={32}
-              height={32}
-              user={user as Author}
-            />
+            {/*<Avatar*/}
+            {/*  imageSrc={user!.image}*/}
+            {/*  altText={`${user!.username}'s avatar`}*/}
+            {/*  width={32}*/}
+            {/*  height={32}*/}
+            {/*  user={user }*/}
+            {/*/>*/}
           </motion.div>
 
           <AnimatePresence>

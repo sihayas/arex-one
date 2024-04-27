@@ -1,9 +1,8 @@
 import {
-  entryHeartCountKey,
   userHeartsKey,
   userNotifsKey,
-  userUnreadNotifsCount,
   redis,
+  entryDataKey,
 } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -12,14 +11,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { action, target, targetId, authorId, userId } = await req.body;
+  const { action, target, targetId, authorId, userId, soundId } =
+    await req.body;
 
   if (authorId === userId) {
     return res.status(400).json({ success: "Cannot act on your own" });
   }
 
   const isEntry = target === "entry";
-  const isReply = target === "reply";
+  const isChain = target === "chain";
+  const key = `${target}_${action}|${targetId}`;
 
   try {
     const result = await prisma.action.create({
@@ -27,20 +28,20 @@ export default async function handler(
         author_id: userId,
         type: action,
         ...(isEntry && { entry_id: targetId }),
-        ...(isReply && { reply_id: targetId }),
+        ...(isChain && { chain_id: targetId }),
       },
     });
-
-    const key = `${action}|${targetId}`;
-    const activity = await prisma.activity.create({
-      data: { author_id: userId, action_id: result.id },
+    await prisma.activity.create({
+      data: { author_id: userId, source_id: result.id, source_type: action },
     });
     const notification = await prisma.notification.create({
       data: {
         key: key,
-        recipient_id: authorId,
-        activity_id: activity.id,
-        author_id: userId,
+        sender_id: userId,
+        receiver_id: authorId,
+        sound_id: soundId,
+        source_id: result.id,
+        source_type: action,
       },
     });
 
@@ -50,8 +51,8 @@ export default async function handler(
       score: new Date(notification.created_at).getTime(),
       member: notification.id,
     });
-    pipeline.incr(userUnreadNotifsCount(authorId)); // increment count
-    pipeline.incr(entryHeartCountKey(targetId)); // increment count
+    pipeline.hincrby(entryDataKey(targetId), "actions_count", 1);
+
     // handle user caches
     pipeline.sadd(userHeartsKey(userId), targetId); // + id to hearts
     await pipeline.exec();

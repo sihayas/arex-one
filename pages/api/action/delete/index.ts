@@ -1,9 +1,8 @@
 import {
-  entryHeartCountKey,
   userHeartsKey,
   userNotifsKey,
-  userUnreadNotifsCount,
   redis,
+  entryDataKey,
 } from "@/lib/global/redis";
 import { prisma } from "@/lib/global/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -22,47 +21,44 @@ export default async function handler(
 
   try {
     // delete from database
-    const result = await prisma.$transaction(async (prisma) => {
-      // Update action to mark as deleted
-      const deletedAction = await prisma.action.update({
-        where: {
-          ...(isEntry
-            ? {
-                author_id_entry_id_type: {
-                  author_id: userId,
-                  entry_id: targetId,
-                  type: action,
-                },
-              }
-            : {
-                author_id_reply_id_type: {
-                  author_id: userId,
-                  reply_id: targetId,
-                  type: action,
-                },
-              }),
-        },
-        data: { is_deleted: true },
-      });
-      // Update related activity
-      const deletedActivity = await prisma.activity.update({
-        where: { action_id: deletedAction.id },
-        data: { is_deleted: true },
-      });
-      // Update notification
-      const deletedNotification = await prisma.notification.update({
-        where: { activity_id: deletedActivity.id },
-        data: { is_deleted: true },
-      });
+    // update action to mark as deleted
+    const deletedAction = await prisma.action.update({
+      where: {
+        ...(isEntry
+          ? {
+              author_id_entry_id_type: {
+                author_id: userId,
+                entry_id: targetId,
+                type: action,
+              },
+            }
+          : {
+              author_id_chain_id_type: {
+                author_id: userId,
+                chain_id: targetId,
+                type: action,
+              },
+            }),
+      },
+      data: { is_deleted: true },
+    });
 
-      return { deletedAction, deletedActivity, deletedNotification };
+    const deletedNotification = await prisma.notification.update({
+      where: {
+        sender_id_receiver_id_source_id_source_type: {
+          sender_id: userId,
+          receiver_id: authorId,
+          source_id: deletedAction.id,
+          source_type: action,
+        },
+      },
+      data: { is_deleted: true },
     });
 
     // handle target author caches
     const pipeline = redis.pipeline();
-    pipeline.zrem(userNotifsKey(authorId), result.deletedNotification.id);
-    pipeline.decr(userUnreadNotifsCount(authorId)); // -1 to count
-    pipeline.decr(entryHeartCountKey(targetId)); // -1 to  count
+    pipeline.zrem(userNotifsKey(authorId), deletedNotification.id);
+    pipeline.hincrby(entryDataKey(targetId), "actions_count", -1);
     // handle user caches
     pipeline.srem(userHeartsKey(userId), targetId); // -id to hearts
     await pipeline.exec();

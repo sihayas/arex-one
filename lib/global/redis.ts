@@ -34,10 +34,6 @@ export const userHeartsKey = (userId: string) => `user:${userId}:hearts`;
 // User followers, a list of ids in Redis.
 export const userFollowersKey = (userId: string) => `user:${userId}:followers`;
 
-// Unread count, a NUMBER.
-export const userUnreadNotifsCount = (userId: string) =>
-  `user:${userId}:unread_count`;
-
 // -- Redis Entry Keys --
 
 // Heart count, a NUMBER.

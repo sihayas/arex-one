@@ -1,21 +1,15 @@
 import { prisma } from "@/lib/global/prisma";
 
-import {
-  userAggNotifsKey,
-  userNotifsKey,
-  userUnreadNotifsCount,
-  redis,
-} from "@/lib/global/redis";
+import { userAggNotifsKey, userNotifsKey, redis } from "@/lib/global/redis";
 import { NextApiRequest, NextApiResponse } from "next";
 
 interface AggregatedNotification {
-  type: string;
-  soundId: string;
-  targetId: string;
-  content: string;
   count: number;
   notifications: string[];
   authors: string[];
+  soundId: string;
+  sourceId: string;
+  source_type: string;
   lastTimestamp: Date;
 }
 
@@ -25,17 +19,13 @@ interface NotificationAccumulator {
 
 interface NotificationResponse {
   id: string;
-  key: string | null;
-  author_id: string;
+  key: string;
+  sender_id: string;
+  sound_id: string;
+  source_id: string;
+  source_type: string; // entry_heart, chain_heart, entry_flag, chain_flag,
+  // chain
   created_at: Date;
-  activity: {
-    action: {
-      type: string;
-      chain: { text: string } | null;
-      entry: { rating: number | null } | null;
-    } | null;
-    chain: { text: string } | null;
-  };
 }
 
 export default async function handler(
@@ -53,15 +43,12 @@ export default async function handler(
   }
 
   try {
-    const unreadCount = parseInt(
-      (await redis.get(userUnreadNotifsCount(userId))) || "0",
-      10,
-    );
+    const unreadCount = await redis.zcard(userNotifsKey(userId));
 
     let notifs;
 
-    if (unreadCount) {
-      // There are unread notifications, fetch IDs from sorted set
+    if (unreadCount > 0) {
+      // there are unread notifications, fetch IDs from sorted set
       const limit = Math.min(unreadCount, 24);
       let notificationIds: string[] = await redis.zrange(
         userNotifsKey(userId),
@@ -69,52 +56,34 @@ export default async function handler(
         cursor + limit - 1,
       );
 
-      // Fetch notification details from the database
+      console.log("notifs", notificationIds);
+
+      // fetch notification details from the database
       const notifications = await prisma.notification.findMany({
         where: { is_deleted: false, id: { in: notificationIds } },
         select: {
           id: true,
-          created_at: true,
-          author_id: true,
           key: true,
-          activity: {
-            select: {
-              chain: {
-                select: {
-                  text: true,
-                },
-              },
-              action: {
-                select: {
-                  type: true,
-                  chain: {
-                    select: {
-                      text: true,
-                    },
-                  },
-                  entry: {
-                    select: {
-                      rating: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
+          sender_id: true,
+          sound_id: true,
+          source_id: true,
+          source_type: true,
+          created_at: true,
         },
       });
 
-      // Aggregate notifications and cache the results
-      const aggregatedNotifs = await batchNotifs(notifications, userId);
-      notifs = aggregatedNotifs.accumulator;
-      const newCursor = aggregatedNotifs.lastTimestamp; // Cursor
+      console.log("notifs", notifications);
 
-      await redis.decrby(userUnreadNotifsCount(userId), notificationIds.length);
+      // aggregate notifications and cache the results
+      const batchedNotifications = await batchNotifs(notifications, userId);
+      notifs = batchedNotifications.accumulator;
+
+      const newCursor = batchedNotifications.lastTimestamp;
       return res.status(200).json({ notifs: notifs, cursor: newCursor });
     }
 
     if (!unreadCount) {
-      // No unread notifications, fetch from cached aggregated notifications
+      // no unread notifications, fetch from cached aggregated notifications
       const limit = 12;
       const cachedAggregatedNotifs = await redis.zrange(
         userAggNotifsKey(userId),
@@ -123,7 +92,7 @@ export default async function handler(
         { byScore: true, offset: 0, count: limit },
       );
 
-      // If there are cached aggregated notifications, return them
+      // if there are cached aggregated notifications, return them
       if (cachedAggregatedNotifs.length) {
         notifs = cachedAggregatedNotifs.map((aggregatedNotif: any) => {
           return JSON.parse(aggregatedNotif) as AggregatedNotification;
@@ -144,40 +113,25 @@ export default async function handler(
 }
 
 async function batchNotifs(notifs: NotificationResponse[], userId: string) {
-  const contentLookup: {
-    [key: string]: (notif: NotificationResponse) => string;
-  } = {
-    reply: (notif: NotificationResponse) => notif.activity!.chain!.text,
-    heart_entry: (notif: NotificationResponse) =>
-      notif.activity!.action!.entry!.rating!.toString(),
-    heart_reply: (notif: NotificationResponse) =>
-      notif.activity!.action!.chain!.text,
-  };
-
   const { accumulator, lastTimestamp } = notifs.reduce(
     ({ accumulator, lastTimestamp }, notif) => {
-      const batchKey = notif.key;
-      if (!batchKey) return { accumulator, lastTimestamp };
+      const key = notif.key;
 
-      const [type, targetId, soundId] = batchKey.split("|");
-      const authorId = notif.author_id;
-
-      if (!accumulator[batchKey]) {
-        accumulator[batchKey] = {
+      if (!accumulator[key]) {
+        accumulator[key] = {
           count: 1,
-          type: type,
+          notifications: [notif.id],
           authors: [],
-          soundId: soundId,
-          notifications: [],
-          targetId: targetId,
-          content: contentLookup[type] ? contentLookup[type](notif) : "",
+          soundId: notif.sound_id,
+          sourceId: notif.source_id,
+          source_type: notif.source_type,
           lastTimestamp: notif.created_at,
         };
       } else {
-        accumulator[batchKey].notifications.push(notif.id);
-        accumulator[batchKey].count++;
-        if (accumulator[batchKey].count < 3) {
-          accumulator[batchKey].authors.push(authorId);
+        accumulator[key].notifications.push(notif.id);
+        accumulator[key].count++;
+        if (accumulator[key].count < 3) {
+          accumulator[key].authors.push(notif.sender_id);
         }
       }
 
@@ -185,7 +139,7 @@ async function batchNotifs(notifs: NotificationResponse[], userId: string) {
         accumulator,
         lastTimestamp: Math.max(
           lastTimestamp,
-          new Date(accumulator[batchKey].lastTimestamp).getTime(),
+          new Date(accumulator[key].lastTimestamp).getTime(),
         ),
       };
     },
@@ -195,6 +149,7 @@ async function batchNotifs(notifs: NotificationResponse[], userId: string) {
   for (let batchKey in accumulator) {
     const aggNotifs = accumulator[batchKey];
     const timestamp = new Date(aggNotifs.lastTimestamp).getTime();
+    // cache aggregated notifications
     await redis.zadd(userAggNotifsKey(userId), {
       score: timestamp,
       member: JSON.stringify(aggNotifs),

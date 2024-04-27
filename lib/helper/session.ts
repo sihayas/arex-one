@@ -1,4 +1,4 @@
-// Initial fetch of basic user and session data
+// initial fetch of basic user and session data
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const useUserAndSessionQuery = () => {
@@ -46,7 +46,7 @@ export const useNotificationsQuery = (userId: string | undefined) => {
         throw new Error("Unexpected server response structure");
       }
 
-      return { data: notifications, nextPageParam: nextCursor }; // Supplying the next cursor for the next query
+      return { data: notifications, nextPageParam: nextCursor }; // supplying the next cursor for the next query
     },
     {
       getNextPageParam: (lastPage) => lastPage?.nextPageParam,

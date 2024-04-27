@@ -7,7 +7,10 @@ import React, {
 } from "react";
 
 import { Session } from "lucia";
-import { useUserAndSessionQuery } from "@/lib/helper/session";
+import {
+  useNotificationsQuery,
+  useUserAndSessionQuery,
+} from "@/lib/helper/session";
 import { StateSnapshot } from "react-virtuoso";
 import { Author, EntryExtended } from "@/types/global";
 import { DatabaseUserAttributes } from "@/lib/global/auth";
@@ -63,18 +66,17 @@ export const InterfaceContext = React.createContext<
   InterfaceContext | undefined
 >(undefined);
 
-// Export a custom hook to consume the context
 export const useInterfaceContext = (): InterfaceContext => {
   const context = useContext(InterfaceContext);
   if (!context) {
     throw new Error(
-      "useInterfaceContext must be used within" + " InterfaceProvider",
+      "useInterfaceContext must be used within InterfaceProvider",
     );
   }
   return context;
 };
 
-// Define the provider for the context
+// define the provider for the context
 export const InterfaceContextProvider = ({
   children,
 }: InterfaceContextProviderProps) => {
@@ -90,10 +92,10 @@ export const InterfaceContextProvider = ({
     pages[pages.length - 1],
   );
 
-  // Create a ref for animations scrolling within the window
+  // ref for animations scrolling within the window
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize the user and session
+  // initialize the user and session
   const { data } = useUserAndSessionQuery();
   useEffect(() => {
     if (data) {
@@ -106,31 +108,19 @@ export const InterfaceContextProvider = ({
   }, [data]);
 
   // Initialize notifications
-  // const { data: notifData } = useNotificationsQuery(user?.id);
-  // useEffect(() => {
-  //   if (notifData) {
-  //     setNotifs(notifData.data);
-  //   }
-  // }, [notifData]);
-  //
-  // const { data: settingsData } = useSettingsQuery(user?.id);
-  // useEffect(() => {
-  //   if (settingsData) {
-  //     setSettings(settingsData);
-  //   }
-  // }, [settingsData]);
+  const { data: notifData } = useNotificationsQuery(user?.id);
+  useEffect(() => {
+    if (notifData) {
+      console.log("notifData", notifData);
+      //  @ts-ignore
+      setNotifs(notifData);
+    }
+  }, [notifData]);
 
   // Initialize the interface
   useEffect(() => {
     if (!pages.length && user) {
-      setPages([
-        {
-          key: user.id,
-          type: "user",
-          data: user,
-          isOpen: false,
-        },
-      ]);
+      setPages([{ key: user.id, type: "user", data: user, isOpen: false }]);
     }
   }, [pages.length, user]);
 
